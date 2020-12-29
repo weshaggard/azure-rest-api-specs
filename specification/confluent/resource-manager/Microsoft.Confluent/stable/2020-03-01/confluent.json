@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Microsoft.Confluent",
-    "version": "2020-03-01"
+    "version": "2020-03-01-preview"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -52,7 +52,7 @@
               "200": {
                 "description": "Success",
                 "schema": {
-                  "$ref": "#/definitions/AgreementTermsListResponse"
+                  "$ref": "#/definitions/ConfluentAgreementResourceListResponse"
                 }
             },
             "default": {
@@ -78,7 +78,7 @@
               "Agreements"
             ],
             "summary": "Accept marketplace terms.",
-            "operationId": "MarketplaceAgreements_Set",
+            "operationId": "MarketplaceAgreements_Create",
             "consumes": [
               "application/json"
             ],
@@ -88,11 +88,22 @@
             "parameters": [
               {
                 "$ref": "#/parameters/SubscriptionIdParameter"
+              },
+              {
+                "in": "body",
+                "name": "body",
+                "description": "Confluent Agreement resource",
+                "schema": {
+                  "$ref": "#/definitions/ConfluentAgreementResource"
+                }
               }
             ],
             "responses": {
               "200": {
-                "description": "Success"
+                "description": "Success",
+                "schema": {
+                  "$ref": "#/definitions/ConfluentAgreementResource"
+                }
               },
               "default": {
                 "description": "Default error response.",
@@ -102,8 +113,8 @@
               }
             },
             "x-ms-examples": {
-              "MarketplaceAgreements_Set": {
-                "$ref": "./examples/MarketplaceAgreements_Set.json"
+              "MarketplaceAgreements_Create": {
+                "$ref": "./examples/MarketplaceAgreements_Create.json"
               }
            }
        }
@@ -446,7 +457,7 @@
     }
   },
   "definitions": {
-    "AgreementProperties": {
+    "ConfluentAgreementProperties": {
         "description": "Terms properties for Marketplace and Confluent.",
         "type": "object",
         "properties": {
@@ -485,30 +496,34 @@
           }
         }
       },
-     "AgreementTerms": {
-        "description": "Agreement Terms definition",
+      "ConfluentAgreementResource": {
+        "description": "Confluent Agreements Resource.",
         "type": "object",
+        "x-ms-azure-resource": true,
         "properties": {
           "id": {
-            "description": "The id of agreement resource.",
-            "type": "string"
+            "description": "ARM id of the resource.",
+            "type": "string",
+            "readOnly": true
           },
           "name": {
-            "description": "The name of the agreement.",
-            "type": "string"
+            "description": "Name of the agreement.",
+            "type": "string",
+            "readOnly": true
           },
           "type": {
-            "description": "The type of the agreement.",
-            "type": "string"
+            "description": "The type of the resource.",
+            "type": "string",
+            "readOnly": true
           },
           "properties": {
-            "$ref": "#/definitions/AgreementProperties",
-            "description": "Represents the properties of the resource.",
-            "x-ms-client-flatten": true
+            "x-ms-client-flatten": true,
+            "$ref": "#/definitions/ConfluentAgreementProperties",
+            "description": "Represents the properties of the resource."
           }
         }
       },
-     "AgreementTermsListResponse": {
+     "ConfluentAgreementResourceListResponse": {
         "description": "Response of a list operation.",
         "type": "object",
         "properties": {
@@ -516,7 +531,7 @@
             "description": "Results of a list operation.",
             "type": "array",
             "items": {
-              "$ref": "#/definitions/AgreementTerms"
+              "$ref": "#/definitions/ConfluentAgreementResource"
             }
           },
           "nextLink": {
@@ -558,6 +573,10 @@
         "display": {
           "description": "The object that represents the operation.",
           "$ref": "#/definitions/OperationDisplay"
+        },
+        "isDataAction": {
+          "description": "Indicates whether the operation is a data action",
+          "type": "boolean"
         }
       }
     },
@@ -840,7 +859,7 @@
       "required": true,
       "type": "string",
       "enum": [
-        "2020-03-01"
+        "2020-03-01-preview"
       ]
     },
     "SubscriptionIdParameter": {
