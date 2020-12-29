@@ -14,6 +14,7 @@ These settings apply only when `--tag=package-2020-10-20-preview --ruby` is spec
 Please also specify `--ruby-sdks-folder=<path to the root directory of your azure-sdk-for-ruby clone>`.
 
 ```yaml $(tag) == 'package-2020-10-20-preview' && $(ruby)
-namespace: Microsoft.HealthcareBot
+namespace: Microsoft.HealthBot
 output-folder: $(ruby-sdks-folder)/healthbot
 ```
+prev

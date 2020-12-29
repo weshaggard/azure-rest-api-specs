@@ -4,23 +4,16 @@ These settings apply only when `--ruby` is specified on the command line.
 
 ```yaml
 package-name: azure_mgmt_servicelinker
-package-version: "0.1.0"
+package-version: 2021-01-01-privatepreview
 azure-arm: true
 ```
 
-### Ruby multi-api
+### Tag: package-2021-01-01-privatepreview and ruby
 
-``` yaml $(ruby) && $(multiapi)
-batch:
-  - tag: package-2020-07-01-preview
-```
-
-### Tag: package-2020-07-01-preview and ruby
-
-These settings apply only when `--tag=package-2020-07-01-preview --ruby` is specified on the command line.
+These settings apply only when `--tag=package-2021-01-01-privatepreview --ruby` is specified on the command line.
 Please also specify `--ruby-sdks-folder=<path to the root directory of your azure-sdk-for-ruby clone>`.
 
-```yaml $(tag) == 'package-2020-07-01-preview' && $(ruby)
-namespace: "Azure::ServiceLinker::Mgmt::V2020_07_01_preview"
-output-folder: $(ruby-sdks-folder)/management/azure_mgmt_servicelinker/lib
+```yaml $(tag) == 'package-2021-01-01-privatepreview' && $(ruby)
+namespace: Microsoft.ServiceLinker
+output-folder: $(ruby-sdks-folder)/servicelinker
 ```
