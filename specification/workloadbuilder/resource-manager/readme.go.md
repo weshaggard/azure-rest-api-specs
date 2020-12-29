@@ -7,22 +7,22 @@ go:
   license-header: MICROSOFT_APACHE_NO_VERSION
   clear-output-folder: true
 ```
-### Tag: package-2020-06-01-preview and go
-
-These settings apply only when `--tag=package-2020-06-01-preview --go` is specified on the command line.
-Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
-
-```yaml $(tag) == 'package-2020-06-01-preview' && $(go)
-namespace: Microsoft.WorkloadBuilder
-output-folder: $(go-sdks-folder)/workloadbuilder/Generated
-```
-
 ### Tag: package-2020-07-01-privatepreview and go
 
 These settings apply only when `--tag=package-2020-07-01-privatepreview --go` is specified on the command line.
 Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
 ```yaml $(tag) == 'package-2020-07-01-privatepreview' && $(go)
-namespace: Microsoft.WorkloadBuilder
-output-folder: $(go-sdks-folder)/workloadbuilder/Generated
+namespace: workloadbuilder
+output-folder: $(go-sdk-folder)/services/privatepreview/$(namespace)/mgmt/2020-07-01-privatepreview/$(namespace)
+```
+
+### Tag: package-2021-03-01-privatepreview and go
+
+These settings apply only when `--tag=package-2021-03-01-privatepreview --go` is specified on the command line.
+Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag) == 'package-2021-03-01-privatepreview' && $(go)
+namespace: workloadbuilder
+output-folder: $(go-sdk-folder)/services/privatepreview/$(namespace)/mgmt/2021-03-01-privatepreview/$(namespace)
 ```

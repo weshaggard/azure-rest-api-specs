@@ -77,11 +77,11 @@
             "headers": {
               "Location": {
                 "type": "string",
-                "description": "Url to retrieve the final update resource."
+                "description": "Url to retrieve the import operation status."
               },
               "Operation-Location": {
                 "type": "string",
-                "description": "Url to retrieve the operation status."
+                "description": "Url to retrieve the import operation status."
               }
             }
           },
@@ -192,7 +192,7 @@
         "tags": [
           "Update management"
         ],
-        "description": "Enumerate all providers.",
+        "description": "Get a list of all update providers that have been imported to ADU.",
         "operationId": "Updates_GetProviders",
         "x-ms-examples": {
           "Updates_GetProviders": {
@@ -206,13 +206,10 @@
         ],
         "responses": {
           "200": {
-            "description": "All available providers.",
+            "description": "All imported update providers, or empty list if there is none.",
             "schema": {
               "$ref": "#/definitions/PageableListOfStrings"
             }
-          },
-          "304": {
-            "description": "Not modified."
           },
           "429": {
             "description": "Too many requests; there is a rate limit on how many operations can be executed within a time period.",
@@ -229,7 +226,7 @@
         "tags": [
           "Update management"
         ],
-        "description": "Enumerate all names for a specific provider.",
+        "description": "Get a list of all update names that match the specified provider.",
         "operationId": "Updates_GetNames",
         "x-ms-examples": {
           "Updates_GetNames": {
@@ -246,13 +243,10 @@
         ],
         "responses": {
           "200": {
-            "description": "All available names.",
+            "description": "All update names that match the specified provider, or empty list if there is none.",
             "schema": {
               "$ref": "#/definitions/PageableListOfStrings"
             }
-          },
-          "304": {
-            "description": "Not modified."
           },
           "404": {
             "description": "Not found.",
@@ -273,7 +267,7 @@
         "tags": [
           "Update management"
         ],
-        "description": "Enumerate all update versions for a specific provider and name.",
+        "description": "Get a list of all update versions that match the specified provider and name.",
         "operationId": "Updates_GetVersions",
         "x-ms-examples": {
           "Updates_GetVersions": {
@@ -293,13 +287,10 @@
         ],
         "responses": {
           "200": {
-            "description": "All available update versions.",
+            "description": "All update versions that match the specified provider and name, or empty list if there is none.",
             "schema": {
               "$ref": "#/definitions/PageableListOfStrings"
             }
-          },
-          "304": {
-            "description": "Not modified."
           },
           "404": {
             "description": "Not found.",
@@ -320,7 +311,7 @@
         "tags": [
           "Update management"
         ],
-        "description": "Enumerate all file identifiers for a specific update version.",
+        "description": "Get a list of all update file identifiers for the specified version.",
         "operationId": "Updates_GetFiles",
         "x-ms-examples": {
           "Updates_GetFiles": {
@@ -343,7 +334,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All available file identifiers.",
+            "description": "All update file identifiers for the specified version.",
             "schema": {
               "$ref": "#/definitions/PageableListOfStrings"
             }
@@ -367,7 +358,7 @@
         "tags": [
           "Update management"
         ],
-        "description": "Get a specific update version file.",
+        "description": "Get a specific update file from the version.",
         "operationId": "Updates_GetFile",
         "x-ms-examples": {
           "Updates_GetFile": {
@@ -389,6 +380,9 @@
           },
           {
             "$ref": "#/parameters/FileIdParameter"
+          },
+          {
+            "$ref": "#/parameters/IfNoneMatchParameter"
           }
         ],
         "responses": {
@@ -418,7 +412,7 @@
           "Update management"
         ],
         "operationId": "Updates_GetOperations",
-        "description": "Enumerate operations details.",
+        "description": "Get a list of all import update operations. Completed operations are kept for 7 days before auto-deleted. Delete operations are not returned by this API version.",
         "x-ms-examples": {
           "Updates_GetOperations": {
             "$ref": "./examples/Updates_GetOperations.json"
@@ -433,7 +427,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "description": "Restricts the set of operations returned. You can filter on Status and you can only select NotStarted and Running operation status when creating filter query."
+            "description": "Restricts the set of operations returned. Only one specific filter is supported: \"status eq 'NotStarted' or status eq 'Running'\""
           },
           {
             "name": "$top",
@@ -450,9 +444,6 @@
             "schema": {
               "$ref": "#/definitions/PageableListOfOperations"
             }
-          },
-          "304": {
-            "description": "Not modified."
           },
           "429": {
             "description": "Too many requests; there is a rate limit on how many operations can be executed within a time period.",
@@ -492,13 +483,9 @@
           "200": {
             "description": "Operation status.",
             "headers": {
-              "Location": {
-                "type": "string",
-                "description": "Url to retrieve the final resource."
-              },
               "Retry-After": {
                 "type": "string",
-                "description": "Number of seconds to check the operation status again."
+                "description": "Number of seconds to wait before checking the operation status again."
               }
             },
             "schema": {
@@ -524,7 +511,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get the list of device classes under management.",
+        "description": "Gets a list of all device classes (unique combinations of device manufacturer and model) for all ADU-enabled devices connected to ADU.",
         "operationId": "Devices_GetAllDeviceClasses",
         "x-ms-examples": {
           "Devices_GetAllDeviceClasses": {
@@ -538,7 +525,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All managed device classes.",
+            "description": "All device classes.",
             "schema": {
               "$ref": "#/definitions/PageableListOfDeviceClasses"
             }
@@ -554,7 +541,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get device class details.",
+        "description": "Gets the properties of a device class.",
         "operationId": "Devices_GetDeviceClass",
         "x-ms-examples": {
           "Devices_GetDeviceClass": {
@@ -571,7 +558,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Device class details.",
+            "description": "The device class properties.",
             "schema": {
               "$ref": "#/definitions/DeviceClass"
             }
@@ -588,7 +575,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get the list of devices in a device class.",
+        "description": "Gets a list of device identifiers in a device class.",
         "operationId": "Devices_GetDeviceClassDeviceIds",
         "x-ms-examples": {
           "Devices_GetDeviceClassDeviceIds": {
@@ -605,7 +592,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Array of device identifiers in the given device class.",
+            "description": "All device identifiers in the specified device class.",
             "schema": {
               "$ref": "#/definitions/PageableListOfStrings"
             }
@@ -625,7 +612,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get installable updates for a device class.",
+        "description": "Gets a list of installable updates for a device class.",
         "operationId": "Devices_GetDeviceClassInstallableUpdates",
         "x-ms-examples": {
           "Devices_GetDeviceClassInstallableUpdates": {
@@ -642,7 +629,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Array of update identifiers.  Returns empty list in case of no installable updates",
+            "description": "The installable update identifiers.  Returns empty list in case of no installable updates",
             "schema": {
               "$ref": "#/definitions/PageableListOfUpdateIds"
             }
@@ -662,7 +649,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get list of devices under management.",
+        "description": "Gets a list of ADU-enabled devices connected to ADU.",
         "operationId": "Devices_GetAllDevices",
         "x-ms-examples": {
           "Devices_GetAllDevices": {
@@ -683,7 +670,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All managed devices.",
+            "description": "All ADU-enabled devices connected to ADU.",
             "schema": {
               "$ref": "#/definitions/PageableListOfDevices"
             }
@@ -700,7 +687,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get device details.",
+        "description": "Gets the device properties and latest deployment status for an ADU device.",
         "operationId": "Devices_GetDevice",
         "x-ms-examples": {
           "Devices_GetDevice": {
@@ -717,7 +704,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Device class details.",
+            "description": "The device properties and latest deployment status.",
             "schema": {
               "$ref": "#/definitions/Device"
             }
@@ -734,7 +721,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get update compliance information.",
+        "description": "Gets the breakdown of how many devices are on their latest update, have new updates available, or are in progress receiving new updates.",
         "operationId": "Devices_GetUpdateCompliance",
         "x-ms-examples": {
           "Devices_GetUpdateCompliance": {
@@ -748,7 +735,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Update compliance information.",
+            "description": "The count of devices that have the latest update, have updates available, or are in progress receiving new updates.",
             "schema": {
               "$ref": "#/definitions/UpdateCompliance"
             }
@@ -761,7 +748,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get list of all device tags.",
+        "description": "Gets a list of available ADU group device tags for all ADU-enabled devices connected to ADU.",
         "operationId": "Devices_GetAllDeviceTags",
         "x-ms-examples": {
           "Devices_GetAllDeviceTags": {
@@ -775,7 +762,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All device tags.",
+            "description": "Available ADU group device tags for all ADU-enabled devices connected to ADU.",
             "schema": {
               "$ref": "#/definitions/PageableListOfDeviceTags"
             }
@@ -791,7 +778,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get device tag details.",
+        "description": "Gets a count of how many devices have a device tag.",
         "operationId": "Devices_GetDeviceTag",
         "x-ms-examples": {
           "Devices_GetDeviceTag": {
@@ -808,7 +795,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Device tag details.",
+            "description": "The count of devices with this device tag.",
             "schema": {
               "$ref": "#/definitions/DeviceTag"
             }
@@ -825,7 +812,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get list of groups under management.",
+        "description": "Gets a list of all device groups.",
         "operationId": "Devices_GetAllGroups",
         "x-ms-examples": {
           "Devices_GetAllGroups": {
@@ -839,7 +826,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All managed groups.",
+            "description": "The device groups.",
             "schema": {
               "$ref": "#/definitions/PageableListOfGroups"
             }
@@ -855,7 +842,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get group details.",
+        "description": "Gets the properties of a group.",
         "operationId": "Devices_GetGroup",
         "x-ms-examples": {
           "Devices_GetGroup": {
@@ -872,7 +859,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Group details.",
+            "description": "The group properties.",
             "schema": {
               "$ref": "#/definitions/Group"
             }
@@ -887,7 +874,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Create or update group.",
+        "description": "Create or update a device group.",
         "operationId": "Devices_CreateOrUpdateGroup",
         "x-ms-examples": {
           "Devices_CreateOrUpdateGroup": {
@@ -908,12 +895,12 @@
             "schema": {
               "$ref": "#/definitions/Group"
             },
-            "description": "The group metadata."
+            "description": "The group properties."
           }
         ],
         "responses": {
           "200": {
-            "description": "Group details.",
+            "description": "The group properties.",
             "schema": {
               "$ref": "#/definitions/Group"
             }
@@ -932,7 +919,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Remove group.",
+        "description": "Deletes a device group.",
         "operationId": "Devices_DeleteGroup",
         "x-ms-examples": {
           "Devices_DeleteGroup": {
@@ -962,7 +949,7 @@
         "tags": [
           "Device management"
         ],
-        "description": "Get group update compliance information.",
+        "description": "Get group update compliance information such as how many devices are on their latest update, how many need new updates, and how many are in progress on receiving a new update.",
         "operationId": "Devices_GetGroupUpdateCompliance",
         "x-ms-examples": {
           "Devices_GetGroupUpdateCompliance": {
@@ -979,7 +966,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Group update compliance information.",
+            "description": "The group update compliance information.",
             "schema": {
               "$ref": "#/definitions/UpdateCompliance"
             }
@@ -1041,7 +1028,7 @@
         "tags": [
           "Deployment management"
         ],
-        "description": "Get list of all deployments.",
+        "description": "Gets a list of deployments.",
         "operationId": "Deployments_GetAllDeployments",
         "x-ms-examples": {
           "Deployments_GetAllDeployments": {
@@ -1062,7 +1049,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of deployments.",
+            "description": "The deployments.",
             "schema": {
               "$ref": "#/definitions/PageableListOfDeployments"
             }
@@ -1079,7 +1066,7 @@
         "tags": [
           "Deployment management"
         ],
-        "description": "Get deployment details.",
+        "description": "Gets the properties of a deployment.",
         "operationId": "Deployments_GetDeployment",
         "x-ms-examples": {
           "Deployments_GetDeployment": {
@@ -1096,7 +1083,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Deployment details.",
+            "description": "The deployment properties.",
             "schema": {
               "$ref": "#/definitions/Deployment"
             }
@@ -1111,7 +1098,7 @@
         "tags": [
           "Deployment management"
         ],
-        "description": "Create or update active deployment.",
+        "description": "Creates or updates a deployment.",
         "operationId": "Deployments_CreateOrUpdateDeployment",
         "x-ms-examples": {
           "Deployments_CreateOrUpdateDeployment": {
@@ -1132,12 +1119,12 @@
             "schema": {
               "$ref": "#/definitions/Deployment"
             },
-            "description": "The deployment metadata."
+            "description": "The deployment properties."
           }
         ],
         "responses": {
           "200": {
-            "description": "Deployment details.",
+            "description": "The deployment properties.",
             "schema": {
               "$ref": "#/definitions/Deployment"
             }
@@ -1152,7 +1139,7 @@
         "tags": [
           "Deployment management"
         ],
-        "description": "Remove deployment.",
+        "description": "Deletes a deployment.",
         "operationId": "Deployments_DeleteDeployment",
         "x-ms-examples": {
           "Deployments_DeleteDeployment": {
@@ -1183,7 +1170,7 @@
         "tags": [
           "Deployment management"
         ],
-        "description": "Get deployment status.",
+        "description": "Gets the status of a deployment including a breakdown of how many devices in the deployment are in progress, completed, or failed.",
         "operationId": "Deployments_GetDeploymentStatus",
         "x-ms-examples": {
           "Deployments_GetDeploymentStatus": {
@@ -1200,7 +1187,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Deployment status.",
+            "description": "The status of the deployment.",
             "schema": {
               "$ref": "#/definitions/DeploymentStatus"
             }
@@ -1217,7 +1204,7 @@
         "tags": [
           "Deployment management"
         ],
-        "description": "Get list of deployment device states.",
+        "description": "Gets a list of devices in a deployment along with their state. Useful for getting a list of failed devices.",
         "operationId": "Deployments_GetDeploymentDevices",
         "x-ms-examples": {
           "Deployments_GetDeploymentDevices": {
@@ -1241,7 +1228,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of deployment device states.",
+            "description": "The devices in the deployment along with their states.",
             "schema": {
               "$ref": "#/definitions/PageableListOfDeploymentDeviceStates"
             }
@@ -1264,7 +1251,7 @@
         "tags": [
           "Deployment management"
         ],
-        "description": "Cancel active deployment.",
+        "description": "Cancels a deployment.",
         "operationId": "Deployments_CancelDeployment",
         "x-ms-examples": {
           "Deployments_CancelOrRetryDeployment": {
@@ -1284,7 +1271,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Deployment details.",
+            "description": "The deployment properties.",
             "schema": {
               "$ref": "#/definitions/Deployment"
             }
@@ -1301,7 +1288,7 @@
         "tags": [
           "Deployment management"
         ],
-        "description": "Retry active deployment.",
+        "description": "Retries a deployment with failed devices.",
         "operationId": "Deployments_RetryDeployment",
         "x-ms-examples": {
           "Deployments_CancelOrRetryDeployment": {
@@ -1321,7 +1308,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Deployment details.",
+            "description": "The deployment properties.",
             "schema": {
               "$ref": "#/definitions/Deployment"
             }
@@ -1372,7 +1359,7 @@
             "$ref": "#/definitions/FileImportMetadata"
           },
           "minItems": 1,
-          "description": "File properties like filename and source URL."
+          "description": "One or more update file properties like filename and source URL."
         }
       },
       "required": [
@@ -1386,7 +1373,7 @@
       "properties": {
         "url": {
           "type": "string",
-          "description": "Source download URL."
+          "description": "Azure Blob location from which the import manifest can be downloaded by ADU. This is typically a read-only SAS-protected blob URL with an expiration set to at least 4 hours."
         },
         "sizeInBytes": {
           "type": "integer",
@@ -1398,7 +1385,7 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "Hash(es) of import manifest file."
+          "description": "A JSON object containing the hash(es) of the file. At least SHA256 hash is required. This object can be thought of as a set of key-value pairs where the key is the hash algorithm, and the value is the hash of the file calculated using that algorithm."
         }
       },
       "required": [
@@ -1406,25 +1393,25 @@
         "sizeInBytes",
         "hashes"
       ],
-      "description": "Import manifest metadata."
+      "description": "Metadata describing the import manifest, a document which describes the files and other metadata about an update version."
     },
     "FileImportMetadata": {
       "type": "object",
       "properties": {
         "filename": {
           "type": "string",
-          "description": "File name."
+          "description": "Update file name as specified inside import manifest."
         },
         "url": {
           "type": "string",
-          "description": "Source download URL."
+          "description": "Azure Blob location from which the update file can be downloaded by ADU. This is typically a read-only SAS-protected blob URL with an expiration set to at least 4 hours."
         }
       },
       "required": [
         "filename",
         "url"
       ],
-      "description": "Import file metadata."
+      "description": "Metadata describing an update file."
     },
     "Update": {
       "type": "object",
@@ -1435,11 +1422,11 @@
         },
         "updateType": {
           "type": "string",
-          "description": "Update type. Optional."
+          "description": "Update type."
         },
         "installedCriteria": {
           "type": "string",
-          "description": "Installed Criteria. Will always be present in manifest version 0.1 or later."
+          "description": "String interpreted by ADU client to determine if the update is installed on the device."
         },
         "compatibility": {
           "type": "array",
@@ -1451,21 +1438,21 @@
         },
         "manifestVersion": {
           "type": "string",
-          "description": "Update manifest schema version. Optional."
+          "description": "Schema version of manifest used to import the update."
         },
         "importedDateTime": {
           "type": "string",
-          "description": "Date and time when update was imported.",
+          "description": "Date and time in UTC when the update was imported.",
           "format": "date-time"
         },
         "createdDateTime": {
           "type": "string",
           "format": "date-time",
-          "description": "Date and time when the update was created."
+          "description": "Date and time in UTC when the update was created."
         },
         "etag": {
           "type": "string",
-          "description": "Update etag."
+          "description": "Update ETag."
         }
       },
       "required": [
@@ -1474,7 +1461,8 @@
         "installedCriteria",
         "compatibility",
         "manifestVersion",
-        "importedDateTime"
+        "importedDateTime",
+        "createdDateTime"
       ],
       "description": "Update metadata."
     },
@@ -1541,7 +1529,7 @@
       "properties": {
         "fileId": {
           "type": "string",
-          "description": "File identity."
+          "description": "File identity, generated by server at import time."
         },
         "fileName": {
           "type": "string",
@@ -1565,16 +1553,16 @@
         },
         "etag": {
           "type": "string",
-          "description": "Gets or sets the ETag of the entity."
+          "description": "File ETag."
         }
       },
       "required": [
         "fileId",
         "fileName",
-        "hashes",
-        "sizeInBytes"
+        "sizeInBytes",
+        "hashes"
       ],
-      "description": "File metadata."
+      "description": "Update file metadata."
     },
     "Operation": {
       "type": "object",
@@ -1589,33 +1577,33 @@
         },
         "updateId": {
           "$ref": "#/definitions/UpdateId",
-          "description": "The identity of update the operation is working on."
+          "description": "The identity of update being imported or deleted. For import, this property will only be populated after import manifest is processed successfully."
         },
         "resourceLocation": {
           "type": "string",
-          "description": "The created resource location if any (PUT or POST methods)."
+          "description": "Location of the imported update when operation is successful."
         },
         "error": {
           "$ref": "#/definitions/Error",
-          "description": "Operation error encountered if any."
+          "description": "Operation error encountered, if any."
         },
         "traceId": {
           "type": "string",
-          "description": "W3C Trace Context base traceId used for creating and running the job."
+          "description": "Operation correlation identity that can used by Microsoft Support for troubleshooting."
         },
         "lastActionDateTime": {
           "type": "string",
           "format": "date-time",
-          "description": "Date time when the operation status was last updated."
+          "description": "Date and time in UTC when the operation status was last updated."
         },
         "createdDateTime": {
           "type": "string",
           "format": "date-time",
-          "description": "Date time when the operation was created."
+          "description": "Date and time in UTC when the operation was created."
         },
         "etag": {
           "type": "string",
-          "description": "Operation etag."
+          "description": "Operation ETag."
         }
       },
       "required": [
@@ -1688,7 +1676,7 @@
           "items": {
             "$ref": "#/definitions/Error"
           },
-          "description": "An array of details about specific errors that led to the reported error."
+          "description": "An array of errors that led to the reported error."
         },
         "innererror": {
           "$ref": "#/definitions/InnerError",
@@ -1696,7 +1684,7 @@
         },
         "occurredDateTime": {
           "type": "string",
-          "description": "Date and time when the error occured.",
+          "description": "Date and time in UTC when the error occured.",
           "format": "date-time"
         }
       },
@@ -1711,7 +1699,7 @@
       "properties": {
         "code": {
           "type": "string",
-          "description": "A more specific error code than was provided by the containing error."
+          "description": "A more specific error code than what was provided by the containing error."
         },
         "message": {
           "type": "string",
@@ -1719,7 +1707,7 @@
         },
         "errorDetail": {
           "type": "string",
-          "description": "The internal error message or exception dump."
+          "description": "The internal error or exception message."
         },
         "innerError": {
           "$ref": "#/definitions/InnerError",
@@ -1753,7 +1741,7 @@
       "properties": {
         "deviceClassId": {
           "type": "string",
-          "description": "Device class identity."
+          "description": "The device class identifier."
         },
         "manufacturer": {
           "type": "string",
@@ -1765,6 +1753,7 @@
         },
         "bestCompatibleUpdateId": {
           "$ref": "#/definitions/UpdateId",
+          "x-nullable": true,
           "description": "Update identity."
         }
       },
@@ -1818,6 +1807,7 @@
         },
         "lastAttempedUpdateId": {
           "$ref": "#/definitions/UpdateId",
+          "x-nullable": true,
           "description": "Update identity."
         },
         "deploymentStatus": {
@@ -1826,6 +1816,7 @@
         },
         "installedUpdateId": {
           "$ref": "#/definitions/UpdateId",
+          "x-nullable": true,
           "description": "Update identity."
         },
         "onLatestUpdate": {
@@ -1959,7 +1950,7 @@
         "updateId",
         "deviceCount"
       ],
-      "description": "Number of devices updatable by the update."
+      "description": "Update identifier and the number of devices for which the update is applicable."
     },
     "PageableListOfUpdatableDevices": {
       "description": "The list of updatable devices.",
@@ -1994,7 +1985,7 @@
         "tagName",
         "deviceCount"
       ],
-      "description": "Device tag details."
+      "description": "Device tag properties."
     },
     "PageableListOfDeviceTags": {
       "description": "The list of device tags.",
@@ -2118,7 +2109,7 @@
           "$ref": "#/definitions/UpdateId",
           "description": "Update identity."
         },
-        "isCancelled": {
+        "isCanceled": {
           "type": "boolean",
           "description": "Boolean flag indicating whether the deployment was canceled."
         },
@@ -2155,17 +2146,17 @@
           {
             "value": "Complete",
             "name": "Complete",
-            "description": "A complete deployment including download, install, and apply commands."
+            "description": "A complete deployment including download, install, and apply actions."
           },
           {
             "value": "Download",
             "name": "Download",
-            "description": "A download-only deployment that does not include any install or apply commands."
+            "description": "A download-only deployment that does not include any install or apply actions. Not currently supported."
           },
           {
             "value": "Install",
             "name": "Install",
-            "description": "An install-only rollout that does not include any download commands, only install and complete."
+            "description": "An install-only rollout that does not include any download actions, only install and complete. Not currently supported."
           }
         ]
       },
