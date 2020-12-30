@@ -26,10 +26,37 @@
     }
   },
   "paths": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.AzureSphere/AzureSphereTenants": {
+      "get": {
+        "tags": [ "AzureSphereTenants" ],
+        "description": "Returns a list of Azure Sphere Tenants for the given subscriptionId",
+        "operationId": "AzureSphereTenantBySubscription_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Azure Sphere Tenants for the subscription details.",
+            "schema": {
+              "$ref": "#/definitions/AzureSphereTenantList"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenants": {
       "get": {
-        "tags": [ "Tenants" ],
-        "description": "Returns a list of Azure Sphere Tenants.",
+        "tags": [ "AzureSphereTenants" ],
+        "description": "Returns a list of Azure Sphere Tenants in the given resource group.",
         "operationId": "AzureSphereTenant_List",
         "parameters": [
           {
@@ -56,9 +83,9 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenant/{azureSphereTenantName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenants/{azureSphereTenantName}": {
       "get": {
-        "tags": [ "Tenants" ],
+        "tags": [ "AzureSphereTenants" ],
         "description": "Returns an Azure Sphere Tenant for a given name.",
         "operationId": "AzureSphereTenant_Get",
         "parameters": [
@@ -85,7 +112,7 @@
         }
       },
       "put": {
-        "tags": [ "Tenants" ],
+        "tags": [ "AzureSphereTenants" ],
         "description": "Create or update an Azure Sphere Tenant.",
         "operationId": "AzureSphereTenant_CreateOrUpdate",
         "parameters": [
@@ -119,12 +146,109 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [ "AzureSphereTenants" ],
+        "description": "Patch an Azure Sphere Tenant.",
+        "operationId": "AzureSphereTenant_Patch",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+          },
+          {
+            "name": "AzureSphereTenant",
+            "description": "Azure Sphere Tenant details.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AzureSphereTenant"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/AzureSphereTenant"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [ "AzureSphereTenants" ],
+        "description": "Delete an Azure Sphere Tenant.",
+        "operationId": "AzureSphereTenant_Delete",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/AzureSphereTenant"
+            }
+          }
+        }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenant/{azureSphereTenantName}/Product/{productName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenants/{azureSphereTenantName}/Products": {
       "get": {
         "tags": [ "Products" ],
-        "description": "Returns nested Product for a given Azure Sphere Tenant Name",
+        "description": "Returns the associated products of a given Azure Sphere Tenant Name",
+        "operationId": "Product_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Azure Sphere Tenants for the subscription details.",
+            "schema": {
+              "$ref": "#/definitions/ProductList"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenants/{azureSphereTenantName}/Products/{productName}": {
+      "get": {
+        "tags": [ "Products" ],
+        "description": "Returns the associated Product for a given Azure Sphere Tenant Name",
         "operationId": "Product_Get",
         "parameters": [
           {
@@ -229,13 +353,11 @@
             }
           }
         }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenant/{azureSphereTenantName}/Products": {
-      "get": {
+      },
+      "delete": {
         "tags": [ "Products" ],
-        "description": "Returns products for a given Azure Sphere Tenant name",
-        "operationId": "Product_List",
+        "description": "Delete Product in an AzureSphereTenant.",
+        "operationId": "Product_Delete",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -248,13 +370,16 @@
           },
           {
             "$ref": "#/parameters/AzureSphereTenantNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ProductNameParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Products.",
+            "description": "Successful.",
             "schema": {
-              "$ref": "#/definitions/ProductList"
+              "$ref": "#/definitions/Product"
             }
           }
         }
@@ -280,6 +405,19 @@
           "type": "string",
           "readOnly": true
         },
+        "location": {
+          "type": "string",
+          "description": "The resource location.",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "$ref": "#/definitions/SystemData",
+          "readOnly": true
+        },
         "tags": {
           "description": "resource tags.",
           "type": "object",
@@ -289,7 +427,63 @@
           }
         }
       },
-      "x-ms-azure-resource": true
+      "x-ms-azure-resource": true,
+      "required": [
+        "location"
+      ]
+    },
+    "SystemData": {
+      "description": "Metadata pertaining to creation and last modification of the resource.",
+      "type": "object",
+      "readOnly": true,
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "description": "The identity that created the resource."
+        },
+        "createdByType": {
+          "type": "string",
+          "description": "The type of identity that created the resource.",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
+          "x-ms-enum": {
+            "name": "createdByType",
+            "modelAsString": true
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp of resource creation (UTC)."
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "description": "The identity that last modified the resource."
+        },
+        "lastModifiedByType": {
+          "type": "string",
+          "description": "The type of identity that last modified the resource.",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
+          "x-ms-enum": {
+            "name": "createdByType",
+            "modelAsString": true
+          }
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The type of identity that last modified the resource."
+        }
+      }
     },
     "AzureSphereTenant": {
       "type": "object",
@@ -298,13 +492,7 @@
         {
           "$ref": "#/definitions/Resource"
         }
-      ],
-      "required": [ "properties" ],
-      "properties": {
-        "properties": {
-          "type": "object"
-          }
-        }
+      ]
     },
     "AzureSphereTenantList": {
       "description": "The list of Azure Sphere Tenants.",
@@ -343,7 +531,7 @@
               "pattern": "^[A-Za-z0-9-._]+$"
             }
           },
-          "required": [ "description"],
+          "required": [ "description" ],
           "type": "object"
         }
       }
@@ -402,7 +590,7 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The name of nested resource.",
+      "description": "The name of associated product.",
       "x-ms-parameter-location": "method"
     }
   }
