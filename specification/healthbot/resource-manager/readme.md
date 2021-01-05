@@ -27,7 +27,7 @@ These are the global settings for the healthbot.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2020-10-20-preview
+tag: package-2020-12-08
 ```
 
 
@@ -42,13 +42,35 @@ input-file:
 
 ---
 
-### Tag2: package-2020-11-03-preview
+### Tag2: package-2020-10-20
 
-These settings apply only when `--tag=package-2020-11-03-preview` is specified on the command line.
+These settings apply only when `--tag=package-2020-10-20` is specified on the command line.
 
-```yaml $(tag) == 'package-2020-11-03-preview'
+```yaml $(tag) == 'package-2020-10-20'
 input-file:
-  - Microsoft.HealthBot/preview/2020-11-03-preview/healthbot.json
+  - Microsoft.HealthBot/stable/2020-10-20/healthbot.json
+```
+
+---
+
+### Tag3: package-2020-12-08-preview
+
+These settings apply only when `--tag=package-2020-12-08-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2020-12-08-preview'
+input-file:
+  - Microsoft.HealthBot/preview/2020-12-08-preview/healthbot.json
+```
+
+---
+
+### Tag3: package-2020-12-08
+
+These settings apply only when `--tag=package-2020-12-08` is specified on the command line.
+
+```yaml $(tag) == 'package-2020-12-08'
+input-file:
+  - Microsoft.HealthBot/stable/2020-12-08/healthbot.json
 ```
 
 ---
@@ -66,22 +88,28 @@ swagger-to-sdk:
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-js
   - repo: azure-sdk-for-ruby
+  - repo: azure-sdk-for-go
     after_scripts:
       - bundle install && rake arm:regen_all_profiles['azure_mgmt_healthbot']
+  - repo: azure-cli-extensions
 ```
 
 ## Python
 
-See configuration in [readme.python.md](./readme.python.md)
+See configuration in [readme.python.md](readme.python.md)
 
 ## Ruby
 
-See configuration in [readme.ruby.md](./readme.ruby.md)
+See configuration in [readme.ruby.md](readme.ruby.md)
 
 ## TypeScript
 
-See configuration in [readme.typescript.md](./readme.typescript.md)
+See configuration in [readme.typescript.md](readme.typescript.md)
 
 ## CSharp
 
-See configuration in [readme.csharp.md](./readme.csharp.md)
+See configuration in [readme.csharp.md](readme.csharp.md)
+
+## GO
+
+See configuration in [readme.go.md](readme.go.md)
