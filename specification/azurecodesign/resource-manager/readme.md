@@ -15,7 +15,6 @@ To see additional help and options, run:
 > `autorest --help`
 
 For other options on installation see [Installing AutoRest](https://aka.ms/autorest/install) on the AutoRest github page.
-
 ---
 
 ## Configuration
@@ -36,7 +35,7 @@ These settings apply only when `--tag=package-2020-01-14-preview` is specified o
 
 ```yaml $(tag) == 'package-2020-12-14-preview'
 input-file:
-- Microsoft.CodeSigning/preview/2020-12-14-preview/codesigning.json
+- Microsoft.CodeSigning/preview/2020-12-14-preview/codeSignAccount.json
 ```
 
 ---
