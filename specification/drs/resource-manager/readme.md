@@ -26,6 +26,7 @@ These are the global settings for the drs.
 
 ```yaml
 openapi-type: arm
+openapi-subtype: rpaas
 tag: package-2021-01-10-preview
 ```
 
