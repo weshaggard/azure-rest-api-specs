@@ -394,44 +394,6 @@
             }
           }
         }
-      },
-      "patch": {
-        "operationId": "Serving_Update",
-        "description": "Update Serving resource details.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/AccountNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ServingNameParameter"
-          },
-          {
-            "name": "ServingPatchResource",
-            "description": "Serving resource patch details.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ServingPatchResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/ServingResource"
-            }
-          }
-        }
       }
     },
     "/providers/microsoft.DRS/operations": {
@@ -532,24 +494,6 @@
         }
       }
     },
-    "AccountPatchResource": {
-      "description": "Account resource patch details",
-      "type": "object",
-      "properties": {
-        "tags": {
-          "description": "resource tags.",
-          "type": "object",
-          "readOnly": false,
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "properties": {
-          "type": "object",
-          "properties": {}
-        }
-      }
-    },
     "AccountResourceList": {
       "description": "The list of DRS Account resources.",
       "type": "object",
@@ -563,6 +507,20 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/AccountResource"
+          }
+        }
+      }
+    },
+    "AccountPatchResource": {
+      "description": "Account resource patch details",
+      "type": "object",
+      "properties": {
+        "tags": {
+          "description": "resource tags.",
+          "type": "object",
+          "readOnly": false,
+          "additionalProperties": {
+            "type": "string"
           }
         }
       }
@@ -582,7 +540,10 @@
         "properties": {
           "type": "object",
           "required": [
-            "DataConnectionString"
+            "DataConnectionString",
+            "Tier",
+            "Frequency",
+            "SizeLimit"
           ],
           "properties": {
             "DataConnectionString": {
@@ -621,10 +582,9 @@
               "type": "string",
               "description": "Max allowed total size of catalog and interactions raw data.",
               "enum": [
-                "1MB",
-                "1GB",
-                "100GB",
-                "1TB"
+                "Small",
+                "Medium",
+                "Large"
               ],
               "x-ms-enum": {
                 "name": "SizeLimit",
@@ -648,6 +608,23 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/CookingResource"
+          }
+        }
+      }
+    },
+    "CookingPatchResource": {
+      "properties": {
+        "description": "Cooking resource patch details",
+        "type": "object",
+        "required": [
+          "DataConnectionString"
+        ],
+        "properties": {
+          "DataConnectionString": {
+            "description": "Connection string to raw data.",
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9-._/:]+$"
           }
         }
       }
@@ -698,6 +675,7 @@
         "properties": {
           "type": "object",
           "required": [
+            "Capacity",
             "AuthDetails"
           ],
           "properties": {
