@@ -86,6 +86,16 @@ swagger-to-sdk:
     after_scripts:
       - bundle install && rake arm:regen_all_profiles['azure_mgmt_azureiidt']
 ```
+## Suppression
+```
+directive:
+  - suppress: SECRET_PROPERTY
+    from:
+      - Microsoft.IntelligentITDigitalTwin/preview/2020-11-01-privatepreview/azureiidt.json
+    where:
+      - $.definitions.StorageMetaData.properties.connectionString
+    reason: Secrets are OK to return in a POST response.
+```
 
 ## Go
 
