@@ -34,7 +34,38 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.DRS/account": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.DRS/account": {
+      "get": {
+        "operationId": "Account_ListBySubscription",
+        "description": "Returns list of DRS Account resources.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account resources list.",
+            "schema": {
+              "$ref": "#/definitions/AccountResourceList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DRS/account": {
       "get": {
         "operationId": "Account_List",
         "description": "Returns list of DRS Account resources.",
@@ -68,7 +99,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.DRS/account/{accountName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DRS/account/{accountName}": {
       "get": {
         "operationId": "Account_Get",
         "description": "Returns DRS Account resource for a given name.",
@@ -213,7 +244,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.DRS/account/{accountName}/cooking": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DRS/account/{accountName}/cooking": {
       "get": {
         "operationId": "Cooking_List",
         "description": "Returns list of Cooking resources for a given Account name.",
@@ -244,10 +275,13 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.DRS/account/{accountName}/cooking/{cookingName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DRS/account/{accountName}/cooking/{cookingName}": {
       "get": {
         "operationId": "Cooking_Get",
         "description": "Returns Cooking resources for a given name.",
@@ -404,7 +438,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.DRS/account/{accountName}/serving": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DRS/account/{accountName}/serving": {
       "get": {
         "operationId": "Serving_List",
         "description": "Returns list of Serving resources for a given Account name.",
@@ -435,10 +469,13 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.DRS/account/{accountName}/serving/{servingName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DRS/account/{accountName}/serving/{servingName}": {
       "get": {
         "operationId": "Serving_Get",
         "description": "Returns Serving resources for a given name.",
@@ -551,9 +588,9 @@
         }
       }
     },
-    "/providers/microsoft.DRS/operations": {
+    "/providers/Microsoft.DRS/operations": {
       "get": {
-        "operationId": "Operation_List",
+        "operationId": "Operations_List",
         "description": "Returns list of operations.",
         "parameters": [
           {
@@ -575,6 +612,14 @@
     }
   },
   "definitions": {
+    "Tags": {
+      "description": "Resource tags.",
+      "type": "object",
+      "readOnly": false,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "AccountSku": {
       "description": "Indicates the type of DRS account. This can only be set at DRS account creation.",
       "type": "string",
@@ -645,14 +690,15 @@
       "type": "object",
       "properties": {
         "tags": {
-          "description": "Resource tags.",
-          "type": "object",
-          "readOnly": false,
-          "additionalProperties": {
-            "type": "string"
-          }
+          "$ref": "#/definitions/Tags"
         }
       }
+    },
+    "CookingDataConnectionString": {
+      "description": "Connection string to raw data.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9-._/:]+$"
     },
     "CookingResource": {
       "description": "Cooking resource details.",
@@ -676,10 +722,7 @@
           ],
           "properties": {
             "dataConnectionString": {
-              "description": "Connection string to raw data.",
-              "type": "string",
-              "minLength": 1,
-              "pattern": "^[A-Za-z0-9-._/:]+$"
+              "$ref": "#/definitions/CookingDataConnectionString"
             },
             "tier": {
               "description": "Cooking tier defines the scenraios set that will be cooked.",
@@ -748,11 +791,19 @@
       "description": "Cooking resource patch details.",
       "type": "object",
       "properties": {
-        "dataConnectionString": {
-          "description": "Connection string to raw data.",
-          "type": "string",
-          "minLength": 1,
-          "pattern": "^[A-Za-z0-9-._/:]+$"
+        "tags": {
+          "$ref": "#/definitions/Tags"
+        },
+        "properties": {
+          "properties": {
+            "description": "Cooking resource properties to update.",
+            "type": "object",
+            "properties": {
+              "dataConnectionString": {
+                "$ref": "#/definitions/CookingDataConnectionString"
+              }
+            }
+          }
         }
       }
     },
@@ -848,6 +899,15 @@
           "items": {
             "$ref": "#/definitions/ServingResource"
           }
+        }
+      }
+    },
+    "ServingPatchResource": {
+      "description": "Serving resource patch details.",
+      "type": "object",
+      "properties": {
+        "tags": {
+          "$ref": "#/definitions/Tags"
         }
       }
     }
