@@ -8,14 +8,20 @@ python:
   azure-arm: true
   license-header: MICROSOFT_MIT_NO_VERSION
   payload-flattening-threshold: 2
-  namespace: Microsoft.AzureStackHCI
-  package-name: azurestackhci
-  package-version: 2020-03-01-preview
+  namespace: azure.mgmt.azurestackhci
+  package-name: azure-mgmt-azurestackhci
+  package-version: 2020-11-01-preview
   clear-output-folder: true
 ```
 
-```yaml $(python)
+```yaml $(python) && $(python-mode) == 'update'
 python:
   no-namespace-folders: true
-  output-folder: $(python-sdks-folder)/azure-mgmt/azurestackhci
+output-folder: $(python-sdks-folder)/azurestackhci/azure-mgmt-azurestackhci/azure/mgmt/azurestackhci
+```
+
+``` yaml $(python) && $(python-mode) == 'create'
+python:
+  basic-setup-py: true
+  output-folder: $(python-sdks-folder)/azurestackhci/azure-mgmt-azurestackhci
 ```
