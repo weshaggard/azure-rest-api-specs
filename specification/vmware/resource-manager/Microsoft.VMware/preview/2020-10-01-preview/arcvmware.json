@@ -2013,7 +2013,7 @@
           "InventoryItems"
         ],
         "operationId": "InventoryItems_Get",
-        "summary": "Gets a InventoryItems.",
+        "summary": "Gets InventoryItem.",
         "description": "Implements InventoryItem GET method.",
         "x-ms-examples": {
           "GetInventoryItem": {
@@ -2207,6 +2207,10 @@
           "description": "Gets or sets the vCenter MoRef (Managed Object Reference) ID for the resource pool.",
           "type": "string"
         },
+        "arcZoneId": {
+          "description": "Gets or sets the ARM Id of the arcZone of the vCenter.",
+          "type": "string"
+        },
         "moName": {
           "description": "Gets or sets the vCenter Managed Object name for the resource pool.",
           "type": "string",
@@ -2376,6 +2380,10 @@
           "maximum": 65535,
           "minimum": 1,
           "type": "integer"
+        },
+        "arcZoneId": {
+          "description": "Gets or sets the ARM Id of the arcZone of the vCenter.",
+          "type": "string"
         },
         "version": {
           "description": "Gets or sets the version of the vCenter.",
@@ -2831,6 +2839,10 @@
           "description": "Gets or sets the ARM Id of the vCenter resource in which this resource pool resides.",
           "type": "string"
         },
+        "arcZoneId": {
+          "description": "Gets or sets the ARM Id of the arcZone of the vCenter.",
+          "type": "string"
+        },
         "osProfile": {
           "description": "OS properties.",
           "$ref": "#/definitions/OsProfile"
@@ -3027,6 +3039,10 @@
           "description": "Gets or sets the vCenter MoRef (Managed Object Reference) ID for the virtual machine\r\ntemplate.",
           "type": "string"
         },
+        "arcZoneId": {
+          "description": "Gets or sets the ARM Id of the arcZone of the vCenter.",
+          "type": "string"
+        },
         "moName": {
           "description": "Gets or sets the vCenter Managed Object name for the virtual machine template.",
           "type": "string",
@@ -3188,6 +3204,10 @@
         },
         "moRefId": {
           "description": "Gets or sets the vCenter MoRef (Managed Object Reference) ID for the virtual network.",
+          "type": "string"
+        },
+        "arcZoneId": {
+          "description": "Gets or sets the ARM Id of the arcZone of the vCenter.",
           "type": "string"
         },
         "moName": {
@@ -3609,29 +3629,20 @@
         "properties"
       ],
       "type": "object",
-      "x-ms-azure-resource": true,
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
+          "description": "The resource model definition for an Azure Resource Manager proxy resource. It will have everything other than required location and tags."
+        }
+      ],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
           "description": "Resource properties.",
           "$ref": "#/definitions/InventoryItemProperties"
-        },
-        "name": {
-          "description": "Gets or sets the name.",
-          "type": "string",
-          "readOnly": true
-        },
-        "id": {
-          "description": "Gets or sets the Id.",
-          "type": "string",
-          "readOnly": true
-        },
-        "type": {
-          "description": "Gets or sets the type of the resource.",
-          "type": "string",
-          "readOnly": true
         }
-      }
+      },
+      "x-ms-azure-resource": true
     },
     "InventoryItemProperties": {
       "description": "Defines the resource properties.",
@@ -3644,6 +3655,10 @@
         "inventoryType": {
           "description": "They inventory type.",
           "$ref": "#/definitions/InventoryType"
+        },
+        "ManagedResourceId": {
+          "description": "Gets or sets the tracked resource id corresponding to the inventory resource.",
+          "type": "string"
         }
       }
     },
@@ -3656,15 +3671,43 @@
         }
       ],
       "properties": {
-        "testProp": {
-          "description": "HDI Cluster resource ID",
+        "moRefId": {
+          "description": "Gets or sets the vCenter MoRef (Managed Object Reference) ID for the resource pool.",
           "type": "string"
+        },
+        "cpuSharesLevel": {
+          "description": "Gets or sets CPUSharesLevel which specifies the CPU allocation level for this pool.\r\nThis property is used in relative allocation between resource consumers.",
+          "type": "string"
+        },
+        "cpuReservationMHz": {
+          "format": "int64",
+          "description": "Gets or sets CPUReservationMHz which specifies the CPU size in MHz that is guaranteed\r\nto be available.",
+          "type": "integer"
+        },
+        "cpuLimitMHz": {
+          "format": "int64",
+          "description": "Gets or sets CPULimitMHz which specifies a CPU usage limit in MHz.\r\nUtilization will not exceed this limit even if there are available resources.",
+          "type": "integer"
+        },
+        "memSharesLevel": {
+          "description": "Gets or sets CPUSharesLevel which specifies the memory allocation level for this pool.\r\nThis property is used in relative allocation between resource consumers.",
+          "type": "string"
+        },
+        "memReservationMB": {
+          "format": "int64",
+          "description": "Gets or sets MemReservationMB which specifies the guaranteed available memory in\r\nmegabytes.",
+          "type": "integer"
+        },
+        "memLimitMB": {
+          "format": "int64",
+          "description": "Gets or sets MemLimitMB specifies a memory usage limit in megabytes.\r\nUtilization will not exceed the specified limit even if there are available resources.",
+          "type": "integer"
         }
       },
       "x-ms-discriminator-value": "ResourcePool"
     },
     "VirtualMachineInventoryItem": {
-      "description": "The resource pool inventory item.",
+      "description": "The VM inventory item.",
       "type": "object",
       "allOf": [
         {
@@ -3672,19 +3715,53 @@
         }
       ],
       "properties": {
-        "testProp1": {
-          "description": "HDI Cluster resource ID",
+        "moRefId": {
+          "description": "Gets or sets the vCenter MoRef (Managed Object Reference) ID for the VM.",
           "type": "string"
         }
       },
       "x-ms-discriminator-value": "VirtualMachine"
+    },
+    "VirtualMachineTemplateInventoryItem": {
+      "description": "The VM Template inventory item.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/InventoryItemProperties"
+        }
+      ],
+      "properties": {
+        "moRefId": {
+          "description": "Gets or sets the vCenter MoRef (Managed Object Reference) ID for the VM template.",
+          "type": "string"
+        }
+      },
+      "x-ms-discriminator-value": "VirtualMachineTemplate"
+    },
+    "VirtualNetworkInventoryItem": {
+      "description": "The Virtual network inventory item.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/InventoryItemProperties"
+        }
+      ],
+      "properties": {
+        "moRefId": {
+          "description": "Gets or sets the vCenter MoRef (Managed Object Reference) ID for the virtual network.",
+          "type": "string"
+        }
+      },
+      "x-ms-discriminator-value": "VirtualNetwork"
     },
     "InventoryType": {
       "type": "string",
       "description": "The inventory type.",
       "enum": [
         "ResourcePool",
-        "VirtualMachine"
+        "VirtualMachine",
+        "VirtualMachineTemplate",
+        "VirtualNetwork"
       ],
       "x-ms-enum": {
         "name": "InventoryType",
