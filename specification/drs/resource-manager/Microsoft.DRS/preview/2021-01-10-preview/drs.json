@@ -34,6 +34,51 @@
     }
   },
   "paths": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Drs/checkNameAvailability": {
+      "post": {
+        "operationId": "account_CheckNameAvailability",
+        "description": "Checks that the DRS Account name is valid and is not already in use.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "description": "Check name availability request details.",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CheckNameAvailabilityRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful. The response describes the name availability.",
+            "schema": {
+              "$ref": "#/definitions/CheckNameAvailabilityResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Check name availability of DRS Account - name available": {
+            "$ref": "./examples/Account_CheckNameAvailabilityAvailable.json"
+          },
+          "Check name availability of DRS Account - name unavailable": {
+            "$ref": "./examples/Accounts_CheckNameAvailabilityUnavailable.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.Drs/account": {
       "get": {
         "operationId": "account_ListBySubscription",
@@ -756,6 +801,46 @@
     }
   },
   "definitions": {
+    "CheckNameAvailabilityRequest": {
+      "description": "The check availability request body for DRS Account name.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the DRS Account for which availability needs to be checked.",
+          "type": "string"
+        },
+        "type": {
+          "description": "The DRS Account type",
+          "type": "string"
+        }
+      }
+    },
+    "CheckNameAvailabilityResponse": {
+      "description": "The check availability result for DRS Account name.",
+      "type": "object",
+      "properties": {
+        "nameAvailable": {
+          "description": "Indicates if the DRS Account name is available.",
+          "type": "boolean"
+        },
+        "message": {
+          "description": "Detailed reason why the given name is invalid",
+          "type": "string"
+        },
+        "reason": {
+          "description": "The reason why the given name is invalid.",
+          "type": "string",
+          "enum": [
+            "Invalid",
+            "AlreadyExists"
+          ],
+          "x-ms-enum": {
+            "name": "AccountSku",
+            "modelAsString": false
+          }
+        }
+      }
+    },
     "Tags": {
       "description": "Resource tags.",
       "type": "object",
