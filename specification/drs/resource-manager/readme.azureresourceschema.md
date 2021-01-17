@@ -19,5 +19,5 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.DRS/preview/2021-01-10-preview/drs.json
+  - Microsoft.Drs/preview/2021-01-10-preview/drs.json
 ```
