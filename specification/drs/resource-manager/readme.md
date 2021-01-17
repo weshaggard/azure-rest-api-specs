@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2021-01-10-preview` is specified o
 
 ```yaml $(tag) == 'package-2021-01-10-preview'
 input-file:
-  - Microsoft.DRS/preview/2021-01-10-preview/drs.json
+  - Microsoft.Drs/preview/2021-01-10-preview/drs.json
 ```
 
 ---
