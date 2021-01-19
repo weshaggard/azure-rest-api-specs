@@ -1,8 +1,8 @@
-# quantum
+# drs
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for quantum.
+This is the AutoRest configuration file for drs.
 
 ## Getting Started
 
@@ -22,21 +22,21 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the quantum.
+These are the global settings for the drs.
 
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2019-11-04-preview
+tag: package-2021-01-10-preview
 ```
 
-### Tag: package-2019-11-04-preview
+### Tag: package-2021-01-10-preview
 
-These settings apply only when `--tag=package-2019-11-04-preview` is specified on the command line.
+These settings apply only when `--tag=package-2021-01-10-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2019-11-04-preview'
+```yaml $(tag) == 'package-2021-01-10-preview'
 input-file:
-  - Microsoft.Quantum/preview/2019-11-04-preview/quantum.json
+  - Microsoft.Drs/preview/2021-01-10-preview/drs.json
 ```
 
 ---
@@ -51,9 +51,17 @@ This is not used by Autorest itself.
 ```yaml $(swagger-to-sdk)
 swagger-to-sdk:
   - repo: azure-sdk-for-python
+  - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
+  - repo: azure-resource-manager-schemas
+    after_scripts:
+      - node sdkauto_afterscript.js drs/resource-manager
+  - repo: azure-cli-extensions
 ```
+## Az
+
+See configuration in [readme.az.md](./readme.az.md)
 
 ## Go
 
@@ -70,3 +78,7 @@ See configuration in [readme.typescript.md](./readme.typescript.md)
 ## CSharp
 
 See configuration in [readme.csharp.md](./readme.csharp.md)
+
+## AzureResourceSchema
+
+See configuration in [readme.azureresourceschema.md](./readme.azureresourceschema.md)
