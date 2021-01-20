@@ -1,0 +1,169 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2020-11-01",
+    "title": "sczedgedevice",
+    "description": "Use this API to allocate IoTHub resource for a SCZdevice",
+    "x-ms-code-generation-settings": {
+      "name": "sczedgedeviceClient"
+    }
+  },
+  "host": "management.azure.com",
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "security": [
+    {
+      "azure_auth": ["user_impersonation"]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SCZEdgeDevice/registration/{iothubName}": {
+          "put": {
+            "tags": ["PUT"],
+            "description": "Create SCZ device resource.",
+            "operationId": "SCZdevice_Create",
+            "x-ms-long-running-operation": true,
+            "parameters": [
+              {
+                "$ref": "#/parameters/SubscriptionIdParameter"
+              },
+              {
+                "$ref": "#/parameters/ResourceGroupNameParameter"
+              },
+              {
+                "$ref": "#/parameters/ApiVersionParameter"
+              },
+              {
+                "$ref": "#/parameters/IotHubNameParameter"
+              },
+              {
+                "name": "SCZdeviceResource",
+                "description": "The name of the SCZ edge device.",
+                "in": "body",
+                "required": true,
+                "schema": {
+                  "$ref": "#/definitions/SCZdeviceResource"
+                }
+              }
+            ],
+            "responses": {
+                "200": {
+                  "description": "SCZedge device creation or update initiated.",
+                  "schema": {
+                    "$ref": "#/definitions/Result"
+                  }
+                },
+                "201": {
+                  "description": "long running operation to create resource.",
+                  "schema": {
+                    "$ref": "#/definitions/Result"
+                  }
+                },
+                "default": {
+                  "description": "Error response describing why the request failed.",
+                  "schema": {
+                    "$ref": "#/definitions/ErrorResponse"
+                  }
+                }
+              }
+          }
+      }
+  },
+  "definitions": {
+      "SCZdeviceResource": {
+          "description": "Input values.",
+          "type": "object",
+          "required": ["properties"],
+          "properties": {
+            "properties": {
+              "type": "object",
+              "required": ["name"],
+              "properties":{
+                "name": {
+                  "description": "The name of of the SCZ edge device.",
+                  "type": "string"
+              }
+            }
+          }
+        } 
+      },
+      "Result": {
+          "description": "result for 200",
+          "properties": {
+              "message": {
+                  "description": "message for request successful.",
+                  "type": "string",
+                  "readOnly": true
+              }
+          }
+      },
+      "ErrorResponse": {
+          "description": "Error response.",
+          "properties": {
+              "error": {
+                  "$ref": "#/definitions/ErrorDefinition",
+                  "description": "The error details."
+              }
+          }
+      },
+      "ErrorDefinition": {
+          "description": "Error definition.",
+          "properties": {
+              "code": {
+                  "description": "Service specific error code which serves as the substatus for the HTTP error code.",
+                  "type": "string",
+                  "readOnly": true
+              },
+              "message": {
+                  "description": "Description of the error.",
+                  "type": "string",
+                  "readOnly": true
+              }
+          }
+      }
+  },
+  "parameters": {
+      "SubscriptionIdParameter": {
+          "name": "subscriptionId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "description": "The Azure subscription ID."
+      },
+      "ApiVersionParameter": {
+          "name": "api-version",
+          "in": "query",
+          "required": true,
+          "type": "string",
+          "description": "Client Api Version."
+      },
+      "ResourceGroupNameParameter": {
+          "name": "resourceGroupName",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "description": "The name of the resource group.",
+          "x-ms-parameter-location": "method"
+      },
+      "IotHubNameParameter": {
+          "name": "iothubName",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "description": "The name iothub name.",
+          "x-ms-parameter-location": "method"
+      }
+  }
+}
