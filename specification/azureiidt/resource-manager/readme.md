@@ -27,7 +27,15 @@ These are the global settings for the azureiidt.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2020-07-15-privatepreview
+tag: package-2020-11-01-privatepreview
+```
+### Tag: package-2020-11-01-privatepreview
+
+These settings apply only when `--tag=package-2020-11-01-privatepreview` is specified on the command line.
+
+```yaml $(tag) == 'package-2020-11-01-privatepreview'
+input-file:
+  - Microsoft.IntelligentITDigitalTwin/preview/2020-11-01-privatepreview/azureiidt.json
 ```
 
 ### Tag: package-2020-07-15-privatepreview
@@ -72,12 +80,21 @@ This is not used by Autorest itself.
 ```yaml $(swagger-to-sdk)
 swagger-to-sdk:
   - repo: azure-sdk-for-python
-  - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
   - repo: azure-sdk-for-ruby
     after_scripts:
       - bundle install && rake arm:regen_all_profiles['azure_mgmt_azureiidt']
+```
+## Suppression
+```
+directive:
+  - suppress: SECRET_PROPERTY
+    from:
+      - Microsoft.IntelligentITDigitalTwin/preview/2020-11-01-privatepreview/azureiidt.json
+    where:
+      - $.definitions.StorageMetaData.properties.connectionString
+    reason: Secrets are OK to return in a POST response.
 ```
 
 ## Go

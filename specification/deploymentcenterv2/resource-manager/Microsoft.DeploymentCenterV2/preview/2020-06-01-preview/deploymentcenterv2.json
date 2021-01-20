@@ -416,10 +416,10 @@
           "description": "Deployer properties",
           "$ref": "#/definitions/Deployer"
         },
-        "resourceChange": {
+        "resourceChanges": {
           "type": "object",
           "description": "Resource change properties",
-          "$ref": "#/definitions/ResourceChange"
+          "$ref": "#/definitions/ResourceChanges"
         },
         "status": {
           "type": "string",
@@ -439,21 +439,24 @@
       "type": "object",
       "description": "Target resource properties.",
       "properties": {
-        "targetResourceId": {
+        "id": {
           "type": "string",
           "description": "Target resource identifier"
         },
-        "targetResourceType": {
+        "type": {
           "type": "string",
           "description": "Target resource type"
         },
-        "targetResourceDataProperties": {
+        "dataProperties": {
           "type": "object",
           "description": "Target resource data properties",
           "properties": {
-            "namespace": {
-              "type": "string",
-              "description": "The namespace"
+            "namespaces": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of namespaces."
             }
           }
         }
@@ -461,19 +464,23 @@
     },
     "Deployer": {
       "type": "object",
-      "description": "deployer properties.",
+      "description": "Deployer properties.",
       "properties": {
-        "deployerType": {
+        "type": {
           "type": "string",
-          "description": "deplopyer type"
+          "description": "Deployer type"
         },
-        "deployerProperties": {
+        "properties": {
           "type": "object",
-          "description": "deployer properties",
+          "description": "Deployer properties",
           "properties": {
             "provider": {
               "type": "string",
               "description": "The provider"
+            },
+            "repository": {
+              "type": "string",
+              "description": "The workflow repository"
             },
             "workflowId": {
               "type": "string",
@@ -492,29 +499,47 @@
         }
       }
     },
-    "ResourceChange": {
+    "ResourceChanges": {
       "type": "object",
-      "description": "Resource change properties.",
+      "description": "Resource changes properties.",
       "properties": {
-        "resourceChangeType": {
+        "type": {
           "type": "string",
-          "description": "Resource change type"
+          "description": "Resource changes type"
         },
-        "targetResourceDataProperties": {
+        "armDeploymentId": {
+          "type": "string",
+          "description": "The arm deployment id"
+        },
+        "armPropertyChanges": {
+          "type": "string",
+          "description": "The arm property changes"
+        },
+        "dataPropertyChanges": {
           "type": "object",
-          "description": "Resource change properties",
+          "description": "Data property changes",
           "properties": {
-            "ArmDeploymentId": {
+            "namespace": {
               "type": "string",
-              "description": "The arm deployment id"
+              "description": "The changed namespace"
             },
-            "ArmPropertyChanges": {
+            "dockerFile": {
               "type": "string",
-              "description": "The arm property changes"
+              "description": "The Dockerfile used in deployment"
             },
-            "DataPropertyChanges": {
-              "type": "string",
-              "description": "The data property changes"
+            "manifests": {
+              "type": "object",
+              "description": "The deployed manifests",
+              "properties": {
+                "deployment": {
+                  "type": "string",
+                  "description": "Deployment manifest"
+                },
+                "service": {
+                  "type": "string",
+                  "description": "Service manifest"
+                }
+              }
             }
           }
         }

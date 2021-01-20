@@ -26,54 +26,6 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/listApiKeys": {
-      "post": {
-        "tags": [
-          "Monitors"
-        ],
-        "summary": "List the api keys for a given monitor resource.",
-        "operationId": "Monitors_ListApiKeys",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/MonitorNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/LogzApiKeyListResponse"
-            }
-          },
-          "default": {
-            "description": "Default error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "ApiKeys_List": {
-            "$ref": "./examples/Monitors_ListApiKeys.json"
-          }
-        }
-      }
-    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/listMonitoredResources": {
       "post": {
         "tags": [
@@ -431,7 +383,13 @@
             "description": "Success"
           },
           "202": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
           },
           "204": {
             "description": "Success"
@@ -444,6 +402,9 @@
           }
         },
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
         "x-ms-examples": {
           "Monitors_Delete": {
             "$ref": "./examples/Monitors_Delete.json"
@@ -506,10 +467,6 @@
         ],
         "summary": "Create or update a tag rule set for a given monitor resource.",
         "operationId": "TagRules_CreateOrUpdate",
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
         "consumes": [
           "application/json"
         ],
@@ -544,7 +501,7 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/MonitoringTagRules"
@@ -609,6 +566,64 @@
         "x-ms-examples": {
           "TagRules_Get": {
             "$ref": "./examples/TagRules_Get.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TagRules"
+        ],
+        "summary": "Delete a tag rule set for a given monitor resource.",
+        "operationId": "TagRules_Delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          },
+          {
+            "in": "path",
+            "name": "ruleSetName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Success",
+            "headers": {
+              "location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Default error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "TagRules_Delete": {
+            "$ref": "./examples/TagRules_Delete.json"
           }
         }
       }
@@ -781,7 +796,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/subAccounts": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/accounts": {
       "get": {
         "tags": [
           "SubAccount"
@@ -829,7 +844,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/subAccounts/{subAccountName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/accounts/{subAccountName}": {
       "put": {
         "tags": [
           "SubAccount"
@@ -871,6 +886,12 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/LogzMonitorResource"
+            }
+          },
           "201": {
             "description": "Success",
             "schema": {
@@ -967,7 +988,13 @@
             "description": "Success"
           },
           "202": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
           },
           "204": {
             "description": "Success"
@@ -980,6 +1007,9 @@
           }
         },
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
         "x-ms-examples": {
           "SubAccount_Delete": {
             "$ref": "./examples/SubAccount_Delete.json"
@@ -988,7 +1018,7 @@
       },
       "patch": {
         "tags": [
-          "Monitors"
+          "SubAccount"
         ],
         "summary": "Update a monitor resource.",
         "operationId": "SubAccount_Update",
@@ -1043,7 +1073,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/subAccounts/{subAccountName}/tagRules": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/accounts/{subAccountName}/tagRules": {
       "get": {
         "tags": [
           "TagRules"
@@ -1094,17 +1124,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/subAccounts/{subAccountName}/tagRules/{ruleSetName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/accounts/{subAccountName}/tagRules/{ruleSetName}": {
       "put": {
         "tags": [
           "TagRules"
         ],
         "summary": "Create or update a tag rule set for a given sub account resource.",
         "operationId": "SubAccountTagRules_CreateOrUpdate",
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
         "consumes": [
           "application/json"
         ],
@@ -1142,7 +1168,7 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/MonitoringTagRules"
@@ -1212,9 +1238,70 @@
             "$ref": "./examples/SubAccountTagRules_Get.json"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "TagRules"
+        ],
+        "summary": "Delete a tag rule set for a given monitor resource.",
+        "operationId": "SubAccountTagRules_Delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SubAccountNameParameter"
+          },
+          {
+            "in": "path",
+            "name": "ruleSetName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Success",
+            "headers": {
+              "location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Default error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "TagRules_Delete": {
+            "$ref": "./examples/SubAccountTagRules_Delete.json"
+          }
+        }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/subAccounts/{subAccountName}/listMonitoredResources": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Logz/monitors/{monitorName}/accounts/{subAccountName}/listMonitoredResources": {
       "post": {
         "tags": [
           "SubAccount"
@@ -1267,47 +1354,6 @@
     }
   },
   "definitions": {
-    "LogzApiKey": {
-      "required": [
-        "key"
-      ],
-      "type": "object",
-      "properties": {
-        "createdBy": {
-          "description": "The user that created the API key.",
-          "type": "string"
-        },
-        "name": {
-          "description": "The name of the API key.",
-          "type": "string"
-        },
-        "key": {
-          "description": "The value of the API key.",
-          "type": "string"
-        },
-        "created": {
-          "description": "The time of creation of the API key.",
-          "type": "string"
-        }
-      }
-    },
-    "LogzApiKeyListResponse": {
-      "description": "Response of a list operation.",
-      "type": "object",
-      "properties": {
-        "value": {
-          "description": "Results of a list operation.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/LogzApiKey"
-          }
-        },
-        "nextLink": {
-          "description": "Link to the next set of results, if any.",
-          "type": "string"
-        }
-      }
-    },
     "MonitoredResource": {
       "description": "The properties of a resource currently being monitored by the Logz monitor resource.",
       "type": "object",
@@ -1327,6 +1373,9 @@
         "sendingLogs": {
           "description": "Flag indicating if resource is sending logs to Logz.",
           "type": "boolean"
+        },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "reasonForLogsStatus": {
           "description": "Reason for why the resource is sending logs (or why it is not sending).",
@@ -1419,18 +1468,8 @@
       "x-ms-enum": {
         "modelAsString": true,
         "name": "ProvisioningState"
-      }
-    },
-    "AccountType": {
-      "enum": [
-        "Main_Account",
-        "Sub_Account"
-      ],
-      "type": "string",
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "AccountType"
-      }
+      },
+      "readOnly": true
     },
     "MonitoringStatus": {
       "description": "Flag specifying if the resource monitoring is enabled or disabled.",
@@ -1558,13 +1597,6 @@
         "planData": {
           "$ref": "#/definitions/PlanData"
         },
-        "accountType": {
-          "$ref": "#/definitions/AccountType"
-        },
-        "parentResourceId": {
-          "description": "The parent account under which the sub account will be created.",
-          "type": "string"
-        },
         "liftrResourceCategory": {
           "$ref": "#/definitions/LiftrResourceCategories"
         },
@@ -1616,6 +1648,9 @@
           "description": "ARM id of the monitor resource.",
           "type": "string",
           "readOnly": true
+        },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "name": {
           "description": "Name of the monitor resource.",
@@ -1746,6 +1781,9 @@
       "properties": {
         "logRules": {
           "$ref": "#/definitions/LogRules"
+        },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         }
       }
     },
@@ -1818,6 +1856,9 @@
         "singleSignOnUrl": {
           "description": "The login URL specific to this Logz Organization.",
           "type": "string"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState"
         }
       }
     },
@@ -1839,6 +1880,9 @@
           "description": "The type of the resource.",
           "type": "string",
           "readOnly": true
+        },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "properties": {
           "$ref": "#/definitions/LogzSingleSignOnProperties"

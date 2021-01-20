@@ -103,7 +103,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Bot"
+              "$ref": "#/definitions/HealthBot"
             },
             "description": "The parameters to provide for the created bot."
           },
@@ -113,15 +113,15 @@
         ],
         "responses": {
           "200": {
-            "description": "If resource is created successfully, the service should return 200.",
+            "description": "If resource is updated successfully, the service should return 200.",
             "schema": {
-              "$ref": "#/definitions/Bot"
+              "$ref": "#/definitions/HealthBot"
             }
           },
           "201": {
-            "description": "If resource is updated successfully, the service should return 201 (Created). Execution to continue asynchronously.",
+            "description": "If resource is created successfully, the service should return 201 (Created). Execution to continue asynchronously.",
             "schema": {
-              "$ref": "#/definitions/Bot"
+              "$ref": "#/definitions/HealthBot"
             }
           },
           "default": {
@@ -157,13 +157,12 @@
           {
             "$ref": "#/parameters/apiVersionParameter"
           }
-
         ],
         "responses": {
           "200": {
             "description": "If resource is got successfully, the service should return 200.",
             "schema": {
-              "$ref": "#/definitions/Bot"
+              "$ref": "#/definitions/HealthBot"
             }
           },
           "default": {
@@ -197,7 +196,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Bot"
+              "$ref": "#/definitions/HealthBotUpdateParameters"
             },
             "description": "The parameters to provide for the required bot."
           },
@@ -209,7 +208,13 @@
           "200": {
             "description": "If resource is patched successfully, the service should return 200.",
             "schema": {
-              "$ref": "#/definitions/Bot"
+              "$ref": "#/definitions/HealthBot"
+            }
+          },
+          "201": {
+            "description": "If resource is received update request successfully, the service should return 201 (Created). Execution to continue asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/HealthBot"
             }
           },
           "default": {
@@ -244,10 +249,10 @@
         ],
         "responses": {
           "200": {
-            "description": "If resource is deleted successfully, the service should return 200.",
-            "schema": {
-              "$ref": "#/definitions/ValidationResult"
-            }
+            "description": "If resource is deleted successfully, the service should return 200."
+          },
+          "202": {
+            "description": "Accepted - Delete request accepted; operation will complete asynchronously"
           },
           "204": {
             "description": "No content."
@@ -374,6 +379,52 @@
     }
   },
   "definitions": {
+    "Sku": {
+      "description": "The resource model definition representing SKU",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the HealthBot SKU",
+          "enum": [
+            "F0",
+            "S1",
+            "C0"
+          ],
+          "x-ms-enum": {
+            "name": "SkuName",
+            "modelAsString": false
+          }
+        },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "Free",
+            "Standard"
+          ],
+          "x-ms-enum": {
+            "name": "SkuTier",
+            "modelAsString": false
+          },
+          "description": "This field is required to be implemented by the Resource Provider if the service has more than one tier, but is not required on a PUT."
+        },
+        "size": {
+          "type": "string",
+          "description": "The SKU size. When the name field is the combination of tier and some other value, this would be the standalone code. "
+        },
+        "family": {
+          "type": "string",
+          "description": "If the service has different generations of hardware, for the same SKU, then that can be captured here."
+        },
+        "capacity": {
+          "type": "integer",
+          "format": "int32",
+          "description": "If the SKU supports scale out/in then the capacity integer should be included. If scale out/in is not possible for the resource this may be omitted."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
     "CheckNameAvailabilityRequestBody": {
       "description": "The request body for a request to to check availability of a bot name.",
       "type": "object",
@@ -386,7 +437,11 @@
           "description": "the type of the bot for which availability needs to be checked",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "name",
+        "type"
+      ]
     },
     "CheckNameAvailabilityResponseBody": {
       "description": "The response body returned for a request to check availability of a bot name.",
@@ -407,65 +462,166 @@
       }
     },
     "Resource": {
-      "description": "Azure resource",
-      "x-ms-azure-resource": true,
       "properties": {
         "id": {
-          "description": "Specifies the resource ID.",
+          "readOnly": true,
           "type": "string",
-          "readOnly": true
+          "description": "Fully qualified resource Id for the resource."
         },
         "name": {
-          "description": "Specifies the name of the resource.",
+          "readOnly": true,
           "type": "string",
-          "readOnly": true
-        },
-        "location": {
-          "description": "Specifies the location of the resource.",
-          "type": "string"
+          "description": "The name of the resource"
         },
         "type": {
-          "description": "Specifies the type of the resource.",
+          "readOnly": true,
           "type": "string",
-          "readOnly": true
+          "description": "The type of the resource."
+        },
+        "systemData": {
+          "$ref": "#/definitions/SystemData",
+          "readOnly": true,
+          "description": "Metadata pertaining to creation and last modification of the resource"
         }
-      }
+      },
+      "description": "The resource model definition for a ARM tracked top level resource",
+      "x-ms-azure-resource": true
     },
-    "Bot": {
-      "type": "object",
-      "description": "Bot resource definition",
+    "TrackedResource": {
+      "description": "The resource model definition for a ARM tracked top level resource",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ],
+          "description": "Resource tags."
+        },
+        "location": {
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
+          "description": "The geo-location where the resource lives"
+        }
+      },
+      "required": [
+        "location"
+      ],
       "allOf": [
         {
           "$ref": "#/definitions/Resource"
         }
+      ]
+    },
+    "HealthBot": {
+      "type": "object",
+      "description": "Bot resource definition",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TrackedResource"
+        }
       ],
       "properties": {
+        "sku": {
+          "$ref": "#/definitions/Sku",
+          "description": "SKU of the HealthBot."
+        },
         "properties": {
-          "$ref": "#/definitions/BotProperties",
+          "$ref": "#/definitions/HealthBotProperties",
           "description": "The set of properties specific to healthcare bot resource."
         }
       }
     },
-    "BotProperties": {
-      "title": "BotProperties",
-      "description": "The properties provided for bot creation",
+    "HealthBotProperties": {
+      "title": "HealthBotProperties",
+      "description": "The properties of a HealthBot. The Health Bot Service is a cloud platform that empowers developers in Healthcare organizations to build and deploy their compliant, AI-powered virtual health assistants and health bots, that help them improve processes and reduce costs.",
       "properties": {
-        "displayName": {
-          "type": "string",
-          "description": "The display name of the bot."
-        },
-        "planId": {
-          "type": "string",
-          "description": "The plan ID of the bot."
-        },
-        "offerId": {
-          "type": "string",
-          "description": "The offer ID of the bot."
-        },
         "provisioningState": {
           "type": "string",
-          "description": "Gets the provisioning state of the Healthcare bot resource."
+          "description": "The provisioning state of the Healthcare bot resource.",
+          "readOnly": true
+        },
+        "botManagementPortalLink": {
+          "type": "string",
+          "description": "The link.",
+          "readOnly": true
         }
+      }
+    },
+    "HealthBotUpdateParameters": {
+      "type": "object",
+      "description": "Parameters for updating a HealthBot.",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "description": "Tags for a HealthBot.",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ]
+        },
+        "sku": {
+          "$ref": "#/definitions/Sku",
+          "description": "SKU of the HealthBot."
+        }
+      }
+    },
+    "SystemData": {
+      "description": "Read only system data",
+      "type": "object",
+      "readOnly": true,
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "description": "The identity that created the resource."
+        },
+        "createdByType": {
+          "$ref": "#/definitions/IdentityType",
+          "description": "The type of identity that created the resource"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp of resource creation (UTC)"
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "description": "The identity that last modified the resource."
+        },
+        "lastModifiedByType": {
+          "$ref": "#/definitions/IdentityType",
+          "description": "The type of identity that last modified the resource"
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp of resource last modification (UTC)"
+        }
+      }
+    },
+    "IdentityType": {
+      "description": "The type of identity that creates/modifies resources",
+      "type": "string",
+      "enum": [
+        "User",
+        "Application",
+        "ManagedIdentity",
+        "Key"
+      ],
+      "x-ms-enum": {
+        "name": "IdentityType",
+        "modelAsString": true
       }
     },
     "ValidationResult": {
@@ -479,32 +635,61 @@
       }
     },
     "Error": {
-      "title": "Error",
-      "description": "Bot error object.",
       "properties": {
-        "status": {
-          "type": "string",
-          "description": "The status code of the response validation."
-        },
         "error": {
-          "$ref": "#/definitions/ErrorBody",
-          "description": "The error body."
+          "type": "object",
+          "description": "The error object.",
+          "properties": {
+            "code": {
+              "readOnly": true,
+              "type": "string",
+              "description": "The error code."
+            },
+            "message": {
+              "readOnly": true,
+              "type": "string",
+              "description": "The error message."
+            },
+            "target": {
+              "readOnly": true,
+              "type": "string",
+              "description": "The error target."
+            },
+            "details": {
+              "readOnly": true,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Error"
+              },
+              "description": "The error details."
+            },
+            "additionalInfo": {
+              "readOnly": true,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorAdditionalInfo"
+              },
+              "description": "The error additional info."
+            }
+          }
         }
-      }
+      },
+      "description": "The resource management error response."
     },
-    "ErrorBody": {
-      "title": "ErrorBody",
-      "description": "Error structure.",
+    "ErrorAdditionalInfo": {
       "properties": {
-        "code": {
+        "type": {
+          "readOnly": true,
           "type": "string",
-          "description": "error code."
+          "description": "The additional info type."
         },
-        "message": {
-          "type": "string",
-          "description": "error message."
+        "info": {
+          "readOnly": true,
+          "type": "object",
+          "description": "The additional info."
         }
-      }
+      },
+      "description": "The resource management error additional info."
     },
     "AvailableOperations": {
       "description": "Available operations of the service",
@@ -575,6 +760,7 @@
     "BotResponseList": {
       "properties": {
         "nextLink": {
+          "readOnly": true,
           "description": "The link used to get the next page of bot service resources.",
           "type": "string"
         },
@@ -582,7 +768,7 @@
           "readOnly": true,
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Bot"
+            "$ref": "#/definitions/HealthBot"
           },
           "description": "Gets the list of healthcare bot results and their properties."
         }

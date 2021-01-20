@@ -6,13 +6,15 @@ This is the AutoRest configuration file for servicelinker.
 
 ## Getting Started
 
-To build the SDKs for My API, simply install AutoRest via `npm` (`npm install -g autorest`) and in this folder, run:
+To build the SDKs for My API, simply install AutoRest via `npm` (`npm install -g autorest`) and then run:
 
-> `autorest`
+> `autorest readme.md`
 
 To see additional help and options, run:
 
 > `autorest --help`
+
+For other options on installation see [Installing AutoRest](https://aka.ms/autorest/install) on the AutoRest github page.
 
 ---
 
@@ -24,26 +26,17 @@ These are the global settings for the servicelinker.
 
 ```yaml
 openapi-type: arm
-tag: package-2020-07-01-preview
+openapi-subtype : rpaas
+tag: package-2021-01-01-privatepreview
 ```
 
-### Suppression
+### Tag: package-2021-01-01-privatepreview
 
-``` yaml
-directive:
-  - suppress: EnumInsteadOfBoolean
-    from: servicelinker.json
-    where: $.definitions.Operation.properties.isDataAction
-    reason:  The boolean properties 'isDataAction' is a standard property for Azuer Operatoins.
-```
+These settings apply only when `--tag=package-2021-01-01-privatepreview` is specified on the command line.
 
-### Tag: package-2020-07-01-preview
-
-These settings apply only when `--tag=package-2020-07-01-preview` is specified on the command line.
-
-```yaml $(tag) == 'package-2020-07-01-preview'
+```yaml $(tag) == 'package-2021-01-01-privatepreview'
 input-file:
-  - Microsoft.ServiceLinker/preview/2020-07-01-preview/servicelinker.json
+  - Microsoft.ServiceLinker/preview/2021-01-01-privatepreview/servicelinker.json
 ```
 
 ---
