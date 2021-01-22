@@ -6,12 +6,20 @@
     "version": "2021-01-01-privatepreview"
   },
   "host": "management.azure.com",
-  "schemes": [ "https" ],
-  "consumes": [ "application/json" ],
-  "produces": [ "application/json" ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "security": [
     {
-      "azure_auth": [ "user_impersonation" ]
+      "azure_auth": [
+        "user_impersonation"
+      ]
     }
   ],
   "securityDefinitions": {
@@ -66,7 +74,7 @@
     "/{resourceUri}/providers/Microsoft.ServiceLinker/linkers/{linkerName}": {
       "get": {
         "description": "Returns Linker resource for a given name.",
-        "operationId": "linker_Get",
+        "operationId": "Linker_Get",
         "x-ms-examples": {
           "Link": {
             "$ref": "./examples/Link.json"
@@ -100,8 +108,8 @@
       },
       "put": {
         "description": "Create or update linker resource.",
-        "operationId": "Linker_CreateAndUpdate",
-        "x-ms-long-running-operation":true,
+        "operationId": "Linker_CreateOrUpdate",
+        "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         },
@@ -188,22 +196,22 @@
           }
         }
       },
-      "patch": {	
-        "tags": [	
-          "Links"	
-        ],	
-        "operationId": "Linker_Update",	
-        "description": "Operation to update an existing link.",	
-        "x-ms-long-running-operation":true,
+      "patch": {
+        "tags": [
+          "Links"
+        ],
+        "operationId": "Linker_Update",
+        "description": "Operation to update an existing link.",
+        "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
-          "PutLink": {
+          "PatchLink": {
             "$ref": "./examples/PatchLink.json"
           }
         },
-        "parameters": [	
+        "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParameter"
           },
@@ -222,37 +230,37 @@
               "$ref": "#/definitions/LinkerPatch"
             }
           }
-        ],	
-        "responses": {	
-          "200": {	
-            "description": "Success. The response describes a link.",	
-            "schema": {	
-              "$ref": "#/definitions/LinkerResource"	
-            }	
-          },	
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. The response describes a link.",
+            "schema": {
+              "$ref": "#/definitions/LinkerResource"
+            }
+          },
           "201": {
             "description": "Long running operation.",
             "schema": {
               "$ref": "#/definitions/LinkerResource"
             }
-          },	
-          "default": {	
-            "description": "Error response describing why the operation failed.",	
-            "schema": {	
-              "$ref": "#/definitions/ErrorResponse"	
-            }	
-          }	
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ServiceLinker/linkers/{linkerName}/validateHealth": {
+    "/{resourceUri}/providers/Microsoft.ServiceLinker/linkers/{linkerName}/validateLinker": {
       "post": {
         "tags": [
           "Links"
         ],
-        "operationId": "Linker_ValidateHealth",
+        "operationId": "Linker_ValidateLinker",
         "description": "Validate a link.",
-        "x-ms-long-running-operation":true,
+        "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         },
@@ -383,10 +391,10 @@
     "AuthInfoBase": {
       "description": "The authentication info",
       "discriminator": "authType",
-      "properties":{
-        "authType":{
+      "properties": {
+        "authType": {
           "description": "The authentication type.",
-          "$ref":  "#/definitions/AuthType"
+          "$ref": "#/definitions/AuthType"
         }
       },
       "required": [
@@ -399,23 +407,20 @@
       "allOf": [
         {
           "$ref": "#/definitions/AuthInfoBase"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "name": {
-              "description": "Username or account name for secret auth.",
-              "type": "string"
-            },
-            "secret": {
-              "description": "Password or account key for secret auth.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "name"
-          ]
         }
+      ],
+      "properties": {
+        "name": {
+          "description": "Username or account name for secret auth.",
+          "type": "string"
+        },
+        "secret": {
+          "description": "Password or account key for secret auth.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
       ]
     },
     "UserAssignedIdentityAuthInfo": {
@@ -424,19 +429,16 @@
       "allOf": [
         {
           "$ref": "#/definitions/AuthInfoBase"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "description": "Client Id for userAssignedIdentity.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "id"
-          ]
         }
+      ],
+      "properties": {
+        "id": {
+          "description": "Client Id for userAssignedIdentity.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
       ]
     },
     "SystemAssignedIdentityAuthInfo": {
@@ -454,24 +456,21 @@
       "allOf": [
         {
           "$ref": "#/definitions/AuthInfoBase"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "description": "ServicePrincipal Id for servicePrincipal auth.",
-              "type": "string"
-            },
-            "name": {
-              "description": "ServicePrincipal Name for servicePrincipal auth.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "id",
-            "name"
-          ]
         }
+      ],
+      "properties": {
+        "id": {
+          "description": "ServicePrincipal Id for servicePrincipal auth.",
+          "type": "string"
+        },
+        "name": {
+          "description": "ServicePrincipal Name for servicePrincipal auth.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
       ]
     },
     "LinkerResource": {
@@ -482,7 +481,9 @@
           "$ref": "#/definitions/Resource"
         }
       ],
-      "required": [ "properties" ],
+      "required": [
+        "properties"
+      ],
       "properties": {
         "properties": {
           "description": "The properties of the linker.",
@@ -535,31 +536,36 @@
         "authInfo": {
           "description": "The authentication type.",
           "$ref": "#/definitions/AuthInfoBase"
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The provisioning state. "
         }
       }
     },
-    "SourceConfiguration" :{
+    "SourceConfiguration": {
       "description": "A configuration item for source resource",
-        "type": "object",
-        "properties": {
-          "type": {
-            "description": "The type of setting. One of appSettings, connectionStrings, serviceBindings",
-            "type": "string",
-            "enum": [
-              "appSettings",
-              "connectionStrings",
-              "serviceBindings"
-            ],
-            "x-ms-enum": {
-              "name": "type",
-              "modelAsString": true
-            }
-          },
-          "linkConfig": {
-            "description": "The configuration of the linker for appSettings or connectionStrings or serviceBindings",
-            "type": "object"
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "The type of setting. One of appSettings, connectionStrings, serviceBindings",
+          "type": "string",
+          "enum": [
+            "appSettings",
+            "connectionStrings",
+            "serviceBindings"
+          ],
+          "x-ms-enum": {
+            "name": "type",
+            "modelAsString": true
           }
+        },
+        "linkConfig": {
+          "description": "The configuration of the linker for appSettings or connectionStrings or serviceBindings",
+          "type": "object"
         }
+      }
     },
     "SourceConfigurationResult": {
       "description": "Configurations for source resource, include appSettings, connectionString and serviceBindings",
@@ -705,11 +711,11 @@
       }
     },
     "OperationListResult": {
-      "description": "The list of servicelinker operations and a URL link to get the next set of results.",
+      "description": "The list of operations and a URL link to get the next set of results.",
       "type": "object",
       "properties": {
         "value": {
-          "description": "The list of servicelinker operations supported by the Microsoft.ServiceLinker resource provider.",
+          "description": "The list of operations supported by the Microsoft.ServiceLinker resource provider.",
           "type": "array",
           "readOnly": true,
           "items": {
