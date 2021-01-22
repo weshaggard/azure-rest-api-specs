@@ -3,7 +3,7 @@
   "info": {
     "version": "2020-11-01",
     "title": "sczedgedevice",
-    "description": "Use this API to allocate IoTHub resource for a SCZdevice",
+    "description": "Use this API to allocate IoTHub Resource for a SCZdevice",
     "x-ms-code-generation-settings": {
       "name": "sczedgedeviceClient"
     }
@@ -65,13 +65,13 @@
                 "200": {
                   "description": "SCZedge device creation or update initiated.",
                   "schema": {
-                    "$ref": "#/definitions/Result"
+                    "$ref": "#/definitions/Resource"
                   }
                 },
                 "201": {
                   "description": "long running operation to create resource.",
                   "schema": {
-                    "$ref": "#/definitions/Result"
+                    "$ref": "#/definitions/Resource"
                   }
                 },
                 "default": {
@@ -85,57 +85,73 @@
       }
   },
   "definitions": {
-      "SCZdeviceResource": {
-          "description": "Input values.",
-          "type": "object",
-          "required": ["properties"],
+    "SCZdeviceResource": {
+      "type": "object",
+      "description": "Input values.",
+      "allOf": [
+          {
+                "$ref": "#/definitions/Resource"
+          }
+      ],
+      "required": ["properties"],
+      "properties": {
           "properties": {
-            "properties": {
-              "type": "object",
-              "required": ["name"],
-              "properties":{
-                "name": {
-                  "description": "The name of of the SCZ edge device.",
-                  "type": "string"
+            "type": "object",
+            "required": ["name"],
+            "properties":{
+              "name": {
+                "description": "The name of of the SCZ edge device.",
+                "type": "string"
               }
+          }
+        }
+      } 
+    },
+    "Resource": {
+        "description": "result for 200",
+        "properties": {
+          "id": {
+              "description": "Azure resource Id.",
+              "type": "string",
+              "readOnly": true
+          },
+          "name": {
+              "description": "Azure resource name.",
+              "type": "string",
+              "readOnly": true
+          },
+          "type": {
+              "description": "Azure resource type.",
+              "type": "string",
+              "readOnly": true
+          }
+        },
+      "x-ms-azure-resource": true
+    },
+    "ErrorResponse": {
+        "description": "Error response.",
+        "properties": {
+            "error": {
+                "$ref": "#/definitions/ErrorDefinition",
+                "description": "The error details."
             }
-          }
-        } 
-      },
-      "Result": {
-          "description": "result for 200",
-          "properties": {
-              "message": {
-                  "description": "message for request successful.",
-                  "type": "string",
-                  "readOnly": true
-              }
-          }
-      },
-      "ErrorResponse": {
-          "description": "Error response.",
-          "properties": {
-              "error": {
-                  "$ref": "#/definitions/ErrorDefinition",
-                  "description": "The error details."
-              }
-          }
-      },
-      "ErrorDefinition": {
-          "description": "Error definition.",
-          "properties": {
-              "code": {
-                  "description": "Service specific error code which serves as the substatus for the HTTP error code.",
-                  "type": "string",
-                  "readOnly": true
-              },
-              "message": {
-                  "description": "Description of the error.",
-                  "type": "string",
-                  "readOnly": true
-              }
+        }
+    },
+    "ErrorDefinition": {
+      "description": "Error definition.",
+      "properties": {
+          "code": {
+              "description": "Service specific error code which serves as the substatus for the HTTP error code.",
+              "type": "string",
+              "readOnly": true
+          },
+          "message": {
+              "description": "Description of the error.",
+              "type": "string",
+              "readOnly": true
           }
       }
+    }
   },
   "parameters": {
       "SubscriptionIdParameter": {
