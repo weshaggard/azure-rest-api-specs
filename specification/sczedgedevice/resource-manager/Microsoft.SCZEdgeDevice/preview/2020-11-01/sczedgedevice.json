@@ -29,7 +29,36 @@
     }
   },
   "paths": {
-      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sczedgedevice/registration/{iothubName}": {
+      "/providers/Microsoft.Sczedgedevice/operations": {
+        "get": {
+          "tags": [
+              "Operations"
+          ],
+          "operationId": "Operations_List",
+          "description": "Retrieves a list of available API operations",
+          "summary": "Retrieves a list of available API operations under this Resource Provider.",
+          "parameters": [
+              {
+              "$ref": "#/parameters/ApiVersionParameter"
+              }
+          ],
+          "responses": {
+            "200": {
+                "description": "The request was successful; response contains the list of operations under Microsoft.Sczedgedevice resource provider.",
+                "schema": {
+                    "$ref": "#/definitions/OperationListResult"
+                }
+            },
+            "default": {
+                "description": "Error response describing why the request failed.",
+                "schema": {
+                    "$ref": "#/definitions/ErrorResponse"
+                }
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sczedgedevice/edgeDevice/{iothubName}": {
           "put": {
             "tags": ["PUT"],
             "description": "Create SCZ device resource.",
@@ -155,6 +184,64 @@
               "type": "string",
               "readOnly": true
           }
+      }
+    },
+    "OperationListResult": {
+      "description": "Available operations of the service",
+      "properties": {
+        "value": {
+          "description": "List of operations supported by the Microsoft.Sczedgedevice resource provider.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/Operation"
+          }
+        },
+        "nextLink": {
+          "readOnly": true,
+          "type": "string",
+          "description": "URL to get the next set of operation list results if there are any."
+        }
+      }
+    },
+    "Operation": {
+      "description": "Azure Percept REST API operation.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Operation name: {provider}/{resource}/{read | write | action | delete}."
+        },
+        "isDataAction": {
+          "description": "Indicates whether the operation is a data action",
+          "type": "boolean"
+        },
+        "display": {
+          "description": "The operation supported by Azure Percept.",
+          "properties": {
+            "provider": {
+              "readOnly": true,
+              "type": "string",
+              "description": "Service provider: Microsoft Azure Percept."
+            },
+            "resource": {
+              "readOnly": true,
+              "type": "string",
+              "description": "Resource on which the operation is performed."
+            },
+            "operation": {
+              "readOnly": true,
+              "type": "string",
+              "description": "Name of the operation."
+            },
+            "description": {
+              "readOnly": true,
+              "type": "string",
+              "description": "Description of the operation."
+            }
+          }
+        }
       }
     }
   },
