@@ -10,7 +10,7 @@ openapi-subtype: rpaas
 > `autorest --help`
 
 # all the input files
-```yaml
+```yaml $(tag) == 'package-2020-06-23-preview'
 input-file:
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/applicationRegistration.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/merchants.json
