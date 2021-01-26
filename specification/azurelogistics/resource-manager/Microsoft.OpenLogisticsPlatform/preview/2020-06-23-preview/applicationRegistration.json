@@ -55,7 +55,10 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ApplicationRegistration"
+              "type": "array",
+              "items":{
+                "$ref": "#/definitions/ApplicationRegistration"
+              }
             }
           },
           "default": {
@@ -66,7 +69,7 @@
           }
         }
       }
-      },
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OpenLogisticsPlatform/workspaces/{workspaceName}/applicationRegistrations/{ApplicationId}": {
       "get": {
         "tags": [
@@ -153,7 +156,7 @@
         },
         "x-ms-long-running-operation": false
       },
-            "delete": {
+      "delete": {
         "tags": [
           "ApplicationRegistration"
         ],
@@ -196,21 +199,40 @@
   "definitions": {
     "ApplicationRegistrationResource": {
       "description": "An Azure resource.",
-      "properties": {
-        "applicationId": {
+        "properties": {
+        "id": {
           "description": "Azure resource Id.",
           "type": "string",
           "readOnly": true
         },
-        "displayName": {
+        "name": {
           "description": "Azure resource name.",
           "type": "string",
           "readOnly": true
         },
-		    "properties": {
-          "$ref": "#/definitions/Properties",
+        "type": {
+          "description": "Azure resource type.",
+          "type": "string",
           "readOnly": true
-        }
+        },
+        "location": {
+          "description": "Location of the resource.",
+          "type": "string",
+          "readOnly": false
+        },
+        "etag": {
+          "description": "The etag",
+          "type": "string",
+          "readOnly": false
+        },
+        "tags": {
+          "description": "resource tags.",
+          "type": "object",
+          "readOnly": false,
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
       },
       "x-ms-azure-resource": true
     },   
@@ -222,6 +244,26 @@
           "$ref": "#/definitions/ApplicationRegistrationResource"
         }
       ],
+        "properties": {
+        "properties": {
+          "type": "object",
+          "properties": {
+          "applicationId": {
+            "description": "Azure resource Application Id.",
+            "type": "string",
+            "readOnly": true
+          },
+          "displayName": {
+            "description": "Azure resource display name.",
+            "type": "string",
+            "readOnly": true
+          },
+  		    "properties": {
+            "$ref": "#/definitions/Properties"
+            }          
+          }
+        }
+      }
     },
     "Properties": {
       "description": "Read only system data",
@@ -234,9 +276,12 @@
         },
         "linkedResourceGroupsResourceIds": {
           "description": "Azure resource name.",
-          "type": "string",
+          "type": "array",
+          "items":{
+            "type": "string"
+          },
           "readOnly": true
-        },
+        }
       }
     },
     "ErrorObject": {
@@ -288,7 +333,7 @@
     "ApplicationIdParameter": {
       "type": "string",
       "name": "ApplicationId",
-      "description": "The name of resource. This is the name of your Azure Supply Chain Service's workspace.",
+      "description": "Application Id",
       "in": "path",
       "required": true,
       "x-ms-parameter-location": "method"
