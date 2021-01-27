@@ -10,7 +10,7 @@ python:
   payload-flattening-threshold: 2
   namespace: Microsoft.Sczedgedevice
   package-name: sczedgedevice
-  package-version: 2020-11-01
+  package-version: 2020-11-01-preview
   clear-output-folder: true
 ```
 
