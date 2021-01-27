@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2020-11-01` is specified on the co
 
 ```yaml $(tag) == 'package-2020-11-01'
 input-file:
-  - Microsoft.SCZEdgeDevice/preview/2020-11-01/sczedgedevice.json
+  - Microsoft.Sczedgedevice/preview/2020-11-01/sczedgedevice.json
 ```
 
 ---

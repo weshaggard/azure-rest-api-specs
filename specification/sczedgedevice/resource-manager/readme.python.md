@@ -8,7 +8,7 @@ python:
   azure-arm: true
   license-header: MICROSOFT_MIT_NO_VERSION
   payload-flattening-threshold: 2
-  namespace: Microsoft.SCZEdgeDevice
+  namespace: Microsoft.Sczedgedevice
   package-name: sczedgedevice
   package-version: 2020-11-01
   clear-output-folder: true

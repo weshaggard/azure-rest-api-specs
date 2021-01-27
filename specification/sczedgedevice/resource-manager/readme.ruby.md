@@ -14,6 +14,6 @@ These settings apply only when `--tag=package-2020-11-01 --ruby` is specified on
 Please also specify `--ruby-sdks-folder=<path to the root directory of your azure-sdk-for-ruby clone>`.
 
 ```yaml $(tag) == 'package-2020-11-01' && $(ruby)
-namespace: Microsoft.SCZEdgeDevice
+namespace: Microsoft.Sczedgedevice
 output-folder: $(ruby-sdks-folder)/sczedgedevice
 ```
