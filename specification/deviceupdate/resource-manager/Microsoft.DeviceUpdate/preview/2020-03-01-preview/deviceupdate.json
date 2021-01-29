@@ -280,7 +280,7 @@
         }
       },
       "patch": {
-        "description": "Updates account's tags.",
+        "description": "Updates account's patchable properties",
         "operationId": "Accounts_Update",
         "parameters": [
           {
@@ -296,12 +296,12 @@
             "$ref": "#/parameters/AccountNameParameter"
           },
           {
-            "name": "tagUpdatePayload",
-            "description": "Updated tags.",
+            "name": "accountUpdatePayload",
+            "description": "Updated Account.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/TagUpdate"
+              "$ref": "#/definitions/AccountUpdate"
             }
           }
         ],
@@ -624,6 +624,10 @@
               "readOnly": true
             }
           }
+        },
+        "identity": {
+          "$ref": "#/definitions/Identity",
+          "description": "The type of identity used for the resource."
         }
       }
     },
@@ -711,6 +715,25 @@
         }
       }
     },
+    "Identity": {
+      "description": "Identity for the resource.",
+      "properties": {
+        "principalId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The principal ID of resource identity."
+        },
+        "tenantId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The tenant ID of resource."
+        },
+        "type": {
+          "type": "string",
+          "description": "The identity type."
+        }
+      }
+    },
     "IotHubSettings": {
       "type": "object",
       "description": "Device Update account integration with IoT Hub settings.",
@@ -784,6 +807,24 @@
           }
         }
       }
+    },
+    "AccountUpdate": {
+      "description": "Request payload used to update and existing Accounts.",
+      "properties": {
+        "identity": {
+          "$ref": "#/definitions/Identity",
+          "description": "The type of identity used for the resource."
+        },
+        "location": {
+          "type": "string",
+          "description": "The geo-location where the resource lives"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/TagUpdate"
+        }
+      ]
     },
     "TagUpdate": {
       "description": "Request payload used to update an existing resource's tags.",
@@ -879,7 +920,7 @@
       "type": "string",
       "description": "Account name.",
       "x-ms-parameter-location": "method",
-      "pattern": "^[A-Za-z][A-Za-z0-9]+$",
+      "pattern": "^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$",
       "minLength": 3,
       "maxLength": 24
     },
@@ -890,7 +931,7 @@
       "type": "string",
       "description": "Instance name.",
       "x-ms-parameter-location": "method",
-      "pattern": "^[A-Za-z][A-Za-z0-9]+$",
+      "pattern": "^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$",
       "minLength": 3,
       "maxLength": 36
     }
