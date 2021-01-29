@@ -12,14 +12,10 @@ az-output-folder: $(azure-cli-extension-folder)/src/codesigning
 python-sdk-output-folder: "$(az-output-folder)/azext_codesigning/vendored_sdks/codesigning"
 # add additinal configuration here specific for Azure CLI
 # refer to the faq.md for more details
-
-
-cli:
-    cli-directive:
-    ## remove the sub group code-sign-account
-    - where:
-          group: codesigning code-sign-account
-      set:
-          group: codesigning
+directive:
+  - where:
+     group: codesigning code-sign-account
+    set:
+     group: codesigning
 
 ```
