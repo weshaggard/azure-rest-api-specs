@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "K8 Connect RP",
-    "version": "2019-11-01-preview",
+    "title": "ConnectedKubernetesClient",
+    "version": "2021-03-01",
     "description": "Azure Connected Cluster Resource Provider API for adopting any Kubernetes Cluster"
   },
   "schemes": [
@@ -30,9 +30,9 @@
   "paths": {
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Kubernetes/connectedClusters/{clusterName}": {
       "put": {
-        "summary": "Registers a new K8s cluster.",
+        "summary": "Register a new Kubernetes cluster with Azure Resource Manager.",
         "operationId": "ConnectedCluster_Create",
-        "description": "API to register a new K8s cluster and thereby create a tracked resource in ARM",
+        "description": "API to register a new Kubernetes cluster and create a tracked resource in Azure Resource Manager (ARM).",
         "consumes": [
           "application/json"
         ],
@@ -46,30 +46,36 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdPathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNamePathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/ClusterNamePathParam"
           },
           {
-            "$ref": "#/parameters/Api-VersionQueryParam"
-          },
-          {
-            "$ref": "#/parameters/ConnectedClusterBodyParam"
+            "in": "body",
+            "name": "ConnectedCluster",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConnectedCluster"
+            },
+            "description": "Parameters supplied to Create a Connected Cluster."
           }
         ],
         "responses": {
           "200": {
-            "description": "Resource Updation Successful",
+            "description": "OK",
             "schema": {
               "$ref": "#/definitions/ConnectedCluster"
             }
           },
           "201": {
-            "description": "Resource Creation Successful",
+            "description": "Resource creation request accepted",
             "schema": {
               "$ref": "#/definitions/ConnectedCluster"
             }
@@ -77,9 +83,13 @@
           "default": {
             "description": "Resource Provider error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         }
       },
       "patch": {
@@ -99,24 +109,30 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdPathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNamePathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/ClusterNamePathParam"
           },
           {
-            "$ref": "#/parameters/Api-VersionQueryParam"
-          },
-          {
-            "$ref": "#/parameters/ConnectedClusterPatchBodyParam"
+            "in": "body",
+            "name": "ConnectedClusterPatch",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConnectedClusterPatch"
+            },
+            "description": "Parameters supplied to update Connected Cluster."
           }
         ],
         "responses": {
           "200": {
-            "description": "Resource Update Successful",
+            "description": "OK",
             "schema": {
               "$ref": "#/definitions/ConnectedCluster"
             }
@@ -124,15 +140,15 @@
           "default": {
             "description": "Resource Provider error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
       },
       "get": {
-        "summary": "Gets data of the specified cluster",
+        "summary": "Get the properties of the specified connected cluster.",
         "operationId": "ConnectedCluster_Get",
-        "description": "API to get the properties of a specific registered K8s cluster.",
+        "description": "Returns the properties of the specified connected cluster, including name, identity, properties, and additional cluster details.",
         "produces": [
           "application/json"
         ],
@@ -143,37 +159,37 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdPathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNamePathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/ClusterNamePathParam"
-          },
-          {
-            "$ref": "#/parameters/Api-VersionQueryParam"
           }
         ],
         "responses": {
           "200": {
-            "description": "Resource Object retrieved successfully",
+            "description": "Resource retrieved successfully.",
             "schema": {
               "$ref": "#/definitions/ConnectedCluster"
             }
           },
           "default": {
-            "description": "Resource Provider error response describing why the operation failed.",
+            "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
       },
       "delete": {
-        "summary": "Deletes a specified cluster",
+        "summary": "Delete a connected cluster.",
         "operationId": "ConnectedCluster_Delete",
-        "description": "API to delete an existing K8s cluster being tracked.",
+        "description": "Delete a connected cluster, removing the tracked resource in Azure Resource Manager (ARM).",
         "produces": [
           "application/json"
         ],
@@ -184,21 +200,24 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdPathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNamePathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/ClusterNamePathParam"
-          },
-          {
-            "$ref": "#/parameters/Api-VersionQueryParam"
           }
         ],
         "responses": {
           "200": {
-            "description": "The resource was deleted successfully"
+            "description": "OK"
+          },
+          "202": {
+            "description": "Resource deletion is in progress"
           },
           "204": {
             "description": "The resource was not found but the request is well formed"
@@ -206,52 +225,13 @@
           "default": {
             "description": "Resource Provider error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Kubernetes/connectedClusters/{clusterName}/listCredentials": {
-      "post": {
-        "summary": "Lists the endpoint and credentials details to connect to the K8s cluster's API server",
-        "operationId": "ConnectedCluster_ListCredentials",
-        "description": "API to fetch endpoint and credential details to connect to the K8s cluster’s API server via Azure",
-        "produces": [
-          "application/json"
-        ],
-        "x-ms-examples": {
-          "ListCredentialsExample": {
-            "$ref": "./examples/ListCredentialsExample.json"
           }
         },
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdPathParam"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupNamePathParam"
-          },
-          {
-            "$ref": "#/parameters/ClusterNamePathParam"
-          },
-          {
-            "$ref": "#/parameters/Api-VersionQueryParam"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Action performed successfully",
-            "schema": {
-              "$ref": "#/definitions/ConnectedClusterAccessProfile"
-            }
-          },
-          "default": {
-            "description": "Resource Provider error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         }
       }
     },
@@ -270,18 +250,18 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdPathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNamePathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/Api-VersionQueryParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Resource Object retrieved successfully",
+            "description": "OK",
             "schema": {
               "$ref": "#/definitions/ConnectedClusterList"
             }
@@ -289,7 +269,7 @@
           "default": {
             "description": "Resource Provider error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -313,15 +293,15 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdPathParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/Api-VersionQueryParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Resource Object retrieved successfully",
+            "description": "OK",
             "schema": {
               "$ref": "#/definitions/ConnectedClusterList"
             }
@@ -329,7 +309,7 @@
           "default": {
             "description": "Resource Provider error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -347,12 +327,12 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/Api-VersionQueryParam"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK. The request has succeeded.",
+            "description": "OK",
             "schema": {
               "$ref": "#/definitions/OperationList"
             }
@@ -360,7 +340,7 @@
           "default": {
             "description": "Resource Provider error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -376,79 +356,6 @@
     }
   },
   "definitions": {
-    "ConnectedClusterAccessProfile": {
-      "type": "object",
-      "required": [
-        "location",
-        "type",
-        "properties"
-      ],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["Microsoft.Kubernetes/connectedClusters"],
-          "description": "Type of the resource on which the credentials are requested"
-        },
-        "location": {
-          "type": "string",
-          "description": "Location of the cluster"
-        },
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/AccessProfile"
-        }
-      }
-    },
-    "AccessProfile": {
-      "type": "object",
-      "required": [
-        "kubeConfig",
-        "aadAccessProfile"
-      ],
-      "properties": {
-        "kubeConfig": {
-          "type": "string",
-          "description": "Base64 Encoded kubeconfig for accessing target cluster"
-        },
-        "aadAccessProfile": {
-          "$ref": "#/definitions/ConnectedClusterAADAccessProfile"
-        }
-      }
-    },
-    "ConnectedClusterAADAccessProfile": {
-      "type": "object",
-      "properties": {
-        "endPoint": {
-          "type": "string",
-          "description": "The endpoint to connect to the cluster"
-        },
-        "endpointAuthorityData": {
-          "type": "string",
-          "description": "The end point authority data to connect to the cluster"
-        },
-        "apiServerId": {
-          "type": "string",
-          "description": "AAD API Server Id"
-        },
-        "clientId": {
-          "type": "string",
-          "description": "Id of the client"
-        },
-        "environment": {
-          "type": "string",
-          "enum": ["AzurePublicCloud", "AzureUSGovernmentCloud", "AzureChinaCloud", "AzureGermanCloud"],
-          "x-ms-enum": {
-            "name": "AzureEnvironment",
-            "modelAsString": false
-          },
-          "description": "The azure environment"
-        },
-        "tenantId": {
-          "type": "string",
-          "description": "AAD Tenent Id"
-        }
-      }
-    },
     "OperationList": {
       "description": "The paginated list of connected cluster API operations.",
       "properties": {
@@ -517,52 +424,39 @@
       }
     },
     "ConnectedCluster": {
-      "x-ms-azure-resource": true,
       "type": "object",
       "required": [
-        "location",
-        "tags",
-        "properties"
+        "properties",
+        "identity"
       ],
       "properties": {
-        "id": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Resource Id"
-        },
-        "name": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Resource name"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string",
-          "enum": ["Microsoft.Kubernetes/connectedClusters"],
-          "description": "Type of the resource requested"
-        },
-        "location": {
-          "type": "string",
-          "description": "Location of the cluster"
-        },
-        "tags": {
-          "description": "Connected Cluster Resource Tags.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "identity": {
           "$ref": "#/definitions/ConnectedClusterIdentity",
-          "description": "The identity of the connected cluster, if configured."
+          "description": "The identity of the connected cluster."
         },
         "properties": {
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/ConnectedClusterProperties"
+          "$ref": "#/definitions/ConnectedClusterProperties",
+          "description": "Describes the connected cluster resource properties."
+        },
+        "systemData": {
+          "$ref": "#/definitions/SystemData",
+          "readOnly": true,
+          "description": "Metadata pertaining to creation and last modification of the resource"
         }
-      }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+        }
+      ],
+      "description": "Represents a connected cluster."
     },
     "ConnectedClusterIdentity": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
       "properties": {
         "principalId": {
           "readOnly": true,
@@ -576,10 +470,11 @@
         },
         "type": {
           "type": "string",
-          "description": "The type of identity used for the connected cluster. The type 'SystemAssigned includes a system created identity. The type 'None' will remove any identities from the virtual machine.",
+          "description": "The type of identity used for the connected cluster. The type 'SystemAssigned, includes a system created identity. The type 'None' means no identity is assigned to the connected cluster.",
+          "default": "SystemAssigned",
           "enum": [
-            "SystemAssigned",
-            "None"
+            "None",
+            "SystemAssigned"
           ],
           "x-ms-enum": {
             "name": "ResourceIdentityType",
@@ -587,56 +482,101 @@
           }
         }
       },
-      "description": "Identity for the virtual machine."
+      "description": "Identity for the connected cluster."
     },
     "ConnectedClusterProperties": {
       "type": "object",
       "required": [
-        "agentPublicKeyCertificate",
-        "aadProfile"
+        "agentPublicKeyCertificate"
       ],
       "properties": {
         "agentPublicKeyCertificate": {
           "type": "string",
           "description": "Base64 encoded public certificate used by the agent to do the initial handshake to the backend services in Azure."
         },
-        "aadProfile": {
-          "$ref": "#/definitions/ConnectedClusterAADProfile"
-        },
         "kubernetesVersion": {
+          "readOnly": true,
           "type": "string",
           "description": "The Kubernetes version of the connected cluster resource"
         },
         "totalNodeCount": {
+          "readOnly": true,
           "type": "integer",
           "description": "Number of nodes present in the connected cluster resource"
         },
+        "totalCoreCount": {
+          "readOnly": true,
+          "format": "int32",
+          "type": "integer",
+          "description": "Number of CPU cores present in the connected cluster resource"
+        },
         "agentVersion": {
+          "readOnly": true,
           "type": "string",
           "description": "Version of the agent running on the connected cluster resource"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ConnectedClusterProvisioningState",
+          "description": "Provisioning state of the connected cluster resource."
+        },
+        "distribution": {
+          "type": "string",
+          "description": "The Kubernetes distribution running on this connected cluster."
+        },
+        "infrastructure": {
+          "type": "string",
+          "description": "The infrastructure on which the Kubernetes cluster represented by this connected cluster is running on."
+        },
+        "offering": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Connected cluster offering"
+        },
+        "managedIdentityCertificateExpirationTime": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true,
+          "description": "Expiration time of the managed identity certificate"
+        },
+        "lastConnectivityTime": {
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time",
+          "description": "Time representing the last instance when heart beat was received from the cluster"
+        },
+        "connectivityStatus": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Represents the connectivity status of the connected cluster.",
+          "enum": [
+            "Connecting",
+            "Connected",
+            "Offline",
+            "Expired"
+          ],
+          "x-ms-enum": {
+            "name": "ConnectivityStatus",
+            "modelAsString": true
+          }
         }
-      }
+      },
+      "description": "Properties of the connected cluster."
     },
-    "ConnectedClusterAADProfile": {
-      "type": "object",
-      "required": [
-        "tenantId",
-        "clientAppId",
-        "serverAppId"
+    "ConnectedClusterProvisioningState": {
+      "type": "string",
+      "description": "The current deployment state of connectedClusters.",
+      "enum": [
+        "Succeeded",
+        "Failed",
+        "Canceled",
+        "Provisioning",
+        "Updating",
+        "Deleting",
+        "Accepted"
       ],
-      "properties": {
-        "tenantId": {
-          "type": "string",
-          "description": "The aad tenant id which is configured on target K8s cluster"
-        },
-        "clientAppId": {
-          "type": "string",
-          "description": "The client app id configured on target K8 cluster "
-        },
-        "serverAppId": {
-          "type": "string",
-          "description": "The server app id to access AD server"
-        }
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
       }
     },
     "ConnectedClusterPatch": {
@@ -648,34 +588,72 @@
             "type": "string"
           },
           "description": "Resource tags."
+        },
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ConnectedClusterPatchProperties",
+          "description": "Describes the connected cluster resource properties that can be updated during PATCH operation."
         }
       },
       "description": "Object containing updates for patch operations."
     },
-    "ErrorResponse": {
-      "description": "The error response that indicates why an operation has failed.",
+    "ConnectedClusterPatchProperties": {
       "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/ErrorDetails"
-        }
-      }
+      "properties": {},
+      "description": "Properties which can be patched on the connected cluster resource."
     },
-    "ErrorDetails": {
-      "description": "The error response details containing error code and error message",
+    "SystemData": {
+      "description": "Metadata pertaining to creation and last modification of the resource.",
       "type": "object",
       "properties": {
-        "code": {
-          "description": "The error code.",
-          "type": "string",
-          "readOnly": true
+        "createdBy": {
+          "description": "The identity that created the resource.",
+          "type": "string"
         },
-        "message": {
-          "description": "The error message.",
+        "createdByType": {
+          "description": "The type of identity that created the resource.",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
           "type": "string",
-          "readOnly": true
+          "x-ms-enum": {
+            "name": "createdByType",
+            "modelAsString": true
+          }
+        },
+        "createdAt": {
+          "format": "date-time",
+          "description": "The timestamp of resource creation (UTC).",
+          "type": "string"
+        },
+        "lastModifiedBy": {
+          "description": "The identity that last modified the resource.",
+          "type": "string"
+        },
+        "lastModifiedByType": {
+          "description": "The type of identity that last modified the resource.",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "lastModifiedByType",
+            "modelAsString": true
+          }
+        },
+        "lastModifiedAt": {
+          "format": "date-time",
+          "description": "The timestamp of resource modification (UTC).",
+          "type": "string"
         }
-      }
+      },
+      "readOnly": true
     }
   },
   "parameters": {
@@ -686,46 +664,6 @@
       "type": "string",
       "description": "The name of the Kubernetes cluster on which get is called.",
       "x-ms-parameter-location": "method"
-    },
-    "ConnectedClusterBodyParam": {
-      "in": "body",
-      "name": "ConnectedCluster",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/ConnectedCluster"
-      },
-      "x-ms-parameter-location": "method"
-    },
-    "ConnectedClusterPatchBodyParam": {
-      "in": "body",
-      "name": "ConnectedClusterPatch",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/ConnectedClusterPatch"
-      },
-      "x-ms-parameter-location": "method"
-    },
-    "ResourceGroupNamePathParam": {
-      "name": "resourceGroupName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The name of the resource group to which the kubernetes cluster is registered.",
-      "x-ms-parameter-location": "method"
-    },
-    "SubscriptionIdPathParam": {
-      "name": "subscriptionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The ID of the subscription to which the kubernetes cluster is registered."
-    },
-    "Api-VersionQueryParam": {
-      "name": "api-version",
-      "in": "query",
-      "required": true,
-      "type": "string",
-      "description": "Version of the API called."
     }
   }
 }
