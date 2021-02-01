@@ -4,7 +4,7 @@
 
 ```yaml
 openapi-type: arm 
-openapi-subtype: rpsample
+openapi-subtype: rpaas
 ```
 
 ```yaml $(tag) == '2021-01-01-preview'
