@@ -9,7 +9,7 @@ openapi-subtype: rpaas
 
 ```yaml $(tag) == '2021-01-01-preview'
 input-file: 
-  - Microsoft.SampleRP/preview/2021-01-01-preview/SampleRT.json
+  - Microsoft.SampleRP/preview/2021-01-01-preview/tower.json
 ```
 ```yaml $(tag) == '2020-06-10-preview'
 input-file: 
