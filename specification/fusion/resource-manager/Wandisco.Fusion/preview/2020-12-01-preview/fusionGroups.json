@@ -4167,71 +4167,14 @@
         }
       ],
       "properties": {
-        "fileSizeForExclusion": {
-          "description": "Any file with a file size greater than fileSizeForExclusion will be excluded",
+        "maxFileSizeBytes": {
+          "description": "Any file with a file size greater than maxFileSizeBytes will be excluded",
           "type": "integer",
           "format": "int64"
-        },
-        "unitForFileSize": {
-          "description": "Data type for the value passed for fileSizeForExclusion",
-          "type": "string",
-          "enum": [
-            "B",
-            "KB",
-            "MB",
-            "GB",
-            "TB",
-            "PB",
-            "KiB",
-            "MiB",
-            "GiB",
-            "TiB",
-            "PiB"
-          ],
-          "x-ms-enum": {
-            "name": "FileSizeForExclusionType",
-            "modelAsString": true,
-            "values": [
-              {
-                "value": "B"
-              },
-              {
-                "value": "KB"
-              },
-              {
-                "value": "MB"
-              },
-              {
-                "value": "GB"
-              },
-              {
-                "value": "TB"
-              },
-              {
-                "value": "PB"
-              },
-              {
-                "value": "KiB"
-              },
-              {
-                "value": "MiB"
-              },
-              {
-                "value": "GiB"
-              },
-              {
-                "value": "TiB"
-              },
-              {
-                "value": "PiB"
-              }
-            ]
-          }
         }
       },
       "required": [
-        "fileSizeForExclusion",
-        "unitForFileSize"
+        "maxFileSizeBytes"
       ],
       "x-ms-discriminator-value": "FileSizeExclusion"
     },
@@ -4541,27 +4484,38 @@
     "MigratorTagsAndBandwidthUpdate": {
       "description": "Updatable Resource Tags and Bandwidth Policy",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/TagsUpdate"
-        }
-      ],
       "properties": {
+        "tags": {
+          "description": "resource tags.",
+          "type": "object",
+          "readOnly": false,
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "properties": {
-          "description": "Overall application bandwidth limit to apply",
+          "title": "properties",
+          "description": "MigratorTagsAndBandwidthUpdate properties",
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/MigratorBandwidthPolicy"
+          "properties": {
+            "bandwidthPolicy": {
+              "description": "Overall application bandwidth limit to apply",
+              "x-ms-client-flatten": false,
+              "$ref": "#/definitions/MigratorBandwidthPolicy"
+            }
+          }
         }
       }
     },
     "MigratorBandwidthPolicy": {
+      "description": "BandwidthPolicy for a Migrator resource.",
       "properties": {
-        "bandwidthLimit": {
+        "maxBytesPerSec": {
           "description": "Overall application bandwidth limit to apply.",
-          "type": "string"
+          "type": "integer",
+          "format": "int64"
         }
-      },
-      "description": "BandwidthPolicy for a Migrator resource."
+      }
     },
     "MigratorTarget": {
       "description": "Migrator Target Resource",
