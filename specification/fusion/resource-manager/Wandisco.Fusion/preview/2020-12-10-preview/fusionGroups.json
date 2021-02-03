@@ -3508,15 +3508,12 @@
     "TagsAndExclusionUpdate": {
       "description": "Fields patchable on LiveDataMigration",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TagsUpdate"
+        }
+      ],
       "properties": {
-        "tags": {
-          "description": "resource tags.",
-          "type": "object",
-          "readOnly": false,
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "properties": {
           "title": "properties",
           "description": "TagsAndExclusionUpdate properties",
@@ -3535,7 +3532,6 @@
         }
       }
     },
-
     "Resource": {
       "description": "An Azure resource.",
       "properties": {
@@ -3570,6 +3566,12 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "systemData": {
+          "title": "SystemData",
+          "description": "System metadata for Resource",
+          "$ref": "#/definitions/SystemData",
+          "readOnly": true
         }
       },
       "x-ms-azure-resource": true
@@ -3592,9 +3594,68 @@
           "description": "Azure resource type.",
           "type": "string",
           "readOnly": true
+        },
+        "systemData": {
+          "title": "SystemData",
+          "description": "System metadata for Resource",
+          "$ref": "#/definitions/SystemData",
+          "readOnly": true
         }
       },
       "x-ms-azure-resource": true
+    },
+    "SystemData": {
+      "description": "Metadata pertaining to creation and last modification of the resource.",
+      "type": "object",
+      "readOnly": true,
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "description": "The identity that created the resource."
+        },
+        "createdByType": {
+          "type": "string",
+          "description": "The type of identity that created the resource.",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
+          "x-ms-enum": {
+            "name": "createdByType",
+            "modelAsString": true
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp of resource creation (UTC)."
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "description": "The identity that last modified the resource."
+        },
+        "lastModifiedByType": {
+          "type": "string",
+          "description": "The type of identity that last modified the resource.",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
+          "x-ms-enum": {
+            "name": "createdByType",
+            "modelAsString": true
+          }
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The type of identity that last modified the resource."
+        }
+      }
     },
     "VirtualMachineIdentity": {
       "properties": {
@@ -4102,71 +4163,14 @@
         }
       ],
       "properties": {
-        "fileSizeForExclusion": {
-          "description": "Any file with a file size greater than fileSizeForExclusion will be excluded",
+        "maxFileSizeBytes": {
+          "description": "Any file with a file size greater than maxFileSizeBytes will be excluded",
           "type": "integer",
           "format": "int64"
-        },
-        "unitForFileSize": {
-          "description": "Data type for the value passed for fileSizeForExclusion",
-          "type": "string",
-          "enum": [
-            "B",
-            "KB",
-            "MB",
-            "GB",
-            "TB",
-            "PB",
-            "KiB",
-            "MiB",
-            "GiB",
-            "TiB",
-            "PiB"
-          ],
-          "x-ms-enum": {
-            "name": "FileSizeForExclusionType",
-            "modelAsString": true,
-            "values": [
-              {
-                "value": "B"
-              },
-              {
-                "value": "KB"
-              },
-              {
-                "value": "MB"
-              },
-              {
-                "value": "GB"
-              },
-              {
-                "value": "TB"
-              },
-              {
-                "value": "PB"
-              },
-              {
-                "value": "KiB"
-              },
-              {
-                "value": "MiB"
-              },
-              {
-                "value": "GiB"
-              },
-              {
-                "value": "TiB"
-              },
-              {
-                "value": "PiB"
-              }
-            ]
-          }
         }
       },
       "required": [
-        "fileSizeForExclusion",
-        "unitForFileSize"
+        "maxFileSizeBytes"
       ],
       "x-ms-discriminator-value": "FileSizeExclusion"
     },
@@ -4483,20 +4487,28 @@
       ],
       "properties": {
         "properties": {
-          "description": "Overall application bandwidth limit to apply",
+          "title": "properties",
+          "description": "MigratorTagsAndBandwidthUpdate properties",
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/MigratorBandwidthPolicy"
+          "properties": {
+            "bandwidthPolicy": {
+              "description": "Overall application bandwidth limit to apply",
+              "x-ms-client-flatten": false,
+              "$ref": "#/definitions/MigratorBandwidthPolicy"
+            }
+          }
         }
       }
     },
     "MigratorBandwidthPolicy": {
+      "description": "BandwidthPolicy for a Migrator resource.",
       "properties": {
-        "bandwidthLimit": {
+        "maxBytesPerSec": {
           "description": "Overall application bandwidth limit to apply.",
-          "type": "string"
+          "type": "integer",
+          "format": "int64"
         }
-      },
-      "description": "BandwidthPolicy for a Migrator resource."
+      }
     },
     "MigratorTarget": {
       "description": "Migrator Target Resource",
@@ -4868,6 +4880,12 @@
           "description": "If present, details of the error.",
           "type": "object",
           "$ref": "#/definitions/OperationStatusError"
+        },
+        "systemData": {
+          "title": "SystemData",
+          "description": "System metadata for Resource",
+          "$ref": "#/definitions/SystemData",
+          "readOnly": true
         }
       }
     },
@@ -5000,6 +5018,12 @@
           "description": "Date after which migration should occur. Required if overwritePolicy is SkipIfDateIsEarlier.",
           "type": "string",
           "format": "date-time"
+        },
+        "provisioningState": {
+          "title": "ProvisioningState",
+          "description": "Provisioning State of resource",
+          "$ref": "#/definitions/ProvisioningState",
+          "readOnly": true
         }
       },
       "required": [
@@ -5123,6 +5147,11 @@
             "type": "string"
           }
         },
+        "scanOnly": {
+          "description": "Flag marking a Non Live migration",
+          "type": "boolean",
+          "default": false
+        },
         "targetActionPolicy": {
           "description": "The policy to use when replacing files on the target",
           "type": "string",
@@ -5155,7 +5184,8 @@
             "Live",
             "Paused",
             "Stopping",
-            "Stopped"
+            "Stopped",
+            "Completed"
           ],
           "x-ms-enum": {
             "name": "LiveDataMigrationState",
@@ -5181,6 +5211,9 @@
               },
               {
                 "value": "Stopped"
+              },
+              {
+                "value": "Completed"
               }
             ]
           }
@@ -5243,6 +5276,7 @@
       "description": "The possible Provisioning States",
       "enum": [
         "Accepted",
+        "Canceled",
         "Succeeded",
         "Failed",
         "Deleting",
