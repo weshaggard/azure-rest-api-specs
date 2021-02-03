@@ -12,5 +12,5 @@ openapi-subtype: rpaas
 # all the input files
 ```yaml $(tag) == 'package-2020-06-01-preview'
 input-file:
-  - Microsoft.OpenLogisticsPlatform/preview/2020-06-01-preview/Controlplane.json
+  - Controlplane.json
  ```
