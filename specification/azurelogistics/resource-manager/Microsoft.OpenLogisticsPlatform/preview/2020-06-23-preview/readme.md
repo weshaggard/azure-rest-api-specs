@@ -3,6 +3,7 @@ OSCP control plane APIs
 > see https://aka.ms/autorest
 
 ```yaml
+openapi-type: arm
 openapi-subtype: rpaas
 ```
 
