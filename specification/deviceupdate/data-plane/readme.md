@@ -1,8 +1,8 @@
-# deviceupdate
+# DeviceUpdate
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for deviceupdate.
+This is the AutoRest configuration file for DeviceUpdate.
 
 ## Getting Started
 
@@ -26,8 +26,6 @@ These are the global settings for the deviceupdate.
 
 ```yaml
 openapi-type: data-plane
-#remove (not applicable for data-plane)
-openapi-subtype: rpaas
 tag: package-2020-09-01
 ```
 
