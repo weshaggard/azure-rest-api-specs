@@ -26,6 +26,8 @@ These are the global settings for the deviceupdate.
 
 ```yaml
 openapi-type: data-plane
+#remove (not applicable for data-plane)
+openapi-subtype: rpaas
 tag: package-2020-09-01
 ```
 
