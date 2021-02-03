@@ -19,4 +19,19 @@ input-file:
   - shareSubscriptions.json
   - shares.json
   - workspaces.json
+  - examples/Workspace_Update.json
+  - examples/Workspace_Put.json
+  - examples/Workspace_OperationStatus.json
+  - examples/Workspace_ListAll.json
+  - examples/Workspace_List.json
+  - examples/Workspace_Get.json
+  - examples/Workspace_Delete.json
+  - examples/Share_Update.json
+  - examples/Share_Put.json
+  - examples/Share_List.json
+  - examples/Share_Invites_List.json
+  - examples/Share_Get.json
+  - examples/Share_Delete.json
+  - examples/ShareSubscriptions_List.json
+  - examples/Namespaces_CheckNameAvailability.json
 ```
