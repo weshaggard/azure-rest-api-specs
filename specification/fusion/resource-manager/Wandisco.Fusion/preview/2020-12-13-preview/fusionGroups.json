@@ -850,7 +850,7 @@
           "Exclusions"
         ],
         "description": "Returns a list of Exclusions",
-        "operationId": "Exclusions_ListByFusionGroup",
+        "operationId": "Exclusions_ListByMigrator",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -3508,15 +3508,12 @@
     "TagsAndExclusionUpdate": {
       "description": "Fields patchable on LiveDataMigration",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TagsUpdate"
+        }
+      ],
       "properties": {
-        "tags": {
-          "description": "resource tags.",
-          "type": "object",
-          "readOnly": false,
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "properties": {
           "title": "properties",
           "description": "TagsAndExclusionUpdate properties",
@@ -3535,7 +3532,6 @@
         }
       }
     },
-
     "Resource": {
       "description": "An Azure resource.",
       "properties": {
@@ -4491,21 +4487,28 @@
       ],
       "properties": {
         "properties": {
-          "description": "Overall application bandwidth limit to apply",
+          "title": "properties",
+          "description": "MigratorTagsAndBandwidthUpdate properties",
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/MigratorBandwidthPolicy"
+          "properties": {
+            "bandwidthPolicy": {
+              "description": "Overall application bandwidth limit to apply",
+              "x-ms-client-flatten": false,
+              "$ref": "#/definitions/MigratorBandwidthPolicy"
+            }
+          }
         }
       }
     },
     "MigratorBandwidthPolicy": {
+      "description": "BandwidthPolicy for a Migrator resource.",
       "properties": {
         "maxBytesPerSec": {
           "description": "Overall application bandwidth limit to apply.",
           "type": "integer",
           "format": "int64"
         }
-      },
-      "description": "BandwidthPolicy for a Migrator resource."
+      }
     },
     "MigratorTarget": {
       "description": "Migrator Target Resource",
@@ -5144,6 +5147,11 @@
             "type": "string"
           }
         },
+        "scanOnly": {
+          "description": "Flag marking a Non Live migration",
+          "type": "boolean",
+          "default": false
+        },
         "targetActionPolicy": {
           "description": "The policy to use when replacing files on the target",
           "type": "string",
@@ -5176,7 +5184,8 @@
             "Live",
             "Paused",
             "Stopping",
-            "Stopped"
+            "Stopped",
+            "Completed"
           ],
           "x-ms-enum": {
             "name": "LiveDataMigrationState",
@@ -5202,6 +5211,9 @@
               },
               {
                 "value": "Stopped"
+              },
+              {
+                "value": "Completed"
               }
             ]
           }
