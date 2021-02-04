@@ -33,7 +33,7 @@ These settings apply only when `--tag=package-2021-01-01-alpha` is specified on 
 
 ```yaml $(tag) == 'package-2021-01-01-alpha'
 input-file:
-  - preview/2021-01-01-alpha/devtestcenter.json
+  - Microsoft.DevTestCenter/preview/2021-01-01-alpha/devtestcenter.json
 ```
 
 ---
