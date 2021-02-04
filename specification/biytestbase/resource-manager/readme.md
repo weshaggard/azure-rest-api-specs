@@ -38,6 +38,15 @@ These settings apply only when `--tag=package-2020-12-16-preview` is specified o
 input-file:
   - Microsoft.TestBaseBin/preview/2020-12-16-preview/testbase.json
 ```
+## Suppression
+
+``` yaml
+directive:
+  - suppress: R4031
+    from: testbase.json
+    reason: Proxy resource
+
+```
 
 ---
 
