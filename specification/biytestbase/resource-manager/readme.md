@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2020-12-16-preview` is specified o
 
 ```yaml $(tag) == 'package-2020-12-16-preview'
 input-file:
-  - Microsoft.TestBase/preview/2020-12-16-preview/testbase.json
+  - Microsoft.TestBaseBin/preview/2020-12-16-preview/testbase.json
 ```
 
 ---
