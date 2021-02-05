@@ -33,7 +33,7 @@ These settings apply only when `--tag=package-2021-01-01-alpha` is specified on 
 
 ```yaml $(tag) == 'package-2021-01-01-alpha'
 input-file:
-  - preview/2021-01-01-alpha/devtestcenter.json
+  - Microsoft.DevTestCenter/preview/2021-01-01-alpha/devtestcenter.json
 ```
 
 ---
@@ -54,6 +54,7 @@ swagger-to-sdk:
   - repo: azure-sdk-for-ruby
     after_scripts:
       - bundle install && rake arm:regen_all_profiles['azure_mgmt_devtestcenter']
+  - repo: azure-cli-extensions
 ```
 
 ## Go
