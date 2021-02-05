@@ -27,16 +27,16 @@ These are the global settings for the testbase.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2019-01-01
+tag: package-2019-02-13
 ```
 
-### Tag: package-2019-01-01
+### Tag: package-2019-02-13
 
-These settings apply only when `--tag=package-2019-01-01` is specified on the command line.
+These settings apply only when `--tag=package-2019-02-13` is specified on the command line.
 
-```yaml $(tag) == 'package-2019-01-01'
+```yaml $(tag) == 'package-2019-02-13'
 input-file:
-  - Microsoft.xiaotest/preview/2019-01-01/testbase.json
+  - Microsoft.xiaotest/preview/2019-02-13/testbase.json
 ```
 ## Suppression
 
