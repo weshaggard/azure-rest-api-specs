@@ -12,5 +12,7 @@ cli:
   test-scenario:
     - name: Create Code Sign Account
     - name: Get Code Sign Account
+    - name: Update Code Sign Account
+    - name: Delete Code Sign Account
 
 ```
