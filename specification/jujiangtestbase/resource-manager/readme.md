@@ -1,16 +1,19 @@
-# devtestcenter
+# testbase
 
 > see https://aka.ms/autorest
-This is the AutoRest configuration file for devtestcenter.
+
+This is the AutoRest configuration file for testbase.
 
 ## Getting Started
 
 To build the SDKs for My API, simply install AutoRest via `npm` (`npm install -g autorest`) and then run:
 
 > `autorest readme.md`
+
 To see additional help and options, run:
 
 > `autorest --help`
+
 For other options on installation see [Installing AutoRest](https://aka.ms/autorest/install) on the AutoRest github page.
 
 ---
@@ -19,21 +22,30 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the devtestcenter.
+These are the global settings for the testbase.
 
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2021-01-01-alpha
+tag: package-2020-12-16-preview
 ```
 
-### Tag: package-2021-01-01-alpha
+### Tag: package-2020-12-16-preview
 
-These settings apply only when `--tag=package-2021-01-01-alpha` is specified on the command line.
+These settings apply only when `--tag=package-2020-12-16-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-01-01-alpha'
+```yaml $(tag) == 'package-2020-12-16-preview'
 input-file:
-  - preview/2021-01-01-alpha/devtestcenter.json
+  - Microsoft.JujiangTestBase/preview/2020-12-16-preview/testbase.json
+```
+## Suppression
+
+``` yaml
+directive:
+  - suppress: R4031
+    from: testbase.json
+    reason: Proxy resource
+
 ```
 
 ---
@@ -51,9 +63,9 @@ swagger-to-sdk:
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
-  - repo: azure-sdk-for-ruby
+  - repo: azure-resource-manager-schemas
     after_scripts:
-      - bundle install && rake arm:regen_all_profiles['azure_mgmt_devtestcenter']
+      - node sdkauto_afterscript.js testbase/resource-manager
 ```
 
 ## Go
@@ -64,10 +76,6 @@ See configuration in [readme.go.md](./readme.go.md)
 
 See configuration in [readme.python.md](./readme.python.md)
 
-## Ruby
-
-See configuration in [readme.ruby.md](./readme.ruby.md)
-
 ## TypeScript
 
 See configuration in [readme.typescript.md](./readme.typescript.md)
@@ -75,3 +83,7 @@ See configuration in [readme.typescript.md](./readme.typescript.md)
 ## CSharp
 
 See configuration in [readme.csharp.md](./readme.csharp.md)
+
+## AzureResourceSchema
+
+See configuration in [readme.azureresourceschema.md](./readme.azureresourceschema.md)
