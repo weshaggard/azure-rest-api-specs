@@ -295,6 +295,20 @@
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "The filter to apply on the operation."
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Comma-separated list of additional properties to be included in the response. Valid values include `createdTime`, `changedTime` and `provisioningState`. For example, `$expand=createdTime,changedTime`."
           }
         ],
         "responses": {
@@ -378,25 +392,6 @@
       "type": "object",
       "description": "The deployment resource representing a deployment being made to an azure resource.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier of the deployment",
-          "readOnly": true
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the deployment",
-          "readOnly": true
-        },
-        "type": {
-          "type": "string",
-          "description": "Type of the deployment",
-          "readOnly": true
-        },
-        "location": {
-          "type": "string",
-          "description": "location of the deployment resource"
-        },
         "properties": {
           "type": "object",
           "description": "Deployment resource properties",
@@ -408,6 +403,11 @@
           "$ref": "#/definitions/SystemData"
         }
       },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProxyResource"
+        }
+      ],
       "x-ms-azure-resource": true
     },
     "DeploymentProperties": {
@@ -661,354 +661,6 @@
       },
       "description": "Display information of an operation."
     },
-    "PipelineTemplateDefinitionListResult": {
-      "type": "object",
-      "description": "Result of a request to list all pipeline template definitions.",
-      "properties": {
-        "value": {
-          "description": "List of pipeline template definitions.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PipelineTemplateDefinition"
-          }
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "The URL to get the next set of pipeline template definitions, if there are any."
-        }
-      }
-    },
-    "PipelineTemplateDefinition": {
-      "type": "object",
-      "description": "Definition of a pipeline template.",
-      "properties": {
-        "id": {
-          "description": "Unique identifier of the pipeline template.",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description of the pipeline enabled by the template.",
-          "type": "string"
-        },
-        "inputs": {
-          "description": "List of input parameters required by the template to create a pipeline.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InputDescriptor"
-          }
-        }
-      },
-      "required": [
-        "id"
-      ]
-    },
-    "InputDescriptor": {
-      "type": "object",
-      "description": "Representation of a pipeline template input parameter.",
-      "properties": {
-        "id": {
-          "description": "Identifier of the input parameter.",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description of the input parameter.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Data type of the value of the input parameter.",
-          "type": "string",
-          "enum": [
-            "String",
-            "SecureString",
-            "Int",
-            "Bool",
-            "Authorization"
-          ],
-          "x-ms-enum": {
-            "name": "InputDataType",
-            "modelAsString": true
-          }
-        },
-        "possibleValues": {
-          "description": "List of possible values for the input parameter.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InputValue"
-          }
-        }
-      },
-      "required": [
-        "id",
-        "type"
-      ]
-    },
-    "InputValue": {
-      "type": "object",
-      "description": "Representation of a pipeline template input parameter value.",
-      "properties": {
-        "value": {
-          "description": "Value of an input parameter.",
-          "type": "string"
-        },
-        "displayValue": {
-          "description": "Description of the input parameter value.",
-          "type": "string"
-        }
-      }
-    },
-    "Pipeline": {
-      "type": "object",
-      "description": "Azure DevOps Pipeline used to configure Continuous Integration (CI) & Continuous Delivery (CD) for Azure resources.",
-      "properties": {
-        "properties": {
-          "$ref": "#/definitions/PipelineProperties",
-          "description": "Custom properties of the Pipeline.",
-          "x-ms-client-flatten": true
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/Resource"
-        }
-      ],
-      "required": [
-        "properties"
-      ]
-    },
-    "PipelineProperties": {
-      "type": "object",
-      "description": "Custom properties of a Pipeline.",
-      "properties": {
-        "pipelineId": {
-          "type": "integer",
-          "format": "int32",
-          "readOnly": true,
-          "description": "Unique identifier of the Azure Pipeline within the Azure DevOps Project."
-        },
-        "organization": {
-          "$ref": "#/definitions/OrganizationReference",
-          "description": "Reference to the Azure DevOps Organization containing the Pipeline."
-        },
-        "project": {
-          "$ref": "#/definitions/ProjectReference",
-          "description": "Reference to the Azure DevOps Project containing the Pipeline."
-        },
-        "bootstrapConfiguration": {
-          "$ref": "#/definitions/BootstrapConfiguration",
-          "description": "Configuration used to bootstrap the Pipeline."
-        }
-      },
-      "required": [
-        "organization",
-        "project",
-        "bootstrapConfiguration"
-      ]
-    },
-    "OrganizationReference": {
-      "type": "object",
-      "description": "Reference to an Azure DevOps Organization.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Unique immutable identifier for the Azure DevOps Organization."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the Azure DevOps Organization."
-        }
-      },
-      "required": [
-        "name"
-      ]
-    },
-    "ProjectReference": {
-      "type": "object",
-      "description": "Reference to an Azure DevOps Project.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Unique immutable identifier of the Azure DevOps Project."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the Azure DevOps Project."
-        }
-      },
-      "required": [
-        "name"
-      ]
-    },
-    "BootstrapConfiguration": {
-      "type": "object",
-      "description": "Configuration used to bootstrap a Pipeline.",
-      "properties": {
-        "repository": {
-          "$ref": "#/definitions/CodeRepository",
-          "description": "Repository containing the source code for the pipeline."
-        },
-        "template": {
-          "$ref": "#/definitions/PipelineTemplate",
-          "description": "Template used to bootstrap the pipeline."
-        }
-      },
-      "required": [
-        "template"
-      ]
-    },
-    "CodeRepository": {
-      "type": "object",
-      "description": "Repository containing the source code for a pipeline.",
-      "properties": {
-        "repositoryType": {
-          "description": "Type of code repository.",
-          "type": "string",
-          "enum": [
-            "gitHub",
-            "vstsGit"
-          ],
-          "x-ms-enum": {
-            "name": "CodeRepositoryType",
-            "modelAsString": true
-          }
-        },
-        "id": {
-          "description": "Unique immutable identifier of the code repository.",
-          "type": "string"
-        },
-        "defaultBranch": {
-          "description": "Default branch used to configure Continuous Integration (CI) in the pipeline.",
-          "type": "string"
-        },
-        "authorization": {
-          "description": "Authorization info to access the code repository.",
-          "$ref": "#/definitions/Authorization"
-        },
-        "properties": {
-          "description": "Repository-specific properties.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-client-flatten": true
-        }
-      },
-      "required": [
-        "repositoryType",
-        "id",
-        "defaultBranch"
-      ]
-    },
-    "Authorization": {
-      "description": "Authorization info used to access a resource (like code repository).",
-      "type": "object",
-      "properties": {
-        "authorizationType": {
-          "description": "Type of authorization.",
-          "type": "string",
-          "enum": [
-            "personalAccessToken"
-          ],
-          "x-ms-enum": {
-            "name": "AuthorizationType",
-            "modelAsString": true
-          }
-        },
-        "parameters": {
-          "description": "Authorization parameters corresponding to the authorization type.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "authorizationType"
-      ]
-    },
-    "PipelineTemplate": {
-      "type": "object",
-      "description": "Template used to bootstrap the pipeline.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier of the pipeline template."
-        },
-        "parameters": {
-          "type": "object",
-          "description": "Dictionary of input parameters used in the pipeline template.",
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "id"
-      ]
-    },
-    "Resource": {
-      "type": "object",
-      "description": "An Azure Resource Manager (ARM) resource.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Id"
-        },
-        "type": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Type"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource Tags"
-        },
-        "location": {
-          "type": "string",
-          "description": "Resource Location"
-        },
-        "name": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Name"
-        }
-      },
-      "x-ms-azure-resource": true
-    },
-    "PipelineUpdateParameters": {
-      "type": "object",
-      "description": "Request payload used to update an existing Azure Pipeline.",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "description": "Dictionary of key-value pairs to be set as tags on the Azure Pipeline. This will overwrite any existing tags.",
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "PipelineListResult": {
-      "description": "Result of a request to list all Azure Pipelines under a given scope.",
-      "properties": {
-        "value": {
-          "description": "List of pipelines.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Pipeline"
-          }
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "URL to get the next set of Pipelines, if there are any."
-        }
-      }
-    },
     "SystemData": {
       "description": "Metadata pertaining to creation and last modification of the resource.",
       "type": "object",
@@ -1061,6 +713,28 @@
           "description": "The type of identity that last modified the resource."
         }
       }
+    },
+    "ProxyResource": {
+      "title": "Proxy resource type",
+      "description": "An azure proxy resource",
+      "properties": {
+        "id": {
+          "description": "Azure resource Id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "name": {
+          "description": "Azure resource name.",
+          "type": "string",
+          "readOnly": true
+        },
+        "type": {
+          "description": "Azure resource type.",
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "x-ms-azure-resource": true
     }
   },
   "parameters": {
