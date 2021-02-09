@@ -183,9 +183,19 @@
           }
         ],
         "operationId": "Organizations_CreateOrUpdate",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "responses": {
           "200": {
             "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Organization"
+            }
+          },
+          "201": {
+            "description": "Created. The request will complete asynchronously.",
             "schema": {
               "$ref": "#/definitions/Organization"
             }
@@ -198,8 +208,11 @@
           }
         },
         "x-ms-examples": {
-          "Organizations_CreateOrUpdate": {
-            "$ref": "./examples/Organizations_Put.json"
+          "Organizations_Create": {
+            "$ref": "./examples/Organizations_Create.json"
+          },
+          "Organizations_CreateWithUserIdentity": {
+            "$ref": "./examples/Organizations_CreateWithUserIdentity.json"
           }
         }
       },
@@ -230,9 +243,19 @@
           }
         ],
         "operationId": "Organizations_Update",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "responses": {
           "200": {
-            "description": "Succeeded",
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Organization"
+            }
+          },
+          "201": {
+            "description": "Created. The request will complete asynchronously.",
             "schema": {
               "$ref": "#/definitions/Organization"
             }
@@ -1960,19 +1983,20 @@
           "description": "Metadata pertaining to creation and last modification of the resource.",
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
           "readOnly": true
+        },
+        "identity": {
+          "description": "Managed identity properties",
+          "$ref": "#/definitions/IdentityProperties"
         }
       }
     },
     "OrganizationUpdateProperties": {
       "description": "Properties of the organization. These properties can be updated after the resource has been created.",
       "properties": {
-        "displayName": {
-          "description": "Display name for the organization.",
-          "type": "string"
-        },
         "description": {
-          "description": "Organization description.",
-          "type": "string"
+          "maxLength": 1024,
+          "type": "string",
+          "description": "Organization description."
         }
       }
     },
@@ -2008,6 +2032,10 @@
           },
           "x-ms-mutability": ["read", "create", "update"],
           "description": "Resource tags."
+        },
+        "identity": {
+          "description": "Managed identity properties",
+          "$ref": "#/definitions/IdentityProperties"
         }
       }
     },
@@ -2048,10 +2076,6 @@
           "description": "Metadata pertaining to creation and last modification of the resource.",
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
           "readOnly": true
-        },
-        "identity": {
-          "description": "Managed identity properties",
-          "$ref": "#/definitions/IdentityProperties"
         }
       }
     },
@@ -2694,25 +2718,52 @@
       }
     },
     "IdentityProperties": {
-      "description": "Properties of a managed identity",
+      "description": "Managed identity for the resource.",
       "type": "object",
       "properties": {
-        "type": {
-          "description": "Type of identity (None, SystemAssigned)",
-          "enum": ["None", "SystemAssigned"],
-          "type": "string",
-          "x-ms-enum": {
-            "name": "ManagedIdentityType",
-            "modelAsString": true
-          }
-        },
         "principalId": {
-          "description": "The principal id of resource identity.",
-          "type": "string"
+          "readOnly": true,
+          "type": "string",
+          "description": "The principal id of the resource identity. This property will only be provided for a system assigned identity."
         },
         "tenantId": {
-          "description": "The tenant identifier of resource.",
-          "type": "string"
+          "readOnly": true,
+          "type": "string",
+          "description": "The tenant id associated with the resource. This property will only be provided for a system assigned identity."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of identity used for the resource. The type 'SystemAssigned, UserAssigned' includes both an implicitly created identity and a user assigned identity. The type 'None' will remove any identities from the resource.",
+          "enum": [
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned, UserAssigned",
+            "None"
+          ],
+          "x-ms-enum": {
+            "name": "ResourceIdentityType",
+            "modelAsString": false
+          }
+        },
+        "userAssignedIdentities": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "x-ms-client-name": "userAssignedIdentitiesValue",
+            "properties": {
+              "principalId": {
+                "readOnly": true,
+                "type": "string",
+                "description": "The principal id of user assigned identity."
+              },
+              "clientId": {
+                "readOnly": true,
+                "type": "string",
+                "description": "The client id of user assigned identity."
+              }
+            }
+          },
+          "description": "The list of user identities associated with the resource. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'."
         }
       }
     },
@@ -2861,6 +2912,9 @@
       "in": "path",
       "required": true,
       "type": "string",
+      "maxLength": 63,
+      "minLength": 2,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]*$",
       "description": "The name of the organization.",
       "x-ms-parameter-location": "method"
     },
