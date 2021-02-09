@@ -43,15 +43,15 @@ input-file:
 
 ``` yaml
 directive:
-  - suppress: EnumCaseMismatch
+  - suppress: ENUM_CASE_MISMATCH
     where: $.paths
     from: deviceupdate.json
     reason: Managed Identity type can be case in-sensitive
-  - suppress: EnumCaseMismatch
+  - suppress: ENUM_CASE_MISMATCH
     where: $.identity.type
     from: deviceupdate.json
     reason: Managed Identity type can be case in-sensitive
-  - suppress: EnumCaseMismatch
+  - suppress: ENUM_CASE_MISMATCH
     where: $.definitions.Identity.properties.type
     from: deviceupdate.json
     reason: Managed Identity type can be case in-sensitive
