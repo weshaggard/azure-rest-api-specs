@@ -39,6 +39,42 @@ input-file:
   - Microsoft.DeviceUpdate/preview/2020-03-01-preview/deviceupdate.json
 ```
 
+## Suppression
+
+``` yaml
+directive:
+  - suppress: EnumCaseMismatch
+    from: deviceupdate.json
+    reason: Managed Identity type can be case in-sensitive
+  - suppress: ENUM_CASE_MISMATCH
+    from: deviceupdate.json
+    reason: Managed Identity type can be case in-sensitive
+  - suppress: EnumCaseMismatch
+    where: $.paths
+    from: deviceupdate.json
+    reason: Managed Identity type can be case in-sensitive
+  - suppress: ENUM_CASE_MISMATCH
+    where: $.paths
+    from: deviceupdate.json
+    reason: Managed Identity type can be case in-sensitive
+  - suppress: EnumCaseMismatch
+    where: $.identity.type
+    from: deviceupdate.json
+    reason: Managed Identity type can be case in-sensitive
+  - suppress: ENUM_CASE_MISMATCH
+    where: $.identity.type
+    from: deviceupdate.json
+    reason: Managed Identity type can be case in-sensitive
+  - suppress: EnumCaseMismatch
+    where: $.definitions.Identity.properties.type
+    from: deviceupdate.json
+    reason: Managed Identity type can be case in-sensitive
+  - suppress: ENUM_CASE_MISMATCH
+    where: $.definitions.Identity.properties.type
+    from: deviceupdate.json
+    reason: Managed Identity type can be case in-sensitive
+```
+
 ---
 
 # Code Generation
@@ -68,12 +104,3 @@ See configuration in [readme.python.md](./readme.python.md)
 ## Go
 
 See configuration in [readme.go.md](./readme.go.md)
-
-## Suppression
-
-``` yaml
-directive:
-  - suppress: EnumCaseMismatch
-    from: deviceupdate.json
-    reason: Managed Identity type can be case in-sensitive
-```
