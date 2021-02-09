@@ -73,7 +73,7 @@ See configuration in [readme.go.md](./readme.go.md)
 
 ``` yaml
 directive:
-  - suppress: ENUM_CASE_MISMATCH
+  - suppress: EnumCaseMismatch
     where: $.definitions.Identity.properties
     from: deviceupdate.json
     reason: Managed Identity type can be case in-sensitive
