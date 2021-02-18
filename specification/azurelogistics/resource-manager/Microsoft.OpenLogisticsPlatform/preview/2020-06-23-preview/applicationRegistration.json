@@ -53,15 +53,17 @@
         ],
         "responses": {
           "200": {
+            "x-nullable": false,
             "description": "",
             "schema": {
-              "type": "array",
-              "items":{
-                "$ref": "#/definitions/ApplicationRegistration"
-              }
+              "$ref": "#/definitions/ApplicationRegistrationList"
             }
           },
+          "204": {
+            "description": ""
+          },
           "default": {
+            "x-nullable": false,
             "description": "",
             "schema": {
               "$ref": "#/definitions/ApplicationRegistrationErrorResponse"
@@ -70,7 +72,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OpenLogisticsPlatform/workspaces/{workspaceName}/applicationRegistrations/{ApplicationId}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OpenLogisticsPlatform/workspaces/{workspaceName}/applicationRegistrations/{applicationName}": {
       "get": {
         "tags": [
           "ApplicationRegistration"
@@ -87,7 +89,7 @@
             "$ref": "#/parameters/WorkspaceNameParameter"
           },
           {
-            "$ref": "#/parameters/ApplicationIdParameter"
+            "$ref": "#/parameters/ApplicationNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -124,7 +126,7 @@
             "$ref": "#/parameters/WorkspaceNameParameter"
           },
           {
-            "$ref": "#/parameters/ApplicationIdParameter"
+            "$ref": "#/parameters/ApplicationNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -172,7 +174,7 @@
             "$ref": "#/parameters/WorkspaceNameParameter"
           },
           {
-            "$ref": "#/parameters/ApplicationIdParameter"
+            "$ref": "#/parameters/ApplicationNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -230,39 +232,49 @@
         "properties": {
           "type": "object",
           "properties": {
-          "applicationId": {
+          "applicationName": {
             "description": "Azure resource Application Id.",
-            "type": "string",
-            "readOnly": true
+            "type": "string"
           },
           "displayName": {
             "description": "Azure resource display name.",
-            "type": "string",
-            "readOnly": true
+            "type": "string"
           },
-  		    "properties": {
-            "$ref": "#/definitions/Properties"
+  		    "attributes": {
+            "description": "Read only system data",
+            "type": "object",
+            "properties": {
+                "marketPlaceOfferIdLink": {
+                  "description": "Azure resource Id.",
+                  "type": "string"
+                },
+                "linkedResourceGroupIds": {
+                  "description": "Azure resource name.",
+                  "type": "array",
+                  "items":{
+                    "type": "string"
+                  }
+                }
+              }
             }          
           }
         }
       }
     },
-    "Properties": {
-      "description": "Read only system data",
+    "ApplicationRegistrationList": {
+      "description": "The list of ApplicationRegistration resources.",
       "type": "object",
       "properties": {
-        "marketPlaceOfferIdLink": {
-          "description": "Azure resource Id.",
-          "type": "string",
-          "readOnly": true
+        "nextLink": {
+          "description": "The link used to get the next page of ApplicationRegistration resources list.",
+          "type": "string"
         },
-        "linkedResourceGroupIds": {
-          "description": "Azure resource name.",
+        "value": {
+          "description": "The list of ApplicationRegistrations.",
           "type": "array",
-          "items":{
-            "type": "string"
-          },
-          "readOnly": true
+          "items": {
+            "$ref": "#/definitions/ApplicationRegistration"
+          }
         }
       }
     },
@@ -312,10 +324,10 @@
       "required": true,
       "x-ms-parameter-location": "method"
     },
-    "ApplicationIdParameter": {
+    "ApplicationNameParameter": {
       "type": "string",
-      "name": "ApplicationId",
-      "description": "Application Id",
+      "name": "applicationName",
+      "description": "Application name",
       "in": "path",
       "required": true,
       "x-ms-parameter-location": "method"
