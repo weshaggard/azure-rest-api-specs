@@ -2,10 +2,15 @@
 
 > see https://aka.ms/autorest
 
+## Configuration
+
 ```yaml
-tag: 2021-02-01-preview
+openapi-type: arm
 openapi-subtype: rpaas
+tag: 2021-02-01-preview
 ```
+
+### Supported API Versions
 ```yaml $(tag) == '2019-09-01-preview'
 input-file: 
   - Wandisco.Fusion/preview/2019-09-01-preview/fusionGroups.json
