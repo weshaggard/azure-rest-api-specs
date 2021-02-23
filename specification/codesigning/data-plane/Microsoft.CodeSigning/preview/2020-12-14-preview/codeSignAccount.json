@@ -1,0 +1,148 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "CodeSigningClient",
+    "description": "Code Signing client performs operations against Code Signing service",
+    "version": "2020-12-14-preview"
+  },
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountUrl}",
+    "useSchemePrefix": false,
+    "parameters": [
+      {
+        "name": "vaultBaseUrl",
+        "description": "The code sign account name, for example https://myaccount.codesigning.azure.net.",
+        "required": true,
+        "type": "string",
+        "in": "path",
+        "x-ms-skip-url-encoding": true
+      }
+    ]
+  },
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/certificateprofiles/{profileName}": {
+      "get": {
+        "operationId": "GetCertificates",
+        "summary": "List certificates in a specified certificate profile",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ProfileNameParameter"
+          }
+        ],
+        "x-ms-examples": {},
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "responses": {
+          "200": {
+            "description": "A response message containing a list of certificates along with a link to the next page of certificates",
+            "schema": {
+              "$ref": "#/definitions/CertificateListResult"
+            }
+          },
+          "default": {
+            "description": "Key Vault error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CodeSigningError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CertificateItem": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Certificate identifier"
+        },
+        "subjectName": {
+          "type": "string",
+          "description": "Certificate Subject Name"
+        }
+      },
+      "description": "The certificate item containing certificate metadata"
+    },
+    "CertificateListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CertificateItem"
+          },
+          "readOnly": true,
+          "description": "A response message containing a list of certificates in the key vault along with a link to the next page of certificates."
+        },
+        "nextLink": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The URL to get the next set of certificates."
+        }
+      },
+      "description": "The certificate list result."
+    },
+    "CodeSigningError": {
+      "properties": {
+        "error": {
+          "readOnly": true,
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "description": "The Code Signing error exception."
+    },
+    "Error": {
+      "properties": {
+        "code": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The error code."
+        },
+        "message": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The error message."
+        },
+        "innererror": {
+          "x-ms-client-name": "innerError",
+          "readOnly": true,
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "description": "The key vault server error.",
+      "x-nullable": true
+    }
+  },
+  "parameters": {
+    "ProfileNameParameter": {
+      "name": "profileName",
+      "description": "Certificate profile name",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ApiVersionParameter": {
+      "name": "api-version",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "description": "Client API version."
+    }
+  }
+}
