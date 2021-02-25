@@ -142,13 +142,17 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/microsoft.Diagnostics/solutions/{solutionName}/insights/{solutionId}/invoke": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/Microsoft.Diagnostics/insights/{solutionId}/invoke": {
       "post": {
         "tags": [
           "Insights"
         ],
-        "description": "This API will ivoke an insight",
+        "description": "Insight Diagnosic Invocation Request",
         "operationId": "First_Level_Extension_Insight_Invoke",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -169,26 +173,33 @@
             "$ref": "#/parameters/ParentResourceNameParameter"
           },
           {
-            "$ref": "#/parameters/SolutionNameParameter"
-          },
-          {
             "$ref": "#/parameters/SolutionIdParameter"
           }
         ],
         "responses": {
+          "200": {
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/InsightResult"
+            }
+          },
           "202": {
-            "description": "Accepted, diagnostics will be invoked and results posted back asyncrhonously."
+            "description": "Accepted, diagnostic will be invoked and results patched back asyncrhonously."
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/microsoft.Diagnostics/solutions/{solutionName}/insights/{solutionId}/invoke": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/Microsoft.Diagnostics/insights/{solutionId}/invoke": {
       "post": {
         "tags": [
           "Insights"
         ],
-        "description": "This API will ivoke an insight",
+        "description": "Insight Diagnosic Invocation Request",
         "operationId": "Second_Level_Extension_Insight_Invoke",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -215,20 +226,158 @@
             "$ref": "#/parameters/SubResourceNameParameter"
           },
           {
-            "$ref": "#/parameters/SolutionNameParameter"
-          },
-          {
             "$ref": "#/parameters/SolutionIdParameter"
           }
         ],
         "responses": {
+          "200": {
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/InsightResult"
+            }
+          },
           "202": {
-            "description": "Accepted, diagnostics will be invoked and results posted back asyncrhonously."
+            "description": "Accepted, diagnostic will be invoked and results patched back asyncrhonously."
           }
         }
       }
     },
-    "/providers/microsoft.diagnostics/operations": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/Microsoft.Diagnostics/azurekb": {
+      "get": {
+        "tags": [
+          "AzureKB"
+        ],
+        "description": "This API will fetch azurekb search results",
+        "operationId": "First_Level_Extension_AzureKB_Fetch_results",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentProviderNamespaceParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentResourceTypeParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentResourceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SearchTextParameter"
+          },
+          {
+            "$ref": "#/parameters/TopResultsParameter"
+          },
+          {
+            "$ref": "#/parameters/SourcesParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of AzureKB Search Responses.",
+            "schema": {
+              "$ref": "#/definitions/AzureKBSearchResultList"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/Microsoft.Diagnostics/azurekb": {
+      "get": {
+        "tags": [
+          "AzureKB"
+        ],
+        "description": "This API will fetch azurekb search results",
+        "operationId": "Second_Level_Extension_AzureKB_Fetch_results",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentProviderNamespaceParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentResourceTypeParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentResourceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SubResourceTypeParameter"
+          },
+          {
+            "$ref": "#/parameters/SubResourceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SearchTextParameter"
+          },
+          {
+            "$ref": "#/parameters/TopResultsParameter"
+          },
+          {
+            "$ref": "#/parameters/SourcesParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of AzureKB Search Responses.",
+            "schema": {
+              "$ref": "#/definitions/AzureKBSearchResultList"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Diagnostics/azurekb": {
+      "get": {
+        "tags": [
+          "AzureKB"
+        ],
+        "description": "This API will fetch azurekb search results",
+        "operationId": "RG_Level_AzureKB_Fetch_results",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/SearchTextParameter"
+          },
+          {
+            "$ref": "#/parameters/TopResultsParameter"
+          },
+          {
+            "$ref": "#/parameters/SourcesParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of AzureKB Search Responses.",
+            "schema": {
+              "$ref": "#/definitions/AzureKBSearchResultList"
+            }
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.Diagnostics/operations": {
       "get": {
         "description": "Returns list of operations.",
         "operationId": "Operation_List",
@@ -286,6 +435,136 @@
           "items": {
             "$ref": "#/definitions/ARMResponse2"
           }
+        }
+      }
+    },
+    "AzureKBSearchResultList": {
+      "description": "Collection of AzureKB Search Results",
+      "properties": {
+        "value": {
+          "description": "Array of AzureKB Search Results",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AzureKBSearchResult"
+          }
+        }
+      }
+    },
+    "AzureKBSearchResult": {
+      "description": "AzureKB Search Result",
+      "properties": {
+        "id": {
+          "description": "Id of AzureKB Search resource",
+          "type": "string"
+        },
+        "name": {
+          "description": "name of resource",
+          "type": "string"
+        },
+        "type": {
+          "description": "Resource Type",
+          "type": "string"
+        },
+        "properties": {
+          "description": "AzureKB Search Result Properties",
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/AzureKBSearchResultProperties"
+          }
+        }
+      }
+    },
+    "AzureKBSearchResultProperties": {
+      "description": "Details about an AzureKB Search Result",
+      "type": "object",
+      "properties": {
+        "resultId": {
+          "description": "Unique id of the result",
+          "type": "string"
+        },
+        "content": {
+          "description": "Content of the search result",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the search result",
+          "type": "string"
+        },
+        "apiType": {
+          "description": "Api type used",
+          "type": "string",
+          "enum": [
+            "QSimilarityAPI",
+            "AzureSearchAPI",
+            "AzureSearchWithRerankerAPI"
+          ]
+        },
+        "confidence": {
+          "description": "Confidence of the search result",
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "unifiedRank": {
+          "description": "unified rank of the search result",
+          "type": "integer"
+        },
+        "unifiedConfidence": {
+          "description": "Unified Confidence of the search result",
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "overAllRank": {
+          "description": "Overall rank of the search result",
+          "type": "integer"
+        },
+        "link": {
+          "description": "Link to the document",
+          "type": "string"
+        },
+        "searchType": {
+          "description": "Source of the results",
+          "type": "string",
+          "enum": [
+            "community",
+            "documentation"
+          ]
+        },
+        "sectionMatchDetails": {
+          "description": "Source of the search result",
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/SectionMatchDetails"
+          }
+        },
+        "attributes": {
+          "description": "Source specific attributes",
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "SectionMatchDetails": {
+      "description": "AzureKB Search Result SectionMatch details",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "Content"
+        },
+        "title": {
+          "type": "string",
+          "description": "title"
+        },
+        "link": {
+          "type": "string",
+          "description": "link"
         }
       }
     },
@@ -436,27 +715,65 @@
       }
     },
     "InsightResult": {
-      "description": "Detail of insights.",
+      "description": "The insight invocation result.",
       "properties": {
-        "InsightId": {
-          "description": "A unique ID for Insights.",
+        "Id": {
+          "description": "A unique ID for this Insight.",
           "type": "string"
         },
-        "InsightInstanceId": {
-          "description": "A unique ID for the insights call.",
+        "Problems": {
+          "description": "The problems (if any) detected by this insight.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Problem"
+          }
+        },
+        "Errors": {
+          "description": "Any errors that potentially occurred during diagnostic invocation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "Problem": {
+      "description": "Detailed problem(s) detected by an insight.",
+      "properties": {
+        "Title": {
+          "description": "The problem's title.",
           "type": "string"
         },
-        "CustomerReadyContent": {
-          "description": "IamNotSureThisField.",
+        "FriendlyDescription": {
+          "description": "A user friendly description of the problem detected.",
           "type": "string"
         },
-        "Confidence": {
-          "description": "A overall confidence if this insight will make end user happy.",
-          "enum": [
-            "Low",
-            "Medium",
-            "High"
-          ]
+        "Repairs": {
+          "description": "Potential repair actions to be taken to remedy this problem",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Repair"
+          }
+        },
+        "AdditionalDetails": {
+          "description": "Additional supporting information for additional context about this problem.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Repair": {
+      "description": "Detailed repair actions to potentially resolve a detected problem.",
+      "properties": {
+        "Title": {
+          "description": "The repair's title.",
+          "type": "string"
+        },
+        "FriendlyDescription": {
+          "description": "A user friendly description of the steps necessary to execute this repair suggestion.",
+          "type": "string"
         }
       }
     },
@@ -616,6 +933,31 @@
       "required": true,
       "type": "string",
       "description": "The unique identifier for the diagnostic solution has been invoked. (e.g. 00000000-0000-0000-0000-000000000000)"
+    },
+    "SearchTextParameter": {
+      "name": "searchText",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "description": "Search text string to search."
+    },
+    "TopResultsParameter": {
+      "name": "topResults",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "description": "Number of search results desired. Default is 5."
+    },
+    "SourcesParameter": {
+      "name": "sources",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "enum": [
+        "community",
+        "documentation"
+      ],
+      "description": "Sources from where articles are to fetched. Default is community & documentation."
     }
   }
 }
