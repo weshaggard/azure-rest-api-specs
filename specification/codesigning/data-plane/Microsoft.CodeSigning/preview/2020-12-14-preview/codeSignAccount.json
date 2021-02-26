@@ -6,11 +6,11 @@
     "version": "2020-12-14-preview"
   },
   "x-ms-parameterized-host": {
-    "hostTemplate": "{accountUrl}",
+    "hostTemplate": "{codesigningBaseUrl}",
     "useSchemePrefix": false,
     "parameters": [
       {
-        "name": "vaultBaseUrl",
+        "name": "codesigningBaseUrl",
         "description": "The code sign account name, for example https://myaccount.codesigning.azure.net.",
         "required": true,
         "type": "string",
@@ -29,7 +29,7 @@
     "application/json"
   ],
   "paths": {
-    "/certificateprofiles/{profileName}": {
+    "/certificateProfiles/{profileName}/certificates": {
       "get": {
         "operationId": "GetCertificates",
         "summary": "List certificates in a specified certificate profile",
@@ -39,6 +39,9 @@
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/AccountNameParameter"
           },
           {
             "$ref": "#/parameters/ProfileNameParameter"
@@ -52,7 +55,7 @@
           "200": {
             "description": "A response message containing a list of certificates along with a link to the next page of certificates",
             "schema": {
-              "$ref": "#/definitions/CertificateListResult"
+              "$ref": "#/definitions/Certificates"
             }
           },
           "default": {
@@ -66,7 +69,7 @@
     }
   },
   "definitions": {
-    "CertificateItem": {
+    "Certificate": {
       "properties": {
         "id": {
           "type": "string",
@@ -77,17 +80,17 @@
           "description": "Certificate Subject Name"
         }
       },
-      "description": "The certificate item containing certificate metadata"
+      "description": "The certificate containing certificate metadata"
     },
-    "CertificateListResult": {
+    "Certificates": {
       "properties": {
         "value": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CertificateItem"
+            "$ref": "#/definitions/Certificate"
           },
           "readOnly": true,
-          "description": "A response message containing a list of certificates in the key vault along with a link to the next page of certificates."
+          "description": "A response message containing a list of certificates in the Certificate Profile along with a link to the next page of certificates."
         },
         "nextLink": {
           "type": "string",
@@ -124,11 +127,19 @@
           "$ref": "#/definitions/Error"
         }
       },
-      "description": "The key vault server error.",
+      "description": "The Signing server error.",
       "x-nullable": true
     }
   },
   "parameters": {
+    "AccountNameParameter": {
+      "name": "accountName",
+      "description": "Code Sin name",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
     "ProfileNameParameter": {
       "name": "profileName",
       "description": "Certificate profile name",
