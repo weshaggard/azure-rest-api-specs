@@ -147,7 +147,7 @@
         "tags": [
           "Insights"
         ],
-        "description": "This API will ivoke an insight",
+        "description": "Insight Diagnosic Invocation Request",
         "operationId": "First_Level_Extension_Insight_Invoke",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
@@ -177,18 +177,24 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "Accepted, diagnostics will be invoked and results posted back asyncrhonously."
+          "200": {
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/InsightResult"
+            }
+          },
+          "202": {
+            "description": "Accepted, diagnostic will be invoked and results patched back asyncrhonously."
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/microsoft.Diagnostics/insights/{solutionId}/invoke": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/Microsoft.Diagnostics/insights/{solutionId}/invoke": {
       "post": {
         "tags": [
           "Insights"
         ],
-        "description": "This API will ivoke an insight",
+        "description": "Insight Diagnosic Invocation Request",
         "operationId": "Second_Level_Extension_Insight_Invoke",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
@@ -224,13 +230,19 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "Accepted, diagnostics will be invoked and results posted back asyncrhonously."
+          "200": {
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/InsightResult"
+            }
+          },
+          "202": {
+            "description": "Accepted, diagnostic will be invoked and results patched back asyncrhonously."
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/microsoft.Diagnostics/azurekb": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/Microsoft.Diagnostics/azurekb": {
       "get": {
         "tags": [
           "AzureKB"
@@ -276,7 +288,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/microsoft.Diagnostics/azurekb": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/Microsoft.Diagnostics/azurekb": {
       "get": {
         "tags": [
           "AzureKB"
@@ -328,7 +340,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Diagnostics/azurekb": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Diagnostics/azurekb": {
       "get": {
         "tags": [
           "AzureKB"
@@ -365,7 +377,7 @@
         }
       }
     },
-    "/providers/microsoft.diagnostics/operations": {
+    "/providers/Microsoft.Diagnostics/operations": {
       "get": {
         "description": "Returns list of operations.",
         "operationId": "Operation_List",
@@ -482,8 +494,8 @@
           "description": "Api type used",
           "type": "string",
           "enum": [
-            "QSimilarityAPI", 
-            "AzureSearchAPI", 
+            "QSimilarityAPI",
+            "AzureSearchAPI",
             "AzureSearchWithRerankerAPI"
           ]
         },
@@ -703,27 +715,65 @@
       }
     },
     "InsightResult": {
-      "description": "Detail of insights.",
+      "description": "The insight invocation result.",
       "properties": {
-        "InsightId": {
-          "description": "A unique ID for Insights.",
+        "Id": {
+          "description": "A unique ID for this Insight.",
           "type": "string"
         },
-        "InsightInstanceId": {
-          "description": "A unique ID for the insights call.",
+        "Problems": {
+          "description": "The problems (if any) detected by this insight.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Problem"
+          }
+        },
+        "Errors": {
+          "description": "Any errors that potentially occurred during diagnostic invocation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "Problem": {
+      "description": "Detailed problem(s) detected by an insight.",
+      "properties": {
+        "Title": {
+          "description": "The problem's title.",
           "type": "string"
         },
-        "CustomerReadyContent": {
-          "description": "IamNotSureThisField.",
+        "FriendlyDescription": {
+          "description": "A user friendly description of the problem detected.",
           "type": "string"
         },
-        "Confidence": {
-          "description": "A overall confidence if this insight will make end user happy.",
-          "enum": [
-            "Low",
-            "Medium",
-            "High"
-          ]
+        "Repairs": {
+          "description": "Potential repair actions to be taken to remedy this problem",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Repair"
+          }
+        },
+        "AdditionalDetails": {
+          "description": "Additional supporting information for additional context about this problem.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Repair": {
+      "description": "Detailed repair actions to potentially resolve a detected problem.",
+      "properties": {
+        "Title": {
+          "description": "The repair's title.",
+          "type": "string"
+        },
+        "FriendlyDescription": {
+          "description": "A user friendly description of the steps necessary to execute this repair suggestion.",
+          "type": "string"
         }
       }
     },

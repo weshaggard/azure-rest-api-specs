@@ -1766,7 +1766,7 @@
           "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
-          "Successful Tags Patch": {
+          "Successful Migrator Tags Patch": {
             "$ref": "./examples/LiveDataMigrator/MigratorTagPatch.json"
           },
           "Successful Bandwidth Patch": {
@@ -2164,7 +2164,7 @@
           "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
-          "Successful Tags Patch": {
+          "Successful Migration Tags Patch": {
             "$ref": "./examples/LiveDataMigrator/LiveDataMigrationTagsPatch.json"
           }
         }
@@ -2198,11 +2198,8 @@
           "200": {
             "description": "OK. The request has succeeded."
           },
-          "412": {
-            "description": "Precondition Failed"
-          },
           "default": {
-            "description": "Error response describing the reason for operation failure. 404 - NotFound",
+            "description": "Error response describing the reason for operation failure.",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -2243,11 +2240,8 @@
           "200": {
             "description": "OK. The request has succeeded."
           },
-          "412": {
-            "description": "Precondition Failed"
-          },
           "default": {
-            "description": "Error response describing the reason for operation failure. 404 - NotFound",
+            "description": "Error response describing the reason for operation failure.",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -3248,24 +3242,15 @@
         }
       }
     },
-    "Resource": {
+    "FrpResource": {
       "description": "An Azure resource.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
+        }
+      ],
       "properties": {
-        "id": {
-          "description": "Azure resource Id.",
-          "type": "string",
-          "readOnly": true
-        },
-        "name": {
-          "description": "Azure resource name.",
-          "type": "string",
-          "readOnly": true
-        },
-        "type": {
-          "description": "Azure resource type.",
-          "type": "string",
-          "readOnly": true
-        },
         "location": {
           "description": "Location of the resource.",
           "type": "string",
@@ -3286,94 +3271,33 @@
         "systemData": {
           "title": "SystemData",
           "description": "System metadata for Resource",
-          "$ref": "#/definitions/SystemData",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
           "readOnly": true
         }
       },
       "x-ms-azure-resource": true
     },
-    "ProxyResource": {
+    "FrpProxyResource": {
       "title": "Proxy resource type",
       "description": "An azure proxy resource",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+        }
+      ],
       "properties": {
-        "id": {
-          "description": "Azure resource Id.",
-          "type": "string",
-          "readOnly": true
-        },
-        "name": {
-          "description": "Azure resource name.",
-          "type": "string",
-          "readOnly": true
-        },
-        "type": {
-          "description": "Azure resource type.",
-          "type": "string",
-          "readOnly": true
-        },
         "systemData": {
           "title": "SystemData",
           "description": "System metadata for Resource",
-          "$ref": "#/definitions/SystemData",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
           "readOnly": true
         }
       },
       "x-ms-azure-resource": true
     },
-    "SystemData": {
-      "description": "Metadata pertaining to creation and last modification of the resource.",
-      "type": "object",
-      "readOnly": true,
-      "properties": {
-        "createdBy": {
-          "type": "string",
-          "description": "The identity that created the resource."
-        },
-        "createdByType": {
-          "type": "string",
-          "description": "The type of identity that created the resource.",
-          "enum": [
-            "User",
-            "Application",
-            "ManagedIdentity",
-            "Key"
-          ],
-          "x-ms-enum": {
-            "name": "createdByType",
-            "modelAsString": true
-          }
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp of resource creation (UTC)."
-        },
-        "lastModifiedBy": {
-          "type": "string",
-          "description": "The identity that last modified the resource."
-        },
-        "lastModifiedByType": {
-          "type": "string",
-          "description": "The type of identity that last modified the resource.",
-          "enum": [
-            "User",
-            "Application",
-            "ManagedIdentity",
-            "Key"
-          ],
-          "x-ms-enum": {
-            "name": "createdByType",
-            "modelAsString": true
-          }
-        },
-        "lastModifiedAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The type of identity that last modified the resource."
-        }
-      }
-    },
     "VirtualMachineIdentity": {
+      "type": "object",
       "properties": {
         "type": {
           "type": "string",
@@ -3414,7 +3338,7 @@
       "description": "Fusion Group details",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
@@ -3477,7 +3401,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
@@ -3490,6 +3414,7 @@
     },
     "AzureZoneProperties": {
       "description": "azure zone properties",
+      "type": "object",
       "properties": {
         "virtualNetworkId": {
           "description": "Resource ID of virtual network to attach the VMs to",
@@ -3582,6 +3507,7 @@
       "properties": {
         "fusion": {
           "description": "Details of the fusion server node.",
+          "type": "object",
           "properties": {
             "nodeName": {
               "description": "The name of the Fusion node",
@@ -3617,6 +3543,7 @@
         "vm": {
           "x-ms-azure-resource": true,
           "description": "The VirtualMachine resource associated with this node",
+          "type": "object",
           "properties": {
             "id": {
               "type": "string",
@@ -3632,7 +3559,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
@@ -3663,6 +3590,7 @@
     },
     "PluginRepresentation": {
       "description": "Plugin Representation",
+      "type": "object",
       "discriminator": "pluginKind",
       "properties": {
         "pluginKind": {
@@ -3798,7 +3726,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
@@ -3900,7 +3828,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
@@ -3995,6 +3923,7 @@
         },
         "installParameters": {
           "description": "Installation configuration for the Migrator server",
+          "type": "object",
           "properties": {
             "user": {
               "description": "The system user to run the process as",
@@ -4062,6 +3991,7 @@
         "properties": {
           "title": "properties",
           "description": "MigratorTagsAndBandwidthUpdate properties",
+          "type": "object",
           "x-ms-client-flatten": true,
           "properties": {
             "bandwidthPolicy": {
@@ -4075,6 +4005,7 @@
     },
     "MigratorBandwidthPolicy": {
       "description": "BandwidthPolicy for a Migrator resource.",
+      "type": "object",
       "properties": {
         "maxBytesPerSec": {
           "description": "Overall application bandwidth limit to apply.",
@@ -4088,7 +4019,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
@@ -4169,7 +4100,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
@@ -4371,6 +4302,7 @@
         },
         "display": {
           "description": "The object that represents the operation.",
+          "type": "object",
           "properties": {
             "provider": {
               "description": "Service provider: Microsoft.ResourceProvider",
@@ -4394,6 +4326,7 @@
     },
     "OperationListResult": {
       "description": "Result of the request to list Resource Provider operations. It contains a list of operations and a URL link to get the next set of results.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -4410,6 +4343,7 @@
     },
     "OperationStatusError": {
       "description": "operation status error",
+      "type": "object",
       "properties": {
         "code": {
           "description": "An invariant error code used for error troubleshooting, aggregation, and analysis.",
@@ -4453,12 +4387,6 @@
           "description": "If present, details of the error.",
           "type": "object",
           "$ref": "#/definitions/OperationStatusError"
-        },
-        "systemData": {
-          "title": "SystemData",
-          "description": "System metadata for Resource",
-          "$ref": "#/definitions/SystemData",
-          "readOnly": true
         }
       }
     },
@@ -4467,7 +4395,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ProxyResource"
+          "$ref": "#/definitions/FrpProxyResource"
         }
       ],
       "properties": {
@@ -4497,6 +4425,7 @@
     },
     "MigrationProperties": {
       "description": "Properties of fusion migration",
+      "type": "object",
       "properties": {
         "source": {
           "type": "string",
@@ -4606,6 +4535,7 @@
     },
     "MigrationProgress": {
       "description": "Status of fusion migration",
+      "type": "object",
       "properties": {
         "duration": {
           "type": "integer",
@@ -4664,7 +4594,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
@@ -4694,6 +4624,7 @@
     },
     "LiveDataMigrationProperties": {
       "description": "Properties of migrator migration",
+      "type": "object",
       "properties": {
         "path": {
           "type": "string",
@@ -4797,6 +4728,7 @@
     },
     "ErrorResponse": {
       "description": "Error response indicates that the service is not able to process the incoming request.",
+      "type": "object",
       "properties": {
         "error": {
           "$ref": "#/definitions/ErrorDefinition",
@@ -4806,6 +4738,7 @@
     },
     "ErrorDefinition": {
       "description": "Error definition.",
+      "type": "object",
       "properties": {
         "code": {
           "description": "Service specific error code which serves as the substatus for the HTTP error code.",
@@ -4828,6 +4761,7 @@
     },
     "Allowance": {
       "description": "The remaining allowance included as part of any plan for a resource",
+      "type": "object",
       "properties": {
         "remainingData": {
           "description": "The number of MBs remaining",
@@ -4854,6 +4788,7 @@
       }
     },
     "Plan": {
+      "type": "object",
       "properties": {
         "name": {
           "type": "string",
@@ -4888,7 +4823,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/FrpResource"
         }
       ],
       "properties": {
