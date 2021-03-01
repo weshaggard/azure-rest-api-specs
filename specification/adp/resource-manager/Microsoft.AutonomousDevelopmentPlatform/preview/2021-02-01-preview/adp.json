@@ -70,6 +70,45 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.AutonomousDevelopmentPlatform/checkNameAvailability": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "operationId": "Accounts_CheckNameAvailability",
+        "description": "Checks that the account name is valid and is not already in use",
+        "x-ms-examples": {
+          "AccountCheckNameAvailability": {
+            "$ref": "./examples/AdpAccountCheckNameAvailability.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccountCheckNameAvailabilityParameters"
+            },
+            "description": "The checkNameAvailability parameters."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK -- Operation to check the account name availability was successful",
+            "schema": {
+              "$ref": "#/definitions/CheckNameAvailabilityResult"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.AutonomousDevelopmentPlatform/accounts": {
       "get": {
         "tags": [
@@ -602,6 +641,59 @@
     }
   },
   "definitions": {
+    "AccountCheckNameAvailabilityParameters": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The account name",
+          "pattern": "^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Microsoft.AutonomousDevelopmentPlatform/accounts"
+          ],
+          "x-ms-enum": {
+            "name": "Type",
+            "modelAsString": true
+          },
+          "description": "The type of resource, Microsoft.AutonomousDevelopmentPlatform/accounts"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "description": "The parameters used to check the availability of the account name"
+    },
+    "CheckNameAvailabilityResult": {
+      "description": "The checkNameAvailability operation response",
+      "properties": {
+        "nameAvailable": {
+          "readOnly": true,
+          "type": "boolean",
+          "description": "Gets a boolean value that indicates whether the name is available for you to use. If true, the name is available. If false, the name has already been taken or is invalid and cannot be used"
+        },
+        "reason": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Gets the reason that an account name could not be used. The reason element is only returned if nameAvailable is false",
+          "enum": [
+            "Invalid",
+            "AlreadyExists"
+          ],
+          "x-ms-enum": {
+            "name": "CheckNameAvailabilityReason",
+            "modelAsString": true
+          }
+        },
+        "message": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Gets an error message explaining the reason value in more detail"
+        }
+      }
+    },
     "Tags": {
       "description": "Resource tags",
       "properties": {
