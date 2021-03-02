@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "CodeSigningClient",
-    "description": "Azure Code Sign Resource Provider Account and CertificateProfile management API",
+    "title": "CodeSigningManagementClient",
+    "description": "Code Sign Resource Provider Account and CertificateProfile management API",
     "version": "2020-12-14-preview"
   },
   "host": "management.azure.com",
@@ -38,7 +38,11 @@
       "get": {
         "operationId": "CodeSignAccount_ListBySubscription",
         "description": "Lists Code Sign Accounts within a subscription",
-        "x-ms-examples": {},
+        "x-ms-examples": {
+          "List Code Sign Accounts by Subscription": {
+            "$ref": "./examples/listCodeSignAccountsBySubscription.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -70,7 +74,11 @@
       "get": {
         "operationId": "CodeSignAccount_ListByResourceGroup",
         "description": "List Code Sign Accounts within a resource group",
-        "x-ms-examples": {},
+        "x-ms-examples": {
+          "List Code Sign Accounts by Resource Group": {
+            "$ref": "./examples/listCodeSignAccountsByResourceGroup.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -104,8 +112,12 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.CodeSigning/codeSignAccounts/{accountName}": {
       "get": {
         "operationId": "CodeSignAccount_Get",
-        "description": "Gets the specified Code Sign Account",
-        "x-ms-examples": {},
+        "description": "Get Code Sign Account",
+        "x-ms-examples": {
+          "Get Code Sign Account": {
+            "$ref": "./examples/getCodeSignAccount.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -137,8 +149,12 @@
       },
       "put": {
         "operationId": "CodeSignAccount_Create",
-        "description": "Create a code sign account",
-        "x-ms-examples": {},
+        "description": "Create Code Sign Account",
+        "x-ms-examples": {
+          "Create Code Sign Account": {
+            "$ref": "./examples/createCodeSignAccount.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -167,6 +183,12 @@
               "$ref": "#/definitions/CodeSignAccount"
             }
           },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/CodeSignAccount"
+            }
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -178,7 +200,11 @@
       "patch": {
         "operationId": "CodeSignAccount_Update",
         "description": "Update a code sign account",
-        "x-ms-examples": {},
+        "x-ms-examples": {
+          "Update Code Sign Account": {
+            "$ref": "./examples/updateCodeSignAccount.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -214,7 +240,11 @@
       "delete": {
         "operationId": "CodeSignAccount_Delete",
         "description": "Delete a Code Sign Account",
-        "x-ms-examples": {},
+        "x-ms-examples": {
+          "Delete Code Sign Account": {
+            "$ref": "./examples/deleteCodeSignAccount.json"
+          }        
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -263,7 +293,11 @@
             "$ref": "#/parameters/AccountNameParam"
           }
         ],
-        "x-ms-examples": {},
+        "x-ms-examples": {
+          "List Certificate Profiles": {
+            "$ref": "./examples/listCertificateProfiles.json"
+          }
+        },
         "responses": {
           "200": {
             "description": "Gets all code sign accounts in the specified resource group",
@@ -287,7 +321,11 @@
       "get": {
         "operationId": "CertificateProfile_Get",
         "description": "Get details of particular certificate profile",
-        "x-ms-examples": {},
+        "x-ms-examples": {
+          "Get Certificate Profile": {
+            "$ref": "./examples/getCertificateProfile.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -323,7 +361,11 @@
       "put": {
         "operationId": "CertificateProfile_Create",
         "description": "Create a certificate profile",
-        "x-ms-examples": {},
+        "x-ms-examples": {
+          "Create Certificate Profile": {
+            "$ref": "./examples/createCertificateProfile.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -407,9 +449,13 @@
         }
       },
       "delete": {
-        "operationId": "CertificateProfile_Disable",
-        "description": "Disable certificate profile",
-        "x-ms-examples": {},
+        "operationId": "CertificateProfile_Delete",
+        "description": "Delete certificate profile",
+        "x-ms-examples": {
+          "Delete Certificate Profile": {
+            "$ref": "./examples/deleteCertificateProfile.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParam"
@@ -515,6 +561,12 @@
         "accountName": {
           "type": "string"
         },
+        "accountUrl": {
+          "type": "string"
+        },
+        "verificationStatus": {
+          "$ref": "#/definitions/VerificationStatus"
+        },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState"
         }
@@ -574,18 +626,93 @@
         "profileName": {
           "type": "string"
         },
+        "profileType": {
+          "$ref": "#/definitions/ProfileType"
+        },
+        "rotationPolicy": {
+          "$ref": "#/definitions/RotationPolicy"
+        },
+        "authority": {
+          "type": "string",
+          "readOnly": true
+        },
+        "commonName": {
+          "type": "string"
+        },
+        "subjectAlternativeName": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string",
+          "readOnly": true
+        },
+        "streetAddress": {
+          "type": "string",
+          "readOnly": true
+        },
+        "country": {
+          "type": "string",
+          "readOnly": true
+        },
+        "state": {
+          "type": "string",
+          "readOnly": true
+        },
+        "city": {
+          "type": "string",
+          "readOnly": true
+        },
+        "certificates": {
+          "$ref": "#/definitions/Certificate"
+        },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState"
         }
       }
     },
-    "RotationPolicy": {
-      "enum": [
-        "Monthly",
-        "Quaterly",
-        "Yearly"
-      ],
-      "type": "string"
+    "Certificate": {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/CertificateProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/CertificateProperties"
+        }
+      ]
+    },
+    "CertificateProperties": {
+      "description": "Certificate properties",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "subjectName": {
+          "type": "string",
+          "readOnly": true
+        },
+        "subjectAlternativeName": {
+          "type": "string",
+          "readOnly": true
+        },
+        "thumbprint": {
+          "type": "string",
+          "readOnly": true
+        },
+        "createdDate": {
+          "type": "string",
+          "readOnly": true
+        },
+        "expiryDate": {
+          "type": "string",
+          "readOnly": true
+        }
+      }
     },
     "OperationList": {
       "description": "The paginated list of code signing API operations.",
@@ -645,6 +772,19 @@
         }
       }
     },
+    "VerificationStatus": {
+      "type": "string",
+      "description": "The vetting status of the code sign account",
+      "enum": [
+        "Completed",
+        "InProgress",
+        "NotCompleted"
+      ],
+      "x-ms-enum": {
+        "name": "VerificationStatus",
+        "modelAsString": true
+      }
+    },
     "ProvisioningState": {
       "type": "string",
       "description": "The current provisioning state",
@@ -661,12 +801,35 @@
         "name": "ProvisioningState",
         "modelAsString": true
       }
+    },
+    "ProfileType": {
+      "type": "string",
+      "enum": [
+        "Test",
+        "Trial",
+        "PrivateTrust",
+        "PublicTrust"
+      ],
+      "x-ms-enum": {
+        "name": "ProfileType",
+        "modelAsString": true
+      }
+    },
+    "RotationPolicy": {
+      "type": "string",
+      "enum": [
+        "Monthly"
+      ],
+      "x-ms-enum": {
+        "name": "RotationPolicy",
+        "modelAsString": true
+      }
     }
   },
   "parameters": {
     "AccountNameParam": {
       "name": "accountName",
-      "description": "ACS account name",
+      "description": "Code Sign account name",
       "in": "path",
       "required": true,
       "type": "string",
