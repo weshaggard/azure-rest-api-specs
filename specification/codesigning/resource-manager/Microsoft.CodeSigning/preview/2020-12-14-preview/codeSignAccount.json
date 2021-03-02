@@ -561,6 +561,12 @@
         "accountName": {
           "type": "string"
         },
+        "accountUrl": {
+          "type": "string"
+        },
+        "verificationStatus": {
+          "$ref": "#/definitions/VerificationStatus"
+        },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState"
         }
@@ -620,18 +626,93 @@
         "profileName": {
           "type": "string"
         },
+        "profileType": {
+          "$ref": "#/definitions/ProfileType"
+        },
+        "rotationPolicy": {
+          "$ref": "#/definitions/RotationPolicy"
+        },
+        "authority": {
+          "type": "string",
+          "readOnly": true
+        },
+        "commonName": {
+          "type": "string"
+        },
+        "subjectAlternativeName": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string",
+          "readOnly": true
+        },
+        "streetAddress": {
+          "type": "string",
+          "readOnly": true
+        },
+        "country": {
+          "type": "string",
+          "readOnly": true
+        },
+        "state": {
+          "type": "string",
+          "readOnly": true
+        },
+        "city": {
+          "type": "string",
+          "readOnly": true
+        },
+        "certificates": {
+          "$ref": "#/definitions/Certificate"
+        },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState"
         }
       }
     },
-    "RotationPolicy": {
-      "enum": [
-        "Monthly",
-        "Quaterly",
-        "Yearly"
-      ],
-      "type": "string"
+    "Certificate": {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/CertificateProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/CertificateProperties"
+        }
+      ]
+    },
+    "CertificateProperties": {
+      "description": "Certificate properties",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "subjectName": {
+          "type": "string",
+          "readOnly": true
+        },
+        "subjectAlternativeName": {
+          "type": "string",
+          "readOnly": true
+        },
+        "thumbprint": {
+          "type": "string",
+          "readOnly": true
+        },
+        "createdDate": {
+          "type": "string",
+          "readOnly": true
+        },
+        "expiryDate": {
+          "type": "string",
+          "readOnly": true
+        }
+      }
     },
     "OperationList": {
       "description": "The paginated list of code signing API operations.",
@@ -691,6 +772,19 @@
         }
       }
     },
+    "VerificationStatus": {
+      "type": "string",
+      "description": "The vetting status of the code sign account",
+      "enum": [
+        "Completed",
+        "InProgress",
+        "NotCompleted"
+      ],
+      "x-ms-enum": {
+        "name": "VerificationStatus",
+        "modelAsString": true
+      }
+    },
     "ProvisioningState": {
       "type": "string",
       "description": "The current provisioning state",
@@ -705,6 +799,29 @@
       ],
       "x-ms-enum": {
         "name": "ProvisioningState",
+        "modelAsString": true
+      }
+    },
+    "ProfileType": {
+      "type": "string",
+      "enum": [
+        "Test",
+        "Trial",
+        "PrivateTrust",
+        "PublicTrust"
+      ],
+      "x-ms-enum": {
+        "name": "ProfileType",
+        "modelAsString": true
+      }
+    },
+    "RotationPolicy": {
+      "type": "string",
+      "enum": [
+        "Monthly"
+      ],
+      "x-ms-enum": {
+        "name": "RotationPolicy",
         "modelAsString": true
       }
     }
