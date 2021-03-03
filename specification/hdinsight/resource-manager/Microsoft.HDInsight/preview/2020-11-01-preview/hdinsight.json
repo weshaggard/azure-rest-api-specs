@@ -1,0 +1,1214 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "HDInsight Hilo Management Client",
+    "description": "The HDInsight Hilo Management Client.",
+    "version": "2020-11-01-preview"
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow.",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusterpools/{clusterPoolName}": {
+      "get": {
+        "description": "Gets a cluster pool.",
+        "operationId": "ClusterPools_Get",
+        "x-ms-examples": {
+          "HDInsightClusterPoolGet": {
+            "$ref": "./examples/GetClusterPool.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Clusterpool details.",
+            "schema": {
+              "$ref": "#/definitions/HDInsightClusterPool"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Creates or updates a cluster pool.",
+        "operationId": "ClusterPools_CreateOrUpdate",
+        "x-ms-examples": {
+          "HDInsightClusterPoolPut": {
+            "$ref": "./examples/CreateClusterPool.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          },
+          {
+            "name": "HDInsightClusterPool",
+            "description": "The Cluster Pool to create.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HDInsightClusterPool"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ClusterPool create/update request accepted.",
+            "schema": {
+              "$ref": "#/definitions/HDInsightClusterPool"
+            }
+          },
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/HDInsightClusterPool"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "patch": {
+        "description": "Updates an existing Cluster Pool Tags.",
+        "operationId": "ClusterPool_UpdateTags",
+        "x-ms-examples": {
+          "HDInsightClusterPoolsPatchTags": {
+            "$ref": "./examples/ClusterPoolsPatch.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          },
+          {
+            "name": "clusterPoolTags",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TagsObject"
+            },
+            "description": "Parameters supplied to update tags."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/HDInsightClusterPool"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a Cluster Pool.",
+        "operationId": "ClusterPools_Delete",
+        "x-ms-examples": {
+          "HDInsightClusterPoolDelete": {
+            "$ref": "./examples/DeleteClusterPool.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful."
+          },
+          "202": {
+            "description": "Accepted response definition."
+          },
+          "204": {
+            "description": "No content - The Cluster Pool doesn't exist."
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/clusterpools": {
+      "get": {
+        "operationId": "ClusterPools_ListBySubscription",
+        "x-ms-examples": {
+          "HDInsightClusterPoolsListBySubscription": {
+            "$ref": "./examples/ListClusterPoolsSubscription.json"
+          }
+        },
+        "description": "Gets the list of Cluster Pools within a Subscription.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cluster Pools successfully returned.",
+            "schema": {
+              "$ref": "#/definitions/ClusterPoolListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusterpools": {
+      "get": {
+        "operationId": "ClusterPools_ListByResourceGroup",
+        "x-ms-examples": {
+          "HDInsightClusterPoolsListByResourceGroup": {
+            "$ref": "./examples/ListClusterPools.json"
+          }
+        },
+        "description": "Lists the HDInsight Hilo cluster pools under a resource group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cluster Pools successfully returned.",
+            "schema": {
+              "$ref": "#/definitions/ClusterPoolListResult"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusterpools/{clusterPoolName}/clusters": {
+      "get": {
+        "operationId": "Clusters_ListByClusterPoolName",
+        "description": "Lists the HDInsight cluster pools under a resource group.",
+        "x-ms-examples": {
+          "HDInsightClustersListByClusterPoolName": {
+            "$ref": "./examples/ListClustersByClusterPoolName.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Clusters successfully returned.",
+            "schema": {
+              "$ref": "#/definitions/ClusterListResult"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusterpools/{clusterPoolName}/clusters/{clusterName}": {
+      "get": {
+        "operationId": "Clusters_Get",
+        "description": "Gets a hdinsight Hilo cluster.",
+        "x-ms-examples": {
+          "HDInsightClusterGet": {
+            "$ref": "./examples/GetCluster.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cluster details.",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "Clusters_CreateOrUpdate",
+        "description": "Creates or updates a cluster.",
+        "x-ms-examples": {
+          "HDInsightClusterPut": {
+            "$ref": "./examples/CreateCluster.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          },
+          {
+            "name": "HDInsightCluster",
+            "in": "body",
+            "required": true,
+            "description": "The cluster to create.",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Cluster create/update request accepted.",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "patch": {
+        "description": "Updates an existing Cluster Tags.",
+        "operationId": "Cluster_UpdateTags",
+        "x-ms-examples": {
+          "HDInsightClustersPatchTags": {
+            "$ref": "./examples/ClustersPatch.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          },
+          {
+            "name": "clusterTags",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TagsObject"
+            },
+            "description": "Parameters supplied to update tags."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Clusters_Delete",
+        "description": "Deletes a cluster.",
+        "x-ms-examples": {
+          "HDInsightClustersDelete": {
+            "$ref": "./examples/DeleteCluster.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterPoolNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful."
+          },
+          "202": {
+            "description": "Cluster delete request accepted."
+          },
+          "204": {
+            "description": "No content - The Cluster doesn't exist."
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/internalHdiData/{internalHdiDataName}": {
+      "get": {
+        "description": "Gets an internal data object.",
+        "operationId": "InternalHdiDatas_Get",
+        "x-ms-examples": {
+          "HDInsightInternalHdiDataGet": {
+            "$ref": "./examples/GetInternalHdiData.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "InternalHdiData details.",
+            "schema": {
+              "$ref": "#/definitions/HDInsightInternalHdiData"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Creates or updates an internal hdi data object.",
+        "operationId": "InternalHdiDatas_CreateOrUpdate",
+        "x-ms-examples": {
+          "HDInsightInternalHdiDatasPut": {
+            "$ref": "./examples/CreateInternalHdiData.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          },
+          {
+            "name": "HDInsightInternalHdiData",
+            "description": "The Internal HDI data to create.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HDInsightInternalHdiData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/HDInsightInternalHdiData"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Updates an existing internal hdi data Tags.",
+        "operationId": "InternalHdiData_UpdateTags",
+        "x-ms-examples": {
+          "HDInsightClusterPoolsPatchTags": {
+            "$ref": "./examples/InternalHdiDatasPatch.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          },
+          {
+            "name": "internalHdiDataTags",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TagsObject"
+            },
+            "description": "Parameters supplied to update tags."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/HDInsightInternalHdiData"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes an internal HDI data object.",
+        "operationId": "InternalHdiDatas_Delete",
+        "x-ms-examples": {
+          "HDInsightInternalHdiDataDelete": {
+            "$ref": "./examples/DeleteInternalHdiData.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful."
+          },
+          "204": {
+            "description": "No content - The Internal HDI data doesn't exist."
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/internalHdiData": {
+      "get": {
+        "operationId": "InternalHdiDatas_ListBySubscription",
+        "x-ms-examples": {
+          "HDInsightInternalHdiDatasListBySubscription": {
+            "$ref": "./examples/ListInternalHdiDatasSubscription.json"
+          }
+        },
+        "description": "Gets the list of Internal HDI datas within a Subscription.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Internal HDI datas successfully returned.",
+            "schema": {
+              "$ref": "#/definitions/InternalHdiDataListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/internalHdiData": {
+      "get": {
+        "operationId": "InternalHdiDatas_ListByResourceGroup",
+        "x-ms-examples": {
+          "HDInsightInternalHdiDatasListByResourceGroup": {
+            "$ref": "./examples/ListInternalHdiDatas.json"
+          }
+        },
+        "description": "Lists the HDInsight Hilo Internal HDI datas under a resource group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Internal HDI datas successfully returned.",
+            "schema": {
+              "$ref": "#/definitions/InternalHdiDataListResult"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/internalHdiData/{internalHdiDataName}/items": {
+      "get": {
+        "operationId": "Items_ListByInternalHdiDataName",
+        "description": "Lists the HDInsight Internal HDI datas under a resource group.",
+        "x-ms-examples": {
+          "HDInsightItemsListByInternalHdiDataName": {
+            "$ref": "./examples/ListItemsByInternalHdiDataName.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Items successfully returned.",
+            "schema": {
+              "$ref": "#/definitions/ItemListResult"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/internalHdiData/{internalHdiDataName}/items/{itemName}": {
+      "get": {
+        "operationId": "Items_Get",
+        "description": "Gets a hdinsight Hilo Item.",
+        "x-ms-examples": {
+          "HDInsightItemGet": {
+            "$ref": "./examples/GetItem.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ItemNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item details.",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "Items_CreateOrUpdate",
+        "description": "Creates or updates an Item.",
+        "x-ms-examples": {
+          "HDInsightItemPut": {
+            "$ref": "./examples/CreateItem.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ItemNameParameter"
+          },
+          {
+            "name": "HDInsightItem",
+            "in": "body",
+            "required": true,
+            "description": "The Item to create.",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Updates an existing Item Tags.",
+        "operationId": "Item_UpdateTags",
+        "x-ms-examples": {
+          "HDInsightItemsPatchTags": {
+            "$ref": "./examples/ItemsPatch.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ItemNameParameter"
+          },
+          {
+            "name": "itemTags",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TagsObject"
+            },
+            "description": "Parameters supplied to update tags."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Items_Delete",
+        "description": "Deletes an Item.",
+        "x-ms-examples": {
+          "HDInsightItemsDelete": {
+            "$ref": "./examples/DeleteItem.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/InternalHdiDataNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ItemNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful."
+          },
+          "204": {
+            "description": "No content - The Item doesn't exist."
+          },
+          "default": {
+            "description": "Error Response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ClusterPoolListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HDInsightClusterPool"
+          },
+          "description": "The list of cluster pools."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The link (url) to the next page of results.",
+          "readOnly": true
+        }
+      },
+      "description": "The list cluster pools operation response."
+    },
+    "HDInsightClusterPool": {
+      "type": "object",
+      "description": "Cluster pool.",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "The location."
+        },
+        "properties": {
+          "type": "object",
+          "description": "The placeholder of properties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "TagsObject": {
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags."
+        }
+      },
+      "description": "Tags object for patch operations."
+    },
+    "ClusterListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Cluster"
+          },
+          "description": "The list of clusters."
+        },
+        "nextLink": {
+          "description": "The link (url) to the next page of results.",
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "description": "The list cluster operation response."
+    },
+    "Cluster": {
+      "type": "object",
+      "description": "The cluster.",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "The location."
+        },
+        "properties": {
+          "type": "object",
+          "description": "The placeholder of properties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "InternalHdiDataListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HDInsightInternalHdiData"
+          },
+          "description": "The list of Internal HDI datas."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The link (url) to the next page of results.",
+          "readOnly": true
+        }
+      },
+      "description": "The list Internal HDI datas operation response."
+    },
+    "HDInsightInternalHdiData": {
+      "type": "object",
+      "description": "Internal HDI data.",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "The location."
+        },
+        "properties": {
+          "type": "object",
+          "description": "The placeholder of properties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "ItemListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Item"
+          },
+          "description": "The list of Items."
+        },
+        "nextLink": {
+          "description": "The link (url) to the next page of results.",
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "description": "The list Item operation response."
+    },
+    "Item": {
+      "type": "object",
+      "description": "The Item.",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "The location."
+        },
+        "properties": {
+          "type": "object",
+          "description": "The placeholder of properties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "SubscriptionIdParameter": {
+      "name": "subscriptionId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call."
+    },
+    "ApiVersionParameter": {
+      "name": "api-version",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "description": "The HDInsight Hilo client API Version."
+    },
+    "ResourceGroupNameParameter": {
+      "name": "resourceGroupName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the resource group.",
+      "x-ms-parameter-location": "method"
+    },
+    "ClusterPoolNameParameter": {
+      "name": "clusterPoolName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the cluster pool.",
+      "x-ms-parameter-location": "method"
+    },
+    "ClusterNameParameter": {
+      "name": "clusterName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the hdinsight Hilo cluster.",
+      "x-ms-parameter-location": "method"
+    },
+    "InternalHdiDataNameParameter": {
+      "name": "internalHdiDataName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the Internal HDI data.",
+      "x-ms-parameter-location": "method"
+    },
+    "ItemNameParameter": {
+      "name": "itemName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the hdinsight Hilo Item.",
+      "x-ms-parameter-location": "method"
+    }
+  }
+}
