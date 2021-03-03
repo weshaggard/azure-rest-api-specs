@@ -25,7 +25,7 @@ These settings apply only when `--tag=package-2020-12-14-preview` is specified o
 
 
 ```yaml
-title: CodeSigningClient
+title: CodeSigningManagementClient
 openapi-type: arm
 openapi-subtype: rpaas
 tag: package-2020-12-14-preview
