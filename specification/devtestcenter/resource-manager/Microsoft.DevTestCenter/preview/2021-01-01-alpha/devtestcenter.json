@@ -1073,7 +1073,7 @@
         "x-ms-odata": "#/definitions/TemplateListResult"
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templatesources": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources": {
       "get": {
         "tags": ["Template Source"],
         "description": "Lists template sources for an organization.",
@@ -1123,7 +1123,7 @@
         "x-ms-odata": "#/definitions/TemplateSourceListResult"
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templatesources/{templateSource}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources/{templateSource}": {
       "get": {
         "tags": ["Template Source"],
         "description": "Gets a template source",
@@ -1307,7 +1307,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templatesources/{templateSource}/templates": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources/{templateSource}/templates": {
       "get": {
         "tags": ["Template Source"],
         "description": "Lists Template resources by template source",
@@ -1360,7 +1360,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templatesources/{templateSource}/templates/{template}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources/{templateSource}/templates/{template}": {
       "get": {
         "tags": ["Template Source"],
         "description": "Gets a Template resource",
@@ -1994,7 +1994,6 @@
       "description": "Properties of the organization. These properties can be updated after the resource has been created.",
       "properties": {
         "description": {
-          "maxLength": 1024,
           "type": "string",
           "description": "Organization description."
         }
@@ -2019,19 +2018,16 @@
     "OrganizationUpdate": {
       "description": "The organization resource for partial updates. Properties not provided in the update request will not be changed.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TrackedResourceUpdate"
+        }
+      ],
       "properties": {
         "properties": {
           "description": "Organization properties to be updated.",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/OrganizationUpdateProperties"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": ["read", "create", "update"],
-          "description": "Resource tags."
         },
         "identity": {
           "description": "Managed identity properties",
@@ -2772,6 +2768,36 @@
       "description": "Provisioning state of the resource.",
       "readOnly": true
     },
+    "TrackedResourceUpdate": {
+      "description": "Base tracked resource type for PATCH updates",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ],
+          "description": "Resource tags."
+        },
+        "location": {
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
+          "description": "The geo-location where the resource lives"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
+        }
+      ]
+    },
     "AvailableOperations": {
       "description": "Available operations of the service",
       "type": "object",
@@ -2912,9 +2938,6 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "maxLength": 63,
-      "minLength": 2,
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]*$",
       "description": "The name of the organization.",
       "x-ms-parameter-location": "method"
     },

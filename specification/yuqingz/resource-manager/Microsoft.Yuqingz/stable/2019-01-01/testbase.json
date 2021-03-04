@@ -154,6 +154,45 @@
         }
       }
     },
+	    "/subscriptions/{subscriptionId}/providers/Microsoft.Yuqingz/testBases/getDeletedTestBases": {
+      "post": {
+        "tags": [
+          "Test Base"
+        ],
+        "operationId": "TestBases_GetDeleted",
+        "description": "Lists all the Test Bases in a resource group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation is completed.",
+            "schema": {
+              "$ref": "#/definitions/TestBaseListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "TestBasesList": {
+            "$ref": "./examples/TestBasesList.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}": {
       "put": {
         "tags": [
@@ -244,6 +283,12 @@
         "responses": {
           "200": {
             "description": "The existing Test Base was successfully updated. Check provisioningState to see detailed status.",
+            "schema": {
+              "$ref": "#/definitions/TestBaseResource"
+            }
+          },
+		            "201": {
+            "description": "The new Test Base was successfully created. Check provisioningState to see detailed status.",
             "schema": {
               "$ref": "#/definitions/TestBaseResource"
             }
@@ -390,6 +435,56 @@
         "x-ms-examples": {
           "TestBaseUsagesList": {
             "$ref": "./examples/TestBaseUsagesList.json"
+          }
+        }
+      }
+    },
+	    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/offboard": {
+      "post": {
+        "tags": [
+          "Test Base package"
+        ],
+        "operationId": "TestBaseOffboard",
+        "description": "Gets the file upload URL of a Test Base.",
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/OffboardParameters"
+            },
+            "description": "Parameters supplied to the Test Base GetFileUploadURL operation."
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/TestBaseNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The file upload URL of the Test Base was returned.",
+            "schema": {
+              "$ref": "#/definitions/OffboardResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "TestBaseGetFileUploadUrl": {
+            "$ref": "./examples/TestBaseGetFileUploadUrl.json"
           }
         }
       }
@@ -2699,13 +2794,30 @@
           "description": "The status of the Test Base.",
           "enum": [
             "Ready",
-            "Pending"
+            "Pending Deletion"
           ],
           "readOnly": true,
           "x-ms-enum": {
             "name": "testBaseStatus",
             "modelAsString": true
           }
+        },
+		        "storageAccountName": {
+          "type": "string",
+          "description": "The status of the Test Base."
+        },
+		        "resourceGroupLocation": {
+          "type": "string",
+          "description": "The status of the Test Base."
+
+        },
+		        "storageAccountLocation": {
+          "type": "string",
+          "description": "The status of the Test Base."
+        },
+		        "signatoryEmail": {
+          "type": "string",
+          "description": "The status of the Test Base."
         },
 		"provisioningState": {
           "type": "string",
@@ -2790,6 +2902,15 @@
         }
       }
     },
+	 "OffboardParameters": {
+      "description": "The parameters supplied to the Test Base GetFileUploadURL action.",
+      "properties": {
+        "offboard": {
+          "type": "boolean",
+          "description": "The custom file name of the uploaded blob."
+        }
+      }
+    },
     "FileUploadURLResponse": {
       "description": "The URL response",
       "properties": {
@@ -2801,6 +2922,11 @@
           "type": "string",
           "description": "The blob path of the uploaded package. It will be used as the 'blobPath' property of PackageResource."
         }
+      }
+    },
+	    "OffboardResponse": {
+      "description": "The URL response",
+      "properties": {
       }
     },
     "AvailableOSListResult": {
