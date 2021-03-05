@@ -1,20 +1,25 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2021-03-01-preview",
     "title": "apisecurity",
-    "description": "Description of the new service",
-    "x-ms-code-generation-settings": {
-      "name": "apisecurityClient"
-    }
+    "version": "2021-03-01-preview",
+    "description": "Description of the new service."
   },
   "host": "management.azure.com",
-  "schemes": ["https"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "security": [
     {
-      "azure_auth": ["user_impersonation"]
+      "azure_auth": [
+        "user_impersonation"
+      ]
     }
   ],
   "securityDefinitions": {
@@ -29,33 +34,44 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiSecurity/operations": {
-      "get": {
-        "tags": ["Tag1"],
-        "operationId": "OperationGroup_Get",
-        "x-ms-examples": {
-          "BatchAccountDelete": { "$ref": "./examples/OperationGroupGet.json" }
-        },
-        "description": "This is a sample get operation, please see guidelines in azure-rest-api-specs repository for more info",
+    "/{scope}/providers/Microsoft.ApiSecurity/defenderSettings/{defenderSettingName}": {
+      "put": {
+        "tags": [
+          "DefenderSettings"
+        ],
+        "operationId": "DefenderSettings_Create",
+        "description": "Creates a defender setting.",
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "name": "scope",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The scope of the defender setting to create. The scope can be any REST resource instance. For example, use '/subscriptions/{subscription-id}/' for a subscription, '/subscriptions/{subscription-id}/resourceGroups/{resource-group-name}' for a resource group, and '/subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/providers/{resource-provider}/{resource-type}/{resource-name}' for a resource.",
+            "x-ms-skip-url-encoding": true
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "name": "defenderSettingName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the defender setting to create. It can be any valid GUID."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
-          "200": {
-            "description": "Describe the result of a successful operation.",
+          "201": {
+            "description": "Created - Returns information about the defender setting.",
             "schema": {
-              "$ref": "#/definitions/Result"
+              "$ref": "#/definitions/DefenderSetting"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -63,70 +79,47 @@
     }
   },
   "definitions": {
-    "Result": {
-      "description": "Sample result definition",
-      "properties": {
-        "sampleProperty": {
-          "type": "string",
-          "description": "Sample property of type string"
-        }
-      }
-    },
-    "ErrorResponse": {
-      "description": "Error response.",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/ErrorDefinition",
-          "description": "The error details."
-        }
-      }
-    },
-    "ErrorDefinition": {
-      "description": "Error definition.",
-      "properties": {
-        "code": {
-          "description": "Service specific error code which serves as the substatus for the HTTP error code.",
-          "type": "string",
-          "readOnly": true
-        },
-        "message": {
-          "description": "Description of the error.",
-          "type": "string",
-          "readOnly": true
-        },
-        "details": {
-          "description": "Internal error details.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ErrorDefinition"
+  "DefenderSettingPropertiesWithScope": {
+    "properties": {
+      "scope": {
+        "type": "string",
+          "description": "The defender setting scope."
+            },
+            "defenderDefinitionId": {
+              "type": "string",
+              "description": "The defender setting ID."
+            },
+            "principalId": {
+              "type": "string",
+              "description": "The principal ID."
+            }
           },
-          "readOnly": true
+          "description": "Defender setting properties with scope."
+        },
+    "DefenderSetting": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The defender setting ID."
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The defender setting name."
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The defender setting type."
+        },
+        "properties": {
+          "$ref": "#/definitions/DefenderSettingPropertiesWithScope",
+          "description": "defender setting properties."
         }
-      }
+      },
+      "description": "Defender Settings"
     }
   },
-  "parameters": {
-    "SubscriptionIdParameter": {
-      "name": "subscriptionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID. This is a GUID-formatted string (e.g. 00000000-0000-0000-0000-000000000000)"
-    },
-    "ResourceGroupNameParameter": {
-      "name": "resourceGroupName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The name of the resource group.",
-      "x-ms-parameter-location": "method"
-    },
-    "ApiVersionParameter": {
-      "name": "api-version",
-      "in": "query",
-      "required": true,
-      "type": "string",
-      "description": "The API version to be used with the HTTP request."
-    }
-  }
+  "parameters": {}
 }
