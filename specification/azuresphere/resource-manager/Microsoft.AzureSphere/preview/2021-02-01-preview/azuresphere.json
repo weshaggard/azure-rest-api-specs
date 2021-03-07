@@ -6,12 +6,20 @@
     "version": "2021-02-01-preview"
   },
   "host": "management.azure.com",
-  "schemes": ["https"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "security": [
     {
-      "azure_auth": ["user_impersonation"]
+      "azure_auth": [
+        "user_impersonation"
+      ]
     }
   ],
   "securityDefinitions": {
@@ -26,11 +34,13 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/providers/Microsoft.AzureSphere/AzureSphereTenants": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.AzureSphere/operations": {
       "get": {
-        "tags": [ "AzureSphereTenants" ],
-        "description": "Returns a list of Azure Sphere Tenants for the given subscriptionId",
-        "operationId": "AzureSphereTenantBySubscription_List",
+        "tags": [
+          "Operations"
+        ],
+        "summary": "Lists all operations supported by the Microsoft.AzureSphere resource provider.",
+        "operationId": "Operations_List",
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -41,23 +51,75 @@
         ],
         "responses": {
           "200": {
-            "description": "Azure Sphere Tenants for the subscription details.",
+            "description": "The list of supported operations has been retrieved successfully.",
             "schema": {
-              "$ref": "#/definitions/AzureSphereTenantList"
+              "$ref": "#/definitions/ListOperationsResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Get a list of operations supported by Microsoft.AzureSphere resource provider.": {
+            "$ref": "./examples/GetOperations.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.AzureSphere/catalogs": {
+      "get": {
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Returns a list of Azure Sphere Catalogs for the given subscriptionId",
+        "operationId": "CatalogsBySubscription_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Azure Sphere Catalogs for the subscription details.",
+            "schema": {
+              "$ref": "#/definitions/CatalogList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
             }
           }
         },
         "deprecated": false,
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Get a list of Azure Sphere Catalogs for a given subscription.": {
+            "$ref": "./examples/GetCatalogsSub.json"
+          }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenants": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/catalogs": {
       "get": {
-        "tags": [ "AzureSphereTenants" ],
-        "description": "Returns a list of Azure Sphere Tenants in the given resource group.",
-        "operationId": "AzureSphereTenant_List",
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Returns a list of Azure Sphere Catalogs in the given resource group.",
+        "operationId": "Catalogs_List",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -71,23 +133,36 @@
         ],
         "responses": {
           "200": {
-            "description": "Azure Sphere Tenants for the subscription details.",
+            "description": "The list of Azure Sphere Catalogs for the subscription.",
             "schema": {
-              "$ref": "#/definitions/AzureSphereTenantList"
+              "$ref": "#/definitions/CatalogList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
             }
           }
         },
         "deprecated": false,
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Get a list of Azure Sphere Catalogs for a given resource group.": {
+            "$ref": "./examples/GetCatalogsRG.json"
+          }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenants/{azureSphereTenantName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/catalogs/{catalogName}": {
       "get": {
-        "tags": [ "AzureSphereTenants" ],
-        "description": "Returns an Azure Sphere Tenant for a given name.",
-        "operationId": "AzureSphereTenant_Get",
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Returns an Azure Sphere Catalog by name.",
+        "operationId": "Catalogs_Get",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -99,22 +174,35 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Azure Sphere Tenant details.",
+            "description": "Azure Sphere Catalog details.",
             "schema": {
-              "$ref": "#/definitions/AzureSphereTenant"
+              "$ref": "#/definitions/Catalog"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the details of an Azure Sphere Catalog.": {
+            "$ref": "./examples/GetCatalog.json"
           }
         }
       },
       "put": {
-        "tags": [ "AzureSphereTenants" ],
-        "description": "Create or update an Azure Sphere Tenant.",
-        "operationId": "AzureSphereTenant_CreateOrUpdate",
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Create or update an Azure Sphere Catalog.",
+        "operationId": "Catalogs_CreateOrUpdate",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -126,15 +214,15 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           },
           {
-            "name": "AzureSphereTenant",
-            "description": "Azure Sphere Tenant details.",
+            "name": "Catalog",
+            "description": "Azure Sphere Catalog details.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AzureSphereTenant"
+              "$ref": "#/definitions/Catalog"
             }
           }
         ],
@@ -142,15 +230,28 @@
           "200": {
             "description": "Successful.",
             "schema": {
-              "$ref": "#/definitions/AzureSphereTenant"
+              "$ref": "#/definitions/Catalog"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Put the details of the Azure Sphere Catalog.": {
+            "$ref": "./examples/PutCatalog.json"
           }
         }
       },
       "patch": {
-        "tags": [ "AzureSphereTenants" ],
-        "description": "Patch an Azure Sphere Tenant.",
-        "operationId": "AzureSphereTenant_Patch",
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Patch an Azure Sphere Catalog.",
+        "operationId": "Catalogs_Update",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -162,15 +263,15 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           },
           {
-            "name": "AzureSphereTenant",
-            "description": "Azure Sphere Tenant details.",
+            "name": "Catalog",
+            "description": "Azure Sphere Catalog details.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AzureSphereTenant"
+              "$ref": "#/definitions/Catalog"
             }
           }
         ],
@@ -178,15 +279,28 @@
           "200": {
             "description": "Successful.",
             "schema": {
-              "$ref": "#/definitions/AzureSphereTenant"
+              "$ref": "#/definitions/Catalog"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Patch an Azure Sphere Catalog.": {
+            "$ref": "./examples/PatchCatalog.json"
           }
         }
       },
       "delete": {
-        "tags": [ "AzureSphereTenants" ],
-        "description": "Delete an Azure Sphere Tenant.",
-        "operationId": "AzureSphereTenant_Delete",
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Delete an Azure Sphere Catalog.",
+        "operationId": "Catalogs_Delete",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -198,24 +312,43 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           }
         ],
         "responses": {
           "200": {
             "description": "Successful.",
             "schema": {
-              "$ref": "#/definitions/AzureSphereTenant"
+              "$ref": "#/definitions/Catalog"
             }
+          },
+          "204": {
+            "description": "Successful. Resource marked for deletion",
+            "schema": {
+              "$ref": "#/definitions/Catalog"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete an Azure Sphere Catalog.": {
+            "$ref": "./examples/DeleteCatalog.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenants/{azureSphereTenantName}/Products": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/catalogs/{catalogName}/products": {
       "get": {
-        "tags": [ "Products" ],
-        "description": "Returns the associated products of a given Azure Sphere Tenant Name",
-        "operationId": "Product_List",
+        "tags": [
+          "Products"
+        ],
+        "description": "Returns the associated products of a given Azure Sphere Catalog by Name",
+        "operationId": "Products_List",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -227,29 +360,41 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           }
         ],
-
         "responses": {
           "200": {
-            "description": "Azure Sphere Tenants for the subscription details.",
+            "description": "Azure Sphere Products for the Azure Sphere Catalog in the subscription.",
             "schema": {
               "$ref": "#/definitions/ProductList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
             }
           }
         },
         "deprecated": false,
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Get products in an Azure Sphere product.": {
+            "$ref": "./examples/GetProducts.json"
+          }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/AzureSphereTenants/{azureSphereTenantName}/Products/{productName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/catalogs/{catalogName}/products/{productName}": {
       "get": {
-        "tags": [ "Products" ],
-        "description": "Returns the associated Product for a given Azure Sphere Tenant Name",
-        "operationId": "Product_Get",
+        "tags": [
+          "Products"
+        ],
+        "description": "Returns the associated Product for a given Azure Sphere Catalog by Name",
+        "operationId": "Products_Get",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -261,7 +406,7 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           },
           {
             "$ref": "#/parameters/ProductNameParameter"
@@ -273,13 +418,26 @@
             "schema": {
               "$ref": "#/definitions/Product"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the details of an Azure Sphere product.": {
+            "$ref": "./examples/GetProduct.json"
           }
         }
       },
       "put": {
-        "tags": [ "Products" ],
-        "description": "Create or update a product.",
-        "operationId": "Product_CreateOrUpdate",
+        "tags": [
+          "Products"
+        ],
+        "description": "Create or update an Azure Sphere Product.",
+        "operationId": "Products_CreateOrUpdate",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -291,14 +449,14 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           },
           {
             "$ref": "#/parameters/ProductNameParameter"
           },
           {
             "name": "Product",
-            "description": "Product details.",
+            "description": "Azure Sphere Product details.",
             "in": "body",
             "required": true,
             "schema": {
@@ -312,13 +470,26 @@
             "schema": {
               "$ref": "#/definitions/Product"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Put an Azure Sphere product.": {
+            "$ref": "./examples/PutProduct.json"
           }
         }
       },
       "patch": {
-        "tags": [ "Products" ],
-        "description": "Patch Product details.",
-        "operationId": "Product_Patch",
+        "tags": [
+          "Products"
+        ],
+        "description": "Patch Azure Sphere Product.",
+        "operationId": "Products_Update",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -330,14 +501,14 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           },
           {
             "$ref": "#/parameters/ProductNameParameter"
           },
           {
-            "name": "ProductPatch",
-            "description": "Product patch details.",
+            "name": "Product",
+            "description": "Azure Sphere Product patch details.",
             "in": "body",
             "required": true,
             "schema": {
@@ -351,13 +522,26 @@
             "schema": {
               "$ref": "#/definitions/Product"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Patch an Azure Sphere product.": {
+            "$ref": "./examples/PatchProduct.json"
           }
         }
       },
       "delete": {
-        "tags": [ "Products" ],
-        "description": "Delete Product in an AzureSphereTenant.",
-        "operationId": "Product_Delete",
+        "tags": [
+          "Products"
+        ],
+        "description": "Delete Product in an Azure Sphere Catalog.",
+        "operationId": "Products_Delete",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -369,7 +553,7 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/AzureSphereTenantNameParameter"
+            "$ref": "#/parameters/CatalogNameParameter"
           },
           {
             "$ref": "#/parameters/ProductNameParameter"
@@ -381,6 +565,23 @@
             "schema": {
               "$ref": "#/definitions/Product"
             }
+          },
+          "204": {
+            "description": "Successful. Resource marked for deletion",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete an Azure Sphere product.": {
+            "$ref": "./examples/DeleteProduct.json"
           }
         }
       }
@@ -388,26 +589,27 @@
   },
   "definitions": {
     "Resource": {
-      "description": "An Azure resource.",
+      "type": "object",
+      "description": "An Azure Sphere Resource.",
       "properties": {
         "id": {
-          "description": "Azure resource Id.",
+          "description": "Azure Sphere resource Id.",
           "type": "string",
           "readOnly": true
         },
         "name": {
-          "description": "Azure resource name.",
+          "description": "Azure Sphere resource name.",
           "type": "string",
           "readOnly": true
         },
         "type": {
-          "description": "Azure resource type.",
+          "description": "Azure Sphere resource type.",
           "type": "string",
           "readOnly": true
         },
         "location": {
           "type": "string",
-          "description": "The resource location.",
+          "description": "The Azure Sphere resource location.",
           "x-ms-mutability": [
             "read",
             "create"
@@ -415,137 +617,194 @@
         },
         "systemData": {
           "description": "Metadata pertaining to creation and last modification of the resource.",
-          "$ref": "#/definitions/SystemData",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
           "readOnly": true
         },
         "tags": {
           "description": "resource tags.",
-          "type": "object",
           "readOnly": false,
           "additionalProperties": {
             "type": "string"
           }
         }
       },
-      "x-ms-azure-resource": true,
-      "required": [
-        "location"
-      ]
+      "x-ms-azure-resource": true
     },
-    "SystemData": {
-      "description": "Metadata pertaining to creation and last modification of the resource.",
+    "Catalog": {
       "type": "object",
-      "readOnly": true,
-      "properties": {
-        "createdBy": {
-          "type": "string",
-          "description": "The identity that created the resource."
-        },
-        "createdByType": {
-          "type": "string",
-          "description": "The type of identity that created the resource.",
-          "enum": [
-            "User",
-            "Application",
-            "ManagedIdentity",
-            "Key"
-          ],
-          "x-ms-enum": {
-            "name": "createdByType",
-            "modelAsString": true
-          }
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp of resource creation (UTC)."
-        },
-        "lastModifiedBy": {
-          "type": "string",
-          "description": "The identity that last modified the resource."
-        },
-        "lastModifiedByType": {
-          "type": "string",
-          "description": "The type of identity that last modified the resource.",
-          "enum": [
-            "User",
-            "Application",
-            "ManagedIdentity",
-            "Key"
-          ],
-          "x-ms-enum": {
-            "name": "createdByType",
-            "modelAsString": true
-          }
-        },
-        "lastModifiedAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The type of identity that last modified the resource."
-        }
-      }
-    },
-    "AzureSphereTenant": {
-      "type": "object",
-      "description": "Azure Sphere Tenant details",
+      "description": "Azure Sphere Catalog details",
       "allOf": [
         {
           "$ref": "#/definitions/Resource"
         }
-      ]
+      ],
+      "properties": {
+        "properties": {
+          "type": "object",
+          "properties": {
+            "provisioningState": {
+              "type": "string",
+              "readOnly": true
+            }
+          }
+        }
+      }
     },
-    "AzureSphereTenantList": {
-      "description": "The list of Azure Sphere Tenants.",
+    "Operation": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Name of the operation."
+        },
+        "display": {
+          "description": "Display information of the operation.",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/OperationDisplay"
+        }
+      },
+      "description": "Properties of an Operation."
+    },
+    "OperationDisplay": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Friendly name of the operation."
+        },
+        "resource": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Friendly name of the resource type the operation applies to."
+        },
+        "description": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Friendly description of the operation."
+        },
+        "provider": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Friendly name of the resource provider."
+        }
+      },
+      "description": "Display information of an operation."
+    },
+    "ErrorResponseBody": {
+      "description": "The error object.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Error code.",
+          "type": "string",
+          "readOnly": true
+        },
+        "message": {
+          "description": "Error message.",
+          "type": "string",
+          "readOnly": true
+        },
+        "target": {
+          "description": "Error target.",
+          "type": "string",
+          "readOnly": true
+        },
+        "details": {
+          "description": "Error details.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/ErrorResponseBody"
+          }
+        }
+      }
+    },
+    "DefaultErrorResponse": {
+      "type": "object",
+      "description": "Default error response on failure.",
+      "properties": {
+        "error": {
+          "description": "The error object.",
+          "readOnly": true,
+          "$ref": "#/definitions/ErrorResponseBody"
+        }
+      }
+    },
+    "ListOperationsResponse": {
+      "type": "object",
+      "description": "Result of a request to list all operations supported by Microsoft.AzureSphere resource provider.",
+      "properties": {
+        "value": {
+          "description": "The list of Azure Sphere Operations.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/Operation"
+          }
+        },
+        "nextLink": {
+          "description": "The link used to get the next page of Azure Sphere Operations list, if any.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "CatalogList": {
+      "description": "The list of Azure Sphere Catalogs.",
       "type": "object",
       "properties": {
         "nextLink": {
-          "description": "The link used to get the next page of Azure Sphere Tenant list.",
+          "description": "The link used to get the next page of Azure Sphere Catalog list.",
           "type": "string"
         },
         "value": {
-          "description": "The list of Azure Sphere Tenants.",
+          "description": "The list of Azure Sphere Catalogs.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AzureSphereTenant"
+            "$ref": "#/definitions/Catalog"
           }
         }
       }
     },
     "Product": {
       "type": "object",
-      "description": "Product details",
+      "description": "Azure Sphere product details",
       "allOf": [
         {
           "$ref": "#/definitions/Resource"
         }
       ],
-      "required": [ "properties" ],
       "properties": {
         "properties": {
+          "type": "object",
           "properties": {
             "description": {
               "type": "string",
-              "description": "Product description.",
+              "description": "Azure Sphere Product description.",
               "minLength": 1,
               "maxLength": 150,
-              "pattern": "^[A-Za-z0-9-._]+$"
+              "pattern": "^[A-Za-z0-9-._ ]+$"
+            },
+            "provisioningState": {
+              "type": "string",
+              "readOnly": true
             }
-          },
-          "required": [ "description" ],
-          "type": "object"
+          }
         }
       }
     },
     "ProductList": {
-      "description": "The list of Products.",
+      "description": "The list of Azure Sphere Products.",
       "type": "object",
       "properties": {
         "nextLink": {
-          "description": "The link used to get the next page of the Product list.",
+          "description": "The link used to get the next page of the Azure Sphere Product list.",
           "type": "string"
         },
         "value": {
-          "description": "The list of products.",
+          "description": "The list of Azure Sphere products.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Product"
@@ -577,12 +836,12 @@
       "description": "The name of the resource group.",
       "x-ms-parameter-location": "method"
     },
-    "AzureSphereTenantNameParameter": {
-      "name": "azureSphereTenantName",
+    "CatalogNameParameter": {
+      "name": "catalogName",
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The name of the Azure Sphere Tenant.",
+      "description": "The name of the Azure Sphere Catalog.",
       "x-ms-parameter-location": "method"
     },
     "ProductNameParameter": {
@@ -590,7 +849,7 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The name of associated product.",
+      "description": "The name of associated Azure Sphere Product.",
       "x-ms-parameter-location": "method"
     }
   }
