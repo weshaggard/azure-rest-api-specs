@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.Drs
-  output-folder: $(csharp-sdks-folder)/drs/management/Microsoft.Drs/GeneratedProtocol
+  namespace: Microsoft.RecommendationsService
+  output-folder: $(csharp-sdks-folder)/recommendationsservice/management/Microsoft.RecommendationsService/src/Generated
 ```
