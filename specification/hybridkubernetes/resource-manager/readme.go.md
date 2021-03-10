@@ -1,4 +1,3 @@
-
 ## Go
 
 These settings apply only when `--go` is specified on the command line.
@@ -14,8 +13,6 @@ go:
 ``` yaml $(go) && $(multiapi)
 batch:
   - tag: package-2020-01-01-preview
-  - tag: package-2019-11-01-preview
-  - tag: package-2019-09-01-privatepreview
 ```
 
 ### Tag: package-2020-01-01-preview and go
@@ -24,27 +21,6 @@ These settings apply only when `--tag=package-2020-01-01-preview --go` is specif
 Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
 ```yaml $(tag) == 'package-2020-01-01-preview' && $(go)
-namespace: kubernetes
+namespace: hybridkubernetes
 output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2020-01-01-preview/$(namespace)
-```
-
-
-### Tag: package-2019-11-01-preview and go
-
-These settings apply only when `--tag=package-2019-11-01-preview --go` is specified on the command line.
-Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
-
-```yaml $(tag) == 'package-2019-11-01-preview' && $(go)
-namespace: kubernetes
-output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2019-11-01-preview/$(namespace)
-```
-
-### Tag: package-2019-09-01-privatepreview and go
-
-These settings apply only when `--tag=package-2019-09-01-privatepreview --go` is specified on the command line.
-Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
-
-```yaml $(tag) == 'package-2019-09-01-privatepreview' && $(go)
-namespace: kubernetes
-output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2019-09-01-privatepreview/$(namespace)
 ```

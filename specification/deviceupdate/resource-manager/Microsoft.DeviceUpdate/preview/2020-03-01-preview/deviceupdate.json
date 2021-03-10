@@ -280,7 +280,7 @@
         }
       },
       "patch": {
-        "description": "Updates account's tags.",
+        "description": "Updates account's patchable properties",
         "operationId": "Accounts_Update",
         "parameters": [
           {
@@ -296,12 +296,12 @@
             "$ref": "#/parameters/AccountNameParameter"
           },
           {
-            "name": "tagUpdatePayload",
-            "description": "Updated tags.",
+            "name": "accountUpdatePayload",
+            "description": "Updated Account.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/TagUpdate"
+              "$ref": "#/definitions/AccountUpdate"
             }
           }
         ],
@@ -312,12 +312,22 @@
               "$ref": "#/definitions/Account"
             }
           },
+          "201": {
+            "description": "Account updated succesfully.",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
           "default": {
             "description": "Error response describing the reason for operation failure.",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
           "Updates Account": {
@@ -542,12 +552,22 @@
               "$ref": "#/definitions/Instance"
             }
           },
+          "201": {
+            "description": "Instance updated successfully.",
+            "schema": {
+              "$ref": "#/definitions/Instance"
+            }
+          },
           "default": {
             "description": "Error response describing the reason for operation failure.",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
           "Updates Instance": {
@@ -596,6 +616,10 @@
         }
       ],
       "properties": {
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v1/types.json#/definitions/systemData",
+          "readOnly": true
+        },
         "properties": {
           "description": "Device Update account properties.",
           "x-ms-client-flatten": true,
@@ -624,6 +648,10 @@
               "readOnly": true
             }
           }
+        },
+        "identity": {
+          "$ref": "#/definitions/Identity",
+          "description": "The type of identity used for the resource."
         }
       }
     },
@@ -653,6 +681,10 @@
         }
       ],
       "properties": {
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v1/types.json#/definitions/systemData",
+          "readOnly": true
+        },
         "properties": {
           "description": "Device Update instance properties.",
           "x-ms-client-flatten": true,
@@ -711,16 +743,37 @@
         }
       }
     },
+    "Identity": {
+      "description": "Identity for the resource.",
+      "properties": {
+        "principalId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The principal ID of resource identity."
+        },
+        "tenantId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The tenant ID of resource."
+        },
+        "type": {
+          "enum": [
+            "SystemAssigned",
+            "None"
+          ],
+          "x-ms-enum": {
+            "name": "ResourceIdentityType",
+            "modelAsString": false
+          },
+          "type": "string",
+          "description": "The identity type."
+        }
+      }
+    },
     "IotHubSettings": {
       "type": "object",
       "description": "Device Update account integration with IoT Hub settings.",
       "properties": {
-        "name": {
-          "description": "IoTHub name",
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 50
-        },
         "resourceId": {
           "description": "IoTHub resource ID",
           "type": "string",
@@ -754,18 +807,14 @@
         },
         "error": {
           "$ref": "#/definitions/ErrorDefinition",
-          "description": "Error details."
+          "description": "Error details.",
+          "readOnly": true
         }
       }
     },
     "ErrorDefinition": {
       "description": "Error definition.",
       "properties": {
-        "target": {
-          "description": "Error target resource id.",
-          "type": "string",
-          "readOnly": true
-        },
         "code": {
           "description": "Error status code.",
           "type": "string",
@@ -784,6 +833,24 @@
           }
         }
       }
+    },
+    "AccountUpdate": {
+      "description": "Request payload used to update and existing Accounts.",
+      "properties": {
+        "identity": {
+          "$ref": "#/definitions/Identity",
+          "description": "The type of identity used for the resource."
+        },
+        "location": {
+          "type": "string",
+          "description": "The geo-location where the resource lives"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/TagUpdate"
+        }
+      ]
     },
     "TagUpdate": {
       "description": "Request payload used to update an existing resource's tags.",

@@ -1,0 +1,851 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "DiagnosticsRP",
+    "description": "Diagnostics RP provider",
+    "version": "2020-07-01-preview"
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Diagnostics/solutions": {
+      "get": {
+        "tags": [
+          "Solutions"
+        ],
+        "description": "This API will return a list of hard coded solution metadata for Hackathon prototype.",
+        "operationId": "Solutions_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM Response for List Solutions",
+            "schema": {
+              "$ref": "#/definitions/ARMResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/microsoft.Diagnostics/solutions": {
+      "get": {
+        "tags": [
+          "Solutions"
+        ],
+        "description": "This API will return a list of hard coded solution metadata for Hackathon prototype.",
+        "operationId": "First_Level_Extension_Solutions_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentProviderNamespaceParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentResourceTypeParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentResourceNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM Response for List Solutions",
+            "schema": {
+              "$ref": "#/definitions/ARMResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/microsoft.Diagnostics/solutions": {
+      "get": {
+        "tags": [
+          "Solutions"
+        ],
+        "description": "This API will return a list of hard coded solution metadata for Hackathon prototype.",
+        "operationId": "Second_Level_Extension_Solutions_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentProviderNamespaceParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentResourceTypeParameter"
+          },
+          {
+            "$ref": "#/parameters/ParentResourceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SubResourceTypeParameter"
+          },
+          {
+            "$ref": "#/parameters/SubResourceNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM Response for List Solutions",
+            "schema": {
+              "$ref": "#/definitions/ARMResponse"
+            }
+          }
+        }
+      }
+    },
+    "/{scope}/providers/Microsoft.Diagnostics/insightDiagnostics/{solutionId}/invoke": {
+      "post": {
+        "tags": [
+          "Insights"
+        ],
+        "description": "Insight Diagnosic Invocation Request",
+        "operationId": "First_Level_Extension_Insight_Invoke",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/SolutionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "in": "body",
+            "name": "parameters",
+            "description": "The user to create.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/InsightResult"
+            }
+          },
+          "202": {
+            "description": "Accepted, diagnostic will be invoked and results patched back asyncrhonously."
+          }
+        }
+      }
+    },
+    "/{scope}/providers/Microsoft.Diagnostics/AzureKB": {
+      "get": {
+        "tags": [
+          "AzureKB"
+        ],
+        "description": "This API will fetch azurekb search results",
+        "operationId": "Scoped_AzureKB_Search_Request",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SearchTextParameter"
+          },
+          {
+            "$ref": "#/parameters/TopResultsParameter"
+          },
+          {
+            "$ref": "#/parameters/SourcesParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of AzureKB Search Responses.",
+            "schema": {
+              "$ref": "#/definitions/AzureKBSearchResultList"
+            }
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.Diagnostics/AzureKB": {
+      "get": {
+        "tags": [
+          "AzureKB"
+        ],
+        "description": "This API will fetch azurekb search results",
+        "operationId": "Tenant_level_AzureKB_requests",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SearchTextParameter"
+          },
+          {
+            "$ref": "#/parameters/TopResultsParameter"
+          },
+          {
+            "$ref": "#/parameters/SourcesParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of AzureKB Search Responses.",
+            "schema": {
+              "$ref": "#/definitions/AzureKBSearchResultList"
+            }
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.Diagnostics/operations": {
+      "get": {
+        "description": "Returns list of operations.",
+        "operationId": "Operation_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation details.",
+            "schema": {
+              "$ref": "#/definitions/operationsList"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ARMResponse2": {
+      "description": "ARM Response2",
+      "properties": {
+        "id": {
+          "description": "full qualified resource id",
+          "type": "string"
+        },
+        "name": {
+          "description": "name of resource",
+          "type": "string"
+        },
+        "type": {
+          "description": "Resource Type",
+          "type": "string"
+        },
+        "properties": {
+          "description": "SolutionMetadata",
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/SolutionMetaData"
+          }
+        }
+      }
+    },
+    "ARMResponse": {
+      "description": "ARM Response",
+      "properties": {
+        "value": {
+          "description": "Array of Solution types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ARMResponse2"
+          }
+        }
+      }
+    },
+    "AzureKBSearchResultList": {
+      "description": "Collection of AzureKB Search Results",
+      "properties": {
+        "value": {
+          "description": "Array of AzureKB Search Results",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AzureKBSearchResult"
+          }
+        }
+      }
+    },
+    "AzureKBSearchResult": {
+      "description": "AzureKB Search Result",
+      "properties": {
+        "id": {
+          "description": "Id of AzureKB Search resource",
+          "type": "string"
+        },
+        "name": {
+          "description": "name of resource",
+          "type": "string"
+        },
+        "type": {
+          "description": "Resource Type",
+          "type": "string"
+        },
+        "properties": {
+          "description": "AzureKB Search Result Properties",
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/AzureKBSearchResultProperties"
+          }
+        }
+      }
+    },
+    "AzureKBSearchResultProperties": {
+      "description": "Details about an AzureKB Search Result",
+      "type": "object",
+      "properties": {
+        "resultId": {
+          "description": "Unique id of the result",
+          "type": "string"
+        },
+        "content": {
+          "description": "Content of the search result",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the search result",
+          "type": "string"
+        },
+        "apiType": {
+          "description": "Api type used",
+          "type": "string",
+          "enum": [
+            "QSimilarityAPI",
+            "AzureSearchAPI",
+            "AzureSearchWithRerankerAPI"
+          ]
+        },
+        "confidence": {
+          "description": "Confidence of the search result",
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "unifiedRank": {
+          "description": "unified rank of the search result",
+          "type": "integer"
+        },
+        "unifiedConfidence": {
+          "description": "Unified Confidence of the search result",
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "overAllRank": {
+          "description": "Overall rank of the search result",
+          "type": "integer"
+        },
+        "link": {
+          "description": "Link to the document",
+          "type": "string"
+        },
+        "searchType": {
+          "description": "Source of the results",
+          "type": "string",
+          "enum": [
+            "community",
+            "documentation"
+          ]
+        },
+        "sectionMatchDetails": {
+          "description": "Source of the search result",
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/SectionMatchDetails"
+          }
+        },
+        "attributes": {
+          "description": "Source specific attributes",
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "SectionMatchDetails": {
+      "description": "AzureKB Search Result SectionMatch details",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "Content"
+        },
+        "title": {
+          "type": "string",
+          "description": "title"
+        },
+        "link": {
+          "type": "string",
+          "description": "link"
+        }
+      }
+    },
+    "operation": {
+      "description": "Operation provided by provider",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the operation"
+        },
+        "display": {
+          "type": "object",
+          "description": "Properties of the operation",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "description": "Provider name"
+            },
+            "resource": {
+              "type": "string",
+              "description": "Resource name"
+            },
+            "operation": {
+              "type": "string",
+              "description": "Operation name"
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of the operation"
+            }
+          }
+        }
+      }
+    },
+    "operationsList": {
+      "description": "Lists the operations available.",
+      "properties": {
+        "nextLink": {
+          "description": "Url to follow for getting next page of operations.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Array of operations",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/operation"
+          }
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "SolutionMetaDataListResult": {
+      "description": "Object that represents the hardcode list of solutions metadata.",
+      "properties": {
+        "value": {
+          "description": "The list of hardcode solutions metadata.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SolutionMetaData"
+          }
+        }
+      }
+    },
+    "SolutionMetaData": {
+      "x-ms-azure-resource": true,
+      "description": "Object that represents a Diagnostic Solution Metadata",
+      "type": "object",
+      "properties": {
+        "solutionid": {
+          "description": "Id of the solution",
+          "type": "string",
+          "readOnly": true
+        },
+        "solutionType": {
+          "description": "Type of the solution",
+          "type": "string",
+          "readOnly": true
+        },
+        "version": {
+          "description": "Version of solution",
+          "type": "string",
+          "readOnly": true
+        },
+        "description": {
+          "description": "A detail description of solution",
+          "type": "string",
+          "readOnly": true
+        },
+        "ownershipId": {
+          "description": "OwnershipIds (Format is Service_Team) are used to properly identify the team responsible for building and maintaining an ASEP extension.",
+          "type": "string",
+          "readOnly": true
+        },
+        "requiredParameterSets": {
+          "description": "Required parameters for invoking this particular solution.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ParameterInfo"
+          }
+        },
+        "targetResourceTypeRegex": {
+          "description": "A list of regex to filter resource type.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "targetSapIds": {
+          "description": "A list of SapId.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "supportedClients": {
+          "description": "Clients supporting the solution id.",
+          "type": "string",
+          "enum": [
+            "AzureSupportCenter",
+            "AzurePortal",
+            "Elixir"
+          ]
+        },
+        "enableStatus": {
+          "description": "A flag that indicate if this solution is enabled.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ParameterInfo": {
+      "description": "Describes a of a diagnostic solution.",
+      "required": [
+        "description",
+        "requiredParameter"
+      ],
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Detailed description of the question or issue.",
+          "type": "string"
+        },
+        "requiredParameter": {
+          "description": "required parameter to run the solution.",
+          "type": "string"
+        }
+      }
+    },
+    "InsightResult": {
+      "description": "The insight invocation result.",
+      "properties": {
+        "Id": {
+          "description": "A unique ID for this Insight.",
+          "type": "string"
+        },
+        "Insights": {
+          "description": "The problems (if any) detected by this insight.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Insight"
+          }
+        },
+        "Error": {
+          "description": "Any errors that potentially occurred during diagnostic invocation.",
+          "type": "object",
+          "$ref": "#/definitions/Error"
+        }
+      }
+    },
+    "Insight": {
+      "description": "Detailed insights(s) obtained via the invocation of an insight diagnostic troubleshooter.",
+      "properties": {
+        "Title": {
+          "description": "This insight's title.",
+          "type": "string"
+        },
+        "Description": {
+          "description": "A user friendly description of what this insight has detected.",
+          "type": "string"
+        },
+        "IssueCategory": {
+          "description": "The category for the issue that this insight detected",
+          "type": "string"
+        },
+        "IssueSubcategory": {
+          "description": "The subcategory for the issue that this insight detected.",
+          "type": "string"
+        },
+        "RecommendedAction": {
+          "description": "The recommended action to resolve the detected issue.",
+          "type": "object",
+          "$ref": "#/definitions/RecommendedAction"
+        },
+        "AdditionalDetails": {
+          "description": "Additional supporting information for additional context about this problem.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RecommendedAction": {
+      "description": "Detailed recommended action(s) to potentially resolve a detected problem.",
+      "properties": {
+        "Action": {
+          "description": "The action to take.",
+          "type": "string"
+        },
+        "ContentType": {
+          "description": "A enumerative value indicating how the client can/should display the textual action given above.",
+          "type": "string",
+          "enum": [
+            "MARKDOWN",
+            "PLAIN_TEXT"
+          ]
+        }
+      }
+    },
+    "ErrorResponse": {
+      "description": "Error response.",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      }
+    },
+    "Error": {
+      "description": "Error definition.",
+      "properties": {
+        "code": {
+          "description": "Service specific error code which serves as the substatus for the HTTP error code.",
+          "type": "string",
+          "readOnly": true
+        },
+        "type": {
+          "description": "Service specific error type which serves as additonal context for the error herein.",
+          "type": "string",
+          "readOnly": true
+        },
+        "message": {
+          "description": "Description of the error.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ArmError": {
+      "description": "Arm Error definition.",
+      "properties": {
+        "code": {
+          "description": "Service specific error code which serves as the substatus for the HTTP error code.",
+          "type": "string",
+          "readOnly": true
+        },
+        "message": {
+          "description": "Description of the error.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "DiagnosticExecutionResponse": {
+      "description": "The response from a Diagnostic Execution."
+    }
+  },
+  "parameters": {
+    "SubscriptionIdParameter": {
+      "name": "subscriptionId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The Azure subscription ID."
+    },
+    "ParentProviderNamespaceParameter": {
+      "name": "parentProviderNamespace",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The Azure subscription ID."
+    },
+    "ParentResourceTypeParameter": {
+      "name": "parentResourceType",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The Azure subscription ID."
+    },
+    "ParentResourceNameParameter": {
+      "name": "parentResourceName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The Azure subscription ID."
+    },
+    "SubResourceTypeParameter": {
+      "name": "subResourceType",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The Azure subscription ID."
+    },
+    "SubResourceNameParameter": {
+      "name": "subResourceName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The Azure subscription ID."
+    },
+    "ScopeParameter": {
+      "name": "scope",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Request scope"
+    },
+    "ApiVersionParameter": {
+      "name": "api-version",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "description": "Client Api Version."
+    },
+    "ResourceGroupNameParameter": {
+      "name": "resourceGroupName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the resource group.",
+      "x-ms-parameter-location": "method"
+    },
+    "SubscriptionId": {
+      "name": "subscriptionId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The Azure subscription ID. This is a GUID-formatted string (e.g. 00000000-0000-0000-0000-000000000000)"
+    },
+    "ResourceUri": {
+      "name": "resourceUri",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The fully qualified Azure Resource Manager identifier of the resource to which the solutions should be discovered/invoked. (e.g. /subscriptions/abc/resourceGroups/abc/providers/Microsoft.Compute/virtualMachineScaleSets/xyz/)"
+    },
+    "SolutionId": {
+      "name": "solutionId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The unique identifier for the diagnostic solution to be invoked."
+    },
+    "SubResource": {
+      "name": "subResource",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Sub level resource of parent resource in resourceType/resourceName convention. (e.g. /blob/my_blob/)"
+    },
+    "Operationid": {
+      "name": "operationId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The unique identifier for the diagnostic solution has been invoked. (e.g. 00000000-0000-0000-0000-000000000000)"
+    },
+    "SolutionNameParameter": {
+      "name": "solutionName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The unique identifier for the diagnostic solution has been invoked. (e.g. 00000000-0000-0000-0000-000000000000)"
+    },
+    "SolutionIdParameter": {
+      "name": "solutionId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The unique identifier for the diagnostic solution has been invoked. (e.g. 00000000-0000-0000-0000-000000000000)"
+    },
+    "SearchTextParameter": {
+      "name": "searchText",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "description": "Search text string to search."
+    },
+    "TopResultsParameter": {
+      "name": "topResults",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "description": "Number of search results desired. Default is 5."
+    },
+    "SourcesParameter": {
+      "name": "sources",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "enum": [
+        "community",
+        "documentation"
+      ],
+      "description": "Sources from where articles are to fetched. Default is community & documentation."
+    }
+  }
+}
