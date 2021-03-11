@@ -14,5 +14,7 @@ cli:
     - name: Update Code Sign Account
     - name: Create Certificate Profile
     - name: Get Certificate Profile
+    - name: Update Certificate Profile
     - name: List Certificate Profiles
+    - name: List Code Sign Account operations
 ```
