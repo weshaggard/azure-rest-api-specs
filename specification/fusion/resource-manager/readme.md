@@ -21,6 +21,11 @@ input-file:
   - Wandisco.Fusion/preview/2020-12-01-preview/fusionGroups.json
 ```
 
+```yaml $(tag) == '2021-01-01-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-01-preview/fusionGroups.json
+```
+
 ```yaml $(tag) == '2021-02-01-preview'
 input-file:
   - Wandisco.Fusion/preview/2021-02-01-preview/fusionGroups.json
