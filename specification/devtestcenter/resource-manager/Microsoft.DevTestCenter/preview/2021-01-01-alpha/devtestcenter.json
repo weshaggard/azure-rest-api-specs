@@ -6,12 +6,12 @@
     "description": "DevTestCenter provider"
   },
   "host": "management.azure.com",
-  "schemes": ["https"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "schemes": [ "https" ],
+  "consumes": [ "application/json" ],
+  "produces": [ "application/json" ],
   "security": [
     {
-      "azure_auth": ["user_impersonation"]
+      "azure_auth": [ "user_impersonation" ]
     }
   ],
   "securityDefinitions": {
@@ -28,7 +28,7 @@
   "paths": {
     "/subscriptions/{subscriptionId}/providers/Microsoft.DevTestCenter/organizations": {
       "get": {
-        "tags": ["Organization"],
+        "tags": [ "Organization" ],
         "description": "Lists all organizations in a subscription.",
         "parameters": [
           {
@@ -67,12 +67,12 @@
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/OrganizationListResult"
+        "x-ms-odata": "#/definitions/Organization"
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations": {
       "get": {
-        "tags": ["Organization"],
+        "tags": [ "Organization" ],
         "description": "Lists all organizations in a resource group.",
         "parameters": [
           {
@@ -114,12 +114,12 @@
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/OrganizationListResult"
+        "x-ms-odata": "#/definitions/Organization"
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}": {
       "get": {
-        "tags": ["Organization"],
+        "tags": [ "Organization" ],
         "description": "Gets an organization.",
         "parameters": [
           {
@@ -157,7 +157,7 @@
         }
       },
       "put": {
-        "tags": ["Organization"],
+        "tags": [ "Organization" ],
         "description": "Creates or updates an organization resource",
         "parameters": [
           {
@@ -217,7 +217,7 @@
         }
       },
       "patch": {
-        "tags": ["Organization"],
+        "tags": [ "Organization" ],
         "description": "Partially updates an organization.",
         "parameters": [
           {
@@ -274,7 +274,7 @@
         }
       },
       "delete": {
-        "tags": ["Organization"],
+        "tags": [ "Organization" ],
         "description": "Deletes an organization",
         "parameters": [
           {
@@ -319,10 +319,10 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.DevTestCenter/projects": {
       "get": {
-        "tags": ["Project"],
-        "description": "Lists all projects in the organization.",
+        "tags": [ "Project" ],
+        "description": "Lists all projects in the subscription.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -331,19 +331,13 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
-          },
-          {
             "$ref": "#/parameters/FilterParameter"
           },
           {
             "$ref": "#/parameters/TopParameter"
           }
         ],
-        "operationId": "Projects_ListByOrganization",
+        "operationId": "Projects_ListBySubscription",
         "responses": {
           "200": {
             "description": "OK",
@@ -359,20 +353,20 @@
           }
         },
         "x-ms-examples": {
-          "Projects_ListByOrganization": {
-            "$ref": "./examples/Projects_List.json"
+          "Projects_ListBySubscription": {
+            "$ref": "./examples/Projects_ListBySubscription.json"
           }
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/ProjectListResult"
+        "x-ms-odata": "#/definitions/Project"
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/projects": {
       "get": {
-        "tags": ["Project"],
-        "description": "Gets a specific project in the organization.",
+        "tags": [ "Project" ],
+        "description": "Lists all projects in the resource group.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -384,7 +378,51 @@
             "$ref": "#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/OrganizationNameParameter"
+            "$ref": "#/parameters/FilterParameter"
+          },
+          {
+            "$ref": "#/parameters/TopParameter"
+          }
+        ],
+        "operationId": "Projects_ListByResourceGroup",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ProjectListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Projects_ListByResourceGroup": {
+            "$ref": "./examples/Projects_ListByResourceGroup.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-odata": "#/definitions/Project"
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/projects/{project}": {
+      "get": {
+        "tags": [ "Project" ],
+        "description": "Gets a specific project in the organization.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -412,7 +450,7 @@
         }
       },
       "put": {
-        "tags": ["Project"],
+        "tags": [ "Project" ],
         "description": "Creates or updates a project.",
         "parameters": [
           {
@@ -423,9 +461,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -472,7 +507,7 @@
         }
       },
       "patch": {
-        "tags": ["Project"],
+        "tags": [ "Project" ],
         "description": "Partially updates a project.",
         "parameters": [
           {
@@ -483,9 +518,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -532,7 +564,7 @@
         }
       },
       "delete": {
-        "tags": ["Project"],
+        "tags": [ "Project" ],
         "description": "Deletes a project resource.",
         "parameters": [
           {
@@ -543,9 +575,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -580,9 +609,9 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}/environments": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/projects/{project}/environments": {
       "get": {
-        "tags": ["Environment"],
+        "tags": [ "Environment" ],
         "description": "Lists the environments for a project.",
         "parameters": [
           {
@@ -593,9 +622,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -630,12 +656,12 @@
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/EnvironmentListResult"
+        "x-ms-odata": "#/definitions/Environment"
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}/environments/{environment}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/projects/{project}/environments/{environment}": {
       "get": {
-        "tags": ["Environment"],
+        "tags": [ "Environment" ],
         "description": "Gets an environment",
         "parameters": [
           {
@@ -646,9 +672,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -679,7 +702,7 @@
         }
       },
       "put": {
-        "tags": ["Environment"],
+        "tags": [ "Environment" ],
         "description": "Creates or updates an environment.",
         "parameters": [
           {
@@ -690,9 +713,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -742,7 +762,7 @@
         }
       },
       "patch": {
-        "tags": ["Environment"],
+        "tags": [ "Environment" ],
         "description": "Partially updates an environment",
         "parameters": [
           {
@@ -753,9 +773,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -805,7 +822,7 @@
         }
       },
       "delete": {
-        "tags": ["Environment"],
+        "tags": [ "Environment" ],
         "description": "Deletes an environment and all it's associated resources",
         "parameters": [
           {
@@ -816,9 +833,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -856,9 +870,9 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}/environments/{environment}/deploy": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/projects/{project}/environments/{environment}/deploy": {
       "post": {
-        "tags": ["Environment"],
+        "tags": [ "Environment" ],
         "description": "Deploys an environment's resources",
         "parameters": [
           {
@@ -869,9 +883,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -915,10 +926,10 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}/environments/{environment}/deployments": {
-      "get": {
-        "tags": ["Environment"],
-        "description": "Lists the deployments for an environment.",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/projects/{project}/environments/{environment}/getDeploymentHistory": {
+      "post": {
+        "tags": [ "Environment" ],
+        "description": "Gets an environment's deployment history",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -930,27 +941,18 @@
             "$ref": "#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/OrganizationNameParameter"
-          },
-          {
             "$ref": "#/parameters/ProjectNameParameter"
           },
           {
             "$ref": "#/parameters/EnvironmentNameParameter"
-          },
-          {
-            "$ref": "#/parameters/FilterParameter"
-          },
-          {
-            "$ref": "#/parameters/TopParameter"
           }
         ],
-        "operationId": "Deployments_ListByEnvironment",
+        "operationId": "Environments_GetDeploymentHistory",
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/DeploymentListResult"
+              "$ref": "#/definitions/DeploymentHistoryResult"
             }
           },
           "default": {
@@ -961,68 +963,15 @@
           }
         },
         "x-ms-examples": {
-          "Deployments_List": {
-            "$ref": "./examples/Deployments_List.json"
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-odata": "#/definitions/DeploymentListResult"
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}/environments/{environment}/deployments/{deploymentName}": {
-      "get": {
-        "tags": ["Environment"],
-        "description": "Gets details of a deployment.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProjectNameParameter"
-          },
-          {
-            "$ref": "#/parameters/EnvironmentNameParameter"
-          },
-          {
-            "$ref": "#/parameters/DeploymentNameParameter"
-          }
-        ],
-        "operationId": "Deployments_Get",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Deployment"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "Deployments_Get": {
-            "$ref": "./examples/Deployments_Get.json"
+          "Environments_GetDeploymentHistory": {
+            "$ref": "./examples/Environments_GetDeploymentHistory.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}/templates": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/projects/{project}/templates": {
       "get": {
-        "tags": ["Project"],
+        "tags": [ "Project" ],
         "description": "Lists all templates available for a project.",
         "parameters": [
           {
@@ -1033,9 +982,6 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
             "$ref": "#/parameters/ProjectNameParameter"
@@ -1070,12 +1016,12 @@
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/TemplateListResult"
+        "x-ms-odata": "#/definitions/TemplateSource"
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templatesources": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources": {
       "get": {
-        "tags": ["Template Source"],
+        "tags": [ "Template Source" ],
         "description": "Lists template sources for an organization.",
         "parameters": [
           {
@@ -1120,12 +1066,12 @@
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/TemplateSourceListResult"
+        "x-ms-odata": "#/definitions/TemplateSource"
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templatesources/{templateSource}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources/{templateSource}": {
       "get": {
-        "tags": ["Template Source"],
+        "tags": [ "Template Source" ],
         "description": "Gets a template source",
         "parameters": [
           {
@@ -1166,7 +1112,7 @@
         }
       },
       "put": {
-        "tags": ["Template Source"],
+        "tags": [ "Template Source" ],
         "description": "Creates or updates a template source.",
         "parameters": [
           {
@@ -1216,7 +1162,7 @@
         }
       },
       "patch": {
-        "tags": ["Template Source"],
+        "tags": [ "Template Source" ],
         "description": "Partially updates a template source.",
         "parameters": [
           {
@@ -1266,7 +1212,7 @@
         }
       },
       "delete": {
-        "tags": ["Template Source"],
+        "tags": [ "Template Source" ],
         "description": "Deletes a Template Source resource.",
         "parameters": [
           {
@@ -1307,9 +1253,9 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templatesources/{templateSource}/templates": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources/{templateSource}/templates": {
       "get": {
-        "tags": ["Template Source"],
+        "tags": [ "Template Source" ],
         "description": "Lists Template resources by template source",
         "parameters": [
           {
@@ -1352,7 +1298,7 @@
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/TemplateListResult",
+        "x-ms-odata": "#/definitions/Template",
         "x-ms-examples": {
           "Templates_ListBySource": {
             "$ref": "./examples/Templates_ListByTemplateSource.json"
@@ -1360,9 +1306,9 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templatesources/{templateSource}/templates/{template}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources/{templateSource}/templates/{template}": {
       "get": {
-        "tags": ["Template Source"],
+        "tags": [ "Template Source" ],
         "description": "Gets a Template resource",
         "parameters": [
           {
@@ -1406,9 +1352,9 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}/mappings": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/mappings": {
       "get": {
-        "tags": ["Environment Mapping"],
+        "tags": [ "Environment Mapping" ],
         "description": "Lists mappings for a project.",
         "parameters": [
           {
@@ -1424,16 +1370,13 @@
             "$ref": "#/parameters/OrganizationNameParameter"
           },
           {
-            "$ref": "#/parameters/ProjectNameParameter"
-          },
-          {
             "$ref": "#/parameters/FilterParameter"
           },
           {
             "$ref": "#/parameters/TopParameter"
           }
         ],
-        "operationId": "EnvironmentMappings_ListByProject",
+        "operationId": "EnvironmentMappings_ListByOrganization",
         "responses": {
           "200": {
             "description": "OK",
@@ -1449,19 +1392,19 @@
           }
         },
         "x-ms-examples": {
-          "EnvironmentMappings_ListByProject": {
+          "EnvironmentMappings_ListByOrganization": {
             "$ref": "./examples/EnvironmentMappings_List.json"
           }
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/EnvironmentMappingListResult"
+        "x-ms-odata": "#/definitions/EnvironmentMapping"
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/projects/{project}/mappings/{mapping}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/mappings/{mapping}": {
       "get": {
-        "tags": ["Environment Mapping"],
+        "tags": [ "Environment Mapping" ],
         "description": "Gets a mapping.",
         "parameters": [
           {
@@ -1475,9 +1418,6 @@
           },
           {
             "$ref": "#/parameters/OrganizationNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProjectNameParameter"
           },
           {
             "$ref": "#/parameters/MappingNameParameter"
@@ -1505,7 +1445,7 @@
         }
       },
       "put": {
-        "tags": ["Environment Mapping"],
+        "tags": [ "Environment Mapping" ],
         "description": "Creates or updates a mapping.",
         "parameters": [
           {
@@ -1519,9 +1459,6 @@
           },
           {
             "$ref": "#/parameters/OrganizationNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProjectNameParameter"
           },
           {
             "$ref": "#/parameters/MappingNameParameter"
@@ -1558,7 +1495,7 @@
         }
       },
       "patch": {
-        "tags": ["Environment Mapping"],
+        "tags": [ "Environment Mapping" ],
         "description": "Partially updates a mapping.",
         "parameters": [
           {
@@ -1572,9 +1509,6 @@
           },
           {
             "$ref": "#/parameters/OrganizationNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProjectNameParameter"
           },
           {
             "$ref": "#/parameters/MappingNameParameter"
@@ -1611,7 +1545,7 @@
         }
       },
       "delete": {
-        "tags": ["Environment Mapping"],
+        "tags": [ "Environment Mapping" ],
         "description": "Deletes a mapping.",
         "parameters": [
           {
@@ -1625,9 +1559,6 @@
           },
           {
             "$ref": "#/parameters/OrganizationNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProjectNameParameter"
           },
           {
             "$ref": "#/parameters/MappingNameParameter"
@@ -1657,7 +1588,7 @@
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/environmentTypes": {
       "get": {
-        "tags": ["Environment Type"],
+        "tags": [ "Environment Type" ],
         "description": "Lists environment types for the organization.",
         "parameters": [
           {
@@ -1702,12 +1633,12 @@
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         },
-        "x-ms-odata": "#/definitions/EnvironmentTypeListResult"
+        "x-ms-odata": "#/definitions/EnvironmentType"
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/environmentTypes/{environmentType}": {
       "get": {
-        "tags": ["Environment Type"],
+        "tags": [ "Environment Type" ],
         "description": "Gets an environment type.",
         "parameters": [
           {
@@ -1748,7 +1679,7 @@
         }
       },
       "put": {
-        "tags": ["Environment Type"],
+        "tags": [ "Environment Type" ],
         "description": "Creates or updates an environment type.",
         "parameters": [
           {
@@ -1798,7 +1729,7 @@
         }
       },
       "patch": {
-        "tags": ["Environment Type"],
+        "tags": [ "Environment Type" ],
         "description": "Partially updates an environment type.",
         "parameters": [
           {
@@ -1848,7 +1779,7 @@
         }
       },
       "delete": {
-        "tags": ["Environment Type"],
+        "tags": [ "Environment Type" ],
         "description": "Deletes an environment type.",
         "parameters": [
           {
@@ -1891,7 +1822,7 @@
     },
     "/providers/Microsoft.DevTestCenter/operations": {
       "get": {
-        "tags": ["Operations"],
+        "tags": [ "Operations" ],
         "description": "Lists all of the available resource provider operations.",
         "operationId": "Operations_List",
         "parameters": [
@@ -1994,7 +1925,6 @@
       "description": "Properties of the organization. These properties can be updated after the resource has been created.",
       "properties": {
         "description": {
-          "maxLength": 1024,
           "type": "string",
           "description": "Organization description."
         }
@@ -2019,19 +1949,16 @@
     "OrganizationUpdate": {
       "description": "The organization resource for partial updates. Properties not provided in the update request will not be changed.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TrackedResourceUpdate"
+        }
+      ],
       "properties": {
         "properties": {
           "description": "Organization properties to be updated.",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/OrganizationUpdateProperties"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": ["read", "create", "update"],
-          "description": "Resource tags."
         },
         "identity": {
           "description": "Managed identity properties",
@@ -2083,9 +2010,9 @@
       "description": "Properties of a project. These properties can be updated after the resource has been created.",
       "type": "object",
       "properties": {
-        "displayName": {
+        "organizationId": {
           "type": "string",
-          "description": "Display name of the project."
+          "description": "Resource Id of an associated Organization"
         },
         "description": {
           "type": "string",
@@ -2112,19 +2039,16 @@
     "ProjectUpdate": {
       "description": "The project properties for partial update. Properties not provided in the update request will not be changed.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TrackedResourceUpdate"
+        }
+      ],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/ProjectUpdateProperties",
           "description": "Properties of a project to be updated."
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": ["read", "create", "update"],
-          "description": "Resource tags."
         }
       }
     },
@@ -2176,9 +2100,9 @@
           "type": "string",
           "description": "Display name of the environment."
         },
-        "type": {
+        "environmentType": {
           "type": "string",
-          "description": "Environment type resource identifier."
+          "description": "Environment type."
         },
         "templateId": {
           "type": "string",
@@ -2238,19 +2162,16 @@
     "EnvironmentUpdate": {
       "description": "The environment properties for partial update. Properties not provided in the update request will not be changed.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TrackedResourceUpdate"
+        }
+      ],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/EnvironmentUpdateProperties",
           "description": "Environment properties to be updated."
-        },
-        "tags": {
-          "description": "Resource tags.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": ["read", "create", "update"]
         }
       }
     },
@@ -2283,48 +2204,22 @@
         }
       }
     },
-    "DeploymentListResult": {
-      "description": "Results of the deployment list operation.",
+    "DeploymentHistoryResult": {
+      "description": "Results of the get deployment history operation.",
       "type": "object",
       "properties": {
         "value": {
-          "description": "Current page of results.",
+          "description": "Recent deployment history.",
           "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Deployment"
           }
-        },
-        "nextLink": {
-          "description": "URL to get the next set of results if there are any.",
-          "type": "string",
-          "readOnly": true
         }
       }
     },
     "Deployment": {
       "description": "Details of a specific deployment of an environment.",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "description": "Deployment properties",
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/DeploymentProperties"
-        },
-        "systemData": {
-          "description": "Metadata pertaining to creation and last modification of the resource.",
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-          "readOnly": true
-        }
-      }
-    },
-    "DeploymentProperties": {
-      "description": "Deployment properties.",
       "type": "object",
       "properties": {
         "provisioningState": {
@@ -2334,10 +2229,12 @@
         },
         "logs": {
           "description": "Deployment logs.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
+          "type": "string",
+          "readOnly": true
+        },
+        "parameters": {
+          "description": "Deployment parameters passed to the template.",
+          "type": "object",
           "readOnly": true
         }
       }
@@ -2347,7 +2244,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
         }
       ],
       "properties": {
@@ -2417,7 +2314,7 @@
       }
     },
     "TemplateSourceUpdate": {
-      "description": "The template source's properties for parital update. Properties not provided in the update request will not be changed.",
+      "description": "The template source's properties for partial update. Properties not provided in the update request will not be changed.",
       "type": "object",
       "properties": {
         "properties": {
@@ -2430,7 +2327,7 @@
           "additionalProperties": {
             "type": "string"
           },
-          "x-ms-mutability": ["read", "create", "update"],
+          "x-ms-mutability": [ "read", "create", "update" ],
           "description": "Resource tags."
         }
       }
@@ -2504,7 +2401,7 @@
           "readOnly": true
         },
         "type": {
-          "enum": ["ARM"],
+          "enum": [ "ARM" ],
           "description": "The type of template used to deploy the environment.",
           "type": "string",
           "readOnly": true,
@@ -2551,7 +2448,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
         }
       ],
       "properties": {
@@ -2571,19 +2468,28 @@
       "description": "Properties of an environment mapping. These properties can be updated after the resource has been created",
       "type": "object",
       "properties": {
+        "mappedSubscription": {
+          "description": "Id of a subscription that the environment type will be mapped to. The environment's resources will be deployed into this subscription.",
+          "type": "string"
+        }
       }
     },
     "EnvironmentMappingProperties": {
       "description": "Properties of an environment mapping.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EnvironmentMappingUpdateProperties"
+        }
+      ],
       "properties": {
-        "subscriptionId": {
-          "description": "Id of a subscription that the environment type will be mapped to.",
-          "type": "string",
-          "x-ms-mutability": ["read", "create"]
-        },
         "environmentType": {
           "description": "Environment type (e.g. Dev/Test)",
+          "type": "string",
+          "x-ms-mutability": [ "read", "create" ]
+        },
+        "projectId": {
+          "description": "Resource Id of a project that this mapping is associated with.",
           "type": "string",
           "x-ms-mutability": [ "read", "create" ]
         },
@@ -2602,14 +2508,6 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/EnvironmentMappingUpdateProperties",
           "description": "Properties to configure a mapping between an environment type and a subscription or management group. Resources for environments of this configured type will be deployed to this subscription or management group."
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": ["read", "create", "update"],
-          "description": "Resource tags."
         }
       }
     },
@@ -2637,7 +2535,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
         }
       ],
       "properties": {
@@ -2650,6 +2548,10 @@
           "description": "Metadata pertaining to creation and last modification of the resource.",
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
           "readOnly": true
+        },
+        "tags": {
+          "$ref": "#/definitions/Tags",
+          "description": "Resource tags."
         }
       }
     },
@@ -2689,11 +2591,7 @@
           "description": "Properties to configure an environment type."
         },
         "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": ["read", "create", "update"],
+          "$ref": "#/definitions/Tags",
           "description": "Resource tags."
         }
       }
@@ -2771,6 +2669,35 @@
       "type": "string",
       "description": "Provisioning state of the resource.",
       "readOnly": true
+    },
+    "Tags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "x-ms-mutability": [
+        "read",
+        "create",
+        "update"
+      ],
+      "description": "Resource tags."
+    },
+    "TrackedResourceUpdate": {
+      "description": "Base tracked resource type for PATCH updates",
+      "properties": {
+        "tags": {
+          "$ref": "#/definitions/Tags",
+          "description": "Resource tags."
+        },
+        "location": {
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
+          "description": "The geo-location where the resource lives"
+        }
+      }
     },
     "AvailableOperations": {
       "description": "Available operations of the service",
@@ -2883,7 +2810,7 @@
     },
     "EnableStatus": {
       "description": "Enable or disable status. Indicates whether the property applied to is either enabled or disabled.",
-      "enum": ["Enabled", "Disabled"],
+      "enum": [ "Enabled", "Disabled" ],
       "type": "string",
       "x-ms-enum": {
         "name": "EnableStatus",
@@ -2912,9 +2839,6 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "maxLength": 63,
-      "minLength": 2,
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]*$",
       "description": "The name of the organization.",
       "x-ms-parameter-location": "method"
     },
