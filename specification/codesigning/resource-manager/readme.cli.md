@@ -13,6 +13,10 @@ cli:
     - name: List Code Sign Accounts by Subscription
     - name: Update Code Sign Account
     - name: Create Certificate Profile
-    - name: Get Certificate Profile
+    - name: Get Certificate Profile   
     - name: List Certificate Profiles
+    - name: Update Certificate Profile
+    - name: Delete Certificate Profile
+    - name: Delete Code Sign Account
+    - name: List Code Sign Account operations
 ```
