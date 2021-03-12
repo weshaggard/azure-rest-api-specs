@@ -6,8 +6,30 @@
     "description": "OLPControlPlaneServiceAPI",
     "version": "2020-06-23-preview"
   },
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
   "paths": {
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OpenLogisticsPlatform/merchants/{merchantName}": {
       "get": {
@@ -15,24 +37,23 @@
           "MerchantAccount"
         ],
         "operationId": "MerchantAccount_Get",
+        "x-ms-examples": {
+          "Workspace Operation Status": {
+            "$ref": "./examples/Merchant_Get.json"
+          }
+        },
         "parameters": [
           {
-            "type": "string",
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "type": "string",
-            "name": "resourceGroupName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/ResourceGroupParameter"
           },
           {
-            "type": "string",
-            "name": "merchantName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/MerchantNameParameter"
           }
         ],
         "responses": {
@@ -45,7 +66,7 @@
           "default": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -55,24 +76,23 @@
           "MerchantAccount"
         ],
         "operationId": "MerchantAccount_Put",
+        "x-ms-examples": {
+          "Workspace Operation Status": {
+            "$ref": "./examples/Merchant_Put.json"
+          }
+        },
         "parameters": [
           {
-            "type": "string",
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "type": "string",
-            "name": "resourceGroupName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/ResourceGroupParameter"
           },
           {
-            "type": "string",
-            "name": "merchantName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/MerchantNameParameter"
           },
           {
             "name": "merchantAccount",
@@ -102,7 +122,7 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -112,24 +132,23 @@
           "MerchantAccount"
         ],
         "operationId": "MerchantAccount_Delete",
+        "x-ms-examples": {
+          "Workspace Operation Status": {
+            "$ref": "./examples/Merchant_Delete.json"
+          }
+        },
         "parameters": [
           {
-            "type": "string",
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "type": "string",
-            "name": "resourceGroupName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/ResourceGroupParameter"
           },
           {
-            "type": "string",
-            "name": "merchantName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/MerchantNameParameter"
           }
         ],
         "responses": {
@@ -146,10 +165,11 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-long-running-operation": true
       },
       "patch": {
         "tags": [
@@ -157,29 +177,23 @@
         ],
         "description": "Update merchant account details.",
         "operationId": "MerchantAccount_Update",
+        "x-ms-examples": {
+          "Workspace Operation Status": {
+            "$ref": "./examples/Merchant_Update.json"
+          }
+        },
         "parameters": [
           {
-            "type": "string",
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "type": "string",
-            "name": "resourceGroupName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/ResourceGroupParameter"
           },
           {
-            "type": "string",
-            "name": "merchantId",
-            "in": "query"
+            "$ref": "#/parameters/ApiVersionParameter"
           },
           {
-            "type": "string",
-            "name": "merchantName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/MerchantNameParameter"
           },
           {
             "name": "MerchantAccountPatchResource",
@@ -197,6 +211,13 @@
             "schema": {
               "$ref": "#/definitions/MerchantAccount"
             }
+          },
+          "default": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -206,19 +227,21 @@
         "tags": [
           "MerchantAccount"
         ],
-        "operationId": "MerchantAccount_List_ResourceGroupLevel",
+        "operationId": "MerchantAccount_ListResourceGroupLevel",
+        "x-ms-examples": {
+          "Workspace Operation Status": {
+            "$ref": "./examples/Merchant_List.json"
+          }
+        },
         "parameters": [
           {
-            "type": "string",
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
-            "type": "string",
-            "name": "resourceGroupName",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/ResourceGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -226,14 +249,14 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-                "$ref": "#/definitions/MerchantAccountList"
+              "$ref": "#/definitions/MerchantAccountList"
             }
           },
           "default": {
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -244,13 +267,18 @@
         "tags": [
           "MerchantAccount"
         ],
-        "operationId": "MerchantAccount_List_SubscriptionLevel",
+        "operationId": "MerchantAccount_ListSubscriptionLevel",
+        "x-ms-examples": {
+          "Workspace Operation Status": {
+            "$ref": "./examples/Merchant_ListAll.json"
+          }
+        },
         "parameters": [
           {
-            "type": "string",
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -258,102 +286,18 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-                "$ref": "#/definitions/MerchantAccountList"
+              "$ref": "#/definitions/MerchantAccountList"
             }
           },
           "default": {
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.OpenLogisticsPlatform/checkNameAvailability": {
-      "post": {
-        "tags": [
-          "CheckNameAvailability Namespaces"
-        ],
-        "operationId": "Namespaces_CheckNameAvailability",
-        "description": "Check the give Namespace name availability.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "name": "parameters",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CheckNameAvailabilityParameter"
-            },
-            "description": "Parameters to check availability of the given Namespace name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "check availability returned successfully.",
-            "schema": {
-              "$ref": "#/definitions/CheckNameAvailabilityResult"
-            }
-          },
-          "default": {
-            "description": "Eventhub error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.OpenLogisticsPlatform/locations/{location}/operationstatus/{operationStatusId}": {
-      "get": {
-        "tags": [
-          "MerchantAccount"
-        ],
-        "operationId": "MerchantAccount_OperationStatus",
-        "description": "The status of provisioning operation.",
-        "parameters": [
-          {
-            "name": "location",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "The region name which the operation will lookup into."
-          },
-          {
-            "name": "operationStatusId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "The target operation status Id."
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK. The operation completed.",
-            "schema": {
-              "$ref": "#/definitions/OperationStatus"
-            }
-          },
-          "202": {
-            "description": "Accepted. The operation is ongoing.",
-            "schema": {
-              "$ref": "#/definitions/OperationStatus"
-            }
-          }
-        }
+        },
+        "x-ms-long-running-operation": true
       }
     }
   },
@@ -370,7 +314,8 @@
         "Failed"
       ]
     },
-    "Resource": {
+    "MerchantResource": {
+      "type": "object",
       "description": "An Azure resource.",
       "properties": {
         "id": {
@@ -378,25 +323,15 @@
           "type": "string",
           "readOnly": true
         },
-        "subscriptionId": {
-          "description": "Azure rubscription Id.",
-          "type": "string",
-          "readOnly": false
-        },
-        "resourceGroup": {
-          "description": "Azure resource group.",
-          "type": "string",
-          "readOnly": false
-        },
         "name": {
           "description": "Azure resource name.",
           "type": "string",
-          "readOnly": false
+          "readOnly": true
         },
         "type": {
           "description": "Azure resource type.",
           "type": "string",
-          "readOnly": false
+          "readOnly": true
         },
         "sku": {
           "description": "Sku of resource definition",
@@ -410,11 +345,6 @@
         },
         "location": {
           "description": "Location of the resource.",
-          "type": "string",
-          "readOnly": false
-        },
-        "zone": {
-          "description": "Availability zone of the resource.",
           "type": "string",
           "readOnly": false
         },
@@ -436,11 +366,6 @@
             "type": "string"
           }
         },
-        "scale": {
-          "description": "The scale",
-          "type": "string",
-          "readOnly": false
-        },
         "identity": {
           "description": "The resource identity",
           "type": "string",
@@ -453,10 +378,13 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "#/definitions/MerchantResource"
         }
       ],
       "properties": {
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+        },
         "properties": {
           "type": "object",
           "properties": {
@@ -510,36 +438,19 @@
         }
       }
     },
-    "ErrorObject": {
+    "NameAvailabilityRequest": {
+      "description": "Name availability request payload which is exposed in the request of the resource provider.",
       "type": "object",
-      "properties": {
-        "code": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        }
-      }
-    },
-    "ErrorResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/ErrorObject"
-        }
-      }
-    },
-    "CheckNameAvailabilityParameter": {
       "properties": {
         "name": {
-          "type": "string",
-          "description": "Name to check the namespace name availability"
+          "description": "Gets or sets the name to check.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Gets or sets the type of the resource to check.",
+          "type": "string"
         }
-      },
-      "required": [
-        "name"
-      ],
-      "description": "Parameter supplied to check Namespace name availability operation "
+      }
     },
     "UnavailableReason": {
       "type": "string",
@@ -558,6 +469,7 @@
       "description": "Specifies the reason for the unavailability of the service."
     },
     "CheckNameAvailabilityResult": {
+      "type": "object",
       "properties": {
         "message": {
           "type": "string",
@@ -574,45 +486,9 @@
         }
       },
       "description": "The Result of the CheckNameAvailability operation"
-    },
-    "OperationStatus": {
-      "description": "The status of operation.",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "The operation Id."
-        },
-        "startTime": {
-          "type": "string",
-          "description": "The start time of the operation."
-        },
-        "endTime": {
-          "type": "string",
-          "description": "The end time of the operation."
-        },
-        "status": {
-          "type": "string",
-          "description": "The status of the operation."
-        },
-        "error": {
-          "type": "object",
-          "description": "The error detail of the operation if any.",
-          "$ref": "#/definitions/ErrorResponse"
-        },
-        "properties": {
-          "type": "object",
-          "properties": {
-            "merchantId": {
-              "type": "string",
-              "readOnly": false
-            }
-          }
-        }
-      }
     }
   },
-  "parameters":{
+  "parameters": {
     "SubscriptionIdParameter": {
       "name": "subscriptionId",
       "in": "path",
@@ -620,12 +496,28 @@
       "type": "string",
       "description": "A unique identifier for a Microsoft Azure subscription. The subscription ID forms part of the URI for every service call."
     },
+    "ResourceGroupParameter": {
+      "name": "resourceGroupName",
+      "in": "path",
+      "description": "The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "MerchantNameParameter": {
+      "type": "string",
+      "name": "merchantName",
+      "description": "The name of resource. This is the name of your merchant.",
+      "in": "path",
+      "required": true,
+      "x-ms-parameter-location": "method"
+    },
     "ApiVersionParameter": {
       "name": "api-version",
       "in": "query",
       "required": true,
       "type": "string",
-      "description": "The client API version."
+      "description": "Client Api Version."
     }
   }
 }
