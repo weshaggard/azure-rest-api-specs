@@ -29,11 +29,37 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/wanfan.rp/employees": {
       "get": {
         "description": "Returns list of employees.",
-        "operationId": "Employee_List",
+        "operationId": "Employee_ListBySubscription",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
           },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee details.",
+            "schema": {
+              "$ref": "#/definitions/EmployeeResourceList"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/wanfan.rp/employees": {
+      "get": {
+        "description": "Returns list of employees.",
+        "operationId": "Employee_List",
+        "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParameter"
           },
@@ -114,10 +140,7 @@
             "schema": {
               "$ref": "#/definitions/EmployeeResource"
             }
-          },
-          "201": {
-              "description": "Long running operation."
-           }
+          }
         }
       },
       "patch": {
@@ -152,6 +175,32 @@
             "schema": {
               "$ref": "#/definitions/EmployeeResource"
             }
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes an employee resource.",
+        "operationId": "Employees_Delete",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/EmployeeNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successful; the employee resource is deleted."
+          },
+          "204": {
+            "description": "The request was successful; employee resource does not exist."
           }
         }
       }
@@ -535,8 +584,42 @@
               }
             }
           }
+        },
+        "plan": {
+          "description": "Plan to use for Store purchase",
+          "$ref": "#/definitions/Plan"
         }
       }
+    },
+    "Plan": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A user defined name of the 3rd Party Artifact that is being procured."
+        },
+        "publisher": {
+          "type": "string",
+          "description": "The publisher of the 3rd Party Artifact that is being bought. E.g. NewRelic"
+        },
+        "product": {
+          "type": "string",
+          "description": "The 3rd Party artifact that is being procured. E.g. NewRelic. Product maps to the OfferID specified for the artifact at the time of Data Market onboarding. "
+        },
+        "promotionCode": {
+          "type": "string",
+          "description": "A publisher provided promotion code as provisioned in Data Market for the said product/artifact."
+        },
+        "version": {
+          "type": "string",
+          "description": "The version of the desired product/artifact."
+        }
+      },
+      "description": "Plan for the resource.",
+      "required": [
+        "name",
+        "publisher",
+        "product"
+      ]
     },
     "EmployeePatchResource": {
       "type": "object",
