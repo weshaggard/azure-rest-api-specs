@@ -37,12 +37,14 @@ These settings apply only when `--tag=package-2020-06-23-preview` is specified o
 ```yaml $(tag) == 'package-2020-06-23-preview'
 input-file:
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/applicationRegistration.json
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/eventGridFilter.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/merchants.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/operations.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shareInvites.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shareSubscriptions.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shares.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/workspaces.json
+  
 
 # Needed when there is more than one input file
 override-info:
