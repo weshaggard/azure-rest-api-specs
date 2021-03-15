@@ -18,5 +18,8 @@ directive:
      group: codesigning code-sign-account
     set:
      group: codesigning
+  - where:
+     group: Operation
+     hide: true
 
 ```
