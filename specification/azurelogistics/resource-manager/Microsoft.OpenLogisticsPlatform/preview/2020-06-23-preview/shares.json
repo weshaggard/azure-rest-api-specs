@@ -60,7 +60,6 @@
           }
         ],
         "responses": {
- 
           "200": {
             "description": "",
             "schema": {
@@ -70,7 +69,7 @@
           "default": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ShareErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -122,7 +121,7 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ShareErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -176,7 +175,7 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ShareErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -219,7 +218,7 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ShareErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -265,7 +264,7 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ShareErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -273,6 +272,18 @@
     }
   },
   "definitions": {
+    "ShareProvisioningState": {
+      "type": "string",
+      "readOnly": true,
+      "description": "The current provisioning state.",
+      "enum": [
+        "Accepted",
+        "Succeeded",
+        "Creating",
+        "Deleting",
+        "Failed"
+      ]
+    },
     "ShareState": {
       "type": "string",
       "readOnly": true,
@@ -290,46 +301,22 @@
         "ALLOFANY"
       ]
     },
-    "ShareResource": {
-      "description": "An Azure resource.",
-      "properties": {
-        "id": {
-          "description": "Azure resource Id.",
-          "type": "string",
-          "readOnly": true
-        },
-        "name": {
-          "description": "Azure resource name.",
-          "type": "string",
-          "readOnly": true
-        },
-        "type": {
-          "description": "Azure resource type.",
-          "type": "string",
-          "readOnly": true
-        },
-        "location": {
-          "description": "Azure location",
-          "type": "string",
-          "readOnly": false
-        },
-		"systemData": {
-          "$ref": "#/definitions/SystemData",
-          "readOnly": true
-        }
-
-      },
-      "x-ms-azure-resource": true
-    },
     "Share": {
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ShareResource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
         }
       ],
       "properties": {
-	    
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+        },
+        "location": {
+          "description": "Location of the resource.",
+          "type": "string",
+          "readOnly": false
+        },
         "properties": {
           "type": "object",
           "properties": {
@@ -344,6 +331,12 @@
             "shareState": {
               "$ref": "#/definitions/ShareState"
             },
+            "provisioningState": {
+              "description": "The provisioning state of the resource.",
+              "readOnly": true,
+              "$ref": "#/definitions/ShareProvisioningState"
+            },
+
             "shareId": {
               "type": "string",
               "readOnly": true
@@ -356,18 +349,6 @@
               }
             }
           }
-        }
-      }
-    },
-	 "SystemData": {
-      "description": "Read only system data",
-      "type": "object",
-      "properties": {
-
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp of resource creation (UTC)"
         }
       }
     },
@@ -422,27 +403,6 @@
           "items": {
             "$ref": "#/definitions/Share"
           }
-        }
-      }
-    },
-    "ErrorObject": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string",
-          "description": "Service-defined error code. This code serves as a sub-status for the HTTP error code specified in the response."
-        },
-        "message": {
-          "type": "string",
-          "description": "Human-readable representation of the error."
-        }
-      }
-    },
-    "ShareErrorResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/ErrorObject"
         }
       }
     },
