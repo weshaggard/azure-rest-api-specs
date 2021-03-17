@@ -34,16 +34,16 @@
     }
   },
   "paths": {
-    "/{scope}/providers/Microsoft.Diagnostics/AzureKB": {
-      "get": {
+    "/providers/Microsoft.Diagnostics/AzureKB/{AzureKBResourceName}/search": {
+      "post": {
         "tags": [
-          "AzureKB"
+          "AzureKB Search Post"
         ],
         "description": "This API will fetch azurekb search results",
-        "operationId": "Scoped_AzureKB_Search_Request",
+        "operationId": "AzureKB_Tenant_Scoped_Search",
         "parameters": [
           {
-            "$ref": "#/parameters/ScopeParameter"
+            "$ref": "#/parameters/AzureKBResourceNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -62,38 +62,7 @@
           "200": {
             "description": "List of AzureKB Search Responses.",
             "schema": {
-              "$ref": "#/definitions/AzureKBSearchResultList"
-            }
-          }
-        }
-      }
-    },
-    "/providers/Microsoft.Diagnostics/AzureKB": {
-      "get": {
-        "tags": [
-          "AzureKB"
-        ],
-        "description": "This API will fetch azurekb search results",
-        "operationId": "Tenant_level_AzureKB_requests",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SearchTextParameter"
-          },
-          {
-            "$ref": "#/parameters/TopResultsParameter"
-          },
-          {
-            "$ref": "#/parameters/SourcesParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of AzureKB Search Responses.",
-            "schema": {
-              "$ref": "#/definitions/AzureKBSearchResultList"
+              "$ref": "#/definitions/AzureKBSearchResult"
             }
           }
         }
@@ -101,18 +70,6 @@
     }
   },
   "definitions": {
-    "AzureKBSearchResultList": {
-      "description": "Collection of AzureKB Search Results",
-      "properties": {
-        "value": {
-          "description": "Array of AzureKB Search Results",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AzureKBSearchResult"
-          }
-        }
-      }
-    },
     "AzureKBSearchResult": {
       "description": "AzureKB Search Result",
       "properties": {
@@ -137,7 +94,16 @@
         }
       }
     },
-    "AzureKBSearchResultProperties": {
+    "AzureKBSearchResultProperties":{
+      "properties": {
+        "description": "AzureKB Search Result Properties",
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/SearchResultDetails"
+        }
+      }
+    },
+    "SearchResultDetails": {
       "description": "Details about an AzureKB Search Result",
       "type": "object",
       "properties": {
@@ -444,21 +410,21 @@
     },
     "SearchTextParameter": {
       "name": "searchText",
-      "in": "query",
+      "in": "body",
       "required": true,
       "type": "string",
       "description": "Search text string to search."
     },
     "TopResultsParameter": {
       "name": "topResults",
-      "in": "query",
+      "in": "body",
       "required": false,
       "type": "integer",
       "description": "Number of search results desired. Default is 5."
     },
     "SourcesParameter": {
       "name": "sources",
-      "in": "query",
+      "in": "body",
       "required": false,
       "type": "string",
       "enum": [
@@ -466,6 +432,13 @@
         "documentation"
       ],
       "description": "Sources from where articles are to fetched. Default is community & documentation."
+    },
+    "AzureKBResourceNameParameter": {
+      "name": "AzureKBResourceName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Transient AzureKB resource name."
     }
   }
 }
