@@ -7,7 +7,7 @@
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: 2020-12-01-preview
+tag: 2021-02-01-preview
 ```
 
 ### Supported API Versions
@@ -19,6 +19,16 @@ input-file:
 ```yaml $(tag) == '2020-12-01-preview'
 input-file: 
   - Wandisco.Fusion/preview/2020-12-01-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-01-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-01-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-02-01-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-02-01-preview/fusionGroups.json
 ```
 
 ## Language specific configurations
@@ -185,6 +195,81 @@ input-file:
 ```yaml $(tag) == '2020-12-15-preview'
 input-file:
   - Wandisco.Fusion/preview/2020-12-15-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-01-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-01-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-02-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-02-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-03-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-03-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-04-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-04-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-05-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-05-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-06-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-06-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-07-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-07-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-08-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-08-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-09-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-09-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-10-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-10-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-11-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-11-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-12-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-12-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-13-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-13-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-14-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-14-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-01-15-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-01-15-preview/fusionGroups.json
 ```
 
 ```yaml $(tag) == '2021-02-01-preview'

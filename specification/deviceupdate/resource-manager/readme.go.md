@@ -4,8 +4,15 @@ These settings apply only when `--go` is specified on the command line.
 
 ```yaml $(go)
 go:
-  license-header: MICROSOFT_MIT_NO_VERSION
+  license-header: MICROSOFT_APACHE_NO_VERSION
   clear-output-folder: true
+```
+
+### Go multi-api
+
+``` yaml $(go) && $(multiapi)
+batch:
+  - tag: package-2020-03-01-preview
 ```
 
 ### Tag: package-2020-03-01-preview and go
