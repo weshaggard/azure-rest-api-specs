@@ -34,66 +34,34 @@
     }
   },
   "paths": {
-    "/{scope}/providers/Microsoft.Diagnostics/AzureKB": {
-      "get": {
+    "/providers/Microsoft.Diagnostics/AzureKB/{AzureKBResourceName}/search": {
+      "post": {
         "tags": [
-          "AzureKB"
+          "AzureKB Search Post"
         ],
         "description": "This API will fetch azurekb search results",
-        "operationId": "Scoped_AzureKB_Search_Request",
+        "operationId": "AzureKB_Tenant_Scoped_Search",
         "parameters": [
           {
-            "$ref": "#/parameters/ScopeParameter"
+            "$ref": "#/parameters/AzureKBResourceNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/SearchTextParameter"
-          },
-          {
-            "$ref": "#/parameters/TopResultsParameter"
-          },
-          {
-            "$ref": "#/parameters/SourcesParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of AzureKB Search Responses.",
+            "name": "SearchRequest",
+            "description": "Search Request body",
+            "in": "body",
             "schema": {
-              "$ref": "#/definitions/AzureKBSearchResultList"
+              "$ref": "#/definitions/SearchRequest"
             }
           }
-        }
-      }
-    },
-    "/providers/Microsoft.Diagnostics/AzureKB": {
-      "get": {
-        "tags": [
-          "AzureKB"
-        ],
-        "description": "This API will fetch azurekb search results",
-        "operationId": "Tenant_level_AzureKB_requests",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SearchTextParameter"
-          },
-          {
-            "$ref": "#/parameters/TopResultsParameter"
-          },
-          {
-            "$ref": "#/parameters/SourcesParameter"
-          }
         ],
         "responses": {
           "200": {
             "description": "List of AzureKB Search Responses.",
             "schema": {
-              "$ref": "#/definitions/AzureKBSearchResultList"
+              "$ref": "#/definitions/AzureKBSearchResult"
             }
           }
         }
@@ -101,17 +69,30 @@
     }
   },
   "definitions": {
-    "AzureKBSearchResultList": {
-      "description": "Collection of AzureKB Search Results",
+    "SearchRequest": {
+      "type": "object",
+      "description": "Search Request body",
       "properties": {
-        "value": {
-          "description": "Array of AzureKB Search Results",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AzureKBSearchResult"
-          }
+        "searchText":{
+          "description": "Search text string to search.",
+          "type": "string"
+        },
+        "topResults":{
+          "description": "Number of search results desired. Default is 1",
+          "type": "integer"
+        },
+        "sources":{
+          "description": "Sources from where articles are to fetched. Default is community & documentation.",
+          "type": "string",
+          "enum": [
+            "community",
+            "documentation"
+          ]
         }
-      }
+      },
+      "required": [
+        "searchText"
+      ]
     },
     "AzureKBSearchResult": {
       "description": "AzureKB Search Result",
@@ -137,7 +118,18 @@
         }
       }
     },
-    "AzureKBSearchResultProperties": {
+    "AzureKBSearchResultProperties":{
+      "properties": {
+        "searchResults": {
+          "description": "AzureKB Search Result Properties",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchResultDetails"
+          }
+        }
+      }
+    },
+    "SearchResultDetails": {
       "description": "Details about an AzureKB Search Result",
       "type": "object",
       "properties": {
@@ -215,7 +207,7 @@
       }
     },
     "SectionMatchDetails": {
-      "description": "AzureKB Search Result SectionMatch details",
+      "description": "Section Match details",
       "properties": {
         "content": {
           "type": "string",
@@ -230,56 +222,6 @@
           "description": "link"
         }
       }
-    },
-    "operation": {
-      "description": "Operation provided by provider",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the operation"
-        },
-        "display": {
-          "type": "object",
-          "description": "Properties of the operation",
-          "properties": {
-            "provider": {
-              "type": "string",
-              "description": "Provider name"
-            },
-            "resource": {
-              "type": "string",
-              "description": "Resource name"
-            },
-            "operation": {
-              "type": "string",
-              "description": "Operation name"
-            },
-            "description": {
-              "type": "string",
-              "description": "Description of the operation"
-            }
-          }
-        }
-      }
-    },
-    "operationsList": {
-      "description": "Lists the operations available.",
-      "properties": {
-        "nextLink": {
-          "description": "Url to follow for getting next page of operations.",
-          "type": "string"
-        },
-        "value": {
-          "description": "Array of operations",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/operation"
-          }
-        }
-      },
-      "required": [
-        "value"
-      ]
     },
     "ErrorResponse": {
       "description": "Error response.",
@@ -323,61 +265,9 @@
           "readOnly": true
         }
       }
-    },
-    "DiagnosticExecutionResponse": {
-      "description": "The response from a Diagnostic Execution."
     }
   },
   "parameters": {
-    "SubscriptionIdParameter": {
-      "name": "subscriptionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID."
-    },
-    "ParentProviderNamespaceParameter": {
-      "name": "parentProviderNamespace",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID."
-    },
-    "ParentResourceTypeParameter": {
-      "name": "parentResourceType",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID."
-    },
-    "ParentResourceNameParameter": {
-      "name": "parentResourceName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID."
-    },
-    "SubResourceTypeParameter": {
-      "name": "subResourceType",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID."
-    },
-    "SubResourceNameParameter": {
-      "name": "subResourceName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID."
-    },
-    "ScopeParameter": {
-      "name": "scope",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "Request scope"
-    },
     "ApiVersionParameter": {
       "name": "api-version",
       "in": "query",
@@ -385,87 +275,12 @@
       "type": "string",
       "description": "Client Api Version."
     },
-    "ResourceGroupNameParameter": {
-      "name": "resourceGroupName",
+    "AzureKBResourceNameParameter": {
+      "name": "AzureKBResourceName",
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The name of the resource group.",
-      "x-ms-parameter-location": "method"
-    },
-    "SubscriptionId": {
-      "name": "subscriptionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID. This is a GUID-formatted string (e.g. 00000000-0000-0000-0000-000000000000)"
-    },
-    "ResourceUri": {
-      "name": "resourceUri",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The fully qualified Azure Resource Manager identifier of the resource to which the solutions should be discovered/invoked. (e.g. /subscriptions/abc/resourceGroups/abc/providers/Microsoft.Compute/virtualMachineScaleSets/xyz/)"
-    },
-    "SolutionId": {
-      "name": "solutionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The unique identifier for the diagnostic solution to be invoked."
-    },
-    "SubResource": {
-      "name": "subResource",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "Sub level resource of parent resource in resourceType/resourceName convention. (e.g. /blob/my_blob/)"
-    },
-    "Operationid": {
-      "name": "operationId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The unique identifier for the diagnostic solution has been invoked. (e.g. 00000000-0000-0000-0000-000000000000)"
-    },
-    "SolutionNameParameter": {
-      "name": "solutionName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The unique identifier for the diagnostic solution has been invoked. (e.g. 00000000-0000-0000-0000-000000000000)"
-    },
-    "SolutionIdParameter": {
-      "name": "solutionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The unique identifier for the diagnostic solution has been invoked. (e.g. 00000000-0000-0000-0000-000000000000)"
-    },
-    "SearchTextParameter": {
-      "name": "searchText",
-      "in": "query",
-      "required": true,
-      "type": "string",
-      "description": "Search text string to search."
-    },
-    "TopResultsParameter": {
-      "name": "topResults",
-      "in": "query",
-      "required": false,
-      "type": "integer",
-      "description": "Number of search results desired. Default is 5."
-    },
-    "SourcesParameter": {
-      "name": "sources",
-      "in": "query",
-      "required": false,
-      "type": "string",
-      "enum": [
-        "community",
-        "documentation"
-      ],
-      "description": "Sources from where articles are to fetched. Default is community & documentation."
+      "description": "Transient AzureKB resource name."
     }
   }
 }
