@@ -85,6 +85,9 @@
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
           {
+            "$ref": "#/parameters/TestBaseIncludeSoftDeletedParameter"
+          },
+          {
             "$ref": "#/parameters/ApiVersionParameter"
           }
         ],
@@ -125,6 +128,9 @@
           },
           {
             "$ref": "#/parameters/ResourceGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/TestBaseIncludeSoftDeletedParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -183,6 +189,9 @@
           },
           {
             "$ref": "#/parameters/TestBaseNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TestBaseRestoreSoftDeletedParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -1848,6 +1857,54 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.TestBase/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/getVideoDownloadUrl": {
+      "post": {
+        "tags": [
+          "Test Result"
+        ],
+        "operationId": "TestResultGetVideoDownloadURL",
+        "description": "Gets the download URL of the test execution screen recording.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/TestBaseNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PackageNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TestResultNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation is completed.",
+            "schema": {
+              "$ref": "#/definitions/DownloadURLResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "TestResultGetVideoDownloadURL": {
+            "$ref": "./examples/TestResultGetVideoDownloadURL.json"
+          }
+        }
+      }
+    },
     "/providers/Microsoft.TestBase/operations": {
       "get": {
         "tags": [
@@ -1987,7 +2044,7 @@
     "TestBaseSKU": {
       "description": "Describes a Test Base SKU.",
       "properties": {
-        "resourceType":{
+        "resourceType": {
           "type": "string",
           "description": "The type of resource the SKU applies to."
         },
@@ -2145,19 +2202,6 @@
         "sku": {
           "description": "The SKU of the Test Base.",
           "$ref": "#/definitions/TestBaseSKU"
-        },
-        "testBaseStatus": {
-          "type": "string",
-          "description": "The status of the Test Base.",
-          "enum": [
-            "Ready",
-            "Pending"
-          ],
-          "readOnly": true,
-          "x-ms-enum": {
-            "name": "testBaseStatus",
-            "modelAsString": true
-          }
         }
       },
       "required": [
@@ -2325,6 +2369,10 @@
     "AvailableOSProperties": {
       "description": "The Available OS properties.",
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "actualOSName": {
           "type": "string",
           "description": "The actual name of an Available OS of a Test Base."
@@ -2370,6 +2418,10 @@
     "FlightingRingProperties": {
       "description": "The Flighting Ring properties.",
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "actualFlightingRingName": {
           "type": "string",
           "description": "The actual name of a flighting ring of a Test Base."
@@ -2415,6 +2467,10 @@
     "TestTypeProperties": {
       "description": "The Test Type properties.",
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "actualTestTypeName": {
           "type": "string",
           "description": "The actual name of a test type of a Test Base."
@@ -2782,14 +2838,6 @@
     "PackageUpdateParameterProperties": {
       "description": "Parameters supplied to update a Test Base package.",
       "properties": {
-        "applicationName": {
-          "type": "string",
-          "description": "Application name"
-        },
-        "version": {
-          "type": "string",
-          "description": "Application version"
-        },
         "testTypes": {
           "type": "array",
           "items": {
@@ -2880,6 +2928,10 @@
     "TestSummaryProperties": {
       "description": "Properties of a Test Summary.",
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "testSummaryId": {
           "type": "string",
           "description": "The Id of the current Test Summary."
@@ -2971,6 +3023,11 @@
             "$ref": "#/definitions/OSUpdateTestSummary"
           },
           "description": "Detailed summary for each OS update"
+        },
+        "releaseVersionDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The release version date."
         }
       }
     },
@@ -3050,6 +3107,10 @@
     "TestResultProperties": {
       "description": "The properties of a Test Result.",
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "testResultId": {
           "type": "string",
           "description": "Id of the current test result. This is a GUID-formatted string."
@@ -3101,6 +3162,10 @@
         "isDownloadDataAvailable": {
           "type": "boolean",
           "description": "Whether download data is available."
+        },
+        "isVideoAvailable": {
+          "type": "boolean",
+          "description": "Whether video data is available."
         },
         "executionStatus": {
           "$ref": "#/definitions/TestExecutionStatus",
@@ -3196,6 +3261,10 @@
     "OSUpdateProperties": {
       "description": "Properties of an OS Update.",
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "osName": {
           "type": "string",
           "description": "The name of the OS."
@@ -3227,6 +3296,11 @@
             "name": "type",
             "modelAsString": true
           }
+        },
+        "releaseVersionDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The release version date the tested release (OS update)"
         }
       }
     },
@@ -3269,6 +3343,10 @@
     "FavoriteProcessProperties": {
       "description": "Properties of a favorite process identifier.",
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "actualProcessName": {
           "type": "string",
           "description": "The actual name of the favorite process. It will be equal to resource name except for the scenario that the process name contains characters that are not allowed in the resource name."
@@ -3321,6 +3399,10 @@
         "analysisResultType"
       ],
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "grade": {
           "$ref": "#/definitions/TestGrade",
           "description": "The grade of the test."
@@ -3385,59 +3467,6 @@
         }
       }
     },
-    "ScriptExecutionAnalysisResultListResult": {
-      "description": "A list of Script Execution Analysis Results. It will only contain one element as all the data will be nested in a singleton object.",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ScriptExecutionAnalysisResultSingletonResource"
-          },
-          "description": "The list of Script Execution Analysis Results."
-        },
-        "nextLink": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
-        }
-      }
-    },
-    "ScriptExecutionAnalysisResultSingletonResource": {
-      "description": "The Script Execution Analysis Result resource.",
-      "properties": {
-        "systemData": {
-          "description": "The system metadata relating to this resource",
-          "$ref": "#/definitions/SystemData"
-        },
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/ScriptExecutionAnalysisResultSingletonResourceProperties",
-          "description": "Properties of a Script Execution Analysis Result."
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ProxyResource"
-        }
-      ],
-      "x-ms-discriminator-value": "ScriptExecution"
-    },
-    "ScriptExecutionAnalysisResultSingletonResourceProperties": {
-      "description": "The properties of Script Execution Analysis Result resource.",
-      "properties": {
-        "grade": {
-          "$ref": "#/definitions/TestGrade",
-          "description": "The grade of the test."
-        },
-        "results": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ScriptExecutionResult"
-          },
-          "description": "The list of Script Execution Results."
-        }
-      }
-    },
     "ScriptExecutionResult": {
       "description": "The Script Execution Result.",
       "properties": {
@@ -3463,59 +3492,6 @@
         "timeOut": {
           "type": "boolean",
           "description": "Whether the subscription execution is timeout."
-        }
-      }
-    },
-    "ReliabilityAnalysisResultListResult": {
-      "description": "A list of Reliability Analysis Results. It will only contain one element as all the data will be nested in a singleton object.",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ReliabilityAnalysisResultSingletonResource"
-          },
-          "description": "The list of Reliability Analysis Results."
-        },
-        "nextLink": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
-        }
-      }
-    },
-    "ReliabilityAnalysisResultSingletonResource": {
-      "description": "The Reliability Analysis Result resource.",
-      "properties": {
-        "systemData": {
-          "description": "The system metadata relating to this resource",
-          "$ref": "#/definitions/SystemData"
-        },
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/ReliabilityAnalysisResultSingletonResourceProperties",
-          "description": "Properties of a Reliability Analysis Result."
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ProxyResource"
-        }
-      ],
-      "x-ms-discriminator-value": "Reliability"
-    },
-    "ReliabilityAnalysisResultSingletonResourceProperties": {
-      "description": "The properties of a Reliability Analysis Result.",
-      "properties": {
-        "grade": {
-          "$ref": "#/definitions/TestGrade",
-          "description": "The grade of the test."
-        },
-        "results": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ReliabilityResult"
-          },
-          "description": "The list of Reliability Result."
         }
       }
     },
@@ -3577,59 +3553,6 @@
         }
       }
     },
-    "UtilizationAnalysisResultListResult": {
-      "description": "A list of Utilization Analysis Results. It will only contain one element as all the data will be nested in a singleton object.",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UtilizationAnalysisResultSingletonResource"
-          },
-          "description": "The list of Reliability Analysis Results."
-        },
-        "nextLink": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
-        }
-      }
-    },
-    "UtilizationAnalysisResultSingletonResource": {
-      "description": "The Utilization Analysis Result resource.",
-      "properties": {
-        "systemData": {
-          "description": "The system metadata relating to this resource",
-          "$ref": "#/definitions/SystemData"
-        },
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/UtilizationAnalysisResultSingletonResourceProperties",
-          "description": "Properties of a Utilization Analysis Result."
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ProxyResource"
-        }
-      ],
-      "x-ms-discriminator-value": "Utilization"
-    },
-    "UtilizationAnalysisResultSingletonResourceProperties": {
-      "description": "The properties of a Utilization Analysis Result.",
-      "properties": {
-        "grade": {
-          "$ref": "#/definitions/TestGrade",
-          "description": "The grade of the test."
-        },
-        "results": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UtilizationResult"
-          },
-          "description": "The list of Utilization Result."
-        }
-      }
-    },
     "UtilizationResult": {
       "description": "The Utilization Result.",
       "properties": {
@@ -3681,59 +3604,6 @@
           "type": "number",
           "format": "double",
           "description": "The value."
-        }
-      }
-    },
-    "RegressionAnalysisResultListResult": {
-      "description": "A list of Regression Analysis Results. It will only contain one element as all the data will be nested in a singleton object.",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RegressionAnalysisResultSingletonResource"
-          },
-          "description": "The list of Regression Analysis Results."
-        },
-        "nextLink": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
-        }
-      }
-    },
-    "RegressionAnalysisResultSingletonResource": {
-      "description": "The Regression Analysis Result resource.",
-      "properties": {
-        "systemData": {
-          "description": "The system metadata relating to this resource",
-          "$ref": "#/definitions/SystemData"
-        },
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/RegressionAnalysisResultSingletonResourceProperties",
-          "description": "Properties of a Regression Analysis Result."
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ProxyResource"
-        }
-      ],
-      "x-ms-discriminator-value": "Regression"
-    },
-    "RegressionAnalysisResultSingletonResourceProperties": {
-      "description": "The properties of a Regression Analysis Result.",
-      "properties": {
-        "grade": {
-          "$ref": "#/definitions/TestGrade",
-          "description": "The grade of the test."
-        },
-        "results": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RegressionResult"
-          },
-          "description": "The list of Regression Result."
         }
       }
     },
@@ -3944,6 +3814,22 @@
       "type": "string",
       "x-ms-parameter-location": "method",
       "description": "Odata filter"
+    },
+    "TestBaseIncludeSoftDeletedParameter": {
+      "name": "getDeleted",
+      "in": "query",
+      "required": false,
+      "type": "boolean",
+      "x-ms-parameter-location": "method",
+      "description": "The flag indicating if we need to include the Test Bases which were soft deleted before."
+    },
+    "TestBaseRestoreSoftDeletedParameter": {
+      "name": "restore",
+      "in": "query",
+      "required": false,
+      "type": "boolean",
+      "x-ms-parameter-location": "method",
+      "description": "The flag indicating if we would like to restore the Test Bases which were soft deleted before."
     }
   }
 }
