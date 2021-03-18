@@ -59,7 +59,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -98,7 +98,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -140,128 +140,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "TestBasesList": {
-            "$ref": "./examples/TestBasesList.json"
-          }
-        }
-      }
-    },
-	    "/subscriptions/{subscriptionId}/providers/Microsoft.Yuqingz/getDeletedTestBases": {
-      "post": {
-        "tags": [
-          "Test Base"
-        ],
-        "operationId": "TestBases_GetDeleted",
-        "description": "Lists all the Test Bases in a resource group.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/TestBaseListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "TestBasesList": {
-            "$ref": "./examples/TestBasesList.json"
-          }
-        }
-      }
-    },
-	"/providers/Microsoft.Yuqingz/getDeletedTestBases": {
-      "post": {
-        "tags": [
-          "Test Base"
-        ],
-        "operationId": "TestBases_GetDeleted2",
-        "description": "Lists all the Test Bases in a resource group.",
-        "parameters": [
-		          {
-            "name": "parameters",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/GetDeletedParameters"
-            },
-            "description": "Parameters supplied to the Test Base GetFileUploadURL operation."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/TestBaseListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "TestBasesList": {
-            "$ref": "./examples/TestBasesList.json"
-          }
-        }
-      }
-    },
-		"/providers/Microsoft.Yuqingz/restoreTestBase": {
-      "post": {
-        "tags": [
-          "Test Base"
-        ],
-        "operationId": "TestBases_Restore",
-        "description": "Lists all the Test Bases in a resource group.",
-        "parameters": [
-		          {
-            "name": "parameters",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/RestoreParameters"
-            },
-            "description": "Parameters supplied to the Test Base GetFileUploadURL operation."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/TestBaseResource"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -283,6 +162,9 @@
         "operationId": "TestBase_Create",
         "description": "Create or replace (overwrite/recreate, with potential downtime) a Test Base in the specified subscription.",
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "name": "parameters",
@@ -307,14 +189,20 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "The new Test Base was successfully created. Check provisioningState to see detailed status.",
+          "200": {
+            "description": "The Test Base was successfully created or updated.",
             "schema": {
               "$ref": "#/definitions/TestBaseResource"
             }
           },
-          "200": {
-            "description": "The existing Test Base was successfully updated. Check provisioningState to see detailed status.",
+          "201": {
+            "description": "The Test Base 'create' or 'update' operation was successfully enqueued. Check provisioningState to see detailed status.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/TestBaseResource"
             }
@@ -322,7 +210,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -339,6 +227,9 @@
         "operationId": "TestBase_Update",
         "description": "Update an existing Test Base.",
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "name": "parameters",
@@ -364,21 +255,41 @@
         ],
         "responses": {
           "200": {
-            "description": "The existing Test Base was successfully updated. Check provisioningState to see detailed status.",
+            "description": "The existing Test Base was successfully updated.",
             "schema": {
               "$ref": "#/definitions/TestBaseResource"
             }
           },
-		            "201": {
-            "description": "The new Test Base was successfully created. Check provisioningState to see detailed status.",
-            "schema": {
-              "$ref": "#/definitions/TestBaseResource"
+          "201": {
+            "description": "The Test Base 'update' operation was successfully enqueued. Follow the Location header to poll for final outcome.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              },
+              "Location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
+          },
+          "202": {
+            "description": "The Test Base 'update' operation was successfully enqueued. Follow the Location header to poll for final outcome.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              },
+              "Location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -395,6 +306,9 @@
         "operationId": "TestBase_Delete",
         "description": "Deletes a Test Base.",
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -414,7 +328,17 @@
             "description": "The Test Base 'delete' operation was completed successfully."
           },
           "202": {
-            "description": "The Test Base 'delete' operation was successfully enqueued; follow the Location header to poll for final outcome."
+            "description": "The Test Base 'delete' operation was successfully enqueued. Follow the Location header to poll for final outcome.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              },
+              "Location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
           },
           "204": {
             "description": "The Test Base 'delete' operation was completed successfully."
@@ -422,7 +346,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -462,7 +386,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -507,7 +431,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -517,56 +441,6 @@
         "x-ms-examples": {
           "TestBaseUsagesList": {
             "$ref": "./examples/TestBaseUsagesList.json"
-          }
-        }
-      }
-    },
-	    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/offboard": {
-      "post": {
-        "tags": [
-          "Test Base package"
-        ],
-        "operationId": "TestBaseOffboard",
-        "description": "Gets the file upload URL of a Test Base.",
-        "parameters": [
-          {
-            "name": "parameters",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/OffboardParameters"
-            },
-            "description": "Parameters supplied to the Test Base GetFileUploadURL operation."
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The file upload URL of the Test Base was returned.",
-            "schema": {
-              "$ref": "#/definitions/OffboardResponse"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "TestBaseGetFileUploadUrl": {
-            "$ref": "./examples/TestBaseGetFileUploadUrl.json"
           }
         }
       }
@@ -610,7 +484,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -655,7 +529,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -669,7 +543,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/availableOSs/{availableOSName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/availableOSs/{availableOSResourceName}": {
       "get": {
         "tags": [
           "Test Base package"
@@ -687,12 +561,12 @@
             "$ref": "#/parameters/TestBaseNameParameter"
           },
           {
-            "name": "availableOSName",
+            "name": "availableOSResourceName",
             "in": "path",
             "required": true,
             "type": "string",
             "x-ms-parameter-location": "method",
-            "description": "The name of an Available OS."
+            "description": "The resource name of an Available OS."
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -708,7 +582,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -750,7 +624,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -764,7 +638,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/flightingRings/{flightingRingName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/flightingRings/{flightingRingResourceName}": {
       "get": {
         "tags": [
           "Test Base package"
@@ -782,12 +656,12 @@
             "$ref": "#/parameters/TestBaseNameParameter"
           },
           {
-            "name": "flightingRingName",
+            "name": "flightingRingResourceName",
             "in": "path",
             "required": true,
             "type": "string",
             "x-ms-parameter-location": "method",
-            "description": "The name of a flighting ring."
+            "description": "The resource name of a flighting ring."
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -803,7 +677,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -845,7 +719,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -859,7 +733,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/testTypes/{testTypeName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/testTypes/{testTypeResourceName}": {
       "get": {
         "tags": [
           "Test Base package"
@@ -877,12 +751,12 @@
             "$ref": "#/parameters/TestBaseNameParameter"
           },
           {
-            "name": "testTypeName",
+            "name": "testTypeResourceName",
             "in": "path",
             "required": true,
             "type": "string",
             "x-ms-parameter-location": "method",
-            "description": "The name of a test type."
+            "description": "The resource name of a test type."
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -898,7 +772,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -915,7 +789,7 @@
           "Test Base package"
         ],
         "operationId": "CheckPackageNameAvailability",
-        "description": "Checks that the Test Base package name is valid and is not already in use.",
+        "description": "Checks that the Test Base package name and version is valid and is not already in use.",
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -949,7 +823,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -991,7 +865,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1013,6 +887,9 @@
         "operationId": "Package_Create",
         "description": "Create or replace (overwrite/recreate, with potential downtime) a Test Base package.",
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "name": "parameters",
@@ -1040,14 +917,20 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "The new Test Base Package was successfully created. Check provisioningState to see detailed status.",
+          "200": {
+            "description": "The Test Base Package was successfully created or updated.",
             "schema": {
               "$ref": "#/definitions/PackageResource"
             }
           },
-          "200": {
-            "description": "The existing Test Base package was successfully updated. Check provisioningState to see detailed status.",
+          "201": {
+            "description": "The Test Base Package 'create' or 'update' operation was successfully enqueued. Check provisioningState to see detailed status.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/PackageResource"
             }
@@ -1055,7 +938,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1072,6 +955,9 @@
         "operationId": "Package_Update",
         "description": "Update an existing Test Base package.",
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "name": "parameters",
@@ -1105,10 +991,36 @@
               "$ref": "#/definitions/PackageResource"
             }
           },
+          "201": {
+            "description": "The Test Base package 'update' operation was successfully enqueued. Follow the Location header to poll for final outcome.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              },
+              "Location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
+          },
+          "202": {
+            "description": "The Test Base package 'update' operation was successfully enqueued. Follow the Location header to poll for final outcome.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              },
+              "Location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1125,6 +1037,9 @@
         "operationId": "Package_Delete",
         "description": "Deletes a Test Base package.",
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1147,7 +1062,17 @@
             "description": "The Test Base package 'delete' operation was completed successfully."
           },
           "202": {
-            "description": "The Test Base package 'delete' operation was successfully enqueued; follow the Location header to poll for final outcome."
+            "description": "The Test Base package 'delete' operation was successfully enqueued. Follow the Location header to poll for final outcome.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              },
+              "Location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
           },
           "204": {
             "description": "The Test Base package 'delete' operation was completed successfully."
@@ -1155,7 +1080,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1198,97 +1123,13 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
           "PackageGet": {
             "$ref": "./examples/PackageGet.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/enable": {
-      "post": {
-        "tags": [
-          "Test Base package"
-        ],
-        "operationId": "PackageEnable",
-        "description": "Enables a package",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The package is enabled."
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "PackageEnable": {
-            "$ref": "./examples/PackageEnable.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/disable": {
-      "post": {
-        "tags": [
-          "Test Base package"
-        ],
-        "operationId": "PackageDisable",
-        "description": "Disables a package",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The package is disabled."
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "PackageDisable": {
-            "$ref": "./examples/PackageDisable.json"
           }
         }
       }
@@ -1327,7 +1168,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1369,7 +1210,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1422,111 +1263,13 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
           "TestSummaryGet": {
             "$ref": "./examples/TestSummaryGet.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packageIdentifiers": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "PackageIdentifiers_List",
-        "description": "Lists all the package identifiers with specified OS Update type under a Test Base.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/OSUpdateTypeParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/PackageIdentifierListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "PackageIdentifiersList": {
-            "$ref": "./examples/PackageIdentifiersList.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packageIdentifiers/{packageIdentifierName}": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "PackageIdentifier_Get",
-        "description": "Gets a package identifiers under a Test Base.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "name": "packageIdentifierName",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "x-ms-parameter-location": "method",
-            "description": "The name of a package identifier."
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/PackageIdentifierResource"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "PackageIdentifierGet": {
-            "$ref": "./examples/PackageIdentifierGet.json"
           }
         }
       }
@@ -1571,7 +1314,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1622,7 +1365,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1670,7 +1413,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1684,7 +1427,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/osUpdates/{osUpdateName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/osUpdates/{osUpdateResourceName}": {
       "get": {
         "tags": [
           "Test Result"
@@ -1705,12 +1448,12 @@
             "$ref": "#/parameters/PackageNameParameter"
           },
           {
-            "name": "osUpdateName",
+            "name": "osUpdateResourceName",
             "in": "path",
             "required": true,
             "type": "string",
             "x-ms-parameter-location": "method",
-            "description": "The name of an OS Update."
+            "description": "The resource name of an OS Update."
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -1726,7 +1469,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1771,7 +1514,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1785,15 +1528,23 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/favoriteProcesses/{processName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/favoriteProcesses/{favoriteProcessResourceName}": {
       "put": {
         "tags": [
           "Test Result"
         ],
         "operationId": "FavoriteProcess_Create",
         "description": "Create or replace a favorite process for a Test Base package.",
-        "x-ms-long-running-operation": true,
         "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FavoriteProcessResource"
+            },
+            "description": "Parameters supplied to create a favorite process in a package."
+          },
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
           },
@@ -1807,21 +1558,15 @@
             "$ref": "#/parameters/PackageNameParameter"
           },
           {
-            "$ref": "#/parameters/ProcessNameParameter"
+            "$ref": "#/parameters/FavoriteProcessResourceNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
-          "201": {
-            "description": "The new favorite processes was successfully created. Check provisioningState to see detailed status.",
-            "schema": {
-              "$ref": "#/definitions/FavoriteProcessResource"
-            }
-          },
           "200": {
-            "description": "The existing favorite processes was successfully updated. Check provisioningState to see detailed status.",
+            "description": "The favorite processes was successfully created or updated.",
             "schema": {
               "$ref": "#/definitions/FavoriteProcessResource"
             }
@@ -1829,7 +1574,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1845,7 +1590,6 @@
         ],
         "operationId": "FavoriteProcess_Delete",
         "description": "Deletes a favorite process for a specific package.",
-        "x-ms-long-running-operation": true,
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1860,7 +1604,7 @@
             "$ref": "#/parameters/PackageNameParameter"
           },
           {
-            "$ref": "#/parameters/ProcessNameParameter"
+            "$ref": "#/parameters/FavoriteProcessResourceNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -1870,16 +1614,13 @@
           "200": {
             "description": "The package favorite process 'delete' operation was completed successfully."
           },
-          "202": {
-            "description": "The package favorite process 'delete' operation was successfully enqueued; follow the Location header to poll for final outcome."
-          },
           "204": {
             "description": "The package favorite process 'delete' operation was completed successfully."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1895,7 +1636,6 @@
         ],
         "operationId": "FavoriteProcess_Get",
         "description": "Gets a favorite process for a Test Base package.",
-        "x-ms-long-running-operation": true,
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1910,7 +1650,7 @@
             "$ref": "#/parameters/PackageNameParameter"
           },
           {
-            "$ref": "#/parameters/ProcessNameParameter"
+            "$ref": "#/parameters/FavoriteProcessResourceNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -1926,7 +1666,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -1937,13 +1677,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/scriptExecutionAnalysisResults": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/analysisResults": {
       "get": {
         "tags": [
           "Test Result"
         ],
-        "operationId": "ScriptExecutionAnalysisResults_List",
-        "description": "Lists the Script Execution Analysis Results. The result collection will only contain one element as all the data will be nested in a singleton object.",
+        "operationId": "AnalysisResults_List",
+        "description": "Lists the Analysis Results of a Test Result. The result collection will only contain one element as all the data will be nested in a singleton object.",
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -1961,58 +1701,7 @@
             "$ref": "#/parameters/TestResultNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/ScriptExecutionAnalysisResultListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "ScriptExecutionAnalysisResultsList": {
-            "$ref": "./examples/ScriptExecutionAnalysisResultsList.json"
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": null
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/scriptExecutionAnalysisResults/{testAnalysisResultName}": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "ScriptExecutionAnalysisResult_Get",
-        "description": "Gets the Script Execution Analysis Result by name.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestAnalysisResultNameParameter"
+            "$ref": "#/parameters/AnalysisResultTypeParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -2022,163 +1711,13 @@
           "200": {
             "description": "The operation is completed.",
             "schema": {
-              "$ref": "#/definitions/ScriptExecutionAnalysisResultSingletonResource"
+              "$ref": "#/definitions/AnalysisResultListResult"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "ScriptExecutionAnalysisResultGet": {
-            "$ref": "./examples/ScriptExecutionAnalysisResultGet.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/reliabilityAnalysisResults": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "ReliabilityAnalysisResults_List",
-        "description": "Lists the Reliability Analysis Results. The result collection will only contain one element as all the data will be nested in a singleton object.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/ReliabilityAnalysisResultListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": null
-        },
-        "x-ms-examples": {
-          "ReliabilityAnalysisResultsList": {
-            "$ref": "./examples/ReliabilityAnalysisResultsList.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/reliabilityAnalysisResults/{testAnalysisResultName}": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "ReliabilityAnalysisResult_Get",
-        "description": "Gets the Reliability Analysis Result by name. Singleton resource.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestAnalysisResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/ReliabilityAnalysisResultSingletonResource"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "ReliabilityAnalysisResultGet": {
-            "$ref": "./examples/ReliabilityAnalysisResultGet.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/memoryUtilizationAnalysisResults": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "MemoryUtilizationAnalysisResults_List",
-        "description": "Lists the Memory Utilization Analysis Results. The result collection will only contain one element as all the data will be nested in a singleton object.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/UtilizationAnalysisResultListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -2188,323 +1727,26 @@
         "x-ms-examples": {
           "MemoryUtilizationAnalysisResultsList": {
             "$ref": "./examples/MemoryUtilizationAnalysisResultsList.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/memoryUtilizationAnalysisResults/{testAnalysisResultName}": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "MemoryUtilizationAnalysisResult_Get",
-        "description": "Gets the Memory Utilization Analysis Result by name. Singleton resource.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
           },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestAnalysisResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/UtilizationAnalysisResultSingletonResource"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "MemoryUtilizationAnalysisResultGet": {
-            "$ref": "./examples/MemoryUtilizationAnalysisResultGet.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/cpuUtilizationAnalysisResults": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "CPUUtilizationAnalysisResults_List",
-        "description": "Lists the CPU Utilization Analysis Results. The result collection will only contain one element as all the data will be nested in a singleton object.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/UtilizationAnalysisResultListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": null
-        },
-        "x-ms-examples": {
           "CPUUtilizationAnalysisResultsList": {
             "$ref": "./examples/CPUUtilizationAnalysisResultsList.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/cpuUtilizationAnalysisResults/{testAnalysisResultName}": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "CPUUtilizationAnalysisResult_Get",
-        "description": "Gets the CPU Utilization Analysis Results by name. Singleton resource.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
           },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestAnalysisResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/UtilizationAnalysisResultSingletonResource"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "CPUUtilizationAnalysisResultGet": {
-            "$ref": "./examples/CPUUtilizationAnalysisResultGet.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/memoryRegressionAnalysisResults": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "MemoryRegressionAnalysisResults_List",
-        "description": "Lists the Memory Regression Analysis Results. The result collection will only contain one element as all the data will be nested in a singleton object.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/RegressionAnalysisResultListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": null
-        },
-        "x-ms-examples": {
           "MemoryRegressionAnalysisResultsList": {
             "$ref": "./examples/MemoryRegressionAnalysisResultsList.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/memoryRegressionAnalysisResults/{testAnalysisResultName}": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "MemoryRegressionAnalysisResults_Get",
-        "description": "Lists the Memory Regression Analysis Results by name. Singleton resource.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
           },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestAnalysisResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/RegressionAnalysisResultSingletonResource"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "MemoryRegressionAnalysisResultGet": {
-            "$ref": "./examples/MemoryRegressionAnalysisResultGet.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/cpuRegressionAnalysisResults": {
-      "get": {
-        "tags": [
-          "Test Result"
-        ],
-        "operationId": "CPURegressionAnalysisResults_List",
-        "description": "Lists the CPU Regression Analysis Results. The result collection will only contain one element as all the data will be nested in a singleton object.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/TestBaseNameParameter"
-          },
-          {
-            "$ref": "#/parameters/PackageNameParameter"
-          },
-          {
-            "$ref": "#/parameters/TestResultNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation is completed.",
-            "schema": {
-              "$ref": "#/definitions/RegressionAnalysisResultListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": null
-        },
-        "x-ms-examples": {
           "CPURegressionAnalysisResultsList": {
             "$ref": "./examples/CPURegressionAnalysisResultsList.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/cpuRegressionAnalysisResults/{testAnalysisResultName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Yuqingz/testBases/{testBaseName}/packages/{packageName}/testResults/{testResultName}/analysisResults/{analysisResultName}": {
       "get": {
         "tags": [
           "Test Result"
         ],
-        "operationId": "CPURegressionAnalysisResult_Get",
-        "description": "Lists the CPU Regression Analysis Results by name. Singleton resource.",
+        "operationId": "AnalysisResult_Get",
+        "description": "Gets an Analysis Result of a Test Result by name.",
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -2522,7 +1764,7 @@
             "$ref": "#/parameters/TestResultNameParameter"
           },
           {
-            "$ref": "#/parameters/TestAnalysisResultNameParameter"
+            "$ref": "#/parameters/AnalysisResultNameParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -2532,17 +1774,26 @@
           "200": {
             "description": "The operation is completed.",
             "schema": {
-              "$ref": "#/definitions/RegressionAnalysisResultSingletonResource"
+              "$ref": "#/definitions/AnalysisResultSingletonResource"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
+          "MemoryUtilizationAnalysisResultGet": {
+            "$ref": "./examples/MemoryUtilizationAnalysisResultGet.json"
+          },
+          "CPUUtilizationAnalysisResultGet": {
+            "$ref": "./examples/CPUUtilizationAnalysisResultGet.json"
+          },
+          "MemoryRegressionAnalysisResultGet": {
+            "$ref": "./examples/MemoryRegressionAnalysisResultGet.json"
+          },
           "CPURegressionAnalysisResultGet": {
             "$ref": "./examples/CPURegressionAnalysisResultGet.json"
           }
@@ -2586,7 +1837,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -2619,7 +1870,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -2669,11 +1920,6 @@
       "additionalProperties": {
         "type": "string"
       },
-      "x-ms-mutability": [
-        "read",
-        "create",
-        "update"
-      ],
       "description": "Resource tags."
     },
     "TrackedResource": {
@@ -2701,14 +1947,25 @@
         }
       ]
     },
-    "CloudError": {
+    "ErrorResponse": {
       "description": "The error response send when an operation fails.",
-      "x-ms-external": true,
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+      "properties": {
+        "error": {
+          "description": "The error info.",
+          "properties": {
+            "code": {
+              "type": "string",
+              "readOnly": true,
+              "description": "error code"
+            },
+            "message": {
+              "type": "string",
+              "readOnly": true,
+              "description": "error message"
+            }
+          }
         }
-      ]
+      }
     },
     "TestBaseSKUListResult": {
       "description": "A list of Test Base SKUs.",
@@ -2722,13 +1979,18 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
     },
     "TestBaseSKU": {
-      "description": "Properties of the Test Base SKU.",
+      "description": "Describes a Test Base SKU.",
       "properties": {
+        "resourceType":{
+          "type": "string",
+          "description": "The type of resource the SKU applies to."
+        },
         "name": {
           "type": "string",
           "description": "The name of the SKU. This is typically a letter + number code, such as A0 or P3."
@@ -2751,6 +2013,14 @@
           "readOnly": true,
           "items": {
             "$ref": "#/definitions/TestBaseSKUCapability"
+          }
+        },
+        "locations": {
+          "description": "The locations that the SKU is available.",
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       },
@@ -2841,6 +2111,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -2867,24 +2138,47 @@
     "TestBaseResourceProperties": {
       "description": "The properties of a Test Base resource.",
       "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
         "sku": {
           "description": "The SKU of the Test Base.",
           "$ref": "#/definitions/TestBaseSKU"
         },
-		"provisioningState": {
+        "testBaseStatus": {
           "type": "string",
-          "description": "The provisioningState of the Test Base.",
+          "description": "The status of the Test Base.",
           "enum": [
-            "Succeeded",
-            "Failed",
-			"Canceled"
+            "Ready",
+            "Pending"
           ],
           "readOnly": true,
           "x-ms-enum": {
-            "name": "provisioningState",
+            "name": "testBaseStatus",
             "modelAsString": true
           }
         }
+      },
+      "required": [
+        "sku"
+      ]
+    },
+    "ProvisioningState": {
+      "type": "string",
+      "description": "ARM provisioning state, see https://github.com/Azure/azure-resource-manager-rpc/blob/master/v1.0/Addendum.md#provisioningstate-property",
+      "enum": [
+        "Succeeded",
+        "Failed",
+        "Cancelled",
+        "Creating",
+        "Deleting",
+        "Updating"
+      ],
+      "readOnly": true,
+      "x-ms-enum": {
+        "name": "provisioningState",
+        "modelAsString": true
       }
     },
     "TestBaseUpdateParameters": {
@@ -2922,6 +2216,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -2929,19 +2224,41 @@
     "TestBaseUsageData": {
       "description": "The usage data of a Test Base.",
       "properties": {
+        "id": {
+          "description": "Fully qualified ARM resource id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/definitions/TestBaseUsageName",
+          "description": "Localizable String object containing the name and a localized value."
+        },
         "unit": {
-          "type": "string",
-          "description": "Representing the units of the usage quota. Possible values are: Count, Bytes, Seconds, Percent, CountPerSecond, BytesPerSecond."
+          "description": "Representing the units of the usage quota. Possible values are: Count, Bytes, Seconds, Percent, CountPerSecond, BytesPerSecond.",
+          "type": "string"
         },
         "limit": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The maximum permitted value for the usage quota. If there is no limit, this value will be -1."
+          "format": "int64",
+          "description": "The maximum permitted value for the usage quota. If there is no limit, this value will be -1.",
+          "type": "integer"
         },
         "currentValue": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Current value for the usage quota."
+          "format": "int64",
+          "description": "Current value for the usage quota.",
+          "type": "integer"
+        }
+      }
+    },
+    "TestBaseUsageName": {
+      "description": "Localizable String object containing the name and a localized value.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "The identifier of the usage.",
+          "type": "string"
+        },
+        "localizedValue": {
+          "description": "Localized name of the usage.",
+          "type": "string"
         }
       }
     },
@@ -2954,49 +2271,19 @@
         }
       }
     },
-	 "OffboardParameters": {
-      "description": "The parameters supplied to the Test Base GetFileUploadURL action.",
-      "properties": {
-        "offboard": {
-          "type": "boolean",
-          "description": "The custom file name of the uploaded blob."
-        }
-      }
-    },
-		 "GetDeletedParameters": {
-      "description": "The parameters supplied to the Test Base GetFileUploadURL action.",
-      "properties": {
-        "subscription": {
-          "type": "string",
-          "description": "The custom file name of the uploaded blob."
-        }
-      }
-    },
-		 "RestoreParameters": {
-      "description": "The parameters supplied to the Test Base GetFileUploadURL action.",
-      "properties": {
-        "testbase": {
-          "type": "string",
-          "description": "The custom file name of the uploaded blob."
-        }
-      }
-    },
     "FileUploadURLResponse": {
       "description": "The URL response",
       "properties": {
         "uploadUrl": {
           "type": "string",
+          "readOnly": true,
           "description": "The URL used for uploading the package."
         },
         "blobPath": {
           "type": "string",
+          "readOnly": true,
           "description": "The blob path of the uploaded package. It will be used as the 'blobPath' property of PackageResource."
         }
-      }
-    },
-	    "OffboardResponse": {
-      "description": "The URL response",
-      "properties": {
       }
     },
     "AvailableOSListResult": {
@@ -3011,6 +2298,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -3021,6 +2309,11 @@
         "systemData": {
           "description": "The system metadata relating to this resource",
           "$ref": "#/definitions/SystemData"
+        },
+        "properties": {
+          "$ref": "#/definitions/AvailableOSProperties",
+          "x-ms-client-flatten": true,
+          "description": "Available OS properties."
         }
       },
       "allOf": [
@@ -3028,6 +2321,15 @@
           "$ref": "#/definitions/ProxyResource"
         }
       ]
+    },
+    "AvailableOSProperties": {
+      "description": "The Available OS properties.",
+      "properties": {
+        "actualOSName": {
+          "type": "string",
+          "description": "The actual name of an Available OS of a Test Base."
+        }
+      }
     },
     "FlightingRingListResult": {
       "description": "A list of flighting rings.",
@@ -3041,6 +2343,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -3051,6 +2354,11 @@
         "systemData": {
           "description": "The system metadata relating to this resource",
           "$ref": "#/definitions/SystemData"
+        },
+        "properties": {
+          "$ref": "#/definitions/FlightingRingProperties",
+          "x-ms-client-flatten": true,
+          "description": "Flighting Ring properties."
         }
       },
       "allOf": [
@@ -3058,6 +2366,15 @@
           "$ref": "#/definitions/ProxyResource"
         }
       ]
+    },
+    "FlightingRingProperties": {
+      "description": "The Flighting Ring properties.",
+      "properties": {
+        "actualFlightingRingName": {
+          "type": "string",
+          "description": "The actual name of a flighting ring of a Test Base."
+        }
+      }
     },
     "TestTypeListResult": {
       "description": "A list of test types.",
@@ -3071,6 +2388,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -3081,6 +2399,11 @@
         "systemData": {
           "description": "The system metadata relating to this resource",
           "$ref": "#/definitions/SystemData"
+        },
+        "properties": {
+          "$ref": "#/definitions/TestTypeProperties",
+          "x-ms-client-flatten": true,
+          "description": "Test Type properties."
         }
       },
       "allOf": [
@@ -3088,6 +2411,15 @@
           "$ref": "#/definitions/ProxyResource"
         }
       ]
+    },
+    "TestTypeProperties": {
+      "description": "The Test Type properties.",
+      "properties": {
+        "actualTestTypeName": {
+          "type": "string",
+          "description": "The actual name of a test type of a Test Base."
+        }
+      }
     },
     "PackageCheckNameAvailabilityParameters": {
       "description": "Parameters body to pass for Test Base package name availability check.",
@@ -3154,6 +2486,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -3180,19 +2513,9 @@
     "PackageProperties": {
       "description": "The properties of the Test Base package.",
       "properties": {
-	    "provisioningState": {
-          "type": "string",
-          "description": "The provisioningState of the package.",
-          "enum": [
-            "Succeeded",
-            "Failed",
-			"Canceled"
-          ],
-          "readOnly": true,
-          "x-ms-enum": {
-            "name": "provisioningState",
-            "modelAsString": true
-          }
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
         },
         "applicationName": {
           "type": "string",
@@ -3209,7 +2532,7 @@
           },
           "description": "OOB, functional or both. OOB must be selected"
         },
-        "targetOSs": {
+        "targetOSList": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/TargetOSInfo"
@@ -3247,7 +2570,6 @@
           "description": "The flighting ring for feature update."
         },
         "isEnabled": {
-          "readOnly": true,
           "type": "boolean",
           "description": "Specifies whether the package is enabled. It doesn't schedule test for package which is not enabled."
         },
@@ -3272,17 +2594,23 @@
         }
       },
       "required": [
-        "applicationName"
+        "applicationName",
+        "version",
+        "testTypes",
+        "targetOSList",
+        "flightingRing",
+        "blobPath",
+        "tests"
       ]
     },
     "TargetOSInfo": {
       "description": "The information of the target OS to be tested.",
       "properties": {
-        "testType": {
+        "osUpdateType": {
           "type": "string",
           "description": "Specifies the OS update type to test against, e.g., 'Security updates' or 'Feature updates'."
         },
-        "targetOS": {
+        "targetOSs": {
           "type": "array",
           "items": {
             "type": "string"
@@ -3291,8 +2619,8 @@
         }
       },
       "required": [
-        "testType",
-        "targetOS"
+        "osUpdateType",
+        "targetOSs"
       ]
     },
     "PackageValidationResult": {
@@ -3469,7 +2797,7 @@
           },
           "description": "OOB, functional or both. OOB must be selected"
         },
-        "targetOSs": {
+        "targetOSList": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/TargetOSInfo"
@@ -3479,6 +2807,10 @@
         "flightingRing": {
           "type": "string",
           "description": "The flighting ring for feature update."
+        },
+        "isEnabled": {
+          "type": "boolean",
+          "description": "Specifies whether the package is enabled. It doesn't schedule test for package which is not enabled."
         },
         "blobPath": {
           "type": "string",
@@ -3498,10 +2830,12 @@
       "properties": {
         "downloadUrl": {
           "type": "string",
+          "readOnly": true,
           "description": "The download URL."
         },
         "expirationTime": {
           "type": "string",
+          "readOnly": true,
           "format": "date-time",
           "description": "Expiry date of the download URL."
         }
@@ -3519,6 +2853,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -3545,9 +2880,13 @@
     "TestSummaryProperties": {
       "description": "Properties of a Test Summary.",
       "properties": {
+        "testSummaryId": {
+          "type": "string",
+          "description": "The Id of the current Test Summary."
+        },
         "packageId": {
           "type": "string",
-          "description": "The Azure resource Id of package"
+          "description": "The Azure resource Id of package."
         },
         "applicationName": {
           "type": "string",
@@ -3567,7 +2906,6 @@
         },
         "testRunTime": {
           "type": "string",
-          "format": "date-time",
           "description": "The run time of the last test."
         },
         "featureUpdatesTestSummary": {
@@ -3625,7 +2963,6 @@
         },
         "testRunTime": {
           "type": "string",
-          "format": "date-time",
           "description": "The run time of the last test."
         },
         "osUpdateTestSummaries": {
@@ -3670,60 +3007,7 @@
         },
         "testRunTime": {
           "type": "string",
-          "format": "date-time",
           "description": "The run time of the test."
-        }
-      }
-    },
-    "PackageIdentifierListResult": {
-      "description": "A list of Package Identifiers.",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PackageIdentifierResource"
-          },
-          "description": "The list of Package Identifiers."
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
-        }
-      }
-    },
-    "PackageIdentifierResource": {
-      "description": "A brief version of Package resource.",
-      "properties": {
-        "systemData": {
-          "description": "The system metadata relating to this resource",
-          "$ref": "#/definitions/SystemData"
-        },
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/PackageIdentifierProperties",
-          "description": "Properties of a package identifier."
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ProxyResource"
-        }
-      ]
-    },
-    "PackageIdentifierProperties": {
-      "description": "The properties of a package identifier.",
-      "properties": {
-        "packageId": {
-          "type": "string",
-          "description": "Azure resource Id of package."
-        },
-        "applicationName": {
-          "type": "string",
-          "description": "Application name."
-        },
-        "version": {
-          "type": "string",
-          "description": "Application version."
         }
       }
     },
@@ -3739,6 +3023,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -3765,6 +3050,10 @@
     "TestResultProperties": {
       "description": "The properties of a Test Result.",
       "properties": {
+        "testResultId": {
+          "type": "string",
+          "description": "Id of the current test result. This is a GUID-formatted string."
+        },
         "baselineTestResultId": {
           "type": "string",
           "description": "Id of the baseline test result. This is a GUID-formatted string."
@@ -3807,7 +3096,6 @@
         },
         "testRunTime": {
           "type": "string",
-          "format": "date-time",
           "description": "The run time of the test."
         },
         "isDownloadDataAvailable": {
@@ -3881,6 +3169,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -3953,6 +3242,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -3979,14 +3269,121 @@
     "FavoriteProcessProperties": {
       "description": "Properties of a favorite process identifier.",
       "properties": {
-        "processName": {
+        "actualProcessName": {
           "type": "string",
-          "description": "The name of the favorite process."
+          "description": "The actual name of the favorite process. It will be equal to resource name except for the scenario that the process name contains characters that are not allowed in the resource name."
         }
       },
       "required": [
-        "processName"
+        "actualProcessName"
       ]
+    },
+    "AnalysisResultListResult": {
+      "description": "A list of Analysis Results. It will only contain one element as all the data will be nested in a singleton object.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalysisResultSingletonResource"
+          },
+          "description": "The list of Analysis Results."
+        },
+        "nextLink": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
+        }
+      }
+    },
+    "AnalysisResultSingletonResource": {
+      "description": "The Analysis Result Singleton Resource.",
+      "properties": {
+        "systemData": {
+          "description": "The system metadata relating to this resource",
+          "$ref": "#/definitions/SystemData"
+        },
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/AnalysisResultSingletonResourceProperties",
+          "description": "Properties of an Analysis Result."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "AnalysisResultSingletonResourceProperties": {
+      "description": "The properties of Analysis Result resource.",
+      "discriminator": "analysisResultType",
+      "required": [
+        "analysisResultType"
+      ],
+      "properties": {
+        "grade": {
+          "$ref": "#/definitions/TestGrade",
+          "description": "The grade of the test."
+        },
+        "analysisResultType": {
+          "description": "Type of the Analysis Result.",
+          "enum": [
+            "scriptExecutionResults",
+            "reliabilityResults",
+            "cpuUtilizationResults",
+            "memoryUtilizationResults",
+            "cpuRegressionResults",
+            "memoryRegressionResults"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "analysisResultType",
+            "modelAsString": true
+          }
+        },
+        "scriptExecutionResults": {
+          "description": "Properties when analysisResultType is scriptExecutionResults.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ScriptExecutionResult"
+          }
+        },
+        "reliabilityResults": {
+          "description": "Properties when analysisResultType is reliabilityResults.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReliabilityResult"
+          }
+        },
+        "cpuUtilizationResults": {
+          "description": "Properties when analysisResultType is cpuUtilizationResults.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UtilizationResult"
+          }
+        },
+        "memoryUtilizationResults": {
+          "description": "Properties when analysisResultType is memoryUtilizationResults.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UtilizationResult"
+          }
+        },
+        "cpuRegressionResults": {
+          "description": "Properties when analysisResultType is cpuRegressionResults.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RegressionResult"
+          }
+        },
+        "memoryRegressionResults": {
+          "description": "Properties when analysisResultType is memoryRegressionResults.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RegressionResult"
+          }
+        }
+      }
     },
     "ScriptExecutionAnalysisResultListResult": {
       "description": "A list of Script Execution Analysis Results. It will only contain one element as all the data will be nested in a singleton object.",
@@ -4000,6 +3397,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -4021,7 +3419,8 @@
         {
           "$ref": "#/definitions/ProxyResource"
         }
-      ]
+      ],
+      "x-ms-discriminator-value": "ScriptExecution"
     },
     "ScriptExecutionAnalysisResultSingletonResourceProperties": {
       "description": "The properties of Script Execution Analysis Result resource.",
@@ -4079,6 +3478,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -4100,7 +3500,8 @@
         {
           "$ref": "#/definitions/ProxyResource"
         }
-      ]
+      ],
+      "x-ms-discriminator-value": "Reliability"
     },
     "ReliabilityAnalysisResultSingletonResourceProperties": {
       "description": "The properties of a Reliability Analysis Result.",
@@ -4188,6 +3589,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -4209,7 +3611,8 @@
         {
           "$ref": "#/definitions/ProxyResource"
         }
-      ]
+      ],
+      "x-ms-discriminator-value": "Utilization"
     },
     "UtilizationAnalysisResultSingletonResourceProperties": {
       "description": "The properties of a Utilization Analysis Result.",
@@ -4293,6 +3696,7 @@
         },
         "nextLink": {
           "type": "string",
+          "readOnly": true,
           "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
@@ -4314,7 +3718,8 @@
         {
           "$ref": "#/definitions/ProxyResource"
         }
-      ]
+      ],
+      "x-ms-discriminator-value": "Regression"
     },
     "RegressionAnalysisResultSingletonResourceProperties": {
       "description": "The properties of a Regression Analysis Result.",
@@ -4381,14 +3786,17 @@
       "properties": {
         "name": {
           "description": "Operation name: {provider}/{resource}/{operation}.",
+          "readOnly": true,
           "type": "string"
         },
         "isDataAction": {
           "description": "Indicates whether the operation is a data action",
+          "readOnly": true,
           "type": "boolean"
         },
         "origin": {
           "description": "Origin of the operation",
+          "readOnly": true,
           "type": "string"
         },
         "display": {
@@ -4396,18 +3804,22 @@
           "properties": {
             "provider": {
               "description": "The resource provider name: Microsoft.Yuqingz.",
+              "readOnly": true,
               "type": "string"
             },
             "operation": {
               "description": "Operation type: read, write, delete, listPackages, etc.",
+              "readOnly": true,
               "type": "string"
             },
             "resource": {
               "description": "Resource type on which the operation is performed.",
+              "readOnly": true,
               "type": "string"
             },
             "description": {
               "description": "Friendly name of the operation.",
+              "readOnly": true,
               "type": "string"
             }
           }
@@ -4444,7 +3856,7 @@
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method",
-      "description": "The name of the Test Base."
+      "description": "The resource name of the Test Base."
     },
     "PackageNameParameter": {
       "name": "packageName",
@@ -4452,15 +3864,15 @@
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method",
-      "description": "The name of the Test Base package."
+      "description": "The resource name of the Test Base package."
     },
-    "ProcessNameParameter": {
-      "name": "processName",
+    "FavoriteProcessResourceNameParameter": {
+      "name": "favoriteProcessResourceName",
       "in": "path",
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method",
-      "description": "The name of a process."
+      "description": "The resource name of a favorite process in a package. If the process name contains characters that are not allowed in Azure Resource Name, we use 'actualProcessName' in request body to submit the name."
     },
     "TestResultNameParameter": {
       "name": "testResultName",
@@ -4469,14 +3881,6 @@
       "type": "string",
       "x-ms-parameter-location": "method",
       "description": "The Test Result Name. It equals to {osName}-{TestResultId} string."
-    },
-    "TestAnalysisResultNameParameter": {
-      "name": "testAnalysisResultName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method",
-      "description": "The Test Analysis Result Name. It should always equal to 'result' as it's a singleton."
     },
     "OSUpdateTypeParameter": {
       "name": "osUpdateType",
@@ -4493,6 +3897,46 @@
       },
       "x-ms-parameter-location": "method",
       "description": "The type of the OS Update."
+    },
+    "AnalysisResultTypeParameter": {
+      "name": "analysisResultType",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "enum": [
+        "ScriptExecution",
+        "Reliability",
+        "MemoryUtilization",
+        "CPUUtilization",
+        "MemoryRegression",
+        "CPURegression"
+      ],
+      "x-ms-enum": {
+        "name": "analysisResultType",
+        "modelAsString": true
+      },
+      "x-ms-parameter-location": "method",
+      "description": "The type of the Analysis Result of a Test Result."
+    },
+    "AnalysisResultNameParameter": {
+      "name": "analysisResultName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "enum": [
+        "scriptExecution",
+        "reliability",
+        "memoryUtilization",
+        "cpuUtilization",
+        "memoryRegression",
+        "cpuRegression"
+      ],
+      "x-ms-enum": {
+        "name": "analysisResultName",
+        "modelAsString": true
+      },
+      "x-ms-parameter-location": "method",
+      "description": "The name of the Analysis Result of a Test Result."
     },
     "FilterParameter": {
       "name": "$filter",
