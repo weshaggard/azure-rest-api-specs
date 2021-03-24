@@ -964,7 +964,7 @@
         "$ref": "#/definitions/EndpointAuthentication"
       }
     },
-    "CORS": {
+    "CorsRule": {
       "description": "CORS details.",
       "type": "object",
       "required": [
@@ -973,26 +973,46 @@
       "properties": {
         "allowedOrigins": {
           "description": "The origin domains that are permitted to make a request against the service via CORS.",
-          "type": "string",
-          "minLength": 1
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
         },
         "allowedMethods": {
           "description": "The methods (HTTP request verbs) that the origin domain may use for a CORS request.",
-          "type": "string",
-          "minLength": 1
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "allowedHeaders": {
           "description": "The request headers that the origin domain may specify on the CORS request.",
-          "type": "string",
-          "minLength": 1
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exposedHeaders": {
+          "description": "The response headers to expose to CORS clients.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "maxAgeInSeconds": {
+          "description": "The number of seconds that the client/browser should cache a preflight response.",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0
         }
       }
     },
-    "CORSList": {
+    "CorsRuleList": {
       "description": "The list of CORS details.",
       "type": "array",
       "items": {
-        "$ref": "#/definitions/CORS"
+        "$ref": "#/definitions/CorsRule"
       }
     },
     "AccountResource": {
@@ -1037,7 +1057,7 @@
             },
             "cors": {
               "description": "The list of CORS details.",
-              "$ref": "#/definitions/CORSList"
+              "$ref": "#/definitions/CorsRuleList"
             },
             "provisioningState": {
               "description": "The resource provisioning state.",
@@ -1087,7 +1107,7 @@
             },
             "cors": {
               "description": "The list of CORS details.",
-              "$ref": "#/definitions/CORSList"
+              "$ref": "#/definitions/CorsRuleList"
             }
           }
         }
@@ -1156,10 +1176,15 @@
         }
       }
     },
-    "ModelDataConnectionString": {
-      "description": "Connection string to raw CDM data to be used as model input.",
-      "type": "string",
-      "minLength": 1
+    "ModelInputDataConfiguration": {
+      "description": "The configuration to raw CDM data to be used as model input.",
+      "type": "object",
+      "properties": {
+        "connectionString": {
+          "description": "Connection string to raw input data.",
+          "type": "string"
+        }
+      }
     },
     "ModelResource": {
       "description": "Model resource details.",
@@ -1178,7 +1203,7 @@
           "type": "object",
           "required": [
             "configuration",
-            "dataConnectionString"
+            "inputDataConfiguration"
           ],
           "properties": {
             "configuration": {
@@ -1189,9 +1214,9 @@
                 "create"
               ]
             },
-            "dataConnectionString": {
-              "description": "Connection string to raw CDM data to be used as model input.",
-              "$ref": "#/definitions/ModelDataConnectionString"
+            "inputDataConfiguration": {
+              "description": "The configuration to raw CDM data to be used as model input.",
+              "$ref": "#/definitions/ModelInputDataConfiguration"
             },
             "provisioningState": {
               "description": "The resource provisioning state.",
@@ -1235,9 +1260,9 @@
           "description": "Model resource properties to update.",
           "type": "object",
           "properties": {
-            "dataConnectionString": {
-              "description": "Connection string to raw CDM data to be used as model input.",
-              "$ref": "#/definitions/ModelDataConnectionString"
+            "inputDataConfiguration": {
+              "description": "The configuration to raw CDM data to be used as model input.",
+              "$ref": "#/definitions/ModelInputDataConfiguration"
             }
           }
         }
