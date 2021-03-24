@@ -2583,10 +2583,11 @@
         },
         "testTypes": {
           "type": "array",
+          "readOnly": true,
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/TestType"
           },
-          "description": "OOB, functional or both. OOB must be selected"
+          "description": "OOB, functional or both. Mapped to the data in 'tests' property."
         },
         "targetOSList": {
           "type": "array",
@@ -2653,12 +2654,23 @@
       "required": [
         "applicationName",
         "version",
-        "testTypes",
         "targetOSList",
         "flightingRing",
         "blobPath",
         "tests"
       ]
+    },
+    "TestType": {
+      "type": "string",
+      "description": "The test type.",
+      "enum": [
+        "OutOfBoxTest",
+        "FunctionalTest"
+      ],
+      "x-ms-enum": {
+        "name": "testType",
+        "modelAsString": true
+      }
     },
     "TargetOSInfo": {
       "description": "The information of the target OS to be tested.",
@@ -2707,16 +2719,7 @@
       "description": "The definition of a Test.",
       "properties": {
         "testType": {
-          "type": "string",
-          "description": "The test type.",
-          "enum": [
-            "OutOfBoxTest",
-            "FunctionalTest"
-          ],
-          "x-ms-enum": {
-            "name": "testType",
-            "modelAsString": true
-          }
+          "$ref": "#/definitions/TestType"
         },
         "validationRunStatus": {
           "readOnly": true,
@@ -2839,13 +2842,6 @@
     "PackageUpdateParameterProperties": {
       "description": "Parameters supplied to update a Test Base package.",
       "properties": {
-        "testTypes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "OOB, functional or both. OOB must be selected"
-        },
         "targetOSList": {
           "type": "array",
           "items": {
