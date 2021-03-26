@@ -34,115 +34,37 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Diagnostics/solutions": {
-      "get": {
+    "/providers/microsoft.Diagnostics/solutions/search": {
+      "post": {
         "tags": [
           "Solutions"
         ],
-        "description": "This API will return a list of hard coded solution metadata for Hackathon prototype.",
-        "operationId": "Solutions_List",
+        "description": "Discover list solution metadata for execution",
+        "operationId": "List_Solutions_By_Tenant_Scope",
         "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
           {
             "$ref": "#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "name": "DiscoverRequest",
+            "description": "Discover Request body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/DiscoverRequest"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "ARM Response for List Solutions",
+            "description": "List of Solution Metadata Responses.",
             "schema": {
-              "$ref": "#/definitions/ARMResponse"
+              "$ref": "#/definitions/SolutionMetaDataListResult"
             }
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/microsoft.Diagnostics/solutions": {
-      "get": {
-        "tags": [
-          "Solutions"
-        ],
-        "description": "This API will return a list of hard coded solution metadata for Hackathon prototype.",
-        "operationId": "First_Level_Extension_Solutions_List",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ParentProviderNamespaceParameter"
-          },
-          {
-            "$ref": "#/parameters/ParentResourceTypeParameter"
-          },
-          {
-            "$ref": "#/parameters/ParentResourceNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM Response for List Solutions",
-            "schema": {
-              "$ref": "#/definitions/ARMResponse"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/{subResourceType}/{subResourceName}/providers/microsoft.Diagnostics/solutions": {
-      "get": {
-        "tags": [
-          "Solutions"
-        ],
-        "description": "This API will return a list of hard coded solution metadata for Hackathon prototype.",
-        "operationId": "Second_Level_Extension_Solutions_List",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ParentProviderNamespaceParameter"
-          },
-          {
-            "$ref": "#/parameters/ParentResourceTypeParameter"
-          },
-          {
-            "$ref": "#/parameters/ParentResourceNameParameter"
-          },
-          {
-            "$ref": "#/parameters/SubResourceTypeParameter"
-          },
-          {
-            "$ref": "#/parameters/SubResourceNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM Response for List Solutions",
-            "schema": {
-              "$ref": "#/definitions/ARMResponse"
-            }
-          }
-        }
-      }
-    },
-    "/{scope}/providers/microsoft.Diagnostics/solutions/search": {
+    "/{scope}/providers/Microsoft.Diagnostics/Solutions/{solutionId}/search": {
       "post": {
         "tags": [
           "Solutions"
@@ -152,6 +74,9 @@
         "parameters": [
           {
             "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/SolutionIdParameter"
           },
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -296,6 +221,14 @@
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "AzureKBSearchRequest",
+            "description": "AzureKB Search Request body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AzureKBSearchRequest"
+            }
           }
         ],
         "responses": {
@@ -333,6 +266,34 @@
     }
   },
   "definitions": {
+    "AzureKBSearchRequest": {
+      "type": "object",
+      "description": "Search Request body",
+      "properties": {
+        "searchText":{
+          "description": "Search text string to search.",
+          "type": "string"
+        },
+        "topResults":{
+          "description": "Number of search results desired. Default is 1",
+          "type": "integer"
+        },
+        "knowledgeSources":{
+          "description": "Sources from where articles are to fetched. Default is community & documentation.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Community",
+              "Documentation"
+            ]
+          }
+        }
+      },
+      "required": [
+        "searchText"
+      ]
+    },
     "ARMResponse2": {
       "description": "ARM Response2",
       "properties": {
@@ -496,7 +457,7 @@
           "description": "Link to the document",
           "type": "string"
         },
-        "searchType": {
+        "knowledgeSource": {
           "description": "Source of the results",
           "type": "string",
           "enum": [
