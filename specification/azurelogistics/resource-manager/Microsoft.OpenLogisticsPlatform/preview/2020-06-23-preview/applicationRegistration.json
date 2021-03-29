@@ -42,33 +42,31 @@
             "$ref": "./examples/ApplicationRegistration_List.json"
           }
         },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkspaceNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
             "schema": {
               "$ref": "#/definitions/ApplicationRegistrationList"
             }
           },
-          "204": {
-            "description": ""
-          },
           "default": {
-            "x-nullable": false,
             "description": "",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
@@ -90,10 +88,10 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkspaceNameParameter"
@@ -102,7 +100,7 @@
             "$ref": "#/parameters/ApplicationRegistrationNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -132,10 +130,10 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkspaceNameParameter"
@@ -144,7 +142,7 @@
             "$ref": "#/parameters/ApplicationRegistrationNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
             "name": "ApplicationRegistration",
@@ -185,10 +183,10 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkspaceNameParameter"
@@ -197,7 +195,7 @@
             "$ref": "#/parameters/ApplicationRegistrationNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -234,23 +232,66 @@
           "type": "object",
           "properties": {
             "displayName": {
-              "description": "Azure resource display name.",
-              "type": "string"
+              "type": "string",
+              "description": "Name to display for application to register"
             },
-            "attributes": {
+            "applicationManifestId": {
+              "type": "string",
+              "description": "Manifest id for the application to rigister"
+            },
+            "attributes":{
               "type": "object",
-              "description": "Read only system data",
-              "properties": {
-                "marketPlaceOfferId": {
-                  "description": "Azure resource Id.",
-                  "type": "string"
-                }
+              "description": "Attributes required by application to rigister, should match attributes in application manifest",
+              "additionalProperties": { 
+                "type": "string" 
               }
+            },
+            "resources":{
+              "type" : "array",
+              "description": "List of resources required by application to rigister, e.g. share. should match resources in application manifest",
+              "items": {
+                "$ref": "#/definitions/ApplicationRegistrationResource"                
+              }
+            },
+            "provisioningState": {
+              "description": "The provisioning state of the resource.",
+              "readOnly": true,
+              "$ref": "#/definitions/ApplicationRegistrationProvisioningState"
+            },
+            "lastUpdated": {
+              "description": "The date time when this resource is last updated",
+              "readOnly": true,
+              "type": "string",
+              "format": "date-time"
             }
           }
         }
       }
     },
+    "ApplicationRegistrationResource" :{
+      "type" : "object",
+      "description": "A resources required by application to rigister, e.g. share. should match resources in application manifest",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "properties": {
+          "$ref": "#/definitions/ApplicationRegistrationResourceShareProperties"
+        }
+      }        
+    },
+    "ApplicationRegistrationResourceShareProperties": {
+      "type": "object",
+      "description": "The share-specific properties for shares affliated with application registartions",
+      "properties": {
+        "accessAssignments": {
+          "type": "array",
+          "items": {
+            "$ref": "shares.json#/definitions/AccessAssignment"
+          }
+        }
+      }
+    },    
     "ApplicationRegistrationList": {
       "description": "The list of ApplicationRegistration resources.",
       "type": "object",
@@ -267,24 +308,18 @@
           }
         }
       }
+    },
+    "ApplicationRegistrationProvisioningState": {
+      "type": "string",
+      "readOnly": true,
+      "description": "The current provisioning state.",
+      "enum": [
+        "Succeeded",
+        "Failed"
+      ]
     }
   },
   "parameters": {
-    "SubscriptionIdParameter": {
-      "name": "subscriptionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "A unique identifier for a Microsoft Azure subscription. The subscription ID forms part of the URI for every service call."
-    },
-    "ResourceGroupParameter": {
-      "name": "resourceGroupName",
-      "in": "path",
-      "description": "The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
     "WorkspaceNameParameter": {
       "type": "string",
       "name": "workspaceName",
@@ -300,13 +335,6 @@
       "in": "path",
       "required": true,
       "x-ms-parameter-location": "method"
-    },
-    "ApiVersionParameter": {
-      "name": "api-version",
-      "in": "query",
-      "required": true,
-      "type": "string",
-      "description": "Client Api Version."
     }
   }
 }
