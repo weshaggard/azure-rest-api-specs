@@ -67,7 +67,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PortalExtension"
+              "$ref": "#/definitions/PortalExtensionRequest"
             },
             "description": "The parameters required to create or update a portal extension."
           }
@@ -459,6 +459,63 @@
           "application/json"
         ]
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Portal/extensions/{portalExtensionName}/export": {
+      "post": {
+        "tags": [
+          "PortalExtension"
+        ],
+        "operationId": "PortalExtensions_Export",
+        "x-ms-examples": {
+          "Compile single extension source file": {
+            "$ref": "examples/portalExtensionExport.json"
+          }
+        },
+        "description": "Exports the extension.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "portalExtensionExport",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PortalExtensionExport"
+            },
+            "description": "The parameters required to export the extension."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Returns the exported extension.",
+            "schema": {
+              "$ref": "#/definitions/PortalExtensionExportResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      }
     }
   },
   "definitions": {
@@ -481,6 +538,37 @@
           "description": "The contents of the string source."
         }
       }
+    },
+    "PortalExtensionExportResult": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/PortalExtensionExportKind"
+        },
+        "uri": {
+          "type": "string",
+          "description": "The uri of the exported extension."
+        }
+      }
+    },
+    "PortalExtensionExport": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/PortalExtensionExportKind"
+        }
+      }
+    },
+    "PortalExtensionExportKind": {
+      "type": "string",
+      "enum": [
+        "SourceCodeZipUri",
+        "BuildArtifactZipUri"
+      ],
+      "x-ms-enum": {
+        "name": "ExportKind"
+      },
+      "description": "The kind of the source package."
     },
     "PortalExtensionAlter": {
       "type": "object",
@@ -539,6 +627,46 @@
       },
       "description": "List of portal extensions."
     },
+    "PortalExtensionRequestProperties": {
+      "type": "object",
+      "description": "The portal extension properties.",
+      "properties": {
+        "extensionName": {
+          "type": "string",
+          "description": "The portal runtime extension name."
+        },
+        "runtimeUri": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The portal runtime uri."
+        },
+        "source": {
+          "type": "object",
+          "description": "The new source code of the extension.",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "SourceCodeZipUri"
+              ],
+              "x-ms-enum": {
+                "name": "SourceKind"
+              },
+              "description": "The kind of the source package."
+            },
+            "uri": {
+              "type": "string",
+              "description": "The uri of the source package."
+            }
+          }
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The provisioning state."
+        }
+      }
+    },
     "PortalExtensionProperties": {
       "type": "object",
       "description": "The portal extension properties.",
@@ -572,6 +700,52 @@
           "description": "The portal extension properties.",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/PortalExtensionProperties"
+        },
+        "id": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource Id"
+        },
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource name"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource type"
+        },
+        "location": {
+          "type": "string",
+          "description": "Resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        }
+      }
+    },
+    "PortalExtensionRequest": {
+      "type": "object",
+      "description": "The portal extension resource definition.",
+      "x-ms-azure-resource": true,
+      "x-ms-client-flatten": true,
+      "required": [
+        "location"
+      ],
+      "properties": {
+        "properties": {
+          "description": "The portal extension properties.",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/PortalExtensionRequestProperties"
         },
         "id": {
           "readOnly": true,
