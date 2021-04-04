@@ -32,9 +32,9 @@ tag: package-2020-12-14-preview
 ```
 
 
-### Tag: package-2020-01-14-preview
+### Tag: package-2020-12-14-preview
 
-These settings apply only when `--tag=package-2020-01-14-preview` is specified on the command line.
+These settings apply only when `--tag=package-2020-12-14-preview` is specified on the command line.
 
 ```yaml $(tag) == 'package-2020-12-14-preview'
 input-file:
@@ -52,11 +52,13 @@ This is not used by Autorest itself.
 
 ```yaml $(swagger-to-sdk)
 swagger-to-sdk:
-  - repo: azure-sdk-for-python
-    after_scripts:
-      - bundle install && rake arm:regen_all_profiles['azure_mgmt_codesigning']
+  - repo: azure-sdk-for-python-track2
   - repo: azure-cli-extensions
 ```
+
+## Az
+
+See configuration in [readme.az.md](./readme.az.md)
 
 ## Python
 

@@ -111,7 +111,13 @@
             "$ref": "#/parameters/AccountNameParameter"
           },
           {
-            "$ref": "#/parameters/CodeSignAccountPatchParameters"
+            "in": "body",
+            "name": "CodeSignAccountPatch",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CodeSignAccountPatch"
+            },
+            "description": "Parameters supplied to update code sign account"
           }
         ],
         "responses": {
@@ -320,10 +326,12 @@
           },
           {
             "in": "body",
-            "name": "CertificateProfile",
+            "name": "CertificateProfilePatch",
+            "required": true,
             "schema": {
-              "$ref": "#/definitions/CertificateProfile"
-            }
+              "$ref": "#/definitions/CertificateProfilePatch"
+            },
+            "description": "Parameters supplied to update certificate profile"
           }
         ],
         "responses": {
@@ -586,31 +594,48 @@
       }
     },
     "CodeSignAccountPatch": {
-      "type": "object",
       "properties": {
         "tags": {
           "type": "object",
           "additionalProperties": {
             "type": "string"
           },
-          "description": "Resource tags."
+          "description": "The tags that will be assigned to the code sign account"
+        },
+        "properties": {
+          "$ref": "#/definitions/CodeSignAccountPatchProperties",
+          "description": "Properties of the code sign account"
         }
       },
-      "description": "Object containing updates for patch operations."
+      "description": "Parameters for creating or updating a code sign account",
+      "x-ms-azure-resource": true
+    },
+    "CodeSignAccountPatchProperties": {
+      "properties": {
+        "accountUri": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Account Uri of the code sign account"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState"
+        }
+      },
+      "description": "Properties of the code sign account"
     },
     "CertificateProfiles": {
-      "description": "The paginated list of certifcate profiles",
+      "description": "The paginated list of certificate profiles",
       "type": "object",
       "properties": {
         "value": {
-          "description": "The list of certifcate profiless",
+          "description": "The list of certificate profiles",
           "type": "array",
           "items": {
             "$ref": "#/definitions/CertificateProfile"
           }
         },
         "nextLink": {
-          "description": "The link to fetch the next page of certifcate profile",
+          "description": "The link to fetch the next page of certificate profile",
           "type": "string"
         }
       }
@@ -730,6 +755,33 @@
           "readOnly": true
         }
       }
+    },
+    "CertificateProfilePatch": {
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/CertificateProfilePatchProperties",
+          "description": "Properties of the certificate profile"
+        }
+      },
+      "description": "Parameters for updating a certificate profile",
+      "x-ms-azure-resource": true
+    },
+    "CertificateProfilePatchProperties": {
+      "properties": {
+        "certificates": {
+          "readOnly": true,
+          "type": "array",
+          "x-ms-client-flatten": true,
+          "items": {
+            "$ref": "#/definitions/Certificate"
+          }
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "$ref": "#/definitions/ProvisioningState"
+        }
+      },
+      "description": "Properties of the certificate profile"
     },
     "VerificationStatus": {
       "type": "string",
@@ -862,15 +914,6 @@
       "required": true,
       "type": "string",
       "pattern": "^[a-zA-Z0-9-]{3,24}$",
-      "x-ms-parameter-location": "method"
-    },
-    "CodeSignAccountPatchParameters": {
-      "in": "body",
-      "name": "CodeSignAccountPatch",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/CodeSignAccountPatch"
-      },
       "x-ms-parameter-location": "method"
     }
   }

@@ -18,8 +18,11 @@ directive:
      group: codesigning code-sign-account
     set:
      group: codesigning
-  - where:
-     group: Operation
-     hide: true
+
+cli:
+  cli-directive:
+    - where:
+        group: Operations
+      hidden: true
 
 ```
