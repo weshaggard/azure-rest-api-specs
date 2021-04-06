@@ -12,7 +12,7 @@ python:
   payload-flattening-threshold: 2
   namespace: azure.mgmt.azurepercept
   package-name: azure-mgmt-azurepercept
-  package-version: 2021-02-01-preview
+  package-version: 2021-09-01-preview
   clear-output-folder: true
 ```
 ``` yaml $(python) && $(python-mode) == 'update'

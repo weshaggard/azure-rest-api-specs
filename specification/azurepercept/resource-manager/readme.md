@@ -28,16 +28,16 @@ These are the global settings for the Azure Percept API.
 title: AzurePerceptManagementClient
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2021-02-01-preview
+tag: package-2021-09-01-preview
 ```
 
-### Tag: package-2021-02-01-preview
+### Tag: package-2021-09-01-preview
 
-These settings apply only when `--tag=package-2021-02-01-preview` is specified on the command line.
+These settings apply only when `--tag=package-2021-09-01-preview` is specified on the command line.
 
-``` yaml $(tag) == 'package-2021-02-01-preview'
+``` yaml $(tag) == 'package-2021-09-01-preview'
 input-file:
-- Microsoft.AzurePercept/preview/2021-02-01-preview/azurepercept.json
+- Microsoft.AzurePercept/preview/2021-09-01-preview/azurepercept.json
 ```
 
 # Code Generation
@@ -107,7 +107,7 @@ require: $(this-folder)/../../../profiles/readme.md
 
 # all the input files across all versions
 input-file:
-  - $(this-folder)/Microsoft.AzurePercept/preview/2021-02-01-preview/azurepercept.json
+  - $(this-folder)/Microsoft.AzurePercept/preview/2021-09-01-preview/azurepercept.json
   
 ```
 
