@@ -58,6 +58,17 @@ swagger-to-sdk:
     after_scripts:
       - bundle install && rake arm:regen_all_profiles['azure_mgmt_elastic']
 ```
+## Suppression
+```
+directive:
+  - suppress: SECRET_PROPERTY
+    from:
+      - Microsoft.Elastic/preview/2020-07-01-preview/elastic.json
+    where:
+      - $.definitions.VMIngestionDetailsResponse.properties.ingestionKey
+    reason: Secrets are OK to return in a POST response.
+```
+
 
 ## Go
 
