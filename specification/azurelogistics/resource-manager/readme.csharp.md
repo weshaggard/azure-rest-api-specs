@@ -9,7 +9,6 @@ csharp:
   license-header: MICROSOFT_MIT_NO_VERSION
   payload-flattening-threshold: 1
   clear-output-folder: true
-  client-side-validation: false
-  namespace: Microsoft.OpenLogisticsPlatform
-  output-folder: $(csharp-sdks-folder)/azurelogistics/management/Microsoft.OpenLogisticsPlatform/GeneratedProtocol
+  namespace: Microsoft.Azure.Management.Logistics
+  output-folder: $(csharp-sdks-folder)/logistics/Microsoft.Azure.Management.Logistics/src/Generated
 ```

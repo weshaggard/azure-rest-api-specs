@@ -2,10 +2,10 @@
 
 These settings apply only when `--go` is specified on the command line.
 
-```yaml $(go)
+``` yaml $(go)
 go:
   license-header: MICROSOFT_APACHE_NO_VERSION
-  namespace: azurelogistics
+  namespace: logistcs
   clear-output-folder: true
 ```
 
@@ -13,14 +13,14 @@ go:
 
 ``` yaml $(go) && $(multiapi)
 batch:
-  - tag: package-2020-06-23-preview-preview
+  - tag: package-2020-06-23-preview
 ```
 
-### Tag: package-2020-06-23-preview-preview and go
+### Tag: package-2020-06-23-preview and go
 
-These settings apply only when `--tag=package-2020-06-23-preview-preview --go` is specified on the command line.
+These settings apply only when `--tag=package-2020-06-23-preview --go` is specified on the command line.
 Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
-```yaml $(tag) == 'package-2020-06-23-preview-preview' && $(go)
+``` yaml $(tag) == 'package-2020-06-23-preview' && $(go)
 output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2020-06-23-preview/$(namespace)
 ```

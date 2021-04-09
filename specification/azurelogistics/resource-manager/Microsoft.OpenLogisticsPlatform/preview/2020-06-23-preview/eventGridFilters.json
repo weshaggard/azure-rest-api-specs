@@ -44,10 +44,10 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkspaceNameParameter"
@@ -56,7 +56,7 @@
             "$ref": "#/parameters/EventGridFilterNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -86,10 +86,10 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkspaceNameParameter"
@@ -98,7 +98,7 @@
             "$ref": "#/parameters/EventGridFilterNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
             "name": "eventGridFilter",
@@ -139,10 +139,10 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkspaceNameParameter"
@@ -151,7 +151,7 @@
             "$ref": "#/parameters/EventGridFilterNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -171,7 +171,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OpenLogisticsPlatform/workspaces/{workspaceName}/eventGridFilters/": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OpenLogisticsPlatform/workspaces/{workspaceName}/eventGridFilters": {
       "get": {
         "tags": [
           "EventGridFilter"
@@ -182,18 +182,21 @@
             "$ref": "./examples/EventGridFilter_List.json"
           }
         },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkspaceNameParameter"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -203,9 +206,6 @@
             "schema": {
               "$ref": "#/definitions/EventGridFilterList"
             }
-          },
-          "204": {
-            "description": ""
           },
           "default": {
             "x-nullable": false,
@@ -236,11 +236,10 @@
             "filter": {
               "$ref": "#/definitions/Filter"
             },
-            "subscriberIdentityInfo": {
-              "$ref": "#/definitions/SubscriberIdentityInfo"
-            },
             "provisioningState": {
-              "$ref": "#/definitions/ProvisioningState"
+              "description": "The provisioning state of the resource.",
+              "readOnly": true,
+              "$ref": "#/definitions/EventGridFilterProvisioningState"
             }
           }
         }
@@ -248,38 +247,22 @@
     },
     "Filter": {
       "type": "object",
+      "description": "Configuration of the EventGrid filter",
       "properties": {
         "subjectBeginsWith": {
+          "description": "Filter configuration: Removes all events with a subject that does not start with this string",
           "type": "string"
         },
         "subjectEndsWith": {
+          "description": "Filter configuration: Removes all events with a subject that does not end with this string",
           "type": "string"
         },
         "includedEventTypes": {
+          "description": "Event types subscribed",
           "type": "array",
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "SubscriberIdentityInfo": {
-      "type": "object",
-      "properties": {
-        "clientPrincipalId": {
-          "type": "string"
-        },
-        "clientObjectId": {
-          "type": "string"
-        },
-        "clientTenantId": {
-          "type": "string"
-        },
-        "clientApplicationId": {
-          "type": "string"
-        },
-        "clientAuthorizationSource": {
-          "type": "string"
         }
       }
     },
@@ -300,35 +283,23 @@
         }
       }
     },
-    "ProvisioningState": {
+    "EventGridFilterProvisioningState": {
       "type": "string",
       "readOnly": true,
       "description": "The current provisioning state.",
       "enum": [
-        "Accepted",
         "Succeeded",
-        "Creating",
-        "Deleting",
-        "Failed"
-      ]
+        "Failed",
+        "Canceled",
+        "Pending"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
     }
   },
   "parameters": {
-    "SubscriptionIdParameter": {
-      "name": "subscriptionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "A unique identifier for a Microsoft Azure subscription. The subscription ID forms part of the URI for every service call."
-    },
-    "ResourceGroupParameter": {
-      "name": "resourceGroupName",
-      "in": "path",
-      "description": "The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
     "WorkspaceNameParameter": {
       "type": "string",
       "name": "workspaceName",
@@ -344,13 +315,6 @@
       "in": "path",
       "required": true,
       "x-ms-parameter-location": "method"
-    },
-    "ApiVersionParameter": {
-      "name": "api-version",
-      "in": "query",
-      "required": true,
-      "type": "string",
-      "description": "Client Api Version."
     }
   }
 }

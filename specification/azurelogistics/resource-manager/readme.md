@@ -1,14 +1,16 @@
-# Open Supply Chain Pltform (OSCP) control plane APIs
+# Logistics
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for Microsoft.OpenLogisticsPlatform RP.
+This is the AutoRest configuration file for Azure Supply Chain Services.
+
+---
 
 ## Getting Started
 
-To build the SDKs for My API, simply install AutoRest via `npm` (`npm install -g autorest`) and then run:
+To build the SDKs for Azure Supply Chain Services, simply [Install AutoRest](https://aka.ms/autorest/install) or via `npm` (`npm install -g autorest`) and in this folder run:
 
-> `autorest readme.md`
+> `autorest`
 
 To see additional help and options, run:
 
@@ -22,7 +24,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the Microsoft.OpenLogisticsPlatform RP.
+These are the global settings for the Azure Supply Chain Services API.
 
 ```yaml
 openapi-type: arm
@@ -36,19 +38,17 @@ These settings apply only when `--tag=package-2020-06-23-preview` is specified o
 
 ```yaml $(tag) == 'package-2020-06-23-preview'
 input-file:
-  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/applicationRegistration.json
-  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/eventGridFilter.json
-  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/merchants.json
-  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/operations.json
-  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shareInvites.json
-  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shareSubscriptions.json
-  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shares.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/workspaces.json
-  
-
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/operations.json
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shares.json
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shareSubscriptions.json
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shareInvites.json
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/applicationRegistrations.json
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/eventGridFilters.json  
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/applicationRegistrationInvites.json
 # Needed when there is more than one input file
 override-info:
-  title: TrafficManagerManagementClient
+  title: LogisticsManagementClient
 ```
 
 ---
@@ -62,34 +62,41 @@ This is not used by Autorest itself.
 
 ```yaml $(swagger-to-sdk)
 swagger-to-sdk:
+  - repo: azure-sdk-for-net
+  - repo: azure-sdk-for-python
+  - repo: azure-sdk-for-js
+  - repo: azure-sdk-for-go
   - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
-  - repo: azure-sdk-for-go
-  - repo: azure-sdk-for-js
   - repo: azure-resource-manager-schemas
     after_scripts:
       - node sdkauto_afterscript.js azurelogistics/resource-manager
   - repo: azure-cli-extensions
 ```
-## Az
-
-See configuration in [readme.az.md](./readme.az.md)
-
-## Go
-
-See configuration in [readme.go.md](./readme.go.md)
 
 ## Python
 
 See configuration in [readme.python.md](./readme.python.md)
 
+## CSharp
+
+See configuration in [readme.csharp.md](./readme.csharp.md)
+
+## Go
+
+See configuration in [readme.go.md](./readme.go.md)
+
 ## TypeScript
 
 See configuration in [readme.typescript.md](./readme.typescript.md)
 
-## CSharp
+## Az
 
-See configuration in [readme.csharp.md](./readme.csharp.md)
+See configuration in [readme.az.md](./readme.az.md)
+
+## Cli
+
+See configuration in [readme.cli.md](./readme.cli.md)
 
 ## AzureResourceSchema
 

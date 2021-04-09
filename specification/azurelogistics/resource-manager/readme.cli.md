@@ -1,1 +1,6 @@
-## CLI Common Settings for all the command line tools
+## CLI
+
+These settings apply only when `--cli` is specified on the command line.
+
+``` yaml $(cli)
+```
