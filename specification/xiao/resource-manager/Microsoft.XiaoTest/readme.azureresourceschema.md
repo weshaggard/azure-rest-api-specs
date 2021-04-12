@@ -19,5 +19,5 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.XiaoTest/preview/2020-12-16-preview/testbase.json
+  - Microsoft.TestBase/preview/2020-12-16-preview/testbase.json
 ```

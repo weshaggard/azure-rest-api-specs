@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.XiaoTest
-  output-folder: $(csharp-sdks-folder)/testbase/management/Microsoft.XiaoTest/GeneratedProtocol
+  namespace: Microsoft.TestBase
+  output-folder: $(csharp-sdks-folder)/testbase/management/Microsoft.TestBase/GeneratedProtocol
 ```
