@@ -1255,7 +1255,7 @@
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources/{templateSource}/templates": {
       "get": {
-        "tags": ["Template Source"],
+        "tags": ["Template"],
         "description": "Lists Template resources by template source",
         "parameters": [
           {
@@ -1308,7 +1308,7 @@
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevTestCenter/organizations/{organization}/templateSources/{templateSource}/templates/{template}": {
       "get": {
-        "tags": ["Template Source"],
+        "tags": ["Template"],
         "description": "Gets a Template resource",
         "parameters": [
           {
@@ -1348,6 +1348,156 @@
         "x-ms-examples": {
           "Templates_Get": {
             "$ref": "./examples/Templates_Get.json"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Template"],
+        "description": "Creates a Template resource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/OrganizationNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TemplateSourceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TemplateNameParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Represents a template.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Template"
+            }
+          }
+        ],
+        "operationId": "Templates_CreateOrUpdate",
+        "responses": {
+          "200": {
+            "description": "Succeeded",
+            "schema": {
+              "$ref": "#/definitions/Template"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Templates_CreateOrUpdate": {
+            "$ref": "./examples/Templates_Put.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Template"],
+        "description": "Partially updates a template.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/OrganizationNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TemplateSourceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TemplateNameParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Updatable template properties.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TemplateUpdate"
+            }
+          }
+        ],
+        "operationId": "Templates_Update",
+        "responses": {
+          "200": {
+            "description": "The resource was updated.",
+            "schema": {
+              "$ref": "#/definitions/Template"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Templates_Update": {
+            "$ref": "./examples/Templates_Patch.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Template"],
+        "description": "Deletes a template.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/OrganizationNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TemplateSourceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TemplateNameParameter"
+          }
+        ],
+        "operationId": "Templates_Delete",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Resource does not exist."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Templates_Delete": {
+            "$ref": "./examples/Templates_Delete.json"
           }
         }
       }
@@ -2374,37 +2524,78 @@
         }
       }
     },
+    "TemplateUpdate": {
+      "description": "The template's properties for partial update. Properties not provided in the update request will not be changed.",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/TemplateUpdateProperties",
+          "description": "Template source properties for update."
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-ms-mutability": ["read", "create", "update"],
+          "description": "Resource tags."
+        }
+      }
+    },
     "TemplateProperties": {
       "description": "Properties of a template.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TemplateUpdateProperties"
+        }
+      ],
+      "properties": {
+        "engine": {
+          "description": "The template engine.",
+          "$ref": "#/definitions/TemplateEngineProperties"
+        },
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState",
+          "readOnly": true
+        }
+      }
+    },
+    "TemplateUpdateProperties": {
+      "description": "Properties of a template which can be updated after creation.",
       "type": "object",
       "properties": {
         "description": {
           "description": "Description of the template.",
-          "type": "string",
-          "readOnly": true
-        },
+          "type": "string"
+        }
+      }
+    },
+    "TemplateEngineProperties": {
+      "description": "Properties of a template engine.",
+      "type": "object",
+      "properties": {
         "type": {
           "enum": ["ARM"],
           "description": "The type of template used to deploy the environment.",
           "type": "string",
-          "readOnly": true,
           "x-ms-enum": {
             "name": "TemplateType",
             "modelAsString": true
           }
+        },
+        "templatePath": {
+          "description": "Path to the template entrypoint file.",
+          "type": "string"
         },
         "parameters": {
           "description": "Parameters that can be provided to the template.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/TemplateParameterProperties"
-          },
-          "readOnly": true
-        },
-        "provisioningState": {
-          "description": "The provisioning state of the resource.",
-          "$ref": "#/definitions/ProvisioningState",
-          "readOnly": true
+          }
         }
       }
     },
