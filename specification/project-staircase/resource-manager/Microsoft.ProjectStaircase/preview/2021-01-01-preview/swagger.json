@@ -208,7 +208,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.projectstaircase/solutions/{resourceName}/results": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.projectstaircase/solutions/{resourceName}/result": {
       "post": {
         "description": "Returns nested resources for a given solutions name",
         "operationId": "solution_Results",
@@ -230,7 +230,7 @@
           "200": {
             "description": "Solutions results.",
             "schema": {
-              "$ref": "#/definitions/solutionsResults"
+              "$ref": "#/definitions/solutionsResult"
             }
           }
         }
@@ -426,14 +426,62 @@
         }
       }
     },
-    "solutionsResults": {
+    "solutionsResult": {
       "type": "object",
-      "description": "solutions details",
-      "allOf": [
-        {
-          "$ref": "#/definitions/solutionsResource"
+      "description": "solutions result",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to ARM template."
+        },
+        "parameters": {
+          "type": "string",
+          "description": "ARM template parameters."
+        },
+        "json": {
+          "type": "string",
+          "description": "ARM template."
+        },
+        "items": {
+          "type": "array",
+          "description": "List of resources to be created.",
+          "items": {
+            "$ref": "#/definitions/resourceResults"
+          }
+        },
+        "costItems": {
+          "type": "array",
+          "description": "List of total resource costs.",
+          "items": {
+            "$ref": "#/definitions/resourceResults"
+          }
         }
-      ]
+      }
+    },
+    "resourceResults": {
+      "description": "Resource list to be created with associated costs.",
+      "properties": {
+        "count": {
+          "description": "Count of resources.",
+          "type": "integer",
+          "readOnly": true
+        },
+        "resourceType": {
+          "description": "Resource Type.",
+          "type": "string",
+          "readOnly": true
+        },
+        "type": {
+          "description": "Name of resource",
+          "type": "string",
+          "readOnly": true
+        },
+        "cost": {
+          "description": "Cost of resource",
+          "type": "number",
+          "readOnly": true
+        }
+      }
     },
     "questionsResource": {
       "type": "object",
