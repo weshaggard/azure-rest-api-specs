@@ -621,7 +621,175 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/catalogs/{catalogName}/images": {
+      "get": {
+        "tags": [
+          "Images"
+        ],
+        "description": "Gets the associated list of images from a given catalog by name.",
+        "operationId": "Images_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/CatalogNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Images list details.",
+            "schema": {
+              "$ref": "#/definitions/GetImagesResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the details of a product.": {
+            "$ref": "./examples/GetImages.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Images"
+        ],
+        "description": "Asynchronous create an image.",
+        "operationId": "Images_Creat",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/CatalogNameParameter"
+          },
+          {
+            "name": "ImageFile",
+            "description": "Image file.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ImageFile"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Image creation queued.",
+            "schema": {
+              "$ref": "#/definitions/OperationDetails"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/catalogs/{catalogName}/images/{imageId}": {
+      "get": {
+        "tags": [
+          "Images"
+        ],
+        "description": "Gets the URL where the specified image can be downloaded.",
+        "operationId": "Image_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/CatalogNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ImageIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The URL information where the image can be downloaded.",
+            "schema": {
+              "$ref": "#/definitions/ImageURL"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphere/catalogs/{catalogName}/images/{imageId}/metadata": {
+      "get": {
+        "tags": [
+          "Images"
+        ],
+        "description": "Gets the metadata of the image.",
+        "operationId": "ImageMetadata_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/CatalogNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ImageIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The metadata information of the requested image.",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
+
+
   },
   "definitions": {
     "Catalog": {
@@ -821,6 +989,150 @@
         }
       }
     },
+    "Image": {
+      "type": "object",
+      "description": "Image details",
+      "properties": {
+        "properties": {
+          "description": "The image properties.",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ImageProperty"
+        }
+      }
+    },
+    "ImageProperty": {
+      "description": "Image properties.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifier of the Image."
+        },
+        "name": {
+          "type": "string",
+          "description": "Image name."
+        },
+        "componentId": {
+          "type": "string",
+          "description": "Guid of the componentId of the Image."
+        },
+        "imageType": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Image type."
+        },
+        "imageLengthInBytes": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Image length in bytes."
+        },
+        "uncompressedSize": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Uncompressed size of the image."
+        },
+        "description": {
+          "description": "Image description.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ImageFile": {
+      "type": "string",
+      "description": "Image file",
+      "format": "binary"
+    },
+    "ImageURL": {
+      "type": "object",
+      "description": "Image URL details",
+      "properties": {
+        "properties": {
+          "description": "The image URL properties.",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ImageURLProperty"
+        }
+      }
+    },
+    "ImageURLProperty": {
+      "description": "Image URL properties.",
+      "type": "object",
+      "properties": {
+        "isSuccess": {
+          "type": "string",
+          "description": "If it was success or not."
+        },
+        "uri": {
+          "type": "string",
+          "description": "URI of the image"
+        },
+        "uriMessage": {
+          "type": "string",
+          "description": "Message for the URI of the image."
+        }
+      }
+    },
+    "OperationDetails": {
+      "type": "object",
+      "description": "Async Operation details",
+      "properties": {
+        "properties": {
+          "description": "The async operation properties.",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/OperationDetailsProperty"
+        }
+      }
+    },
+    "OperationDetailsProperty": {
+      "description": "Async operation details properties.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifier of the async operation."
+        },
+        "createdDateUTC": {
+          "type": "string",
+          "description": "Created date UTC."
+        },
+        "startedDateUTC": {
+          "type": "string",
+          "description": "Started date UTC."
+        },
+        "completedDateUTC": {
+          "type": "string",
+          "description": "Completed date UTC."
+        },
+        "state": {
+          "type": "integer",
+          "format": "int64",
+          "description": "State of the image upload."
+        },
+        "resourceLocation": {
+          "type": "string",
+          "description": "Location of the image."
+        },
+        "detailsLocation": {
+          "type": "string",
+          "description": "Details of the location of the image."
+        },
+        "error": {
+          "description": "Error details.",
+          "type": "object",
+          "readOnly": true,
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code"
+            },
+            "message": {
+              "type": "string",
+              "description": "Details on the error"
+            }
+          }
+        }
+      }
+    },
     "ProductPatch": {
       "type": "object",
       "description": "Product details",
@@ -873,7 +1185,25 @@
           }
         }
       }
+    },
+    "GetImagesResponse": {
+      "description": "The collection of images.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of the images collection.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The collection of images.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Image"
+          }
+        }
+      }
     }
+
   },
   "parameters": {
     "SubscriptionIdParameter": {
@@ -912,6 +1242,14 @@
       "required": true,
       "type": "string",
       "description": "The name of associated product.",
+      "x-ms-parameter-location": "method"
+    },
+    "ImageIdParameter": {
+      "name": "imageId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The identifier of the requested image.",
       "x-ms-parameter-location": "method"
     }
   }
