@@ -86,58 +86,6 @@
         ],
         "responses": {
           "200": {
-            "description": "Azure Sphere Catalog certificate",
-            "schema": {
-              "$ref": "#/definitions/RetrieveCertResponse"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "tags": [
-          "Catalogs"
-        ]
-      },
-      "get": {
-        "operationId": "Catalogs_getCert",
-        "summary": "Retrieves the certificate for the catalog (GET).",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "name": "catalogName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "retrieveCertRequest",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/RetrieveCertRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
             "description": "The certificate.",
             "schema": {
               "$ref": "#/definitions/Certificate"
@@ -967,7 +915,7 @@
             "$ref": "#/parameters/CatalogParameter"
           },
           {
-            "$ref": "#/parameters/ImageParameter"
+            "$ref": "#/parameters/ImageIdParameter"
           }
         ],
         "responses": {
@@ -1019,7 +967,7 @@
             "$ref": "#/parameters/CatalogParameter"
           },
           {
-            "$ref": "#/parameters/ImageParameter"
+            "$ref": "#/parameters/ImageIdParameter"
           },
           {
             "name": "resource",
@@ -1346,22 +1294,12 @@
     "RetrieveCertRequest": {
       "type": "object",
       "properties": {
-        "identifier": {
+        "serialNumber": {
           "type": "string",
           "description": "The identifier of the certificate to retrieve."
         }
       },
       "description": "Parameters for the retrieve certificate."
-    },
-    "RetrieveCertResponse": {
-      "type": "object",
-      "properties": {},
-      "description": "Azure Sphere Catalog certificate",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ArmResponse_Certificate"
-        }
-      ]
     },
     "Certificate": {
       "type": "object",
@@ -1475,18 +1413,6 @@
         {
           "$ref": "#/definitions/Page_Image"
         }
-      ]
-    },
-    "ArmResponse_Certificate": {
-      "type": "object",
-      "properties": {
-        "body": {
-          "$ref": "#/definitions/Certificate"
-        }
-      },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
       ]
     },
     "ArmResponse_CertificateChain": {
@@ -1695,6 +1621,10 @@
     "CatalogProperties": {
       "type": "object",
       "properties": {
+        "dummyProperty": {
+          "type": "string",
+          "description": "Testing if it requires at least one property"
+        },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
           "readOnly": true
@@ -1779,10 +1709,7 @@
           "readOnly": true
         }
       },
-      "description": "Properties of the image",
-      "required": [
-        "imageName"
-      ]
+      "description": "Properties of the image"
     },
     "ProvisioningState": {
       "type": "string",
@@ -1826,12 +1753,12 @@
       "description": "DeviceGroup name",
       "type": "string"
     },
-    "ImageParameter": {
+    "ImageIdParameter": {
       "x-ms-parameter-location": "method",
       "name": "imageId",
       "in": "path",
       "required": true,
-      "description": "Image name",
+      "description": "Image identifier",
       "type": "string"
     }
   }
