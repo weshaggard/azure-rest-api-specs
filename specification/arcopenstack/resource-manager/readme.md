@@ -27,16 +27,16 @@ These are the global settings for the openstack.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2021-05-31-private-preview
+tag: package-2021-05-31-privatepreview
 ```
 
-### Tag: package-2021-05-31-private-preview
+### Tag: package-2021-05-31-privatepreview
 
-These settings apply only when `--tag=package-2021-05-31-private-preview` is specified on the command line.
+These settings apply only when `--tag=package-2021-05-31-privatepreview` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-05-31-private-preview'
+```yaml $(tag) == 'package-2021-05-31-privatepreview'
 input-file:
-  - Microsoft.ConnectedOpenStack/preview/2021-05-31-private-preview/arcopenstack.json
+  - Microsoft.ConnectedOpenStack/preview/2021-05-31-privatepreview/arcopenstack.json
 ```
 
 ---

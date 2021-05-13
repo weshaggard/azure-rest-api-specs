@@ -10,10 +10,10 @@ go:
 
 ### Tag: package-2021-05-31-private-preview and go
 
-These settings apply only when `--tag=package-2021-05-31-private-preview --go` is specified on the command line.
+These settings apply only when `--tag=package-2021-05-31-privatepreview --go` is specified on the command line.
 Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
-```yaml $(tag) == 'package-2021-05-31-private-preview' && $(go)
+```yaml $(tag) == 'package-2021-05-31-privatepreview' && $(go)
 namespace: arcopenstack
-output-folder: $(go-sdk-folder)/Microsoft.ConnectedOpenStack/preview/2021-05-31-private-preview/$(namespace)
+output-folder: $(go-sdk-folder)/Microsoft.ConnectedOpenStack/preview/2021-05-31-privatepreview/$(namespace)
 ```

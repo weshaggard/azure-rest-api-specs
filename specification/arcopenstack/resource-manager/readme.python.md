@@ -10,7 +10,7 @@ python:
   payload-flattening-threshold: 2
   namespace: azure.mgmt.arcopenstack
   package-name: azure-mgmt-arcopenstack
-  package-version: 2021-05-31-private-preview
+  package-version: 2021-05-31-privatepreview
   clear-output-folder: true
 ```
 
