@@ -76,7 +76,7 @@
           }
         },
         "x-ms-examples": {
-          "Delete packet core data plane resource": {
+          "Delete packet core data plane": {
             "$ref": "./examples/PacketCoreDataPlaneDelete.json"
           }
         },
@@ -273,7 +273,7 @@
           }
         },
         "x-ms-examples": {
-          "List all packetCoreDataPlanes": {
+          "List packet core data planes in a subscription": {
             "$ref": "./examples/PacketCoreDataPlaneListBySubscription.json"
           }
         },
@@ -329,7 +329,7 @@
         "tags": [
           "PacketCoreDataPlanes"
         ],
-        "operationId": "PacketCoreDataPlanes_ListByControlPlane",
+        "operationId": "PacketCoreDataPlanes_ListByPacketCoreControlPlane",
         "description": "Lists all the packetCoreDataPlanes associated with a packetCoreControlPlane.",
         "parameters": [
           {
@@ -360,7 +360,7 @@
           }
         },
         "x-ms-examples": {
-          "List packet core data planes in resource group": {
+          "List packet core data planes in a control plane": {
             "$ref": "./examples/PacketCoreDataPlaneListByPacketCoreControlPlane.json"
           }
         },
@@ -377,6 +377,12 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/PacketCoreDataPlanePropertiesFormat",
           "description": "Packet core data plane Properties."
+        },
+        "systemData": {
+          "x-ms-client-flatten": true,
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "readOnly": true,
+          "description": "Metadata pertaining to creation and last modification of the resource."
         }
       },
       "allOf": [
@@ -395,12 +401,16 @@
           "description": "The provisioning state of the packet core data plane resource."
         },
         "customLocation": {
-            "$ref": "./common.json#/definitions/SubResource",
-            "description": "Azure arc custom location where the packet core is deployed."
+          "$ref": "./common.json#/definitions/SubResource",
+          "description": "Azure arc custom location where the packet core is deployed."
         },
         "coreNetworkTechnology": {
           "$ref": "./ts29571.json#/definitions/CoreNetworkType",
           "description": "The core network technology generation."
+        },
+        "version": {
+          "type": "string",
+          "description": "The version of the packet core software that is deployed."
         },
         "pduSessionType": {
           "$ref": "./ts29571.json#/definitions/PduSessionType",
@@ -416,7 +426,7 @@
             "$ref": "#/definitions/AccessControlRule"
           },
           "minItems": 1,
-          "description": "Access control list"
+          "description": "Access control list."
         },
         "sliceList": {
           "type": "array",
@@ -428,7 +438,7 @@
         },
         "vpnGateway": {
           "$ref": "./common.json#/definitions/SubResource",
-          "description": "The VPN Gateway used to connect the N6 interface"
+          "description": "The VPN Gateway used to connect the N6 interface."
         }
       }
     },
@@ -453,10 +463,12 @@
       "description": "An access control list entry, manages blocking or allowing data plane traffic. Access control can be applied in four places. Source address matches are evaluated on ingress. Destination address matches are evaluated on egress.",
       "properties": {
         "action": {
-          "$ref": "#/definitions/AccessControlAction"
+          "$ref": "#/definitions/AccessControlAction",
+          "description": "Whether network traffic is to be allowed or denied."
         },
         "direction": {
-          "$ref": "#/definitions/AccessControlDirection"
+          "$ref": "#/definitions/AccessControlDirection",
+          "description": "Direction of flow of data plane traffic."
         },
         "sourceAddressPrefix": {
           "type": "string",
@@ -496,7 +508,11 @@
       "enum": [
         "Allow",
         "Deny"
-      ]
+      ],
+      "x-ms-enum": {
+        "name": "AccessControlAction",
+        "modelAsString": true
+      }
     },
     "AccessControlDirection": {
       "type": "string",
@@ -504,7 +520,11 @@
       "enum": [
         "Uplink",
         "Downlink"
-      ]
+      ],
+      "x-ms-enum": {
+        "name": "AccessControlDirection",
+        "modelAsString": true
+      }
     }
   }
 }

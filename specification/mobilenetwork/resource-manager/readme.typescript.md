@@ -3,11 +3,12 @@
 These settings apply only when `--typescript` is specified on the command line.
 Please also specify `--typescript-sdks-folder=<path to root folder of your azure-sdk-for-js clone>`.
 
-```yaml $(typescript)
+``` yaml $(typescript)
 typescript:
   azure-arm: true
-  package-name: "mobilenetwork"
-  output-folder: "$(typescript-sdks-folder)/packages/mobilenetwork"
+  package-name: "@azure/arm-mobilenetwork"
+  output-folder: "$(typescript-sdks-folder)/sdk/mobilenetwork/arm-mobilenetwork"
   payload-flattening-threshold: 1
+  clear-output-folder: true
   generate-metadata: true
 ```

@@ -39,7 +39,7 @@
         "tags": [
           "Service"
         ],
-        "operationId": "Service_Delete",
+        "operationId": "Services_Delete",
         "description": "Deletes the specified service.",
         "parameters": [
           {
@@ -80,7 +80,7 @@
           }
         },
         "x-ms-examples": {
-          "Delete service resource": {
+          "Delete service": {
             "$ref": "./examples/ServiceDelete.json"
           }
         },
@@ -93,7 +93,7 @@
         "tags": [
           "Service"
         ],
-        "operationId": "Service_Get",
+        "operationId": "Services_Get",
         "description": "Gets information about the specified service.",
         "parameters": [
           {
@@ -140,7 +140,7 @@
         "tags": [
           "Service"
         ],
-        "operationId": "Service_CreateOrUpdate",
+        "operationId": "Services_CreateOrUpdate",
         "description": "Creates or updates a Service.",
         "parameters": [
           {
@@ -201,6 +201,62 @@
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         }
+      },
+      "patch": {
+        "tags": [
+          "Service"
+        ],
+        "operationId": "Services_UpdateTags",
+        "description": "Update service tags.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MobileNetworkNameParameter"
+          },
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the Service."
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "./common.json#/definitions/TagsObject"
+            },
+            "description": "Parameters supplied to update service tags."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful. The operation returns the resulting service resource.",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update service tags": {
+            "$ref": "./examples/ServiceUpdateTags.json"
+          }
+        }
       }
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.MobileNetwork/services": {
@@ -208,7 +264,7 @@
         "tags": [
           "Service"
         ],
-        "operationId": "Service_ListBySubscription",
+        "operationId": "Services_ListBySubscription",
         "description": "Gets all the services in a subscription.",
         "parameters": [
           {
@@ -233,7 +289,7 @@
           }
         },
         "x-ms-examples": {
-          "List all services in a subscription": {
+          "List services in a subscription": {
             "$ref": "./examples/ServiceListBySubscription.json"
           }
         },
@@ -247,7 +303,7 @@
         "tags": [
           "Service"
         ],
-        "operationId": "Service_ListByResourceGroup",
+        "operationId": "Services_ListByResourceGroup",
         "description": "Gets all the services in a resource group.",
         "parameters": [
           {
@@ -275,7 +331,7 @@
           }
         },
         "x-ms-examples": {
-          "List Services in resource group": {
+          "List services in resource group": {
             "$ref": "./examples/ServiceListByResourceGroup.json"
           }
         },
@@ -284,22 +340,25 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.MobileNetwork/mobileNetworks/{mobileNetworkName}/services": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/mobileNetworks/{mobileNetworkName}/services": {
       "get": {
         "tags": [
           "Service"
         ],
-        "operationId": "Service_ListByMobileNetwork",
+        "operationId": "Services_ListByMobileNetwork",
         "description": "Gets all the services in a mobile network.",
         "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MobileNetworkNameParameter"
+          },
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "./common.json#/parameters/MobileNetworkNameParameter"
           }
         ],
         "responses": {
@@ -317,7 +376,7 @@
           }
         },
         "x-ms-examples": {
-          "List all service in a mobile network": {
+          "List services in a mobile network": {
             "$ref": "./examples/ServiceListByMobileNetwork.json"
           }
         },
@@ -334,11 +393,17 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/ServicePropertiesFormat",
           "description": "Service Properties."
+        },
+        "systemData": {
+          "x-ms-client-flatten": true,
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "readOnly": true,
+          "description": "Metadata pertaining to creation and last modification of the resource."
         }
       },
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
         }
       ],
       "description": "Service resource."
@@ -357,6 +422,7 @@
         "servicePrecedence": {
           "description": "A precedence value that is used to decide between services when identifying the QoS values to use for a particular Sim. A lower value means a higher priority. This value should be unique among all services configured in the Mobile Network.",
           "type": "integer",
+          "format": "int32",
           "minimum": 0,
           "maximum": 255
         },
@@ -381,6 +447,7 @@
       ]
     },
     "PccRuleConfiguration": {
+      "description": "PCC rule configuration",
       "properties": {
         "ruleName": {
           "description": "The name of the rule. You must not use any of the following reserved strings - `default`, `requested` or `service`.",
@@ -389,6 +456,7 @@
         "rulePrecedence": {
           "description": "A precedence value that is used to decide between PCC Rules when identifying the QoS values to use for a particular Sim. A lower value means a higher priority. This value should be unique among all PCC Rules configured in the Mobile Network.",
           "type": "integer",
+          "format": "int32",
           "minimum": 0,
           "maximum": 255
         },
@@ -399,7 +467,7 @@
         "trafficControl": {
           "description": "Determines whether flows that match this PCC Rule are permitted.",
           "$ref": "#/definitions/TrafficControlPermission",
-          "default": "ENABLED"
+          "default": "Enabled"
         },
         "serviceDataFlowTemplates": {
           "description": "The set of service data flow templates to use for this PCC Rule.",
@@ -418,9 +486,10 @@
       ]
     },
     "ServiceDataFlowTemplate": {
+      "description": "Service data flow (SDF) template",
       "properties": {
         "templateName": {
-          "description": "The name of the SDF tempalte. You must not use any of the following reserved strings - `default`, `requested` or `service`.",
+          "description": "The name of the SDF template. You must not use any of the following reserved strings - `default`, `requested` or `service`.",
           "type": "string"
         },
         "direction": {
@@ -446,7 +515,7 @@
           "uniqueItems": true
         },
         "ports": {
-          "description": "The port(s) to which UEs will connect for this flow. You can specify one or more ports or port ranges. This is an optional setting. If you do not specify it then conenctions will be allowed on all ports. Port ranges must be specified as <FirstPort>-<LastPort>. For example: [`8080`, `8082-8085`].",
+          "description": "The port(s) to which UEs will connect for this flow. You can specify one or more ports or port ranges. This is an optional setting. If you do not specify it then connections will be allowed on all ports. Port ranges must be specified as <FirstPort>-<LastPort>. For example: [`8080`, `8082-8085`].",
           "type": "array",
           "items": {
             "type": "string"
@@ -479,6 +548,7 @@
       "description": "Response for Services API service call."
     },
     "QosPolicy": {
+      "description": "QoS policy",
       "x-nullable": true,
       "properties": {
         "5qi": {
@@ -494,12 +564,12 @@
         "preemptionCapability": {
           "description": "QoS Flow preemption capability.  The Preemption Capability of a QoS Flow controls whether it can preempt another QoS Flow with a lower priority level. See 3GPP TS23.501 section 5.7.2.2 for a full description of the ARP parameters.",
           "$ref": "./ts29571.json#/definitions/PreemptionCapability",
-          "default": "NOT_PREEMPT"
+          "default": "NotPreempt"
         },
         "preemptionVulnerability": {
           "description": "QoS Flow preemption vulnerability.  The Preemption Vulnerability of a QoS Flow controls whether it can be preempted by QoS Flow with a higher priority level. See 3GPP TS23.501 section 5.7.2.2 for a full description of the ARP parameters.",
           "$ref": "./ts29571.json#/definitions/PreemptionVulnerability",
-          "default": "PREEMPTABLE"
+          "default": "Preemptable"
         },
         "maximumBitRate": {
           "description": "The Maximum Bit Rate (MBR) for all service data flows that use this PCC Rule or Service.",
@@ -511,35 +581,44 @@
       ]
     },
     "PccRuleQosPolicy": {
+      "description": "PCC rule QoS policy",
       "x-nullable": true,
+      "properties": {
+        "guaranteedBitRate": {
+          "description": "The Guaranteed Bit Rate (GBR) for all service data flows that use this PCC Rule. This is an optional setting. If you do not provide a value, there will be no GBR set for the PCC Rule that uses this QoS definition.",
+          "$ref": "./ts29571.json#/definitions/AmbrRm"
+        }
+      },
       "allOf": [
         {
           "$ref": "#/definitions/QosPolicy"
-        },
-        {
-          "properties": {
-            "guaranteedBitRate": {
-              "description": "The Guaranteed Bit Rate (GBR) for all service data flows that use this PCC Rule. This is an optional setting. If you do not provide a value, there will be no GBR set for the PCC Rule that uses this QoS definition.",
-              "$ref": "./ts29571.json#/definitions/AmbrRm"
-            }
-          }
         }
       ]
     },
     "TrafficControlPermission": {
       "type": "string",
+      "description": "Traffic control permission.",
       "enum": [
-        "ENABLED",
-        "BLOCKED"
-      ]
+        "Enabled",
+        "Blocked"
+      ],
+      "x-ms-enum": {
+        "name": "TrafficControlPermission",
+        "modelAsString": true
+      }
     },
     "SdfDirection": {
       "type": "string",
+      "description": "Service data flow direction.",
       "enum": [
-        "UPLINK",
-        "DOWNLINK",
-        "BIDIRECTIONAL"
-      ]
+        "Uplink",
+        "Downlink",
+        "Bidirectional"
+      ],
+      "x-ms-enum": {
+        "name": "SdfDirection",
+        "modelAsString": true
+      }
     }
   }
 }

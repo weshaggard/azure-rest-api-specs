@@ -1,4 +1,4 @@
-mobilenetwork
+# mobilenetwork
 
 > see https://aka.ms/autorest
 
@@ -15,8 +15,8 @@ To see additional help and options, run:
 > `autorest --help`
 
 For other options on installation see [Installing AutoRest](https://aka.ms/autorest/install) on the AutoRest github page.
----
 
+---
 
 ## Configuration
 
@@ -39,7 +39,7 @@ input-file:
   - Microsoft.MobileNetwork/preview/2021-04-01-preview/attachedDataNetwork.json
   - Microsoft.MobileNetwork/preview/2021-04-01-preview/common.json
   - Microsoft.MobileNetwork/preview/2021-04-01-preview/dataNetwork.json
-  - Microsoft.MobileNetwork/preview/2021-04-01-preview/mobilenetwork.json
+  - Microsoft.MobileNetwork/preview/2021-04-01-preview/mobileNetwork.json
   - Microsoft.MobileNetwork/preview/2021-04-01-preview/operation.json
   - Microsoft.MobileNetwork/preview/2021-04-01-preview/packetCoreControlPlane.json
   - Microsoft.MobileNetwork/preview/2021-04-01-preview/packetCoreDataPlane.json
@@ -58,8 +58,9 @@ input-file:
   - Microsoft.MobileNetwork/preview/2020-06-01-preview/common.json
   - Microsoft.MobileNetwork/preview/2020-06-01-preview/operation.json
   - Microsoft.MobileNetwork/preview/2020-06-01-preview/mobileNetwork.json
-  - Microsoft.MobileNetwork/preview/2020-06-01-preview/networkFunctionVendor.json
 ```
+
+---
 
 # Code Generation
 

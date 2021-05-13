@@ -33,13 +33,13 @@
       }
     }
   },
-  "paths": {  
+  "paths": {
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/mobileNetworks/{mobileNetworkName}/simPolicies/{simPolicyName}": {
       "delete": {
         "tags": [
           "SimPolicy"
         ],
-        "operationId": "SimPolicy_Delete",
+        "operationId": "SimPolicies_Delete",
         "description": "Deletes the specified sim policy.",
         "parameters": [
           {
@@ -80,7 +80,7 @@
           }
         },
         "x-ms-examples": {
-          "Delete sim policy resource": {
+          "Delete sim policy": {
             "$ref": "./examples/SimPolicyDelete.json"
           }
         },
@@ -93,7 +93,7 @@
         "tags": [
           "SimPolicy"
         ],
-        "operationId": "SimPolicy_Get",
+        "operationId": "SimPolicies_Get",
         "description": "Gets information about the specified sim policy.",
         "parameters": [
           {
@@ -140,7 +140,7 @@
         "tags": [
           "SimPolicy"
         ],
-        "operationId": "SimPolicy_CreateOrUpdate",
+        "operationId": "SimPolicies_CreateOrUpdate",
         "description": "Creates or updates a SimPolicy.",
         "parameters": [
           {
@@ -201,6 +201,62 @@
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         }
+      },
+      "patch": {
+        "tags": [
+          "SimPolicy"
+        ],
+        "operationId": "SimPolicies_UpdateTags",
+        "description": "Update sim policy tags.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MobileNetworkNameParameter"
+          },
+          {
+            "name": "simPolicyName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the Sim Policy."
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "./common.json#/definitions/TagsObject"
+            },
+            "description": "Parameters supplied to update Sim Policy tags."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful. The operation returns the resulting Sim Policy resource.",
+            "schema": {
+              "$ref": "#/definitions/SimPolicy"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update sim policy tags": {
+            "$ref": "./examples/SimPolicyUpdateTags.json"
+          }
+        }
       }
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.MobileNetwork/simPolicies": {
@@ -208,7 +264,7 @@
         "tags": [
           "SimPolicy"
         ],
-        "operationId": "SimPolicy_ListBySubscription",
+        "operationId": "SimPolicies_ListBySubscription",
         "description": "Gets all the simPolicies in a subscription.",
         "parameters": [
           {
@@ -233,7 +289,7 @@
           }
         },
         "x-ms-examples": {
-          "List all simPolicies in a subscription": {
+          "List simPolicies in a subscription": {
             "$ref": "./examples/SimPolicyListBySubscription.json"
           }
         },
@@ -247,7 +303,7 @@
         "tags": [
           "SimPolicy"
         ],
-        "operationId": "SimPolicy_ListByResourceGroup",
+        "operationId": "SimPolicies_ListByResourceGroup",
         "description": "Gets all the simPolicies in a resource group.",
         "parameters": [
           {
@@ -284,22 +340,25 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.MobileNetwork/mobileNetworks/{mobileNetworkName}/simPolicies": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/mobileNetworks/{mobileNetworkName}/simPolicies": {
       "get": {
         "tags": [
           "SimPolicy"
         ],
-        "operationId": "SimPolicy_ListByMobileNetwork",
+        "operationId": "SimPolicies_ListByMobileNetwork",
         "description": "Gets all the simPolicies in a mobile network.",
         "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MobileNetworkNameParameter"
+          },
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "./common.json#/parameters/MobileNetworkNameParameter"
           }
         ],
         "responses": {
@@ -317,7 +376,7 @@
           }
         },
         "x-ms-examples": {
-          "List all sim policy in a mobile network": {
+          "List sim policies in a mobile network": {
             "$ref": "./examples/SimPolicyListByMobileNetwork.json"
           }
         },
@@ -327,22 +386,28 @@
       }
     }
   },
-  "definitions": {     
+  "definitions": {
     "SimPolicy": {
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SimPolicyPropertiesFormat",
           "description": "Sim policy Properties."
+        },
+        "systemData": {
+          "x-ms-client-flatten": true,
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "readOnly": true,
+          "description": "Metadata pertaining to creation and last modification of the resource."
         }
       },
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
         }
       ],
       "description": "Sim policy resource."
-    },    
+    },
     "SimPolicyPropertiesFormat": {
       "description": "SimPolicy properties.",
       "properties": {
@@ -356,15 +421,16 @@
         },
         "defaultSlice": {
           "description": "The default slice to use if the UE does not explicitly specify it.  This slice must exist in the `sliceConfigurations` map.",
-          "$ref": "./common.json#/definitions/SubResource"          
+          "$ref": "./common.json#/definitions/SubResource"
         },
-        "rfspIndexRm": {
+        "rfspIndex": {
           "description": "RAT/Frequency Selection Priority Index, defined in 3GPP TS 36.413.  This is an optional setting and by default is unspecified.",
-          "$ref": "./ts29571.json#/definitions/RfspIndex"          
+          "$ref": "./ts29571.json#/definitions/RfspIndex"
         },
         "registrationTimer": {
           "description": "Interval for the UE periodic registration update procedure, in seconds.",
           "type": "integer",
+          "format": "int32",
           "minimum": 30,
           "default": 3240
         },
@@ -435,17 +501,17 @@
         "preemptionCapability": {
           "description": "Default QoS Flow preemption capability.  The Preemption Capability of a QoS Flow controls whether it can preempt another QoS Flow with a lower priority level. See 3GPP TS23.501 section 5.7.2.2 for a full description of the ARP parameters.",
           "$ref": "./ts29571.json#/definitions/PreemptionCapability",
-          "default": "NOT_PREEMPT"
+          "default": "NotPreempt"
         },
         "preemptionVulnerability": {
           "description": "Default QoS Flow preemption vulnerability.  The Preemption Vulnerability of a QoS Flow controls whether it can be preempted by QoS Flow with a higher priority level. See 3GPP TS23.501 section 5.7.2.2 for a full description of the ARP parameters.",
           "$ref": "./ts29571.json#/definitions/PreemptionVulnerability",
-          "default": "PREEMPTABLE"
+          "default": "Preemptable"
         },
         "defaultSessionType": {
           "description": "The default PDU session type, which is used if the UE does not request a specific session type.",
           "$ref": "./ts29571.json#/definitions/PduSessionType",
-          "default": "IPV4"
+          "default": "IPv4"
         },
         "additionalAllowedSessionTypes": {
           "description": "Allowed session types in addition to the default session type.  Must not duplicate the default session type.",
