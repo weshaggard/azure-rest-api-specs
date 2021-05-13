@@ -6,8 +6,8 @@ Please also specify `--typescript-sdks-folder=<path to root folder of your azure
 ```yaml $(typescript)
 typescript:
   azure-arm: true
-  package-name: "devtestcenter"
-  output-folder: "$(typescript-sdks-folder)/packages/devtestcenter"
+  package-name: "@azure/arm-fidalgo"
+  output-folder: "$(typescript-sdks-folder)/packages/fidalgo"
   payload-flattening-threshold: 1
   generate-metadata: true
 ```

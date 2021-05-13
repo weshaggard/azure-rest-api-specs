@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.DevTestCenter
-  output-folder: $(csharp-sdks-folder)/devtestcenter/management/Microsoft.DevTestCenter/GeneratedProtocol
+  namespace: Microsoft.Azure.Management.Fidalgo
+  output-folder: $(csharp-sdks-folder)/fidalgo/management/Microsoft.Azure.Management.Fidalgo/src/Generated
 ```

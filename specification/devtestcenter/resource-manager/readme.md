@@ -1,7 +1,7 @@
-# devtestcenter
+# fidalgo
 
 > see https://aka.ms/autorest
-This is the AutoRest configuration file for devtestcenter.
+This is the AutoRest configuration file for fidalgo.
 
 ## Getting Started
 
@@ -19,12 +19,12 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the devtestcenter.
+These are the global settings for fidalgo.
 
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2021-01-01-alpha
+tag: package-2021-06-01-privatepreview
 ```
 
 ### Tag: package-2021-01-01-alpha
@@ -34,6 +34,15 @@ These settings apply only when `--tag=package-2021-01-01-alpha` is specified on 
 ```yaml $(tag) == 'package-2021-01-01-alpha'
 input-file:
   - Microsoft.DevTestCenter/preview/2021-01-01-alpha/devtestcenter.json
+```
+
+### Tag: package-2021-06-01-privatepreview
+
+These settings apply only when `--tag=package-2021-06-01-privatepreview` is specified on the command line.
+
+```yaml $(tag) == 'package-2021-06-01-privatepreview'
+input-file:
+  - Microsoft.Fidalgo/preview/2021-06-01-privatepreview/fidalgo.json
 ```
 
 ---
@@ -53,7 +62,7 @@ swagger-to-sdk:
   - repo: azure-sdk-for-js
   - repo: azure-sdk-for-ruby
     after_scripts:
-      - bundle install && rake arm:regen_all_profiles['azure_mgmt_devtestcenter']
+      - bundle install && rake arm:regen_all_profiles['azure_mgmt_fidalgo']
   - repo: azure-cli-extensions
 ```
 
