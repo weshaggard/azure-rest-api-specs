@@ -3103,6 +3103,10 @@
           "$ref": "#/definitions/TestExecutionStatus",
           "description": "The execution status of last test."
         },
+        "testStatus": {
+          "$ref": "#/definitions/TestStatus",
+          "description": "The status of last test."
+        },
         "grade": {
           "$ref": "#/definitions/TestGrade",
           "description": "The grade of the test."
@@ -3139,6 +3143,24 @@
         "modelAsString": true
       }
     },
+    "TestStatus": {
+      "type": "string",
+      "description": "The status of a test.",
+      "enum": [
+        "None",
+        "TestExecutionInProgress",
+        "DataProcessing",
+        "TestFailure",
+        "UpdateFailure",
+        "TestAndUpdateFailure",
+        "InfrastructureFailure",
+        "Completed"
+      ],
+      "x-ms-enum": {
+        "name": "testStatus",
+        "modelAsString": true
+      }
+    },
     "TestGrade": {
       "type": "string",
       "description": "The grade of a test.",
@@ -3159,6 +3181,10 @@
         "executionStatus": {
           "$ref": "#/definitions/TestExecutionStatus",
           "description": "The status of the last test."
+        },
+        "testStatus": {
+          "$ref": "#/definitions/TestStatus",
+          "description": "The status of last test."
         },
         "grade": {
           "$ref": "#/definitions/TestGrade",
@@ -3208,6 +3234,10 @@
         "executionStatus": {
           "$ref": "#/definitions/TestExecutionStatus",
           "description": "The execution status of the test."
+        },
+        "testStatus": {
+          "$ref": "#/definitions/TestStatus",
+          "description": "The status of the test."
         },
         "grade": {
           "$ref": "#/definitions/TestGrade",
@@ -3322,6 +3352,10 @@
         "executionStatus": {
           "$ref": "#/definitions/TestExecutionStatus",
           "description": "The execution status of the test."
+        },        
+        "testStatus": {
+          "$ref": "#/definitions/TestStatus",
+          "description": "The status of the test."
         },
         "grade": {
           "$ref": "#/definitions/TestGrade",
@@ -3555,7 +3589,8 @@
             "CPUUtilization",
             "MemoryUtilization",
             "CPURegression",
-            "MemoryRegression"
+            "MemoryRegression",
+            "TestAnalysis"
           ],
           "type": "string",
           "x-ms-enum": {
@@ -3839,6 +3874,83 @@
         }
       }
     },
+    "TestAnalysisResultSingletonResourceProperties": {
+      "description": "The properties of Test Analysis Result.",
+      "x-ms-discriminator-value": "TestAnalysis",
+      "properties": {
+        "testAnalysisResult": {
+          "$ref": "#/definitions/TestAnalysisResult",
+          "description": "The result of test analysis."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/AnalysisResultSingletonResourceProperties"
+        }
+      ]
+    },
+    "TestAnalysisResult":{
+      "description": "The test analysis result.",
+      "properties": {
+        "blobData":{
+          "type": "string",
+          "description": "The data to provide more failure analysis information."
+        },
+        "analysisStatus":{
+          "type": "string",
+          "description": "The status of the analysis.",
+          "enum": [
+            "None",
+            "Analyzing",
+            "Completed",
+            "Failed"
+          ],
+          "x-ms-enum": {
+            "name": "analysisStatus",
+            "modelAsString": true
+          }
+        },
+        "identifiedFailures": {
+          "description": "The array of identified failures.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentifiedFailure"
+          }
+        }
+      }
+    },
+    "IdentifiedFailure": {
+      "description": "The failure identified.",
+      "properties": {
+        "failureId": {
+          "type": "string",
+          "description": "The Failure Id."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the failure.",
+          "enum": [
+            "None",
+            "Unidentified",
+            "Package",
+            "OSUpdate",
+            "Infrastructure"
+          ],
+          "x-ms-enum": {
+            "name": "category",
+            "modelAsString": true
+          }
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "Message that shows information about the failure."
+        },
+        "guidance": {
+          "type": "string",
+          "description": "Guidance that shows what the customer needs to do for this failure."
+        }
+      }
+    },
     "OperationListResult": {
       "description": "A list of operations supported by the resource provider.",
       "properties": {
@@ -3995,7 +4107,8 @@
         "MemoryUtilization",
         "CPUUtilization",
         "MemoryRegression",
-        "CPURegression"
+        "CPURegression",
+        "TestAnalysis"
       ],
       "x-ms-enum": {
         "name": "analysisResultType",
@@ -4015,7 +4128,8 @@
         "memoryUtilization",
         "cpuUtilization",
         "memoryRegression",
-        "cpuRegression"
+        "cpuRegression",
+        "testAnalysis"
       ],
       "x-ms-enum": {
         "name": "analysisResultName",
