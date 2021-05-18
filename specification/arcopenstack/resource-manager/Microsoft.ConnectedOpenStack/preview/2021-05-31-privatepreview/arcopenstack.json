@@ -43,7 +43,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/api-version"
           }
         ],
         "responses": {
@@ -61,6 +61,71 @@
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/VirtualMachines/{virtualMachineName}": {
+      "put": {
+        "tags": [
+          "VirtualMachines"
+        ],
+        "operationId": "VirtualMachines_Create",
+        "summary": "Create virtual machine.",
+        "description": "Implements virtual machine PUT method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "virtualMachineName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the virtual machine"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Request payload.",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachine"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachine"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachine"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
       "get": {
         "tags": [
           "VirtualMachines"
@@ -73,20 +138,20 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/subscriptionId"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
           },
           {
             "in": "path",
             "name": "virtualMachineName",
             "required": true,
             "type": "string",
-            "description": "Name of the VirtualMachine resource"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "description": "Name of the virtual machine"
           }
         ],
         "responses": {
@@ -104,13 +169,13 @@
           }
         }
       },
-      "put": {
+      "patch": {
         "tags": [
           "VirtualMachines"
         ],
-        "operationId": "VirtualMachines_Create",
-        "description": "Create Or Update virtual machine.",
-        "summary": "Implements virtual machine PUT method.",
+        "operationId": "VirtualMachines_Update",
+        "summary": "Updates a virtual machine.",
+        "description": "API to update certain properties of the virtual machine resource.",
         "consumes": [
           "application/json"
         ],
@@ -119,28 +184,28 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/subscriptionId"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
           },
           {
             "in": "path",
             "name": "virtualMachineName",
             "required": true,
             "type": "string",
-            "description": "Name of the VirtualMachine"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "description": "Name of the virtual machine"
           },
           {
             "in": "body",
             "name": "body",
             "required": true,
-            "description": "Request payload.",
+            "description": "Virtual machine properties to update. Only tags are supported.",
             "schema": {
-              "$ref": "#/definitions/VirtualMachine"
+              "$ref": "#/definitions/ResourcePatchTags"
             }
           }
         ],
@@ -177,86 +242,31 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/subscriptionId"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
           },
           {
             "in": "path",
             "name": "virtualMachineName",
             "required": true,
             "type": "string",
-            "description": "Name of the VirtualMachine"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "description": "Name of the virtual machine"
           }
         ],
         "responses": {
           "200": {
             "description": "Success"
           },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "VirtualMachines"
-        ],
-        "operationId": "VirtualMachines_Update",
-        "summary": "Updates a virtual machine.",
-        "description": "API to update certain properties of the virtual machine resource.",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+          "202": {
+            "description": "Accepted"
           },
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "in": "path",
-            "name": "virtualMachineName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the VirtualMachine resource"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "description": "Resource properties to update.",
-            "schema": {
-              "$ref": "#/definitions/VirtualMachine"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/VirtualMachine"
-            }
-          },
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/VirtualMachine"
-            }
+          "204": {
+            "description": "No Content"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -275,25 +285,22 @@
         "operationId": "VirtualMachines_Stop",
         "description": "Stop virtual machine.",
         "summary": "Implements the operation to stop a virtual machine.",
-        "consumes": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/subscriptionId"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
           },
           {
             "in": "path",
             "name": "virtualMachineName",
-            "description": "Name of the virtual machine resource.",
+            "description": "Name of the virtual machine.",
             "required": true,
             "type": "string"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -323,10 +330,13 @@
         "summary": "Implements the operation to start a virtual machine.",
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/subscriptionId"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
           },
           {
             "in": "path",
@@ -334,9 +344,6 @@
             "description": "Name of the virtual machine resource.",
             "required": true,
             "type": "string"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -365,10 +372,13 @@
         "summary": "Implements the operation to restart a virtual machine.",
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/subscriptionId"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
           },
           {
             "in": "path",
@@ -376,9 +386,6 @@
             "description": "Name of the virtual machine resource.",
             "required": true,
             "type": "string"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -402,13 +409,13 @@
         "operationId": "VirtualMachines_ListByResourceGroup",
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/subscriptionId"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "#/parameters/resourceGroupName"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/api-version"
           }
         ],
         "responses": {
@@ -429,10 +436,10 @@
         "operationId": "VirtualMachines_ListBySubscription",
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/subscriptionId"
           },
           {
-            "$ref": "#/parameters/ApiVersionParameter"
+            "$ref": "#/parameters/api-version"
           }
         ],
         "responses": {
@@ -447,484 +454,1940 @@
           "nextLinkName": "nextLink"
         }
       }
+    },
+
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/OpenStackIdentities/{openStackIdentityName}": {
+      "put": {
+        "tags": [
+          "OpenStackIdentities"
+        ],
+        "operationId": "OpenStackIdentities_Create",
+        "summary": "Create OpenStackIdentity.",
+        "description": "Implements OpenStackIdentity PUT method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "openStackIdentityName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the OpenStackIdentity"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Request payload.",
+            "schema": {
+              "$ref": "#/definitions/OpenStackIdentity"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OpenStackIdentity"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/OpenStackIdentity"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "get": {
+        "tags": [
+          "OpenStackIdentities"
+        ],
+        "operationId": "OpenStackIdentities_Get",
+        "summary": "Gets a OpenStackIdentity.",
+        "description": "Implements OpenStackIdentity GET method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "openStackIdentityName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the OpenStackIdentity"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OpenStackIdentity"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "OpenStackIdentities"
+        ],
+        "operationId": "OpenStackIdentities_Update",
+        "summary": "Updates a OpenStackIdentity.",
+        "description": "API to update certain properties of the OpenStackIdentity resource.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "openStackIdentityName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the OpenStackIdentity"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "OpenStackIdentity properties to update. Only tags are supported.",
+            "schema": {
+              "$ref": "#/definitions/ResourcePatchTags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OpenStackIdentity"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/OpenStackIdentity"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "OpenStackIdentities"
+        ],
+        "operationId": "OpenStackIdentities_Delete",
+        "summary": "Deletes a OpenStackIdentity.",
+        "description": "Implements OpenStackIdentity DELETE method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "openStackIdentityName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the OpenStackIdentity"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/OpenStackIdentities": {
+      "get": {
+        "operationId": "OpenStackIdentities_ListByResourceGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all OpenStackIdentities under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/OpenStackIdentitiesListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.ConnectedOpenStack/OpenStackIdentities": {
+      "get": {
+        "operationId": "OpenStackIdentities_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all OpenStackIdentities under the subscription.",
+            "schema": {
+              "$ref": "#/definitions/OpenStackIdentitiesListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Images/{imageName}": {
+      "put": {
+        "tags": [
+          "Images"
+        ],
+        "operationId": "Images_Create",
+        "summary": "Create Image.",
+        "description": "Implements Image PUT method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "imageName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Image"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Request payload.",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "get": {
+        "tags": [
+          "Images"
+        ],
+        "operationId": "Images_Get",
+        "summary": "Gets a Image.",
+        "description": "Implements Image GET method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "imageName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Image"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Images"
+        ],
+        "operationId": "Images_Update",
+        "summary": "Updates a Image.",
+        "description": "API to update certain properties of the Image resource.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "imageName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Image"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Image properties to update. Only tags are supported.",
+            "schema": {
+              "$ref": "#/definitions/ResourcePatchTags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Images"
+        ],
+        "operationId": "Images_Delete",
+        "summary": "Deletes a Image.",
+        "description": "Implements Image DELETE method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "imageName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Image"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Images": {
+      "get": {
+        "operationId": "Images_ListByResourceGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Images under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/ImagesListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.ConnectedOpenStack/Images": {
+      "get": {
+        "operationId": "Images_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Images under the subscription.",
+            "schema": {
+              "$ref": "#/definitions/ImagesListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Keypairs/{keypairName}": {
+      "put": {
+        "tags": [
+          "Keypairs"
+        ],
+        "operationId": "Keypairs_Create",
+        "summary": "Create Keypair.",
+        "description": "Implements Keypair PUT method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "keypairName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Keypair"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Request payload.",
+            "schema": {
+              "$ref": "#/definitions/Keypair"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Keypair"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Keypair"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "get": {
+        "tags": [
+          "Keypairs"
+        ],
+        "operationId": "Keypairs_Get",
+        "summary": "Gets a Keypair.",
+        "description": "Implements Keypair GET method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "keypairName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Keypair"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Keypair"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Keypairs"
+        ],
+        "operationId": "Keypairs_Update",
+        "summary": "Updates a Keypair.",
+        "description": "API to update certain properties of the Keypair resource.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "keypairName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Keypair"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Keypair properties to update. Only tags are supported.",
+            "schema": {
+              "$ref": "#/definitions/ResourcePatchTags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Keypair"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Keypair"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Keypairs"
+        ],
+        "operationId": "Keypairs_Delete",
+        "summary": "Deletes a Keypair.",
+        "description": "Implements Keypair DELETE method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "keypairName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Keypair"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Keypairs": {
+      "get": {
+        "operationId": "Keypairs_ListByResourceGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Keypairs under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/KeypairsListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.ConnectedOpenStack/Keypairs": {
+      "get": {
+        "operationId": "Keypairs_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Keypairs under the subscription.",
+            "schema": {
+              "$ref": "#/definitions/KeypairsListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Networks/{networkName}": {
+      "put": {
+        "tags": [
+          "Networks"
+        ],
+        "operationId": "Networks_Create",
+        "summary": "Create Network.",
+        "description": "Implements Network PUT method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "networkName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Network"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Request payload.",
+            "schema": {
+              "$ref": "#/definitions/Network"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Network"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Network"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "get": {
+        "tags": [
+          "Networks"
+        ],
+        "operationId": "Networks_Get",
+        "summary": "Gets a Network.",
+        "description": "Implements Network GET method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "networkName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Network"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Network"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Networks"
+        ],
+        "operationId": "Networks_Update",
+        "summary": "Updates a Network.",
+        "description": "API to update certain properties of the Network resource.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "networkName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Network"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Network properties to update. Only tags are supported.",
+            "schema": {
+              "$ref": "#/definitions/ResourcePatchTags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Network"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Network"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Networks"
+        ],
+        "operationId": "Networks_Delete",
+        "summary": "Deletes a Network.",
+        "description": "Implements Network DELETE method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "networkName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Network"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Networks": {
+      "get": {
+        "operationId": "Networks_ListByResourceGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Networks under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/NetworksListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.ConnectedOpenStack/Networks": {
+      "get": {
+        "operationId": "Networks_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Networks under the subscription.",
+            "schema": {
+              "$ref": "#/definitions/NetworksListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Subnets/{subnetName}": {
+      "put": {
+        "tags": [
+          "Subnets"
+        ],
+        "operationId": "Subnets_Create",
+        "summary": "Create Subnet.",
+        "description": "Implements Subnet PUT method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "subnetName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Subnet"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Request payload.",
+            "schema": {
+              "$ref": "#/definitions/Subnet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Subnet"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Subnet"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "get": {
+        "tags": [
+          "Subnets"
+        ],
+        "operationId": "Subnets_Get",
+        "summary": "Gets a Subnet.",
+        "description": "Implements Subnet GET method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "subnetName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Subnet"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Subnet"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Subnets"
+        ],
+        "operationId": "Subnets_Update",
+        "summary": "Updates a Subnet.",
+        "description": "API to update certain properties of the Subnet resource.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "subnetName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Subnet"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Subnet properties to update. Only tags are supported.",
+            "schema": {
+              "$ref": "#/definitions/ResourcePatchTags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Subnet"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Subnet"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Subnets"
+        ],
+        "operationId": "Subnets_Delete",
+        "summary": "Deletes a Subnet.",
+        "description": "Implements Subnet DELETE method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "subnetName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Subnet"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Subnets": {
+      "get": {
+        "operationId": "Subnets_ListByResourceGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Subnets under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/SubnetsListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.ConnectedOpenStack/Subnets": {
+      "get": {
+        "operationId": "Subnets_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Subnets under the subscription.",
+            "schema": {
+              "$ref": "#/definitions/SubnetsListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Volumes/{volumeName}": {
+      "put": {
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "Volumes_Create",
+        "summary": "Create Volume.",
+        "description": "Implements Volume PUT method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "volumeName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Volume"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Request payload.",
+            "schema": {
+              "$ref": "#/definitions/Volume"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Volume"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Volume"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "get": {
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "Volumes_Get",
+        "summary": "Gets a Volume.",
+        "description": "Implements Volume GET method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "volumeName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Volume"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Volume"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "Volumes_Update",
+        "summary": "Updates a Volume.",
+        "description": "API to update certain properties of the Volume resource.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "volumeName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Volume"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Volume properties to update. Only tags are supported.",
+            "schema": {
+              "$ref": "#/definitions/ResourcePatchTags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Volume"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Volume"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Volumes"
+        ],
+        "operationId": "Volumes_Delete",
+        "summary": "Deletes a Volume.",
+        "description": "Implements Volume DELETE method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "volumeName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Volume"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/Volumes": {
+      "get": {
+        "operationId": "Volumes_ListByResourceGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Volumes under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/VolumesListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.ConnectedOpenStack/Volumes": {
+      "get": {
+        "operationId": "Volumes_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all Volumes under the subscription.",
+            "schema": {
+              "$ref": "#/definitions/VolumesListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/HeatStacks/{heatStackName}": {
+      "put": {
+        "tags": [
+          "HeatStacks"
+        ],
+        "operationId": "HeatStacks_Create",
+        "summary": "Create HeatStack.",
+        "description": "Implements HeatStack PUT method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "heatStackName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the HeatStack"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Request payload.",
+            "schema": {
+              "$ref": "#/definitions/HeatStack"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HeatStack"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/HeatStack"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "get": {
+        "tags": [
+          "HeatStacks"
+        ],
+        "operationId": "HeatStacks_Get",
+        "summary": "Gets a HeatStack.",
+        "description": "Implements HeatStack GET method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "heatStackName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the HeatStack"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HeatStack"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "HeatStacks"
+        ],
+        "operationId": "HeatStacks_Update",
+        "summary": "Updates a HeatStack.",
+        "description": "API to update certain properties of the HeatStack resource.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "heatStackName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the HeatStack"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "HeatStack properties to update. Only tags are supported.",
+            "schema": {
+              "$ref": "#/definitions/ResourcePatchTags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HeatStack"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/HeatStack"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "HeatStacks"
+        ],
+        "operationId": "HeatStacks_Delete",
+        "summary": "Deletes a HeatStack.",
+        "description": "Implements HeatStack DELETE method.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "in": "path",
+            "name": "heatStackName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the HeatStack"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedOpenStack/HeatStacks": {
+      "get": {
+        "operationId": "HeatStacks_ListByResourceGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all HeatStacks under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/HeatStacksListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.ConnectedOpenStack/HeatStacks": {
+      "get": {
+        "operationId": "HeatStacks_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/api-version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all HeatStacks under the subscription.",
+            "schema": {
+              "$ref": "#/definitions/HeatStacksListResult"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
     }
   },
   "definitions": {
     "VirtualMachineProperties": {
       "type": "object",
       "properties": {
-        "availabilityzone": {
-          "type": "string"
-        },
-        "dnsnameservers": {
+        "identityRefId": {
           "type": "string",
-          "description": "A comma separated list of DNS nameservers"
+          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
         },
-        "flavorid": {
+        "availabilityZone": {
           "type": "string"
         },
-        "identityRef": {
-          "type": "object",
-          "properties": {
-            "apiGroup": {
-              "type": "string",
-              "description": "APIGroup of resource that is being referred."
-            },
-            "apiVersion": {
-              "type": "string",
-              "description": "APIVersion of resource that is being referred."
-            },
-            "kind": {
-              "type": "string",
-              "description": "Kind of resource that is being referred."
-            },
-            "name": {
-              "type": "string",
-              "description": "Name of resource that is being referred.",
-              "minLength": 1
-            },
-            "namespace": {
-              "type": "string",
-              "description": "Namespace of resource that is being referred."
-            }
-          },
-          "required": [
-            "name"
-          ],
-          "description": "IdentityRef is the resource reference to the Openstack credentials."
+        "flavorId": {
+          "type": "string"
         },
-        "imageid": {
+        "imageId": {
           "type": "string"
         },
         "keypair": {
           "type": "string"
         },
-        "networkid": {
+        "networkId": {
           "type": "string"
         },
-        "securitygroups": {
+        "securityGroups": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "provisioningState": {
-          "type": "string"
+        "uuid": {
+          "type": "string",
+          "description": "The internal OpenStack resource id."
         },
-        "status": {
-          "type": "object",
-          "properties": {
-            "observedGeneration": {
-              "type": "integer",
-              "format": "int64",
-              "description": "ObservedGeneration is the last known generation observed in the virtualMachine resource."
-            },
-            "openstackStatus": {
-              "type": "string"
-            },
-            "provisioningStatus": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "description": "Code contains any error code associated with the message."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message contains the string suitable for logging and human consumption."
-                    }
-                  },
-                  "description": "Error will be set in the event that there is a terminal problem reconciling the resource."
-                },
-                "operationID": {
-                  "type": "string",
-                  "description": "OperationID is the unique identifier for tracking any operation associated with this resource."
-                },
-                "status": {
-                  "type": "string",
-                  "description": "ProvisioningState describes the job completion status. Only one of the following provisioning status may be specified.",
-                  "enum": [
-                    "Provisioning",
-                    "Succeeded",
-                    "Failed"
-                  ]
-                }
-              },
-              "description": "ProvisioningStatus describes the provisioning status of the resource."
-            },
-            "resourceStatus": {
-              "type": "object",
-              "properties": {
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time",
-                  "description": "CreatedAt is time at which resource was previously created."
-                },
-                "lastConfigurationAttempt": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "description": "Message contains information about error that has occurred."
-                        },
-                        "reason": {
-                          "type": "string",
-                          "description": "Reason is a camel case string value indicating reason for current error state."
-                        }
-                      },
-                      "description": "Error contains the error details of the last configure attempt."
-                    },
-                    "startedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "description": "StartedAt is UTC time at which this phase started."
-                    },
-                    "taskInfo": {
-                      "type": "object",
-                      "properties": {
-                        "errorMessage": {
-                          "type": "string"
-                        },
-                        "isCompleted": {
-                          "type": "boolean"
-                        },
-                        "isSuccess": {
-                          "type": "boolean"
-                        },
-                        "openstackTaskState": {
-                          "type": "string",
-                          "description": "TODO: consider having a \"Started\" field instead of propagating the internal Openstack task state."
-                        },
-                        "resourceID": {
-                          "type": "string"
-                        },
-                        "taskType": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "TaskInfo holds the details of last configured task."
-                    }
-                  },
-                  "description": "LastConfigurationAttempt indicates the details of the last configuration attempt."
-                },
-                "lastSyncAttempt": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "description": "Message contains information about error that has occurred."
-                        },
-                        "reason": {
-                          "type": "string",
-                          "description": "Reason is a camel case string value indicating reason for current error state."
-                        }
-                      },
-                      "description": "Error contains the error details of the last sync attempt."
-                    },
-                    "startedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "description": "StartedAt is UTC time at which this phase started."
-                    },
-                    "timeTaken": {
-                      "type": "string",
-                      "description": "TimeTaken is the time it took to complete the syncing attempt."
-                    }
-                  },
-                  "description": "LastSyncAttempt indicates the details of the last sync attempt."
-                },
-                "state": {
-                  "type": "object",
-                  "properties": {
-                    "configuring": {
-                      "type": "object",
-                      "properties": {
-                        "phase": {
-                          "type": "object",
-                          "properties": {
-                            "configuring": {
-                              "type": "object",
-                              "properties": {
-                                "waitingOn": {
-                                  "type": "object",
-                                  "properties": {
-                                    "errorMessage": {
-                                      "type": "string"
-                                    },
-                                    "isCompleted": {
-                                      "type": "boolean"
-                                    },
-                                    "isSuccess": {
-                                      "type": "boolean"
-                                    },
-                                    "openstackTaskState": {
-                                      "type": "string",
-                                      "description": "TODO: consider having a \"Started\" field instead of propagating the internal Openstack task state."
-                                    },
-                                    "resourceID": {
-                                      "type": "string"
-                                    },
-                                    "taskType": {
-                                      "type": "string"
-                                    }
-                                  }
-                                }
-                              },
-                              "description": "Configuring indicates resource configuration is underway."
-                            },
-                            "syncing": {
-                              "type": "object",
-                              "properties": {
-                                "startedAt": {
-                                  "type": "string",
-                                  "format": "date-time",
-                                  "description": "StartedAt is UTC time at which this phase started."
-                                }
-                              },
-                              "description": "Syncing indicates resource configuration is syncing."
-                            }
-                          },
-                          "description": "Phase is the current phase of the state machine's state that the resource is in."
-                        },
-                        "startedAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "description": "StartedAt is UTC time at which this state started."
-                        }
-                      },
-                      "description": "Contains details about Configuring state."
-                    },
-                    "createError": {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "description": "Message contains information about error that has occurred."
-                        },
-                        "reason": {
-                          "type": "string",
-                          "description": "Reason is a camel case string value indicating reason for current error state."
-                        }
-                      },
-                      "description": "Contains details about CreateError state."
-                    },
-                    "creating": {
-                      "type": "object",
-                      "properties": {
-                        "phase": {
-                          "type": "object",
-                          "properties": {
-                            "creating": {
-                              "type": "object",
-                              "properties": {
-                                "waitingOn": {
-                                  "type": "object",
-                                  "properties": {
-                                    "errorMessage": {
-                                      "type": "string"
-                                    },
-                                    "isCompleted": {
-                                      "type": "boolean"
-                                    },
-                                    "isSuccess": {
-                                      "type": "boolean"
-                                    },
-                                    "openstackTaskState": {
-                                      "type": "string",
-                                      "description": "TODO: consider having a \"Started\" field instead of propagating the internal Openstack task state."
-                                    },
-                                    "resourceID": {
-                                      "type": "string"
-                                    },
-                                    "taskType": {
-                                      "type": "string"
-                                    }
-                                  }
-                                }
-                              },
-                              "description": "Creating indicates resource creating is underway."
-                            },
-                            "syncing": {
-                              "type": "object",
-                              "properties": {
-                                "startedAt": {
-                                  "type": "string",
-                                  "format": "date-time"
-                                }
-                              },
-                              "description": "Syncing indicates resource is syncing."
-                            }
-                          },
-                          "description": "Phase is the current phase of the state machine's state that the resource is in."
-                        },
-                        "startedAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "description": "StartedAt is UTC time at which this state started."
-                        },
-                        "state": {
-                          "type": "string",
-                          "description": "State indicates the state machine's state the resource is in."
-                        }
-                      },
-                      "description": "Contains details about Creating state."
-                    },
-                    "deleteError": {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "description": "Message contains information about error that has occurred."
-                        },
-                        "reason": {
-                          "type": "string",
-                          "description": "Reason is a camel case string value indicating reason for current error state."
-                        }
-                      },
-                      "description": "Contains details about DeleteError state."
-                    },
-                    "deletePreflight": {
-                      "type": "object",
-                      "properties": {
-                        "startedAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "description": "StartedAt is UTC time at which this state started."
-                        }
-                      },
-                      "description": "Contains details about DeletePreflight state."
-                    },
-                    "deleting": {
-                      "type": "object",
-                      "properties": {
-                        "phase": {
-                          "type": "object",
-                          "properties": {
-                            "deleting": {
-                              "type": "object",
-                              "properties": {
-                                "waitingOn": {
-                                  "type": "object",
-                                  "properties": {
-                                    "errorMessage": {
-                                      "type": "string"
-                                    },
-                                    "isCompleted": {
-                                      "type": "boolean"
-                                    },
-                                    "isSuccess": {
-                                      "type": "boolean"
-                                    },
-                                    "openstackTaskState": {
-                                      "type": "string",
-                                      "description": "TODO: consider having a \"Started\" field instead of propagating the internal Openstack task state."
-                                    },
-                                    "resourceID": {
-                                      "type": "string"
-                                    },
-                                    "taskType": {
-                                      "type": "string"
-                                    }
-                                  }
-                                }
-                              },
-                              "description": "Deleting indicates current resource configuration is deleting."
-                            },
-                            "retry": {
-                              "type": "object",
-                              "properties": {
-                                "nextRetryAt": {
-                                  "type": "string",
-                                  "format": "date-time"
-                                }
-                              },
-                              "description": "Retry indicates retry the delete operation."
-                            }
-                          },
-                          "description": "Phase is the current phase of the state machine's state that the resource is in."
-                        },
-                        "retryAttempt": {
-                          "type": "integer",
-                          "format": "int32"
-                        },
-                        "startedAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "description": "StartedAt is UTC time at which this state started."
-                        }
-                      },
-                      "description": "Contains details about Deleting state."
-                    },
-                    "ok": {
-                      "type": "object",
-                      "properties": {
-                        "nextSyncAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "description": "NextSyncAt is UTC time at or after which the next sync should happen."
-                        }
-                      },
-                      "description": "Contains details about OK state."
-                    },
-                    "syncError": {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "description": "Message contains information about error that has occurred."
-                        },
-                        "reason": {
-                          "type": "string",
-                          "description": "Reason is a camel case string value indicating reason for current error state."
-                        }
-                      },
-                      "description": "Contains details about SyncError state."
-                    },
-                    "syncing": {
-                      "type": "object",
-                      "properties": {
-                        "startedAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "description": "StartedAt is UTC time at which this state started."
-                        }
-                      },
-                      "description": "Contains details about Syncing state."
-                    }
-                  },
-                  "description": "ResourceState defines various states for a resource. Only one of the fields below is set."
-                }
-              },
-              "description": "ResourceStatus defines appropriate status fields for a resource."
-            },
-            "uuid": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "openstackStatus"
-          ],
-          "description": "VirtualMachineStatus defines the observed state of VirtualMachine"
+        "provisioningStatus": {
+          "type": "string",
+          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+        },
+        "resourceStatus": {
+          "type": "string",
+          "description": "resourceStatus describes the internal OpenStack resource status."
         }
       },
       "required": [
-        "identityRef"
+        "identityRefId",
+        "flavorId",
+        "imageId",
+        "networkId"
       ],
-      "description": "VirtualMachineSpec defines the desired state of VirtualMachine"
+      "description": "VirtualMachineProperties define the resource properties."
     },
     "VirtualMachine": {
       "type": "object",
       "properties": {
         "properties": {
+          "description": "Resource properties.",
           "$ref": "#/definitions/VirtualMachineProperties"
         },
         "id": {
@@ -944,7 +2407,11 @@
         },
         "location": {
           "type": "string",
-          "description": "The resource location"
+          "description": "The resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
         "tags": {
           "type": "object",
@@ -954,39 +2421,19 @@
           "description": "Resource tags"
         },
         "extendedLocation": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "description": "The extended location type."
-            },
-            "name": {
-              "type": "string",
-              "description": "The extended location name."
-            }
-          }
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location name."
         }
       },
       "required": [
-        "location"
+        "location",
+        "properties"
       ],
       "description": "The VirtualMachine resource definition."
     },
-    "VirtualMachineResult": {
-      "type": "object",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
-        }
-      },
-      "description": "The VirtualMachine resource patch definition."
-    },
     "VirtualMachinesListResult": {
       "type": "object",
+      "description": "List of virtual machines.",
       "properties": {
         "value": {
           "type": "array",
@@ -995,7 +2442,758 @@
           }
         },
         "nextLink": {
-          "type": "string"
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "OpenStackIdentityProperties": {
+      "type": "object",
+      "properties": {
+        "identityEndpoint": {
+          "type": "string",
+          "description": "OpenStack Keystone endpoint."
+        },
+        "region": {
+          "type": "string",
+          "description": "OpenStack Keystone region."
+        },
+        "domainName": {
+          "type": "string",
+          "description": "OpenStack Keystone domain name."
+        },
+        "projectName": {
+          "type": "string",
+          "description": "OpenStack Keystone project name."
+        },
+        "username": {
+          "type": "string",
+          "description": "OpenStack Keystone username."
+        },
+        "password": {
+          "type": "string",
+          "description": "OpenStack Keystone user password.",
+          "x-ms-mutability": [
+            "create",
+            "update"
+          ],
+          "x-ms-secret": true
+        }
+      },
+      "required": [
+        "identityEndpoint",
+        "region",
+        "password"
+      ],
+      "description": "OpenStackIdentityProperties defines the resource properties."
+    },
+    "OpenStackIdentity": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/OpenStackIdentityProperties"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Id"
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Name"
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Type"
+        },
+        "location": {
+          "type": "string",
+          "description": "The resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location name."
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The OpenStackIdentity resource definition."
+    },
+    "OpenStackIdentitiesListResult": {
+      "type": "object",
+      "description": "List of OpenStackIdentities.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpenStackIdentity"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "ImageProperties": {
+      "type": "object",
+      "properties": {
+        "identityRefId": {
+          "type": "string",
+          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Image url is the public HTTP(S) endpoint from where the image can be downloaded."
+        },
+        "imageTags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of tags to assosciate with the Image."
+        },
+        "minDisk": {
+          "type": "integer",
+          "format": "int64",
+          "description": "MinDisk is the minimum amount of disk a flavor must have to be able to create a server based on the image, measured in GB."
+        },
+        "minRam": {
+          "type": "integer",
+          "format": "int64",
+          "description": "MinRam is the minimum amount of RAM a flavor must have to be able to create a server based on the image, measured in MB."
+        },
+        "diskFormat": {
+          "type": "string",
+          "description": "DiskFormat is the format of the disk (e.g. ami, ari, aki, vhd, vhdx, vmdk, raw, qcow2, vdi, iso, etc). Make sure that the openstack cloud supports the specified image format, otherwise convert it first"
+        },
+        "containerFormat": {
+          "type": "string",
+          "description": "ContainerFormat is the format of the container. Valid values are ami, ari, aki, bare, and ovf. Default: bare"
+        },
+        "uuid": {
+          "type": "string",
+          "description": "The internal OpenStack resource id."
+        },
+        "provisioningStatus": {
+          "type": "string",
+          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+        },
+        "resourceStatus": {
+          "type": "string",
+          "description": "resourceStatus describes the internal OpenStack resource status."
+        }
+      },
+      "required": [
+        "identityRefId",
+        "imageUrl",
+        "diskFormat",
+        "containerFormat"
+      ],
+      "description": "ImageProperties defines the resource properties."
+    },
+    "Image": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/ImageProperties"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Id"
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Name"
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Type"
+        },
+        "location": {
+          "type": "string",
+          "description": "The resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location name."
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The Image resource definition."
+    },
+    "ImagesListResult": {
+      "type": "object",
+      "description": "List of Images.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Image"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "KeypairProperties": {
+      "type": "object",
+      "properties": {
+        "identityRefId": {
+          "type": "string",
+          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+        },
+        "publicKey": {
+          "type": "string",
+          "description": "The public ssh key to import."
+        },
+        "uuid": {
+          "type": "string",
+          "description": "The internal OpenStack resource id."
+        },
+        "provisioningStatus": {
+          "type": "string",
+          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+        },
+        "resourceStatus": {
+          "type": "string",
+          "description": "resourceStatus describes the internal OpenStack resource status."
+        }
+      },
+      "required": [
+        "identityRefId",
+        "publicKey"
+      ],
+      "description": "KeypairProperties defines the resource properties."
+    },
+    "Keypair": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/KeypairProperties"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Id"
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Name"
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Type"
+        },
+        "location": {
+          "type": "string",
+          "description": "The resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location name."
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The Keypair resource definition."
+    },
+    "KeypairsListResult": {
+      "type": "object",
+      "description": "List of Keypairs.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Keypair"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "NetworkProperties": {
+      "type": "object",
+      "properties": {
+        "identityRefId": {
+          "type": "string",
+          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+        },
+        "shared": {
+          "type": "boolean",
+          "description": "Whether the network can be used by other tenants (projects)."
+        },
+        "availabilityZoneHints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of availabilityZone hints."
+        },
+        "uuid": {
+          "type": "string",
+          "description": "The internal OpenStack resource id."
+        },
+        "provisioningStatus": {
+          "type": "string",
+          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+        },
+        "resourceStatus": {
+          "type": "string",
+          "description": "resourceStatus describes the internal OpenStack resource status."
+        }
+      },
+      "required": [
+        "identityRefId"
+      ],
+      "description": "NetworkProperties defines the resource properties."
+    },
+    "Network": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/NetworkProperties"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Id"
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Name"
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Type"
+        },
+        "location": {
+          "type": "string",
+          "description": "The resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location name."
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The Network resource definition."
+    },
+    "NetworksListResult": {
+      "type": "object",
+      "description": "List of Networks.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Network"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "SubnetProperties": {
+      "type": "object",
+      "properties": {
+        "identityRefId": {
+          "type": "string",
+          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+        },
+        "networkRefId": {
+          "type": "string",
+          "description": "networkRefId is the resource reference Id to the Openstack Network."
+        },
+        "cidr": {
+          "type": "string",
+          "description": "CIDR is the address CIDR of the subnet."
+        },
+        "uuid": {
+          "type": "string",
+          "description": "The internal OpenStack resource id."
+        },
+        "provisioningStatus": {
+          "type": "string",
+          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+        },
+        "resourceStatus": {
+          "type": "string",
+          "description": "resourceStatus describes the internal OpenStack resource status."
+        }
+      },
+      "required": [
+        "identityRefId",
+        "networkRefId",
+        "cidr"
+      ],
+      "description": "SubnetProperties defines the resource properties."
+    },
+    "Subnet": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/SubnetProperties"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Id"
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Name"
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Type"
+        },
+        "location": {
+          "type": "string",
+          "description": "The resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location name."
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The Subnet resource definition."
+    },
+    "SubnetsListResult": {
+      "type": "object",
+      "description": "List of Subnets.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subnet"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "VolumeProperties": {
+      "type": "object",
+      "properties": {
+        "identityRefId": {
+          "type": "string",
+          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+        },
+        "size": {
+          "type": "integer",
+          "description": "The size of the volume in GB."
+        },
+        "uuid": {
+          "type": "string",
+          "description": "The internal OpenStack resource id."
+        },
+        "provisioningStatus": {
+          "type": "string",
+          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+        },
+        "resourceStatus": {
+          "type": "string",
+          "description": "resourceStatus describes the internal OpenStack resource status."
+        }
+      },
+      "required": [
+        "identityRefId",
+        "size"
+      ],
+      "description": "VolumeProperties defines the resource properties."
+    },
+    "Volume": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/VolumeProperties"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Id"
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Name"
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Type"
+        },
+        "location": {
+          "type": "string",
+          "description": "The resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location name."
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The Volume resource definition."
+    },
+    "VolumesListResult": {
+      "type": "object",
+      "description": "List of Volumes.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Volume"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "HeatStackProperties": {
+      "type": "object",
+      "properties": {
+        "identityRefId": {
+          "type": "string",
+          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+        },
+        "templateUrl": {
+          "type": "string",
+          "description": "Heat Template download URL."
+        },
+        "templateB64": {
+          "type": "string",
+          "description": "Heat Template represented as a base64 string, as an alternative to the template url."
+        },
+        "uuid": {
+          "type": "string",
+          "description": "The internal OpenStack resource id."
+        },
+        "provisioningStatus": {
+          "type": "string",
+          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+        },
+        "resourceStatus": {
+          "type": "string",
+          "description": "resourceStatus describes the internal OpenStack resource status."
+        }
+      },
+      "required": [
+        "identityRefId"
+      ],
+      "description": "HeatStackProperties defines the resource properties."
+    },
+    "HeatStack": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/HeatStackProperties"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Id"
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Name"
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Type"
+        },
+        "location": {
+          "type": "string",
+          "description": "The resource location",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location name."
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The HeatStack resource definition."
+    },
+    "HeatStacksListResult": {
+      "type": "object",
+      "description": "List of HeatStacks.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HeatStack"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "ResourcePatchTags": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags."
+        }
+      },
+      "description": "Object containing updates for minimal patch operations."
+    },
+    "ExtendedLocation": {
+      "type": "object",
+      "description": "The extended location.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The extended location type."
+        },
+        "name": {
+          "type": "string",
+          "description": "The extended location name."
         }
       }
     },
@@ -1088,26 +3286,28 @@
     }
   },
   "parameters": {
-    "SubscriptionIdParameter": {
+    "subscriptionId": {
       "name": "subscriptionId",
       "in": "path",
       "required": true,
       "type": "string",
       "description": "The Azure subscription ID. This is a GUID-formatted string (e.g. 00000000-0000-0000-0000-000000000000)"
     },
-    "ResourceGroupNameParameter": {
+    "resourceGroupName": {
       "name": "resourceGroupName",
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The name of the resource group."
+      "description": "The name of the resource group.",
+      "x-ms-parameter-location": "method"
     },
-    "ApiVersionParameter": {
+    "api-version": {
       "name": "api-version",
       "in": "query",
       "required": true,
       "type": "string",
-      "description": "The API version to be used with the HTTP request (e.g. YYYY-MM-DD)."
+      "description": "The API version to be used with the HTTP request. Supported-format: yyyy-MM-dd(+ '-preview,-alpha,-beta,-rc,-privatepreview'."
     }
   }
 }
+
