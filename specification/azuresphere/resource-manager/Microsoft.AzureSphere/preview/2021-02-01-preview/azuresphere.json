@@ -151,7 +151,7 @@
           "200": {
             "description": "Response to the action call for list of component identifiers for the given image identifiers.",
             "schema": {
-              "$ref": "#/definitions/ListComponentIdsForImagesResponse"
+              "$ref": "#/definitions/ListComponentIdsForImagesPageResponse"
             }
           },
           "default": {
@@ -454,7 +454,7 @@
           "200": {
             "description": "Response to the action call for list devices in a product.",
             "schema": {
-              "$ref": "#/definitions/ListDevicesProductResponse"
+              "$ref": "#/definitions/ListDevicesProductPageResponse"
             }
           },
           "default": {
@@ -889,7 +889,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Azure Sphere Image metadata",
+            "description": "Response to the request to deploy images to device.",
             "schema": {
               "$ref": "#/definitions/DeployImagesToDeviceGroupResponse"
             }
@@ -963,7 +963,7 @@
           "200": {
             "description": "Response to the action call for list deployments in a device group.",
             "schema": {
-              "$ref": "#/definitions/ListDeploymentsDeviceGroupResponse"
+              "$ref": "#/definitions/ListDeploymentsDeviceGroupPageResponse"
             }
           },
           "default": {
@@ -1035,7 +1035,7 @@
           "200": {
             "description": "Response to the action call for list devices in a device group.",
             "schema": {
-              "$ref": "#/definitions/ListDevicesDeviceGroupResponse"
+              "$ref": "#/definitions/ListDevicesDeviceGroupPageResponse"
             }
           },
           "default": {
@@ -1416,9 +1416,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Azure Sphere Image metadata",
+            "description": "Azure Sphere Image metadata.",
             "schema": {
-              "$ref": "#/definitions/GetMetadataResponse"
+              "$ref": "#/definitions/ImageMetadataResponse"
             }
           },
           "default": {
@@ -1717,9 +1717,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Response of the create device capability action",
+            "description": "Signed device capability image response.",
             "schema": {
-              "$ref": "#/definitions/CreateDeviceCapabilityImageResponse"
+              "$ref": "#/definitions/SignedDeviceCapabilityImageResponse"
             }
           },
           "default": {
@@ -1785,7 +1785,7 @@
           "200": {
             "description": "Response of the assign device to device group action",
             "schema": {
-              "$ref": "#/definitions/AssignDeviceResourceGroupResponse"
+              "$ref": "#/definitions/DeviceAssignResultResponse"
             }
           },
           "default": {
@@ -1961,9 +1961,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Azure Sphere Catalog certificate chain",
+            "description": "The certificate chain response.",
             "schema": {
-              "$ref": "#/definitions/RetrieveCertChainResponse"
+              "$ref": "#/definitions/CertificateChainResponse"
             }
           },
           "default": {
@@ -2579,13 +2579,13 @@
         }
       ]
     },
-    "ListComponentIdsForImagesResponse": {
+    "ListComponentIdsForImagesPageResponse": {
       "type": "object",
       "properties": {},
       "description": "Response to the action call for list of component identifiers for the given image identifiers.",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResponse_ListComponentIdsForImagesPage"
+          "$ref": "#/definitions/AzureSpherePage_ImageComponent"
         }
       ]
     },
@@ -2620,13 +2620,13 @@
         }
       ]
     },
-    "ListDevicesProductResponse": {
+    "ListDevicesProductPageResponse": {
       "type": "object",
       "properties": {},
       "description": "Response to the action call for list devices in a product.",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResponse_ListDevicesProductPage"
+          "$ref": "#/definitions/AzureSpherePage_DeviceProperties"
         }
       ]
     },
@@ -2646,21 +2646,7 @@
       "description": "List of default device groups created.",
       "allOf": [
         {
-          "type": "object",
-          "properties": {
-            "body": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/DeviceGroupProperties"
-              },
-              "x-adl-name": "Microsoft.AzureSphere.DeviceGroupProperties[]"
-            }
-          },
-          "description": "Typed response envelope for ARM operations.",
-          "required": [
-            "body"
-          ],
-          "x-adl-name": "ArmResponse<Microsoft.AzureSphere.DeviceGroupProperties[]>"
+          "$ref": "#/definitions/AzureSpherePage_DeviceGroupProperties"
         }
       ]
     },
@@ -2678,7 +2664,7 @@
     "DeployImageToDeviceGroupRequest": {
       "type": "object",
       "properties": {
-        "imageIds": {
+        "imageIdentifiers": {
           "type": "array",
           "items": {
             "type": "string"
@@ -2689,17 +2675,27 @@
       },
       "description": "Request of the action to deploy images to a device group.",
       "required": [
-        "imageIds"
+        "imageIdentifiers"
       ]
     },
     "DeployImagesToDeviceGroupResponse": {
       "type": "object",
-      "properties": {},
-      "description": "Azure Sphere Image metadata",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ArmResponse_ImageDeployOperation"
+      "properties": {
+        "operationId": {
+          "type": "string",
+          "description": "The deployment operation id.",
+          "readOnly": true
+        },
+        "createdDateUTC": {
+          "type": "string",
+          "description": "The created date of the deployment in UTC",
+          "readOnly": true
         }
+      },
+      "description": "Response to the request to deploy images to device.",
+      "required": [
+        "operationId",
+        "createdDateUTC"
       ]
     },
     "ListDeploymentsDeviceGroupRequest": {
@@ -2712,13 +2708,13 @@
         }
       ]
     },
-    "ListDeploymentsDeviceGroupResponse": {
+    "ListDeploymentsDeviceGroupPageResponse": {
       "type": "object",
       "properties": {},
       "description": "Response to the action call for list deployments in a device group.",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResponse_ListDeploymentsDeviceGroupPage"
+          "$ref": "#/definitions/AzureSpherePage_DeploymentProperties"
         }
       ]
     },
@@ -2732,13 +2728,13 @@
         }
       ]
     },
-    "ListDevicesDeviceGroupResponse": {
+    "ListDevicesDeviceGroupPageResponse": {
       "type": "object",
       "properties": {},
       "description": "Response to the action call for list devices in a device group.",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResponse_ListDevicesDeviceGroupPage"
+          "$ref": "#/definitions/AzureSpherePage_DeviceProperties"
         }
       ]
     },
@@ -2763,14 +2759,36 @@
       ],
       "x-ms-azure-resource": true
     },
-    "GetMetadataResponse": {
+    "ImageMetadataResponse": {
       "type": "object",
-      "properties": {},
-      "description": "Azure Sphere Image metadata",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ArmResponse_ImageMetadata"
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The image name.",
+          "readOnly": true
+        },
+        "description": {
+          "type": "string",
+          "description": "The image description.",
+          "readOnly": true
+        },
+        "componentId": {
+          "type": "string",
+          "description": "The image component id.",
+          "readOnly": true
+        },
+        "imageType": {
+          "$ref": "#/definitions/ImageType",
+          "description": "The image type.",
+          "readOnly": true
         }
+      },
+      "description": "Azure Sphere Image metadata.",
+      "required": [
+        "name",
+        "description",
+        "componentId",
+        "imageType"
       ]
     },
     "Image": {
@@ -2799,7 +2817,7 @@
       "description": "Images that should be installed in the device",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResponse_DeviceImages"
+          "$ref": "#/definitions/AzureSpherePage_DeviceImage"
         }
       ]
     },
@@ -2820,14 +2838,18 @@
         "capabilities"
       ]
     },
-    "CreateDeviceCapabilityImageResponse": {
+    "SignedDeviceCapabilityImageResponse": {
       "type": "object",
-      "properties": {},
-      "description": "Response of the create device capability action",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ArmResponse_SignedDeviceCapabilityImage"
+      "properties": {
+        "image": {
+          "type": "string",
+          "description": "Bytes of the signed device capability image",
+          "readOnly": true
         }
+      },
+      "description": "Signed device capability image response.",
+      "required": [
+        "image"
       ]
     },
     "AssignDeviceResourceGroupRequest": {
@@ -2843,15 +2865,15 @@
         "deviceGroupName"
       ]
     },
-    "AssignDeviceResourceGroupResponse": {
+    "DeviceAssignResultResponse": {
       "type": "object",
-      "properties": {},
-      "description": "Response of the assign device to device group action",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ArmResponse_DeviceAssignResult"
+      "properties": {
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "readOnly": true
         }
-      ]
+      },
+      "description": "Response of the assign device to device group action"
     },
     "Device": {
       "type": "object",
@@ -2863,15 +2885,16 @@
       ],
       "x-ms-azure-resource": true
     },
-    "RetrieveCertChainResponse": {
+    "CertificateChainResponse": {
       "type": "object",
-      "properties": {},
-      "description": "Azure Sphere Catalog certificate chain",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ArmResponse_CertificateChain"
+      "properties": {
+        "certificateChain": {
+          "type": "string",
+          "description": "The certificate chain.",
+          "readOnly": true
         }
-      ]
+      },
+      "description": "The certificate chain response."
     },
     "ProofOfPossessionNonceResponse": {
       "type": "object",
@@ -2879,7 +2902,7 @@
       "description": "Result of the action to generate a proof of possession nonce",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResponse_CertificateProperties"
+          "$ref": "#/definitions/CertificateProperties"
         }
       ]
     },
@@ -2955,13 +2978,13 @@
     },
     "CountElementsResponse": {
       "type": "object",
-      "properties": {},
-      "description": "Response of the count for elements.",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ArmResponse_int32"
+      "properties": {
+        "value": {
+          "type": "integer",
+          "format": "int32"
         }
-      ]
+      },
+      "description": "Response of the count for elements."
     },
     "ListRequest": {
       "type": "object",
@@ -2978,17 +3001,24 @@
       },
       "description": "Request of an action to list elements."
     },
-    "ArmResponse_ListComponentIdsForImagesPage": {
+    "AzureSpherePage_ImageComponent": {
       "type": "object",
       "properties": {
-        "body": {
-          "$ref": "#/definitions/ListComponentIdsForImagesPage"
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImageComponent"
+          },
+          "description": "List of elements",
+          "readOnly": true
+        },
+        "continuationToken": {
+          "type": "string",
+          "description": "A continuation token to be used in the next page call.",
+          "readOnly": true
         }
       },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
+      "description": "Azure Sphere page of elements."
     },
     "TrackedResource_CatalogProperties": {
       "type": "object",
@@ -3015,42 +3045,43 @@
         }
       ]
     },
-    "ArmResponse_ListDevicesProductPage": {
+    "AzureSpherePage_DeviceProperties": {
       "type": "object",
       "properties": {
-        "body": {
-          "$ref": "#/definitions/ListDevicesProductPage"
-        }
-      },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
-    },
-    "DeviceGroupProperties": {
-      "type": "object",
-      "properties": {
-        "description": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeviceProperties"
+          },
+          "description": "List of elements",
+          "readOnly": true
+        },
+        "continuationToken": {
           "type": "string",
-          "description": "Description of the device group"
-        },
-        "osFeedType": {
-          "$ref": "#/definitions/OSFeedType"
-        },
-        "updatePolicy": {
-          "$ref": "#/definitions/UpdatePolicy"
-        },
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
+          "description": "A continuation token to be used in the next page call.",
           "readOnly": true
         }
       },
-      "description": "Properties of the device group",
-      "required": [
-        "description",
-        "osFeedType",
-        "updatePolicy"
-      ]
+      "description": "Azure Sphere page of elements."
+    },
+    "AzureSpherePage_DeviceGroupProperties": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeviceGroupProperties"
+          },
+          "description": "List of elements",
+          "readOnly": true
+        },
+        "continuationToken": {
+          "type": "string",
+          "description": "A continuation token to be used in the next page call.",
+          "readOnly": true
+        }
+      },
+      "description": "Azure Sphere page of elements."
     },
     "ProxyResource_ProductProperties": {
       "type": "object",
@@ -3072,41 +3103,24 @@
         }
       ]
     },
-    "ArmResponse_ImageDeployOperation": {
+    "AzureSpherePage_DeploymentProperties": {
       "type": "object",
       "properties": {
-        "body": {
-          "$ref": "#/definitions/ImageDeployOperation"
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeploymentProperties"
+          },
+          "description": "List of elements",
+          "readOnly": true
+        },
+        "continuationToken": {
+          "type": "string",
+          "description": "A continuation token to be used in the next page call.",
+          "readOnly": true
         }
       },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
-    },
-    "ArmResponse_ListDeploymentsDeviceGroupPage": {
-      "type": "object",
-      "properties": {
-        "body": {
-          "$ref": "#/definitions/ListDeploymentsDeviceGroupPage"
-        }
-      },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
-    },
-    "ArmResponse_ListDevicesDeviceGroupPage": {
-      "type": "object",
-      "properties": {
-        "body": {
-          "$ref": "#/definitions/ListDevicesDeviceGroupPage"
-        }
-      },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
+      "description": "Azure Sphere page of elements."
     },
     "ProxyResource_DeviceGroupProperties": {
       "type": "object",
@@ -3128,17 +3142,38 @@
         }
       ]
     },
-    "ArmResponse_ImageMetadata": {
-      "type": "object",
-      "properties": {
-        "body": {
-          "$ref": "#/definitions/ImageMetadata"
-        }
-      },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
+    "ImageType": {
+      "type": "string",
+      "enum": [
+        "InvalidImageType",
+        "OneBl",
+        "PlutonRuntime",
+        "WifiFirmware",
+        "SecurityMonitor",
+        "NormalWorldLoader",
+        "NormalWorldDtb",
+        "NormalWorldKernel",
+        "RootFs",
+        "Services",
+        "Applications",
+        "FwConfig",
+        "BootManifest",
+        "Nwfs",
+        "TrustedKeystore",
+        "Policy",
+        "CustomerBoardConfig",
+        "UpdateCertStore",
+        "BaseSystemUpdateManifest",
+        "FirmwareUpdateManifest",
+        "CustomerUpdateManifest",
+        "RecoveryManifest",
+        "ManifestSet",
+        "Other"
+      ],
+      "x-ms-enum": {
+        "name": "ImageType",
+        "modelAsString": true
+      }
     },
     "ProxyResource_ImageProperties": {
       "type": "object",
@@ -3180,41 +3215,40 @@
         }
       ]
     },
-    "ArmResponse_DeviceImages": {
+    "AzureSpherePage_DeviceImage": {
       "type": "object",
       "properties": {
-        "body": {
-          "$ref": "#/definitions/DeviceImages"
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeviceImage"
+          },
+          "description": "List of elements",
+          "readOnly": true
+        },
+        "continuationToken": {
+          "type": "string",
+          "description": "A continuation token to be used in the next page call.",
+          "readOnly": true
         }
       },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
+      "description": "Azure Sphere page of elements."
     },
-    "ArmResponse_SignedDeviceCapabilityImage": {
-      "type": "object",
-      "properties": {
-        "body": {
-          "$ref": "#/definitions/SignedDeviceCapabilityImage"
-        }
-      },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
-    },
-    "ArmResponse_DeviceAssignResult": {
-      "type": "object",
-      "properties": {
-        "body": {
-          "$ref": "#/definitions/DeviceAssignResult"
-        }
-      },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
-      ]
+    "ProvisioningState": {
+      "type": "string",
+      "enum": [
+        "Suceeded",
+        "Failed",
+        "Cancelled",
+        "Provisioning",
+        "Updating",
+        "Deleting",
+        "Accepted"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
     },
     "ProxyResource_DeviceProperties": {
       "type": "object",
@@ -3236,28 +3270,18 @@
         }
       ]
     },
-    "ArmResponse_CertificateChain": {
+    "CertificateProperties": {
       "type": "object",
       "properties": {
-        "body": {
-          "$ref": "#/definitions/CertificateChain"
+        "certificate": {
+          "type": "string",
+          "description": "The certificate.",
+          "readOnly": true
         }
       },
-      "description": "Typed response envelope for ARM operations.",
+      "description": "Properties of the certificate",
       "required": [
-        "body"
-      ]
-    },
-    "ArmResponse_CertificateProperties": {
-      "type": "object",
-      "properties": {
-        "body": {
-          "$ref": "#/definitions/CertificateProperties"
-        }
-      },
-      "description": "Typed response envelope for ARM operations.",
-      "required": [
-        "body"
+        "certificate"
       ]
     },
     "ProxyResource_CertificateProperties": {
@@ -3382,27 +3406,24 @@
       },
       "description": "Paged response"
     },
-    "ArmResponse_int32": {
+    "ImageComponent": {
       "type": "object",
       "properties": {
-        "body": {
-          "type": "integer",
-          "format": "int32"
+        "imageIdentifier": {
+          "type": "string",
+          "description": "Image identifier",
+          "readOnly": true
+        },
+        "componentIdentifier": {
+          "type": "string",
+          "description": "Component identifier",
+          "readOnly": true
         }
       },
-      "description": "Typed response envelope for ARM operations.",
+      "description": "Image identifier with the component identifier.",
       "required": [
-        "body"
-      ]
-    },
-    "ListComponentIdsForImagesPage": {
-      "type": "object",
-      "properties": {},
-      "description": "Page of component identifiers for thre requested images.",
-      "allOf": [
-        {
-          "$ref": "#/definitions/AzureSpherePage_ImageComponent"
-        }
+        "imageIdentifier",
+        "componentIdentifier"
       ]
     },
     "CatalogProperties": {
@@ -3419,54 +3440,56 @@
       },
       "description": "Properties of the catalog"
     },
-    "ListDevicesProductPage": {
+    "DeviceProperties": {
       "type": "object",
-      "properties": {},
-      "description": "Page of devices for the product",
-      "allOf": [
-        {
-          "$ref": "#/definitions/AzureSpherePage_DeviceProperties"
+      "properties": {
+        "product": {
+          "type": "string",
+          "description": "Product of the device"
+        },
+        "deviceGroup": {
+          "type": "string",
+          "description": "Device group of the device"
+        },
+        "chipSku": {
+          "type": "string",
+          "description": "SKU of the chip",
+          "readOnly": true
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "readOnly": true
         }
+      },
+      "description": "Properties of the device",
+      "required": [
+        "chipSku"
       ]
     },
-    "OSFeedType": {
-      "type": "string",
-      "enum": [
-        "Retail",
-        "RetailEval"
-      ],
-      "x-ms-enum": {
-        "name": "OSFeedType",
-        "modelAsString": true
-      }
-    },
-    "UpdatePolicy": {
-      "type": "string",
-      "enum": [
-        "UpdateAll",
-        "No3rdPartyAppUpdates",
-        "NoUpdates"
-      ],
-      "x-ms-enum": {
-        "name": "UpdatePolicy",
-        "modelAsString": true
-      }
-    },
-    "ProvisioningState": {
-      "type": "string",
-      "enum": [
-        "Suceeded",
-        "Failed",
-        "Cancelled",
-        "Provisioning",
-        "Updating",
-        "Deleting",
-        "Accepted"
-      ],
-      "x-ms-enum": {
-        "name": "ProvisioningState",
-        "modelAsString": true
-      }
+    "DeviceGroupProperties": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of the device group"
+        },
+        "osFeedType": {
+          "$ref": "#/definitions/OSFeedType"
+        },
+        "updatePolicy": {
+          "$ref": "#/definitions/UpdatePolicy"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "readOnly": true
+        }
+      },
+      "description": "Properties of the device group",
+      "required": [
+        "description",
+        "osFeedType",
+        "updatePolicy"
+      ]
     },
     "ProductProperties": {
       "type": "object",
@@ -3483,99 +3506,6 @@
       "description": "Properties of the product",
       "required": [
         "description"
-      ]
-    },
-    "ImageDeployOperation": {
-      "type": "object",
-      "properties": {
-        "operationId": {
-          "type": "string",
-          "description": "The deployment operation id.",
-          "readOnly": true
-        },
-        "createdDateUTC": {
-          "type": "string",
-          "description": "The created date of the deployment in UTC",
-          "readOnly": true
-        }
-      },
-      "description": "Details of a deployment operation",
-      "required": [
-        "operationId",
-        "createdDateUTC"
-      ]
-    },
-    "ListDeploymentsDeviceGroupPage": {
-      "type": "object",
-      "properties": {},
-      "description": "Page of devices for the device group",
-      "allOf": [
-        {
-          "$ref": "#/definitions/AzureSpherePage_DeploymentProperties"
-        }
-      ]
-    },
-    "ListDevicesDeviceGroupPage": {
-      "type": "object",
-      "properties": {},
-      "description": "Page of devices for the device group",
-      "allOf": [
-        {
-          "$ref": "#/definitions/AzureSpherePage_DeviceProperties"
-        }
-      ]
-    },
-    "ImageMetadata": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The image name.",
-          "readOnly": true
-        },
-        "description": {
-          "type": "string",
-          "description": "The image description.",
-          "readOnly": true
-        },
-        "componentId": {
-          "type": "string",
-          "description": "The image component id.",
-          "readOnly": true
-        },
-        "imageType": {
-          "$ref": "#/definitions/ImageType",
-          "description": "The image type.",
-          "readOnly": true
-        }
-      },
-      "description": "The image metadata.",
-      "required": [
-        "name",
-        "description",
-        "componentId",
-        "imageType"
-      ]
-    },
-    "ImageProperties": {
-      "type": "object",
-      "properties": {
-        "uri": {
-          "type": "string",
-          "description": "Location the image"
-        },
-        "uriMessage": {
-          "type": "string",
-          "description": "Message for uri of the image"
-        },
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "readOnly": true
-        }
-      },
-      "description": "Properties of the image",
-      "required": [
-        "uri"
       ]
     },
     "DeploymentProperties": {
@@ -3608,200 +3538,26 @@
         "deploymentDateUtc"
       ]
     },
-    "DeviceImages": {
+    "ImageProperties": {
       "type": "object",
       "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DeviceImage"
-          },
-          "x-adl-name": "Microsoft.AzureSphere.DeviceImage[]",
-          "description": "The list of images.",
-          "readOnly": true
-        }
-      },
-      "description": "The list of images.",
-      "required": [
-        "items"
-      ]
-    },
-    "SignedDeviceCapabilityImage": {
-      "type": "object",
-      "properties": {
-        "image": {
+        "uri": {
           "type": "string",
-          "description": "Bytes of the signed device capability image",
-          "readOnly": true
-        }
-      },
-      "description": "Signed device capability image",
-      "required": [
-        "image"
-      ]
-    },
-    "DeviceAssignResult": {
-      "type": "object",
-      "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "readOnly": true
-        }
-      },
-      "description": "Result of the device assign action"
-    },
-    "DeviceProperties": {
-      "type": "object",
-      "properties": {
-        "product": {
-          "type": "string",
-          "description": "Product of the device"
+          "description": "Location the image"
         },
-        "deviceGroup": {
+        "uriMessage": {
           "type": "string",
-          "description": "Device group of the device"
-        },
-        "chipSku": {
-          "type": "string",
-          "description": "SKU of the chip",
-          "readOnly": true
+          "description": "Message for uri of the image"
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
           "readOnly": true
         }
       },
-      "description": "Properties of the device",
+      "description": "Properties of the image",
       "required": [
-        "chipSku"
+        "uri"
       ]
-    },
-    "CertificateChain": {
-      "type": "object",
-      "properties": {
-        "certificateChain": {
-          "type": "string",
-          "description": "The certificate chain.",
-          "readOnly": true
-        }
-      },
-      "description": "The certificate chain."
-    },
-    "CertificateProperties": {
-      "type": "object",
-      "properties": {
-        "certificate": {
-          "type": "string",
-          "description": "The certificate.",
-          "readOnly": true
-        }
-      },
-      "description": "Properties of the certificate",
-      "required": [
-        "certificate"
-      ]
-    },
-    "AzureSpherePage_ImageComponent": {
-      "type": "object",
-      "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ImageComponent"
-          },
-          "x-adl-name": "Microsoft.AzureSphere.ImageComponent[]",
-          "description": "List of elements",
-          "readOnly": true
-        },
-        "continuationToken": {
-          "type": "string",
-          "description": "A continuation token to be used in the next page call.",
-          "readOnly": true
-        }
-      },
-      "description": "Azure Sphere page of elements.",
-      "required": [
-        "items"
-      ]
-    },
-    "AzureSpherePage_DeviceProperties": {
-      "type": "object",
-      "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DeviceProperties"
-          },
-          "x-adl-name": "Microsoft.AzureSphere.DeviceProperties[]",
-          "description": "List of elements",
-          "readOnly": true
-        },
-        "continuationToken": {
-          "type": "string",
-          "description": "A continuation token to be used in the next page call.",
-          "readOnly": true
-        }
-      },
-      "description": "Azure Sphere page of elements.",
-      "required": [
-        "items"
-      ]
-    },
-    "AzureSpherePage_DeploymentProperties": {
-      "type": "object",
-      "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DeploymentProperties"
-          },
-          "x-adl-name": "Microsoft.AzureSphere.DeploymentProperties[]",
-          "description": "List of elements",
-          "readOnly": true
-        },
-        "continuationToken": {
-          "type": "string",
-          "description": "A continuation token to be used in the next page call.",
-          "readOnly": true
-        }
-      },
-      "description": "Azure Sphere page of elements.",
-      "required": [
-        "items"
-      ]
-    },
-    "ImageType": {
-      "type": "string",
-      "enum": [
-        "InvalidImageType",
-        "OneBl",
-        "PlutonRuntime",
-        "WifiFirmware",
-        "SecurityMonitor",
-        "NormalWorldLoader",
-        "NormalWorldDtb",
-        "NormalWorldKernel",
-        "RootFs",
-        "Services",
-        "Applications",
-        "FwConfig",
-        "BootManifest",
-        "Nwfs",
-        "TrustedKeystore",
-        "Policy",
-        "CustomerBoardConfig",
-        "UpdateCertStore",
-        "BaseSystemUpdateManifest",
-        "FirmwareUpdateManifest",
-        "CustomerUpdateManifest",
-        "RecoveryManifest",
-        "ManifestSet",
-        "Other"
-      ],
-      "x-ms-enum": {
-        "name": "ImageType",
-        "modelAsString": true
-      }
     },
     "DeviceImage": {
       "type": "object",
@@ -3841,25 +3597,28 @@
         "imageType"
       ]
     },
-    "ImageComponent": {
-      "type": "object",
-      "properties": {
-        "imageIdentifier": {
-          "type": "string",
-          "description": "Image identifier",
-          "readOnly": true
-        },
-        "componentIdentifier": {
-          "type": "string",
-          "description": "Component identifier",
-          "readOnly": true
-        }
-      },
-      "description": "Image identifier with the component identifier.",
-      "required": [
-        "imageIdentifier",
-        "componentIdentifier"
-      ]
+    "OSFeedType": {
+      "type": "string",
+      "enum": [
+        "Retail",
+        "RetailEval"
+      ],
+      "x-ms-enum": {
+        "name": "OSFeedType",
+        "modelAsString": true
+      }
+    },
+    "UpdatePolicy": {
+      "type": "string",
+      "enum": [
+        "UpdateAll",
+        "No3rdPartyAppUpdates",
+        "NoUpdates"
+      ],
+      "x-ms-enum": {
+        "name": "UpdatePolicy",
+        "modelAsString": true
+      }
     }
   },
   "parameters": {
