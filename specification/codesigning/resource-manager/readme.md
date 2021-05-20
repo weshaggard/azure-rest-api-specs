@@ -38,7 +38,7 @@ These settings apply only when `--tag=package-2020-12-14-preview` is specified o
 
 ```yaml $(tag) == 'package-2020-12-14-preview'
 input-file:
-- Microsoft.CodeSigning/preview/2020-12-14-preview/codeSignAccount.json
+- Microsoft.CodeSigning/preview/2020-12-14-preview/codeSigningAccount.json
 ```
 
 ---
@@ -63,4 +63,3 @@ See configuration in [readme.az.md](./readme.az.md)
 ## Python
 
 See configuration in [readme.python.md](./readme.python.md)
-

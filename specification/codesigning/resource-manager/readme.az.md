@@ -24,5 +24,19 @@ cli:
     - where:
         group: Operations
       hidden: true
+    - where:
+        group: CodeSigningAccount
+        param: accountName
+      name: name
+      alias:
+        - name
+        - n
+    - where:
+        group: CertificateProfile
+        param: profileName
+      name: name
+      alias:
+        - name
+        - n
 
 ```
