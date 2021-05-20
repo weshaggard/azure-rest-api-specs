@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.GraphServices
-  output-folder: $(csharp-sdks-folder)/graphservice/management/Microsoft.GraphServices/GeneratedProtocol
+  namespace: Microsoft.Graph
+  output-folder: $(csharp-sdks-folder)/graphservice/management/Microsoft.Graph/GeneratedProtocol
 ```

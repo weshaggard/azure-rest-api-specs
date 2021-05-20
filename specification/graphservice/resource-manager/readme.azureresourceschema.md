@@ -19,5 +19,5 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.GraphServices/preview/2021-04-14-preview/graphservice.json
+  - Microsoft.Graph/preview/2021-04-14-preview/graphservice.json
 ```

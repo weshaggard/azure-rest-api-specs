@@ -35,7 +35,7 @@ These settings apply only when `--tag=package-2021-04-14-preview` is specified o
 
 ```yaml $(tag) == 'package-2021-04-14-preview'
 input-file:
-  - Microsoft.GraphServices/preview/2021-04-14-preview/graphservice.json
+  - Microsoft.Graph/preview/2021-04-14-preview/graphservice.json
 ```
 
 ---
