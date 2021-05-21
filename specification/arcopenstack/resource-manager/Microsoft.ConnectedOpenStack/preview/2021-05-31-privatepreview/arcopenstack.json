@@ -2337,9 +2337,13 @@
     "VirtualMachineProperties": {
       "type": "object",
       "properties": {
-        "identityRefId": {
+        "name": {
           "type": "string",
-          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+          "description": "Name is the OpenStack resource name."
+        },
+        "identityId": {
+          "type": "string",
+          "description": "identityId is the resource reference Id to the Openstack credentials."
         },
         "availabilityZone": {
           "type": "string"
@@ -2376,7 +2380,7 @@
         }
       },
       "required": [
-        "identityRefId",
+        "identityId",
         "flavorId",
         "imageId",
         "networkId"
@@ -2559,20 +2563,29 @@
     "ImageProperties": {
       "type": "object",
       "properties": {
-        "identityRefId": {
+        "name": {
           "type": "string",
-          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+          "description": "Name is the OpenStack resource name."
+        },
+        "identityId": {
+          "type": "string",
+          "description": "IdentityId is the resource reference Id to the Openstack credentials."
+        },
+        "diskFormat": {
+          "type": "string",
+          "description": "DiskFormat is the format of the disk (e.g. ami, ari, aki, vhd, vhdx, vmdk, raw, qcow2, vdi, iso, etc). Make sure that the openstack cloud supports the specified image format, otherwise convert it first"
+        },
+        "containerFormat": {
+          "type": "string",
+          "description": "ContainerFormat is the format of the container. Valid values are ami, ari, aki, bare, and ovf. Default: bare"
+        },
+        "hidden": {
+          "type": "boolean",
+          "description": "Hidden is whether the image is listed in default image list or not."
         },
         "imageUrl": {
           "type": "string",
           "description": "Image url is the public HTTP(S) endpoint from where the image can be downloaded."
-        },
-        "imageTags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "A list of tags to assosciate with the Image."
         },
         "minDisk": {
           "type": "integer",
@@ -2584,13 +2597,34 @@
           "format": "int64",
           "description": "MinRam is the minimum amount of RAM a flavor must have to be able to create a server based on the image, measured in MB."
         },
-        "diskFormat": {
+        "imageProperties": {
           "type": "string",
-          "description": "DiskFormat is the format of the disk (e.g. ami, ari, aki, vhd, vhdx, vmdk, raw, qcow2, vdi, iso, etc). Make sure that the openstack cloud supports the specified image format, otherwise convert it first"
+          "description": "Properties provides free-form key/value pairs that further describe the image, which are used by Nova for scheduling instances."
         },
-        "containerFormat": {
+        "protected": {
+          "type": "boolean",
+          "description": "Protected is whether the image is not deletable."
+        },
+        "imageTags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of tags to assosciate with the Image."
+        },
+        "visibility": {
           "type": "string",
-          "description": "ContainerFormat is the format of the container. Valid values are ami, ari, aki, bare, and ovf. Default: bare"
+          "enum": [
+            "public",
+            "private",
+            "shared",
+            "community"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "visibility"
+          },
+          "description": "Visibility defines who can see/use the image."
         },
         "uuid": {
           "type": "string",
@@ -2606,7 +2640,7 @@
         }
       },
       "required": [
-        "identityRefId",
+        "identityId",
         "imageUrl",
         "diskFormat",
         "containerFormat"
@@ -2682,9 +2716,13 @@
     "KeypairProperties": {
       "type": "object",
       "properties": {
-        "identityRefId": {
+        "name": {
           "type": "string",
-          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+          "description": "Name is the OpenStack resource name."
+        },
+        "identityId": {
+          "type": "string",
+          "description": "IdentityId is the resource reference Id to the Openstack credentials."
         },
         "publicKey": {
           "type": "string",
@@ -2704,7 +2742,7 @@
         }
       },
       "required": [
-        "identityRefId",
+        "identityId",
         "publicKey"
       ],
       "description": "KeypairProperties defines the resource properties."
@@ -2778,9 +2816,17 @@
     "NetworkProperties": {
       "type": "object",
       "properties": {
-        "identityRefId": {
+        "name": {
           "type": "string",
-          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+          "description": "Name is the OpenStack resource name."
+        },
+        "identityId": {
+          "type": "string",
+          "description": "IdentityId is the resource reference Id to the Openstack credentials."
+        },
+        "networkDescription": {
+          "type": "string",
+          "description": "Description of the network."
         },
         "shared": {
           "type": "boolean",
@@ -2807,7 +2853,7 @@
         }
       },
       "required": [
-        "identityRefId"
+        "identityId"
       ],
       "description": "NetworkProperties defines the resource properties."
     },
@@ -2880,17 +2926,100 @@
     "SubnetProperties": {
       "type": "object",
       "properties": {
-        "identityRefId": {
+        "name": {
           "type": "string",
-          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+          "description": "Name is the OpenStack resource name."
         },
-        "networkRefId": {
+        "identityId": {
           "type": "string",
-          "description": "networkRefId is the resource reference Id to the Openstack Network."
+          "description": "IdentityId is the resource reference Id to the Openstack credentials."
+        },
+        "networkId": {
+          "type": "string",
+          "description": "networkId is the resource reference Id to the Openstack Network."
+        },
+        "allocationPools": {
+          "type": "array",
+          "items": {
+             "type": "object",
+             "properties": {
+                "start": {
+                  "type": "string"
+                },
+                "end": {
+                  "type": "string"
+                }
+            },
+            "required": [
+                "start",
+                "end"
+             ]
+          },
+          "description": "AllocationPool represents a sub-range of cidr available for dynamic allocation to ports."
         },
         "cidr": {
           "type": "string",
           "description": "CIDR is the address CIDR of the subnet."
+        },
+        "subnetDescription": {
+          "type": "string",
+          "description": "Description of the subnet."
+        },
+        "dnsNameservers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "DNSNameservers are the nameservers to be set via DHCP."
+        },
+        "enableDhcp": {
+          "type": "boolean",
+          "description": "EnableDHCP will either enable to disable the DHCP service."
+        },
+        "gatewayIP": {
+          "type": "string",
+          "description": "GatewayIP sets gateway information for the subnet."
+        },
+        "hostRoutes": {
+          "type": "array",
+          "items": {
+             "type": "object",
+             "properties": {
+                "destination": {
+                  "type": "string"
+                },
+                "nextHop": {
+                  "type": "string"
+                }
+            },
+            "required": [
+                "destination",
+                "nextHop"
+             ]
+          },
+          "description": "HostRoutes are any static host routes to be set via DHCP."
+        },
+        "ipVersion": {
+          "type": "integer",
+          "format": "int32",
+          "description": "IPVersion is the IP version for the subnet."
+        },
+        "ipv6AddressMode": {
+          "type": "string",
+          "description": "The IPv6 address modes specifies mechanisms for assigning IPv6 IP addresses."
+        },
+        "ipv6RaMode": {
+          "type": "string",
+          "description": "The IPv6 router advertisement specifies whether the networking service should transmit ICMPv6 packets."
+        },
+        "prefixLen": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Prefixlen is used when user creates a subnet from the subnetpool."
+        },
+        "subnetPoolId": {
+          "type": "string",
+          "description": "SubnetPoolID is the id of the subnet pool that subnet should be associated to."
         },
         "uuid": {
           "type": "string",
@@ -2906,8 +3035,8 @@
         }
       },
       "required": [
-        "identityRefId",
-        "networkRefId",
+        "identityId",
+        "networkId",
         "cidr"
       ],
       "description": "SubnetProperties defines the resource properties."
@@ -2981,13 +3110,61 @@
     "VolumeProperties": {
       "type": "object",
       "properties": {
-        "identityRefId": {
+        "name": {
           "type": "string",
-          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+          "description": "Name is the OpenStack resource name."
+        },
+        "identityId": {
+          "type": "string",
+          "description": "IdentityId is the resource reference Id to the Openstack credentials."
+        },
+        "availabilityZone": {
+          "type": "string",
+          "description": "The availabilityZone of the volume."
+        },
+        "backupId": {
+          "type": "string",
+          "description": "Specifies the backup ID, from which to create the volume."
+        },
+        "consistencygroupId": {
+          "type": "string",
+          "description": "The consistencygroupId of the volume."
+        },
+        "volumeDescription": {
+          "type": "string",
+          "description": "The description of the volume."
+        },
+        "imageId": {
+          "type": "string",
+          "description": "The ID of the image from which to create the volume. Required to create a bootable volume."
+        },
+        "metadata": {
+          "type": "string",
+          "description": "One or more metadata key and value pairs to associate with the volume."
+        },
+        "multiattach": {
+          "type": "boolean",
+          "description": "Multiattach denotes if the volume is multi-attach capable."
         },
         "size": {
           "type": "integer",
           "description": "The size of the volume in GB."
+        },
+        "snapshotId": {
+          "type": "string",
+          "description": "The ID of the existing volume snapshot to clone."
+        },
+        "sourceReplicaId": {
+          "type": "string",
+          "description": "The ID of an existing volume to replicate with."
+        },
+        "sourceVolId": {
+          "type": "string",
+          "description": "The ID of the existing volume to clone."
+        },
+        "volumeType": {
+          "type": "string",
+          "description": "The type of the volume."
         },
         "uuid": {
           "type": "string",
@@ -3003,7 +3180,7 @@
         }
       },
       "required": [
-        "identityRefId",
+        "identityId",
         "size"
       ],
       "description": "VolumeProperties defines the resource properties."
@@ -3077,9 +3254,28 @@
     "HeatStackProperties": {
       "type": "object",
       "properties": {
-        "identityRefId": {
+        "name": {
           "type": "string",
-          "description": "IdentityRefId is the resource reference Id to the Openstack credentials."
+          "description": "Name is the OpenStack resource name."
+        },
+        "identityId": {
+          "type": "string",
+          "description": "IdentityId is the resource reference Id to the Openstack credentials."
+        },
+        "disableRollback": {
+          "type": "boolean",
+          "description": "Enables or disables deletion of all stack resources when a stack creation fails."
+        },
+        "heatStackParameters": {
+          "type": "string",
+          "description": "User-defined parameters to pass to the Heat Stack."
+        },
+        "heatStackTags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of tags to assosciate with the Heat Stack."
         },
         "templateUrl": {
           "type": "string",
@@ -3088,6 +3284,11 @@
         "templateB64": {
           "type": "string",
           "description": "Heat Template represented as a base64 string, as an alternative to the template url."
+        },
+        "timeout_mins": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The timeout for Heat Stack creation in minutes."
         },
         "uuid": {
           "type": "string",
@@ -3103,7 +3304,7 @@
         }
       },
       "required": [
-        "identityRefId"
+        "identityId"
       ],
       "description": "HeatStackProperties defines the resource properties."
     },
@@ -3313,4 +3514,3 @@
     }
   }
 }
-
