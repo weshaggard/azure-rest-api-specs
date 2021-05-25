@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2020-12-16-preview` is specified o
 
 ```yaml $(tag) == 'package-2020-12-16-preview'
 input-file:
-  - Microsoft.TestBase/preview/2020-12-16-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2020-12-16-preview/testbase.json
 directive:
 - suppress: R4031
   from: testbase.json
@@ -67,7 +67,7 @@ swagger-to-sdk:
 directive:
   - suppress: SECRET_PROPERTY
     from:
-      - Microsoft.TestBase/preview/2020-12-16-preview/testbase.json
+      - Microsoft.XiaoTest/preview/2020-12-16-preview/testbase.json
     where:
       - $.definitions.DownloadURLResponse.properties.downloadUrl
     reason: Secrets are OK to return in a POST response according to ARM.
