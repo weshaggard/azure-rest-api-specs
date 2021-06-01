@@ -15,7 +15,7 @@ python-sdk-output-folder: "$(az-output-folder)/azext_codesigning/vendored_sdks/c
 
 directive:
   - where:
-     group: codesigning code-sign-account
+     group: codesigning code-signing-account
     set:
      group: codesigning
 
