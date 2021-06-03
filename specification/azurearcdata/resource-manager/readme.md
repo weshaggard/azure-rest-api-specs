@@ -27,16 +27,16 @@ These are the global settings for the azurearcdata.
 ``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-preview-2020-12-08
+tag: package-preview-2021-06-01
 ```
 
-### Tag: package-preview-2020-12-08
+### Tag: package-preview-2021-06-01
 
-These settings apply only when `--tag=package-preview-2020-12-08` is specified on the command line.
+These settings apply only when `--tag=package-preview-2021-06-01` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2020-12-08'
+```yaml $(tag) == 'package-preview-2021-06-01'
 input-file:
-  - Microsoft.AzureArcData/preview/2020-12-08-preview/azurearcdata.json
+  - Microsoft.AzureArcData/preview/2021-06-01-preview/azurearcdata.json
 ```
 
 ---
@@ -50,7 +50,7 @@ This is not used by Autorest itself.
 
 ``` yaml $(swagger-to-sdk)
 swagger-to-sdk:
-  - repo: azure-sdk-for-python
+  - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
@@ -86,4 +86,3 @@ See configuration in [readme.csharp.md](./readme.csharp.md)
 ## AzureResourceSchema
 
 See configuration in [readme.azureresourceschema.md](./readme.azureresourceschema.md)
-
