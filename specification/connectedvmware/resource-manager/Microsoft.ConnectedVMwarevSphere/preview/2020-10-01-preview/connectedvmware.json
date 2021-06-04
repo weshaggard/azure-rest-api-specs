@@ -2948,8 +2948,8 @@
         "statuses": {
           "description": "The resource status information.",
           "readOnly": true,
-          "type": "object",
-          "additionalProperties": {
+          "type": "array",
+          "items": {
             "$ref": "#/definitions/ResourceStatus"
           }
         },
@@ -3059,6 +3059,11 @@
     "ResourceStatus": {
       "description": "The resource status information.",
       "properties": {
+        "type": {
+          "description": "The type of the condition.",
+          "type": "string",
+          "readOnly": true
+        },
         "status": {
           "description": "Status of the condition.",
           "type": "string",
@@ -3079,14 +3084,8 @@
           "type": "string",
           "readOnly": true
         },
-        "startedAt": {
-          "description": "The time this condition was entered.",
-          "type": "string",
-          "format": "date-time",
-          "readOnly": true
-        },
-        "lastTransitionTime": {
-          "description": "The last transition time.",
+        "lastUpdatedAt": {
+          "description": "The last update time for this condition.",
           "type": "string",
           "format": "date-time",
           "readOnly": true
@@ -3143,8 +3142,8 @@
         "statuses": {
           "description": "The resource status information.",
           "readOnly": true,
-          "type": "object",
-          "additionalProperties": {
+          "type": "array",
+          "items": {
             "$ref": "#/definitions/ResourceStatus"
           }
         },
@@ -3546,6 +3545,45 @@
         }
       }
     },
+    "GuestAgentProfile": {
+      "description": "Defines the resource properties.",
+      "type": "object",
+      "properties": {
+        "status": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The status of the hybrid machine agent.",
+          "enum": [
+            "Connected",
+            "Disconnected",
+            "Error"
+          ],
+          "x-ms-enum": {
+            "name": "StatusTypes",
+            "modelAsString": true
+          }
+        },
+        "lastStatusChange": {
+          "readOnly": true,
+          "type": "string",
+          "format": "date-time",
+          "description": "The time of the last status change."
+        },
+        "agentVersion": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The hybrid machine agent full version."
+        },
+        "errorDetails": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorDetail"
+          },
+          "description": "Details about the error state."
+        }
+      }
+    },
     "ExtendedLocation": {
       "type": "object",
       "description": "The extended location.",
@@ -3592,6 +3630,10 @@
           "description": "Storage properties.",
           "$ref": "#/definitions/StorageProfile"
         },
+        "guestAgentProfile": {
+          "description": "Guest agent status properties.",
+          "$ref": "#/definitions/GuestAgentProfile"
+        },
         "moRefId": {
           "description": "Gets or sets the vCenter MoRef (Managed Object Reference) ID for the virtual machine.",
           "type": "string"
@@ -3633,8 +3675,8 @@
         "statuses": {
           "description": "The resource status information.",
           "readOnly": true,
-          "type": "object",
-          "additionalProperties": {
+          "type": "array",
+          "items": {
             "$ref": "#/definitions/ResourceStatus"
           }
         },
@@ -3862,8 +3904,8 @@
         "statuses": {
           "description": "The resource status information.",
           "readOnly": true,
-          "type": "object",
-          "additionalProperties": {
+          "type": "array",
+          "items": {
             "$ref": "#/definitions/ResourceStatus"
           }
         },
@@ -3985,8 +4027,8 @@
         "statuses": {
           "description": "The resource status information.",
           "readOnly": true,
-          "type": "object",
-          "additionalProperties": {
+          "type": "array",
+          "items": {
             "$ref": "#/definitions/ResourceStatus"
           }
         },
@@ -4286,6 +4328,35 @@
           "readOnly": true
         }
       }
+    },
+    "ErrorDetail": {
+      "title": "Error details.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "The error's code.",
+          "type": "string"
+        },
+        "message": {
+          "description": "A human readable error message.",
+          "type": "string"
+        },
+        "target": {
+          "description": "Indicates which property in the request is responsible for the error.",
+          "type": "string"
+        },
+        "details": {
+          "description": "Additional error details.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorDetail"
+          }
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
     },
     "operation": {
       "description": "Operation provided by provider",
@@ -4772,7 +4843,8 @@
         },
         "protectedSettings": {
           "type": "object",
-          "description": "The extension can contain either protectedSettings or protectedSettingsFromKeyVault or no protected settings at all."
+          "description": "The extension can contain either protectedSettings or protectedSettingsFromKeyVault or no protected settings at all.",
+          "x-ms-secret": true
         },
         "provisioningState": {
           "readOnly": true,
@@ -4818,7 +4890,8 @@
         },
         "protectedSettings": {
           "type": "object",
-          "description": "The extension can contain either protectedSettings or protectedSettingsFromKeyVault or no protected settings at all."
+          "description": "The extension can contain either protectedSettings or protectedSettingsFromKeyVault or no protected settings at all.",
+          "x-ms-secret": true
         }
       },
       "description": "Describes the properties of a Machine Extension."
