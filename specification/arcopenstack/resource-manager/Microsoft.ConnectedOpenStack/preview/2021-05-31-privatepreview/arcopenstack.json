@@ -3665,38 +3665,65 @@
           "type": "string",
           "description": "identityId is the resource reference Id to the Openstack credentials."
         },
-        "availabilityZone": {
-          "type": "string"
-        },
-        "flavorId": {
-          "type": "string"
-        },
-        "imageId": {
-          "type": "string"
-        },
-        "keypair": {
-          "type": "string"
-        },
-        "networkId": {
-          "type": "string"
-        },
-        "securityGroups": {
-          "type": "array",
-          "items": {
-            "type": "string"
+        "virtualMachineConfig": {
+          "type": "object",
+          "description": "virtualMachineConfig is the OpenStack resource configuration.",
+          "properties": {
+            "availabilityZone": {
+              "type": "string",
+              "description": "The virtualMachine availabilityZone."
+            },
+            "flavorId": {
+              "type": "string",
+              "description": "The virtualMachine flavor resource id."
+            },
+            "imageId": {
+              "type": "string",
+              "description": "The virtualMachine image resource id."
+            },
+            "keypairId": {
+              "type": "string",
+              "description": "The virtualMachine keypair resource id."
+            },
+            "networkIds": {
+              "type": "array",
+              "description": "The virtualMachine network resource ids.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "securityGroupIds": {
+              "type": "array",
+              "description": "The virtualMachine secgroups resource ids.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "userDataB64": {
+              "type": "string",
+              "description": "The virtualMachine userdata in base64 string format."
+            },
+            "volumeId": {
+              "type": "string",
+              "description": "The virtualMachine boot volume id."
+            }
           }
         },
-        "uuid": {
-          "type": "string",
-          "description": "The internal OpenStack resource id."
+        "importConfig": {
+          "$ref": "#/definitions/GenericImportConfig",
+          "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
         },
-        "provisioningStatus": {
+        "openStackUuid": {
           "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+          "description": "The OpenStack resource id."
         },
-        "resourceStatus": {
+        "openStackProvisioningStatus": {
           "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackProvisioningStatus describes the OpenStack resource job completion status."
+        },
+        "openStackResourceStatus": {
+          "type": "string",
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -3705,10 +3732,8 @@
         }
       },
       "required": [
-        "identityId",
-        "flavorId",
-        "imageId",
-        "networkId"
+        "virtualMachineName",
+        "identityId"
       ],
       "description": "VirtualMachineProperties define the resource properties."
     },
@@ -3915,72 +3940,85 @@
           "type": "string",
           "description": "IdentityId is the resource reference Id to the Openstack credentials."
         },
-        "diskFormat": {
+        "imageConfig": {
+          "type": "object",
+          "description": "imageConfig is the OpenStack resource configuration.",
+          "properties": {
+            "diskFormat": {
+              "type": "string",
+              "description": "DiskFormat is the format of the disk (e.g. ami, ari, aki, vhd, vhdx, vmdk, raw, qcow2, vdi, iso, etc). Make sure that the openstack cloud supports the specified image format, otherwise convert it first"
+            },
+            "containerFormat": {
+              "type": "string",
+              "description": "ContainerFormat is the format of the container. Valid values are ami, ari, aki, bare, and ovf. Default: bare"
+            },
+            "hidden": {
+              "type": "boolean",
+              "description": "Hidden is whether the image is listed in default image list or not."
+            },
+            "imageUrl": {
+              "type": "string",
+              "description": "Image url is the public HTTP(S) endpoint from where the image can be downloaded."
+            },
+            "minDisk": {
+              "type": "integer",
+              "format": "int32",
+              "description": "MinDisk is the minimum amount of disk a flavor must have to be able to create a server based on the image, measured in GB."
+            },
+            "minRam": {
+              "type": "integer",
+              "format": "int32",
+              "description": "MinRam is the minimum amount of RAM a flavor must have to be able to create a server based on the image, measured in MB."
+            },
+            "imageProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "imageProperties provides free-form key/value pairs that further describe the image, which are used by Nova for scheduling instances."
+            },
+            "protected": {
+              "type": "boolean",
+              "description": "Protected is whether the image is not deletable."
+            },
+            "imageTags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of tags to associate with the Image."
+            },
+            "visibility": {
+              "type": "string",
+              "enum": [
+                "public",
+                "private",
+                "shared",
+                "community"
+              ],
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "visibility"
+              },
+              "description": "Visibility defines who can see/use the image."
+            }
+          }
+        },
+        "importConfig": {
+          "$ref": "#/definitions/GenericImportConfig",
+          "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
+        },
+        "openStackUuid": {
           "type": "string",
-          "description": "DiskFormat is the format of the disk (e.g. ami, ari, aki, vhd, vhdx, vmdk, raw, qcow2, vdi, iso, etc). Make sure that the openstack cloud supports the specified image format, otherwise convert it first"
+          "description": "The OpenStack resource id."
         },
-        "containerFormat": {
+        "openStackProvisioningStatus": {
           "type": "string",
-          "description": "ContainerFormat is the format of the container. Valid values are ami, ari, aki, bare, and ovf. Default: bare"
+          "description": "openStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "hidden": {
-          "type": "boolean",
-          "description": "Hidden is whether the image is listed in default image list or not."
-        },
-        "imageUrl": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "Image url is the public HTTP(S) endpoint from where the image can be downloaded."
-        },
-        "minDisk": {
-          "type": "integer",
-          "format": "int32",
-          "description": "MinDisk is the minimum amount of disk a flavor must have to be able to create a server based on the image, measured in GB."
-        },
-        "minRam": {
-          "type": "integer",
-          "format": "int32",
-          "description": "MinRam is the minimum amount of RAM a flavor must have to be able to create a server based on the image, measured in MB."
-        },
-        "imageProperties": {
-          "type": "string",
-          "description": "Properties provides free-form key/value pairs that further describe the image, which are used by Nova for scheduling instances."
-        },
-        "protected": {
-          "type": "boolean",
-          "description": "Protected is whether the image is not deletable."
-        },
-        "imageTags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "A list of tags to associate with the Image."
-        },
-        "visibility": {
-          "type": "string",
-          "enum": [
-            "public",
-            "private",
-            "shared",
-            "community"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "visibility"
-          },
-          "description": "Visibility defines who can see/use the image."
-        },
-        "uuid": {
-          "type": "string",
-          "description": "The internal OpenStack resource id."
-        },
-        "provisioningStatus": {
-          "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
-        },
-        "resourceStatus": {
-          "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -3989,10 +4027,8 @@
         }
       },
       "required": [
-        "identityId",
-        "imageUrl",
-        "diskFormat",
-        "containerFormat"
+        "imageName",
+        "identityId"
       ],
       "description": "ImageProperties defines the resource properties."
     },
@@ -4077,21 +4113,31 @@
           "type": "string",
           "description": "IdentityId is the resource reference Id to the Openstack credentials."
         },
-        "publicKey": {
-          "type": "string",
-          "description": "The public ssh key to import."
+        "keypairConfig": {
+          "type": "object",
+          "description": "keypairConfig is the OpenStack resource configuration.",
+          "properties": {
+            "publicKey": {
+              "type": "string",
+              "description": "The public ssh key to import."
+            }
+          }
         },
-        "uuid": {
-          "type": "string",
-          "description": "The internal OpenStack resource id."
+        "importConfig": {
+          "$ref": "#/definitions/GenericImportConfig",
+          "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
         },
-        "provisioningStatus": {
+        "openStackUuid": {
           "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+          "description": "The OpenStack resource id."
         },
-        "resourceStatus": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
+        },
+        "openStackResourceStatus": {
+          "type": "string",
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -4100,8 +4146,8 @@
         }
       },
       "required": [
-        "identityId",
-        "publicKey"
+        "keypairName",
+        "identityId"
       ],
       "description": "KeypairProperties defines the resource properties."
     },
@@ -4186,32 +4232,42 @@
           "type": "string",
           "description": "IdentityId is the resource reference Id to the Openstack credentials."
         },
-        "networkDescription": {
+        "networkConfig": {
+          "type": "object",
+          "description": "networkConfig is the OpenStack resource configuration.",
+          "properties": {
+            "networkDescription": {
+              "type": "string",
+              "description": "Description of the network."
+            },
+            "shared": {
+              "type": "boolean",
+              "description": "Whether the network can be used by other tenants (projects)."
+            },
+            "availabilityZoneHints": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of availabilityZone hints."
+            }
+          }
+        },
+        "importConfig": {
+          "$ref": "#/definitions/GenericImportConfig",
+          "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
+        },
+        "openStackUuid": {
           "type": "string",
-          "description": "Description of the network."
+          "description": "The OpenStack resource id."
         },
-        "shared": {
-          "type": "boolean",
-          "description": "Whether the network can be used by other tenants (projects)."
-        },
-        "availabilityZoneHints": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "A list of availabilityZone hints."
-        },
-        "uuid": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "The internal OpenStack resource id."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "provisioningStatus": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
-        },
-        "resourceStatus": {
-          "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -4220,6 +4276,7 @@
         }
       },
       "required": [
+        "networkName",
         "identityId"
       ],
       "description": "NetworkProperties defines the resource properties."
@@ -4305,104 +4362,109 @@
           "type": "string",
           "description": "IdentityId is the resource reference Id to the Openstack credentials."
         },
-        "networkId": {
-          "type": "string",
-          "description": "networkId is the resource reference Id to the Openstack Network."
-        },
-        "allocationPools": {
-          "type": "array",
-          "items": {
-             "type": "object",
-             "properties": {
-                "start": {
-                  "type": "string"
-                },
-                "end": {
-                  "type": "string"
-                }
+        "subnetConfig": {
+          "type": "object",
+          "description": "subnetConfig is the OpenStack resource configuration.",
+          "properties": {
+            "networkId": {
+              "type": "string",
+              "description": "networkId is the resource reference Id to the Openstack Network."
             },
-            "required": [
-                "start",
-                "end"
-             ]
-          },
-          "description": "AllocationPool represents a sub-range of cidr available for dynamic allocation to ports."
-        },
-        "cidr": {
-          "type": "string",
-          "description": "CIDR is the address CIDR of the subnet."
-        },
-        "subnetDescription": {
-          "type": "string",
-          "description": "Description of the subnet."
-        },
-        "dnsNameservers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "DNSNameservers are the nameservers to be set via DHCP."
-        },
-        "enableDhcp": {
-          "type": "boolean",
-          "description": "EnableDHCP will either enable to disable the DHCP service."
-        },
-        "gatewayIP": {
-          "type": "string",
-          "description": "GatewayIP sets gateway information for the subnet."
-        },
-        "hostRoutes": {
-          "type": "array",
-          "items": {
-             "type": "object",
-             "properties": {
-                "destination": {
-                  "type": "string"
+            "allocationPools": {
+              "type": "array",
+              "items": {
+                 "type": "object",
+                 "properties": {
+                    "start": {
+                      "type": "string",
+                      "description": "Allocation pool start."
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "Allocation pool end."
+                    }
                 },
-                "nextHop": {
-                  "type": "string"
-                }
+                "required": [
+                    "start",
+                    "end"
+                 ]
+              },
+              "description": "AllocationPool represents a sub-range of cidr available for dynamic allocation to ports."
             },
-            "required": [
-                "destination",
-                "nextHop"
-             ]
-          },
-          "description": "HostRoutes are any static host routes to be set via DHCP."
+            "cidr": {
+              "type": "string",
+              "description": "CIDR is the address CIDR of the subnet."
+            },
+            "subnetDescription": {
+              "type": "string",
+              "description": "Description of the subnet."
+            },
+            "dnsNameservers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "DNSNameservers are the nameservers to be set via DHCP."
+            },
+            "enableDhcp": {
+              "type": "boolean",
+              "description": "EnableDHCP will either enable to disable the DHCP service."
+            },
+            "gatewayIP": {
+              "type": "string",
+              "description": "GatewayIP sets gateway information for the subnet."
+            },
+            "hostRoutes": {
+              "type": "array",
+              "items": {
+                 "type": "object",
+                 "properties": {
+                    "destination": {
+                      "type": "string",
+                      "description": "Destination for the route."
+                    },
+                    "nextHop": {
+                      "type": "string",
+                      "description": "Next hop for the route."
+                    }
+                },
+                "required": [
+                    "destination",
+                    "nextHop"
+                 ]
+              },
+              "description": "HostRoutes are any static host routes to be set via DHCP."
+            },
+            "ipVersion": {
+              "type": "integer",
+              "format": "int32",
+              "description": "IPVersion is the IP version for the subnet."
+            },
+            "ipv6AddressMode": {
+              "type": "string",
+              "description": "The IPv6 address modes specifies mechanisms for assigning IPv6 IP addresses."
+            },
+            "ipv6RaMode": {
+              "type": "string",
+              "description": "The IPv6 router advertisement specifies whether the networking service should transmit ICMPv6 packets."
+            }
+          }
         },
-        "ipVersion": {
-          "type": "integer",
-          "format": "int32",
-          "description": "IPVersion is the IP version for the subnet."
+        "importConfig": {
+          "$ref": "#/definitions/GenericImportConfig",
+          "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
         },
-        "ipv6AddressMode": {
+        "openStackUuid": {
           "type": "string",
-          "description": "The IPv6 address modes specifies mechanisms for assigning IPv6 IP addresses."
+          "description": "The OpenStack resource id."
         },
-        "ipv6RaMode": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "The IPv6 router advertisement specifies whether the networking service should transmit ICMPv6 packets."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "prefixLen": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Prefixlen is used when user creates a subnet from the subnetpool."
-        },
-        "subnetPoolId": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "SubnetPoolID is the id of the subnet pool that subnet should be associated to."
-        },
-        "uuid": {
-          "type": "string",
-          "description": "The internal OpenStack resource id."
-        },
-        "provisioningStatus": {
-          "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
-        },
-        "resourceStatus": {
-          "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -4411,9 +4473,8 @@
         }
       },
       "required": [
-        "identityId",
-        "networkId",
-        "cidr"
+        "subnetName",
+        "identityId"
       ],
       "description": "SubnetProperties defines the resource properties."
     },
@@ -4498,66 +4559,63 @@
           "type": "string",
           "description": "IdentityId is the resource reference Id to the Openstack credentials."
         },
-        "availabilityZone": {
+        "volumeConfig": {
+          "type": "object",
+          "description": "volumeConfig is the OpenStack resource configuration.",
+          "properties": {
+            "availabilityZone": {
+              "type": "string",
+              "description": "The availabilityZone of the volume."
+            },
+            "volumeDescription": {
+              "type": "string",
+              "description": "The description of the volume."
+            },
+            "volumeMetadata": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "One or more metadata key and value pairs to associate with the volume."
+            },
+            "multiattach": {
+              "type": "boolean",
+              "description": "Multiattach denotes if the volume is multi-attach capable."
+            },
+            "size": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The size of the volume in GB."
+            },
+            "sourceImageId": {
+              "type": "string",
+              "description": "The ID of the image from which to create the volume. Required to create a bootable volume."
+            },
+            "sourceVolumeId": {
+              "type": "string",
+              "description": "The ID of the existing volume to clone."
+            },
+            "volumeTypeId": {
+              "type": "string",
+              "description": "The type of the volume."
+            }
+          }
+        },
+        "importConfig": {
+          "$ref": "#/definitions/GenericImportConfig",
+          "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
+        },
+        "openStackUuid": {
           "type": "string",
-          "description": "The availabilityZone of the volume."
+          "description": "The OpenStack resource id."
         },
-        "backupId": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "Specifies the backup ID, from which to create the volume."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "consistencygroupId": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "The consistencygroupId of the volume."
-        },
-        "volumeDescription": {
-          "type": "string",
-          "description": "The description of the volume."
-        },
-        "imageId": {
-          "type": "string",
-          "description": "The ID of the image from which to create the volume. Required to create a bootable volume."
-        },
-        "metadata": {
-          "type": "string",
-          "description": "One or more metadata key and value pairs to associate with the volume."
-        },
-        "multiattach": {
-          "type": "boolean",
-          "description": "Multiattach denotes if the volume is multi-attach capable."
-        },
-        "size": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The size of the volume in GB."
-        },
-        "snapshotId": {
-          "type": "string",
-          "description": "The ID of the existing volume snapshot to clone."
-        },
-        "sourceReplicaId": {
-          "type": "string",
-          "description": "The ID of an existing volume to replicate with."
-        },
-        "sourceVolId": {
-          "type": "string",
-          "description": "The ID of the existing volume to clone."
-        },
-        "volumeType": {
-          "type": "string",
-          "description": "The type of the volume."
-        },
-        "uuid": {
-          "type": "string",
-          "description": "The internal OpenStack resource id."
-        },
-        "provisioningStatus": {
-          "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
-        },
-        "resourceStatus": {
-          "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -4566,8 +4624,8 @@
         }
       },
       "required": [
-        "identityId",
-        "size"
+        "volumeName",
+        "identityId"
       ],
       "description": "VolumeProperties defines the resource properties."
     },
@@ -4652,45 +4710,66 @@
           "type": "string",
           "description": "IdentityId is the resource reference Id to the Openstack credentials."
         },
-        "disableRollback": {
-          "type": "boolean",
-          "description": "Enables or disables deletion of all stack resources when a stack creation fails."
+        "heatStackConfig": {
+          "type": "object",
+          "description": "heatStackConfig is the OpenStack resource configuration.",
+          "properties": {
+            "disableRollback": {
+              "type": "boolean",
+              "description": "Enables or disables deletion of all stack resources when a stack creation fails."
+            },
+            "environmentB64": {
+              "type": "string",
+              "description": "Heat environment file represented as a base64 string, as an alternative to the environment file url."
+            },
+            "environmentUrl": {
+              "type": "string",
+              "description": "Heat environment file download url."
+            },
+            "heatStackParameters": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "User-defined parameters to pass to the Heat Stack."
+            },
+            "heatStackTags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of tags to associate with the Heat Stack."
+            },
+            "templateB64": {
+              "type": "string",
+              "description": "Heat Template represented as a base64 string, as an alternative to the template url."
+            },
+            "templateUrl": {
+              "type": "string",
+              "description": "Heat Template download URL."
+            },
+            "timeoutMins": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The timeout for Heat Stack creation in minutes."
+            }
+          }
         },
-        "heatStackParameters": {
+        "importConfig": {
+          "$ref": "#/definitions/GenericImportConfig",
+          "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
+        },
+        "openStackUuid": {
           "type": "string",
-          "description": "User-defined parameters to pass to the Heat Stack."
+          "description": "The OpenStack resource id."
         },
-        "heatStackTags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "A list of tags to associate with the Heat Stack."
-        },
-        "templateUrl": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "Heat Template download URL."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "templateB64": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "Heat Template represented as a base64 string, as an alternative to the template url."
-        },
-        "timeoutMins": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The timeout for Heat Stack creation in minutes."
-        },
-        "uuid": {
-          "type": "string",
-          "description": "The internal OpenStack resource id."
-        },
-        "provisioningStatus": {
-          "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
-        },
-        "resourceStatus": {
-          "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -4699,6 +4778,7 @@
         }
       },
       "required": [
+         "heatStackName",
         "identityId"
       ],
       "description": "HeatStackProperties defines the resource properties."
@@ -4793,12 +4873,19 @@
               "format": "int32",
               "description": "The amount of root disk space, measured in GB."
             },
+            "flavorExtraSpecs": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Extra spec key-value pairs."
+            },
             "ephemeralDiskSize": {
               "type": "integer",
               "format": "int32",
               "description": "The amount of ephemeral disk space, measured in GB."
             },
-            "id": {
+            "flavorIdentifier": {
               "type": "string",
               "description": "A unique ID for the flavor. This is optional."
             },
@@ -4832,17 +4919,17 @@
           "$ref": "#/definitions/GenericImportConfig",
           "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
         },
-        "uuid": {
+        "openStackUuid": {
           "type": "string",
-          "description": "The internal OpenStack resource id."
+          "description": "The OpenStack resource id."
         },
-        "provisioningStatus": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "resourceStatus": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -4851,8 +4938,8 @@
         }
       },
       "required": [
-        "identityId",
-        "flavorName"
+        "flavorName",
+        "identityId"
       ],
       "description": "FlavorProperties defines the resource properties."
     },
@@ -4951,17 +5038,17 @@
           "$ref": "#/definitions/GenericImportConfig",
           "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
         },
-        "uuid": {
+        "openStackUuid": {
           "type": "string",
-          "description": "The internal OpenStack resource id."
+          "description": "The OpenStack resource id."
         },
-        "provisioningStatus": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "resourceStatus": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -4970,8 +5057,8 @@
         }
       },
       "required": [
-        "identityId",
-        "securityGroupName"
+        "securityGroupName",
+        "identityId"
       ],
       "description": "SecurityGroupProperties defines the resource properties."
     },
@@ -5060,6 +5147,10 @@
           "type": "object",
           "description": "The desired configuration for the resource",
           "properties": {
+             "description": {
+               "type": "string",
+               "description": "The remote security group description."
+             },
              "direction": {
                "type": "string",
                "description": "The direction in which the security group rule is applied. Allowed values: ingress or egress.",
@@ -5092,15 +5183,15 @@
              "portRangeMin": {
                "type": "integer",
                "format": "int32",
-               "description": "The minimum port number in the range that is matched by the security group rule. Valid values are 'tcp', 'udp', 'icmp' or an empty string."
+               "description": "The minimum port number in the range that is matched by the security group rule."
              },
              "protocol": {
                "type": "string",
-               "description": "The protocol that is matched by the security group rule."
+               "description": "The protocol that is matched by the security group rule. Valid values are 'tcp', 'udp', 'icmp' or an empty string."
              },
              "remoteIpPrefix": {
                "type": "string",
-               "description": "The remote IP prefix to be associated with this security."
+               "description": "The remote IP prefix to be associated with this security group rule."
              },
              "securityGroupId": {
                "type": "string",
@@ -5119,17 +5210,17 @@
           "$ref": "#/definitions/GenericImportConfig",
           "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
         },
-        "uuid": {
+        "openStackUuid": {
           "type": "string",
-          "description": "The internal OpenStack resource id."
+          "description": "The OpenStack resource id."
         },
-        "provisioningStatus": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "resourceStatus": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -5138,8 +5229,8 @@
         }
       },
       "required": [
-        "identityId",
-        "securityGroupRuleName"
+        "securityGroupRuleName",
+        "identityId"
       ],
       "description": "SecurityGroupRuleProperties defines the resource properties."
     },
@@ -5228,30 +5319,38 @@
           "type": "object",
           "description": "The desired configuration for the resource",
           "properties": {
-            "volumeType" : {
+            "description" : {
               "type": "string",
-              "description": "The Cinder Volume Type."
+              "description": "The Cinder Volume Type description."
+            },
+            "extraSpecs" : {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The Cinder Volume Type extra specs."
+            },
+            "isPublic" : {
+              "type": "boolean",
+              "description": "The Cinder Volume Type visibility."
             }
-          },
-          "required": [
-            "volumeType"
-          ]
+          }
         },
         "importConfig": {
           "$ref": "#/definitions/GenericImportConfig",
           "description": "The import config. If set, the existing OpenStack resource will be imported to Azure."
         },
-        "uuid": {
+        "openStackUuid": {
           "type": "string",
-          "description": "The internal OpenStack resource id."
+          "description": "The OpenStack resource id."
         },
-        "provisioningStatus": {
+        "openStackopenStackProvisioningStatus": {
           "type": "string",
-          "description": "provisioningStatus describes the internal OpenStack resource job completion status."
+          "description": "openStackopenStackProvisioningStatus describes the OpenStack resource job completion status."
         },
-        "resourceStatus": {
+        "openStackResourceStatus": {
           "type": "string",
-          "description": "resourceStatus describes the internal OpenStack resource status."
+          "description": "openStackResourceStatus describes the OpenStack resource status."
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -5260,8 +5359,8 @@
         }
       },
       "required": [
-        "identityId",
-        "volumeTypeName"
+        "volumeTypeName",
+        "identityId"
       ],
       "description": "VolumeTypeProperties defines the resource properties."
     },
