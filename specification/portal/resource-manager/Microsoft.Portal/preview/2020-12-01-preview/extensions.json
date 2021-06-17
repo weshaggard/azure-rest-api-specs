@@ -177,9 +177,6 @@
               "$ref": "#/definitions/PortalExtension"
             }
           },
-          "404": {
-            "description": "Not found. Portal extension with provided id doesn't exist."
-          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -234,9 +231,6 @@
             "schema": {
               "$ref": "#/definitions/PortalExtension"
             }
-          },
-          "404": {
-            "description": "Not found. Portal extension with provided id doesn't exist."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -519,6 +513,228 @@
           "application/json"
         ]
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Portal/extensions/{portalExtensionName}/versions": {
+      "get": {
+        "tags": [
+          "PortalExtensionVersion"
+        ],
+        "operationId": "PortalExtensionVersions_ListByResourceGroup",
+        "x-ms-examples": {
+          "List all portal extensions on the resourceGroup": {
+            "$ref": "examples/listPortalExtensionVersionsByResourceGroup.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "description": "Gets all the portal extension versions within a resource group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Returns an array of portal extension versions.",
+            "schema": {
+              "$ref": "#/definitions/ExtensionVersionListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Portal/extensions/{portalExtensionName}/versions/{versionName}": {
+      "put": {
+        "tags": [
+          "PortalExtensionVersion"
+        ],
+        "operationId": "PortalExtension_VersionsCreate",
+        "description": "Creates an extension version",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "extension version definition.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExtensionVersion"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ExtensionVersion"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ExtensionVersion"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create Extension Version from External Build Artifact": {
+            "$ref": "./examples/createPortalExtensionVersionUsingBuildArtifact.json"
+          },
+          "Create Extension Version from Extension": {
+            "$ref": "./examples/createPortalExtensionVersionOnDemmand.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "original-uri"
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "PortalExtensionVersion"
+        ],
+        "operationId": "PortalExtension_VersionsGet",
+        "x-ms-examples": {
+          "Get a portal extension": {
+            "$ref": "examples/getPortalExtensionVersion.json"
+          }
+        },
+        "description": "Gets the portal extension.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response definition.",
+            "schema": {
+              "$ref": "#/definitions/ExtensionVersion"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "delete": {
+        "tags": [
+          "PortalExtensionVersion"
+        ],
+        "operationId": "PortalExtension_VersionsDelete",
+        "x-ms-examples": {
+          "Delete a portal extension": {
+            "$ref": "examples/deletePortalExtensionVersion.json"
+          }
+        },
+        "description": "Deletes the portal extension.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response definition."
+          },
+          "204": {
+            "description": "OK resource was not found."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      }
     }
   },
   "definitions": {
@@ -572,6 +788,16 @@
         "name": "ExportKind"
       },
       "description": "The kind of the source package."
+    },
+    "ExtensionVersionSourceKind": {
+      "enum": [
+        "BuildArtifactZipUri"
+      ],
+      "default": "BuildArtifactZipUri",
+      "x-ms-enum": {
+        "name": "ExtensionVersionSourceKind",
+        "modelAsString": true
+      }
     },
     "PortalExtensionAlter": {
       "type": "object",
@@ -682,9 +908,9 @@
           "description": "The ARM API definition used to generate extension content."
         },
         "provisioningState": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The provisioning state."
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Readonly. The provisioning state.",
+          "readOnly": true
         }
       }
     },
@@ -706,9 +932,9 @@
           "description": "The ARM API definition used to generate extension content."
         },
         "provisioningState": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The provisioning state."
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Readonly. The provisioning state.",
+          "readOnly": true
         }
       }
     },
@@ -771,38 +997,13 @@
           "description": "The portal extension properties.",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/PortalExtensionRequestProperties"
-        },
-        "id": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Resource Id"
-        },
-        "name": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Resource name"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Resource type"
-        },
-        "location": {
-          "type": "string",
-          "description": "Resource location",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
         }
-      }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArmCommonProperties"
+        }
+      ]
     },
     "PatchablePortalExtension": {
       "type": "object",
@@ -823,6 +1024,103 @@
           "description": "Resource tags"
         }
       }
+    },
+    "ExtensionVersionListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionVersion"
+          },
+          "description": "The array of portal extension versions."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URL to use for getting the next set of results."
+        }
+      },
+      "description": "List of portal extensions."
+    },
+    "ExtensionVersion": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ExtensionVersionProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArmCommonProperties"
+        }
+      ],
+      "description": "Extension Version"
+    },
+    "ExtensionVersionProperties": {
+      "properties": {
+        "buildOutputArtifactUri": {
+          "description": "The path to the ingested extension build artifact zip for the version.",
+          "type": "string"
+        },
+        "hasBeenDeployed": {
+          "description": "Indicates if the version has ever been deployed",
+          "type": "string"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Readonly. The provisioning state.",
+          "readOnly": true
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "description": "The kind of source content for the version. If ommited uses latest exported version from extension.",
+              "$ref": "#/definitions/ExtensionVersionSourceKind"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "description": "The build output artifact zip to create a version from"
+        },
+        "version": {
+          "description": "The extension page version of the zip",
+          "type": "string"
+        }
+      }
+    },
+    "ArmCommonProperties": {
+      "description": "Common resource properties",
+      "properties": {
+        "id": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource Id"
+        },
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource name"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource type"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of extension"
+        }
+      },
+      "x-ms-azure-resource": true
     },
     "ErrorResponse": {
       "type": "object",
@@ -858,6 +1156,27 @@
           "readOnly": true
         }
       }
+    },
+    "ProvisioningState": {
+      "description": "The provisioning state.",
+      "enum": [
+        "NotSpecified",
+        "Accepted",
+        "Running",
+        "Ready",
+        "Creating",
+        "Created",
+        "Deleting",
+        "Deleted",
+        "Canceled",
+        "Failed",
+        "Succeeded",
+        "Updating"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
     }
   },
   "parameters": {
@@ -884,6 +1203,14 @@
       "description": "The name of the portal extension.",
       "minLength": 3,
       "maxLength": 64,
+      "x-ms-parameter-location": "method"
+    },
+    "VersionNameParameter": {
+      "name": "versionName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the version",
       "x-ms-parameter-location": "method"
     },
     "ApiVersionParameter": {
