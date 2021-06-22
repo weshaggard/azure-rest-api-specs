@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.Dynatrace
-  output-folder: $(csharp-sdks-folder)/dynatrace/management/Microsoft.Dynatrace/src/Generated
+  namespace: Dynatrace.Observability
+  output-folder: $(csharp-sdks-folder)/dynatrace/management/Dynatrace.Observability/src/Generated
 ```

@@ -11,7 +11,7 @@ python:
   payload-flattening-threshold: 2
   namespace: azure.mgmt.dynatrace
   package-name: azure-mgmt-dynatrace
-  package-version: 2021-05-01-preview
+  package-version: 2021-06-01-preview
   clear-output-folder: true
 ```
 
