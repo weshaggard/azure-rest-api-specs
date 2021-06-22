@@ -151,8 +151,13 @@
         ],
         "operationId": "PortalExtension_Get",
         "x-ms-examples": {
-          "Get a portal extension": {
-            "$ref": "examples/getPortalExtension.json"
+          "Get Extension: Declarative portal extension, Not Onboarded": {
+            "description": "Example extension registration for a Declarative Extension created and maintained in portal extension studio that not yet registered in partner center.",
+            "$ref": "./examples/getPortalExtensionDeclarativeNotOboarded.json"
+          },
+          "Get Extension: Microsoft Extension, GA": {
+            "description": "Example extension registration for an Microsoft internal extension that is registered in service tree and GA.",
+            "$ref": "./examples/getPortalExtensionMicrosoftGA.json"
           }
         },
         "description": "Gets the portal extension.",
@@ -738,6 +743,48 @@
     }
   },
   "definitions": {
+    "DeploymentConfig": {
+      "description": "Deployment config for the extension.",
+      "properties": {
+        "stageDefinition": {
+          "$ref": "#/definitions/StageDefinition"
+        }
+      }
+    },
+    "StageDefinition": {
+      "description": "Defines the deployment stages, regions to deploy to for each stage and sequence to rollout to individual stages.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "example": {
+          "stage1": [
+            "centraluseuap"
+          ],
+          "stage2": [
+            "westcentralus"
+          ],
+          "stage3": [
+            "southcentralus"
+          ],
+          "stage4": [
+            "westus"
+          ],
+          "stage5": [
+            "*"
+          ],
+          "$sequence": [
+            "stage1",
+            "stage2",
+            "stage3",
+            "stage4",
+            "stage5"
+          ]
+        }
+      }
+    },
     "PortalExtensionCompileFileResult": {
       "type": "object"
     },
@@ -778,6 +825,16 @@
         }
       }
     },
+    "PortalExtensionSourceKind": {
+      "enum": [
+        "SourceCodeZipUri"
+      ],
+      "default": "SourceCodeZipUri",
+      "x-ms-enum": {
+        "name": "PortalExtensionSourceKind",
+        "modelAsString": true
+      }
+    },
     "PortalExtensionExportKind": {
       "type": "string",
       "enum": [
@@ -796,6 +853,19 @@
       "default": "BuildArtifactZipUri",
       "x-ms-enum": {
         "name": "ExtensionVersionSourceKind",
+        "modelAsString": true
+      }
+    },
+    "PublicStatusKind": {
+      "enum": [
+        "NotOnboarded",
+        "PrivatePreview",
+        "PublicPreview",
+        "GA"
+      ],
+      "default": "NotOnboarded",
+      "x-ms-enum": {
+        "name": "PublicStatusKind",
         "modelAsString": true
       }
     },
@@ -874,34 +944,19 @@
       "type": "object",
       "description": "The portal extension properties.",
       "properties": {
-        "extensionName": {
-          "type": "string",
-          "description": "The portal runtime extension name."
-        },
-        "runtimeUri": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The portal runtime uri."
-        },
         "source": {
           "type": "object",
-          "description": "The new source code of the extension.",
           "properties": {
             "kind": {
-              "type": "string",
-              "enum": [
-                "SourceCodeZipUri"
-              ],
-              "x-ms-enum": {
-                "name": "SourceKind"
-              },
-              "description": "The kind of the source package."
+              "description": "The kind of the source package.",
+              "$ref": "#/definitions/PortalExtensionSourceKind"
             },
             "uri": {
               "type": "string",
               "description": "The uri of the source package."
             }
-          }
+          },
+          "description": "The new source code of the extension."
         },
         "apiDefinition": {
           "$ref": "#/definitions/ExtensionApiDefinition",
@@ -911,6 +966,9 @@
           "$ref": "#/definitions/ProvisioningState",
           "description": "Readonly. The provisioning state.",
           "readOnly": true
+        },
+        "deploymentConfig": {
+          "$ref": "#/definitions/DeploymentConfig"
         }
       }
     },
@@ -918,14 +976,60 @@
       "type": "object",
       "description": "The portal extension properties.",
       "properties": {
-        "extensionName": {
-          "type": "string",
-          "description": "The portal runtime extension name."
+        "deploymentConfig": {
+          "$ref": "#/definitions/DeploymentConfig"
         },
-        "runtimeUri": {
+        "icm": {
+          "type": "object",
           "readOnly": true,
+          "description": "Readonly. The ICM routing details for any live site issues for the extension set in service tree",
+          "properties": {
+            "service": {
+              "readOnly": true,
+              "description": "Readonly. The ICM service route e.g Azure Portal (IbizaFx) from ICM for the service tree icm teamId.",
+              "type": "string"
+            },
+            "team": {
+              "readOnly": true,
+              "description": "Readonly. The team under the ICM service e.g Portal from ICM for the service tree icm teamId.",
+              "type": "string"
+            },
+            "teamId": {
+              "readOnly": true,
+              "description": "Readonly. The ICM team Id from service tree.",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "service",
+            "team",
+            "teamId"
+          ]
+        },
+        "feedbackEmail": {
+          "readOnly": true,
+          "description": "Readonly. Email for customer feedback from service tree.",
+          "type": "string"
+        },
+        "serviceTreeId": {
+          "description": "Readonly. The service tree id.",
           "type": "string",
-          "description": "The portal runtime uri."
+          "readOnly": true
+        },
+        "oAuthClientId": {
+          "readOnly": true,
+          "description": "Readonly. The oAuthClientId guid from service tree.",
+          "type": "string"
+        },
+        "previewStamp": {
+          "readOnly": true,
+          "description": "Readonly. The preview stamp from service tree.",
+          "type": "string"
+        },
+        "portalName": {
+          "readOnly": true,
+          "description": "Readonly. The Azure portal extension name e.g Microsoft_Azure_Storage. Comes in from extension.pdl or extension.dx.json or is generated.",
+          "type": "string"
         },
         "apiDefinition": {
           "$ref": "#/definitions/ExtensionApiDefinition",
@@ -933,7 +1037,17 @@
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
-          "description": "Readonly. The provisioning state.",
+          "description": "The current registration or provisioning state which only appears in the response",
+          "readOnly": true
+        },
+        "publicStatus": {
+          "description": "The visibility of the extension. By default status will be NotOnboarded. Microsoft owned extensions can promote using service tree. External extensions can promote your application use partner center.",
+          "$ref": "#/definitions/PublicStatusKind",
+          "readOnly": true
+        },
+        "runtimeUri": {
+          "description": "Once provisioningState is in the terminal state of Succeeded this is the portal runtime uri for portal extensions with status of private",
+          "type": "string",
           "readOnly": true
         }
       }
@@ -948,41 +1062,16 @@
       ],
       "properties": {
         "properties": {
-          "description": "The portal extension properties.",
           "x-ms-client-flatten": true,
+          "description": "The extension properties.",
           "$ref": "#/definitions/PortalExtensionProperties"
-        },
-        "id": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Resource Id"
-        },
-        "name": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Resource name"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Resource type"
-        },
-        "location": {
-          "type": "string",
-          "description": "Resource location",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
         }
-      }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArmCommonProperties"
+        }
+      ]
     },
     "PortalExtensionRequest": {
       "type": "object",
