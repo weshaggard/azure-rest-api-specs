@@ -251,6 +251,100 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Confluent/organizations/filtered": {
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "List all Organizations filtered by the given parameters.",
+        "operationId": "Organization_ListByFilter",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupParameter"
+          },
+          {
+            "in": "body",
+            "name": "filterParameters",
+            "description": "Organization filter parameters",
+            "schema": {
+              "$ref": "#/definitions/OrganizationFilterParameters"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "location": {
+                "type": "string",
+                "description": "List operation result URI"
+              }
+            }
+          },
+          "default": {
+            "description": "Default error response.",
+            "schema": {
+              "$ref": "#/definitions/ResourceProviderDefaultErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.Confluent/operations/{operationId}": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "List all Organizations filtered by the given parameters.",
+        "operationId": "Organization_OperationResult",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/OperationIdParameter"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "location": {
+                "type": "string",
+                "description": "List operation result URI"
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OrganizationResourceListResult"
+            }
+          },
+          "default": {
+            "description": "Default error response.",
+            "schema": {
+              "$ref": "#/definitions/ResourceProviderDefaultErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Confluent/organizations/{organizationName}": {
       "get": {
         "tags": [
@@ -936,6 +1030,23 @@
         }
       }
     },
+    "OrganizationFilterParameters": {
+      "description": "Filtering parameters for listing organizations",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "type": "object",
+          "properties": {
+            "softDeleteState": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrganizationSoftDeleteState"
+              }
+            }
+          }
+        }
+      }
+    },
     "OrganizationResourceListResult": {
       "description": "The response of a list operation.",
       "type": "object",
@@ -1003,6 +1114,13 @@
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method"
+    },
+    "OperationIdParameter": {
+      "in": "path",
+      "name": "operationId",
+      "description": "Operation ID for an async operation",
+      "required": true,
+      "type": "string"
     }
   }
 }
