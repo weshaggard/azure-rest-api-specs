@@ -26,7 +26,6 @@ These are the global settings for the elastic.
 
 ```yaml
 openapi-type: arm
-openapi-subtype: rpaas
 tag: package-2020-07-01-preview
 ```
 
@@ -39,6 +38,14 @@ input-file:
   - Microsoft.Elastic/preview/2020-07-01-preview/elastic.json
 ```
 
+### Tag: package-2020-07-01
+
+These settings apply only when `--tag=package-2020-07-01` is specified on the command line.
+
+```yaml $(tag) == 'package-2020-07-01'
+input-file:
+  - Microsoft.Elastic/stable/2020-07-01/elastic.json
+```
 ---
 
 # Code Generation
@@ -50,13 +57,12 @@ This is not used by Autorest itself.
 
 ```yaml $(swagger-to-sdk)
 swagger-to-sdk:
-  - repo: azure-sdk-for-python
+  - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
-  - repo: azure-sdk-for-ruby
-    after_scripts:
-      - bundle install && rake arm:regen_all_profiles['azure_mgmt_elastic']
+  - repo: azure-resource-manager-schemas
+  - repo: azure-cli-extensions
 ```
 ## Suppression
 ```
@@ -67,8 +73,18 @@ directive:
     where:
       - $.definitions.VMIngestionDetailsResponse.properties.ingestionKey
     reason: Secrets are OK to return in a POST response.
+  - suppress: SECRET_PROPERTY
+    from:
+      - Microsoft.Elastic/stable/2020-07-01/elastic.json
+    where:
+      - $.definitions.VMIngestionDetailsResponse.properties.ingestionKey
+    reason: Secrets are OK to return in a POST response.
+
 ```
 
+## Az
+
+See configuration in [readme.az.md](./readme.az.md)
 
 ## Go
 
@@ -78,10 +94,6 @@ See configuration in [readme.go.md](./readme.go.md)
 
 See configuration in [readme.python.md](./readme.python.md)
 
-## Ruby
-
-See configuration in [readme.ruby.md](./readme.ruby.md)
-
 ## TypeScript
 
 See configuration in [readme.typescript.md](./readme.typescript.md)
@@ -89,3 +101,5 @@ See configuration in [readme.typescript.md](./readme.typescript.md)
 ## CSharp
 
 See configuration in [readme.csharp.md](./readme.csharp.md)
+
+
