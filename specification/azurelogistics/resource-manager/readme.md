@@ -39,6 +39,7 @@ These settings apply only when `--tag=package-2020-06-23-preview` is specified o
 ```yaml $(tag) == 'package-2020-06-23-preview'
 input-file:
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/workspaces.json
+  - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/applicationWorkspaces.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/operations.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shares.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/shareSubscriptions.json
@@ -46,6 +47,19 @@ input-file:
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/applicationRegistrations.json
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/eventGridFilters.json  
   - Microsoft.OpenLogisticsPlatform/preview/2020-06-23-preview/applicationRegistrationInvites.json
+# Needed when there is more than one input file
+override-info:
+  title: LogisticsManagementClient
+```
+
+### Tag: package-2021-06-24-preview
+
+These settings apply only when `--tag=package-2021-06-24-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2021-06-24-preview'
+input-file:
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/workspaces.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/applicationWorkspaces.json
 # Needed when there is more than one input file
 override-info:
   title: LogisticsManagementClient
