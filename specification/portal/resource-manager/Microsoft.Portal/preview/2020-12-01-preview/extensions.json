@@ -524,10 +524,10 @@
         "tags": [
           "PortalExtensionVersion"
         ],
-        "operationId": "PortalExtensionVersions_ListByResourceGroup",
+        "operationId": "PortalExtensionVersions_ListByExtension",
         "x-ms-examples": {
           "List all portal extensions on the resourceGroup": {
-            "$ref": "examples/listPortalExtensionVersionsByResourceGroup.json"
+            "$ref": "examples/listPortalExtensionVersionsByExtension.json"
           }
         },
         "x-ms-pageable": {
@@ -740,9 +740,349 @@
           "application/json"
         ]
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Portal/extensions/{portalExtensionName}/deployments": {
+      "get": {
+        "tags": [
+          "PortalExtensionDeployment"
+        ],
+        "operationId": "PortalExtensionDeployments_ListByExtension",
+        "x-ms-examples": {
+          "List all portal extensions on the extension": {
+            "$ref": "examples/listPortalExtensionDeploymentsByExtension.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "description": "Gets all the portal extension deployments within an extension.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Returns an array of portal extension deployments.",
+            "schema": {
+              "$ref": "#/definitions/ExtensionDeploymentListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Portal/extensions/{portalExtensionName}/deployments/{deploymentName}": {
+      "put": {
+        "tags": [
+          "PortalExtensionDeployment"
+        ],
+        "operationId": "PortalExtension_DeploymentsCreate",
+        "description": "Deploys an extension.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/DeploymentNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "deployment definition",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExtensionDeployment"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ExtensionDeployment"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create Extension Deployment: From Version Resource Id": {
+            "$ref": "./examples/createPortalExtensionDeploymentOfVersionId.json"
+          },
+          "Create Extension Deployment: Promote existing slot": {
+            "$ref": "./examples/createPortalExtensionDeploymentPromoteSlotToProdStages.json"
+          },
+          "Create Extension Deployment: Single Stage": {
+            "$ref": "./examples/createPortalExtensionDeploymentOfVersionIdToSingleStage.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "original-uri"
+        }
+      },
+      "get": {
+        "tags": [
+          "PortalExtensionDeployment"
+        ],
+        "operationId": "PortalExtension_DeploymentsGet",
+        "x-ms-examples": {
+          "Get a portal extension": {
+            "$ref": "examples/getPortalExtensionDeployment.json"
+          }
+        },
+        "description": "Gets the portal extension deployment.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/DeploymentNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response definition.",
+            "schema": {
+              "$ref": "#/definitions/ExtensionDeployment"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "delete": {
+        "tags": [
+          "PortalExtensionDeployment"
+        ],
+        "operationId": "PortalExtension_DeploymentsDelete",
+        "x-ms-examples": {
+          "Delete a portal extension": {
+            "$ref": "examples/deletePortalExtensionDeployment.json"
+          }
+        },
+        "description": "Only deletes if in a terminal state. Deletes the record only but not the actively running code.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/DeploymentNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response definition."
+          },
+          "204": {
+            "description": "OK resource was not found."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Portal/extensions/{portalExtensionName}/deployments/{deploymentName}/stop": {
+      "post": {
+        "tags": [
+          "PortalExtension_DeploymentStop"
+        ],
+        "operationId": "PortalExtension_DeploymentStop",
+        "x-ms-examples": {
+          "Compile single extension source file": {
+            "$ref": "examples/portalExtensionDeploymentStop.json"
+          }
+        },
+        "description": "Stops or cancels the deployment, if in progress.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/DeploymentNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully cancelled the default rollout."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      }
     }
   },
   "definitions": {
+    "ExtensionDeploymentListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionDeployment"
+          },
+          "description": "The array of portal extension deployments."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URL to use for getting the next set of results."
+        }
+      },
+      "description": "List of portal extension deployments."
+    },
+    "ExtensionDeployment": {
+      "description": "Extension Deployment",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArmCommonProperties"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "The extension properties.",
+          "$ref": "#/definitions/ExtensionDeploymentProperties"
+        }
+      }
+    },
+    "ExtensionDeploymentProperties": {
+      "properties": {
+        "waitDuration": {
+          "description": "Default PT24H. The wait duration after each stage of the deployment. If a only single stage is being deployed waitDuration is ignored.",
+          "type": "string",
+          "default": "PT24H"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "description": "The kind of source content for deployment",
+              "$ref": "#/definitions/DeploymentSourceKind"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "description": "The build output artifact zip to deploy."
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Readonly. The current registration or provisioning state which only appears in the response",
+          "readOnly": true
+        },
+        "nextStage": {
+          "description": "Readonly. The next stage of deployment from the deployment sequence e.g stage2",
+          "type": "string",
+          "readOnly": true
+        },
+        "stage": {
+          "description": "Optional. The name of a a single stage to deploy. If ommitted the Extensions stageDefintion is used for deployment.",
+          "type": "string"
+        }
+      }
+    },
+    "DeploymentSourceKind": {
+      "enum": [
+        "Version",
+        "CopySlot"
+      ],
+      "default": "Version",
+      "x-ms-enum": {
+        "name": "DeploymentSourceKind",
+        "modelAsString": true
+      }
+    },
     "DeploymentConfig": {
       "description": "Deployment config for the extension.",
       "properties": {
@@ -1300,6 +1640,14 @@
       "required": true,
       "type": "string",
       "description": "The name of the version",
+      "x-ms-parameter-location": "method"
+    },
+    "DeploymentNameParameter": {
+      "name": "deploymentName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the deployment",
       "x-ms-parameter-location": "method"
     },
     "ApiVersionParameter": {
