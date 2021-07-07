@@ -1001,9 +1001,284 @@
           "application/json"
         ]
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Portal/extensions/{portalExtensionName}/slots": {
+      "get": {
+        "tags": [
+          "PortalExtensionSlot"
+        ],
+        "operationId": "PortalExtensionSlots_ListByExtension",
+        "x-ms-examples": {
+          "List all portal extensions on the extension": {
+            "$ref": "examples/listPortalExtensionSlotsByExtension.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "description": "Gets all the portal extension Slots within an extension.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Returns an array of slots for the extension.",
+            "schema": {
+              "$ref": "#/definitions/ExtensionSlotListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Portal/extensions/{portalExtensionName}/slots/{slotName}": {
+      "put": {
+        "tags": [
+          "PortalExtensionSlot"
+        ],
+        "operationId": "PortalExtension_SlotsCreateOrUpdate",
+        "description": "Creates or Updates a slot",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SlotNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "The slot deployment definition",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExtensionSlot"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ExtensionSlot"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Creates a slot with content from an existing version": {
+            "$ref": "./examples/createOrUpdatePortalExtensionSlotFromExistingVersion.json"
+          },
+          "Creates a slot with content from another slot": {
+            "$ref": "./examples/createOrUpdatePortalExtensionSlotFromOtherSlot.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "original-uri"
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "PortalExtensionSlot"
+        ],
+        "operationId": "PortalExtension_SlotsGet",
+        "x-ms-examples": {
+          "Get a portal extension": {
+            "$ref": "examples/getPortalExtensionSlot.json"
+          }
+        },
+        "description": "Gets the portal extension slot.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SlotNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response definition.",
+            "schema": {
+              "$ref": "#/definitions/ExtensionSlot"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "delete": {
+        "tags": [
+          "PortalExtensionSlot"
+        ],
+        "operationId": "PortalExtension_SlotsDelete",
+        "x-ms-examples": {
+          "Delete a portal extension slot": {
+            "$ref": "examples/deletePortalExtensionSlot.json"
+          }
+        },
+        "description": "Delets a portal extension slot.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PortalExtensionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SlotNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response definition."
+          },
+          "204": {
+            "description": "OK resource was not found."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ]
+      }
     }
   },
   "definitions": {
+    "ExtensionSlot": {
+      "description": "A Portal Extension Slot",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArmCommonProperties"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "The extension slot properties.",
+          "$ref": "#/definitions/ExtensionSlotProperties"
+        }
+      }
+    },
+    "ExtensionSlotProperties": {
+      "properties": {
+        "source": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "description": "The source content kind for deployment to the slot.",
+              "$ref": "#/definitions/DeploymentSourceKind"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "description": "The source content for deployment to the slot."
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Readonly. The current registration or provisioning state which only appears in the response",
+          "readOnly": true
+        },
+        "nextStage": {
+          "description": "Readonly. The slot that will be deployed to.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ExtensionSlotListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionSlot"
+          },
+          "description": "The array of portal extension slots."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URL to use for getting the next set of results."
+        }
+      },
+      "description": "List of portal extension slots."
+    },
     "ExtensionDeploymentListResult": {
       "type": "object",
       "properties": {
@@ -1648,6 +1923,14 @@
       "required": true,
       "type": "string",
       "description": "The name of the deployment",
+      "x-ms-parameter-location": "method"
+    },
+    "SlotNameParameter": {
+      "name": "slotName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the slot",
       "x-ms-parameter-location": "method"
     },
     "ApiVersionParameter": {
