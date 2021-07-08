@@ -7,15 +7,10 @@
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: 2021-02-01-preview
+tag: 2021-06-01-preview
 ```
 
 ### Supported API Versions
-```yaml $(tag) == '2019-09-01-preview'
-input-file: 
-  - Wandisco.Fusion/preview/2019-09-01-preview/fusionGroups.json
-```
-
 ```yaml $(tag) == '2020-12-01-preview'
 input-file: 
   - Wandisco.Fusion/preview/2020-12-01-preview/fusionGroups.json
@@ -29,6 +24,21 @@ input-file:
 ```yaml $(tag) == '2021-02-01-preview'
 input-file:
   - Wandisco.Fusion/preview/2021-02-01-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-05-01-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-01-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-01-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-01-preview/operations.json
+  - Wandisco.Fusion/preview/2021-05-01-preview/commonTypes.json
+```
+
+```yaml $(tag) == '2021-06-01-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-06-01-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-06-01-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-06-01-preview/operations.json
 ```
 
 ## Language specific configurations
@@ -345,4 +355,164 @@ input-file:
 ```yaml $(tag) == '2021-02-15-preview'
 input-file:
   - Wandisco.Fusion/preview/2021-02-15-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2021-05-01-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-01-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-01-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-01-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-01-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-02-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-02-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-02-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-02-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-02-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-03-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-03-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-03-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-03-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-03-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-04-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-04-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-04-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-04-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-04-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-05-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-05-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-05-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-05-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-05-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-06-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-06-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-06-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-06-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-06-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-07-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-07-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-07-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-07-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-07-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-08-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-08-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-08-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-08-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-08-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-09-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-09-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-09-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-09-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-09-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-10-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-10-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-10-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-10-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-10-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-11-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-11-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-11-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-11-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-11-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-12-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-12-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-12-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-12-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-12-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-13-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-13-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-13-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-13-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-13-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-14-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-14-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-14-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-14-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-14-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-15-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-15-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-15-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-15-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-15-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-16-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-16-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-16-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-16-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-16-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-17-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-17-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-17-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-17-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-17-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-18-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-18-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-18-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-18-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-18-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-19-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-19-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-19-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-19-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-19-preview/operations.json
+```
+
+```yaml $(tag) == '2021-05-20-preview'
+input-file:
+  - Wandisco.Fusion/preview/2021-05-20-preview/commonTypes.json
+  - Wandisco.Fusion/preview/2021-05-20-preview/fusionGroups.json
+  - Wandisco.Fusion/preview/2021-05-20-preview/migrators.json
+  - Wandisco.Fusion/preview/2021-05-20-preview/operations.json
 ```
