@@ -207,6 +207,31 @@ input-file:
   - Wandisco.Fusion/preview/2020-12-15-preview/fusionGroups.json
 ```
 
+```yaml $(tag) == '2020-12-16-preview'
+input-file:
+  - Wandisco.Fusion/preview/2020-12-16-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2020-12-17-preview'
+input-file:
+  - Wandisco.Fusion/preview/2020-12-17-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2020-12-18-preview'
+input-file:
+  - Wandisco.Fusion/preview/2020-12-18-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2020-12-19-preview'
+input-file:
+  - Wandisco.Fusion/preview/2020-12-19-preview/fusionGroups.json
+```
+
+```yaml $(tag) == '2020-12-20-preview'
+input-file:
+  - Wandisco.Fusion/preview/2020-12-20-preview/fusionGroups.json
+```
+
 ```yaml $(tag) == '2021-01-01-preview'
 input-file:
   - Wandisco.Fusion/preview/2021-01-01-preview/fusionGroups.json
