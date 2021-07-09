@@ -223,6 +223,45 @@
         }
       }
     },
+    "/{scope}/providers/Microsoft.Diagnostics/Feedback/GeneralFeedback/provide": {
+      "post": {
+        "tags": [
+          "Feedback"
+        ],
+        "description": "Feedback request",
+        "operationId": "Scope_Feedback_Provide",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "GeneralFeedbackRequest",
+            "description": "Feedback Request body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/DiagnosticFeedbackRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Feedback Submit Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/FeedbackSubmitResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/providers/Microsoft.Diagnostics/operations": {
       "get": {
         "description": "Returns list of operations.",
@@ -686,6 +725,90 @@
     },
     "DiagnosticExecutionResponse": {
       "description": "The response from a Diagnostic Execution."
+    },
+    "DiagnosticFeedbackRequest": {
+      "type": "object",
+      "description": "Diagnostics Feedback Request Body",
+      "properties": {
+        "FeedbackType": {
+          "description": "Feedback Type",
+          "type": "string",
+          "enum": [
+            "InsightDiagnostics",
+            "AzureKB",
+            "Discovery"
+          ]
+        },
+        "FeedbackCategory": {
+          "description": "Solution Id/Result ID",
+          "type": "string"
+        },
+        "Sentiment": {
+          "description": "Feedback sentiment (Positive/Negative)",
+          "type": "string",
+          "enum": [
+            "Positive",
+            "Neutral",
+            "Negative"
+          ]
+        },
+        "Title": {
+          "description": "Feedback title",
+          "type": "string"
+        },
+        "Description": {
+          "description": "Feedback description",
+          "type": "string"
+        },
+        "CorrelationRequestId": {
+          "description": "Request id of execution",
+          "type": "string"
+        },
+        "EmailId": {
+          "description": "Optional Email Id for S2S flow",
+          "type": "string"
+        },
+        "AdditionalInformation": {
+          "description": "Additional property bag to store information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "FeedbackSubmitResponse": {
+      "description": "Feedback Submit Result Response",
+      "properties": {
+        "feedbackId": {
+          "description": "Unique Feedback id",
+          "type": "string"
+        },
+        "repairItemId": {
+          "description": "Unique Repair Item id",
+          "type": "string"
+        },
+        "feedbackType": {
+          "description": "Feedback Type",
+          "type": "string",
+          "enum": [
+            "InsightDiagnostics",
+            "AzureKB",
+            "Discovery"
+          ]
+        },
+        "feedbackCategory": {
+          "description": "Feedback category",
+          "type": "string"
+        },
+        "Error": {
+          "description": "Error response if input error",
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/ErrorResponse"
+          }
+        }
+      }
     }
   },
   "parameters": {
