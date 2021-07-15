@@ -29,7 +29,7 @@ These are the global settings for the Azure Supply Chain Services API.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2020-06-23-preview
+tag: package-2021-06-24-preview
 ```
 
 ### Tag: package-2020-06-23-preview
@@ -60,6 +60,13 @@ These settings apply only when `--tag=package-2021-06-24-preview` is specified o
 input-file:
   - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/workspaces.json
   - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/applicationWorkspaces.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/operations.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/shares.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/shareSubscriptions.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/shareInvites.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/applicationRegistrations.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/eventGridFilters.json  
+  - Microsoft.OpenLogisticsPlatform/preview/2021-06-24-preview/applicationRegistrationInvites.json
 # Needed when there is more than one input file
 override-info:
   title: LogisticsManagementClient
