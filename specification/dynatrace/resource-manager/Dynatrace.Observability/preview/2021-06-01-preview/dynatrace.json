@@ -4,6 +4,7 @@
     "title": "Dynatrace.Observability",
     "version": "2021-06-01-preview"
   },
+  "host": "management.azure.com",
   "schemes": [
     "https"
   ],
@@ -33,24 +34,20 @@
   },
   "tags": [
     {
-      "name": "Operations"
+      "name": "Monitors"
     },
     {
-      "name": "Monitors"
+      "name": "Operations"
     },
     {
       "name": "TagRules"
     }
   ],
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/listMonitoredResources": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/getAccountCredentials": {
       "post": {
-        "operationId": "MonitoredResources_List",
-        "summary": "List the resources currently being monitored by the Dynatrace monitor resource.",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
+        "operationId": "Monitors_GetAccountCredentials",
+        "summary": "Gets the user account credentials for a Monitor",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -67,7 +64,52 @@
         ],
         "responses": {
           "200": {
-            "description": "A successful response",
+            "description": "Dynatrace account API Key",
+            "schema": {
+              "$ref": "#/definitions/AccountInfoSecure"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": [
+          "Monitors"
+        ],
+        "x-ms-examples": {
+          "Monitors_GetAccountCredentials_MaximumSet_Gen": {
+            "$ref": "./examples/Monitors_GetAccountCredentials_MaximumSet_Gen.json"
+          },
+          "Monitors_GetAccountCredentials_MinimumSet_Gen": {
+            "$ref": "./examples/Monitors_GetAccountCredentials_MinimumSet_Gen.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/listMonitoredResources": {
+      "post": {
+        "operationId": "Monitors_ListMonitoredResources",
+        "summary": "List the resources currently being monitored by the Dynatrace monitor resource.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all the resources being monitored by Dynatrace monitor resource",
             "schema": {
               "$ref": "#/definitions/MonitoredResourceListResponse"
             }
@@ -79,24 +121,23 @@
             }
           }
         },
+        "tags": [
+          "Monitors"
+        ],
         "x-ms-examples": {
-          "MonitoredResources_List_MaximumSet_Gen": {
-            "$ref": "./examples/MonitoredResources_List_MaximumSet_Gen.json"
+          "Monitors_ListMonitoredResources_MaximumSet_Gen": {
+            "$ref": "./examples/Monitors_ListMonitoredResources_MaximumSet_Gen.json"
           },
-          "MonitoredResources_List_MinimumSet_Gen": {
-            "$ref": "./examples/MonitoredResources_List_MinimumSet_Gen.json"
+          "Monitors_ListMonitoredResources_MinimumSet_Gen": {
+            "$ref": "./examples/Monitors_ListMonitoredResources_MinimumSet_Gen.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/tagRules": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}": {
       "get": {
-        "operationId": "TagRulesList_list",
-        "summary": "List the tag rules for a given monitor resource.",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
+        "operationId": "Monitors_Get",
+        "summary": "Get a MonitorResource",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -113,9 +154,17 @@
         ],
         "responses": {
           "200": {
-            "description": "A successful response",
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/TagRulesListResponse"
+              "$ref": "#/definitions/MonitorResource"
             }
           },
           "default": {
@@ -125,12 +174,227 @@
             }
           }
         },
+        "tags": [
+          "Monitors"
+        ],
         "x-ms-examples": {
-          "TagRulesList_list_MaximumSet_Gen": {
-            "$ref": "./examples/TagRulesList_list_MaximumSet_Gen.json"
+          "Monitors_Get_MaximumSet_Gen": {
+            "$ref": "./examples/Monitors_Get_MaximumSet_Gen.json"
           },
-          "TagRulesList_list_MinimumSet_Gen": {
-            "$ref": "./examples/TagRulesList_list_MinimumSet_Gen.json"
+          "Monitors_Get_MinimumSet_Gen": {
+            "$ref": "./examples/Monitors_Get_MinimumSet_Gen.json"
+          }
+        }
+      },
+      "put": {
+        "operationId": "Monitors_CreateOrUpdate",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "summary": "Create a MonitorResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "required": true,
+            "description": "Resource create parameters.",
+            "schema": {
+              "$ref": "#/definitions/MonitorResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/MonitorResource"
+            }
+          },
+          "201": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "ARM create operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/MonitorResource"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": [
+          "Monitors"
+        ],
+        "x-ms-examples": {
+          "Monitors_CreateOrUpdate_MaximumSet_Gen": {
+            "$ref": "./examples/Monitors_CreateOrUpdate_MaximumSet_Gen.json"
+          },
+          "Monitors_CreateOrUpdate_MinimumSet_Gen": {
+            "$ref": "./examples/Monitors_CreateOrUpdate_MinimumSet_Gen.json"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "Monitors_Update",
+        "summary": "Update a MonitorResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "required": true,
+            "description": "The resource properties to be updated.",
+            "schema": {
+              "$ref": "#/definitions/MonitorResourceUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/MonitorResource"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": [
+          "Monitors"
+        ],
+        "x-ms-examples": {
+          "Monitors_Update_MaximumSet_Gen": {
+            "$ref": "./examples/Monitors_Update_MaximumSet_Gen.json"
+          },
+          "Monitors_Update_MinimumSet_Gen": {
+            "$ref": "./examples/Monitors_Update_MinimumSet_Gen.json"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Monitors_Delete",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "summary": "Delete a MonitorResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "Resource deleted successfully."
+          },
+          "202": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "Resource deletion accepted."
+          },
+          "204": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "Resource deleted successfully."
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": [
+          "Monitors"
+        ],
+        "x-ms-examples": {
+          "Monitors_Delete_MaximumSet_Gen": {
+            "$ref": "./examples/Monitors_Delete_MaximumSet_Gen.json"
+          },
+          "Monitors_Delete_MinimumSet_Gen": {
+            "$ref": "./examples/Monitors_Delete_MinimumSet_Gen.json"
           }
         }
       }
@@ -138,10 +402,7 @@
     "/providers/Dynatrace.Observability/operations": {
       "get": {
         "operationId": "Operations_List",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
+        "summary": "List the operations for Dynatrace.Observability",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -157,7 +418,7 @@
                 "type": "string"
               }
             },
-            "description": "Typed response envelope for ARM operations.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/OperationListResult"
             }
@@ -185,270 +446,10 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}": {
-      "get": {
-        "operationId": "Monitors_Get",
-        "summary": "Get a MonitorResource",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/MonitorNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "x-ms-client-request-id": {
-                "type": "string"
-              },
-              "x-ms-correlation-request-id": {
-                "type": "string"
-              }
-            },
-            "description": "Typed response envelope for ARM operations.",
-            "schema": {
-              "$ref": "#/definitions/MonitorResource"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "tags": [
-          "Monitors"
-        ],
-        "x-ms-examples": {
-          "Monitors_Get_MaximumSet_Gen": {
-            "$ref": "./examples/Monitors_Get_MaximumSet_Gen.json"
-          },
-          "Monitors_Get_MinimumSet_Gen": {
-            "$ref": "./examples/Monitors_Get_MinimumSet_Gen.json"
-          }
-        }
-      },
-      "put": {
-        "operationId": "Monitors_CreateOrUpdate",
-        "summary": "Create a MonitorResource",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/MonitorNameParameter"
-          },
-          {
-            "name": "resource",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/MonitorResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "x-ms-client-request-id": {
-                "type": "string"
-              },
-              "x-ms-correlation-request-id": {
-                "type": "string"
-              }
-            },
-            "description": "Typed response envelope for ARM operations.",
-            "schema": {
-              "$ref": "#/definitions/MonitorResource"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "tags": [
-          "Monitors"
-        ],
-        "x-ms-examples": {
-          "Monitors_CreateOrUpdate_MaximumSet_Gen": {
-            "$ref": "./examples/Monitors_CreateOrUpdate_MaximumSet_Gen.json"
-          },
-          "Monitors_CreateOrUpdate_MinimumSet_Gen": {
-            "$ref": "./examples/Monitors_CreateOrUpdate_MinimumSet_Gen.json"
-          }
-        }
-      },
-      "patch": {
-        "operationId": "Monitors_Update",
-        "summary": "Update a MonitorResource",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/MonitorNameParameter"
-          },
-          {
-            "name": "resource",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/MonitorResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "x-ms-client-request-id": {
-                "type": "string"
-              },
-              "x-ms-correlation-request-id": {
-                "type": "string"
-              }
-            },
-            "description": "Typed response envelope for ARM operations.",
-            "schema": {
-              "$ref": "#/definitions/MonitorResource"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "tags": [
-          "Monitors"
-        ],
-        "x-ms-examples": {
-          "Monitors_Update_MaximumSet_Gen": {
-            "$ref": "./examples/Monitors_Update_MaximumSet_Gen.json"
-          },
-          "Monitors_Update_MinimumSet_Gen": {
-            "$ref": "./examples/Monitors_Update_MinimumSet_Gen.json"
-          }
-        }
-      },
-      "delete": {
-        "operationId": "Monitors_Delete",
-        "summary": "Delete a MonitorResource",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/MonitorNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "x-ms-client-request-id": {
-                "type": "string"
-              },
-              "x-ms-correlation-request-id": {
-                "type": "string"
-              }
-            },
-            "description": "Resource deleted successfully.",
-            "schema": {
-              "$ref": "#/definitions/ArmDeletedResponse"
-            }
-          },
-          "202": {
-            "headers": {
-              "x-ms-client-request-id": {
-                "type": "string"
-              },
-              "x-ms-correlation-request-id": {
-                "type": "string"
-              }
-            },
-            "description": "Resource deletion accepted.",
-            "schema": {
-              "$ref": "#/definitions/ArmDeleteAcceptedResponse"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "tags": [
-          "Monitors"
-        ],
-        "x-ms-examples": {
-          "Monitors_Delete_MaximumSet_Gen": {
-            "$ref": "./examples/Monitors_Delete_MaximumSet_Gen.json"
-          },
-          "Monitors_Delete_MinimumSet_Gen": {
-            "$ref": "./examples/Monitors_Delete_MinimumSet_Gen.json"
-          }
-        }
-      }
-    },
     "/subscriptions/{subscriptionId}/providers/Dynatrace.Observability/monitors": {
       "get": {
-        "operationId": "Monitors_ListBySubscription",
-        "summary": "List MonitorResource resources by subscription ID",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
+        "operationId": "Monitors_ListBySubscriptionId",
+        "summary": "List all MonitorResource by subscriptionId",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -467,7 +468,7 @@
                 "type": "string"
               }
             },
-            "description": "Typed response envelope for ARM operations.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/MonitorResourceListResult"
             }
@@ -486,11 +487,11 @@
           "nextLinkName": "nextLink"
         },
         "x-ms-examples": {
-          "Monitors_ListBySubscription_MaximumSet_Gen": {
-            "$ref": "./examples/Monitors_ListBySubscription_MaximumSet_Gen.json"
+          "Monitors_ListBySubscriptionId_MaximumSet_Gen": {
+            "$ref": "./examples/Monitors_ListBySubscriptionId_MaximumSet_Gen.json"
           },
-          "Monitors_ListBySubscription_MinimumSet_Gen": {
-            "$ref": "./examples/Monitors_ListBySubscription_MinimumSet_Gen.json"
+          "Monitors_ListBySubscriptionId_MinimumSet_Gen": {
+            "$ref": "./examples/Monitors_ListBySubscriptionId_MinimumSet_Gen.json"
           }
         }
       }
@@ -499,10 +500,6 @@
       "get": {
         "operationId": "Monitors_ListByResourceGroup",
         "summary": "List MonitorResource resources by resource group",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -524,7 +521,7 @@
                 "type": "string"
               }
             },
-            "description": "Typed response envelope for ARM operations.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/MonitorResourceListResult"
             }
@@ -556,10 +553,6 @@
       "get": {
         "operationId": "TagRules_Get",
         "summary": "Get a TagRule",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -587,7 +580,7 @@
                 "type": "string"
               }
             },
-            "description": "Typed response envelope for ARM operations.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/TagRule"
             }
@@ -613,13 +606,11 @@
       },
       "put": {
         "operationId": "TagRules_CreateOrUpdate",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "summary": "Create a TagRule",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -640,6 +631,7 @@
             "name": "resource",
             "in": "body",
             "required": true,
+            "description": "Resource create parameters.",
             "schema": {
               "$ref": "#/definitions/TagRule"
             }
@@ -655,7 +647,21 @@
                 "type": "string"
               }
             },
-            "description": "Typed response envelope for ARM operations.",
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/TagRule"
+            }
+          },
+          "201": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "ARM create operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/TagRule"
             }
@@ -682,12 +688,6 @@
       "patch": {
         "operationId": "TagRules_Update",
         "summary": "Update a TagRule",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -708,8 +708,9 @@
             "name": "resource",
             "in": "body",
             "required": true,
+            "description": "The resource properties to be updated.",
             "schema": {
-              "$ref": "#/definitions/TagRule"
+              "$ref": "#/definitions/TagRuleUpdate"
             }
           }
         ],
@@ -723,7 +724,7 @@
                 "type": "string"
               }
             },
-            "description": "Typed response envelope for ARM operations.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/TagRule"
             }
@@ -749,11 +750,11 @@
       },
       "delete": {
         "operationId": "TagRules_Delete",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "summary": "Delete a TagRule",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -781,10 +782,7 @@
                 "type": "string"
               }
             },
-            "description": "Resource deleted successfully.",
-            "schema": {
-              "$ref": "#/definitions/ArmDeletedResponse"
-            }
+            "description": "Resource deleted successfully."
           },
           "202": {
             "headers": {
@@ -795,10 +793,18 @@
                 "type": "string"
               }
             },
-            "description": "Resource deletion accepted.",
-            "schema": {
-              "$ref": "#/definitions/ArmDeleteAcceptedResponse"
-            }
+            "description": "Resource deletion accepted."
+          },
+          "204": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "Resource deleted successfully."
           },
           "default": {
             "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
@@ -819,69 +825,87 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/tagRules": {
+      "get": {
+        "operationId": "TagRules_List",
+        "summary": "List all TagRule by monitorName",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "x-ms-client-request-id": {
+                "type": "string"
+              },
+              "x-ms-correlation-request-id": {
+                "type": "string"
+              }
+            },
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/TagRuleListResult"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": [
+          "TagRules"
+        ],
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "TagRules_List_MaximumSet_Gen": {
+            "$ref": "./examples/TagRules_List_MaximumSet_Gen.json"
+          },
+          "TagRules_List_MinimumSet_Gen": {
+            "$ref": "./examples/TagRules_List_MinimumSet_Gen.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "AccountInfoSecure": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "Account Id of the account this environment is linked to",
+          "readOnly": true
+        },
+        "apiKey": {
+          "$ref": "#/definitions/SecureString",
+          "description": "API Key of the user account",
+          "readOnly": true
+        },
+        "regionId": {
+          "type": "string",
+          "description": "Region in which the account is created",
+          "readOnly": true
+        }
+      },
+      "description": "Dynatrace account API Key"
+    },
     "MonitoredResourceListResponse": {
-      "type": "object",
-      "properties": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Page_MonitoredResource"
-        }
-      ]
-    },
-    "TagRulesListResponse": {
-      "type": "object",
-      "properties": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Page_MonitoringTagRules"
-        }
-      ]
-    },
-    "MonitorResource": {
-      "type": "object",
-      "properties": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/TrackedResource_DynatraceMonitorResource"
-        }
-      ],
-      "x-ms-azure-resource": true
-    },
-    "ArmDeletedResponse": {
-      "type": "object",
-      "properties": {},
-      "description": "Resource deleted successfully."
-    },
-    "ArmDeleteAcceptedResponse": {
-      "type": "object",
-      "properties": {},
-      "description": "Resource deletion accepted."
-    },
-    "MonitorResourceListResult": {
-      "type": "object",
-      "properties": {},
-      "description": "The response of a MonitorResource list operation.",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Page_MonitorResource"
-        }
-      ]
-    },
-    "TagRule": {
-      "type": "object",
-      "properties": {},
-      "description": "Tag rules for a monitor resource",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ProxyResource_MonitoringTagRules"
-        }
-      ],
-      "x-ms-azure-resource": true
-    },
-    "Page_MonitoredResource": {
       "type": "object",
       "properties": {
         "value": {
@@ -897,39 +921,21 @@
           "description": "The link to the next page of items"
         }
       },
-      "description": "Paged response",
+      "description": "List of all the resources being monitored by Dynatrace monitor resource",
       "required": [
         "value",
         "nextLink"
       ]
     },
-    "Page_MonitoringTagRules": {
+    "MonitorResource": {
       "type": "object",
       "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MonitoringTagRules"
-          },
-          "x-adl-name": "MonitoringTagRules[]",
-          "description": "The items on this page"
+        "identity": {
+          "$ref": "#/definitions/IdentityProperties",
+          "description": "Identity properties of the monitor resource."
         },
-        "nextLink": {
-          "type": "string",
-          "description": "The link to the next page of items"
-        }
-      },
-      "description": "Paged response",
-      "required": [
-        "value",
-        "nextLink"
-      ]
-    },
-    "TrackedResource_DynatraceMonitorResource": {
-      "type": "object",
-      "properties": {
         "properties": {
-          "$ref": "#/definitions/DynatraceMonitorResource",
+          "$ref": "#/definitions/MonitorProperties",
           "description": "The resource-specific properties for this resource.",
           "x-ms-mutability": [
             "read",
@@ -943,7 +949,7 @@
           "readOnly": true
         }
       },
-      "description": "Concrete tracked resource types can be created by aliasing this type using a specific property type.",
+      "description": "Dynatrace Monitor Resource",
       "required": [
         "properties"
       ],
@@ -953,7 +959,45 @@
         }
       ]
     },
-    "Page_MonitorResource": {
+    "MonitorResourceUpdate": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "monitoringStatus": {
+          "$ref": "#/definitions/MonitoringStatus",
+          "description": "Status of the monitor."
+        },
+        "marketplaceSubscriptionStatus": {
+          "$ref": "#/definitions/MarketplaceSubscriptionStatus",
+          "description": "Marketplace subscription status."
+        },
+        "dynatraceEnvironmentProperties": {
+          "$ref": "#/definitions/DynatraceEnvironmentProperties",
+          "description": "Properties of the Dynatrace environment."
+        },
+        "userInfo": {
+          "$ref": "#/definitions/UserInfo",
+          "description": "User info."
+        },
+        "planData": {
+          "$ref": "#/definitions/PlanData",
+          "description": "Billing plan information."
+        }
+      },
+      "description": "Updatable properties of MonitorResource."
+    },
+    "MonitorResourceListResult": {
       "type": "object",
       "properties": {
         "value": {
@@ -969,26 +1013,31 @@
           "description": "The link to the next page of items"
         }
       },
-      "description": "Paged response",
+      "description": "The response of a MonitorResource list operation.",
       "required": [
         "value",
         "nextLink"
       ]
     },
-    "ProxyResource_MonitoringTagRules": {
+    "TagRule": {
       "type": "object",
       "properties": {
         "properties": {
-          "$ref": "#/definitions/MonitoringTagRules",
+          "$ref": "#/definitions/MonitoringTagRulesProperties",
           "description": "The resource-specific properties for this resource.",
           "x-ms-mutability": [
             "read",
             "create"
           ],
           "x-ms-client-flatten": true
+        },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "description": "System metadata for this resource.",
+          "readOnly": true
         }
       },
-      "description": "Concrete proxy resource types can be created by aliasing this type using a specific property type.",
+      "description": "Tag rules for a monitor resource",
       "required": [
         "properties"
       ],
@@ -998,6 +1047,44 @@
         }
       ]
     },
+    "TagRuleUpdate": {
+      "type": "object",
+      "properties": {
+        "logRules": {
+          "$ref": "#/definitions/LogRules",
+          "description": "Set of rules for sending logs for the Monitor resource."
+        }
+      },
+      "description": "Updatable properties of TagRule."
+    },
+    "TagRuleListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TagRule"
+          },
+          "x-adl-name": "Dynatrace.Observability.TagRule[]",
+          "description": "The items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The link to the next page of items"
+        }
+      },
+      "description": "The response of a TagRule list operation.",
+      "required": [
+        "value",
+        "nextLink"
+      ]
+    },
+    "SecureString": {
+      "type": "string",
+      "format": "password",
+      "x-ms-secret": true,
+      "description": "Credential string."
+    },
     "MonitoredResource": {
       "type": "object",
       "properties": {
@@ -1006,7 +1093,7 @@
           "description": "The ARM id of the resource."
         },
         "sendingMetrics": {
-          "type": "boolean",
+          "$ref": "#/definitions/SendingMetricsStatus",
           "description": "Flag indicating if resource is sending metrics to Dynatrace."
         },
         "reasonForMetricsStatus": {
@@ -1014,93 +1101,39 @@
           "description": "Reason for why the resource is sending metrics (or why it is not sending)."
         },
         "sendingLogs": {
-          "type": "boolean",
+          "$ref": "#/definitions/SendingLogsStatus",
           "description": "Flag indicating if resource is sending logs to Dynatrace."
         },
         "reasonForLogsStatus": {
           "type": "string",
           "description": "Reason for why the resource is sending logs (or why it is not sending)."
         }
-      }
+      },
+      "description": "Details of resource being monitored by Dynatrace monitor resource"
     },
-    "MonitoringTagRules": {
+    "IdentityProperties": {
       "type": "object",
       "properties": {
-        "id": {
+        "principalId": {
           "type": "string",
-          "description": "ARM id of monitor resource",
+          "description": "The identity ID.",
           "readOnly": true
         },
-        "name": {
+        "tenantId": {
           "type": "string",
-          "description": "Name of monitor resource",
+          "description": "The tenant ID of resource.",
           "readOnly": true
         },
         "type": {
-          "type": "string",
-          "description": "Type of monitor resource",
-          "readOnly": true
-        },
-        "properties": {
-          "$ref": "#/definitions/MonitoringTagRulesProperties",
-          "description": "Properties for the Tag rules resource of a Monitor account."
+          "$ref": "#/definitions/ManagedIdentityTypes",
+          "description": "Type of identity"
         }
       },
-      "description": "Capture logs and metrics of Azure resources based on ARM tags."
-    },
-    "DynatraceMonitorResource": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "ARM id of monitor resource",
-          "readOnly": true
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of monitor resource",
-          "readOnly": true
-        },
-        "type": {
-          "type": "string",
-          "description": "Type of monitor resource",
-          "readOnly": true
-        },
-        "properties": {
-          "$ref": "#/definitions/MonitorProperties",
-          "description": "Properties specific to the monitor resource."
-        },
-        "identity": {
-          "$ref": "#/definitions/IdentityProperties",
-          "description": "Identity properties of the monitor resource."
-        },
-        "location": {
-          "type": "string",
-          "description": "Location of the monitor resource"
-        }
-      },
-      "description": "Details of Dynatrace Monitor Resource",
-      "required": [
-        "location"
-      ]
-    },
-    "MonitoringTagRulesProperties": {
-      "type": "object",
-      "properties": {
-        "logRules": {
-          "$ref": "#/definitions/LogRules",
-          "description": "Set of rules for sending logs for the Monitor resource."
-        }
-      }
+      "description": "Identity properties of the monitor resource."
     },
     "MonitorProperties": {
       "type": "object",
       "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "Provisioning state of the resource.",
-          "readOnly": true
-        },
         "monitoringStatus": {
           "$ref": "#/definitions/MonitoringStatus",
           "description": "Status of the monitor."
@@ -1131,75 +1164,18 @@
           "format": "int32",
           "description": "The priority of the resource.",
           "readOnly": true
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisioning state of the resource.",
+          "readOnly": true
         }
       },
       "description": "Properties specific to the monitor resource."
     },
-    "IdentityProperties": {
-      "type": "object",
-      "properties": {
-        "principalId": {
-          "type": "string",
-          "description": "The identity ID.",
-          "readOnly": true
-        },
-        "tenantId": {
-          "type": "string",
-          "description": "The tenant ID of resource.",
-          "readOnly": true
-        },
-        "type": {
-          "$ref": "#/definitions/ManagedIdentityTypes",
-          "description": "Type of idenity"
-        }
-      }
-    },
-    "LogRules": {
-      "type": "object",
-      "properties": {
-        "sendAadLogs": {
-          "type": "boolean",
-          "description": "Flag specifying if AAD logs should be sent for the Monitor resource."
-        },
-        "sendSubscriptionLogs": {
-          "type": "boolean",
-          "description": "Flag specifying if subscription logs should be sent for the Monitor resource."
-        },
-        "sendActivityLogs": {
-          "type": "boolean",
-          "description": "Flag specifying if activity logs from Azure resources should be sent for the Monitor resource."
-        },
-        "filteringTags": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/FilteringTag"
-          },
-          "x-adl-name": "FilteringTag[]",
-          "description": "List of filtering tags to be used for capturing logs. This only takes effect if SendActivityLogs flag is enabled. If empty, all resources will be captured. \nIf only Exclude action is specified, the rules will apply to the list of all available resources. If Include actions are specified, the rules will only include resources with the associated tags."
-        }
-      },
-      "description": "Set of rules for sending logs for the Monitor resource."
-    },
-    "ProvisioningState": {
-      "type": "string",
-      "enum": [
-        "Accepted",
-        "Creating",
-        "Updating",
-        "Deleting",
-        "Succeeded",
-        "Failed",
-        "Canceled",
-        "Deleted",
-        "NotSpecified"
-      ],
-      "x-ms-enum": {
-        "name": "ProvisioningState",
-        "modelAsString": true
-      }
-    },
     "MonitoringStatus": {
       "type": "string",
+      "description": "Flag specifying if the resource monitoring is enabled or disabled.",
       "enum": [
         "Enabled",
         "Disabled"
@@ -1211,6 +1187,7 @@
     },
     "MarketplaceSubscriptionStatus": {
       "type": "string",
+      "description": "Flag specifying the Marketplace Subscription Status of the resource. If payment is not made in time, the resource will go in Suspended state.",
       "enum": [
         "Active",
         "Suspended"
@@ -1238,7 +1215,8 @@
           "description": "Dynatrace Environment Information",
           "readOnly": true
         }
-      }
+      },
+      "description": "Properties of the Dynatrace environment."
     },
     "UserInfo": {
       "type": "object",
@@ -1264,7 +1242,8 @@
           "type": "string",
           "description": "Country of the user"
         }
-      }
+      },
+      "description": "User info."
     },
     "PlanData": {
       "type": "object",
@@ -1289,8 +1268,86 @@
       },
       "description": "Billing plan information."
     },
+    "MonitoringTagRulesProperties": {
+      "type": "object",
+      "properties": {
+        "logRules": {
+          "$ref": "#/definitions/LogRules",
+          "description": "Set of rules for sending logs for the Monitor resource."
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisioning state of the resource.",
+          "readOnly": true
+        }
+      },
+      "description": "Properties for the Tag rules resource of a Monitor account."
+    },
+    "LogRules": {
+      "type": "object",
+      "properties": {
+        "sendAadLogs": {
+          "$ref": "#/definitions/SendAadLogsStatus",
+          "description": "Flag specifying if AAD logs should be sent for the Monitor resource."
+        },
+        "sendSubscriptionLogs": {
+          "$ref": "#/definitions/SendSubscriptionLogsStatus",
+          "description": "Flag specifying if subscription logs should be sent for the Monitor resource."
+        },
+        "sendActivityLogs": {
+          "$ref": "#/definitions/SendActivityLogsStatus",
+          "description": "Flag specifying if activity logs from Azure resources should be sent for the Monitor resource."
+        },
+        "filteringTags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FilteringTag"
+          },
+          "x-adl-name": "FilteringTag[]",
+          "description": "List of filtering tags to be used for capturing logs. This only takes effect if SendActivityLogs flag is enabled. If empty, all resources will be captured.\nIf only Exclude action is specified, the rules will apply to the list of all available resources. If Include actions are specified, the rules will only include resources with the associated tags."
+        }
+      },
+      "description": "Set of rules for sending logs for the Monitor resource."
+    },
+    "SendingMetricsStatus": {
+      "type": "string",
+      "description": "Indicates whether metrics are being sent.",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "x-ms-enum": {
+        "name": "SendingMetricsStatus",
+        "modelAsString": true
+      }
+    },
+    "SendingLogsStatus": {
+      "type": "string",
+      "description": "Indicates whether logs are being sent.",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "x-ms-enum": {
+        "name": "SendingLogsStatus",
+        "modelAsString": true
+      }
+    },
+    "ManagedIdentityTypes": {
+      "type": "string",
+      "description": "Managed identity types",
+      "enum": [
+        "SystemAssigned",
+        "UserAssigned"
+      ],
+      "x-ms-enum": {
+        "name": "ManagedIdentityTypes",
+        "modelAsString": true
+      }
+    },
     "LiftrResourceCategories": {
       "type": "string",
+      "description": "Liftr resource category",
       "enum": [
         "Unknown",
         "MonitorLogs"
@@ -1300,14 +1357,106 @@
         "modelAsString": true
       }
     },
-    "ManagedIdentityTypes": {
+    "ProvisioningState": {
       "type": "string",
+      "description": "Provisioning state of the monitoring resource",
       "enum": [
-        "SystemAssigned",
-        "UserAssigned"
+        "Accepted",
+        "Creating",
+        "Updating",
+        "Deleting",
+        "Succeeded",
+        "Failed",
+        "Canceled",
+        "Deleted",
+        "NotSpecified"
       ],
       "x-ms-enum": {
-        "name": "ManagedIdentityTypes",
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
+    },
+    "AccountInfo": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "Account Id of the account this environment is linked to",
+          "readOnly": true
+        },
+        "regionId": {
+          "type": "string",
+          "description": "Region in which the account is created",
+          "readOnly": true
+        }
+      },
+      "description": "Dynatrace Account Information"
+    },
+    "EnvironmentInfo": {
+      "type": "object",
+      "properties": {
+        "environmentId": {
+          "type": "string",
+          "description": "Id of the environment created",
+          "readOnly": true
+        },
+        "ingestionKey": {
+          "type": "string",
+          "description": "Ingestion key of the environment",
+          "readOnly": true
+        },
+        "logsIngestionEndpoint": {
+          "type": "string",
+          "description": "Ingestion endpoint used for sending logs",
+          "readOnly": true
+        }
+      },
+      "description": "Dynatrace Environment Information"
+    },
+    "MediumString": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 50,
+      "description": "Shorthand for setting length limit."
+    },
+    "email": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$",
+      "description": "Reusable representation of an email address"
+    },
+    "SendAadLogsStatus": {
+      "type": "string",
+      "description": "Indicates whether AAD logs are being sent.",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "x-ms-enum": {
+        "name": "SendAadLogsStatus",
+        "modelAsString": true
+      }
+    },
+    "SendSubscriptionLogsStatus": {
+      "type": "string",
+      "description": "Indicates whether subscription logs are being sent.",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "x-ms-enum": {
+        "name": "SendSubscriptionLogsStatus",
+        "modelAsString": true
+      }
+    },
+    "SendActivityLogsStatus": {
+      "type": "string",
+      "description": "Indicates whether activity logs are being sent.",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "x-ms-enum": {
+        "name": "SendActivityLogsStatus",
         "modelAsString": true
       }
     },
@@ -1323,62 +1472,15 @@
           "description": "The value of the tag."
         },
         "action": {
-          "$ref": "#/definitions/TagAction"
+          "$ref": "#/definitions/TagAction",
+          "description": "Valid actions for a filtering tag. Exclusion takes priority over inclusion."
         }
       },
       "description": "The definition of a filtering tag. Filtering tags are used for capturing resources and include/exclude them from being monitored."
     },
-    "AccountInfo": {
-      "type": "object",
-      "properties": {
-        "AccountId": {
-          "type": "string",
-          "description": "Acount Id of the account this environment is linked to",
-          "readOnly": true
-        },
-        "ApiKey": {
-          "type": "string",
-          "description": "API Key of the user account",
-          "readOnly": true
-        },
-        "RegionId": {
-          "type": "string",
-          "description": "Region in which the account is created",
-          "readOnly": true
-        }
-      }
-    },
-    "EnvironmentInfo": {
-      "type": "object",
-      "properties": {
-        "EnvironmentId": {
-          "type": "string",
-          "description": "Id of the environment created",
-          "readOnly": true
-        },
-        "IngestionKey": {
-          "type": "string",
-          "description": "Ingestion key of the environment",
-          "readOnly": true
-        },
-        "LogsIngestionEndpoint": {
-          "type": "string",
-          "description": "Ingestion endpoint used for sending logs",
-          "readOnly": true
-        }
-      }
-    },
-    "MediumString": {
-      "type": "string",
-      "minLength": 5,
-      "maxLength": 50
-    },
-    "email": {
-      "type": "string",
-      "pattern": "^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$"
-    },
     "TagAction": {
       "type": "string",
+      "description": "Valid actions for a filtering tag. Exclusion takes priority over inclusion.",
       "enum": [
         "Include",
         "Exclude"
