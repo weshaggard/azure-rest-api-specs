@@ -46,6 +46,7 @@ input-file:
   - Microsoft.MobileCore/preview/2021-06-15-preview/lawfulIntercept.json
   - Microsoft.MobileCore/preview/2021-06-15-preview/networkSlice.json
   - Microsoft.MobileCore/preview/2021-06-15-preview/zone.json
+  - Microsoft.MobileCore/preview/2021-06-15-preview/cluster.json
   - Microsoft.MobileCore/preview/2021-06-15-preview/networkFunctionGroup.json
   - Microsoft.MobileCore/preview/2021-06-15-preview/dataNetwork.json
   - Microsoft.MobileCore/preview/2021-06-15-preview/sNssaIdentifier.json
