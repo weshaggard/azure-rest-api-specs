@@ -312,6 +312,62 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/mobileNetworks/{mobileNetworkName}/listSimIds": {
+      "post": {
+        "tags": [
+          "MobileNetworks"
+        ],
+        "operationId": "MobileNetwork_ListSimIds",
+        "description": "List sim ids under a mobile network.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "mobileNetworkName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the mobile network."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List sim profile ids successful.",
+            "schema": {
+              "$ref": "#/definitions/SimIdListResult"
+            }
+          },
+          "202": {
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation.",
+            "schema": {
+              "$ref": "#/definitions/SimIdListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "List sim profile ids by network": {
+            "$ref": "./examples/SimIdListByMobileNetwork.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/mobileNetworks/{mobileNetworkName}/sites/{siteName}": {
       "delete": {
         "tags": [
@@ -1116,13 +1172,6 @@
         "spectrumAccessProvider": {
           "type": "string",
           "description": "The spectrum access provider for the mobile network."
-        },
-        "sims": {
-          "type": "array",
-          "items": {
-            "$ref": "./common.json#/definitions/SubResource"
-          },
-          "description": "An array of ids of the sims associated with the mobile network resource."
         }
       }
     },
@@ -1223,6 +1272,23 @@
         }
       }
     },
+    "SimIdListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "./common.json#/definitions/SubResource"
+          },
+          "description": "A list of sim profile ids in a resource group."
+        },
+        "nextLink": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The URL to get the next set of results."
+        }
+      },
+      "description": "Response for list sim ids API service call."
+    },
     "SimListResult": {
       "properties": {
         "value": {
@@ -1238,7 +1304,7 @@
           "description": "The URL to get the next set of results."
         }
       },
-      "description": "Response for Sims API service call."
+      "description": "Response for list Sims API service call."
     },
     "Site": {
       "properties": {
