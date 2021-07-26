@@ -57,16 +57,41 @@
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ArcConnectivity/networkAccessCredentials/default": {
-      "get": {
-        "description": "Returns list of network access credentials for the resource.",
-        "operationId": "NetworkAccessCredential_List",
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{providerNamespace}/{resourceType}/{resourceName}/providers/Microsoft.ArcConnectivity/networkAccess/default": {
+      "put": {
+        "description": "Create the network access to the target resource.",
+        "operationId": "NetworkAccess_Create",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceUriParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "providerNamespace",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The namespace of the resource provider."
+          },
+          {
+            "name": "resourceType",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The resource type of the resource.",
+            "x-ms-skip-url-encoding": true
+          },
+          {
+            "name": "resourceName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource to get network access credentials"
           },
           {
             "$ref": "#/parameters/NetworkAccessCredentialExpirationParameter"
@@ -77,6 +102,75 @@
             "description": "Network access credentials",
             "schema": {
               "$ref": "#/definitions/NetworkAccessCredentials"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{providerNamespace}/{resourceType}/{resourceName}/providers/Microsoft.ArcConnectivity/networkAccessCredentials/{credentialName}": {
+      "get": {
+        "description": "Lists the network access credentials to the target resource.",
+        "operationId": "NetworkAccessCredentials_List",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "providerNamespace",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The namespace of the resource provider."
+          },
+          {
+            "name": "resourceType",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The resource type of the resource.",
+            "x-ms-skip-url-encoding": true
+          },
+          {
+            "name": "resourceName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource to get network access credentials."
+          },
+          {
+            "name": "credentialName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the credential to the target resource."
+          },
+          {
+            "$ref": "#/parameters/NetworkAccessCredentialExpirationParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Network access credentials",
+            "schema": {
+              "$ref": "#/definitions/NetworkAccessCredentials"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -139,15 +233,6 @@
     }
   },
   "parameters": {
-    "ResourceUriParameter": {
-      "name": "resourceUri",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The fully qualified Azure Resource manager identifier of the resource.",
-      "x-ms-skip-url-encoding": true,
-      "x-ms-parameter-location": "method"
-    },
     "NetworkAccessCredentialExpirationParameter": {
       "name": "expiration",
       "in": "query",
