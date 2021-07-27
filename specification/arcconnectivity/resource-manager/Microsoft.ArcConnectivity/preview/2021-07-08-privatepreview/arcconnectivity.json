@@ -57,10 +57,10 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{providerNamespace}/{resourceType}/{resourceName}/providers/Microsoft.ArcConnectivity/networkAccessCredentials": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{providerNamespace}/{resourceType}/{resourceName}/providers/Microsoft.ArcConnectivity/connections": {
       "get": {
-        "description": "List of the network access credentials to the target resource.",
-        "operationId": "NetworkAccessCredentials_List",
+        "description": "List of connections to the target resource.",
+        "operationId": "Connections_List",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -91,14 +91,14 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of the resource to get network access credentials."
+            "description": "The name of the resource."
           }
         ],
         "responses": {
           "200": {
-            "description": "Network access credentials",
+            "description": "List of connections.",
             "schema": {
-              "$ref": "#/definitions/NetworkAccessCredentials"
+              "$ref": "#/definitions/ConnectionDetailsList"
             }
           },
           "default": {
@@ -107,13 +107,17 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "deprecated": false,
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{providerNamespace}/{resourceType}/{resourceName}/providers/Microsoft.ArcConnectivity/networkAccessCredentials/default": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{providerNamespace}/{resourceType}/{resourceName}/providers/Microsoft.ArcConnectivity/connections/default": {
       "get": {
-        "description": "Gets network access credentials to the target resource.",
-        "operationId": "NetworkAccessCredentials_Get",
+        "description": "Gets the connection to the resource.",
+        "operationId": "Connections_Get",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -144,14 +148,17 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of the resource to get network access credentials."
+            "description": "The name of the resource."
+          },
+          {
+            "$ref": "#/parameters/ConnectionExpirationParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Network access credentials",
+            "description": "Connection details",
             "schema": {
-              "$ref": "#/definitions/NetworkAccessCredentials"
+              "$ref": "#/definitions/ConnectionDetails"
             }
           },
           "default": {
@@ -160,11 +167,12 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "deprecated": false
       },
       "put": {
-        "description": "Create the network access credentials to the target resource.",
-        "operationId": "NetworkAccessCredentials_Create",
+        "description": "Create or update the connections to the target resource.",
+        "operationId": "Connections_Create",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -195,17 +203,17 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of the resource to get network access credentials"
+            "description": "The name of the resource."
           },
           {
-            "$ref": "#/parameters/NetworkAccessCredentialExpirationParameter"
+            "$ref": "#/parameters/ConnectionExpirationParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Network access credentials",
+            "description": "Connection details.",
             "schema": {
-              "$ref": "#/definitions/NetworkAccessCredentials"
+              "$ref": "#/definitions/ConnectionDetails"
             }
           },
           "default": {
@@ -217,8 +225,8 @@
         }
       },
       "patch": {
-        "description": "Update the network access credentials to the target resource.",
-        "operationId": "NetworkAccessCredentials_Update",
+        "description": "Update the connections to the target resource.",
+        "operationId": "Connections_Update",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -249,18 +257,69 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of the resource to get network access credentials"
+            "description": "The name of the resource."
           },
           {
-            "$ref": "#/parameters/NetworkAccessCredentialExpirationParameter"
+            "$ref": "#/parameters/ConnectionExpirationParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Network access credentials",
+            "description": "Connection details.",
             "schema": {
-              "$ref": "#/definitions/NetworkAccessCredentials"
+              "$ref": "#/definitions/ConnectionDetails"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete the connection to the target resource.",
+        "operationId": "Connections_Delete",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "providerNamespace",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The namespace of the resource provider."
+          },
+          {
+            "name": "resourceType",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The resource type of the resource.",
+            "x-ms-skip-url-encoding": true
+          },
+          {
+            "name": "resourceName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The connection is deleted successfully."
+          },
+          "204": {
+            "description": "The connection has been deleted already."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -278,9 +337,7 @@
       "description": "HybridConnection Access Info.",
       "required": [
         "namespace",
-        "hybridConnectionName",
-        "accessToken",
-        "expiration"
+        "hybridConnectionName"
       ],
       "properties": {
         "namespace": {
@@ -309,8 +366,8 @@
         }
       }
     },
-    "NetworkAccessCredentials": {
-      "description": "The network access credentials for the target resource.",
+    "ConnectionDetails": {
+      "description": "The connection details for the target resource.",
       "type": "object",
       "required": [
         "primary"
@@ -325,10 +382,27 @@
           "$ref": "#/definitions/HybridConnectionAccessInfo"
         }
       }
+    },
+    "ConnectionDetailsList": {
+      "description": "The list of connection details.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of connection details list.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The list of connection details.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConnectionDetails"
+          }
+        }
+      }
     }
   },
   "parameters": {
-    "NetworkAccessCredentialExpirationParameter": {
+    "ConnectionExpirationParameter": {
       "name": "expiration",
       "in": "query",
       "required": false,
@@ -336,7 +410,7 @@
       "default": 600,
       "minimum": 60,
       "maximum": 600,
-      "description": "The requested expiration time in second for the access token.",
+      "description": "The requested expiration time in second for the connection.",
       "x-ms-parameter-location": "method"
     }
   }
