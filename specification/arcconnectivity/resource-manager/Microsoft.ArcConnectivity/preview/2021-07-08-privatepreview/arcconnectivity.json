@@ -172,7 +172,7 @@
       },
       "put": {
         "description": "Create or update the connections to the target resource.",
-        "operationId": "Connections_Create",
+        "operationId": "Connections_CreateOrUpdate",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -206,7 +206,13 @@
             "description": "The name of the resource."
           },
           {
-            "$ref": "#/parameters/ConnectionExpirationParameter"
+            "name": "properties",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConnectionRequest"
+            },
+            "description": "The connection request supplied to the CreateOrUpdate operation."
           }
         ],
         "responses": {
@@ -260,7 +266,13 @@
             "description": "The name of the resource."
           },
           {
-            "$ref": "#/parameters/ConnectionExpirationParameter"
+            "name": "properties",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConnectionRequest"
+            },
+            "description": "The connection request supplied to the Update operation."
           }
         ],
         "responses": {
@@ -281,6 +293,40 @@
     }
   },
   "definitions": {
+    "ConnectionRequest": {
+      "description": "The connection request for the target resource.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "properties": {
+        "systemData": {
+          "description": "System data of ConnectionRequest resource",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "x-ms-client-flatten": true
+        },
+        "properties": {
+          "description": "Connection request properties.",
+          "$ref": "#/definitions/ConnectionRequestProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "ConnectionRequestProperties": {
+      "description": "The connection details for the target resource.",
+      "type": "object",
+      "properties": {
+        "expiration": {
+          "type": "integer",
+          "default": 600,
+          "minimum": 60,
+          "maximum": 600,
+          "description": "The requested expiration time in second for the connection."
+        }
+      }
+    },
     "HybridConnectionAccessInfo": {
       "type": "object",
       "description": "HybridConnection Access Info.",
@@ -316,6 +362,27 @@
       }
     },
     "ConnectionDetails": {
+      "description": "The connection details for the target resource.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "properties": {
+        "systemData": {
+          "description": "System data of ConnectionDetails resource",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "x-ms-client-flatten": true
+        },
+        "properties": {
+          "description": "Connection properties.",
+          "$ref": "#/definitions/ConnectionProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "ConnectionProperties": {
       "description": "The connection details for the target resource.",
       "type": "object",
       "required": [
