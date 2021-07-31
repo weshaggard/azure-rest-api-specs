@@ -650,6 +650,51 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DeviceUpdate/accounts/{accountName}/privateEndpointConnections": {
+      "get": {
+        "tags": [
+          "PrivateEndpointConnections"
+        ],
+        "description": "List all private endpoint connections in a device update account.",
+        "operationId": "PrivateEndpointConnections_ListByAccount",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/AccountNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successful; the request was well-formed and received properly.",
+            "schema": {
+              "$ref": "#/definitions/PrivateEndpointConnectionListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing the reason for operation failure.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "PrivateEndpointConnectionList": {
+            "$ref": "./examples/PrivateEndpointConnections/PrivateEndpointConnection_ListByAccount.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DeviceUpdate/accounts/{accountName}/privateEndpointConnections/{privateEndpointConnectionName}": {
       "get": {
         "tags": [
@@ -792,13 +837,13 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DeviceUpdate/accounts/{accountName}/privateEndpointConnections": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DeviceUpdate/accounts/{accountName}/privateLinkResources": {
       "get": {
         "tags": [
-          "PrivateEndpointConnections"
+          "PrivateLinkResources"
         ],
-        "description": "List all private endpoint connections in a device update account.",
-        "operationId": "PrivateEndpointConnections_List",
+        "description": "List all private link resources in a device update account.",
+        "operationId": "PrivateLinkResources_ListByAccount",
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -817,7 +862,7 @@
           "200": {
             "description": "The request was successful; the request was well-formed and received properly.",
             "schema": {
-              "$ref": "#/definitions/PrivateEndpointConnectionListResult"
+              "$ref": "#/definitions/PrivateLinkResourcesListResult"
             }
           },
           "default": {
@@ -828,12 +873,57 @@
           }
         },
         "x-ms-examples": {
-          "PrivateEndpointConnectionList": {
-            "$ref": "./examples/PrivateEndpointConnections/PrivateEndpointConnection_List.json"
+          "PrivateLinkResourcesList": {
+            "$ref": "./examples/PrivateLinkResources/PrivateLinkResources_ListByAccount.json"
           }
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DeviceUpdate/accounts/{accountName}/privateLinkResources/{groupId}": {
+      "get": {
+        "tags": [
+          "PrivateLinkResources"
+        ],
+        "description": "Get the specified private link resource associated with the device update account.",
+        "operationId": "PrivateLinkResources_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/AccountNameParameter"
+          },
+          {
+            "$ref": "#/parameters/GroupIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successful; the request was well-formed and received properly.",
+            "schema": {
+              "$ref": "#/definitions/GroupIdInformation"
+            }
+          },
+          "default": {
+            "description": "Error response describing the reason for operation failure.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "PrivateLinkResourcesGet": {
+            "$ref": "./examples/PrivateLinkResources/PrivateLinkResources_Get.json"
+          }
         }
       }
     },
@@ -1118,6 +1208,78 @@
         }
       }
     },
+    "PrivateLinkResourcesListResult": {
+      "description": "The available private link resources for an Account",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "The list of available private link resources for an Account",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupIdInformation"
+          }
+        }
+      }
+    },
+    "GroupIdInformation": {
+      "description": "The group information for creating a private endpoint on an Account",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v1/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "properties": {
+        "id": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The resource identifier."
+        },
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The resource name.",
+          "pattern": "^(?![0-9]+$)(?!-)[a-zA-Z0-9-]{2,49}[a-zA-Z0-9]$"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The resource type."
+        },
+        "properties": {
+          "description": "The properties for a group information object",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/GroupIdInformationProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "GroupIdInformationProperties": {
+      "description": "The properties for a group information object",
+      "type": "object",
+      "properties": {
+        "groupId": {
+          "type": "string",
+          "description": "The group id"
+        },
+        "requiredMembers": {
+          "description": "The required members for a specific group id",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requiredZoneNames": {
+          "description": "The required DNS zones for a specific group id",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "Identity": {
       "description": "Identity for the resource.",
       "properties": {
@@ -1282,6 +1444,14 @@
       "required": true,
       "type": "string",
       "description": "The name of the private endpoint connection.",
+      "x-ms-parameter-location": "method"
+    },
+    "GroupIdParameter": {
+      "name": "groupId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The group ID of the private link resource.",
       "x-ms-parameter-location": "method"
     }
   }
