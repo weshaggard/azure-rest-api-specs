@@ -26,37 +26,131 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/providers/microsoft.SAPRP/virtualinstances": {
+    "/providers/Microsoft.SAPRP/operations": {
       "get": {
-        "description": "Returns list of virtualinstances by subscription registered within SAPRP",
-        "operationId": "virtualinstances_SubscriptionList",
+        "tags": [
+          "Operations"
+        ],
+        "description": "Lists all the available API operations for SAPEmbrace.",
+        "operationId": "Operations_List",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "virtualinstances details.",
+            "description": "Success",
             "schema": {
-              "$ref": "#/definitions/virtualinstancesResourceList"
+              "$ref": "#/definitions/OperationListResult"
+            }
+          },
+          "default": {
+            "description": "Resource provider error response about the failure.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
-        "deprecated": false,
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.SAPRP/virtualinstances": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.SAPRP/virtualinstances": {
       "get": {
-        "description": "Returns list of virtualinstances.",
-        "operationId": "virtualinstances_List",
+        "tags": [
+          "Instances"
+        ],
+        "description": "Returns list of virtualinstances by subscription registered within SAPRP.",
+        "operationId": "Instances_ListBySubscription",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/InstancesPageList"
+            }
+          },
+          "default": {
+            "description": "Resource provider error response about the failure.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SAPRP/virtualinstances": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "description": "Lists virtual instances in a resource group.",
+        "operationId": "Instances_ListByResourceGroup",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK -- list of virtual instances retrieved",
+            "schema": {
+              "$ref": "#/definitions/InstancesPageList"
+            }
+          },
+          "default": {
+            "description": "Resource provider error response about the failure.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SAPRP/virtualinstances/{instanceName}": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "description": "Get a virtual instance resource.",
+        "operationId": "Instances_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
           },
@@ -64,54 +158,40 @@
             "$ref": "#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/VirtualInstanceNameParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "virtualinstances details.",
+            "description": "OK -- virtual instance retrieved",
             "schema": {
-              "$ref": "#/definitions/virtualinstancesResourceList"
+              "$ref": "#/definitions/InstanceResource"
             }
-          }
-        },
-        "deprecated": false,
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.SAPRP/virtualinstances/{virtualinstancesName}": {
-      "get": {
-        "description": "Returns virtualinstances resource for a given name.",
-        "operationId": "virtualinstances_Get",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
           },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/virtualinstancesNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "virtualinstances details.",
+          "default": {
+            "description": "Resource provider error response about the failure.",
             "schema": {
-              "$ref": "#/definitions/virtualinstancesResource"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
       },
       "put": {
-        "description": "Create or update virtualinstances resource.",
-        "operationId": "virtualinstances_CreateAndUpdate",
+        "tags": [
+          "Instances"
+        ],
+        "description": "Create or update virtual instance resource.",
+        "operationId": "Instances_CreateOrUpdate",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
           },
@@ -119,37 +199,94 @@
             "$ref": "#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "#/parameters/VirtualInstanceNameParameter"
           },
           {
-            "$ref": "#/parameters/virtualinstancesNameParameter"
-          },
-          {
-            "name": "virtualinstancesResource",
-            "description": "virtualinstances details.",
             "in": "body",
+            "name": "InstanceResource",
+            "description": "Virtual instance resource data",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/virtualinstancesResource"
+              "$ref": "#/definitions/InstanceResource"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful.",
+            "description": "Updated -- Virtual instance updated",
             "schema": {
-              "$ref": "#/definitions/virtualinstancesResource"
+              "$ref": "#/definitions/InstanceResource"
             }
           },
-          "201": {
-            "description": "Long running operation."
+          "default": {
+            "description": "Resource provider error response about the failure.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": false
+      },
+      "patch": {
+        "tags": [
+          "Instances"
+        ],
+        "description": "Update a virtual instance resource.",
+        "operationId": "Instances_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/VirtualInstanceNameParameter"
+          },
+          {
+            "in": "body",
+            "name": "ResourcePatchRequestBody",
+            "description": "Virtual instance resource update data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResourcePatchRequestBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK -- resource updated",
+            "schema": {
+              "$ref": "#/definitions/InstanceResource"
+            }
+          },
+          "default": {
+            "description": "Resource provider error response about the failure.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       },
       "delete": {
-        "description": "Delete virtualinstances resource for a given name.",
-        "operationId": "virtualinstances_Delete",
+        "tags": [
+          "Instances"
+        ],
+        "description": "Delete a virtual instance.",
+        "operationId": "Instances_Delete",
         "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
           },
@@ -157,680 +294,442 @@
             "$ref": "#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/virtualinstancesNameParameter"
+            "$ref": "#/parameters/VirtualInstanceNameParameter"
           }
         ],
         "responses": {
+          "204": {
+            "description": "Resource not found"
+          },
           "200": {
-            "description": "Successful.",
+            "description": "OK -- resource deleted"
+          },
+          "default": {
+            "description": "Resource provider error response about the failure.",
             "schema": {
-              "$ref": "#/definitions/virtualinstancesResource"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
-        }
-      },
-      "patch": {
-        "description": "Update virtualinstances details.",
-        "operationId": "virtualinstances_Update",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/virtualinstancesNameParameter"
-          },
-          {
-            "name": "virtualinstancesPatchResource",
-            "description": "virtualinstances patch details.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/virtualinstancesPatchResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/virtualinstancesResource"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.SAPRP/virtualinstances/{virtualinstancesName}/nestedResourceType/{nestedvirtualinstancesName}": {
-      "get": {
-        "description": "Returns nested resources for a given virtualinstances name",
-        "operationId": "NestedResourceType_Get",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/virtualinstancesNameParameter"
-          },
-          {
-            "$ref": "#/parameters/NestedvirtualinstancesNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Nested Resource Types.",
-            "schema": {
-              "$ref": "#/definitions/NestedResource"
-            }
-          }
-        }
-      },
-      "put": {
-        "description": "Create or update nested resource type.",
-        "operationId": "NestedResourceType_CreateAndUpdate",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/virtualinstancesNameParameter"
-          },
-          {
-            "$ref": "#/parameters/NestedvirtualinstancesNameParameter"
-          },
-          {
-            "name": "NestedResourceType",
-            "description": "Nested Resource Type details.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/NestedResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/NestedResource"
-            }
-          }
-        }
-      },
-      "patch": {
-        "description": "Update nested resource type details.",
-        "operationId": "NestedResourceType_Update",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/virtualinstancesNameParameter"
-          },
-          {
-            "$ref": "#/parameters/NestedvirtualinstancesNameParameter"
-          },
-          {
-            "name": "NestedResourcePatchResource",
-            "description": "Nested resource patch details.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/NestedResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/NestedResource"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.SAPRP/virtualinstances/{virtualinstancesName}/nestedResourceType": {
-      "get": {
-        "description": "Returns nested resources for a given virtualinstances name",
-        "operationId": "NestedResourceType_List",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/virtualinstancesNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Nested Resource Types.",
-            "schema": {
-              "$ref": "#/definitions/NestedResourceList"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.SAPRP/extensionResourceType": {
-      "get": {
-        "description": "Returns nextension resource for a given virtualinstances name",
-        "operationId": "ExtensionResourceType_Get",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Nested Resource Types.",
-            "schema": {
-              "$ref": "#/definitions/ExtensionResourceList"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.SAPRP/extensionResourceType/{extensionvirtualinstancesName}": {
-      "get": {
-        "description": "Returns extension resources",
-        "operationId": "ExtensionResource_Get",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ExtensionvirtualinstancesNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Extension Resources.",
-            "schema": {
-              "$ref": "#/definitions/ExtensionResource"
-            }
-          }
-        }
-      },
-      "put": {
-        "description": "Create or update extension resource.",
-        "operationId": "ExtensionResource_CreateAndUpdate",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ExtensionvirtualinstancesNameParameter"
-          },
-          {
-            "name": "ExtensionResourceType",
-            "description": "ExtensionResource details.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ExtensionResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/ExtensionResource"
-            }
-          }
-        }
-      },
-      "patch": {
-        "description": "Update extension resource details.",
-        "operationId": "ExtensionResource_Update",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ExtensionvirtualinstancesNameParameter"
-          },
-          {
-            "name": "ExtensionResourcePatchResource",
-            "description": "Extension Resource patch details.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ExtensionResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/ExtensionResource"
-            }
-          }
-        }
-      }
-    },
-    "/providers/microsoft.SAPRP/operations": {
-      "get": {
-        "description": "Returns list of operations.",
-        "operationId": "Operation_List",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operation details.",
-            "schema": {
-              "$ref": "#/definitions/operationsList"
-            }
-          }
-        },
-        "deprecated": false,
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
         }
       }
     }
   },
   "definitions": {
-    "Resource": {
-      "description": "An Azure resource.",
+    "ResourceBaseProperties": {
+      "description": "Resource base properties.",
+      "type": "object",
       "properties": {
-        "id": {
-          "description": "Azure resource Id.",
-          "type": "string",
+        "provisioningState": {
+          "description": "Resource provisioning state.",
+          "$ref": "#/definitions/ResourceState",
           "readOnly": true
+        }
+      }
+    },
+    "InstancesPageList": {
+      "description": "List of resources page result.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "List of resources in current page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstanceResource"
+          }
         },
-        "name": {
-          "description": "Azure resource name.",
-          "type": "string",
-          "readOnly": true
+        "nextLink": {
+          "description": "Link to next page of resources.",
+          "type": "string"
+        }
+      }
+    },
+    "InstanceResource": {
+      "description": "Instance resource data.",
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "properties": {
+        "properties": {
+          "description": "Instance resource properties",
+          "$ref": "#/definitions/InstanceProperties",
+          "x-ms-client-flatten": true
         },
-        "type": {
-          "description": "Azure resource type.",
-          "type": "string",
-          "readOnly": true
+        "systemData": {
+          "$ref": "#/definitions/systemData"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "InstanceProperties": {
+      "description": "Instance resource properties.",
+      "required": [
+        "instanceType"
+      ],
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the resource.",
+          "maxLength": 512,
+          "type": "string"
         },
-        "location": {
-          "description": "Location of the resource.",
-          "type": "string",
-          "readOnly": false
+        "instanceType": {
+          "description": "Instance type",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ],
+          "$ref": "#/definitions/InstanceType"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResourceBaseProperties"
+        }
+      ]
+    },
+    "ParameterValue": {
+      "description": "Value type to store parameter values.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Parameter value.",
+          "type": "string"
         },
+        "secureValue": {
+          "description": "Secure parameter value.",
+          "$ref": "#/definitions/SecureValueType"
+        }
+      }
+    },
+    "SecureValueType": {
+      "description": "Secure value type to store key-vault details.",
+      "type": "object",
+      "properties": {
+        "keyVaultId": {
+          "description": "Key vault Id.",
+          "type": "string"
+        },
+        "secretName": {
+          "description": "Secret name.",
+          "maxLength": 128,
+          "type": "string"
+        }
+      }
+    },
+    "InstanceType": { 
+      "description": "Type of instances that can be created",
+      "enum": [
+        "Unknown",
+        "SAP"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "InstanceType",
+        "modelAsString": true
+      }
+    },
+    "ResourceState": {
+      "description": "SAPEmbrace resource provisioning states.",
+      "enum": [
+        "NotSpecified",
+        "Accepted",
+        "Creating",
+        "Succeeded",
+        "Failed",
+        "Canceled",
+        "Deleted",
+        "ProvisioningResources",
+        "InstallingApplication",
+        "ConfiguringApplication",
+        "MigratingApplicationData",
+        "RunningValidations",
+        "CreatingArtifacts",
+        "DeletingArtifacts"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ResourceState",
+        "modelAsString": true
+      }
+    },
+    "ResourcePatchRequestBody": {
+      "description": "Virtual instance resource patch request body.",
+      "type": "object",
+      "properties": {
         "tags": {
-          "description": "resource tags.",
+          "description": "Resource tags.",
           "type": "object",
-          "readOnly": false,
           "additionalProperties": {
             "type": "string"
           }
+        }
+      }
+    },
+    "Resource": {
+      "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+      "properties": {
+        "id": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Fully qualified resource ID for the resource."
+        },
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\""
         }
       },
       "x-ms-azure-resource": true
     },
-    "virtualinstancesResource": {
-      "type": "object",
-      "description": "virtualinstances details",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Resource"
-        }
-      ],
-      "required": [ "properties" ],
-      "properties": {
-        "properties": {
-          "type": "object",
-          "required": [ "firstName", "lastName", "group", "likesTea" ],
-          "properties": {
-            "firstName": {
-              "type": "string",
-              "description": "virtualinstances full name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "middleName": {
-              "type": "string",
-              "description": "virtualinstances middle name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "lastName": {
-              "type": "string",
-              "description": "virtualinstances last name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "group": {
-              "type": "string",
-              "description": "group like Finance, HR etc...",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "password": {
-              "type": "string",
-              "description": "password.",
-              "x-ms-secret": true
-            },
-            "identificationNumber": {
-              "type": "string",
-              "readOnly": true,
-              "description": "unique id assigned at the time of user creation"
-            },
-            "likesTea": {
-              "type": "string",
-              "description": "Gets or sets the deployment mode.",
-              "enum": [ "Yes" ],
-              "x-ms-enum": {
-                "name": "likesTea",
-                "modelAsString": true
-              }
-            }
-          }
-        }
-      }
-    },
-    "virtualinstancesPatchResource": {
-      "type": "object",
-      "description": "virtualinstances patch properties",
+    "TrackedResource": {
+      "description": "The resource model definition for an Azure Resource Manager tracked top level resource",
       "properties": {
         "tags": {
-          "description": "resource tags.",
           "type": "object",
-          "readOnly": false,
           "additionalProperties": {
             "type": "string"
-          }
-        },
-        "properties": {
-          "type": "object",
-          "properties": {
-            "group": {
-              "type": "string",
-              "description": "group like Finance, HR etc..."
-            }
-          }
-        }
-      }
-    },
-    "virtualinstancesResourceList": {
-      "description": "The list of virtualinstances.",
-      "type": "object",
-      "properties": {
-        "nextLink": {
-          "description": "The link used to get the next page of virtualinstances list.",
-          "type": "string"
-        },
-        "value": {
-          "description": "The list of recommendations.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/virtualinstancesResource"
-          }
-        }
-      }
-    },
-    "NestedResource": {
-      "type": "object",
-      "description": "Nested Resource details",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Resource"
-        }
-      ],
-      "required": [ "properties" ],
-      "properties": {
-        "properties": {
-          "properties": {
-            "firstName": {
-              "type": "string",
-              "description": "Nested Resource full name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "middleName": {
-              "type": "string",
-              "description": "Nested Resource name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "lastName": {
-              "type": "string",
-              "description": "Nested Resource name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "group": {
-              "type": "string",
-              "description": "group like Finance, HR etc...",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "identificationNumber": {
-              "type": "string",
-              "readOnly": true,
-              "description": "unique id assigned at the time of user creation"
-            },
-            "likesTea": {
-              "type": "string",
-              "description": "Gets or sets the deployment mode.",
-              "enum": [ "Yes" ],
-              "x-ms-enum": {
-                "name": "likesTea",
-                "modelAsString": true
-              }
-            }
           },
-          "required": [ "firstName", "lastName", "group", "likesTea" ],
-          "type": "object"
-        }
-      }
-    },
-    "NestedResourceList": {
-      "description": "The list of nested resources.",
-      "type": "object",
-      "properties": {
-        "nextLink": {
-          "description": "The link used to get the next page of nested resources list.",
-          "type": "string"
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ],
+          "description": "Resource tags."
         },
-        "value": {
-          "description": "The list of recommendations.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NestedResource"
-          }
-        }
-      }
-    },
-    "ExtensionResource": {
-      "type": "object",
-      "description": "Extension Resource details",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Resource"
-        }
-      ],
-      "required": [ "properties" ],
-      "properties": {
-        "properties": {
-          "properties": {
-            "firstName": {
-              "type": "string",
-              "description": "Extension Resource full name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "middleName": {
-              "type": "string",
-              "description": "Extension Resource name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "lastName": {
-              "type": "string",
-              "description": "Extension Resource name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "group": {
-              "type": "string",
-              "description": "group like Finance, HR etc...",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "identificationNumber": {
-              "type": "string",
-              "readOnly": true,
-              "description": "unique id assigned at the time of user creation"
-            },
-            "likesTea": {
-              "type": "string",
-              "description": "Gets or sets the deployment mode.",
-              "enum": [ "Yes" ],
-              "x-ms-enum": {
-                "name": "likesTea",
-                "modelAsString": true
-              }
-            }
-          },
-          "required": [ "firstName", "lastName", "group", "likesTea" ],
-          "type": "object"
-        }
-      }
-    },
-    "ExtensionResourceList": {
-      "description": "The list of extension resources.",
-      "type": "object",
-      "properties": {
-        "nextLink": {
-          "description": "The link used to get the next page of extension resources list.",
-          "type": "string"
-        },
-        "value": {
-          "description": "The list of recommendations.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ExtensionResource"
-          }
-        }
-      }
-    },
-    "operation": {
-      "description": "Operation provided by provider",
-      "properties": {
-        "name": {
+        "location": {
           "type": "string",
-          "description": "Name of the operation"
-        },
-        "display": {
-          "type": "object",
-          "description": "Properties of the operation",
-          "properties": {
-            "provider": {
-              "type": "string",
-              "description": "Provider name"
-            },
-            "resource": {
-              "type": "string",
-              "description": "Resource name"
-            },
-            "operation": {
-              "type": "string",
-              "description": "Operation name"
-            },
-            "description": {
-              "type": "string",
-              "description": "Description of the operation"
-            }
-          }
-        }
-      }
-    },
-    "operationsList": {
-      "description": "Lists the operations available.",
-      "properties": {
-        "nextLink": {
-          "description": "Url to follow for getting next page of operations.",
-          "type": "string"
-        },
-        "value": {
-          "description": "Array of operations",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/operation"
-          }
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
+          "description": "The geo-location where the resource lives"
         }
       },
-      "required": [ "value" ]
+      "required": [
+        "location"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ]
+    },
+    "ProxyResource": {
+      "description": "The resource model definition for an Azure Resource Manager proxy resource. It will have everything other than required location and tags",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ]
+    },
+    "ErrorDetail": {
+      "description": "The error detail.",
+      "properties": {
+        "code": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The error code."
+        },
+        "message": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The error message."
+        },
+        "target": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The error target."
+        },
+        "details": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorDetail"
+          },
+          "description": "The error details."
+        },
+        "additionalInfo": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorAdditionalInfo"
+          },
+          "description": "The error additional info."
+        }
+      }
+    },
+    "ErrorResponse": {
+      "title": "Error response",
+      "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+      "properties": {
+        "error": {
+          "description": "The error object.",
+          "$ref": "#/definitions/ErrorDetail"
+        }
+      }
+    },
+    "ErrorAdditionalInfo": {
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The additional info type."
+        },
+        "info": {
+          "readOnly": true,
+          "type": "object",
+          "description": "The additional info."
+        }
+      },
+      "description": "The resource management error additional info."
+    },
+    "Operation": {
+      "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the operation, as per Resource-Based Access Control (RBAC).",
+          "type": "string",
+          "readOnly": true
+        },
+        "isDataAction": {
+          "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+          "type": "boolean",
+          "readOnly": true
+        },
+        "display": {
+          "description": "Localized display information for this particular operation.",
+          "properties": {
+            "provider": {
+              "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+              "type": "string",
+              "readOnly": true
+            },
+            "resource": {
+              "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+              "type": "string",
+              "readOnly": true
+            },
+            "operation": {
+              "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+              "type": "string",
+              "readOnly": true
+            },
+            "description": {
+              "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+              "type": "string",
+              "readOnly": true
+            }
+          }
+        },
+        "origin": {
+          "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "user",
+            "system",
+            "user,system"
+          ],
+          "x-ms-enum": {
+            "name": "Origin",
+            "modelAsString": true
+          }
+        },
+        "actionType": {
+          "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "Internal"
+          ],
+          "x-ms-enum": {
+            "name": "ActionType",
+            "modelAsString": true
+          }
+        }
+      }
+    },
+    "OperationListResult": {
+      "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Operation"
+          },
+          "description": "List of operations supported by the resource provider",
+          "readOnly": true
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "URL to get the next set of operation list results (if there are any).",
+          "readOnly": true
+        }
+      }
+    },
+    "systemData": {
+      "description": "Metadata pertaining to creation and last modification of the resource.",
+      "type": "object",
+      "readOnly": true,
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "description": "The identity that created the resource."
+        },
+        "createdByType": {
+          "type": "string",
+          "description": "The type of identity that created the resource.",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
+          "x-ms-enum": {
+            "name": "createdByType",
+            "modelAsString": true
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp of resource creation (UTC)."
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "description": "The identity that last modified the resource."
+        },
+        "lastModifiedByType": {
+          "type": "string",
+          "description": "The type of identity that last modified the resource.",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
+          "x-ms-enum": {
+            "name": "createdByType",
+            "modelAsString": true
+          }
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The type of identity that last modified the resource."
+        }
+      }
     }
   },
   "parameters": {
@@ -839,46 +738,35 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The Azure subscription ID."
+      "description": "The ID of the target subscription.",
+      "minLength": 1
     },
     "ApiVersionParameter": {
       "name": "api-version",
       "in": "query",
       "required": true,
       "type": "string",
-      "description": "Client Api Version."
+      "description": "The API version to use for this operation.",
+      "minLength": 1
     },
     "ResourceGroupNameParameter": {
       "name": "resourceGroupName",
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The name of the resource group.",
+      "description": "The name of the resource group. The name is case insensitive.",
+      "pattern": "^[-\\w\\._\\(\\)]+$",
+      "minLength": 1,
+      "maxLength": 90,
       "x-ms-parameter-location": "method"
     },
-    "virtualinstancesNameParameter": {
-      "name": "virtualinstancesName",
+    "VirtualInstanceNameParameter": {
       "in": "path",
+      "name": "instanceName",
+      "description": "Virtual Instance name.",
       "required": true,
-      "type": "string",
-      "description": "The name virtualinstances resource.",
-      "x-ms-parameter-location": "method"
-    },
-    "NestedvirtualinstancesNameParameter": {
-      "name": "nestedvirtualinstancesName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The name of nested resource.",
-      "x-ms-parameter-location": "method"
-    },
-    "ExtensionvirtualinstancesNameParameter": {
-      "name": "extensionvirtualinstancesName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The name of extension resource.",
-      "x-ms-parameter-location": "method"
+      "x-ms-parameter-location": "method",
+      "type": "string"
     }
   }
 }
