@@ -70,6 +70,48 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.VideoIndexer/checkNameAvailability": {
+      "post": {
+        "tags": [
+          "NameAvailability"
+        ],
+        "operationId": "Accounts_CheckNameAvailability",
+        "description": "Checks that the Video Indexer account name is valid and is not already in use.",
+        "x-ms-examples": {
+          "Check free account name availability": {
+            "$ref": "./examples/ViAccountCheckNameAvailabilityFree.json"
+          },
+          "Check taken account name availability": {
+            "$ref": "./examples/ViAccountCheckNameAvailabilityTaken.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "accountName",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccountCheckNameAvailabilityParameters"
+            },
+            "description": "The name of the Video Indexer account. Name must be unique globally"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Operation to check the Video Indexer account name availability was successful. Ok does not indicate the name is available, the body of the response does.",
+            "schema": {
+              "$ref": "#/definitions/CheckNameAvailabilityResult"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.VideoIndexer/accounts": {
       "get": {
         "tags": [
@@ -396,19 +438,19 @@
         "operationId": "Generate_AccessToken",
         "description": "Generate an Azure Video Analyzer for Media access token.",
         "x-ms-examples": {
-          "Generate accessToken for video contributer": {
+          "Generate accessToken for video contributor": {
             "$ref": "./examples/ViGenerateVideoContributerAccessToken.json"
           },
           "Generate accessToken for video reader": {
             "$ref": "./examples/ViGenerateVideoReaderAccessToken.json"
           },
-          "Generate accessToken for project contributer": {
+          "Generate accessToken for project contributor": {
             "$ref": "./examples/ViGenerateProjectContributerAccessToken.json"
           },
           "Generate accessToken for project reader": {
             "$ref": "./examples/ViGenerateProjectReaderAccessToken.json"
           },
-          "Generate accessToken for account contributer": {
+          "Generate accessToken for account contributor": {
             "$ref": "./examples/ViGenerateAccountContributerAccessToken.json"
           },
           "Generate accessToken for account reader": {
@@ -823,6 +865,57 @@
           "readOnly": true
         }
       }
+    },
+    "AccountCheckNameAvailabilityParameters": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The VideoIndexer account name."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Microsoft.VideoIndexer/accounts"
+          ],
+          "x-ms-enum": {
+            "name": "Type",
+            "modelAsString": false
+          },
+          "description": "The type of resource, Microsoft.VideoIndexer/accounts"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "description": "The parameters used to check the availability of the Video Indexer account name."
+    },
+    "CheckNameAvailabilityResult": {
+      "properties": {
+        "nameAvailable": {
+          "readOnly": true,
+          "type": "boolean",
+          "description": "Gets a boolean value that indicates whether the name is available for you to use. If true, the name is available. If false, the name has already been taken."
+        },
+        "reason": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Gets the reason that a Video Indexer account name could not be used. The Reason element is only returned if NameAvailable is false.",
+          "enum": [
+            "AlreadyExists"
+          ],
+          "x-ms-enum": {
+            "name": "Reason",
+            "modelAsString": false
+          }
+        },
+        "message": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Gets an error message explaining the Reason value in more detail."
+        }
+      },
+      "description": "The CheckNameAvailability operation response."
     }
   },
   "parameters": {
