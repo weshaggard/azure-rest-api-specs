@@ -63,32 +63,26 @@
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ArcConnectivity/networkAccessDetails": {
+    "/{resourceUri}/providers/Microsoft.ArcConnectivity/networks": {
       "get": {
         "tags": [
-          "NetworkAccessDetails"
+          "Networks"
         ],
-        "description": "List of network access details to the target resource.",
-        "operationId": "NetworkAccessDetails_List",
+        "description": "List of networks to the target resource.",
+        "operationId": "Networks_List",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "$ref": "#/parameters/ResourceUriParameter"
-          },
-          {
-            "$ref": "#/parameters/LocationParameter"
-          },
-          {
-            "$ref": "#/parameters/NetworkAccessExpirationParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "List of network access details.",
+            "description": "List of networks.",
             "schema": {
-              "$ref": "#/definitions/NetworkAccessDetailsList"
+              "$ref": "#/definitions/NetworksList"
             }
           },
           "default": {
@@ -104,13 +98,13 @@
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ArcConnectivity/networkAccessDetails/{networkAccess}": {
+    "/{resourceUri}/providers/Microsoft.ArcConnectivity/networks/{networkId}": {
       "get": {
         "tags": [
-          "NetworkAccessDetails"
+          "Networks"
         ],
-        "description": "Gets the connection to the resource.",
-        "operationId": "NetworkAccessDetails_Get",
+        "description": "Gets the network to the resource.",
+        "operationId": "Networks_Get",
         "produces": [
           "application/json"
         ],
@@ -119,21 +113,14 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "name": "networkAccess",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "The network access."
-          },
-          {
-            "$ref": "#/parameters/NetworkAccessExpirationParameter"
+            "$ref": "#/parameters/NetworkIdParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Network access details",
+            "description": "Network details",
             "schema": {
-              "$ref": "#/definitions/NetworkAccessDetails"
+              "$ref": "#/definitions/NetworkResource"
             }
           },
           "default": {
@@ -147,10 +134,10 @@
       },
       "put": {
         "tags": [
-          "NetworkAccessDetails"
+          "Networks"
         ],
-        "description": "Create or update the connections to the target resource.",
-        "operationId": "NetworkAccessDetails_CreateOrUpdate",
+        "description": "Create or update the network to the target resource.",
+        "operationId": "Networks_CreateOrUpdate",
         "produces": [
           "application/json"
         ],
@@ -159,18 +146,23 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "name": "networkAccess",
-            "in": "path",
+            "$ref": "#/parameters/NetworkIdParameter"
+          },
+          {
+            "name": "NetworkResource",
+            "description": "Network details",
+            "in": "body",
             "required": true,
-            "type": "string",
-            "description": "The network access."
+            "schema": {
+              "$ref": "#/definitions/NetworkResource"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Network access details.",
+            "description": "Network details.",
             "schema": {
-              "$ref": "#/definitions/NetworkAccessDetails"
+              "$ref": "#/definitions/NetworkResource"
             }
           },
           "default": {
@@ -183,10 +175,10 @@
       },
       "patch": {
         "tags": [
-          "NetworkAccessDetails"
+          "Networks"
         ],
-        "description": "Update the connections to the target resource.",
-        "operationId": "NetworkAccessDetails_Update",
+        "description": "Update the network to the target resource.",
+        "operationId": "Networks_Update",
         "produces": [
           "application/json"
         ],
@@ -195,18 +187,23 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "name": "networkAccess",
-            "in": "path",
+            "$ref": "#/parameters/NetworkIdParameter"
+          },
+          {
+            "name": "NetworkResource",
+            "description": "Network details",
+            "in": "body",
             "required": true,
-            "type": "string",
-            "description": "The network access."
+            "schema": {
+              "$ref": "#/definitions/NetworkResource"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Connection details.",
+            "description": "Network resource.",
             "schema": {
-              "$ref": "#/definitions/NetworkAccessDetails"
+              "$ref": "#/definitions/NetworkResource"
             }
           },
           "default": {
@@ -219,10 +216,10 @@
       },
       "delete": {
         "tags": [
-          "NetworkAccessDetails"
+          "Networks"
         ],
         "description": "Deletes the network access to the target resource.",
-        "operationId": "NetworkAccessDetails_Delete",
+        "operationId": "Networks_Delete",
         "produces": [
           "application/json"
         ],
@@ -231,19 +228,15 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "name": "networkAccess",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "The network access."
+            "$ref": "#/parameters/NetworkIdParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "The network access is deleted successfully."
+            "description": "The network is deleted successfully."
           },
           "204": {
-            "description": "The network access has been deleted already."
+            "description": "The network has been deleted already."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -253,12 +246,50 @@
           }
         }
       }
+    },
+    "/{resourceUri}/providers/Microsoft.ArcConnectivity/networks/{networkId}/listCredentials": {
+      "post": {
+        "tags": [
+          "Networks"
+        ],
+        "description": "Gets the network access credentials to the resource.",
+        "operationId": "Networks_ListCredentials",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+          {
+            "$ref": "#/parameters/NetworkIdParameter"
+          },
+          {
+            "$ref": "#/parameters/NetworkAccessExpirationParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Network credentials",
+            "schema": {
+              "$ref": "#/definitions/NetworkAccessResource"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
     }
   },
   "definitions": {
-    "HybridConnectionAccessInfo": {
+    "NetworkAccessProperties": {
       "type": "object",
-      "description": "HybridConnection Access Info.",
+      "description": "Network access properties",
       "required": [
         "namespace",
         "hybridConnectionName"
@@ -266,32 +297,29 @@
       "properties": {
         "namespace": {
           "type": "string",
-          "description": "Azure Relay Namespace.",
+          "description": "Azure Relay namespace",
           "minLength": 1,
           "maxLength": 100,
           "pattern": "^[A-Za-z0-9-._/]+$"
         },
         "hybridConnectionName": {
           "type": "string",
-          "description": "Azure Relay Hybrid Connection name for the resource.",
-          "minLength": 1,
-          "maxLength": 300,
-          "pattern": "^[A-Za-z0-9-._/]+$"
+          "description": "Azure Relay hybrid connection name for the resource."
         },
-        "accessToken": {
+        "accessKey": {
           "type": "string",
-          "description": "Shared Access Signature.",
-          "minLength": 1,
-          "maxLength": 500
+          "description": "Shared access signature key.",
+          "readOnly": true,
+          "x-ms-secret": true
         },
         "expiration": {
           "type": "integer",
-          "description": "The experation of sasToken in unix time."
+          "description": "The experation of accessKey in unix time."
         }
       }
     },
-    "NetworkAccessDetails": {
-      "description": "The network access details for the target resource.",
+    "NetworkAccessResource": {
+      "description": "The network access for the target resource.",
       "type": "object",
       "allOf": [
         {
@@ -300,47 +328,77 @@
       ],
       "properties": {
         "systemData": {
-          "description": "System data of NetworkAccessDetails resource",
+          "description": "System data of Networks resource",
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
           "x-ms-client-flatten": true
         },
         "properties": {
-          "description": "Network access details properties.",
-          "$ref": "#/definitions/NetworkAccessDetailsProperties",
+          "description": "The primary hybridconnection access detail.",
+          "$ref": "#/definitions/NetworkAccessProperties",
           "x-ms-client-flatten": true
         }
       }
     },
-    "NetworkAccessDetailsProperties": {
-      "description": "The network access details for the target resource.",
+    "NetworkProperties": {
       "type": "object",
+      "description": "Network details",
       "required": [
-        "primary"
+        "location",
+        "namespace",
+        "resourceId"
       ],
       "properties": {
-        "primary": {
-          "description": "The primary hybridconnection access detail.",
-          "$ref": "#/definitions/HybridConnectionAccessInfo"
+        "location": {
+          "type": "string",
+          "description": "The location of target resource",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[A-Za-z0-9-._/]+$"
         },
-        "secondary": {
-          "description": "The secondary hybridconnection access detail.",
-          "$ref": "#/definitions/HybridConnectionAccessInfo"
+        "namespace": {
+          "type": "string",
+          "description": "Azure Relay namespace"
+        },
+        "resourceId": {
+          "type": "string",
+          "description": "The target resource"
         }
       }
     },
-    "NetworkAccessDetailsList": {
-      "description": "The list of network access details.",
+    "NetworkResource": {
+      "description": "The network for the target resource.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "properties": {
+        "systemData": {
+          "description": "System data of Networks resource",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "x-ms-client-flatten": true
+        },
+        "properties": {
+          "description": "The network detail.",
+          "$ref": "#/definitions/NetworkProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "NetworksList": {
+      "description": "The list of networks.",
       "type": "object",
       "properties": {
         "nextLink": {
-          "description": "The link used to get the next page of network access details list.",
+          "description": "The link used to get the next page of networks list.",
           "type": "string"
         },
         "value": {
-          "description": "The list of network access details.",
+          "description": "The list of networks.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/NetworkAccessDetails"
+            "$ref": "#/definitions/NetworkResource"
           }
         }
       }
@@ -356,15 +414,13 @@
       "x-ms-skip-url-encoding": true,
       "x-ms-parameter-location": "method"
     },
-    "LocationParameter": {
-      "name": "location",
-      "in": "query",
+    "NetworkIdParameter": {
+      "name": "networkId",
+      "in": "path",
       "required": true,
       "type": "string",
-      "description": "The requested expiration time in second for the network access.",
-      "minLength": 1,
-      "maxLength": 10,
-      "pattern": "^[A-Za-z0-9]+$",
+      "description": "The network Id.",
+      "x-ms-skip-url-encoding": true,
       "x-ms-parameter-location": "method"
     },
     "NetworkAccessExpirationParameter": {
