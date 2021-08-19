@@ -605,19 +605,73 @@
   },
   "definitions": {
     "ResourceOfPlayerNamespace": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/Resource"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "systemData": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+        "type": "object",
+        "description": "Resource of PlayerNamespace Type",
+        "properties": {
+            "Properties": {
+                "$ref": "#/definitions/PlayerNamespaceProperties"
             }
-          }
+        },
+        "required": [
+            "Properties"
+        ],
+        "allOf": [
+            {
+                "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "systemData": {
+                  "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+                }
+              }
+            }
+        ]
+    },
+    "PlayerNamespaceProperties": {
+        "type": "object",
+        "description": "Properties of PlayerNamespace Reource",
+        "properties": {
+            "PlayFabPublisherId": {
+                "type": "string",
+                "description": "PlayFab Publisher ID associated with the PlayerNamespaceResource"
+            }
+        },
+        "allOf": [
+            {
+                "$ref": "#/definitions/ResourcePropertiesBase"
+            }
+        ]
+    },
+    "ResourcePropertiesBase": {
+        "type": "object",
+        "description": "The Common Resource Properties",
+        "properties": {
+            "ProvisioningState": {
+                "$ref": "#/definitions/ProvisioningState"
+            }
+        },
+        "required": [
+            "ProvisioningState"
+        ]
+    },
+    "ProvisioningState": {
+        "type": "string",
+        "description": "The value for the provisioning state",
+        "enum": [
+            "NotSpecified",
+            "Accepted",
+            "Creating",
+            "Deleting",
+            "Canceled",
+            "Failed",
+            "Succeeded"
+        ],
+        "x-ms-enum": {
+            "name": "provisioningState",
+            "modelAsString": true
         }
-      ]
     },
     "Resource": {
       "type": "object",
@@ -657,16 +711,14 @@
         "type": "string"
       }
     },
-    "PlayerNamespace": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/BasicResourceProperties"
-        }
-      ]
-    },
     "BasicResourceProperties": {
       "type": "object",
       "properties": {
+        "provisioningState": {
+          "description": "Provisioning State",
+          "type": "string",
+          "readOnly": true
+        },
         "playFabEntityId": {
           "type": "string",
           "description": "The playfab entity ID for this title",
