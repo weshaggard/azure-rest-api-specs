@@ -27,7 +27,7 @@ These are the global settings for the applicationassessment.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2020-09-01-privatepreview
+tag: package-2021-08-01-privatepreview
 ```
 
 ### Tag: package-2020-09-01-privatepreview
@@ -44,6 +44,23 @@ input-file:
   - Microsoft.AppAssessment/preview/2020-09-01-privatepreview/migrateAssessmentsApplications.json
   - Microsoft.AppAssessment/preview/2020-09-01-privatepreview/migrateAssessmentsMachines.json
   - Microsoft.AppAssessment/preview/2020-09-01-privatepreview/migrateAssessmentsAnnotations.json
+```
+
+### Tag: package-2021-08-01-privatepreview
+
+These settings apply only when `--tag=package-2021-08-01-privatepreview` is specified on the command line.
+
+```yaml $(tag) == 'package-2021-08-01-privatepreview'
+input-file:
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/operations.json
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/osVersions.json
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/migrateProjects.json
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/migrateProjectSite.json
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/machineToAssessGroups.json
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/migrateAssessments.json
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/migrateAssessmentsApplications.json
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/migrateAssessmentsMachines.json
+  - Microsoft.AppAssessment/preview/2021-08-01-privatepreview/migrateAssessmentsAnnotations.json
 ```
 
 ---
