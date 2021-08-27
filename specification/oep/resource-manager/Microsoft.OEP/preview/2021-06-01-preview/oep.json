@@ -3,10 +3,7 @@
   "info": {
     "title": "Open Energy Platform Management Service APIs",
     "description": "Open Energy Platform Management Service APIs",
-    "version": "2021-06-01-preview",
-    "x-ms-code-generation-settings": {
-      "name": "OepClient"
-    }
+    "version": "2021-06-01-preview"
   },
   "paths": {
     "/subscriptions/{subscriptionId}/providers/Microsoft.OEP/checkNameAvailability": {
@@ -16,12 +13,6 @@
         ],
         "description": "Checks the name availability of the resource with requested resource name.",
         "operationId": "Locations_CheckNameAvailability",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -186,9 +177,6 @@
         ],
         "description": "Method that gets called if subscribed for ResourceCreationBegin trigger.",
         "operationId": "OepResources_Create",
-        "consumes": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -218,12 +206,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OepResource"
-            }
-          },
           "201": {
             "description": "The OEP resource will be created asynchronously",
             "schema": {
@@ -452,8 +434,39 @@
         }
       }
     },
+    "SystemData": {
+      "description": "Metadata pertaining to creation and last modification of the resource.",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "description": "The identity that created the resource.",
+          "type": "string"
+        },
+        "createdByType": {
+          "description": "The type of identity that created the resource. Possible values include: 'User', 'Application', 'ManagedIdentity', 'Key'.",
+          "type": "string"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "description": "The timestamp of resource creation (UTC).",
+          "type": "string"
+        },
+        "lastModifiedBy": {
+          "description": "The identity that last modified the resource.",
+          "type": "string"
+        },
+        "lastModifiedByType": {
+          "description": "The type of identity that last modified the resource. Possible values include: 'User', 'Application', 'ManagedIdentity', 'Key'.",
+          "type": "string"
+        },
+        "lastModifiedAt": {
+          "format": "date-time",
+          "description": "The type of identity that last modified the resource.",
+          "type": "string"
+        }
+      }
+    },
     "OepResource": {
-      "description": "The tracked resource object.",
       "required": [
         "location"
       ],
@@ -471,6 +484,15 @@
             }
           ]
         },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/SystemData"
+            }
+          ],
+          "readOnly": true
+        },
         "tags": {
           "description": "Resource tags.",
           "type": "object",
@@ -480,8 +502,7 @@
         },
         "location": {
           "description": "Geo-location where the resource lives.",
-          "type": "string",
-		  "x-ms-mutability": [ "create", "read" ]
+          "type": "string"
         }
       }
     },
@@ -572,6 +593,12 @@
         "user_impersonation"
       ]
     }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
   ],
   "host": "management.azure.com",
   "schemes": [
