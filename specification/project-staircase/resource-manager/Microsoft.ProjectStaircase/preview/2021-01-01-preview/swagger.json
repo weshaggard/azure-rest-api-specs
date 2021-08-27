@@ -236,6 +236,34 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.projectstaircase/solutions/{resourceName}/guidedDeployment": {
+      "post": {
+        "description": "Returns guided deployment controls for a given solutions name",
+        "operationId": "solution_GuidedDeployment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/solutionsNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Solution guided deployment.",
+            "schema": {
+              "$ref": "#/definitions/solutionsGuidedDeployment"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.projectstaircase/solutions/{resourceName}/questionnaire": {
       "post": {
         "description": "Returns nested resources for a given solutions name",
@@ -264,47 +292,6 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.projectstaircase/solutions/{resourceName}/guidedDeployment": {
-      "post": {
-        "description": "Create or update solutions resource.",
-        "operationId": "solutions_GuidedDeploymentUpdate",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/solutionsNameParameter"
-          },
-          {
-            "name": "solutionsResource",
-            "description": "solutions details.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/solutionsResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/solutionsResource"
-            }
-          },
-          "201": {
-            "description": "Long running operation."
-          }
-        }
-      }
-    },
-
     "/providers/microsoft.projectstaircase/operations": {
       "get": {
         "description": "Returns list of operations.",
@@ -455,6 +442,179 @@
           "items": {
             "$ref": "#/definitions/resourceResults"
           }
+        }
+      }
+    },
+    "solutionsGuidedDeployment": {
+      "type": "object",
+      "description": "solutions guided deployment",
+      "properties": {
+        "sections": {
+          "type": "array",
+          "description": "List of total resource costs.",
+          "items": {
+            "$ref": "#/definitions/guidedDeploymentSections"
+          }
+        }
+      }
+    },
+    "guidedDeploymentSections": {
+      "type": "object",
+      "description": "solutions guided deployment section",
+      "properties": {
+        "id": {
+          "description": "Control id.",
+          "type": "integer",
+          "readOnly": true
+        },
+        "label": {
+          "description": "Control label id",
+          "type": "string",
+          "readOnly": true
+        },
+        "visible": {
+          "description": "Control visbility",
+          "type": "boolean",
+          "readOnly": true
+        },
+        "controls": {
+          "description": "Controls in the section",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/guidedDeploymentControls"
+          }
+        }
+      }
+    },
+    "guidedDeploymentControls": {
+      "description": "Guided Deployment Control.",
+      "properties": {
+        "id": {
+          "description": "Control id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "label": {
+          "description": "Control label.",
+          "type": "string",
+          "readOnly": true
+        },
+        "controlType": {
+          "description": "Control type",
+          "type": "string",
+          "readOnly": true
+        },
+        "toolTip": {
+          "description": "Control tooltip",
+          "type": "string",
+          "readOnly": true
+        },
+        "required": {
+          "description": "Defined whether value is required or optional.",
+          "type": "boolean",
+          "readOnly": true
+        },
+        "visible": {
+          "description": "Control visibility.",
+          "type": "boolean",
+          "readOnly": true
+        },
+        "nested": {
+          "description": "Control nesting.",
+          "type": "string",
+          "readOnly": true
+        },
+        "defaultValue": {
+          "description": "Default value of control.",
+          "type": "string",
+          "readOnly": true
+        },
+        "subLabel": {
+          "description": "Control Sub Label.",
+          "type": "string",
+          "readOnly": true
+        },
+        "subToolTip": {
+          "description": "Control Sub ToolTip.",
+          "type": "string",
+          "readOnly": true
+        },
+        "subscribers": {
+          "description": "Control subscribers",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/guidedDeploymentControlsSubsribers"
+          }
+        },
+        "items": {
+          "description": "Control items",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/guidedDeploymentControlsItems"
+          }
+        },
+        "validations": {
+          "description": "Control Validation.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "guidedDeploymentControlsSubsribers": {
+      "description": "Guided Deployment Control Subscribers.",
+      "properties": {
+        "subscriberType": {
+          "description": "Subscriber Type.",
+          "type": "string",
+          "readOnly": true
+        },
+        "values": {
+          "description": "Subscriber Values.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "description": "Item text.",
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "receivers": {
+          "description": "Subscriber Receivers.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "description": "Item text.",
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "dependencies": {
+          "description": "Subscriber Dependencies.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "description": "Item text.",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      }
+    },
+    "guidedDeploymentControlsItems": {
+      "description": "Guided Deployment Control Items.",
+      "properties": {
+        "value": {
+          "description": "Item value.",
+          "type": "string",
+          "readOnly": true
+        },
+        "text": {
+          "description": "Item text.",
+          "type": "string",
+          "readOnly": true
         }
       }
     },
