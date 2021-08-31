@@ -213,7 +213,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Updated -- Virtual instance updated",
+            "description": "OK - Virtual instance created or updated successfully",
+            "schema": {
+              "$ref": "#/definitions/InstanceResource"
+            }
+          },
+          "201": {
+            "description": "Created - Virtual instance created or updated started",
             "schema": {
               "$ref": "#/definitions/InstanceResource"
             }
@@ -225,7 +231,10 @@
             }
           }
         },
-        "x-ms-long-running-operation": false
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       },
       "patch": {
         "tags": [
@@ -298,11 +307,14 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Resource not found"
-          },
           "200": {
-            "description": "OK -- resource deleted"
+            "description": "OK - Resource deleted"
+          },
+          "202": {
+            "description": "Accepted - Resource deletion in progress"
+          },
+          "204": {
+            "description": "Resourcce not found"
           },
           "default": {
             "description": "Resource provider error response about the failure.",
@@ -310,6 +322,10 @@
               "$ref": "#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         }
       }
     }
