@@ -42,6 +42,9 @@
     },
     {
       "name": "Titles"
+    },
+    {
+      "name": "Segments"
     }
   ],
   "paths": {
@@ -535,6 +538,51 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PlayFab2/titles/{resourceName}/segments/{childResourceName}": {
+      "put": {
+        "tags": [
+          "Segments"
+        ],
+        "operationId": "Segment_ResourceGroupLevelPut",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/resourceName"
+          },
+          {
+            "$ref": "#/parameters/childResourceName"
+          },
+          {
+            "$ref": "#/parameters/segmentResource"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Typed response envelope for ARM operations.",
+            "schema": {
+              "$ref": "#/definitions/ResourceOfSegment"
+            }
+          },
+          "201": {
+            "description": "Typed response envelope for ARM operations.",
+            "schema": {
+              "$ref": "#/definitions/ResourceOfSegment"
+            }
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/providers/Microsoft.PlayFab2/operations": {
       "get": {
         "description": "Returns list of operations.",
@@ -726,6 +774,226 @@
           "type": "string"
         }
       }
+    },
+    "ResourceOfSegment": {
+      "type": "object",
+      "description": "Resource of Segment Type",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/SegmentProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "SegmentProperties": {
+      "type": "object",
+      "description": "Properties of Segment Reource",
+      "properties": {
+        "playFabTitleId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "It is the ID of the title object that the segment is associated with."
+        },
+        "segmentId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "It is the ID of the segment object."
+        },
+        "description": {
+          "type": "string",
+          "readOnly": true,
+          "description": "It is the description of the filters in the segment."
+        },
+        "lastUpdateTime": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true,
+          "description": "It is the timestamp of the last update made to the segment."
+        },
+        "expr": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExprObject"
+          }
+        }
+      }
+    },
+    "ExprObject": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "pattern": "^or$"
+        },
+        "predicate": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PredicateOrObject"
+          }
+        }
+      },
+      "required": [
+        "operator",
+        "predicate"
+      ]
+    },
+    "PredicateOrObject": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "pattern": "^and$"
+        },
+        "predicate": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FirstLoginFilter"
+          }
+        }
+      }
+    },
+    "FirstLoginFilter": {
+      "type": "object",
+      "description": "The definition which can be used to filter based first login timespan relative to the current datetime.",
+      "properties": {
+        "filter": {
+          "type": "string",
+          "pattern": "^FirstLoginFilter$"
+        },
+        "comparison": {
+          "type": "string",
+          "enum": [
+            "Is Greater Than",
+            "Is Greater Than Or Equal to",
+            "Is Less Than",
+            "Is Less Than Or Equal to"
+          ],
+          "x-ms-enum": {
+            "name": "comparison_firstLoginFilter",
+            "modelAsString": false
+          }
+        },
+        "durationInMinutes": {
+          "type": "number"
+        }
+      }
+    },
+    "LastLoginFilter": {
+      "type": "object",
+      "description": "The definition which can be used to filter based on last login timespan relative to the current datetime.",
+      "properties": {
+        "filter": {
+          "type": "string",
+          "pattern": "^LastLoginFilter$"
+        },
+        "comparison": {
+          "type": "string",
+          "enum": [
+            "Is Greater Than",
+            "Is Greater Than Or Equal to",
+            "Is Less Than",
+            "Is Less Than Or Equal to"
+          ],
+          "x-ms-enum": {
+            "name": "comparison_lastLoginFilter",
+            "modelAsString": false
+          }
+        },
+        "durationInMinutes": {
+          "type": "number"
+        }
+      }
+    },
+    "FirstLoginDateFilter": {
+      "type": "object",
+      "description": "The definition which can be used to filter based on first login datetime.",
+      "properties": {
+        "filter": {
+          "type": "string",
+          "pattern": "^FirstLoginDateFilter$"
+        },
+        "comparison": {
+          "type": "string",
+          "enum": [
+            "Is Greater Than",
+            "Is Greater Than Or Equal to",
+            "Is Less Than",
+            "Is Less Than Or Equal to"
+          ],
+          "x-ms-enum": {
+            "name": "comparison_firstLoginDateFilter",
+            "modelAsString": false
+          }
+        },
+        "durationInMinutes": {
+          "type": "number"
+        }
+      }
+    },
+    "LastLoginDateFilter": {
+      "type": "object",
+      "description": "The definition which can be used to filter based on last login datetime.",
+      "properties": {
+        "filter": {
+          "type": "string",
+          "pattern": "^LastLoginDateFilter$"
+        },
+        "comparison": {
+          "type": "string",
+          "enum": [
+            "Is Greater Than",
+            "Is Greater Than Or Equal to",
+            "Is Less Than",
+            "Is Less Than Or Equal to"
+          ],
+          "x-ms-enum": {
+            "name": "comparison_lastLoginDateFilter",
+            "modelAsString": false
+          }
+        },
+        "durationInMinutes": {
+          "type": "number"
+        }
+      }
+    },
+    "UserOriginationFilter": {
+      "type": "object",
+      "description": "The definition which can be used to filter based on first login datetime.",
+      "properties": {
+        "filter": {
+          "type": "string",
+          "pattern": "^FirstLoginDateFilter$"
+        },
+        "loginProvideer": {
+          "type": "string",
+          "enum": [
+            "Unknown",
+            "PlayFab",
+            "Custom",
+            "GameCenter",
+            "GooglePlay",
+            "Steam",
+            "XBoxLive",
+            "PSN",
+            "Kongregate",
+            "Facebook",
+            "IOSDevice",
+            "Twitch",
+            "WindowsHello",
+            "GameServer",
+            "CustomServer",
+            "NintendoSwitch",
+            "FacebookInstantGames",
+            "OpenIdConnect",
+            "Apple",
+            "NintendoSwitchAccount"
+          ]
+        }
+      }
     }
   },
   "parameters": {
@@ -758,6 +1026,26 @@
       },
       "x-nullable": false,
       "description": "Title Resource",
+      "x-ms-parameter-location": "method"
+    },
+    "segmentResource": {
+      "name": "segment_resource",
+      "in": "body",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/ResourceOfSegment"
+      },
+      "x-nullable": false,
+      "description": "Segment Resource",
+      "x-ms-parameter-location": "method"
+    },
+    "childResourceName": {
+      "type": "string",
+      "name": "childResourceName",
+      "in": "path",
+      "required": true,
+      "x-nullable": true,
+      "description": "Child Resource Name",
       "x-ms-parameter-location": "method"
     }
   }
