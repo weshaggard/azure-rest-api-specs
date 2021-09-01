@@ -381,12 +381,19 @@
         },
         "kind": {
           "type": "string",
+          "description": "Indicates which kind of php workload this resource represent e.g Moodle",
+          "enum": [
+            "Moodle",
+            "Wordpress"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "WorkloadKind"
+          },
           "x-ms-mutability": [
             "read",
             "create"
-          ],
-          "description": "Metadata used by portal/tooling/etc to render different UX experiences for resources of the same type; e.g. ApiApps are a kind of Microsoft.Web/sites type.  If supported, the resource provider must validate and persist this value.",
-          "pattern": "^[-\\w\\._,\\(\\)]+$"
+          ]
         },
         "sku": {
           "description": "Php workloads SKU",
@@ -398,6 +405,10 @@
           "readOnly": true
         }
       },
+      "required": [
+        "kind",
+        "sku"
+      ],
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
@@ -428,7 +439,7 @@
           "description": "User profile used for VMs and VMSS",
           "$ref": "#/definitions/userProfile"
         },
-        "webNodesProfiled": {
+        "webNodesProfile": {
           "description": "VMSS profile",
           "$ref": "#/definitions/vmssNodesProfile"
         },
@@ -482,9 +493,9 @@
             "Failed",
             "Canceled",
             "Deleting",
-            "ProvisioningResources",
-            "InstallingApplication",
-            "ConfiguringApplication"
+            "Provisioning",
+            "Installing",
+            "Configuring"
           ],
           "type": "string",
           "x-ms-enum": {
@@ -495,7 +506,11 @@
         }
       },
       "required": [
-        "adminUserProfile"
+        "adminUserProfile",
+        "webNodesProfile",
+        "controllerProfile",
+        "siteProfile",
+        "databaseProfile"
       ]
     },
     "resourcePool": {
@@ -527,7 +542,15 @@
           "type": "string",
           "description": "SSH public key data"
         }
-      }
+      },
+      "x-ms-mutability": [
+        "create",
+        "read"
+      ],
+      "required": [
+        "userName",
+        "sshPublicKey"
+      ]
     },
     "vmssNodesProfile": {
       "type": "object",
@@ -560,7 +583,11 @@
         },
         "osImage": {
           "description": "OS image used for creating the nodes",
-          "$ref": "#/definitions/osImageProfile"
+          "$ref": "#/definitions/osImageProfile",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "osDisk": {
           "description": "OS disk details",
@@ -594,7 +621,11 @@
           "x-ms-enum": {
             "name": "DiskStorageType",
             "modelAsString": false
-          }
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "sizeInGB": {
           "type": "integer",
@@ -633,7 +664,11 @@
       "properties": {
         "vNetAddressSpace": {
           "type": "string",
-          "description": "Virtual network address space in CIDR format. Example: 172.31.0.0/16"
+          "description": "Virtual network address space in CIDR format. Example: 172.31.0.0/16",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "loadBalancerType": {
           "type": "string",
@@ -645,7 +680,11 @@
           "x-ms-enum": {
             "name": "LoadBalancerType",
             "modelAsString": false
-          }
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "loadBalancerSku": {
           "type": "string",
@@ -659,13 +698,16 @@
           "type": "integer",
           "description": "Capacity, applicable only for Application Gateway."
         }
-      }
+      },
+      "required": [
+        "loadBalancerType"
+      ]
     },
     "databaseProfile": {
       "type": "object",
       "description": "Workload database profile",
       "properties": {
-        "dbType": {
+        "type": {
           "description": "Database type",
           "type": "string",
           "enum": [
@@ -674,16 +716,24 @@
           ],
           "x-ms-enum": {
             "name": "DatabaseType",
-            "modelAsString": false
-          }
+            "modelAsString": true
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
-        "dbVersion": {
+        "version": {
           "type": "string",
           "description": "Database version"
         },
         "adminUser": {
           "type": "string",
-          "description": "Admin user name for the database resource"
+          "description": "Admin user name for the database resource",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "sku": {
           "type": "string",
@@ -711,7 +761,7 @@
           ],
           "x-ms-enum": {
             "name": "HAEnabled",
-            "modelAsString": false
+            "modelAsString": true
           }
         },
         "storageSku": {
@@ -743,7 +793,12 @@
             "modelAsString": true
           }
         }
-      }
+      },
+      "required": [
+        "type",
+        "sku",
+        "tier"
+      ]
     },
     "siteProfile": {
       "type": "object",
@@ -758,8 +813,12 @@
           ],
           "x-ms-enum": {
             "name": "WebServerType",
-            "modelAsString": false
-          }
+            "modelAsString": true
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "domainName": {
           "type": "string",
@@ -778,7 +837,10 @@
           "description": "Site Url to access the Php application",
           "readOnly": true
         }
-      }
+      },
+      "required": [
+        "domainName"
+      ]
     },
     "fileshareProfile": {
       "type": "object",
@@ -793,8 +855,12 @@
           ],
           "x-ms-enum": {
             "name": "FileShareType",
-            "modelAsString": false
-          }
+            "modelAsString": true
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "storageType": {
           "description": "File share backing storage type",
@@ -807,8 +873,12 @@
           ],
           "x-ms-enum": {
             "name": "FileShareStorageType",
-            "modelAsString": false
-          }
+            "modelAsString": true
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "shareSizeInGB": {
           "type": "integer",
@@ -816,7 +886,11 @@
           "minimum": 1,
           "maximum": 1024
         }
-      }
+      },
+      "required": [
+        "shareType",
+        "storageType"
+      ]
     },
     "applicationProfile": {
       "type": "object",
@@ -835,11 +909,19 @@
         },
         "databaseName": {
           "type": "string",
-          "description": "Database name used by the application"
+          "description": "Database name used by the application",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "databaseUser": {
           "type": "string",
-          "description": "Database user used to connect to the database"
+          "description": "Database user used to connect to the database",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         }
       }
     },
@@ -911,7 +993,11 @@
           "x-ms-enum": {
             "name": "CacheSkuType",
             "modelAsString": true
-          }
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "capacity": {
           "type": "integer",
@@ -936,23 +1022,6 @@
           }
         }
       }
-    },
-    "Capability": {
-      "description": "Capability of a SKU",
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "An invariant to describe the feature, such as SLA"
-        },
-        "value": {
-          "type": "string",
-          "description": "An invariant if the feature is measured by quantity, such as 99.9%"
-        }
-      },
-      "required": [
-        "name"
-      ]
     },
     "ResourcePatchRequestBody": {
       "description": "Resource patch request body.",
