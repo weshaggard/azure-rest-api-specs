@@ -814,186 +814,40 @@
           "readOnly": true,
           "description": "It is the timestamp of the last update made to the segment."
         },
-        "expr": {
+        "expressions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ExprObject"
-          }
-        }
-      }
-    },
-    "ExprObject": {
-      "type": "object",
-      "properties": {
-        "operator": {
-          "type": "string",
-          "pattern": "^or$"
-        },
-        "predicate": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PredicateOrObject"
+            "$ref": "#/definitions/ExpressionObject"
           }
         }
       },
       "required": [
-        "operator",
-        "predicate"
+        "expressions"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResourcePropertiesBase"
+        }
       ]
     },
-    "PredicateOrObject": {
+    "ExpressionObject": {
       "type": "object",
       "properties": {
-        "operator": {
-          "type": "string",
-          "pattern": "^and$"
-        },
-        "predicate": {
+        "anyOf": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/FirstLoginFilter"
-          }
+            "$ref": "#/definitions/AllOf"
+          },
+          "minItems": 1
         }
-      }
+      },
+      "required": [
+        "anyOf"
+      ]
     },
-    "FirstLoginFilter": {
+    "AllOf": {
       "type": "object",
-      "description": "The definition which can be used to filter based first login timespan relative to the current datetime.",
-      "properties": {
-        "filter": {
-          "type": "string",
-          "pattern": "^FirstLoginFilter$"
-        },
-        "comparison": {
-          "type": "string",
-          "enum": [
-            "Is Greater Than",
-            "Is Greater Than Or Equal to",
-            "Is Less Than",
-            "Is Less Than Or Equal to"
-          ],
-          "x-ms-enum": {
-            "name": "comparison_firstLoginFilter",
-            "modelAsString": false
-          }
-        },
-        "durationInMinutes": {
-          "type": "number"
-        }
-      }
-    },
-    "LastLoginFilter": {
-      "type": "object",
-      "description": "The definition which can be used to filter based on last login timespan relative to the current datetime.",
-      "properties": {
-        "filter": {
-          "type": "string",
-          "pattern": "^LastLoginFilter$"
-        },
-        "comparison": {
-          "type": "string",
-          "enum": [
-            "Is Greater Than",
-            "Is Greater Than Or Equal to",
-            "Is Less Than",
-            "Is Less Than Or Equal to"
-          ],
-          "x-ms-enum": {
-            "name": "comparison_lastLoginFilter",
-            "modelAsString": false
-          }
-        },
-        "durationInMinutes": {
-          "type": "number"
-        }
-      }
-    },
-    "FirstLoginDateFilter": {
-      "type": "object",
-      "description": "The definition which can be used to filter based on first login datetime.",
-      "properties": {
-        "filter": {
-          "type": "string",
-          "pattern": "^FirstLoginDateFilter$"
-        },
-        "comparison": {
-          "type": "string",
-          "enum": [
-            "Is Greater Than",
-            "Is Greater Than Or Equal to",
-            "Is Less Than",
-            "Is Less Than Or Equal to"
-          ],
-          "x-ms-enum": {
-            "name": "comparison_firstLoginDateFilter",
-            "modelAsString": false
-          }
-        },
-        "durationInMinutes": {
-          "type": "number"
-        }
-      }
-    },
-    "LastLoginDateFilter": {
-      "type": "object",
-      "description": "The definition which can be used to filter based on last login datetime.",
-      "properties": {
-        "filter": {
-          "type": "string",
-          "pattern": "^LastLoginDateFilter$"
-        },
-        "comparison": {
-          "type": "string",
-          "enum": [
-            "Is Greater Than",
-            "Is Greater Than Or Equal to",
-            "Is Less Than",
-            "Is Less Than Or Equal to"
-          ],
-          "x-ms-enum": {
-            "name": "comparison_lastLoginDateFilter",
-            "modelAsString": false
-          }
-        },
-        "durationInMinutes": {
-          "type": "number"
-        }
-      }
-    },
-    "UserOriginationFilter": {
-      "type": "object",
-      "description": "The definition which can be used to filter based on first login datetime.",
-      "properties": {
-        "filter": {
-          "type": "string",
-          "pattern": "^FirstLoginDateFilter$"
-        },
-        "loginProvideer": {
-          "type": "string",
-          "enum": [
-            "Unknown",
-            "PlayFab",
-            "Custom",
-            "GameCenter",
-            "GooglePlay",
-            "Steam",
-            "XBoxLive",
-            "PSN",
-            "Kongregate",
-            "Facebook",
-            "IOSDevice",
-            "Twitch",
-            "WindowsHello",
-            "GameServer",
-            "CustomServer",
-            "NintendoSwitch",
-            "FacebookInstantGames",
-            "OpenIdConnect",
-            "Apple",
-            "NintendoSwitchAccount"
-          ]
-        }
-      }
+      "additionalProperties": true
     }
   },
   "parameters": {
