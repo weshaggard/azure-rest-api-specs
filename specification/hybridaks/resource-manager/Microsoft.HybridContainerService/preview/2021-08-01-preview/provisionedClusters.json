@@ -155,6 +155,9 @@
             "200": {
               "description": "Deletes the provisionedClusters resource."
             },
+            "204": {
+              "description": "No content"
+            },
             "default": {
               "description": "Error response describing why the operation failed.",
               "schema": {
@@ -364,24 +367,12 @@
     "definitions": {
       "provisionedClustersProperties": {
         "type": "object",
+        "x-ms-client-flatten": true,
         "properties": {
           "addon": {
             "type": "object",
             "additionalProperties": {
-              "properties": {
-                "config": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "description": "Config - Key-value pairs for configuring an add-on.",
-                  "type": "object"
-                },
-                "enabled": {
-                  "description": "Enabled - Whether the add-on is enabled or not.",
-                  "type": "boolean"
-                }
-              },
-              "type": "object"
+              "$ref": "#/definitions/AddonConfigs"
             },
             "description": "AddonProfiles - Profile of managed cluster add-on."
           },
@@ -815,20 +806,7 @@
               "addonStatus": {
                 "type": "object",
                 "additionalProperties": {
-                  "properties": {
-                    "errorMessage": {
-                      "description": "ErrorMessage will be set in the event that there is a terminal problem reconciling the AddOn and will contain a more verbose string suitable for logging and human consumption.",
-                      "type": "string"
-                    },
-                    "phase": {
-                      "description": "Phase represents the current phase of cluster actuation. E.g. Pending, Running, Terminating, Failed etc.",
-                      "type": "string"
-                    },
-                    "ready": {
-                      "type": "boolean"
-                    }
-                  },
-                  "type": "object"
+                  "$ref": "#/definitions/AddonStatus"
                 },
                 "description": "AddonStatus - Status of Addons"
               },
@@ -912,6 +890,9 @@
             },
             "description": "Resource tags"
           },
+          "systemData": {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+          },
           "extendedLocation": {
             "type": "object",
             "properties": {
@@ -955,7 +936,42 @@
           }
         }
       },
+      "AddonConfigs": {
+        "properties": {
+          "config": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Config - Key-value pairs for configuring an add-on.",
+            "type": "object"
+          },
+          "enabled": {
+            "description": "Enabled - Whether the add-on is enabled or not.",
+            "type": "boolean"
+          }
+        },
+        "type": "object",
+        "description": "Addon configurations"
+      },
+      "AddonStatus": {
+        "properties": {
+          "errorMessage": {
+            "description": "ErrorMessage will be set in the event that there is a terminal problem reconciling the AddOn and will contain a more verbose string suitable for logging and human consumption.",
+            "type": "string"
+          },
+          "phase": {
+            "description": "Phase represents the current phase of cluster actuation. E.g. Pending, Running, Terminating, Failed etc.",
+            "type": "string"
+          },
+          "ready": {
+            "type": "boolean"
+          }
+        },
+        "type": "object",
+        "description": "Status of the addon"
+      },
       "CredentialResults": {
+        "type": "object",
         "properties": {
           "kubeconfigs": {
             "type": "array",
