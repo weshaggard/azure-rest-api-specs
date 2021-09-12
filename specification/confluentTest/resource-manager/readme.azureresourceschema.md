@@ -21,7 +21,7 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.Confluent/stable/2020-03-01/confluent.json
+  - Microsoft.Confluent/stable/2020-03-01/confluentTest.json
 
 ```
 
@@ -43,6 +43,6 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.Confluent/preview/2021-03-01-preview/confluent.json
+  - Microsoft.Confluent/preview/2021-03-01-preview/confluentTest.json
 
 ```
