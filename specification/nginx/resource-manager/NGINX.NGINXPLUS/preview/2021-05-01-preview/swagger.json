@@ -303,7 +303,7 @@
           "NginxConfiguration"
         ],
         "summary": "Create or update the Nginx configuraton for given Nginx deployment",
-        "operationId": "Configurations_Create",
+        "operationId": "Configurations_CreateOrUpdate",
         "consumes": [
           "application/json"
         ],
@@ -434,6 +434,7 @@
         "tags": [
           "NginxConfiguration"
         ],
+        "summary": "List configurations of given Nginx deployment",
         "operationId": "Configurations_List",
         "produces": [
           "application/json"
@@ -442,18 +443,21 @@
           {
             "in": "path",
             "name": "subscriptionId",
+            "description": "The Id of subscription",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "resourceGroupName",
+            "description": "The name of resource group",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "deploymentName",
+            "description": "The name of targeted Nginx deployment",
             "required": true,
             "type": "string"
           }
@@ -638,7 +642,8 @@
               "$ref": "#/definitions/ResourceProviderDefaultErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-long-running-operation": true
       },
       "delete": {
         "tags": [
@@ -917,6 +922,125 @@
         }
       }
     },
+    "NginxConfigurationListResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NginxConfiguration"
+          }
+        },
+        "nextLink": {
+          "type": "string"
+        }
+      }
+    },
+    "NginxPrivateIPAllocationMethod": {
+      "enum": [
+        "Static",
+        "Dynamic"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "modelAsString": true,
+        "name": "NginxPrivateIPAllocationMethod"
+      }
+    },
+    "SubNet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+        },
+    "PublicIPAddress": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "NginxFrontendIPConfiguration": {
+      "type": "object",
+      "properties": {
+        "privateIPAddress": {
+          "type": "string",
+          "readOnly": true
+        },
+        "privateIPAllocationMethod": {
+          "$ref": "#/definitions/NginxPrivateIPAllocationMethod"
+        },
+        "subnet": {
+          "$ref": "#/definitions/SubNet"
+        },
+        "publicIPAddress": {
+          "$ref": "#/definitions/PublicIPAddress"
+        }
+      }
+    },
+    "NginxNetworkInterfaceConfiguration": {
+          "type": "object",
+      "properties": {
+        "subNet": {
+          "$ref": "#/definitions/SubNet"
+          }
+      }
+    },
+    "NginxNetworkProfile": {
+      "type": "object",
+      "properties": {
+        "frontEndIPConfiguration": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NginxFrontendIPConfiguration"
+          }
+        },
+        "networkInterfaceConfiguration": {
+          "$ref": "#/definitions/NginxNetworkInterfaceConfiguration"
+        }
+      }
+    },
+    "NginxDeploymentInternalMetadata": {
+      "type": "object",
+      "properties": {
+        "deploymentId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "billingId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "managedIdentityEntityId": {
+          "type": "string"
+        },
+        "vNetInjectionEndpoint": {
+          "format": "uri",
+          "type": "string"
+        },
+        "managedResourceGroup": {
+          "type": "string"
+        }
+      }
+    },
+    "NginxDeploymentProperties": {
+      "type": "object",
+      "properties": {
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState"
+        },
+        "nginxVersion": {
+          "type": "string",
+          "readOnly": true
+        },
+        "networkProfile": {
+          "$ref": "#/definitions/NginxNetworkProfile"
+        }
+      }
+    },
     "IdentityType": {
       "enum": [
         "SystemAssigned",
@@ -965,37 +1089,6 @@
         }
       }
     },
-    "NginxDeploymentInternalMetadata": {
-      "type": "object",
-      "properties": {
-        "deploymentId": {
-          "format": "uuid",
-          "type": "string"
-        },
-        "billingId": {
-          "format": "uuid",
-          "type": "string"
-        },
-        "managedIdentityEntityId": {
-          "type": "string"
-        }
-      }
-    },
-    "NginxDeploymentProperties": {
-      "type": "object",
-      "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState"
-        },
-        "nginxVersion": {
-          "type": "string",
-          "readOnly": true
-        },
-        "ipAddress": {
-          "type": "string"
-        }
-      }
-    },
     "NginxDeployment": {
       "type": "object",
       "properties": {
@@ -1011,11 +1104,11 @@
           "type": "string",
           "readOnly": true
         },
-        "identity": {
-          "$ref": "#/definitions/IdentityProperties"
-        },
         "properties": {
           "$ref": "#/definitions/NginxDeploymentProperties"
+        },
+        "identity": {
+          "$ref": "#/definitions/IdentityProperties"
         },
         "tags": {
           "type": "object",
@@ -1052,20 +1145,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/NginxDeployment"
-          }
-        },
-        "nextLink": {
-          "type": "string"
-        }
-      }
-    },
-    "NginxConfigurationListResponse": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NginxConfiguration"
           }
         },
         "nextLink": {
