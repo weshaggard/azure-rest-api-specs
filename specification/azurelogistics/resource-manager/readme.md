@@ -79,14 +79,14 @@ These settings apply only when `--tag=package-2021-08-23-preview` is specified o
 ```yaml $(tag) == 'package-2021-08-23-preview'
 input-file:
   - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/workspaces.json
-  - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/applicationWorkspaces.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/applicationManagers.json
   - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/operations.json
   - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/shares.json
   - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/shareSubscriptions.json
   - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/shareInvites.json
-  - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/applicationRegistrations.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/applications.json
   - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/eventGridFilters.json  
-  - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/applicationRegistrationInvites.json
+  - Microsoft.OpenLogisticsPlatform/preview/2021-08-23-preview/applicationRegistrations.json
 # Needed when there is more than one input file
 override-info:
   title: LogisticsManagementClient
