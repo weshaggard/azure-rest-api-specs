@@ -151,13 +151,17 @@
         }
       }
     },
-    "/{scope}/providers/Microsoft.Diagnostics/Test": {
-      "post": {
+    "/{scope}/providers/Microsoft.Diagnostics/ContosoInsightsV2": {
+      "get": {
         "tags": [
-          "Test"
+          "ContosoInsightsV2"
         ],
-        "description": "Test Top level actions",
-        "operationId": "SearchSolutions_Action",
+        "description": "Insights_V2_POC Create API",
+        "operationId": "SubscriptionLevel_List",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "$ref": "#/parameters/ScopeParameter"
@@ -168,7 +172,99 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful Insight Diagnostic Invocation (may contain errors)"
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/InsightResultArmResource"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/{scope}/providers/Microsoft.Diagnostics/ContosoInsightsV2/{insightResultName}": {
+      "put": {
+        "tags": [
+          "ContosoInsightsV2"
+        ],
+        "description": "Insights_V2_POC Create API",
+        "operationId": "ResourceLevel_Create",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/InsightNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "in": "body",
+            "name": "parameters",
+            "description": "The required parameters for this solution invocation.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "parameters": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/InsightResultArmResource"
+            }
+          },
+          "202": {
+            "description": "Accepted, diagnostic will be invoked and results patched back asyncrhonously."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ContosoInsightsV2"
+        ],
+        "description": "Insights_V2_POC Get API",
+        "operationId": "ResourceLevel_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/InsightNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/InsightResultArmResource"
+            }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -550,6 +646,48 @@
         }
       }
     },
+    "InsightResultArmResource": {
+      "description": "Insight result modeled as arm resource.",
+      "properties": {
+        "Id": {
+          "description": "Arm resource URI",
+          "type": "string"
+        },
+        "Name": {
+          "description": "Name of the resource",
+          "type": "string"
+        },
+        "Type": {
+          "description": "Type of Arm resource",
+          "type": "string"
+        },
+        "Properties": {
+          "description": "Properties of the Arm resource",
+          "type": "object",
+          "$ref": "#/definitions/InsightResultProperties"
+        }
+      }
+    },
+    "InsightResultProperties": {
+      "description": "Insight Result properties",
+      "properties": {
+        "Id": {
+          "description": "A unique ID for this Insight.",
+          "type": "string"
+        },
+        "CreatedTime": {
+          "description": "Insight generated time.",
+          "type": "string"
+        },
+        "Insights": {
+          "description": "The problems (if any) detected by this insight.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Insight"
+          }
+        }
+      }
+    },
     "InsightResult": {
       "description": "The insight invocation result.",
       "properties": {
@@ -772,6 +910,13 @@
     }
   },
   "parameters": {
+    "InsightNameParameter": {
+      "name": "insightResultName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Name of the insight result"
+    },
     "ScopeParameter": {
       "name": "scope",
       "in": "path",
