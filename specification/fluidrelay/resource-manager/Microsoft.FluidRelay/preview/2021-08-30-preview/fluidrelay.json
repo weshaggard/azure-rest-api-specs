@@ -174,7 +174,7 @@
         ],
         "summary": "Update a Fluid Relay server.",
         "x-ms-examples": {
-          "Create a Fluid Relay server": {
+          "Update a Fluid Relay server": {
             "$ref": "./examples/FluidRelayServers_Update.json"
           }
         },
@@ -198,7 +198,7 @@
             "schema": {
               "$ref": "#/definitions/FluidRelayServerUpdate"
             },
-            "description": "The details of the Fluid Relay server resource included in update calls."
+            "description": "The updatable details of the Fluid Relay server resource."
           }
         ],
         "responses": {
@@ -479,7 +479,7 @@
         ],
         "summary": "Get a Fluid Relay container.",
         "x-ms-examples": {
-          "Get Fluid Relay server details": {
+          "Get Fluid Relay container details": {
             "$ref": "./examples/FluidRelayContainers_Get.json"
           }
         },
@@ -574,6 +574,51 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.FluidRelay/fluidRelayServers/{fluidRelayServerName}/fluidRelayContainers": {
+      "get": {
+        "operationId": "FluidRelayContainers_ListByFluidRelayServers",
+        "tags": [
+          "FluidRelayContainers"
+        ],
+        "summary": "List all Fluid Relay containers which are children of a given Fluid Relay server.",
+        "x-ms-examples": {
+          "List all Fluid Relay containers in a Fluid Relay server": {
+            "$ref": "./examples/FluidRelayContainers_ListByFluidRelayServer.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionId"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroup"
+          },
+          {
+            "$ref": "#/parameters/FluidRelayServerName"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/FluidRelayContainerList"
+            },
+            "description": "Paged response"
+          },
+          "default": {
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            },
+            "description": "Error in operation."
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
     }
   },
   "definitions": {
@@ -653,10 +698,6 @@
         "identity": {
           "$ref": "#/definitions/Identity",
           "description": "The type of identity used for the resource."
-        },
-        "location": {
-          "type": "string",
-          "description": "The geo-location where the resource lives"
         }
       },
       "description": "The updatable properties of a Fluid Relay server"
@@ -682,6 +723,25 @@
         "value"
       ],
       "x-adl-name": "Page<FluidRelayServer>"
+    },
+    "FluidRelayContainerList": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FluidRelayContainer"
+          },
+          "description": "A sequence of FluidRelay containers.",
+          "x-adl-name": "FluidRelayContainer[]"
+        },
+        "nextLink": {
+          "readOnly": true,
+          "type": "string",
+          "description": "A link to the next page of results, if any."
+        }
+      },
+      "description": "Paged response"
     },
     "FluidRelayServer": {
       "type": "object",
@@ -720,10 +780,7 @@
           "$ref": "#/definitions/FluidRelayContainerProperties",
           "description": "The resource-specific properties for this resource.",
           "readOnly": true,
-          "x-ms-client-flatten": true,
-          "x-ms-mutability": [
-            "read"
-          ]
+          "x-ms-client-flatten": true
         },
         "systemData": {
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
@@ -783,18 +840,18 @@
       "type": "object",
       "properties": {
         "principalId": {
+          "readOnly": true,
           "type": "string",
           "description": "The principal ID of resource identity."
         },
         "tenantId": {
+          "readOnly": true,
           "type": "string",
           "description": "The tenant ID of resource."
         },
         "type": {
           "enum": [
             "SystemAssigned",
-            "UserAssigned",
-            "SystemAssigned, UserAssigned",
             "None"
           ],
           "x-ms-enum": {
@@ -803,24 +860,6 @@
           },
           "type": "string",
           "description": "The identity type."
-        },
-         "userAssignedIdentities": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "x-ms-client-name": "userAssignedIdentitiesValue",
-            "properties": {
-              "principalId": {
-                "type": "string",
-                "description": "The principal id of user assigned identity."
-              },
-              "clientId": {
-                "type": "string",
-                "description": "The client id of user assigned identity."
-              }
-            }
-          },
-          "description": "The list of user identities associated with the resource."
         }
       }
     },
@@ -862,12 +901,13 @@
           "description": "The Fluid tenantId for this container",
           "readOnly": true
         },
-        "containerId": {
+        "frsContainerId": {
           "type": "string",
-          "description": "The containerId for this container",
+          "description": "The frsContainerId for this container",
           "readOnly": true
         },
         "provisioningState": {
+          "readOnly": true,
           "enum": [
             "Succeeded",
             "Failed",
