@@ -331,7 +331,7 @@
             "description": "Accepted - Resource deletion in progress"
           },
           "204": {
-            "description": "Resourcce not found"
+            "description": "Resource not found"
           },
           "default": {
             "description": "Resource provider error response about the failure.",
@@ -429,7 +429,7 @@
         },
         "resourcePools": {
           "type": "array",
-          "description": "Resource pools comprising current workload infrastruture",
+          "description": "Resource pools comprising current workload infrastructure",
           "items": {
             "$ref": "#/definitions/resourcePool"
           },
@@ -563,7 +563,7 @@
         },
         "autoScaleMaxCount": {
           "type": "integer",
-          "description": "Maxmimum number of nodes for autoscale",
+          "description": "Maximum number of nodes for autoscale",
           "minimum": 1
         }
       },
@@ -577,6 +577,10 @@
       "type": "object",
       "description": "Node profile",
       "properties": {
+        "name":{
+          "type": "string",
+          "description": "VM/VMSS name"
+        },
         "nodeSku": {
           "type": "string",
           "description": "VM SKU for node(s)"
@@ -662,6 +666,14 @@
       "type": "object",
       "description": "Workload network profile",
       "properties": {
+        "vNetName":{
+          "type": "string",
+          "description": "Virtual network name",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
         "vNetAddressSpace": {
           "type": "string",
           "description": "Virtual network address space in CIDR format. Example: 172.31.0.0/16",
@@ -718,6 +730,14 @@
             "name": "DatabaseType",
             "modelAsString": true
           },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "serverName":{
+          "type": "string",
+          "description": "Database server name",
           "x-ms-mutability": [
             "create",
             "read"
@@ -931,7 +951,7 @@
       "properties": {
         "version": {
           "type": "string",
-          "description": "PHP versionss",
+          "description": "PHP version",
           "enum": [
             "7.2",
             "7.3",
@@ -982,16 +1002,31 @@
       "type": "object",
       "description": "Cache settings",
       "properties": {
-        "cacheSku": {
-          "description": "Cache SKU",
+        "name": {
+          "description": "Cache Name",
+          "type": "string",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "skuName": {
+          "description": "Cache SKU Name",
+          "type": "string",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "family": {
+          "description": "Cache Family",
           "type": "string",
           "enum": [
-            "Basic",
-            "Standard",
-            "Premium"
+            "C",
+            "P"
           ],
           "x-ms-enum": {
-            "name": "CacheSkuType",
+            "name": "RedisCacheFamily",
             "modelAsString": true
           },
           "x-ms-mutability": [
@@ -1001,13 +1036,17 @@
         },
         "capacity": {
           "type": "integer",
-          "description": "Cache capacity"
+          "description": "Cache capacity",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         }
       }
     },
     "backupProfile": {
       "type": "object",
-      "description": "Azure Backeup settings",
+      "description": "Azure Backup settings",
       "properties": {
         "backupEnabled": {
           "type": "string",
