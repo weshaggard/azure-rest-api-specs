@@ -49,7 +49,7 @@
         ],
         "x-ms-examples": {
           "HybridConnectivityOperationsList": {
-            "$ref": "./examples/HybridConnectivityOperationsList.json"
+            "$ref": "./examples/OperationsList.json"
           }
         },
         "parameters": [
@@ -83,7 +83,7 @@
         ],
         "x-ms-examples": {
           "HybridConnectivityEndpointsGet": {
-            "$ref": "./examples/HybridConnectivityEndpointsList.json"
+            "$ref": "./examples/EndpointsList.json"
           }
         },
         "parameters": [
@@ -126,10 +126,10 @@
         ],
         "x-ms-examples": {
           "HybridConnectivityEndpointsGetDefault": {
-            "$ref": "./examples/HybridConnectivityEndpointsGetDefault.json"
+            "$ref": "./examples/EndpointsGetDefault.json"
           },
           "HybridConnectivityEndpointsGetCustom": {
-            "$ref": "./examples/HybridConnectivityEndpointsGetCustom.json"
+            "$ref": "./examples/EndpointsGetCustom.json"
           }
         },
         "parameters": [
@@ -170,10 +170,10 @@
         ],
         "x-ms-examples": {
           "HybridConnectivityEndpointsPutDefault": {
-            "$ref": "./examples/HybridConnectivityEndpointsPutDefault.json"
+            "$ref": "./examples/EndpointsPutDefault.json"
           },
           "HybridConnectivityEndpointsPutCustom": {
-            "$ref": "./examples/HybridConnectivityEndpointsPutCustom.json"
+            "$ref": "./examples/EndpointsPutCustom.json"
           }
         },
         "parameters": [
@@ -222,7 +222,7 @@
         ],
         "x-ms-examples": {
           "HybridConnectivityEndpointsPatchDefault": {
-            "$ref": "./examples/HybridConnectivityEndpointsPatchDefault.json"
+            "$ref": "./examples/EndpointsPatchDefault.json"
           }
         },
         "parameters": [
@@ -271,7 +271,7 @@
         ],
         "x-ms-examples": {
           "HybridConnectivityEndpointsDeleteDefault": {
-            "$ref": "./examples/HybridConnectivityEndpointsDeleteDefault.json"
+            "$ref": "./examples/EndpointsDeleteDefault.json"
           }
         },
         "parameters": [
@@ -313,7 +313,7 @@
         ],
         "x-ms-examples": {
           "HybridConnectivityEndpointsPostListCredentials": {
-            "$ref": "./examples/HybridConnectivityEndpointsPostListCredentials.json"
+            "$ref": "./examples/EndpointsPostListCredentials.json"
           }
         },
         "parameters": [
@@ -349,20 +349,26 @@
     }
   },
   "definitions": {
-    "EndpointAccessProperties": {
+    "RelayNamespaceAccessProperties": {
       "type": "object",
-      "description": "Endpoint access properties",
+      "description": "Azure relay hybrid connection access properties",
       "required": [
-        "namespaceBaseUri",
+        "namespaceName",
+        "namespaceNameSuffix",
         "hybridConnectionName"
       ],
       "properties": {
-        "namespaceBaseUri": {
+        "namespaceName": {
           "type": "string",
-          "description": "The base uri of azure relay namespace",
+          "description": "The namespace name.",
           "minLength": 1,
-          "maxLength": 100,
-          "pattern": "^[A-Za-z0-9-._/]+$"
+          "maxLength": 200
+        },
+        "namespaceNameSuffix": {
+          "type": "string",
+          "description": "The suffix domain name of relay namespace.",
+          "minLength": 1,
+          "maxLength": 100
         },
         "hybridConnectionName": {
           "type": "string",
@@ -374,7 +380,7 @@
           "readOnly": true,
           "x-ms-secret": true
         },
-        "expiration": {
+        "expiresOn": {
           "type": "integer",
           "description": "The experation of access key in unix time."
         }
@@ -383,20 +389,11 @@
     "EndpointAccessResource": {
       "description": "The endpoint access for the target resource.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
-        }
-      ],
       "properties": {
-        "systemData": {
-          "description": "System data of endpoint access resource.",
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-          "x-ms-client-flatten": true
-        },
-        "properties": {
+        "relay": {
+          "type": "object",
           "description": "The endpoint access detail.",
-          "$ref": "#/definitions/EndpointAccessProperties",
+          "$ref": "#/definitions/RelayNamespaceAccessProperties",
           "x-ms-client-flatten": true
         }
       }
@@ -405,8 +402,7 @@
       "type": "object",
       "description": "Endpoint details",
       "required": [
-        "type",
-        "location"
+        "type"
       ],
       "properties": {
         "type": {
@@ -416,13 +412,6 @@
             "default",
             "custom"
           ]
-        },
-        "location": {
-          "type": "string",
-          "description": "The location of endpoint resource.",
-          "minLength": 1,
-          "maxLength": 50,
-          "pattern": "^[A-Za-z0-9-._/]+$"
         },
         "namespaceResourceId": {
           "type": "string",
@@ -489,14 +478,14 @@
       "x-ms-parameter-location": "method"
     },
     "AccessTokenExpirationParameter": {
-      "name": "expiration",
+      "name": "expiresin",
       "in": "query",
       "required": false,
       "type": "integer",
       "default": 600,
       "minimum": 60,
       "maximum": 600,
-      "description": "The requested expiration time in second for the endpoints access.",
+      "description": "The is how long the endpoint access token is valid (in seconds).",
       "x-ms-parameter-location": "method"
     }
   }
