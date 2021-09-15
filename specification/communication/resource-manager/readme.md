@@ -69,36 +69,6 @@ input-file:
   - Microsoft.Communication/preview/2020-08-20-preview/CommunicationService-private.json
 ```
 
-### Tag: package-2020-08-20-alpha
-
-These settings apply only when `--tag=package-2020-08-20-alpha` is specified on the command line.
-
-``` yaml $(tag) == 'package-2020-08-20-alpha'
-input-file:
-  - Microsoft.Communication/preview/2020-08-20-alpha/CommunicationService.json
-```
-
-``` yaml $(tag) == 'package-2020-08-20-alpha' && $(generate-private)
-input-file:
-  - Microsoft.Communication/preview/2020-08-20-alpha/CommunicationService-private.json
-```
-
-### Tag: package-2020-08-20-beta
-
-These settings apply only when `--tag=package-2020-08-20-beta` is specified on the command line.
-
-``` yaml $(tag) == 'package-2020-08-20-beta'
-input-file:
-  - Microsoft.Communication/preview/2020-08-20-beta/CommunicationService.json
-```
-
-``` yaml $(tag) == 'package-2020-08-20-beta' && $(generate-private)
-input-file:
-  - Microsoft.Communication/preview/2020-08-20-beta/CommunicationService-private.json
-```
-
----
-
 # Code Generation
 
 ## Swagger to SDK
