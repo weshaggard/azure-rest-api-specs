@@ -303,7 +303,7 @@
           "NginxConfiguration"
         ],
         "summary": "Create or update the Nginx configuraton for given Nginx deployment",
-        "operationId": "Configurations_CreateOrUpdate",
+        "operationId": "Configurations_Create",
         "consumes": [
           "application/json"
         ],
@@ -936,6 +936,14 @@
         }
       }
     },
+    "NginxPublicIPAddress": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
     "NginxPrivateIPAllocationMethod": {
       "enum": [
         "Static",
@@ -947,23 +955,7 @@
         "name": "NginxPrivateIPAllocationMethod"
       }
     },
-    "SubNet": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      }
-        },
-    "PublicIPAddress": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      }
-    },
-    "NginxFrontendIPConfiguration": {
+    "NginxPrivateIPAddress": {
       "type": "object",
       "properties": {
         "privateIPAddress": {
@@ -973,30 +965,43 @@
         "privateIPAllocationMethod": {
           "$ref": "#/definitions/NginxPrivateIPAllocationMethod"
         },
-        "subnet": {
-          "$ref": "#/definitions/SubNet"
-        },
-        "publicIPAddress": {
-          "$ref": "#/definitions/PublicIPAddress"
+        "subnetId": {
+          "type": "string",
+          "readOnly": true
         }
       }
     },
-    "NginxNetworkInterfaceConfiguration": {
+    "NginxFrontendIPConfiguration": {
       "type": "object",
       "properties": {
-        "subNet": {
-          "$ref": "#/definitions/SubNet"
+        "publicIPAddresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NginxPublicIPAddress"
+        },
+          "readOnly": true
+        },
+        "privateIPAddresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NginxPrivateIPAddress"
+          }
+        }
+      }
+        },
+    "NginxNetworkInterfaceConfiguration": {
+          "type": "object",
+      "properties": {
+        "subnetId": {
+          "type": "string"
           }
       }
     },
     "NginxNetworkProfile": {
       "type": "object",
       "properties": {
-        "frontEndIPConfigurations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NginxFrontendIPConfiguration"
-          }
+        "frontEndIPConfiguration": {
+          "$ref": "#/definitions/NginxFrontendIPConfiguration"
         },
         "networkInterfaceConfiguration": {
           "$ref": "#/definitions/NginxNetworkInterfaceConfiguration"
