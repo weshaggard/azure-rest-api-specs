@@ -31,16 +31,19 @@ openapi-subtype: rpaas
 tag: package-preview-2021-10
 ```
 
-
 ### Tag: package-preview-2021-10
 
 These settings apply only when `--tag=package-preview-2021-10` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2021-10'
+``` yaml $(tag) == 'package-preview-2021-10'
 input-file:
-  - Microsoft.Communication/preview/2021-10-01-preview/CommunicationService-private.json
   - Microsoft.Communication/preview/2021-10-01-preview/CommunicationService.json
 ```
+
+``` yaml $(tag) == 'package-preview-2021-10' && $(generate-private)
+  - Microsoft.Communication/preview/2021-10-01-preview/CommunicationService-private.json
+```
+
 ### Tag: package-2020-08-20
 
 These settings apply only when `--tag=package-2020-08-20` is specified on the command line.
@@ -68,6 +71,31 @@ input-file:
 input-file:
   - Microsoft.Communication/preview/2020-08-20-preview/CommunicationService-private.json
 ```
+
+### Tag: package-2019-10-10-preview
+
+These settings apply only when `--tag=package-2019-10-10-preview` is specified on the command line.
+
+``` yaml $(tag) == 'package-2019-10-10-preview'
+input-file:
+  - Microsoft.Communication/preview/2019-10-10-preview/CommunicationService.json
+```
+
+``` yaml $(tag) == 'package-2019-10-10-preview' && $(generate-private)
+input-file:
+  - Microsoft.Communication/preview/2019-10-10-preview/CommunicationService-private.json
+```
+
+### Tag: package-2021-09-09-privatepreview
+
+These settings apply only when `--tag=package-2021-09-09-privatepreview` is specified on the command line.
+
+``` yaml $(tag) == 'package-2021-09-09-privatepreview' && $(generate-private)
+input-file:
+  - Microsoft.Communication/preview/2021-09-09-privatepreview/EventGridFilters.json
+```
+
+---
 
 # Code Generation
 
