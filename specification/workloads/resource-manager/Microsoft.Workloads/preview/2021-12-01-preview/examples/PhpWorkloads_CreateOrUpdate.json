@@ -12,6 +12,7 @@
         "name": "Large"
       },
       "properties": {
+        "infraResourceGroup": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39",
         "adminUserProfile": {
           "userName": "moodleadmin",
           "sshPublicKey": "===SSH=PUBLIC=KEY==="
@@ -34,6 +35,12 @@
         "controllerProfile": {
           "name": "contoller-vm",
           "nodeSku": "Standard_DS2_v2",
+          "osImage": {
+            "publisher": "UbuntuServer",
+            "offer": "Canonical",
+            "sku": "18.0-LTS",
+            "version": "latest"
+          },
           "osDisk": {
             "storageType": "Premium_LRS"
           },
@@ -45,18 +52,18 @@
           ]
         },
         "networkProfile": {
-          "vNetName": "moodle-vnet",
-          "vNetAddressSpace": "172.31.0.0/16",
           "loadBalancerType": "ApplicationGateway",
           "loadBalancerSku": "Standard_v2",
           "loadBalancerTier": "Standard_v2",
-          "capacity": 3
+          "capacity": 3,
+          "azureFrontDoorEnabled": "Enabled"
         },
         "databaseProfile": {
           "type": "MySql",
           "serverName": "moodle-db-server",
           "version": "5.7",
           "adminUser": "dbadmin",
+          "adminUserPassword": "xxxxxxxxxxx",
           "sku": "Standard_D32s_v4",
           "tier": "GeneralPurpose",
           "haEnabled": "Disabled",
@@ -67,11 +74,11 @@
           "sslEnforcementEnabled": "Enabled"
         },
         "siteProfile": {
-          "domainName": "www.example.com",
-          "dnsZoneName": "example.com"
+          "webServerType": "nginx",
+          "domainName": "www.example.com"
         },
         "fileshareProfile": {
-          "shareType": "NfsOnController",
+          "shareType": "AzureFiles",
           "storageType": "Premium_LRS",
           "shareSizeInGB": 100
         },
@@ -85,6 +92,12 @@
         },
         "searchProfile": {
           "nodeSku": "Standard_DS2_v2",
+          "osImage": {
+            "publisher": "UbuntuServer",
+            "offer": "Canonical",
+            "sku": "18.0-LTS",
+            "version": "latest"
+          },
           "osDisk": {
             "storageType": "Premium_LRS"
           },
@@ -97,7 +110,7 @@
           "capacity": 0
         },
         "backupProfile": {
-          "backupEnabled": "Enabled"
+          "backupEnabled": "Disabled"
         }
       }
     }
@@ -125,28 +138,6 @@
         "properties": {
           "infraResourceGroup": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39",
           "provisioningState": "Succeeded",
-          "resourcePools": [
-            {
-              "name": "web",
-              "resourceIds": [
-                "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-fymfur"
-              ]
-            },
-            {
-              "name": "controller",
-              "resourceIds": [
-                "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Compute/virtualMachines/controller-fymfur"
-              ]
-            },
-            {
-              "name": "default",
-              "resourceIds": [
-                "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/loadBalancers/lb-fymfur",
-                "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/publicIPAddresses/lb-pubip-fymfur",
-                "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/virtualNetworks/vnet-fymfur"
-              ]
-            }
-          ],
           "adminUserProfile": {
             "userName": "moodleadmin",
             "sshPublicKey": "===SSH=PUBLIC=KEY==="
@@ -165,7 +156,10 @@
               "sizeInGB": 30
             },
             "autoScaleMinCount": 1,
-            "autoScaleMaxCount": 1
+            "autoScaleMaxCount": 1,
+            "nodeResourceIds": [
+              "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-fymfur"
+            ]
           },
           "controllerProfile": {
             "name": "contoller-vm",
@@ -185,15 +179,25 @@
                 "storageType": "Premium_LRS",
                 "sizeInGB": 100
               }
+            ],
+            "nodeResourceIds": [
+              "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Compute/virtualMachines/controller-fymfur"
             ]
           },
           "networkProfile": {
-            "vNetName": "moodle-vnet",
-            "vNetAddressSpace": "172.31.0.0/16",
             "loadBalancerType": "ApplicationGateway",
             "loadBalancerSku": "Standard_v2",
             "loadBalancerTier": "Standard_v2",
-            "capacity": 3
+            "capacity": 3,
+            "azureFrontDoorEnabled": "Enabled",
+            "vNetResourceId": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/virtualNetworks/vnet-fymfur",
+            "loadBalancerResourceId": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/loadBalancers/lb-fymfur",
+            "frontEndPublicIpResourceId": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/publicIPAddresses/lb-pubip-fymfur",
+            "azureFrontDoorResourceId": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/frontdoors/afd-fymfur",
+            "outboundPublicIpResourceIds": [
+              "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/publicIPAddresses/lb-outpubip001-fymfur",
+              "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Network/publicIPAddresses/lb-outpubip002-fymfur"
+            ]
           },
           "databaseProfile": {
             "type": "MySql",
@@ -207,22 +211,23 @@
             "storageInGB": 128,
             "storageIops": 200,
             "backupRetentionDays": 7,
-            "sslEnforcementEnabled": "Enabled"
+            "sslEnforcementEnabled": "Enabled",
+            "serverResourceId": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.DBforMySQL/servers/mysql-fymfur"
           },
           "siteProfile": {
-            "webServerType": "apache",
+            "webServerType": "nginx",
             "domainName": "www.example.com",
-            "dnsZoneName": "example.com",
-            "dnsZoneId": "{dnsZone-arm-Id}",
             "siteUrl": "https://www.example.com"
           },
           "fileshareProfile": {
-            "shareType": "NfsOnController",
+            "shareType": "AzureFiles",
             "storageType": "Premium_LRS",
-            "shareSizeInGB": 100
+            "shareSizeInGB": 100,
+            "storageResourceId": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Storage/storageAccounts/absfymfuraf",
+            "shareName": "moodle"
           },
           "applicationProfile": {
-            "version": "Moodle_39",
+            "version": "Moodle_3.8.3",
             "plugins": [],
             "databaseName": "moodledb",
             "databaseUser": "moodleuser"
@@ -243,16 +248,23 @@
               "sizeInGB": 0
             },
             "dataDisks": [],
-            "searchType": "Elastic"
+            "searchType": "Elastic",
+            "nodeResourceIds": [
+              "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Compute/virtualMachines/elastic-vm-01-fymfur",
+              "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Compute/virtualMachines/elastic-vm-02-fymfur",
+              "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Compute/virtualMachines/elastic-vm-03-fymfur"
+            ]
           },
           "cacheProfile": {
             "name": "moodle-cache",
             "skuName": "Basic",
             "family": "C",
-            "capacity": 0
+            "capacity": 0,
+            "cacheResourceId": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39/providers/Microsoft.Cache/redis/redis-fymfur"
           },
           "backupProfile": {
-            "backupEnabled": "Disabled"
+            "backupEnabled": "Disabled",
+            "vaultResourceId": ""
           }
         }
       }
@@ -279,7 +291,6 @@
         "properties": {
           "infraResourceGroup": "/subscriptions/6d875e77-e412-4d7d-9af4-8895278b4443/resourceGroups/php-mrg-moodle39",
           "provisioningState": "Created",
-          "resourcePools": [],
           "adminUserProfile": {
             "userName": "moodleadmin",
             "sshPublicKey": "===SSH=PUBLIC=KEY==="
@@ -294,8 +305,7 @@
               "version": "latest"
             },
             "osDisk": {
-              "storageType": "Premium_LRS",
-              "sizeInGB": 30
+              "storageType": "Premium_LRS"
             },
             "autoScaleMinCount": 1,
             "autoScaleMaxCount": 1
@@ -310,8 +320,7 @@
               "version": "latest"
             },
             "osDisk": {
-              "storageType": "Premium_LRS",
-              "sizeInGB": 30
+              "storageType": "Premium_LRS"
             },
             "dataDisks": [
               {
@@ -321,12 +330,11 @@
             ]
           },
           "networkProfile": {
-            "vNetName": "moodle-vnet",
-            "vNetAddressSpace": "172.31.0.0/16",
             "loadBalancerType": "ApplicationGateway",
             "loadBalancerSku": "Standard_v2",
             "loadBalancerTier": "Standard_v2",
-            "capacity": 3
+            "capacity": 3,
+            "azureFrontDoorEnabled": "Enabled"
           },
           "databaseProfile": {
             "type": "MySql",
@@ -343,20 +351,17 @@
             "sslEnforcementEnabled": "Enabled"
           },
           "siteProfile": {
-            "webServerType": "apache",
+            "webServerType": "nginx",
             "domainName": "www.example.com",
-            "dnsZoneName": "example.com",
-            "dnsZoneId": "{dnsZone-arm-Id}",
-            "siteUrl": ""
+            "siteUrl": "https://www.example.com"
           },
           "fileshareProfile": {
-            "shareType": "NfsOnController",
+            "shareType": "AzureFiles",
             "storageType": "Premium_LRS",
             "shareSizeInGB": 100
           },
           "applicationProfile": {
             "version": "Moodle_39",
-            "plugins": [],
             "databaseName": "moodledb",
             "databaseUser": "moodleuser"
           },
@@ -372,12 +377,9 @@
               "version": "latest"
             },
             "osDisk": {
-              "storageType": "Premium_LRS",
-              "sizeInGB": 0
+              "storageType": "Premium_LRS"
             },
-            "dataDisks": [],
-            "searchType": "Elastic",
-            "tikaServiceEnabled": "Enabled"
+            "searchType": "Elastic"
           },
           "cacheProfile": {
             "name": "moodle-cache",

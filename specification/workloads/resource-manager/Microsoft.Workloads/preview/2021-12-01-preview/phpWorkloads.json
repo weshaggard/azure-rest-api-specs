@@ -279,7 +279,7 @@
             "description": "Workload resource update data",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ResourcePatchRequestBody"
+              "$ref": "#/definitions/PatchResourceRequestBody"
             }
           }
         ],
@@ -321,6 +321,14 @@
           },
           {
             "$ref": "#/parameters/PhpWorkloadNameParameter"
+          },
+          {
+            "name": "delete-infra",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Whether to delete infra along with workload resource.",
+            "minLength": 1
           }
         ],
         "responses": {
@@ -427,14 +435,6 @@
             "read"
           ]
         },
-        "resourcePools": {
-          "type": "array",
-          "description": "Resource pools comprising current workload infrastructure",
-          "items": {
-            "$ref": "#/definitions/resourcePool"
-          },
-          "readOnly": true
-        },
         "adminUserProfile": {
           "description": "User profile used for VMs and VMSS",
           "$ref": "#/definitions/userProfile"
@@ -506,29 +506,13 @@
         }
       },
       "required": [
+        "infraResourceGroup",
         "adminUserProfile",
         "webNodesProfile",
         "controllerProfile",
         "siteProfile",
         "databaseProfile"
       ]
-    },
-    "resourcePool": {
-      "type": "object",
-      "description": "Resource pool entry",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Pool name"
-        },
-        "resourceIds": {
-          "type": "array",
-          "description": "List of resource Ids belong to a pool",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
     },
     "userProfile": {
       "type": "object",
@@ -577,7 +561,7 @@
       "type": "object",
       "description": "Node profile",
       "properties": {
-        "name":{
+        "name": {
           "type": "string",
           "description": "VM/VMSS name"
         },
@@ -603,10 +587,19 @@
           "items": {
             "$ref": "#/definitions/diskInfo"
           }
+        },
+        "nodeResourceIds": {
+          "description": "VM/VMSS resource ARM Ids",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
         }
       },
       "required": [
         "nodeSku",
+        "osImage",
         "osDisk"
       ]
     },
@@ -646,19 +639,48 @@
       "properties": {
         "publisher": {
           "description": "OS image publisher",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "UbuntuServer"
+          ],
+          "x-ms-enum": {
+            "name": "OSImagePublisher",
+            "modelAsString": true
+          }
         },
         "offer": {
           "description": "OS image offer",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Canonical"
+          ],
+          "x-ms-enum": {
+            "name": "OSImageOffer",
+            "modelAsString": true
+          }
         },
         "sku": {
           "description": "OS image sku",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "18.04-LTS",
+            "16.04-LTS"
+          ],
+          "x-ms-enum": {
+            "name": "OSImageSku",
+            "modelAsString": true
+          }
         },
         "version": {
           "description": "OS image version",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "latest"
+          ],
+          "x-ms-enum": {
+            "name": "OSImageVersion",
+            "modelAsString": true
+          }
         }
       }
     },
@@ -666,22 +688,6 @@
       "type": "object",
       "description": "Workload network profile",
       "properties": {
-        "vNetName":{
-          "type": "string",
-          "description": "Virtual network name",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
-        "vNetAddressSpace": {
-          "type": "string",
-          "description": "Virtual network address space in CIDR format. Example: 172.31.0.0/16",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
         "loadBalancerType": {
           "type": "string",
           "description": "Load balancer type",
@@ -691,7 +697,7 @@
           ],
           "x-ms-enum": {
             "name": "LoadBalancerType",
-            "modelAsString": false
+            "modelAsString": true
           },
           "x-ms-mutability": [
             "create",
@@ -709,6 +715,50 @@
         "capacity": {
           "type": "integer",
           "description": "Capacity, applicable only for Application Gateway."
+        },
+        "azureFrontDoorEnabled": {
+          "type": "string",
+          "description": "Enable Azure front door",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "x-ms-enum": {
+            "name": "AzureFrontDoorEnabled",
+            "modelAsString": true
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "vNetResourceId": {
+          "description": "Virtual network resource Id",
+          "type": "string",
+          "readOnly": true
+        },
+        "loadBalancerResourceId": {
+          "description": "Azure Loadbalancer or ApplicationGateway resource Id",
+          "type": "string",
+          "readOnly": true
+        },
+        "azureFrontDoorResourceId": {
+          "description": "Azure front door resource id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "frontEndPublicIpResourceId": {
+          "description": "Loadbalancer frontent IP address resource Id to access the application web page",
+          "type": "string",
+          "readOnly": true
+        },
+        "outboundPublicIpResourceIds": {
+          "description": "List of outbound public ip resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
         }
       },
       "required": [
@@ -723,8 +773,7 @@
           "description": "Database type",
           "type": "string",
           "enum": [
-            "MySql",
-            "Postgres"
+            "MySql"
           ],
           "x-ms-enum": {
             "name": "DatabaseType",
@@ -735,7 +784,7 @@
             "read"
           ]
         },
-        "serverName":{
+        "serverName": {
           "type": "string",
           "description": "Database server name",
           "x-ms-mutability": [
@@ -749,7 +798,17 @@
         },
         "adminUser": {
           "type": "string",
-          "description": "Admin user name for the database resource",
+          "description": "Admin user name for the database server resource",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "adminUserPassword": {
+          "type": "string",
+          "format": "password",
+          "description": "Admin user password for the database server resource",
+          "x-ms-secret": true,
           "x-ms-mutability": [
             "create",
             "read"
@@ -812,10 +871,17 @@
             "name": "EnableSslEnforcement",
             "modelAsString": true
           }
+        },
+        "serverResourceId": {
+          "description": "Azure Database Server ARM Id",
+          "type": "string",
+          "readOnly": true
         }
       },
       "required": [
         "type",
+        "adminUser",
+        "adminUserPassword",
         "sku",
         "tier"
       ]
@@ -828,7 +894,6 @@
           "description": "Web server type",
           "type": "string",
           "enum": [
-            "apache",
             "nginx"
           ],
           "x-ms-enum": {
@@ -844,14 +909,6 @@
           "type": "string",
           "description": "Domain name for the application site URL"
         },
-        "dnsZoneName": {
-          "type": "string",
-          "description": "Parent domain name to create DNS Zone resource"
-        },
-        "dnsZoneId": {
-          "type": "string",
-          "description": "DNS Zone resource Id if existing Zone resource being used"
-        },
         "siteUrl": {
           "type": "string",
           "description": "Site Url to access the Php application",
@@ -859,6 +916,7 @@
         }
       },
       "required": [
+        "webServerType",
         "domainName"
       ]
     },
@@ -905,6 +963,16 @@
           "description": "Fileshare size in GB",
           "minimum": 1,
           "maximum": 1024
+        },
+        "storageResourceId": {
+          "type": "string",
+          "description": "Fileshare storage resource id",
+          "readOnly": true
+        },
+        "shareName": {
+          "type": "string",
+          "description": "File share name",
+          "readOnly": true
         }
       },
       "required": [
@@ -918,7 +986,15 @@
       "properties": {
         "version": {
           "type": "string",
-          "description": "Application version"
+          "description": "Application version",
+          "enum": [
+            "WordPress_5.4.2",
+            "Moodle_3.8.3"
+          ],
+          "x-ms-enum": {
+            "name": "ApplicationVersion",
+            "modelAsString": true
+          }
         },
         "plugins": {
           "type": "array",
@@ -943,7 +1019,10 @@
             "read"
           ]
         }
-      }
+      },
+      "required": [
+        "version"
+      ]
     },
     "phpProfile": {
       "type": "object",
@@ -962,7 +1041,10 @@
             "modelAsString": true
           }
         }
-      }
+      },
+      "required": [
+        "version"
+      ]
     },
     "searchProfile": {
       "type": "object",
@@ -978,24 +1060,15 @@
             "name": "SearchType",
             "modelAsString": true
           }
-        },
-        "tikaServiceEnabled": {
-          "type": "string",
-          "description": "Whether to enable Tika service for file search in Moodle",
-          "enum": [
-            "Enabled",
-            "Disabled"
-          ],
-          "x-ms-enum": {
-            "name": "EnableTikaService",
-            "modelAsString": true
-          }
         }
       },
       "allOf": [
         {
           "$ref": "#/definitions/nodeProfile"
         }
+      ],
+      "required": [
+        "searchType"
       ]
     },
     "cacheProfile": {
@@ -1041,8 +1114,18 @@
             "create",
             "read"
           ]
+        },
+        "cacheResourceId": {
+          "description": "Cache resource ARM Id",
+          "type": "string",
+          "readOnly": true
         }
-      }
+      },
+      "required": [
+        "skuName",
+        "family",
+        "capacity"
+      ]
     },
     "backupProfile": {
       "type": "object",
@@ -1059,10 +1142,18 @@
             "name": "EnableBackup",
             "modelAsString": true
           }
+        },
+        "vaultResourceId": {
+          "description": "Backup vault resource ARM Id",
+          "type": "string",
+          "readOnly": true
         }
-      }
+      },
+      "required": [
+        "backupEnabled"
+      ]
     },
-    "ResourcePatchRequestBody": {
+    "PatchResourceRequestBody": {
       "description": "Resource patch request body.",
       "type": "object",
       "properties": {
