@@ -40,6 +40,9 @@
         "operationId": "monitors_List",
         "summary": "Gets a list of SAP monitors in the specified subscription.",
         "description": "Gets a list of SAP monitors in the specified subscription. The operations returns various properties of each SAP monitor.",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -107,8 +110,17 @@
         "tags": [ "Monitors" ],
         "operationId": "monitors_Create",
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "summary": "Creates a SAP monitor.",
         "description": "Creates a SAP monitor for the specified subscription, resource group, and resource name.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -123,7 +135,13 @@
             "$ref": "#/parameters/monitorNameParameter"
           },
           {
-            "$ref": "#/parameters/MonitorParameter"
+            "in": "body",
+            "name": "MonitorParameter",
+            "description": "Request body representing a SAP Monitor",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Monitor"
+            }
           }
         ],
         "responses": {
@@ -151,6 +169,9 @@
         "tags": [ "Monitors" ],
         "operationId": "monitors_Delete",
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "summary": "Deletes a SAP monitor.",
         "description": "Deletes a SAP monitor with the specified subscription, resource group, and monitor name.",
         "parameters": [
@@ -169,7 +190,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Deleted Monitor"
+            "description": "Deleted Monitor",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/OperationStatusResult"
+            }
           },
           "202": {
             "description": "Deleting Monitor"
@@ -188,8 +212,8 @@
       "patch": {
         "tags": [ "Monitors" ],
         "operationId": "monitors_Update",
-        "summary": "Patches the Tags field of a SAP monitor.",
-        "description": "Patches the Tags field of a SAP monitor for the specified subscription, resource group, and monitor name.",
+        "summary": "Patches a SAP monitor.",
+        "description": "Patches a SAP monitor.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -204,7 +228,13 @@
             "$ref": "#/parameters/monitorNameParameter"
           },
           {
-            "$ref": "#/parameters/TagsParameter"
+            "in": "body",
+            "name": "MonitorParameter",
+            "description": "Request body representing a SAP Monitor",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Monitor"
+            }
           }
         ],
         "responses": {
@@ -222,341 +252,9 @@
           }
         }
       }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Workloads/monitors/{monitorName}/providerInstances": {
-      "get": {
-        "tags": [ "ProviderInstances" ],
-        "operationId": "ProviderInstances_List",
-        "summary": "Gets a list of provider instances in the specified SAP monitor.",
-        "description": "Gets a list of provider instances in the specified SAP monitor. The operations returns various properties of each provider instances.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/monitorNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ProviderInstanceListResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Workloads/monitors/{monitorName}/providerInstances/{providerInstanceName}": {
-      "get": {
-        "tags": [ "ProviderInstances" ],
-        "operationId": "ProviderInstances_Get",
-        "summary": "Gets properties of a provider instance.",
-        "description": "Gets properties of a provider instance for the specified subscription, resource group, Monitor name, and resource name.",
-        "produces": [ "application/json" ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/monitorNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProviderInstanceNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ProviderInstance"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [ "ProviderInstances" ],
-        "operationId": "ProviderInstances_Create",
-        "x-ms-long-running-operation": true,
-        "summary": "Creates a provider instance.",
-        "description": "Creates a provider instance for the specified subscription, resource group, Monitor name, and resource name.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/monitorNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProviderInstanceNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProviderInstanceParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Created provider instance",
-            "schema": {
-              "$ref": "#/definitions/ProviderInstance"
-            }
-          },
-          "201": {
-            "description": "Creating provider instance",
-            "schema": {
-              "$ref": "#/definitions/ProviderInstance"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [ "ProviderInstances" ],
-        "operationId": "ProviderInstances_Delete",
-        "x-ms-long-running-operation": true,
-        "summary": "Deletes a provider instance.",
-        "description": "Deletes a provider instance for the specified subscription, resource group, Monitor name, and resource name.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/monitorNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProviderInstanceNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Deleted provider instance"
-          },
-          "202": {
-            "description": "Deleting provider instance"
-          },
-          "204": {
-            "description": "No provider instance to delete"
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
     }
   },
   "definitions": {
-    "OperationsDisplayDefinition": {
-      "required": [
-        "description",
-        "operation",
-        "provider",
-        "resource"
-      ],
-      "type": "object",
-      "properties": {
-        "provider": {
-          "type": "string"
-        },
-        "resource": {
-          "type": "string"
-        },
-        "operation": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        }
-      }
-    },
-    "OperationsDefinition": {
-      "required": [
-        "display",
-        "name"
-      ],
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the operation."
-        },
-        "isDataAction": {
-          "type": "boolean",
-          "description": "Indicates whether the operation applies to data-plane."
-        },
-        "origin": {
-          "enum": [
-            "NotSpecified",
-            "User",
-            "System"
-          ],
-          "type": "string"
-        },
-        "display": {
-          "type": "object",
-          "description": "Display information of the operation.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/OperationsDisplayDefinition"
-            }
-          ]
-        },
-        "actionType": {
-          "enum": [
-            "NotSpecified",
-            "Internal"
-          ],
-          "type": "string"
-        },
-        "properties": {}
-      },
-      "description": "Properties of an Operation."
-    },
-    "OperationsContent": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "description": "Operations content.",
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/OperationsDefinition"
-        }
-      },
-      "x-ms-azure-resource": true
-    },
-    "Error": {
-      "description": "Standard error object.",
-      "type": "object",
-      "properties": {
-        "code": {
-          "description": "Server-defined set of error codes.",
-          "type": "string",
-          "readOnly": true
-        },
-        "message": {
-          "description": "Human-readable representation of the error.",
-          "type": "string",
-          "readOnly": true
-        },
-        "target": {
-          "description": "Target of the error.",
-          "type": "string",
-          "readOnly": true
-        },
-        "details": {
-          "description": "Array of details about specific errors that led to this reported error.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Error"
-          },
-          "readOnly": true
-        },
-        "innerError": {
-          "description": "Object containing more specific information than  the current object about the error.",
-          "type": "object",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Error"
-            }
-          ],
-          "readOnly": true
-        }
-      }
-    },
-    "ErrorResponse": {
-      "description": "Standard error response.",
-      "type": "object",
-      "properties": {
-        "error": {
-          "description": "Standard error object.",
-          "type": "object",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Error"
-            }
-          ]
-        }
-      }
-    },
-    "Tags": {
-      "type": "object",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Tags field of the resource."
-        }
-      },
-      "description": "Tags field of the resource."
-    },
-    "MonitorListResult": {
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Monitor"
-          },
-          "description": "The list of SAP monitors."
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "The URL to get the next set of SAP monitors."
-        }
-      },
-      "description": "The response from the List SAP monitors operation."
-    },
     "Monitor": {
       "type": "object",
       "properties": {
@@ -629,111 +327,51 @@
       "type": "object",
       "description": "Describes the properties of a SAP monitor."
     },
-    "ProviderInstanceListResult": {
-      "type": "object",
+    "MonitorListResult": {
       "properties": {
         "value": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ProviderInstance"
+            "$ref": "#/definitions/Monitor"
           },
-          "description": "The list of provider instances."
+          "description": "The list of SAP monitors."
         },
         "nextLink": {
           "type": "string",
-          "description": "The URL to get the next set of provider instances."
+          "description": "The URL to get the next set of SAP monitors."
         }
       },
-      "description": "The response from the List provider instances operation."
+      "description": "The response from the List SAP monitors operation."
     },
-    "ProviderInstance": {
+    "Error": {
+      "description": "Standard error object.",
       "type": "object",
       "properties": {
-        "providerType": {
-          "description": "The provider type.",
+        "code": {
+          "description": "Server-defined set of error codes.",
           "type": "string",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
+          "readOnly": true
         },
-        "properties": {
-          "nextLink": null,
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/ProviderInstanceProperties",
-          "description": "Provider Instance properties"
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v1/types.json#/definitions/ProxyResource"
-        }
-      ],
-      "description": "A provider instance associated with monitor."
-    },
-    "HanaDbProviderInstanceProperties": {
-      "description": "Gets or sets the provider properties.",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ProviderInstanceProperties"
-        }
-      ],
-      "properties": {
-        "hanaHostname": {
-          "description": "Gets or sets the target virtual machine size.",
-          "type": "string"
-        },
-        "hanaDatabaseName": {
-          "description": "Gets or sets the hana database name.",
-          "type": "string"
-        },
-        "hanaDatabaseSqlPort": {
-          "description": "Gets or sets the database sql port.",
-          "type": "string"
-        },
-        "hanaDatabaseUsername": {
-          "description": "Gets or sets the database user name.",
-          "type": "string"
-        },
-        "hanaDatabasePassword": {
-          "description": "Gets or sets the database password.",
+        "message": {
+          "description": "Human-readable representation of the error.",
           "type": "string",
-          "x-ms-secret": true
-        }
-      },
-      "x-ms-discriminator-value": "SapHana"
-    },
-    "ProviderInstanceProperties": {
-      "properties": {
-        "providerType": {
-          "description": "The provider type. For example, the value can be SapHana.",
-          "type": "string",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
+          "readOnly": true
         },
-        "provisioningState": {
-          "readOnly": true,
+        "target": {
+          "description": "Target of the error.",
           "type": "string",
-          "enum": [
-            "Accepted",
-            "Creating",
-            "Updating",
-            "Failed",
-            "Succeeded",
-            "Deleting",
-            "Migrating"
-          ],
-          "x-ms-enum": {
-            "name": "ProvisioningState",
-            "modelAsString": true
+          "readOnly": true
+        },
+        "details": {
+          "description": "Array of details about specific errors that led to this reported error.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
           },
-          "description": "State of provisioning of the provider instance"
+          "readOnly": true
         },
-        "errors": {
-          "description": "Defines the provider instance errors.",
+        "innerError": {
+          "description": "Object containing more specific information than  the current object about the error.",
           "type": "object",
           "allOf": [
             {
@@ -742,11 +380,22 @@
           ],
           "readOnly": true
         }
-      },
+      }
+    },
+    "ErrorResponse": {
+      "description": "Standard error response.",
       "type": "object",
-      "description": "Describes the properties of a provider instance.",
-      "discriminator": "providerType",
-      "required": [ "providerType" ]
+      "properties": {
+        "error": {
+          "description": "Standard error object.",
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Error"
+            }
+          ]
+        }
+      }
     }
   },
   "parameters": {
@@ -756,47 +405,6 @@
       "required": true,
       "type": "string",
       "description": "Name of the SAP monitor resource.",
-      "x-ms-parameter-location": "method"
-    },
-    "ProviderInstanceNameParameter": {
-      "name": "providerInstanceName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "Name of the provider instance.",
-      "x-ms-parameter-location": "method"
-    },
-    "TagsParameter": {
-      "name": "tagsParameter",
-      "in": "body",
-      "required": true,
-      "type": "object",
-      "schema": {
-        "$ref": "#/definitions/Tags"
-      },
-      "description": "Request body that only contains the new Tags field",
-      "x-ms-parameter-location": "method"
-    },
-    "MonitorParameter": {
-      "name": "MonitorParameter",
-      "in": "body",
-      "required": true,
-      "type": "object",
-      "schema": {
-        "$ref": "#/definitions/Monitor"
-      },
-      "description": "Request body representing a SAP Monitor",
-      "x-ms-parameter-location": "method"
-    },
-    "ProviderInstanceParameter": {
-      "name": "providerInstanceParameter",
-      "in": "body",
-      "required": true,
-      "type": "object",
-      "schema": {
-        "$ref": "#/definitions/ProviderInstance"
-      },
-      "description": "Request body representing a provider instance",
       "x-ms-parameter-location": "method"
     }
   }
