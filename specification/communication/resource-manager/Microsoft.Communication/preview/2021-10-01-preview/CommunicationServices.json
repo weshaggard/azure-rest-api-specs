@@ -74,6 +74,7 @@
           {
             "name": "nameAvailabilityParameters",
             "in": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/NameAvailabilityParameters"
             },
@@ -93,7 +94,7 @@
           "200": {
             "description": "Success. The response describes the name availability.",
             "schema": {
-              "$ref": "#/definitions/NameAvailability"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/CheckNameAvailabilityResponse"
             }
           },
           "default": {
@@ -277,7 +278,7 @@
             "description": "Parameters for the update operation",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/CommunicationServiceResource"
+              "$ref": "#/definitions/CommunicationServiceResourceUpdate"
             }
           },
           {
@@ -595,39 +596,15 @@
   "definitions": {
     "NameAvailabilityParameters": {
       "description": "Data POST-ed to the nameAvailability action",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/CheckNameAvailabilityRequest"
+        }
+      ],
       "required": [
         "type",
         "name"
-      ],
-      "type": "object",
-      "properties": {
-        "type": {
-          "description": "The resource type. Should be always \"Microsoft.Communication/CommunicationServices\".",
-          "type": "string"
-        },
-        "name": {
-          "description": "The CommunicationService name to validate. e.g.\"my-CommunicationService-name-here\"",
-          "type": "string"
-        }
-      }
-    },
-    "NameAvailability": {
-      "description": "Result of the request to check name availability. It contains a flag and possible reason of failure.",
-      "type": "object",
-      "properties": {
-        "nameAvailable": {
-          "description": "Indicates whether the name is available or not.",
-          "type": "boolean"
-        },
-        "reason": {
-          "description": "The reason of the availability. Required if name is not available.",
-          "type": "string"
-        },
-        "message": {
-          "description": "The message of the operation.",
-          "type": "string"
-        }
-      }
+      ]
     },
     "LinkNotificationHubParameters": {
       "description": "Description of an Azure Notification Hub to link to the communication service",
@@ -679,13 +656,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
-        },
-        {
-          "$ref": "#/definitions/LocationResource"
-        },
-        {
-          "$ref": "#/definitions/TaggedResource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
         }
       ],
       "properties": {
@@ -699,18 +670,12 @@
         }
       }
     },
-    "LocationResource": {
-      "description": "An ARM resource with its own location (not a global or an inherited location).",
-      "type": "object",
-      "properties": {
-        "location": {
-          "description": "The Azure location where the resource is running.",
-          "type": "string",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        }
+    "DomainsResourceList": {
+      "description": "List of email Domain resource Ids.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Resource ID of an EmailService/Domain resource linked to this resource."
       }
     },
     "TaggedResource": {
@@ -787,12 +752,7 @@
           "readOnly": true
         },
         "linkedDomains": {
-          "description": "List of email Domain resource Ids.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "Resource ID of an EmailService/Domain resource linked to this resource."
-          }
+          "$ref": "#/definitions/DomainsResourceList"
         }
       }
     },
@@ -833,6 +793,31 @@
             "name": "KeyType",
             "modelAsString": false
           }
+        }
+      }
+    },
+    "CommunicationServiceUpdateProperties": {
+      "description": "A class that describes the properties that can be updated for CommunicationService resource.",
+      "type": "object",
+      "properties": {
+        "linkedDomains": {
+          "$ref": "#/definitions/DomainsResourceList"
+        }
+      }
+    },
+    "CommunicationServiceResourceUpdate": {
+      "description": "A class representing update parameters for CommunicationService resource.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaggedResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/CommunicationServiceUpdateProperties",
+          "description": "The properties of the service.",
+          "x-ms-client-flatten": true
         }
       }
     }
