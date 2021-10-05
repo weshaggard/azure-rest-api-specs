@@ -1929,11 +1929,6 @@
           "description": "The Solution name.",
           "type": "string"
         },
-        "type": {
-          "description": "The resource type.",
-          "type": "string",
-          "readOnly": true
-        },
         "systemData": {
           "description": "Metadata pertaining to creation and last modification of the resource.",
           "$ref": "#/definitions/SystemData",
@@ -1962,38 +1957,13 @@
       "description": "Editable properties of a Solution inside the Azure Percept account.",
       "type": "object",
       "properties": {
-        "template": {
-          "description": "The template type.",
-          "enum": [
-            "AVA-SA"
-          ],
-          "x-ms-enum": {
-            "name": "SolutionTemplate",
-            "modelAsString": true
-          },
+        "name": {
+          "description": "The Solution name.",
           "type": "string"
         },
-        "topologies": {
-          "description": "Topologies associated with the Solution.",
-          "type": "array",
-          "items": {
-            "description": "Topology information.",
-            "type": "object",
-            "properties": {
-              "name": {
-                "description": "Topology name indentifier.",
-                "type": "string"
-              },
-              "definition": {
-                "description": "Array of strings with the JSON for the topology.",
-                "type": "array",
-                "items": {
-                  "description": "JSON topology.",
-                  "type": "string"
-                }
-              }
-            }
-          }
+        "properties": {
+          "description": "The properties of a Solution linked to the Azure Percept account.",
+          "$ref": "#/definitions/SolutionProperties"
         }
       }
     },
@@ -2001,48 +1971,59 @@
       "description": "The properties of a Solution linked to the Azure Percept account.",
       "type": "object",
       "properties": {
-        "template": {
-          "description": "The template type.",
-          "enum": [
-            "AVA-SA"
-          ],
-          "x-ms-enum": {
-            "name": "SolutionTemplate",
-            "modelAsString": true
-          },
-          "type": "string"
-        },
-        "topologies": {
-          "description": "Topologies associated with the Solution.",
-          "type": "array",
-          "items": {
-            "description": "Topology information.",
-            "type": "object",
-            "properties": {
-              "name": {
-                "description": "Topology name indentifier.",
-                "type": "string"
-              },
-              "definition": {
-                "description": "Array of strings with the JSON for the topology.",
-                "type": "array",
-                "items": {
-                  "description": "JSON topology.",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
         "components": {
           "description": "Components associated with the Solution.",
           "type": "array",
           "items": {
             "description": "Component information.",
             "type": "object",
-            "readOnly": true,
-            "additionalProperties": {
-              "type": "string"
+            "properties": {
+              "name": {
+                "description": "Component name.",
+                "type": "string"
+              },
+              "type": {
+                "description": "Component type.",
+                "type": "string"
+              },
+              "imageUrl": {
+                "description": "Component image Url.",
+                "type": "string"
+              },
+              "properties": {
+                "description": "Component properties.",
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "capabilities": {
+                "description": "Component capabilities.",
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "configuration": {
+                "description": "Component configuration.",
+                "type": "object",
+                "properties": {
+                  "directMethod": {
+                    "description": "Component direct method calls to IoT Hub module",
+                    "type": "array",
+                    "items": {
+                      "description": "Direct method properties",
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
@@ -2288,30 +2269,30 @@
       "x-ms-azure-resource": true,
       "properties": {
         "id": {
-            "description": "The unique identifier of a sensor.",
-            "type": "string",
-            "readOnly": true
+          "description": "The unique identifier of a sensor.",
+          "type": "string",
+          "readOnly": true
         },
         "name": {
-            "description": "The sensor name.",
-            "type": "string",
-            "readOnly": true,
-            "pattern": "^(?![0-9]+$)(?!-)[a-zA-Z0-9-]{2,49}[a-zA-Z0-9]$"
+          "description": "The sensor name.",
+          "type": "string",
+          "readOnly": true,
+          "pattern": "^(?![0-9]+$)(?!-)[a-zA-Z0-9-]{2,49}[a-zA-Z0-9]$"
         },
         "type": {
-            "description": "The resource type.",
-            "type": "string",
-            "readOnly": true
+          "description": "The resource type.",
+          "type": "string",
+          "readOnly": true
         },
         "systemData": {
-            "description": "Metadata pertaining to creation and last modification of the resource.",
-            "$ref": "#/definitions/SystemData",
-            "readOnly": true
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "$ref": "#/definitions/SystemData",
+          "readOnly": true
         },
         "properties": {
-            "x-ms-client-flatten": true,
-            "description": "Azure Percept sensor properties.",
-            "$ref": "#/definitions/SensorProperties"
+          "x-ms-client-flatten": true,
+          "description": "Azure Percept sensor properties.",
+          "$ref": "#/definitions/SensorProperties"
         }
       }
     },
@@ -2321,9 +2302,9 @@
       "x-ms-azure-resource": true,
       "properties": {
         "properties": {
-            "x-ms-client-flatten": true,
-            "description": "Azure Percept sensor editable properties.",
-            "$ref": "#/definitions/SensorEditableProperties"
+          "x-ms-client-flatten": true,
+          "description": "Azure Percept sensor editable properties.",
+          "$ref": "#/definitions/SensorEditableProperties"
         }
       }
     },
@@ -2334,7 +2315,7 @@
         "metadata": {
           "type": "object",
           "additionalProperties": {
-              "type": "string"
+            "type": "string"
           },
           "description": "A list of key value pairs representing additional metadata specific to each sensor. A maximum of 15 entries can be provided for a device. Each entry must have a key no greater than 128 characters and value no greater than 256 characters."
         }
@@ -2345,35 +2326,35 @@
       "type": "object",
       "properties": {
         "name": {
-            "description": "The sensor name.",
-            "type": "string"
+          "description": "The sensor name.",
+          "type": "string"
         },
         "location": {
-            "description": "The sensor location.",
-            "type": "string"
+          "description": "The sensor location.",
+          "type": "string"
         },
         "url": {
-            "description": "The sensor url.",
-            "type": "string"
+          "description": "The sensor url.",
+          "type": "string"
         },
         "username": {
-            "description": "The sensor username.",
-            "type": "string"
+          "description": "The sensor username.",
+          "type": "string"
         },
         "password": {
-            "description": "The sensor password.",
-            "type": "string"
+          "description": "The sensor password.",
+          "type": "string"
         },
         "kind": {
-            "description": "The sensor kind identifier.",
-            "enum": [
-                "camera"
-            ],
-            "type": "string",
-            "x-ms-enum": {
-                "name": "SensorKind",
-                "modelAsString": true
-            }
+          "description": "The sensor kind identifier.",
+          "enum": [
+            "camera"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "SensorKind",
+            "modelAsString": true
+          }
         }
       },
       "allOf": [
@@ -2386,7 +2367,7 @@
         "url",
         "kind"
       ]
-    }, 
+    },
     "SensorListResult": {
       "description": "The JSON-serialized array of Sensor objects with a next link.",
       "type": "object",
@@ -2396,16 +2377,16 @@
           "type": "array",
           "readOnly": true,
           "items": {
-              "$ref": "#/definitions/Sensor"
+            "$ref": "#/definitions/Sensor"
           }
         },
         "nextLink": {
-            "description": "The next link, if any.",
-            "type": "string",
-            "readOnly": true
+          "description": "The next link, if any.",
+          "type": "string",
+          "readOnly": true
         }
       }
-    },       
+    },
     "CheckNameAvailabilityRequest": {
       "description": "Name availability request.",
       "type": "object",
