@@ -36,11 +36,14 @@
         "tags": [
           "ApplicationRegistration"
         ],
-        "operationId": "ApplicationRegistration_List_SubscriptionLevel",
+        "operationId": "ApplicationRegistration_SubscriptionLevelList",
         "x-ms-examples": {
           "ApplicationRegistration Get": {
             "$ref": "./examples/ApplicationRegistration_List_SubscriptionLevel.json"
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         },
         "parameters": [
           {
@@ -51,6 +54,9 @@
           },
           {
             "$ref": "applicationManagers.json#/parameters/ApplicationManagerNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApplicationDefinitionIdParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -73,12 +79,12 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OpenLogisticsPlatform/applicationManagers/{applicationManagerName}/applicationRegistrations/{ApplicationRegistrationId}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OpenLogisticsPlatform/applicationManagers/{applicationManagerName}/applicationRegistrations/{applicationRegistrationId}": {
       "put": {
         "tags": [
           "ApplicationRegistration"
         ],
-        "operationId": "ApplicationRegistration_Put_SubscriptionLevel",
+        "operationId": "ApplicationRegistration_SubscriptionLevelPut",
         "x-ms-examples": {
           "ApplicationRegistration Put": {
             "$ref": "./examples/ApplicationRegistration_Put_SubscriptionLevel.json"
@@ -131,7 +137,7 @@
         "tags": [
           "ApplicationRegistration"
         ],
-        "operationId": "ApplicationRegistration_Get_SubscriptionLevel",
+        "operationId": "ApplicationRegistration_SubscriptionLevelGet",
         "x-ms-examples": {
           "ApplicationRegistration Get": {
             "$ref": "./examples/ApplicationRegistration_Get_SubscriptionLevel.json"
@@ -190,9 +196,9 @@
               "type": "string",
               "description": "Name to display for application to register"
             },
-            "applicationManifestId": {
+            "applicationDefinitionId": {
               "type": "string",
-              "description": "Manifest id for application to register"
+              "description": "Definition id for application to register"
             },
             "parameters": {
               "type": "object",
@@ -212,6 +218,11 @@
               "type": "string",
               "description": "sourceWorkspaceId for application to register"
             },
+            "provisioningState": {
+              "description": "The provisioning state of the resource.",
+              "readOnly": true,
+              "$ref": "#/definitions/ApplicationRegistrationProvisioningState"
+            },
             "status": {
               "type": "string",
               "description": "ISV provided status on application"
@@ -219,6 +230,18 @@
           }
         }
       }
+    },
+    "ApplicationRegistrationProvisioningState": {
+      "type": "string",
+      "readOnly": true,
+      "description": "The current provisioning state.",
+      "enum": [
+        "Accepted",
+        "Succeeded",
+        "Creating",
+        "Deleting",
+        "Failed"
+      ]
     },
     "ApplicationRegistrationResource": {
       "type": "object",
@@ -250,7 +273,7 @@
           "type": "string"
         },
         "value": {
-          "description": "The list of applicationRegistrations.",
+          "description": "The list of ApplicationRegistrations.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ApplicationRegistration"
@@ -260,9 +283,18 @@
     }
   },
   "parameters": {
+    "ApplicationDefinitionIdParameter": {
+      "type": "string",
+      "name": "application-definition-id",
+      "description": "The Id of your application definition (used part of queries).",
+      "in": "query",
+      "required": false,
+      "minLength": 1,
+      "x-ms-parameter-location": "method"
+    },
     "ApplicationRegistrationIdParameter": {
       "type": "string",
-      "name": "ApplicationRegistrationId",
+      "name": "applicationRegistrationId",
       "in": "path",
       "description": "The Id of application registration invite.",
       "required": true,
