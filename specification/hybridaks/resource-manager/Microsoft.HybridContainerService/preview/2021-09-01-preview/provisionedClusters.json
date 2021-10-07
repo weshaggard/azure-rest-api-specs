@@ -339,6 +339,124 @@
           }
         }
       }
+    }, 
+	"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridContainerService/provisionedClusters/{provisionedClustersName}/hybridIdentityMetadata/{hybridIdentityMetadataResourceName}": {
+      "put": {
+        "operationId": "hybridIdentityMetadata_Put",
+        "summary": "Creates the hybrid identity metadata resource",
+        "description": "Creates the hybrid identity metadata proxy resource that facilitates the managed identity provisioning.",		
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/provisionedClustersNameParameter"
+          },		  
+          {
+            "$ref": "#/parameters/hybridIdentityMetadataResourceNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/hybridIdentityMetadata"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created the hybridIdentityMetadata resource.",
+            "schema": {
+              "$ref": "#/definitions/hybridIdentityMetadata"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "hybridIdentityMetadata_Get",
+        "summary": "Get the hybrid identity metadata resource",
+        "description": "Get the hybrid identity metadata proxy resource.",				
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/provisionedClustersNameParameter"
+          },
+          {
+            "$ref": "#/parameters/hybridIdentityMetadataResourceNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get the hybridIdentityMetadata resource for the given AKS Edge cluster.",
+            "schema": {
+              "$ref": "#/definitions/hybridIdentityMetadata"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "hybridIdentityMetadata_Delete",
+        "summary": "Deletes the hybrid identity metadata resource",
+        "description": "Deletes the hybrid identity metadata proxy resource.",				
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/provisionedClustersNameParameter"
+          },
+          {
+            "$ref": "#/parameters/hybridIdentityMetadataResourceNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete the hybridIdentityMetadata resource"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     },
     "/providers/Microsoft.HybridContainerService/operations": {
       "get": {
@@ -373,6 +491,16 @@
       "type": "object",
       "x-ms-client-flatten": true,
       "properties": {
+        "features": {
+          "type": "object",   
+          "description": "Additional features specs like Arc Agent Onboarding.",		  
+          "properties": {		  
+            "arcAgentProfile": {
+              "description": "Arc agentry configuration for the provisioned cluster.",
+              "$ref": "#/definitions/ArcAgentProfile"
+            }
+		  }
+        },		  
         "addon": {
           "type": "object",
           "additionalProperties": {
@@ -456,7 +584,7 @@
             "$ref": "#/definitions/NodePoolConfig"
           },
           "description": "WorkerPool -Worker pool References"
-        },
+        },		
         "provisioningState": {
           "type": "string",
           "readOnly": true,
@@ -476,6 +604,16 @@
           "type": "object",
           "readOnly": true,
           "properties": {
+            "featuresStatus": {
+              "type": "object",         
+              "description": "Additional features status like Arc Agent Onboarding.",
+			  "properties": {		  			  
+                "arcAgentStatus": {
+                  "description": "Defines the observed Arc Agent status that is resourceSynced back to the ARM resource.",
+                  "$ref": "#/definitions/ArcAgentStatus"
+                }
+			  }
+            },
             "addonStatus": {
               "type": "object",
               "additionalProperties": {
@@ -542,6 +680,9 @@
       "type": "object",
       "x-ms-azure-resource": true,
       "properties": {
+        "identity": {
+          "$ref": "#/definitions/provisionedClusterIdentity"
+        },		  
         "properties": {
           "$ref": "#/definitions/provisionedClustersProperties"
         },
@@ -881,7 +1022,152 @@
         }
       },
       "description": "Results of the request to list operations."
-    }
+    },
+    "ArcAgentProfile": {
+      "description": "Defines the Arc Agent properties for the Provisioned clusters.",
+      "type": "object",
+      "properties": {
+        "agentOnboarding": {
+          "type": "string",
+          "description": "Indicates whether the Arc agent onboarding is enabled on the provisioned cluster. Defaults to Enabled.",
+          "default": "Enabled",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "x-ms-enum": {
+            "name": "AgentOnboardingOptions",
+            "modelAsString": true
+          }
+        },
+        "agentVersion": {
+          "type": "string",
+          "description": "Version of the Arc agents to be installed on the provisioned Provisioned cluster resource"
+        },
+        "aadAdminGroupObjectIds": {
+          "type": "array",
+          "description": "List of AAD groups that will be configured to get a cluster-admin role while accessing the provisioned cluster through a cluster connect workflow.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "agentAutoUpgrade": {
+          "type": "string",
+          "description": "Indicates whether the Arc agents on the provisioned clusters be upgraded automatically to the latest version. Defaults to Enabled.",
+          "default": "Enabled",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "x-ms-enum": {
+            "name": "AutoUpgradeOptions",
+            "modelAsString": true
+          }
+        }
+      }
+    },	
+    "ArcAgentStatus": {
+      "description": "Defines the observed Arc Agent status that is resourceSynced back to the ARM resource.",
+      "type": "object",
+      "properties": {
+        "deploymentState": {
+          "type": "string",
+          "description": "Observed deployment state of the Arc Agents on the target cluster. Possible values include: 'pending', 'provisioning', 'provisioned', 'deleting', 'failed', 'upgrading'",
+          "enum": [
+            "pending",
+            "provisioning",
+            "provisioned",
+            "deleting",
+            "failed",
+            "upgrading"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "deploymentState"
+          }
+        },				
+        "errorMessage": {
+          "type": "string",
+          "description": "Error messages while onboarding/upgrading/uninstalling the Arc agents"
+        },				  
+        "onboardingPublicKey": {
+          "type": "string",
+          "description": "Onboarding public key for provisioning the Managed identity for the HybridAKS cluster. Will be used to create the hybridIdentityMetadata proxy resource and will not be persisted."
+        },				  				
+        "agentVersion": {
+          "type": "string",
+          "description": "Version of the Arc agents currently running on the Provisioned cluster resource."
+        },
+        "coreCount": {
+          "type": "integer",
+          "description": "Number of CPU cores present in the Provisioned cluster resource"
+        },
+        "managedIdentityCertificateExpirationTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ManagedIdentity certificate expiration time (ValidUntil)."
+        },
+        "lastConnectivityTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last connected timestamp of the Provisioned cluster resource."
+        }
+      }
+    },	
+    "provisionedClusterIdentity": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "principalId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The principal id of provisioned cluster identity. This property will only be provided for a system assigned identity."
+        },
+        "tenantId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The tenant id associated with the provisioned cluster. This property will only be provided for a system assigned identity."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of identity used for the provisioned cluster. The type SystemAssigned, includes a system created identity. The type None means no identity is assigned to the provisioned cluster.",
+          "enum": [
+            "None",
+            "SystemAssigned"
+          ],
+          "x-ms-enum": {
+            "name": "ResourceIdentityType",
+            "modelAsString": false
+          }
+        }
+      },
+      "description": "Identity for the Provisioned cluster."
+    },
+    "hybridIdentityMetadata": {
+      "description": "Defines the hybridIdentityMetadata.",
+      "type": "object",
+      "properties": {
+        "resourceUid": {
+          "description": "Unique id of the parent provisioned cluster resource.",
+          "type": "string"
+        },
+        "publicKey": {
+          "description": "Onboarding public key for provisioning the Managed identity for the HybridAKS cluster.",
+          "type": "string"
+        },
+        "identity": {
+          "$ref": "#/definitions/provisionedClusterIdentity",
+          "description": "The identity of the provisioned cluster."
+        },
+        "provisioningState": {
+          "description": "provisioning state of the hybridIdentityMetadata resource.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    }	
   },
   "parameters": {
     "provisionedClustersNameParameter": {
@@ -893,6 +1179,16 @@
       "x-ms-parameter-location": "method",
       "maxLength": 64,
       "minLength": 3
-    }
+    },
+    "hybridIdentityMetadataResourceNameParameter": {
+      "name": "hybridIdentityMetadataResourceName",
+      "description": "Parameter for the name of the hybrid identity metadata resource.",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method",
+      "maxLength": 64,
+      "minLength": 3
+    }	
   }
 }
