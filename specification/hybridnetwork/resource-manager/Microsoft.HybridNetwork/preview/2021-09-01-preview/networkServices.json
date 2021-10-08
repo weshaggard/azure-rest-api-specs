@@ -320,11 +320,17 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/NetworkServicePropertiesFormat",
           "description": "Hybrid network networkService properties."
+        },
+        "systemData": {
+          "x-ms-client-flatten": true,
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "readOnly": true,
+          "description": "Metadata pertaining to creation and last modification of the resource."
         }
       },
       "allOf": [
         {
-          "$ref": "./common.json#/definitions/Resource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
         }
       ],
       "description": "Hybrid network networkService resource."
@@ -337,9 +343,23 @@
           "$ref": "./common.json#/definitions/ProvisioningState",
           "description": "The provisioning state of the site resource. **TODO**: Confirm if this is needed."
         },
-        "genericParametersParameters": {
-          "$ref": "./common.json#/definitions/GenericParameters",
-          "description": "The parameters for the generic object."
+        "networkServiceTemplate": {
+          "$ref": "./common.json#/definitions/SubResource",
+          "description": "The reference to the network service descriptor."
+        },
+        "defaultSitesForNetworkFunctions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NFVISite"
+          },
+          "description": "The default NFVI sites."
+        },
+        "linkedNetworkFunctions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NFInstanceReference"
+          },
+          "description": "The linked network functions."
         }
       }
     },
@@ -359,6 +379,60 @@
         }
       },
       "description": "Response for hybrid network networkServices API service call."
+    },
+    "NFVISite": {
+      "properties": {
+        "nfviType": {
+          "$ref": "./common.json#/definitions/NFVIType",
+          "description": "The NFVI type."
+        },
+        "siteResource": {
+          "$ref": "./common.json#/definitions/SubResource",
+          "description": "The reference to the network site."
+        }
+      },
+      "description": "The service descriptor configuration."
+    },
+    "NFInstanceReference": {
+      "properties": {
+        "referenceName": {
+          "type": "string",
+          "description": "The reference name."
+        },
+        "instanceName": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The reference name."
+        },
+        "skuName": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The sku name for the network function."
+        },
+        "vendorName": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The vendor name for the network function."
+        },
+        "nfviType": {
+          "readOnly": true,
+          "$ref": "./common.json#/definitions/NFVIType",
+          "description": "The NFVI type."
+        },
+        "siteResource": {
+          "$ref": "./common.json#/definitions/SubResource",
+          "description": "The reference to the network site."
+        },
+        "isOverrideDescriptorAllowed": {
+          "type": "boolean",
+          "description": "Indicates whether override NSD NFD descriptor or not."
+        },
+        "descriptor": {
+          "$ref": "./common.json#/definitions/GenericParameters",
+          "description": "The parameters for the descriptor."
+        }
+      },
+      "description": "The NF Instance reference."
     }
   }
 }
