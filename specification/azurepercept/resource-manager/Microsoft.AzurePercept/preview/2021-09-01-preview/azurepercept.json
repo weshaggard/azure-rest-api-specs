@@ -575,6 +575,52 @@
         "deprecated": false
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{resourceName}/devices/{deviceName}/discoverSensors": {
+      "post": {
+        "tags": [
+          "POST"
+        ],
+        "summary": "Discover sensors associated to Azure Percept device.",
+        "operationId": "Devices_Action_DiscoverSensors",
+        "x-ms-examples": {
+          "Devices_Action_DiscoverSensors": {
+            "$ref": "./examples/Devices_Action_DiscoverSensors.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/resourceName"
+          },
+          {
+            "$ref": "#/parameters/deviceName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The action was successfully executed.",
+            "schema": {
+              "$ref": "#/definitions/DeviceSensorDiscover"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{resourceName}/targets": {
       "get": {
         "tags": [
@@ -1558,6 +1604,105 @@
         "deprecated": false
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{resourceName}/devices/{deviceName}/sensors/{sensorName}/listSensorInfo": {
+      "post": {
+        "tags": [
+          "POST"
+        ],
+        "summary": "List sensors info.",
+        "operationId": "Sensors_Action_SensorInfo",
+        "x-ms-examples": {
+          "Sensors_Action_SensorInfo": {
+            "$ref": "./examples/Sensors_Action_ListSensorInfo.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/resourceName"
+          },
+          {
+            "$ref": "#/parameters/deviceName"
+          },
+          {
+            "$ref": "#/parameters/sensorName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The action was successfully executed.",
+            "schema": {
+              "$ref": "#/definitions/SensorInfo"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{resourceName}/devices/{deviceName}/sensors/{sensorName}/GetThumbnail": {
+      "post": {
+        "tags": [
+          "POST"
+        ],
+        "produces":[
+          "image/png",
+          "image/jpeg"
+        ],
+        "summary": "Get snapshot of the camera sensor in an Azure Percept device.",
+        "operationId": "Sensors_Action_GetThumbnail",
+        "x-ms-examples": {
+          "Sensors_Action_GetThumbnail": {
+            "$ref": "./examples/Sensors_Action_GetThumbnail.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-version"
+          }, 
+          {
+            "$ref": "#/parameters/subscriptionId"
+          }, 
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          }, 
+          {
+            "$ref": "#/parameters/resourceName"
+          }, 
+          {
+            "$ref": "#/parameters/deviceName"
+          }, 
+          {
+            "$ref": "#/parameters/sensorName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The response contains a image/jpg thumbnail of the camera sensor."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },  
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{resourceName}/solutioninstances": {
       "get": {
         "tags": [
@@ -2410,6 +2555,48 @@
         }
       }
     },
+    "DeviceSensorDiscover": {
+      "description": "Discovered sensor information list.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The discovered sensor name.",
+          "type": "string",
+          "readOnly": true
+        },
+        "hardware": {
+          "description": "The discovered sensor hardware id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "location": {
+          "description": "The discovered sensor location.",
+          "type": "string",
+          "readOnly": true
+        },
+        "xaddrs": {
+          "description": "List of transforation addresses of the discovered device.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "remoteAddress": {
+          "description": "Remote addresses of the discovered device.",
+          "type": "string",
+          "readOnly": true
+        },
+        "scopeUris": {
+          "description": "List of scoped URIs of the discovered device.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "Target": {
       "description": "The description of a target inside the Azure Percept account.",
       "type": "object",
@@ -2638,6 +2825,44 @@
           "description": "The next link, if any.",
           "type": "string",
           "readOnly": true
+        }
+      }
+    },
+    "SensorInfo": {
+      "description": "The JSON-serialized array of Sensor objects with a next link.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The sensor name.",
+          "type": "string",
+          "readOnly": true
+        },
+        "manufacturer": {
+          "description": "The sensor manufacturer.",
+          "type": "string",
+          "readOnly": true
+        },
+        "model": {
+          "description": "The sensor model.",
+          "type": "string",
+          "readOnly": true
+        },
+        "hardwareId": {
+          "description": "The sensor hardwareId.",
+          "type": "string",
+          "readOnly": true
+        },
+        "sensorType": {
+          "description": "The sensor sensorType.",
+          "type": "string",
+          "readOnly": true
+        },
+        "properties":{
+          "description": "sensor properties",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },
