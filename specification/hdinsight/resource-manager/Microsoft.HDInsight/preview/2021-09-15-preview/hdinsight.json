@@ -560,7 +560,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterServiceConfigsResult"
+              "$ref": "#/definitions/ClusterInstanceServiceConfigsResult"
             }
           },
           "default": {
@@ -608,7 +608,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterServiceConfigsResult"
+              "$ref": "#/definitions/ClusterInstanceServiceConfigsResult"
             }
           },
           "default": {
@@ -952,7 +952,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterInstanceViews"
+              "$ref": "#/definitions/ClusterInstanceViewsResult"
             }
           },
           "default": {
@@ -997,7 +997,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterInstanceView"
+              "$ref": "#/definitions/ClusterInstanceViewResult"
             }
           },
           "default": {
@@ -1042,7 +1042,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterInstanceViews"
+              "$ref": "#/definitions/ClusterInstanceViewsResult"
             }
           },
           "default": {
@@ -1090,7 +1090,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterInstanceView"
+              "$ref": "#/definitions/ClusterInstanceViewResult"
             }
           },
           "default": {
@@ -1198,7 +1198,8 @@
       "properties": {
         "subnetId": {
           "type": "string",
-          "description": "Cluster pool subnet resource id."
+          "description": "Cluster pool subnet resource id.",
+          "pattern": "^/subscriptions/([a-zA-Z0-9\\-]+)/resource[gG]roups/([a-zA-Z0-9\\-_()\\.]+)/providers/[mM]icrosoft\\.[nN]etwork/virtual[nN]etworks/([a-zA-Z0-9][a-zA-Z0-9_\\-\\.]{0,62}[a-zA-Z0-9_])/subnets/([a-zA-Z0-9][a-zA-Z0-9_\\-\\.]{0,78}[a-zA-Z0-9_])$"
         }
       }
     },
@@ -1215,7 +1216,27 @@
         },
         "workspaceId": {
           "type": "string",
-          "description": "Log analytics workspace to associate with the OMS agent."
+          "description": "Log analytics workspace to associate with the OMS agent.",
+          "pattern": "^/subscriptions/([a-zA-Z0-9\\-]+)/resource[gG]roups/([a-zA-Z0-9\\-_()\\.]+)/providers/[mM]icrosoft.[oO]perational[iI]nsights/workspaces/([A-Za-z0-9][A-Za-z0-9\\-]+[A-Za-z0-9])$"
+        }
+      }
+    },
+    "AksClusterProfile": {
+      "type": "object",
+      "description": "Properties of the cluster pool underlying AKS cluster.",
+      "properties": {
+        "aksClusterResourceId": {
+          "type": "string",
+          "description": "ARM Resource ID of the AKS cluster",
+          "pattern": "^/subscriptions/([a-zA-Z0-9\\-]+)/resource[gG]roups/([a-zA-Z0-9\\-_()\\.]+)/providers/[mM]icrosoft\\.[cC]ontainer[sS]ervice/managed[cC]lusters/([A-Za-z0-9][A-Za-z0-9\\-_]*[A-Za-z0-9]*)$"
+        },
+        "aksClusterAgentPoolIdentityProfile": {
+          "description": "Identity properties of the AKS cluster agentpool MSI",
+          "allOf": [
+            {
+              "$ref": "#/definitions/IdentityProfile"
+            }
+          ]
         }
       }
     },
@@ -1249,11 +1270,14 @@
           "example": "hdi-45cd32aead6e4a91b079a0cdbfac8c36",
           "readOnly": true
         },
-        "aksAgentPoolMsiResourceId": {
-          "type": "string",
-          "description": "Resource ID of underlying AKS agent pool MSI.",
-          "example": "/subscriptions/subid/resourceGroups/hdi-45cd32aead6e4a91b079a0cdbfac8c36/providers/Microsoft.ManagedIdentity/userAssignedIdentities/clusterpool1-agentpool",
-          "readOnly": true
+        "aksClusterProfile": {
+          "description": "Properties of underlying AKS cluster.",
+          "readOnly": true,
+          "allOf": [
+            {
+              "$ref": "#/definitions/AksClusterProfile"
+            }
+          ]
         },
         "networkProfile": {
           "description": "Cluster pool network profile.",
@@ -1326,19 +1350,6 @@
       },
       "description": "The list cluster operation response."
     },
-    "ClusterNetworkProfile": {
-      "type": "object",
-      "description": "Cluster networking configuration.",
-      "required": [
-        "subnetId"
-      ],
-      "properties": {
-        "subnetId": {
-          "type": "string",
-          "description": "Cluster subnet resource id."
-        }
-      }
-    },
     "ClusterLogAnalyticsProfile": {
       "type": "object",
       "description": "Cluster log analytics profile to enable or disable OMS agent for cluster.",
@@ -1373,9 +1384,9 @@
         }
       }
     },
-    "ClusterIdentityProfile": {
+    "IdentityProfile": {
       "type": "object",
-      "description": "Cluster identity profile with details of customer MSI for the cluster.",
+      "description": "Identity Profile with details of an MSI.",
       "required": [
         "msiResourceId",
         "msiClientId",
@@ -1384,15 +1395,18 @@
       "properties": {
         "msiResourceId": {
           "type": "string",
-          "description": "ResourceId of the MSI that has required access to customer resources."
+          "description": "ResourceId of the MSI.",
+          "pattern": "^/subscriptions/([a-zA-Z0-9\\-]+)/resource[gG]roups/([a-zA-Z0-9\\-_()\\.]+)/providers/[mM]icrosoft\\.[mM]anaged[iI]dentity/user[aA]ssigned[iI]dentities/([a-zA-Z0-9\\-\\._~]+)$"
         },
         "msiClientId": {
           "type": "string",
-          "description": "ClientId of the MSI."
+          "description": "ClientId of the MSI.",
+          "pattern": "^[{(]?[0-9A-Fa-f]{8}[-]?(?:[0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?$"
         },
         "msiObjectId": {
           "type": "string",
-          "description": "ObjectId of the MSI."
+          "description": "ObjectId of the MSI.",
+          "pattern": "^[{(]?[0-9A-Fa-f]{8}[-]?(?:[0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?$"
         }
       }
     },
@@ -1431,7 +1445,8 @@
         },
         "type": {
           "type": "string",
-          "description": "Type of key vault object: secret, key or certificate."
+          "description": "Type of key vault object: secret, key or certificate.",
+          "pattern": "^([kK][eE][yY]|[sS][eE][cC][rR][eE][tT]|[cC][eE][rR][tT][iI][fF][iI][cC][aA][tT][eE])$"
         },
         "version": {
           "type": "string",
@@ -1439,7 +1454,8 @@
         },
         "keyVaultObjectName": {
           "type": "string",
-          "description": "Object identifier name of the secret in key vault."
+          "description": "Object identifier name of the secret in key vault.",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9-]{1,126}$"
         }
       }
     },
@@ -1452,7 +1468,8 @@
       "properties": {
         "keyVaultResourceId": {
           "type": "string",
-          "description": "Name of the user Key Vault where all the cluster specific user secrets are stored."
+          "description": "Name of the user Key Vault where all the cluster specific user secrets are stored.",
+          "pattern": "^/subscriptions/([a-zA-Z0-9\\-]+)/resource[gG]roups/([a-zA-Z0-9\\-_()\\.]+)/providers/[mM]icrosoft\\.[kK]eyVault/vaults/([a-zA-Z0-9\\-\\._~]+)$"
         },
         "secrets": {
           "type": "array",
@@ -1581,7 +1598,7 @@
           "pattern": "^(0|[1-9][0-9]{0,18})\\.(0|[1-9][0-9]{0,18})\\.(0|[1-9][0-9]{0,18})-(0|[1-9][0-9]{0,18})\\.(0|[1-9][0-9]{0,18})$"
         },
         "identityProfile": {
-          "$ref": "#/definitions/ClusterIdentityProfile"
+          "$ref": "#/definitions/IdentityProfile"
         },
         "authorizationProfile": {
           "$ref": "#/definitions/ClusterAuthorizationProfile"
@@ -1597,6 +1614,12 @@
         },
         "connectivityProfile": {
           "$ref": "#/definitions/ConnectivityProfile"
+        },
+        "logAnalyticsProfile": {
+          "$ref": "#/definitions/ClusterLogAnalyticsProfile"
+        },
+        "sshProfile": {
+          "$ref": "#/definitions/SshProfile"
         },
         "kafkaProfile": {
           "type": "object",
@@ -1630,6 +1653,30 @@
         }
       },
       "description": "Cluster profile."
+    },
+    "SshProfile": {
+      "type": "object",
+      "description": "Ssh profile for the cluster.",
+      "required": [
+        "count"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of ssh pods per cluster.",
+          "format": "int32",
+          "maximum": 5.0,
+          "minimum": 0.0
+        },
+        "podPrefix": {
+          "type": "string",
+          "description": "Prefix of the pod names. Pod number will be appended to the prefix. The ingress URLs for the pods will be available at <clusterFqdn>/<sshBasePath>/<prefix>-<number>",
+          "minLength": 1,
+          "maxLength": 58,
+          "pattern": "^[a-z]([-a-z0-9]*[a-z0-9])?$",
+          "default": "pod"
+        }
+      }
     },
     "ClusterResourceProperties": {
       "type": "object",
@@ -1671,6 +1718,10 @@
         "computeProfile": {
           "type": "object",
           "description": "The compute profile.",
+          "required": [
+            "vmSize",
+            "count"
+          ],
           "properties": {
             "vmSize": {
               "type": "string",
@@ -1685,12 +1736,6 @@
               "minimum": 1.0
             }
           }
-        },
-        "networkProfile": {
-          "$ref": "#/definitions/ClusterNetworkProfile"
-        },
-        "logAnalyticsProfile": {
-          "$ref": "#/definitions/ClusterLogAnalyticsProfile"
         },
         "clusterProfile": {
           "$ref": "#/definitions/ClusterProfile"
@@ -1719,25 +1764,36 @@
         }
       ]
     },
-    "ClusterServiceConfigsResult": {
+    "ClusterInstanceServiceConfigsResult": {
       "type": "object",
+      "description": "Cluster/SessionCluster instance service configs api response.",
       "properties": {
         "value": {
           "type": "array",
+          "description": "Cluster/SessionCluster instance service config in the array.",
           "items": {
-            "$ref": "#/definitions/ServiceConfig"
-          },
-          "description": "ServiceConfig."
+            "$ref": "#/definitions/ClusterInstanceServiceConfig"
+          }
         },
         "nextLink": {
-          "description": "The link (url) to the next page of results.",
           "type": "string",
+          "description": "The link (url) to the next page of results.",
           "readOnly": true
         }
-      },
-      "description": "Cluster service config response."
+      }
     },
-    "ServiceConfig": {
+    "ClusterInstanceServiceConfig": {
+      "type": "object",
+      "description": "Cluster/SessionCluster instance service config.",
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Gets or sets the properties. Define service config properties.",
+          "$ref": "#/definitions/ClusterInstanceServiceConfigProperties"
+        }
+      }
+    },
+    "ClusterInstanceServiceConfigProperties": {
       "type": "object",
       "properties": {
         "serviceConfigName": {
@@ -1748,7 +1804,7 @@
           "type": "string",
           "description": "File Name."
         },
-        "value": {
+        "content": {
           "type": "string",
           "description": "Content in the service config file."
         }
@@ -1756,16 +1812,16 @@
       "required": [
         "serviceConfigName",
         "fileName",
-        "value"
+        "content"
       ],
       "description": "Service config response."
     },
-    "ClusterInstanceViews": {
+    "ClusterInstanceViewsResult": {
       "type": "object",
       "properties": {
         "value": {
           "items": {
-            "$ref": "#/definitions/ClusterInstanceView"
+            "$ref": "#/definitions/ClusterInstanceViewResult"
           },
           "type": "array"
         },
@@ -1777,49 +1833,91 @@
       },
       "description": "The instance view of a HDInsight Cluster."
     },
-    "ClusterInstanceView": {
+    "ClusterInstanceViewResult": {
       "type": "object",
+      "description": "Cluster Instance View.",
+      "required": [
+        "name",
+        "properties"
+      ],
       "properties": {
         "name": {
           "type": "string",
-          "description": "Name of the instance view"
+          "description": "Name of the instance view."
         },
-        "serviceStatuses": {
-          "items": {
-            "$ref": "#/definitions/ServiceStatusProperties"
-          },
-          "type": "array"
+        "properties": {
+          "description": "Properties of the instance view.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ClusterInstanceViewProperties"
+            }
+          ]
         }
-      },
+      }
+    },
+    "ClusterInstanceViewProperties": {
+      "type": "object",
       "required": [
+        "status",
         "serviceStatuses"
       ],
-      "description": "The instance view of a HDInsight Cluster."
-    },
-    "ServiceStatusProperties": {
-      "type": "object",
       "properties": {
-        "name": {
+        "status": {
+          "description": "Status of the instance view.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ClusterInstanceViewStatus"
+            }
+          ]
+        },
+        "serviceStatuses": {
+          "type": "array",
+          "description": "List of statuses of relevant services that make up the hilo cluster to surface to the customer.",
+          "items": {
+            "$ref": "#/definitions/ServiceStatus"
+          }
+        }
+      }
+    },
+    "ClusterInstanceViewStatus": {
+      "type": "object",
+      "description": "Status of the instance view.",
+      "required": [
+        "ready"
+      ],
+      "properties": {
+        "ready": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "ServiceStatus": {
+      "type": "object",
+      "description": "Describes the status of a service of a Hilo cluster.",
+      "required": [
+        "kind",
+        "ready"
+      ],
+      "properties": {
+        "kind": {
           "type": "string",
-          "description": "Name of the service"
+          "description": "Kind of the service. E.g. \"Zookeeper\"."
         },
         "ready": {
           "type": "string",
-          "description": "Indicates if the service is ready / healthy."
-        },
-        "reason": {
-          "type": "string",
-          "description": "A code describing the health of the service."
+          "description": "Indicates if the service is ready / healthy. Values can be \"true\", \"false\", \"unknown\" or anything else."
         },
         "message": {
           "type": "string",
-          "description": "A message describing the Reason."
+          "description": "A message describing the error if any."
         }
-      },
-      "required": [
-        "name",
-        "ready"
-      ]
+      }
     },
     "SessionClusterListResult": {
       "type": "object",
