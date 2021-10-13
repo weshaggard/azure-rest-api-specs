@@ -11,5 +11,5 @@ csharp:
   clear-output-folder: true
   client-side-validation: false
   namespace: Microsoft.Flows
-  output-folder: $(csharp-sdks-folder)/cts/management/Microsoft.Flows/GeneratedProtocol
+  output-folder: $(csharp-sdks-folder)/cts-experience/management/Microsoft.Flows/GeneratedProtocol
 ```

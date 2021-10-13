@@ -1,8 +1,8 @@
-# cts
+# cts-experience
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for cts.
+This is the AutoRest configuration file for cts-experience.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the cts.
+These are the global settings for the cts-experience.
 
 ```yaml
 openapi-type: arm
@@ -35,7 +35,7 @@ These settings apply only when `--tag=package-2021-09-07-preview` is specified o
 
 ```yaml $(tag) == 'package-2021-09-07-preview'
 input-file:
-  - Microsoft.Flows/preview/2021-09-07-preview/cts.json
+  - Microsoft.Flows/preview/2021-09-07-preview/cts-experience.json
 ```
 
 ---
