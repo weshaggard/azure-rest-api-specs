@@ -34,6 +34,48 @@
     }
   },
   "paths": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Fidalgo/skus": {
+      "parameters": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/TopParameter"
+        }
+      ],
+      "get": {
+        "tags": [
+          "SKUs"
+        ],
+        "description": "Lists the Microsoft.Fidalgo SKUs available in a subscription",
+        "operationId": "Skus_ListBySubscription",
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/SkuListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Skus_ListBySubscription": {
+            "$ref": "./examples/Skus_ListBySubscription.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fidalgo/projects/{projectName}/pools": {
       "parameters": [
         {
@@ -766,6 +808,48 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fidalgo/networksettings/{networkSettingName}/healthchecks/latest": {
+      "get": {
+        "tags": [
+          "Network Settings"
+        ],
+        "description": "Gets health check status details.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/NetworkSettingName"
+          }
+        ],
+        "operationId": "NetworkSettings_GetHealthDetails",
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/HealthCheckStatusDetails"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "NetworkSettings_GetHealthDetails": {
+            "$ref": "./examples/NetworkSettings_GetHealthDetails.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fidalgo/networksettings/{networkSettingName}/outboundNetworkDependenciesEndpoints": {
       "get": {
         "tags": [
@@ -813,6 +897,25 @@
     }
   },
   "definitions": {
+    "SkuListResult": {
+      "description": "Results of the Microsoft.Fidalgo SKU list operation.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Current page of results.",
+          "type": "array",
+          "items": {
+            "$ref": "commonDefinitions.json#/definitions/Sku"
+          },
+          "readOnly": true
+        },
+        "nextLink": {
+          "description": "URL to get the next set of results if there are any.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
     "Pool": {
       "description": "A pool of Virtual Machines.",
       "type": "object",
@@ -1038,10 +1141,6 @@
       "description": "Properties of network settings. These properties can be updated after the resource has been created.",
       "type": "object",
       "properties": {
-        "virtualNetworkId": {
-          "description": "Resource id of a vnet to join virtual machines in the pool to.",
-          "type": "string"
-        },
         "subnetId": {
           "description": "The subnet to attach Virtual Machines to",
           "type": "string"
@@ -1082,6 +1181,11 @@
           "description": "The provisioning state of the resource.",
           "$ref": "commonDefinitions.json#/definitions/ProvisioningState",
           "readOnly": true
+        },
+        "healthCheckStatus": {
+          "description": "Overall health status of the network connection. Health checks are run on creation, update, and periodically to validate the network connection.",
+          "$ref": "#/definitions/HealthCheckStatus",
+          "readOnly": true
         }
       }
     },
@@ -1099,6 +1203,112 @@
         },
         "nextLink": {
           "description": "URL to get the next set of results if there are any.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "HealthCheckStatus": {
+      "description": "Health check status values",
+      "enum": [
+        "Pending",
+        "Running",
+        "Passed",
+        "Failed",
+        "Warning",
+        "Unknown"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "HealthCheckStatus",
+        "modelAsString": true
+      }
+    },
+    "HealthCheckStatusDetails": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Health check status details properties.",
+          "$ref": "#/definitions/HealthCheckStatusDetailsProperties"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "readOnly": true
+        }
+      }
+    },
+    "HealthCheckStatusDetailsProperties": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "startDateTime": {
+          "type": "string",
+          "description": "Start time of last execution of the health checks.",
+          "readOnly": true,
+          "format": "date-time"
+        },
+        "endDateTime": {
+          "type": "string",
+          "description": "End time of last execution of the health checks.",
+          "readOnly": true,
+          "format": "date-time"
+        },
+        "healthChecks": {
+          "description": "Details for each health check item.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HealthCheck"
+          },
+          "readOnly": true
+        }
+      }
+    },
+    "HealthCheck": {
+      "description": "An individual health check item",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "The status of the health check item.",
+          "$ref": "#/definitions/HealthCheckStatus",
+          "readOnly": true
+        },
+        "displayName": {
+          "description": "The display name of this health check item.",
+          "type": "string",
+          "readOnly": true
+        },
+        "startDateTime": {
+          "description": "Start time of health check item.",
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time"
+        },
+        "endDateTime": {
+          "description": "End time of the health check item.",
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time"
+        },
+        "errorType": {
+          "description": "The type of error that occurred during this health check.",
+          "type": "string",
+          "readOnly": true
+        },
+        "recommendedAction": {
+          "description": "The recommended action to fix the corresponding error.",
+          "type": "string",
+          "readOnly": true
+        },
+        "additionalDetails": {
+          "description": "Additional details about the health check or the recommended action.",
           "type": "string",
           "readOnly": true
         }
