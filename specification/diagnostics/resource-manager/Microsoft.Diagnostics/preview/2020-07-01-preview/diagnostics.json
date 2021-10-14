@@ -336,9 +336,398 @@
           "nextLinkName": "nextLink"
         }
       }
+    },
+    "/{scope}/providers/Microsoft.Diagnostics/Apollo/{apolloResultName}": {
+      "put": {
+        "tags": [
+          "Apollo"
+        ],
+        "description": "Apollo Invoke Solution API",
+        "operationId": "Invoke_Apollo",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/ApolloNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "in": "body",
+            "name": "parameters",
+            "description": "The required parameters for this solution invocation.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "solutionId": {
+                  "description": "Solution Id",
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "parameters": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Apollo Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/ApolloArmResourceResponse"
+            }
+          },
+          "202": {
+            "description": "Accepted, diagnostic will be invoked and results patched back asyncrhonously."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Apollo"
+        ],
+        "description": "Apollo Get Solution API",
+        "operationId": "Get_Apollo",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/ApolloNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Insight Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/ApolloArmResourceResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/{scope}/providers/Microsoft.Diagnostics/Apollo": {
+      "get": {
+        "tags": [
+          "Apollo"
+        ],
+        "description": "Apollo List Result API",
+        "operationId": "List_Apollo",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Apollo Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/ApolloArmResourceList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "ApolloArmResourceList": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApolloArmResource"
+          }
+        }
+      }
+    },
+    "ApolloArmResourceResponse": {
+      "properties": {
+        "value": {
+          "type": "object",
+          "$ref": "#/definitions/ApolloArmResource"
+        }
+      }
+    },
+    "ApolloArmResource": {
+      "description": "Insight result modeled as arm resource.",
+      "properties": {
+        "id": {
+          "description": "Arm resource URI",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the resource",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of Arm resource",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Properties of the Arm resource",
+          "type": "object",
+          "$ref": "#/definitions/ApolloResult"
+        }
+      }
+    },
+    "ApolloResult": {
+      "description": "Apollo Result",
+      "properties": {
+        "title": {
+          "description": "Title of Apollo",
+          "type": "string"
+        },
+        "htmlContent": {
+          "description": "HTML Content",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of Apollo Execution",
+          "type": "string"
+        },
+        "ownershipId": {
+          "description": "OwnershipId",
+          "type": "string"
+        },
+        "solutionId": {
+          "description": "Solution Id",
+          "type": "string"
+        },
+        "solutionType": {
+          "description": "Solution Type",
+          "type": "string"
+        },
+        "requestId": {
+          "description": "Request Id",
+          "type": "string"
+        },
+        "sessionId": {
+          "description": "Session Id",
+          "type": "string"
+        },
+        "bindings": {
+          "description": "Bindings",
+          "type": "object",
+          "$ref": "#/definitions/Bindings"
+        }
+      }
+    },
+    "Bindings": {
+      "description": "Bindings",
+      "properties": {
+        "azureKb": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApolloAzureKBExecutionResult"
+          }
+        },
+        "insights": {
+          "description": "The problems (if any) detected by this insight.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiagnosticExecutionResult"
+          }
+        }
+      }
+    },
+    "ApolloAzureKBExecutionResult": {
+      "properties": {
+        "azureKBSearchResult": {
+          "type": "object",
+          "$ref": "#/definitions/ApolloAzureKBSolutionSearchResult"
+        }
+      }
+    },
+    "ApolloAzureKBSolutionSearchResult": {
+      "properties": {
+        "matches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApolloAzureKBSolutionSearchItem"
+          }
+        }
+      }
+    },
+    "ApolloAzureKBSolutionSearchItem": {
+      "properties": {
+        "content": {
+          "description": "Content of the search result",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the search result",
+          "type": "string"
+        },
+        "confidence": {
+          "description": "Confidence of the search result",
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "unifiedConfidence": {
+          "description": "Unified Confidence of the search result",
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "overAllRank": {
+          "description": "Overall rank of the search result",
+          "type": "integer"
+        },
+        "link": {
+          "description": "Link to the document",
+          "type": "string"
+        }
+      }
+    },
+    "DiagnosticExecutionResult": {
+      "description": "Apollo Result",
+      "properties": {
+        "replacementKey": {
+          "description": "Replacement Key",
+          "type": "string"
+        },
+        "executionText": {
+          "description": "Execution Text",
+          "type": "string"
+        },
+        "timeoutText": {
+          "description": "Timeout Text",
+          "type": "string"
+        },
+        "noResultText": {
+          "description": "No Result Text",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of Apollo Execution",
+          "type": "string"
+        },
+        "ownershipId": {
+          "description": "OwnershipId",
+          "type": "string"
+        },
+        "solutionId": {
+          "description": "Solution Id",
+          "type": "string"
+        },
+        "solutionType": {
+          "description": "Solution Type",
+          "type": "string"
+        },
+        "requestId": {
+          "description": "Request Id",
+          "type": "string"
+        },
+        "sessionId": {
+          "description": "Session Id",
+          "type": "string"
+        },
+        "diagnosticResult": {
+          "description": "diagnostic result",
+          "type": "object",
+          "$ref": "#/definitions/DiagnosticResult"
+        }
+      }
+    },
+    "DiagnosticResult": {
+      "description": "Diagnostic Result",
+      "properties": {
+        "symptomId": {
+          "type": "string"
+        },
+        "diagnosticPackageId": {
+          "type": "string"
+        },
+        "insightResult": {
+          "type": "object",
+          "$ref": "#/definitions/ApolloInsightResult"
+        }
+      }
+    },
+    "ApolloInsightResult": {
+      "properties": {
+        "Insights": {
+          "description": "The problems (if any) detected by this insight.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApolloInsight"
+          }
+        }
+      }
+    },
+    "ApolloInsight": {
+      "properties": {
+        "title": {
+          "description": "This insight's title.",
+          "type": "string"
+        },
+        "issueCategory": {
+          "description": "The category for the issue that this insight detected",
+          "type": "string"
+        },
+        "issueSubcategory": {
+          "description": "The subcategory for the issue that this insight detected.",
+          "type": "string"
+        },
+        "description": {
+          "type": "object",
+          "$ref": "#/definitions/ApolloDescription"
+        }
+      }
+    },
+    "ApolloDescription": {
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
     "DiscoveryFeedbackRequest": {
       "type": "object",
       "description": "Search Request body",
@@ -927,6 +1316,13 @@
     }
   },
   "parameters": {
+    "ApolloNameParameter": {
+      "name": "apolloResultName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Name of the insight result"
+    },
     "InsightNameParameter": {
       "name": "insightResultName",
       "in": "path",
