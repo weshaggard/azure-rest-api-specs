@@ -642,12 +642,12 @@
         }
       }
     },
-    "/providers/Microsoft.VideoIndexer/locations/{location}/classicAccount": {
-      "post": {
+    "/providers/Microsoft.VideoIndexer/locations/{location}/classicAccounts/{accountName}": {
+      "get": {
         "tags": [
           "Accounts"
         ],
-        "operationId": "ClassicAccounts_CreateOrUpdate",
+        "operationId": "ClassicAccounts_GetDetails",
         "description": "Gets the properties of an Azure Video Analyzer for Media Classic account.",
         "parameters": [
           {
@@ -657,12 +657,7 @@
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "in": "body",
-            "name": "parameters",
-            "description": "The name of the classic account.",
-            "schema": {
-              "$ref": "#/definitions/ClassicAccountRequestBody"
-            }
+            "$ref": "#/parameters/AccountNameParameter"
           }
         ],
         "responses": {
@@ -670,6 +665,13 @@
             "description": "The Azure Video Analyzer for Media account properties were retrieved successfully.",
             "schema": {
               "$ref": "#/definitions/ClassicAccount"
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "x-ms-error-response": true,
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "401": {
@@ -797,39 +799,27 @@
     "ClassicAccount": {
       "description": "An Azure Video Analyzer for Media classic account.",
       "type": "object",
-      "x-ms-azure-resource": true,
       "properties": {
-        "properties": {
+        "name": {
+          "description": "The account's name",
+          "type": "string",
+          "readOnly": true,
+          "example": "contoso-videoanalyzer"
+        },
+        "location": {
+          "description": "The account's location",
+          "type": "string",
+          "example": "westus"
+        },
+        "mediaServices": {
           "description": "List of classic account properties",
           "type": "object",
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/ClassicAccountProperties"
-        },
-        "id": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Fully qualified resource ID for the resource.",
-          "example": "/subscriptions/c450302a-5ad7-4038-9f2b-f83a01e0dcd9/resourceGroups/contoso-rg/providers/Microsoft.VideoIndexer/classicAccounts/contoso-videoanalyzer-classic-account"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The type of the resource.",
-          "example": "Microsoft.VideoIndexer/classicAccounts"
-        },
-        "systemData": {
-          "readOnly": true,
-          "description": "The system meta data relating to this resource.",
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+          "$ref": "#/definitions/ClassicAccountMediaServices"
         }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ClassicAccountSlim"
-        }
-      ]
+      }
     },
-    "ClassicAccountProperties": {
+    "ClassicAccountMediaServices": {
       "description": "Azure Video Analyzer for Media classic account properties",
       "type": "object",
       "properties": {
@@ -1294,17 +1284,6 @@
         }
       },
       "description": "The CheckNameAvailability operation response."
-    },
-    "ClassicAccountRequestBody": {
-      "description": "Request Body to get Classic Account",
-      "type": "object",
-      "properties": {
-        "accountName": {
-          "description": "The account's name",
-          "type": "string",
-          "example": "contoso-videoanalyzer"
-        }
-      }
     }
   },
   "parameters": {
