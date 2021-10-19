@@ -338,6 +338,53 @@
       }
     },
     "/{scope}/providers/Microsoft.Diagnostics/Apollo/{apolloResultName}": {
+      "put": {
+        "tags": [
+          "Apollo"
+        ],
+        "description": "Apollo Invoke Solution API",
+        "operationId": "Invoke_Apollo",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "$ref": "#/parameters/ApolloNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "ApolloInvokeRequest",
+            "description": "Apollo Invoke Request body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ApolloInvokeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Apollo Diagnostic Invocation (may contain errors)",
+            "schema": {
+              "$ref": "#/definitions/ApolloArmResourceResponse"
+            }
+          },
+          "202": {
+            "description": "Accepted, diagnostic will be invoked and results patched back asyncrhonously."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "Apollo"
@@ -391,29 +438,11 @@
             "$ref": "#/parameters/ApiVersionParameter"
           },
           {
+            "name": "ApolloInvokeRequest",
+            "description": "Apollo Invoke Request body",
             "in": "body",
-            "name": "updateInvokeRequest",
-            "description": "The required parameters for this solution invocation.",
             "schema": {
-              "type": "object",
-              "properties": {
-                "solutionId": {
-                  "description": "Solution Id",
-                  "type": "string"
-                },
-                "parameters": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  }
-                },
-                "tags": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
+              "$ref": "#/definitions/ApolloInvokeRequest"
             }
           }
         ],
