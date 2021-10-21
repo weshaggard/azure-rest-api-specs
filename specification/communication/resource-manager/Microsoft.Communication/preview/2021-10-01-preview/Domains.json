@@ -348,9 +348,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "The verification operation has been initiated."
-          },
           "202": {
             "description": "The initiateVerification operation is being performed in the background.",
             "headers": {
@@ -366,6 +363,10 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         },
         "produces": [
           "application/json"
@@ -412,9 +413,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "The verification operation has been canceled."
-          },
           "202": {
             "description": "The cancelVerification operation is being performed in the background.",
             "headers": {
@@ -430,6 +428,10 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         },
         "produces": [
           "application/json"
@@ -459,14 +461,8 @@
     },
     "VerificationStatusRecord": {
       "description": "A class that represents a VerificationStatus record.",
-      "required": [
-        "type"
-      ],
       "type": "object",
       "properties": {
-        "type": {
-          "$ref": "#/definitions/VerificationType"
-        },
         "status": {
           "description": "Status of the verification operation.",
           "enum": [
@@ -509,22 +505,12 @@
           "type": "string",
           "readOnly": true
         },
-        "verificationType": {
-          "$ref": "#/definitions/VerificationType"
-        },
         "ttl": {
           "description": "Represents an expiry time in seconds to represent how long this entry can be cached by the resolver, default = 3600sec.",
           "type": "integer",
           "format": "int32",
           "readOnly": true
         }
-      }
-    },
-    "DnsRecordList": {
-      "description": "List of DnsRecord",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/DnsRecord"
       }
     },
     "DomainProperties": {
@@ -580,31 +566,38 @@
         },
         "verificationStates": {
           "description": "List of VerificationStatusRecord",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/VerificationStatusRecord"
+          "type": "object",
+          "properties": {
+            "Domain": {
+              "$ref": "#/definitions/VerificationStatusRecord"
+            },
+            "SPF": {
+              "$ref": "#/definitions/VerificationStatusRecord"
+            },
+            "DKIM": {
+              "$ref": "#/definitions/VerificationStatusRecord"
+            },
+            "DMARC": {
+              "$ref": "#/definitions/VerificationStatusRecord"
+            }
           },
           "readOnly": true
         },
         "verificationRecords": {
           "description": "List of DnsRecord",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DnsRecord"
-          },
-          "readOnly": true
-        },
-        "usabilityStatus": {
-          "description": "Usability status of a Domains resource.",
           "type": "object",
           "properties": {
-            "isReadyToLinkWithCommunicationServices": {
-              "description": "True if the domain is ready to be linked to a CommunicationServices resource. False otherwise.",
-              "type": "boolean"
+            "Domain": {
+              "$ref": "#/definitions/DnsRecord"
             },
-            "errorCode": {
-              "description": "Error code. This property will only be present if isReadyToLinkWithCommunicationServices is false.",
-              "type": "string"
+            "SPF": {
+              "$ref": "#/definitions/DnsRecord"
+            },
+            "DKIM": {
+              "$ref": "#/definitions/DnsRecord"
+            },
+            "DMARC": {
+              "$ref": "#/definitions/DnsRecord"
             }
           },
           "readOnly": true

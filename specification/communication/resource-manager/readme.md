@@ -37,7 +37,9 @@ These settings apply only when `--tag=package-preview-2021-10` is specified on t
 
 ``` yaml $(tag) == 'package-preview-2021-10'
 input-file:
-  - Microsoft.Communication/preview/2021-10-01-preview/CommunicationService.json
+  - Microsoft.Communication/preview/2021-10-01-preview/CommunicationServices.json
+  - Microsoft.Communication/preview/2021-10-01-preview/Domains.json
+  - Microsoft.Communication/preview/2021-10-01-preview/EmailServices.json
 ```
 
 ``` yaml $(tag) == 'package-preview-2021-10' && $(generate-private)
