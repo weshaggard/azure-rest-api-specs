@@ -41,9 +41,6 @@
         ],
         "operationId": "Operations_List",
         "description": "Lists Operations.",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -68,9 +65,6 @@
           "Instances"
         ],
         "operationId": "Instances_ListBySubscription",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -117,9 +111,6 @@
           "Instances"
         ],
         "operationId": "Instances_ListByResourceGroup",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -172,9 +163,6 @@
           "Instances"
         ],
         "operationId": "instances_Get",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -228,12 +216,6 @@
           "Instances"
         ],
         "operationId": "instances_CreateOrUpdate",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -263,12 +245,6 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Instance"
-            }
-          },
-          "201": {
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/Instance"
@@ -300,13 +276,6 @@
           "Instances"
         ],
         "operationId": "instances_Patch",
-        "consumes": [
-          "application/merge-patch+json",
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -341,12 +310,6 @@
               "$ref": "#/definitions/Instance"
             }
           },
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/Instance"
-            }
-          },
           "default": {
             "description": "",
             "schema": {
@@ -359,23 +322,13 @@
           "Instances Update": {
             "$ref": "./examples/InstancesPatch.json"
           }
-        },
-        "security": [
-          {
-            "azure_auth": [
-              "user_impersonation"
-            ]
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
           "Instances"
         ],
         "operationId": "instances_Delete",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -418,14 +371,7 @@
           "Instances Update": {
             "$ref": "./examples/InstancesDelete.json"
           }
-        },
-        "security": [
-          {
-            "azure_auth": [
-              "user_impersonation"
-            ]
-          }
-        ]
+        }
       }
     }
   },
@@ -493,6 +439,7 @@
       }
     },
     "ProvisioningState": {
+      "description": "The provisioning state of resource.",
       "enum": [
         "Unknown",
         "Validating",
@@ -537,6 +484,8 @@
     },
     "Resource": {
       "type": "object",
+      "description": "Common resource representation.",
+      "x-ms-azure-resource": true,
       "properties": {
         "id": {
           "readOnly": true,
@@ -568,28 +517,39 @@
           "description": "system data",
           "title": "system data",
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+        },
+        "sku": {
+          "type": "string",
+          "description": "Name of SKU.",
+          "$ref": "#/definitions/Sku"
         }
-      },
-      "description": "Common resource representation.",
-      "x-ms-azure-resource": true
+      }
     },
     "CidrBlock": {
       "description": "this is an extension of IPAddress which includes logic related to Classes Interdomain Routing (CIDR) formatted IP Addresses.  \r\nE.g. 192.168.0.0/24, most people's default class C RFC 1918 IP space for their home router",
       "type": "string"
     },
+    "AppOidc": {
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "type": "string",
+          "description": "Client Id"
+        },
+        "secretUri": {
+          "type": "string",
+          "description": "Client secret"
+        }
+      }
+    },
     "InstancePropertiesFormat": {
       "type": "object",
       "properties": {
-        "sku": {
-          "type": "string",
-          "description": "Sku of the instance."
-        },
-        "environment": {
-          "type": "string",
-          "description": "Environment of the instance."
-        },
-        "instanceAddressSpace": {
+        "addressSpace": {
           "$ref": "#/definitions/CidrBlock"
+        },
+        "appOidc": {
+          "$ref": "#/definitions/AppOidc"
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
