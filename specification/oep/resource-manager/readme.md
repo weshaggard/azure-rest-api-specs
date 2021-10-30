@@ -26,6 +26,7 @@ These are the global settings for the oep.
 
 ```yaml
 openapi-type: arm
+openapi-subtype: rpaas
 tag: package-2021-06-01-preview
 ```
 
@@ -35,7 +36,7 @@ These settings apply only when `--tag=package-2021-06-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2021-06-01-preview'
 input-file:
-  - Microsoft.OEP/preview/2021-06-01-preview/oep.json
+  - Microsoft.OpenEnergyPlatform/preview/2021-06-01-preview/oep.json
 ```
 
 ---
