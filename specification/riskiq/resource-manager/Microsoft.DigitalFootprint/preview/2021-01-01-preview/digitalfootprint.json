@@ -26,10 +26,42 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.DigitalFootprint/Workspace": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.DigitalFootprint/Workspace": {
       "get": {
-        "description": "Returns list of Workspace.",
-        "operationId": "Workspace_List",
+        "description": "Returns list of Workspaces under the given subscription.",
+        "operationId": "Workspace_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace details.",
+            "schema": {
+              "$ref": "#/definitions/WorkspaceResourceList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorDetail"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DigitalFootprint/Workspace": {
+      "get": {
+        "description": "Returns list of Workspaces in the given resource group.",
+        "operationId": "Workspace_ListByResourceGroup",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceGroupNameParameter"
@@ -47,6 +79,12 @@
             "schema": {
               "$ref": "#/definitions/WorkspaceResourceList"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorDetail"
+            }
           }
         },
         "deprecated": false,
@@ -55,7 +93,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.DigitalFootprint/Workspace/{workspaceName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DigitalFootprint/Workspace/{workspaceName}": {
       "get": {
         "description": "Returns Workspace resource for a given name.",
         "operationId": "Workspace_Get",
@@ -191,7 +229,7 @@
         }
       }
     },
-    "/providers/microsoft.DigitalFootprint/operations": {
+    "/providers/Microsoft.DigitalFootprint/operations": {
       "get": {
         "description": "Returns list of operations.",
         "operationId": "Operation_List",
@@ -262,54 +300,11 @@
       "properties": {
         "properties": {
           "type": "object",
-          "required": [ "firstName", "lastName", "group", "likesTea" ],
+          "required": [ "workspaceID" ],
           "properties": {
-            "firstName": {
-              "type": "string",
-              "description": "Workspace full name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "middleName": {
-              "type": "string",
-              "description": "Workspace middle name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "lastName": {
-              "type": "string",
-              "description": "Workspace last name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "group": {
-              "type": "string",
-              "description": "group like Finance, HR etc...",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "password": {
-              "type": "string",
-              "description": "password.",
-              "x-ms-secret": [ "password" ]
-            },
-            "identificationNumber": {
-              "type": "string",
-              "readOnly": true,
-              "description": "unique id assigned at the time of user creation"
-            },
-            "likesTea": {
-              "type": "string",
-              "description": "Gets or sets the deployment mode.",
-              "enum": [ "Yes" ],
-              "x-ms-enum": {
-                "name": "likesTea",
-                "modelAsString": true
-              }
+            "workspaceID": {
+              "description": "Workspace ID",
+              "type": "integer"
             }
           }
         }
