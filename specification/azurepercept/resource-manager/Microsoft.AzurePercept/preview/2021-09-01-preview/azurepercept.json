@@ -1901,8 +1901,12 @@
         "sku": {
           "description": "Azure Percept account SKU.",
           "$ref": "#/definitions/AccountSku"
+        },
+        "identity": {
+          "$ref": "#/definitions/AccountsIdentity",
+          "description": "The identities associated to the Azure Percept account resource."
         }
-      },
+      },      
       "allOf": [
         {
           "$ref": "#/definitions/TrackedResource"
@@ -1919,6 +1923,10 @@
         "sku": {
           "description": "Azure Percept account SKU.",
           "$ref": "#/definitions/AccountSku"
+        },
+        "identity": {
+          "description": "Azure Percept account identity.",
+          "$ref": "#/definitions/AccountsIdentity"
         },
         "tags": {
           "type": "object",
@@ -2504,10 +2512,6 @@
           "$ref": "#/definitions/SolutionInstanceProperties",
           "description": "The resource properties.",
           "x-ms-client-flatten": true
-        },
-        "identity": {
-          "$ref": "#/definitions/SolutionInstanceIdentity",
-          "description": "The identities associated to the SolutionInstance resource."
         }
       },
       "type": "object",
@@ -2562,10 +2566,6 @@
           "x-ms-client-flatten": true,
           "description": "Azure Percept SolutionInstance editable properties.",
           "$ref": "#/definitions/SolutionInstanceProperties"
-        },
-        "identity": {
-          "$ref": "#/definitions/SolutionInstanceIdentity",
-          "description": "The identities associated to the SolutionInstance resource."
         }
       }
     },
@@ -2605,8 +2605,7 @@
           "description": "The account kind.",
           "enum": [
             "ava",
-            "computervision",
-            "iothub"
+            "computervision"
           ],
           "x-ms-enum": {
             "name": "kind",
@@ -2616,10 +2615,6 @@
         "id": {
           "type": "string",
           "description": "The ID of the associated account resource."
-        },
-        "identity": {
-          "$ref": "#/definitions/ResourceIdentity",
-          "description": "A managed identity that SolutionInstance will use to access the associated account."
         }
       }
     },
@@ -2667,19 +2662,6 @@
         }
       }
     },
-    "ResourceIdentity": {
-      "properties": {
-        "userAssignedIdentity": {
-          "type": "string",
-          "description": "The user assigned managed identity's resource identifier to use when accessing a resource."
-        }
-      },
-      "type": "object",
-      "required": [
-        "userAssignedIdentity"
-      ],
-      "description": "The user assigned managed identity to use when accessing a resource."
-    },
     "UserAssignedManagedIdentity": {
       "properties": {
         "clientId": {
@@ -2698,7 +2680,7 @@
         }
       },
       "type": "object",
-      "description": "The details of the user assigned managed identity used by the SolutionInstance resource."
+      "description": "The details of the user assigned managed identity."
     },
     "UserAssignedManagedIdentities": {
       "type": "object",
@@ -2707,11 +2689,19 @@
         "$ref": "#/definitions/UserAssignedManagedIdentity"
       }
     },
-    "SolutionInstanceIdentity": {
+    "AccountsIdentity": {
       "properties": {
         "type": {
           "type": "string",
-          "description": "The identity type."
+          "description": "The identity type.",
+          "enum": [
+            "UserAssigned",
+            "SystemAssigned"
+          ],
+          "x-ms-enum": {
+            "name": "type",
+            "modelAsString": true
+          }
         },
         "userAssignedIdentities": {
           "$ref": "#/definitions/UserAssignedManagedIdentities",
@@ -2722,7 +2712,7 @@
       "required": [
         "type"
       ],
-      "description": "The managed identity for the SolutionInstance resource."
+      "description": "The managed identity for the Accounts resource."
     },
     "CheckNameAvailabilityRequest": {
       "description": "Name availability request.",
