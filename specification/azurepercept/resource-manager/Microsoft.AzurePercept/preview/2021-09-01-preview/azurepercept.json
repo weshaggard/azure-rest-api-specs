@@ -848,7 +848,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The taget was successfully deleted."
+            "description": "The target was successfully deleted."
           },
           "204": {
             "description": "The request is valid, but the target does not exist."
@@ -1368,9 +1368,9 @@
           "POST"
         ],
         "summary": "List sensors info.",
-        "operationId": "Sensors_Action_SensorInfo",
+        "operationId": "Sensors_Action_ListSensorInfo",
         "x-ms-examples": {
-          "Sensors_Action_SensorInfo": {
+          "Sensors_Action_ListSensorInfo": {
             "$ref": "./examples/Sensors_Action_ListSensorInfo.json"
           }
         },
@@ -1411,7 +1411,7 @@
         "deprecated": false
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{resourceName}/devices/{deviceName}/sensors/{sensorName}/GetThumbnail": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{resourceName}/devices/{deviceName}/sensors/{sensorName}/getThumbnail": {
       "post": {
         "tags": [
           "POST"
@@ -1426,19 +1426,19 @@
         "parameters": [
           {
             "$ref": "#/parameters/api-version"
-          }, 
+          },
           {
             "$ref": "#/parameters/subscriptionId"
-          }, 
+          },
           {
             "$ref": "#/parameters/resourceGroupName"
-          }, 
+          },
           {
             "$ref": "#/parameters/resourceName"
-          }, 
+          },
           {
             "$ref": "#/parameters/deviceName"
-          }, 
+          },
           {
             "$ref": "#/parameters/sensorName"
           }
@@ -1459,7 +1459,7 @@
         },
         "deprecated": false
       }
-    },  
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{resourceName}/solutioninstances": {
       "get": {
         "tags": [
@@ -1611,7 +1611,7 @@
         "summary": "Partially update an existing solutionInstance inside an Azure Percept account.",
         "operationId": "SolutionInstances_Update",
         "x-ms-examples": {
-          "SolutionINstances_Update": {
+          "SolutionInstances_Update": {
             "$ref": "./examples/SolutionInstances_Update.json"
           }
         },
@@ -1798,6 +1798,7 @@
   "definitions": {
     "OperationListResult": {
       "description": "Result of the request to list Azure Percept operations. It contains a list of operations and a URL link to get the next set of results.",
+      "type": "object",
       "properties": {
         "value": {
           "description": "List of operations supported by the Microsoft.AzurePercept resource provider.",
@@ -1829,6 +1830,7 @@
         },
         "display": {
           "description": "The operation supported by Azure Percept.",
+          "type": "object",
           "properties": {
             "provider": {
               "readOnly": true,
@@ -1906,7 +1908,7 @@
           "$ref": "#/definitions/AccountsIdentity",
           "description": "The identities associated to the Azure Percept account resource."
         }
-      },      
+      },
       "allOf": [
         {
           "$ref": "#/definitions/TrackedResource"
@@ -2021,11 +2023,7 @@
       "description": "Editable properties of a Solution inside the Azure Percept account.",
       "type": "object",
       "properties": {
-        "name": {
-          "description": "The Solution name.",
-          "type": "string"
-        },
-        "properties": {
+        "Properties": {
           "description": "The properties of a Solution linked to the Azure Percept account.",
           "$ref": "#/definitions/SolutionProperties"
         }
@@ -2201,7 +2199,7 @@
       "description": "Discover sensor response.",
       "type": "object",
       "properties": {
-        "value":{
+        "value": {
           "description": "The array of sensors discovered.",
           "type": "array",
           "readOnly": true,
@@ -2242,7 +2240,7 @@
           "readOnly": true
         },
         "xaddrs": {
-          "description": "List of transforation addresses of the discovered device.",
+          "description": "List of transformation addresses of the discovered device.",
           "type": "array",
           "readOnly": true,
           "items": {
@@ -2261,6 +2259,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "uuid": {
+          "description": "UUID of the discovered device.",
+          "type": "string",
+          "readOnly": true
         }
       }
     },
@@ -2413,8 +2416,8 @@
           "description": "The sensor url.",
           "type": "string"
         },
-        "username": {
-          "description": "The sensor username.",
+        "userName": {
+          "description": "The sensor userName.",
           "type": "string"
         },
         "password": {
@@ -2492,7 +2495,7 @@
           "type": "string",
           "readOnly": true
         },
-        "properties":{
+        "properties": {
           "description": "sensor properties",
           "type": "object",
           "additionalProperties": {
@@ -2548,7 +2551,7 @@
           "description": "Component configurations.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SolutionInstanceConfiguaration"
+            "$ref": "#/definitions/SolutionInstanceConfiguration"
           }
         }
       },
@@ -2569,7 +2572,8 @@
         }
       }
     },
-    "SolutionInstanceConfiguaration": {
+    "SolutionInstanceConfiguration": {
+      "type": "object",
       "properties": {
         "operation": {
           "type": "string",
@@ -2587,7 +2591,7 @@
           "description": "The component name for the configuration.",
           "type": "string"
         },
-        "value":{
+        "value": {
           "type": "object",
           "additionalProperties": true,
           "description": "Defines the value for the configuration."
@@ -2759,59 +2763,6 @@
         }
       }
     },
-    "systemData": {
-      "description": "Metadata pertaining to creation and last modification of the resource.",
-      "type": "object",
-      "readOnly": true,
-      "properties": {
-        "createdBy": {
-          "type": "string",
-          "description": "The identity that created the resource."
-        },
-        "createdByType": {
-          "type": "string",
-          "description": "The type of identity that created the resource.",
-          "enum": [
-            "User",
-            "Application",
-            "ManagedIdentity",
-            "Key"
-          ],
-          "x-ms-enum": {
-            "name": "createdByType",
-            "modelAsString": true
-          }
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp of resource creation (UTC)."
-        },
-        "lastModifiedBy": {
-          "type": "string",
-          "description": "The identity that last modified the resource."
-        },
-        "lastModifiedByType": {
-          "type": "string",
-          "description": "The type of identity that last modified the resource.",
-          "enum": [
-            "User",
-            "Application",
-            "ManagedIdentity",
-            "Key"
-          ],
-          "x-ms-enum": {
-            "name": "createdByType",
-            "modelAsString": true
-          }
-        },
-        "lastModifiedAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp of resource last modification (UTC)"
-        }
-      }
-    },
     "Resource": {
       "title": "Resource",
       "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
@@ -2836,7 +2787,7 @@
           "readOnly": true,
           "type": "object",
           "description": "Azure Resource Manager metadata containing createdBy and modifiedBy information.",
-          "$ref": "#/definitions/systemData"
+          "$ref": "#/definitions/SystemData"
         }
       },
       "x-ms-azure-resource": true
