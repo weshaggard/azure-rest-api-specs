@@ -472,16 +472,16 @@
       "description": "Arm default resource properties",
       "properties": {
         "id": {
-          "type": "string",
-          "description": "Full resource uri of the resource"
+          "description": "Full resource uri of the resource",
+          "type": "string"
         },
         "type": {
-          "type": "string",
-          "description": "Type of resource"
+          "description": "Type of resource",
+          "type": "string"
         },
         "name": {
-          "type": "string",
-          "description": "Resource name"
+          "description": "Resource name",
+          "type": "string"
         }
       }
     },
@@ -501,10 +501,11 @@
       "description": "Apollo Invoke properties.",
       "properties": {
         "solutionId": {
-          "type": "string",
-          "description": "Solution Id."
+          "description": "Solution Id to identify single Apollo Solution",
+          "type": "string"
         },
         "parameters": {
+          "description": "Client input parameters to run Apollo Solution",
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -540,218 +541,245 @@
     "ApolloResult": {
       "description": "Apollo Result",
       "properties": {
-        "title": {
-          "description": "Title of Apollo",
-          "type": "string"
-        },
-        "htmlContent": {
-          "description": "HTML Content",
-          "type": "string"
-        },
-        "status": {
-          "description": "Status of Apollo Execution",
-          "type": "string"
-        },
-        "ownershipId": {
-          "description": "OwnershipId",
-          "type": "string"
-        },
         "solutionId": {
-          "description": "Solution Id",
+          "description": "Solution Id to identify single Apollo Solution",
           "type": "string"
         },
         "solutionType": {
           "description": "Solution Type",
           "type": "string"
         },
-        "requestId": {
-          "description": "Request Id",
+        "solutionInstanceId": {
+          "description": "Unique solution instance Id to identify solution execution result",
           "type": "string"
         },
-        "sessionId": {
-          "description": "Session Id",
+        "status": {
+          "description": "Status of Apollo Execution",
           "type": "string"
+        },
+        "title": {
+          "description": "The title",
+          "type": "string"
+        },
+        "htmlContent": {
+          "description": "The HTML content that needs to be rendered and shown to customer",
+          "type": "string"
+        },
+        "parameters": {
+          "description": "Client input parameters to run Apollo Solution",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         },
         "bindings": {
-          "description": "Bindings",
+          "description": "List of rich components (Insights, Videos, Charts, etc.) that need to be replaced in the htmlContent",
           "type": "object",
-          "$ref": "#/definitions/Bindings"
+          "$ref": "#/definitions/BindingExecutionResult"
+        },
+        "sections": {
+          "description": "Part of the solution and are dividers in the solution rendering.",
+          "type": "object",
+          "$ref": "#/definitions/SectionExecutionResult"
         }
       }
     },
-    "Bindings": {
-      "description": "Bindings",
+    "SectionExecutionResult": {
+      "description": "Each section is placed in an accordion control and contains htmlContent and bindings that help replace rich components in the htmlContent",
+      "properties": {
+        "title": {
+          "description": "The title",
+          "type": "string"
+        },
+        "htmlContent": {
+          "description": "The HTML content that needs to be rendered and shown to customer",
+          "type": "string"
+        },
+        "bindings": {
+          "description": "List of rich components (Insights, Videos, Charts, etc.) that need to be replaced in the htmlContent",
+          "type": "object",
+          "$ref": "#/definitions/BindingExecutionResult"
+        }
+      }
+    },
+    "BindingExecutionResult": {
+      "description": "List of rich components (Insights, Videos, Charts, etc.) that need to be replaced in the htmlContent",
       "properties": {
         "azureKb": {
+          "description": "Content ingested from many places, such as Azure public docs, Stack, MSDN, Q&A",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ApolloAzureKBExecutionResult"
           }
         },
         "insights": {
-          "description": "The problems (if any) detected by this insight.",
+          "description": "diagnosis and data collected on the customer's deployed application",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/DiagnosticExecutionResult"
+            "$ref": "#/definitions/ApolloInsightExecutionResult"
+          }
+        },
+        "videos": {
+          "description": "Video solutions, which have the power to engage the customer by stimulating their senses",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Video"
+          }
+        },
+        "videoGroups": {
+          "description": "Group of Videos",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VideoGroup"
+          }
+        },
+        "commonSolutions": {
+          "description": "SelfHelp Articles written in markdown language, which will be shown inside HTMLContent",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommonSolution"
           }
         }
       }
     },
     "ApolloAzureKBExecutionResult": {
+      "description": "insight execution result detail",
       "properties": {
-        "azureKBSearchResult": {
-          "type": "object",
-          "$ref": "#/definitions/ApolloAzureKBSolutionSearchResult"
-        }
-      }
-    },
-    "ApolloAzureKBSolutionSearchResult": {
-      "properties": {
-        "matches": {
+        "ShowSummary": {
+          "description": "Whether to show AzureKB summary to Customers",
+          "type": "boolean"
+        },
+        "ShowSource": {
+          "description": "Whether to show AzureKB source to Customers",
+          "type": "boolean"
+        },
+        "solutionType": {
+          "description": "Solution Type",
+          "type": "string"
+        },
+        "replacementKey": {
+          "description": "Place holder used in HTML Content replace control with the insight content",
+          "type": "string"
+        },
+        "searchResults": {
+          "description": "Array of AzureKB Search Results",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ApolloAzureKBSolutionSearchItem"
+            "$ref": "#/definitions/AzureKBSearchResultProperties"
           }
         }
       }
     },
-    "ApolloAzureKBSolutionSearchItem": {
+    "ApolloInsightExecutionResult": {
+      "description": "insight execution result detail",
       "properties": {
-        "content": {
-          "description": "Content of the search result",
-          "type": "string"
-        },
-        "title": {
-          "description": "Title of the search result",
-          "type": "string"
-        },
-        "confidence": {
-          "description": "Confidence of the search result",
-          "type": "string",
-          "enum": [
-            "Low",
-            "Medium",
-            "High"
-          ]
-        },
-        "unifiedConfidence": {
-          "description": "Unified Confidence of the search result",
-          "type": "string",
-          "enum": [
-            "Low",
-            "Medium",
-            "High"
-          ]
-        },
-        "overAllRank": {
-          "description": "Overall rank of the search result",
-          "type": "integer"
-        },
-        "link": {
-          "description": "Link to the document",
-          "type": "string"
-        }
-      }
-    },
-    "DiagnosticExecutionResult": {
-      "description": "Apollo Result",
-      "properties": {
-        "replacementKey": {
-          "description": "Replacement Key",
-          "type": "string"
-        },
-        "executionText": {
-          "description": "Execution Text",
-          "type": "string"
-        },
-        "timeoutText": {
-          "description": "Timeout Text",
-          "type": "string"
-        },
-        "noResultText": {
-          "description": "No Result Text",
-          "type": "string"
-        },
-        "status": {
-          "description": "Status of Apollo Execution",
-          "type": "string"
-        },
-        "ownershipId": {
-          "description": "OwnershipId",
-          "type": "string"
-        },
         "solutionId": {
-          "description": "Solution Id",
+          "description": "Solution Id to identify single Apollo Solution",
           "type": "string"
         },
         "solutionType": {
           "description": "Solution Type",
           "type": "string"
         },
-        "requestId": {
-          "description": "Request Id",
+        "solutionInstanceId": {
+          "description": "Unique solution instance Id to identify solution execution result",
           "type": "string"
         },
-        "sessionId": {
-          "description": "Session Id",
+        "status": {
+          "description": "Status of Apollo Execution",
           "type": "string"
         },
-        "diagnosticResult": {
-          "description": "diagnostic result",
-          "type": "object",
-          "$ref": "#/definitions/DiagnosticResult"
-        }
-      }
-    },
-    "DiagnosticResult": {
-      "description": "Diagnostic Result",
-      "properties": {
-        "symptomId": {
+        "executionText": {
+          "description": "Text to be presented to the user while the diagnostic is running",
           "type": "string"
         },
-        "diagnosticPackageId": {
+        "timeoutText": {
+          "description": "Failure text when diagnostic is timeout",
           "type": "string"
         },
-        "insightResult": {
-          "type": "object",
-          "$ref": "#/definitions/ApolloInsightResult"
-        }
-      }
-    },
-    "ApolloInsightResult": {
-      "properties": {
+        "noResultText": {
+          "description": "Text to be presented to the user if the diagnostic successfully completes but no insight is returned",
+          "type": "string"
+        },
+        "maxInsightCount": {
+          "description": "Defines the maximum number of insights to be presented if more than one insight is returned by the diagnostic",
+          "type": "string"
+        },
+        "additionalInputsReq": {
+          "description": "Defines if this should be showcased as a DSQ card to the user",
+          "type": "boolean"
+        },
+        "replacementKey": {
+          "description": "Place holder used in HTML Content replace control with the insight content",
+          "type": "string"
+        },
         "insights": {
-          "description": "The problems (if any) detected by this insight.",
+          "description": "The problems (if any) detected by this insight",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ApolloInsight"
+            "$ref": "#/definitions/Insight"
           }
         }
       }
     },
-    "ApolloInsight": {
+    "Video": {
+      "description": "Video detail",
       "properties": {
+        "src": {
+          "description": "Link to the video",
+          "type": "string"
+        },
+        "width": {
+          "description": "Width of video, which will be shown to customers",
+          "type": "string"
+        },
         "title": {
-          "description": "This insight's title.",
+          "description": "Title of the video",
           "type": "string"
         },
-        "issueCategory": {
-          "description": "The category for the issue that this insight detected",
+        "replacementKey": {
+          "description": "Place holder used in HTML Content replace control with the insight content",
           "type": "string"
-        },
-        "issueSubcategory": {
-          "description": "The subcategory for the issue that this insight detected.",
-          "type": "string"
-        },
-        "description": {
-          "type": "object",
-          "$ref": "#/definitions/ApolloDescription"
         }
       }
     },
-    "ApolloDescription": {
+    "VideoGroup": {
+      "description": "Video group detail",
       "properties": {
-        "value": {
+        "videos": {
+          "description": "List of videos will be shown to customers",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Video"
+          }
+        },
+        "replacementKey": {
+          "description": "Place holder used in HTML Content replace control with the insight content",
+          "type": "string"
+        }
+      }
+    },
+    "CommonSolution": {
+      "description": "Common Solution detail",
+      "properties": {
+        "title": {
+          "description": "Common article title",
+          "type": "string"
+        },
+        "gitHubPath": {
+          "description": "Path of the article in GitHub",
+          "type": "string"
+        },
+        "htmlContent": {
+          "description": "The HTML content that needs to be rendered and shown to customer",
+          "type": "string"
+        },
+        "type": {
+          "description": "Article type",
+          "type": "string"
+        },
+        "replacementKey": {
+          "description": "Place holder used in HTML Content replace control with the insight content",
           "type": "string"
         }
       }
