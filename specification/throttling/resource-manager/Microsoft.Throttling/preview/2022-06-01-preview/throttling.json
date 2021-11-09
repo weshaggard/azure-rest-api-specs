@@ -1,0 +1,211 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2022-06-01-preview",
+    "title": "throttling",
+    "description": "Description of the new service"
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Throttling/throttlingresource/{resourceName}": {
+      "put": {
+        "description": "Create a throttling resource.",
+        "operationId": "ThrottlingResources_Create",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created a throttling resource.",
+            "schema": {
+              "$ref": "#/definitions/ThrottlingResource"
+            }
+          },
+          "201": {
+            "description": "Long running operation.",
+            "schema": {
+              "$ref": "#/definitions/ThrottlingResource"
+            }
+          },
+          "default": {
+            "description": "Failed to create a throttling resource.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create a throttling resource": {
+            "$ref": "./examples/ThrottlingResourceCreate.json"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete a throttling resource",
+        "operationId": "ThrottlingResources_Delete",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted a throttling resource.",
+            "schema": {
+              "$ref": "#/definitions/ThrottlingResource"
+            }
+          },
+          "204": {
+            "description": "Failed to delete a throttling resource.",
+            "schema": {
+              "$ref": "#/definitions/ThrottlingResource"
+            }
+          },
+          "default": {
+            "description": "Failed to delete a throttling resource.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete a throttling resource": {
+            "$ref": "./examples/ThrottlingResourceDelete.json"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.Throttling/operations": {
+      "get": {
+        "description": "Return list of operations for Microsoft.Throttling resource provider.",
+        "operationId": "Operations_List",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation details.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
+            }
+          },
+          "default": {
+            "description": "Failed to retrive operation list.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ThrottlingResource": {
+      "type": "object",
+      "description": "throttling resource details",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
+        }
+      ],
+      "required": [
+        "properties"
+      ],
+      "properties": {
+        "systemData": {
+          "x-ms-client-flatten": true,
+          "readOnly": true,
+          "description": "Metadata pertaining to creation and last modification of the resource."
+        },
+        "properties": {
+          "x-ms-client-flatten": true,
+          "type": "object",
+          "required": [
+            "firstName",
+            "lastName",
+            "group"
+          ],
+          "properties": {
+            "firstName": {
+              "type": "string",
+              "description": "Employee full name.",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "lastName": {
+              "type": "string",
+              "description": "Employee last name.",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "group": {
+              "type": "string",
+              "description": "group like Finance, HR etc...",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "ResourceNameParameter": {
+      "name": "resourceName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of throttling resource to create",
+      "x-ms-parameter-location": "method"
+    }
+  }
+}
