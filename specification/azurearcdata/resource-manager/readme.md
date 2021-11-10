@@ -29,6 +29,13 @@ openapi-type: arm
 openapi-subtype: rpaas
 tag: package-2021-08-01
 ```
+### Tag: package-2021-11-01
+
+These settings apply only when `--tag=package-2021-11-01` is specified on the command line.
+
+```yaml $(tag) == 'package-2021-11-01'
+input-file:
+  - Microsoft.AzureArcData/stable/2021-11-01/azurearcdata.json
 
 ### Tag: package-2021-08-01
 
