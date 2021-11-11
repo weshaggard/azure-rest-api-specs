@@ -128,6 +128,53 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Workloads/locations/{location}/sapVirtualInstanceMetadata/supportedSku": {
+      "post": {
+        "tags": [
+          "SAPVirtualInstanceMetadata"
+        ],
+        "description": "Get SAP supported SKUs.",
+        "operationId": "SAPVirtualInstanceMetadata_SupportedSku",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "SAPSupportedSku",
+            "description": "SAP Supported SKU Request body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/SAPSupportedSkusRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SAP Supported SKU Result.",
+            "schema": {
+              "$ref": "#/definitions/SAPSupportedResourceSkusResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "SAPSupportedSku": {
+            "$ref": "./examples/sapvirtualinstances/SAPSupportedSkus.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Workloads/sapVirtualInstances/{sapVirtualInstanceName}": {
       "put": {
         "tags": [
@@ -1501,6 +1548,22 @@
         "read"
       ]
     },
+    "SAPDatabaseType": {
+      "description": "Defines the supported SAP Database types.",
+      "enum": [
+        "HANA",
+        "DB2"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "SAPDatabaseType",
+        "modelAsString": true
+      },
+      "x-ms-mutability": [
+        "create",
+        "read"
+      ]
+    },
     "SAPProductType": {
       "description": "Defines the SAP Product type.",
       "enum": [
@@ -1827,6 +1890,59 @@
         }
       },
       "discriminator": "deploymentType"
+    },
+    "SAPSupportedSkusRequest": {
+      "description": "The SAP request to get list of supported SKUs.",
+      "type": "object",
+      "properties": {
+        "appLocation": {
+          "type": "string",
+          "description": "The geo-location where the resource is to be created."
+        },
+        "sapProduct": {
+          "$ref": "#/definitions/SAPProductType"
+        },
+        "databaseType": {
+          "description": "The database type. Eg: HANA, DB2, etc",
+          "$ref": "#/definitions/SAPDatabaseType"
+        }
+      },
+      "required": [
+        "appLocation",
+        "sapProduct",
+        "databaseType"
+      ]
+    },
+    "SAPSupportedSku": {
+      "description": "The SAP supported SKU.",
+      "type": "object",
+      "properties": {
+        "vmSku": {
+          "type": "string",
+          "description": "The VM Sku."
+        },
+        "isAppServerCertified": {
+          "description": "True if the Sku is certified for App server in the SAP system.",
+          "type": "boolean"
+        },
+        "isDatabaseCertified": {
+          "description": "True if the Sku is certified for Database server in the SAP system.",
+          "type": "boolean"
+        }
+      }
+    },
+    "SAPSupportedResourceSkusResult": {
+      "description": "The list of supported SKUs for different resources which are part of SAP deployment.",
+      "type": "object",
+      "properties": {
+        "supportedSkus": {
+          "description": "Gets the list of SAP supported SKUs.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SAPSupportedSku"
+          }
+        }
+      }
     },
     "VirtualMachineConfiguration": {
       "description": "Defines the virtual machine configuration.",
