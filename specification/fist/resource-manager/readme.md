@@ -58,6 +58,18 @@ swagger-to-sdk:
   - repo: azure-resource-manager-schemas
   - repo: azure-cli-extensions
 ```
+
+## Suppression
+```
+directive:
+  - suppress: SECRET_PROPERTY
+    from:
+      - Microsoft.IoTFirmwareDefense/preview/2021-11-10-privatepreview/firmwares.json
+    where:
+      - $.definitions.UrlData.properties.uploadUrl
+    reason: Secrets are OK to return in a POST response.
+```
+
 ## Az
 
 See configuration in [readme.az.md](./readme.az.md)
