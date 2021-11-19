@@ -3,7 +3,7 @@
   "info": {
     "title": "Test Base",
     "description": "Test Base",
-    "version": "2020-12-16-preview"
+    "version": "2021-09-01"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -1309,6 +1309,72 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiaoTest/testBaseAccounts/{testBaseAccountName}/packages/{packageName}/runTest": {
+      "post": {
+        "tags": [
+          "Test Base Package"
+        ],
+        "operationId": "Packages_RunTest",
+        "description": "Trigger a test run on the package.",
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PackageRunTestParameters"
+            },
+            "description": "The parameters supplied to the Test Base Package to start a Test Run."
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/TestBaseAccountNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PackageNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The test is triggered successfully."
+          },
+          "202": {
+            "description": "The request to trigger a test was accepted. Follow the Location header to poll for final outcome.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              },
+              "Location": {
+                "description": "URL to query for status of the operation.",
+                "type": "string"
+              }
+            }
+          },
+          "204": {
+            "description": "The test is triggered successfully."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "PackageRunTest": {
+            "$ref": "./examples/PackageRunTest.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiaoTest/testBaseAccounts/{testBaseAccountName}/testSummaries": {
       "get": {
         "tags": [
@@ -1855,6 +1921,9 @@
           "nextLinkName": null
         },
         "x-ms-examples": {
+          "ScriptExecutionAnalysisResultsList": {
+            "$ref": "./examples/ScriptExecutionAnalysisResultsList.json"
+          },
           "MemoryUtilizationAnalysisResultsList": {
             "$ref": "./examples/MemoryUtilizationAnalysisResultsList.json"
           },
@@ -1915,6 +1984,9 @@
           }
         },
         "x-ms-examples": {
+          "ScriptExecutionAnalysisResultGet" : {
+            "$ref": "./examples/ScriptExecutionAnalysisResultGet.json"
+          },
           "MemoryUtilizationAnalysisResultGet": {
             "$ref": "./examples/MemoryUtilizationAnalysisResultGet.json"
           },
@@ -2022,6 +2094,63 @@
         "x-ms-examples": {
           "TestResultGetVideoDownloadURL": {
             "$ref": "./examples/TestResultGetVideoDownloadURL.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiaoTest/testBaseAccounts/{testBaseAccountName}/packages/{packageName}/testResults/{testResultName}/getConsoleLogDownloadUrl": {
+      "post": {
+        "tags": [
+          "Test Result"
+        ],
+        "operationId": "TestResults_GetConsoleLogDownloadURL",
+        "description": "Gets the download URL of the test execution console log file.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/TestBaseAccountNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PackageNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TestResultNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestResultConsoleLogDownloadURLParameters"
+            },
+            "description": "Parameters supplied to the Test Result GetConsoleLogDownloadUrl operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation is completed.",
+            "schema": {
+              "$ref": "#/definitions/DownloadURLResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "TestResultGetVideoDownloadURL": {
+            "$ref": "./examples/TestResultGetConsoleLogDownloadURL.json"
           }
         }
       }
@@ -2379,6 +2508,7 @@
   "definitions": {
     "Resource": {
       "description": "The Resource definition.",
+      "type": "object",
       "properties": {
         "id": {
           "readOnly": true,
@@ -2415,6 +2545,7 @@
     },
     "TrackedResource": {
       "description": "The resource model definition for an ARM tracked top level resource",
+      "type": "object",
       "properties": {
         "tags": {
           "description": "The tags of the resource.",
@@ -2445,6 +2576,7 @@
     },
     "ErrorResponse": {
       "description": "The error response send when an operation fails.",
+      "type": "object",
       "properties": {
         "error": {
           "$ref": "#/definitions/ErrorDefinition",
@@ -2454,6 +2586,7 @@
     },
     "ErrorDefinition": {
       "description": "Error definition.",
+      "type": "object",
       "properties": {
         "code": {
           "description": "The error code.",
@@ -2482,6 +2615,7 @@
     },
     "TestBaseAccountSKUListResult": {
       "description": "A list of Test Base Account SKUs.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -2499,6 +2633,7 @@
     },
     "TestBaseAccountSKU": {
       "description": "Describes a Test Base Account SKU.",
+      "type": "object",
       "properties": {
         "resourceType": {
           "type": "string",
@@ -2543,6 +2678,7 @@
     },
     "TestBaseAccountSKUCapability": {
       "description": "Properties of the Test Base Account SKU Capability.",
+      "type": "object",
       "properties": {
         "name": {
           "type": "string",
@@ -2613,6 +2749,7 @@
     },
     "TestBaseAccountListResult": {
       "description": "A list of Test Base Accounts.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -2630,6 +2767,7 @@
     },
     "TestBaseAccountResource": {
       "description": "The Test Base Account resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -2649,6 +2787,7 @@
     },
     "TestBaseAccountResourceProperties": {
       "description": "The properties of a Test Base Account resource.",
+      "type": "object",
       "properties": {
         "provisioningState": {
           "description": "The provisioning state of the resource.",
@@ -2662,6 +2801,18 @@
           "description": "The access level of the Test Base Account.",
           "readOnly": true,
           "type": "string"
+        },
+        "totalTrialHours": {
+          "type": "number",
+          "readOnly": true,
+          "format": "double",
+          "description": "The number of total trial hours."
+        },
+        "trialHoursRemaining": {
+          "type": "number",
+          "readOnly": true,
+          "format": "double",
+          "description": "The number of trial hours remaining."
         }
       },
       "required": [
@@ -2687,6 +2838,7 @@
     },
     "TestBaseAccountUpdateParameters": {
       "description": "Parameters supplied to update a Test Base Account.",
+      "type": "object",
       "properties": {
         "properties": {
           "$ref": "#/definitions/TestBaseAccountUpdateParameterProperties",
@@ -2701,6 +2853,7 @@
     },
     "TestBaseAccountUpdateParameterProperties": {
       "description": "Parameters supplied to update a Test Base Account.",
+      "type": "object",
       "properties": {
         "sku": {
           "description": "The SKU of the Test Base Account.",
@@ -2710,6 +2863,7 @@
     },
     "TestBaseAccountUsageDataList": {
       "description": "A list of Test Base Account usage data.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -2727,6 +2881,7 @@
     },
     "TestBaseAccountUsageData": {
       "description": "The usage data of a Test Base Account.",
+      "type": "object",
       "properties": {
         "id": {
           "description": "Fully qualified ARM resource id",
@@ -2768,6 +2923,7 @@
     },
     "GetFileUploadURLParameters": {
       "description": "The parameters supplied to the Test Base Account GetFileUploadURL action.",
+      "type": "object",
       "properties": {
         "blobName": {
           "type": "string",
@@ -2777,6 +2933,7 @@
     },
     "FileUploadURLResponse": {
       "description": "The URL response",
+      "type": "object",
       "properties": {
         "uploadUrl": {
           "type": "string",
@@ -2792,6 +2949,7 @@
     },
     "AvailableOSListResult": {
       "description": "A list of available OSs.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -2809,6 +2967,7 @@
     },
     "AvailableOSResource": {
       "description": "The Available OS resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -2828,6 +2987,7 @@
     },
     "AvailableOSProperties": {
       "description": "The Available OS properties.",
+      "type": "object",
       "properties": {
         "osId": {
           "type": "string",
@@ -2857,6 +3017,7 @@
     },
     "FlightingRingListResult": {
       "description": "A list of flighting rings.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -2874,6 +3035,7 @@
     },
     "FlightingRingResource": {
       "description": "The flighting ring resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -2893,6 +3055,7 @@
     },
     "FlightingRingProperties": {
       "description": "The Flighting Ring properties.",
+      "type": "object",
       "properties": {
         "actualFlightingRingName": {
           "type": "string",
@@ -2902,6 +3065,7 @@
     },
     "TestTypeListResult": {
       "description": "A list of test types.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -2919,6 +3083,7 @@
     },
     "TestTypeResource": {
       "description": "The test type resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -2938,6 +3103,7 @@
     },
     "TestTypeProperties": {
       "description": "The Test Type properties.",
+      "type": "object",
       "properties": {
         "actualTestTypeName": {
           "type": "string",
@@ -2947,6 +3113,7 @@
     },
     "PackageCheckNameAvailabilityParameters": {
       "description": "Parameters body to pass for Test Base Package name availability check.",
+      "type": "object",
       "properties": {
         "name": {
           "type": "string",
@@ -2968,8 +3135,7 @@
       "required": [
         "name",
         "applicationName",
-        "version",
-        "type"
+        "version"
       ]
     },
     "CheckNameAvailabilityResult": {
@@ -2996,10 +3162,51 @@
           "description": "The detailed info regarding the reason associated with the name. Required if nameAvailable == false."
         }
       },
+      "type": "object",
       "description": "Description of a Check Name availability response properties."
+    },
+    "PackageRunTestParameters": {
+      "description": "The parameters supplied to the Test Base Package to start a Test Run.",
+      "type": "object",
+      "properties": {
+        "testType": {
+          "$ref": "#/definitions/TestType",
+          "description": "The type of the test."
+        },
+        "osUpdateType": {
+          "type": "string",
+          "description": "Specifies the OS update type to test against.",
+          "default": "SecurityUpdate",
+          "enum": [
+            "SecurityUpdate",
+            "FeatureUpdate"
+          ],
+          "x-ms-enum": {
+            "name": "osUpdateType",
+            "modelAsString": true
+          }
+        },
+        "osName": {
+          "type": "string",
+          "description": "The operating system name. e.g. Windows 10 1809."
+        },
+        "releaseName": {
+          "type": "string",
+          "description": "The name of the tested release (OS update)."
+        },
+        "flightingRing": {
+          "type": "string",
+          "description": "The flighting ring, only for release of feature updates."
+        }
+      },
+      "required": [
+        "testType",
+        "osName"
+      ]
     },
     "PackageListResult": {
       "description": "A list of Test Base Packages.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -3017,6 +3224,7 @@
     },
     "PackageResource": {
       "description": "The Test Base Package resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -3036,6 +3244,7 @@
     },
     "PackageProperties": {
       "description": "The properties of the Test Base Package.",
+      "type": "object",
       "properties": {
         "provisioningState": {
           "description": "The provisioning state of the resource.",
@@ -3142,6 +3351,7 @@
     },
     "TargetOSInfo": {
       "description": "The information of the target OS to be tested.",
+      "type": "object",
       "properties": {
         "osUpdateType": {
           "type": "string",
@@ -3153,6 +3363,13 @@
             "type": "string"
           },
           "description": "Specifies the target OSs to be tested."
+        },
+        "baselineOSs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Specifies the baseline OSs to be tested."
         }
       },
       "required": [
@@ -3162,6 +3379,7 @@
     },
     "PackageValidationResult": {
       "description": "The validation results. There's validation on package when it's created or updated.",
+      "type": "object",
       "properties": {
         "validationName": {
           "type": "string",
@@ -3185,6 +3403,7 @@
     },
     "Test": {
       "description": "The definition of a Test.",
+      "type": "object",
       "properties": {
         "testType": {
           "$ref": "#/definitions/TestType",
@@ -3205,6 +3424,11 @@
             "modelAsString": true
           }
         },
+        "validationResultId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource identifier of the validation test result."
+        },
         "isActive": {
           "type": "boolean",
           "description": "Indicates if this test is active.It doesn't schedule test for not active Test."
@@ -3224,6 +3448,7 @@
     },
     "Command": {
       "description": "The command used in the test",
+      "type": "object",
       "properties": {
         "name": {
           "type": "string",
@@ -3296,6 +3521,7 @@
     },
     "PackageUpdateParameters": {
       "description": "Parameters supplied to update a Test Base Package.",
+      "type": "object",
       "properties": {
         "properties": {
           "$ref": "#/definitions/PackageUpdateParameterProperties",
@@ -3310,6 +3536,7 @@
     },
     "PackageUpdateParameterProperties": {
       "description": "Parameters supplied to update a Test Base Package.",
+      "type": "object",
       "properties": {
         "targetOSList": {
           "type": "array",
@@ -3339,8 +3566,22 @@
         }
       }
     },
+    "TestResultConsoleLogDownloadURLParameters": {
+      "description": "Parameters body to pass for getting the download URL of the test execution console log file.",
+      "type": "object",
+      "properties": {
+        "logFileName": {
+          "type": "string",
+          "description": "The log file name corresponding to the download URL."
+        }
+      },
+      "required": [
+        "logFileName"
+      ]
+    },
     "DownloadURLResponse": {
       "description": "The response of getting a download URL.",
+      "type": "object",
       "properties": {
         "downloadUrl": {
           "type": "string",
@@ -3358,6 +3599,7 @@
     },
     "TestSummaryListResult": {
       "description": "A list of Test Summaries.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -3375,6 +3617,7 @@
     },
     "TestSummaryResource": {
       "description": "Summary of a Test.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -3394,6 +3637,7 @@
     },
     "TestSummaryProperties": {
       "description": "Properties of a Test Summary.",
+      "type": "object",
       "properties": {
         "testSummaryId": {
           "type": "string",
@@ -3489,6 +3733,7 @@
     },
     "OSUpdatesTestSummary": {
       "description": "The summary of some tests.",
+      "type": "object",
       "properties": {
         "executionStatus": {
           "$ref": "#/definitions/TestExecutionStatus",
@@ -3517,6 +3762,7 @@
     },
     "OSUpdateTestSummary": {
       "description": "The summary of a test.",
+      "type": "object",
       "properties": {
         "osName": {
           "type": "string",
@@ -3567,6 +3813,7 @@
     },
     "TestResultListResult": {
       "description": "A list of Test Results.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -3584,6 +3831,7 @@
     },
     "TestResultResource": {
       "description": "The Test Result Resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -3603,6 +3851,7 @@
     },
     "TestResultProperties": {
       "description": "The properties of a Test Result.",
+      "type": "object",
       "properties": {
         "baselineTestResultId": {
           "type": "string",
@@ -3677,6 +3926,14 @@
           "type": "string",
           "description": "KB number."
         },
+        "InteropMediaType": {
+          "type": "string",
+          "description": "Interop media type."
+        },
+        "InteropMediaVersion": {
+          "type": "string",
+          "description": "Interop media version."
+        },
         "packageVersion": {
           "type": "string",
           "description": "The version of the Windows update package."
@@ -3692,6 +3949,7 @@
     },
     "TestResultAnalysisSummary": {
       "description": "The summary of a Test Analysis Result.",
+      "type": "object",
       "properties": {
         "name": {
           "type": "string",
@@ -3722,6 +3980,7 @@
     },
     "OSUpdateListResult": {
       "description": "A list of OS Updates.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -3739,6 +3998,7 @@
     },
     "OSUpdateResource": {
       "description": "An OS Update.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -3758,6 +4018,7 @@
     },
     "OSUpdateProperties": {
       "description": "Properties of an OS Update.",
+      "type": "object",
       "properties": {
         "osName": {
           "type": "string",
@@ -3800,6 +4061,7 @@
     },
     "FavoriteProcessListResult": {
       "description": "A list of favorite processes for a package.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -3817,6 +4079,7 @@
     },
     "FavoriteProcessResource": {
       "description": "A favorite process identifier.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -3836,6 +4099,7 @@
     },
     "FavoriteProcessProperties": {
       "description": "Properties of a favorite process identifier.",
+      "type": "object",
       "properties": {
         "actualProcessName": {
           "type": "string",
@@ -3848,6 +4112,7 @@
     },
     "AnalysisResultListResult": {
       "description": "A list of Analysis Results. It will only contain one element as all the data will be nested in a singleton object.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -3865,6 +4130,7 @@
     },
     "AnalysisResultSingletonResource": {
       "description": "The Analysis Result Singleton Resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -3884,6 +4150,7 @@
     },
     "AnalysisResultSingletonResourceProperties": {
       "description": "The properties of Analysis Result resource.",
+      "type": "object",
       "discriminator": "analysisResultType",
       "required": [
         "analysisResultType"
@@ -3914,6 +4181,7 @@
     },
     "ScriptExecutionResultSingletonResourceProperties": {
       "description": "The properties of Script Execution Result.",
+      "type": "object",
       "x-ms-discriminator-value": "ScriptExecution",
       "properties": {
         "scriptExecutionResults": {
@@ -3932,6 +4200,7 @@
     },
     "ScriptExecutionResult": {
       "description": "The Script Execution Result.",
+      "type": "object",
       "properties": {
         "scriptName": {
           "type": "string",
@@ -3955,11 +4224,20 @@
         "timedOut": {
           "type": "boolean",
           "description": "Whether the script execution is timed out."
+        },
+        "stdoutLogFileName": {
+          "type":"string",
+          "description": "The stdout log file name."
+        },
+        "stderrLogFileName": {
+          "type": "string",
+          "description": "The stderr log file name."
         }
       }
     },
     "ReliabilityResultSingletonResourceProperties": {
       "description": "The properties of Reliability Result.",
+      "type": "object",
       "x-ms-discriminator-value": "Reliability",
       "properties": {
         "reliabilityResults": {
@@ -3978,6 +4256,7 @@
     },
     "ReliabilityResult": {
       "description": "The Reliability Result.",
+      "type": "object",
       "properties": {
         "fileName": {
           "type": "string",
@@ -4022,6 +4301,7 @@
     },
     "RegressionTestDetails": {
       "description": "The details of a regression test.",
+      "type": "object",
       "properties": {
         "diff": {
           "type": "number",
@@ -4036,6 +4316,7 @@
     },
     "CPUUtilizationResultSingletonResourceProperties": {
       "description": "The properties of CPU Utilization Result.",
+      "type": "object",
       "x-ms-discriminator-value": "CPUUtilization",
       "properties": {
         "cpuUtilizationResults": {
@@ -4054,6 +4335,7 @@
     },
     "MemoryUtilizationResultSingletonResourceProperties": {
       "description": "The properties of Memory Utilization Result.",
+      "type": "object",
       "x-ms-discriminator-value": "MemoryUtilization",
       "properties": {
         "memoryUtilizationResults": {
@@ -4072,6 +4354,7 @@
     },
     "UtilizationResult": {
       "description": "The Utilization Result.",
+      "type": "object",
       "properties": {
         "process": {
           "type": "string",
@@ -4096,6 +4379,7 @@
     },
     "UtilizationBound": {
       "description": "The bound of a utilization result.",
+      "type": "object",
       "properties": {
         "percentile": {
           "type": "number",
@@ -4111,6 +4395,7 @@
     },
     "UtilizationEntry": {
       "description": "The utilization entry.",
+      "type": "object",
       "properties": {
         "timestamp": {
           "type": "string",
@@ -4126,6 +4411,7 @@
     },
     "CPURegressionResultSingletonResourceProperties": {
       "description": "The properties of CPU Regression Result.",
+      "type": "object",
       "x-ms-discriminator-value": "CPURegression",
       "properties": {
         "cpuRegressionResults": {
@@ -4144,6 +4430,7 @@
     },
     "MemoryRegressionResultSingletonResourceProperties": {
       "description": "The properties of Memory Regression Result.",
+      "type": "object",
       "x-ms-discriminator-value": "MemoryRegression",
       "properties": {
         "memoryRegressionResults": {
@@ -4162,6 +4449,7 @@
     },
     "RegressionResult": {
       "description": "The regression result.",
+      "type": "object",
       "properties": {
         "fileName": {
           "type": "string",
@@ -4188,6 +4476,7 @@
     },
     "TestAnalysisResultSingletonResourceProperties": {
       "description": "The properties of Test Analysis Result.",
+      "type": "object",
       "x-ms-discriminator-value": "TestAnalysis",
       "properties": {
         "testAnalysisResult": {
@@ -4203,6 +4492,7 @@
     },
     "TestAnalysisResult": {
       "description": "The test analysis result.",
+      "type": "object",
       "properties": {
         "blobData": {
           "type": "string",
@@ -4233,6 +4523,7 @@
     },
     "IdentifiedFailure": {
       "description": "The failure identified.",
+      "type": "object",
       "properties": {
         "failureId": {
           "type": "string",
@@ -4265,6 +4556,7 @@
     },
     "OperationListResult": {
       "description": "A list of operations supported by the resource provider.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -4301,6 +4593,7 @@
         },
         "display": {
           "description": "The object that describes the operation.",
+          "type": "object",
           "properties": {
             "provider": {
               "description": "The resource provider name: Microsoft.XiaoTest.",
@@ -4338,6 +4631,7 @@
     },
     "EmailEventListResult": {
       "description": "A list of email events.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -4355,6 +4649,7 @@
     },
     "EmailEventResource": {
       "description": "The email event resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -4374,6 +4669,7 @@
     },
     "EmailEventProperties": {
       "description": "The Email Event properties.",
+      "type": "object",
       "properties": {
         "eventId": {
           "type": "string",
@@ -4391,6 +4687,7 @@
     },
     "CustomerEventListResult": {
       "description": "A list of Test Base Customer Events.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -4408,6 +4705,7 @@
     },
     "CustomerEventResource": {
       "description": "The Customer Notification Event resource.",
+      "type": "object",
       "properties": {
         "systemData": {
           "description": "The system metadata relating to this resource",
@@ -4427,6 +4725,7 @@
     },
     "CustomerEventProperties": {
       "description": "A notification events subscribed to be received by customer.",
+      "type": "object",
       "properties": {
         "eventName": {
           "type": "string",
@@ -4447,6 +4746,7 @@
     },
     "NotificationEventReceiver": {
       "description": "A notification event receivers.",
+      "type": "object",
       "properties": {
         "receiverType": {
           "type": "string",
@@ -4460,6 +4760,7 @@
     },
     "NotificationReceiverValue": {
       "description": "A notification event receiver value.",
+      "type": "object",
       "properties": {
         "userObjectReceiverValue": {
           "description": "The user object receiver value.",
@@ -4477,6 +4778,7 @@
     },
     "UserObjectReceiverValue": {
       "description": "The user object receiver value.",
+      "type": "object",
       "properties": {
         "userObjectIds": {
           "type": "array",
@@ -4489,6 +4791,7 @@
     },
     "SubscriptionReceiverValue": {
       "description": "The subscription role receiver value.",
+      "type": "object",
       "properties": {
         "subscriptionId": {
           "type": "string",
@@ -4506,6 +4809,7 @@
     },
     "DistributionGroupListReceiverValue": {
       "description": "The user object receiver value.",
+      "type": "object",
       "properties": {
         "distributionGroups": {
           "type": "array",
@@ -4570,7 +4874,7 @@
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method",
-      "description": "The Test Result Name. It equals to {osName}-{TestResultId} string."
+      "description": "The Test Result Name. It equals to TestResult-{TestResultId} string."
     },
     "OSUpdateTypeParameter": {
       "name": "osUpdateType",
