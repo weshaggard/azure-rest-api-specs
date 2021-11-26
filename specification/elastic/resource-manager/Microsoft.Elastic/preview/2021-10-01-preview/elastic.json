@@ -853,6 +853,105 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Elastic/monitors/{monitorName}/listUpgradableVersions": {
+      "post": {
+        "tags": [
+          "MonitorUpgradableVersions"
+        ],
+        "summary": "List of upgradable versions for a given monitor resource.",
+        "operationId": "UpgradableVersions_Details",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UpgradableVersionsList"
+            }
+          },
+          "default": {
+            "description": "Default error response.",
+            "schema": {
+              "$ref": "#/definitions/ResourceProviderDefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "UpgradableVersions_Details": {
+            "$ref": "./examples/UpgradableVersions_Details.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Elastic/monitors/{monitorName}/upgrade": {
+      "post": {
+        "tags": [
+          "DeploymentUpdate"
+        ],
+        "summary": "Upgradable version for a monitor resource.",
+        "operationId": "Monitor_Upgrade",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MonitorNameParameter"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Elastic Monitor Upgrade Parameters",
+            "schema": {
+              "$ref": "#/definitions/ElasticMonitorUpgrade"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Default error response.",
+            "schema": {
+              "$ref": "#/definitions/ResourceProviderDefaultErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-examples": {
+          "Monitor_Upgrade": {
+            "$ref": "./examples/Monitor_Upgrade.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1617,6 +1716,33 @@
         "operationName": {
           "description": "Operation to be performed for given VM.",
           "$ref": "#/definitions/OperationName"
+        }
+      }
+    },
+    "UpgradableVersionsList": {
+      "description": "Stack Versions that this version can upgrade to",
+      "type": "object",
+      "properties": {
+        "currentVersion": {
+          "type": "string",
+          "description": "Current version of the elastic monitor"
+        },
+        "upgradableVersions": {
+          "type": "array",
+          "description": "Stack Versions that this version can upgrade to",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ElasticMonitorUpgrade": {
+      "description": "Upgrade elastic monitor version",
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Version to which the elastic monitor should be upgraded to"
         }
       }
     }
