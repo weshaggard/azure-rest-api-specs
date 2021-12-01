@@ -2152,49 +2152,54 @@
         "filters"
       ]
     },
-    "SegmentFilter":{
-      "type":"object",
-      "properties":{
-         "statisticName":{
-            "type":"string",
-            "description":"Statistic Filter name"
-         },
-         "version":{
-            "type":"integer",
-            "format":"int32",
-            "description":"Version of Statistic to be used"
-         },
-         "useCurrentVersion":{
-            "type":"boolean",
-            "description":"Use current version of Statistic filter"
-         }
+    "SegmentFilter": {
+      "type": "object",
+      "discriminator": "filterName",
+      "properties": {
+        "filterName": {
+          "type" : "string",
+          "description": "Name of the Segment filter."
+        },
+        "comparison": {
+          "$ref": "#/definitions/Comparison",
+          "description": "Comparator used for the filter."
+        },
+        "value": {
+          "type": "string",
+          "description": "Value to be compared."
+        }
       },
-      "description":"Segment Statistics Filter",
-      "allOf":[
-         {
-            "type":"object",
-            "properties":{
-               "filterName":{
-                  "$ref":"#/definitions/FilterName",
-                  "description":"Name of the Segment filter."
-               },
-               "comparison":{
-                  "$ref":"#/definitions/Comparison",
-                  "description":"Comparator used for the filter."
-               },
-               "value":{
-                  "type":"string",
-                  "description":"Value to be compared"
-               }
-            },
-            "required":[
-               "filterName",
-               "comparison",
-               "value"
-            ]
-         }
+      "description": "Segment Filter",
+      "required": [
+        "filterName",
+        "comparison",
+        "value"
       ]
-   },
+    },
+    "SegmentStatisticsFilter": {
+      "type": "object",
+      "properties": {
+        "statisticName": {
+          "type": "string",
+          "description": "Statistic Filter name"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Version of Statistic to be used"
+        },
+        "useCurrentVersion": {
+          "type": "boolean",
+          "description": "Use current version of Statistic filter"
+        }
+      },
+      "description": "Segment Statistics Filter",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
     "SegmentListResult": {
       "type": "object",
       "properties": {
