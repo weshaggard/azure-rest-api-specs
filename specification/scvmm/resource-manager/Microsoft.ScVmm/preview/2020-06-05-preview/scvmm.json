@@ -1370,6 +1370,183 @@
         "x-ms-long-running-operation": true
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ScVmm/virtualMachines/{virtualMachineName}/createCheckpoint": {
+      "post": {
+        "tags": [
+          "VirtualMachines"
+        ],
+        "operationId": "VirtualMachines_CheckpointCreate",
+        "description": "Creates a checkpoint in virtual machine.",
+        "summary": "Implements the operation to creates a checkpoint in a virtual machine.",
+        "x-ms-examples": {
+          "RestartVirtualMachine": {
+            "$ref": "./examples/CheckpointCreateVirtualMachine.json"
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "in": "path",
+            "name": "virtualMachineName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the VirtualMachine."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Virtualmachine checkpoint create action payload.",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachineCheckpointCreate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ScVmm/virtualMachines/{virtualMachineName}/deleteCheckpoint": {
+      "post": {
+        "tags": [
+          "VirtualMachines"
+        ],
+        "operationId": "VirtualMachines_CheckpointDelete",
+        "description": "Deletes a checkpoint in virtual machine.",
+        "summary": "Implements the operation to delete a checkpoint in a virtual machine.",
+        "x-ms-examples": {
+          "RestartVirtualMachine": {
+            "$ref": "./examples/CheckpointDeleteVirtualMachine.json"
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "in": "path",
+            "name": "virtualMachineName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the VirtualMachine."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Virtualmachine checkpoint delete action payload.",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachineCheckpointDelete"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ScVmm/virtualMachines/{virtualMachineName}/restoreCheckpoint": {
+      "post": {
+        "tags": [
+          "VirtualMachines"
+        ],
+        "operationId": "VirtualMachines_CheckpointRestore",
+        "description": "Restores to a checkpoint in virtual machine.",
+        "summary": "Implements the operation to restores to a checkpoint in a virtual machine.",
+        "x-ms-examples": {
+          "RestartVirtualMachine": {
+            "$ref": "./examples/CheckpointRestoreVirtualMachine.json"
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "in": "path",
+            "name": "virtualMachineName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the VirtualMachine."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Virtualmachine checkpoint restore action payload.",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachineCheckpointRestore"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ScVmm/virtualMachines": {
       "get": {
         "tags": [
@@ -2763,7 +2940,7 @@
       "description": "Defines the resource properties.",
       "properties": {
         "inventoryItemId": {
-          "description": "Gets or sets the inventory Item ID for the resurce.",
+          "description": "Gets or sets the inventory Item ID for the resource.",
           "type": "string"
         },
         "vmmServerId": {
@@ -2777,6 +2954,18 @@
         "templateId": {
           "type": "string",
           "description": "ARM Id of the template resource to use for deploying the vm."
+        },
+        "checkpointType": {
+          "type": "string",
+          "description": "Type of checkpoint supported for the vm."
+        },
+        "checkpoints": {
+          "description": "Checkpoints in the vm.",
+          "type": "array",
+          "items":{
+            "description": "Checkpoint properties",
+            "$ref": "#/definitions/Checkpoint"
+          }
         },
         "availabilitySets": {
           "description": "Availability Sets in vm.",
@@ -2982,6 +3171,28 @@
           "type": "integer",
           "format": "int32",
           "description": "Gets or sets the min dynamic memory for the vm."
+        }
+      }
+    },
+    "Checkpoint": {
+      "description": "Defines the resource properties.",
+      "type": "object",
+      "properties": {
+        "ParentCheckpointId":{
+          "description": "Gets ID of parent of the checkpoint.",
+          "type": "string"
+        },
+        "CheckpointId":{
+          "description": "Gets ID of the checkpoint.",
+          "type": "string"
+        },
+        "Name":{
+          "description": "Gets name of the checkpoint.",
+          "type": "string"
+        },
+        "Description":{
+          "description": "Gets description of the checkpoint.",
+          "type": "string"
         }
       }
     },
@@ -3310,6 +3521,40 @@
           "description": "Gets or sets a value indicating whether to request non-graceful VM shutdown. True value for this flag indicates non-graceful shutdown whereas false indicates otherwise. Defaults to false.",
           "type": "boolean",
           "default": false
+        }
+      }
+    },
+    "VirtualMachineCheckpointCreate": {
+      "description": "Defines the checkpoint create action properties.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the checkpoint.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the checkpoint.",
+          "type": "string"
+        }
+      }
+    },
+    "VirtualMachineCheckpointDelete": {
+      "description": "Defines the checkpoint delete action properties.",
+      "type": "object",
+      "properties": {
+        "checkpointID": {
+          "description": "ID of the checkpoint to be deleted.",
+          "type": "string"
+        }
+      }
+    },
+    "VirtualMachineCheckpointRestore": {
+      "description": "Defines the checkpoint restore action properties.",
+      "type": "object",
+      "properties": {
+        "checkpointID": {
+          "description": "ID of the checkpoint to be restored to.",
+          "type": "string"
         }
       }
     },
