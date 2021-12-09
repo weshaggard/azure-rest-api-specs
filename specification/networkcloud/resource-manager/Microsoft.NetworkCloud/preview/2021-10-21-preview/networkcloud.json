@@ -1,0 +1,880 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "The Network Cloud Client.",
+    "title": "Network Cloud Client",
+    "version": "2021-10-21-preview"
+  },
+  "host": "management.azure.com",
+  "paths": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters": {
+      "get": {
+        "description": "This will show all network cloud clusters.",
+        "summary": "Lists network cloud clusters.",
+        "operationId": "Clusters_List",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClusterList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{resourceName}": {
+      "get": {
+        "description": "This will show the properties of a specific network cloud cluster.",
+        "summary": "Retrieves a specific network cloud cluster.",
+        "operationId": "Clusters_Get",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClusterList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get Network Cloud Cluster": {
+            "$ref": "./examples/Clusters_Get.json"
+          }
+        }
+      },
+      "put": {
+        "description": "This create or update the properties of a specific network cloud cluster.",
+        "summary": "Creates or updates a specific network cloud cluster.",
+        "operationId": "Clusters_CreateOrUpdate",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "Properties",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "rackskus",
+                "uplinkcidripv4",
+                "uplinkcidripv6"
+              ],
+              "properties": {
+                "bgppeeringstatusipv4": {
+                  "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
+                },
+                "bgppeeringstatusipv6": {
+                  "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
+                },
+                "bgpsettings": {
+                  "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
+                },
+                "rackskus": {
+                  "description": "description: \"The rack sku entries for this cluster\"",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/RackSkuEntry"
+                  },
+                  "x-go-name": "RackSkuEntries"
+                },
+                "uplinkcidripv4": {
+                  "description": "description: \"Cluster uplink cidr ipv4 values\"",
+                  "type": "string",
+                  "x-go-name": "UplinkCidrIPv4"
+                },
+                "uplinkcidripv6": {
+                  "description": "description: \"Cluster uplink cidr ipv6 values\"",
+                  "type": "string",
+                  "x-go-name": "UplinkCidrIPv6"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create or Update Network Cloud Cluster": {
+            "$ref": "./examples/Clusters_Create.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{resourceName}/bootstrapIsos": {
+      "get": {
+        "description": "This will show all network cloud bootstrap Isos for a particular cluster.",
+        "summary": "Lists network cloud cluster bootstrap ISOs.",
+        "operationId": "Clusters_BootstrapIsos_List",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClustersBootstrapIsosList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{resourceName}/bootstrapIsos/{bootstrapIsoName}": {
+      "get": {
+        "description": "This will show the properties of a specific bootstrap ISO.",
+        "summary": "Retrieve a specific bootstrap ISO for a cluster.",
+        "operationId": "Clusters_BootstrapIsos_Get",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
+            "type": "string",
+            "x-go-name": "BootstrapIsoName",
+            "name": "bootstrapIsoName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClustersBootstrapIsos"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "This will generate a bootable ISO for this network cloud cluster.",
+        "summary": "Generate a bootable ISO for this cluster.",
+        "operationId": "Clusters_BootstrapIsos_Create",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
+            "type": "string",
+            "x-go-name": "BootstrapIsoName",
+            "name": "bootstrapIsoName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClustersBootstrapIsos"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AzureCommonProperties": {},
+    "CloudError": {
+      "type": "object",
+      "title": "CloudError represents a cloud error.",
+      "properties": {
+        "code": {
+          "description": "An identifier for the error. Codes are invariant and are intended to be consumed programmatically.",
+          "type": "string",
+          "x-go-name": "Code"
+        },
+        "details": {
+          "description": "A list of additional details about the error.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CloudErrorBody"
+          },
+          "x-go-name": "Details"
+        },
+        "message": {
+          "description": "A message describing the error, intended to be suitable for display in a user interface.",
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "target": {
+          "description": "The target of the particular error. For example, the name of the property in error.",
+          "type": "string",
+          "x-go-name": "Target"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "CloudErrorBody": {
+      "type": "object",
+      "title": "CloudErrorBody represents the body of a cloud error.",
+      "properties": {
+        "code": {
+          "description": "An identifier for the error. Codes are invariant and are intended to be consumed programmatically.",
+          "type": "string",
+          "x-go-name": "Code"
+        },
+        "details": {
+          "description": "A list of additional details about the error.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CloudErrorBody"
+          },
+          "x-go-name": "Details"
+        },
+        "message": {
+          "description": "A message describing the error, intended to be suitable for display in a user interface.",
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "target": {
+          "description": "The target of the particular error. For example, the name of the property in error.",
+          "type": "string",
+          "x-go-name": "Target"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "Cluster": {
+      "description": "A cluster is the top level object for the on-premise environment.",
+      "type": "object",
+      "title": "Cluster represents an on-Premise Network Cloud cluster",
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "location": {
+          "type": "string",
+          "x-go-name": "Location"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "properties": {
+          "$ref": "#/definitions/ClusterProperties"
+        },
+        "systemData": {
+          "$ref": "#/definitions/SystemData"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Tags"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClusterList": {
+      "type": "object",
+      "title": "ClusterList represents a list of Clusters.",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of operations.",
+          "type": "string",
+          "x-go-name": "NextLink"
+        },
+        "value": {
+          "description": "The list of clusters.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Cluster"
+          },
+          "x-go-name": "Clusters"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClusterNetworkingProperties": {
+      "type": "object",
+      "title": "ClusterNetworkingProperties represents the clusters networking properties.",
+      "required": [
+        "uplinkcidripv4",
+        "uplinkcidripv6"
+      ],
+      "properties": {
+        "bgpsettings": {
+          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
+        },
+        "uplinkcidripv4": {
+          "description": "description: \"Cluster uplink cidr ipv4 values\"",
+          "type": "string",
+          "x-go-name": "UplinkCidrIPv4"
+        },
+        "uplinkcidripv6": {
+          "description": "description: \"Cluster uplink cidr ipv6 values\"",
+          "type": "string",
+          "x-go-name": "UplinkCidrIPv6"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClusterNetworkingPropertiesUplink": {
+      "type": "object",
+      "title": "lusterNetworkingPropertiesUplink represents the clusters networking properties for the uplink between the CE and PE.",
+      "required": [
+        "uplinkcidripv4",
+        "uplinkcidripv6"
+      ],
+      "properties": {
+        "bgpsettings": {
+          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
+        },
+        "uplinkcidripv4": {
+          "description": "description: \"Cluster uplink cidr ipv4 values\"",
+          "type": "string",
+          "x-go-name": "UplinkCidrIPv4"
+        },
+        "uplinkcidripv6": {
+          "description": "description: \"Cluster uplink cidr ipv6 values\"",
+          "type": "string",
+          "x-go-name": "UplinkCidrIPv6"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClusterNetworkingPropertiesUplinkBgpSettings": {
+      "description": "ClusterNetworkingPropertiesUplinkBgpSettings represents bgp uplink settings for the cluster",
+      "type": "object",
+      "required": [
+        "asn",
+        "bgppeeraddressipv4",
+        "bgppeeraddressipv6"
+      ],
+      "properties": {
+        "asn": {
+          "description": "description: \"Cluster uplink bgp properties asn value\"",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Asn"
+        },
+        "bgppeeraddressipv4": {
+          "description": "description: \"Cluster uplink bgp properties ipv4 value\"",
+          "type": "string",
+          "x-go-name": "BgpPeeringAddressIpv4"
+        },
+        "bgppeeraddressipv6": {
+          "description": "description: \"Cluster uplink bgp properties ipv6 value\"",
+          "type": "string",
+          "x-go-name": "BgpPeeringAddressIpv6"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClusterNetworkingPropertiesUplinkBgpStatus": {
+      "description": "ClusterNetworkingPropertiesUplinkBgpStatus represents bgp uplink status for the cluster",
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "x-go-name": "Neighbor",
+          "readOnly": true
+        },
+        "asn": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Asn",
+          "readOnly": true
+        },
+        "connectedduration": {
+          "type": "string",
+          "x-go-name": "ConnectedDuration",
+          "readOnly": true
+        },
+        "localaddress": {
+          "type": "string",
+          "x-go-name": "LocalAddress",
+          "readOnly": true
+        },
+        "messagesreceived": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "MessagesReceived",
+          "readOnly": true
+        },
+        "messagessent": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "MessagesSent",
+          "readOnly": true
+        },
+        "routesreceived": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "RoutesReceived",
+          "readOnly": true
+        },
+        "state": {
+          "description": "\nUnknown BgpUnknown\nStopped BgpStopped\nIdle BgpIdle\nConnecting BgpConnecting\nConnected BgpConnected",
+          "type": "string",
+          "enum": [
+            "Unknown",
+            "Stopped",
+            "Idle",
+            "Connecting",
+            "Connected"
+          ],
+          "x-go-enum-desc": "Unknown BgpUnknown\nStopped BgpStopped\nIdle BgpIdle\nConnecting BgpConnecting\nConnected BgpConnected",
+          "x-go-name": "State",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClusterProperties": {
+      "description": "https://armwiki.azurewebsites.net/rpaas/arc-rp/conversion/SchemaTranslation.html#default-kubernetes-bridge-mapping\n\nfor now, we'll align on the same concept for our RPaaS\nobjects as well\n\nClusterProperties represents the properties of a cluster.",
+      "type": "object",
+      "title": "Note, k8s bridge resource types will default to\na singular status field under properties",
+      "required": [
+        "rackskus",
+        "uplinkcidripv4",
+        "uplinkcidripv6"
+      ],
+      "properties": {
+        "bgppeeringstatusipv4": {
+          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
+        },
+        "bgppeeringstatusipv6": {
+          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
+        },
+        "bgpsettings": {
+          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
+        },
+        "rackskus": {
+          "description": "description: \"The rack sku entries for this cluster\"",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RackSkuEntry"
+          },
+          "x-go-name": "RackSkuEntries"
+        },
+        "uplinkcidripv4": {
+          "description": "description: \"Cluster uplink cidr ipv4 values\"",
+          "type": "string",
+          "x-go-name": "UplinkCidrIPv4"
+        },
+        "uplinkcidripv6": {
+          "description": "description: \"Cluster uplink cidr ipv6 values\"",
+          "type": "string",
+          "x-go-name": "UplinkCidrIPv6"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClusterSKUProperties": {
+      "type": "object",
+      "title": "ClusterSKUProperties represent the properties of a clusters SKU set.",
+      "required": [
+        "rackskus"
+      ],
+      "properties": {
+        "rackskus": {
+          "description": "description: \"The rack sku entries for this cluster\"",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RackSkuEntry"
+          },
+          "x-go-name": "RackSkuEntries"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClusterStatus": {
+      "description": "ClusterStatus represents all the status properties of a cluster",
+      "type": "object",
+      "properties": {
+        "bgppeeringstatusipv4": {
+          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
+        },
+        "bgppeeringstatusipv6": {
+          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClustersBootstrapIsos": {
+      "description": "Bootstrap ISO resource",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "location": {
+          "type": "string",
+          "x-go-name": "Location"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "properties": {
+          "$ref": "#/definitions/ClustersBootstrapIsosProperties"
+        },
+        "systemData": {
+          "$ref": "#/definitions/SystemData"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Tags"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClustersBootstrapIsosList": {
+      "type": "object",
+      "title": "BootstrapIsoList represents a list of bootstrap ISOs for a cluster.",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of operations.",
+          "type": "string",
+          "x-go-name": "NextLink"
+        },
+        "value": {
+          "description": "The list of BootstrapIsos",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClustersBootstrapIsos"
+          },
+          "x-go-name": "ClustersBootstrapIsos"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "ClustersBootstrapIsosProperties": {
+      "type": "object",
+      "title": "ClusterBootstrapIsosProperties represents the properties of a cluster bootstrap ISO.",
+      "properties": {
+        "mediaurl": {
+          "type": "string",
+          "x-go-name": "MediaUrl",
+          "readOnly": true
+        },
+        "provisioningState": {
+          "x-go-name": "ProvisioningState",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "CreatedByType": {
+      "description": "CreatedByType defines user type, which executed the request",
+      "type": "string",
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "RackSkuEntry": {
+      "type": "object",
+      "title": "RackSkuEntry represents a rack for the cluster.",
+      "required": [
+        "skumodelname",
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "description": "description: \"A unique identifier for the rack\"",
+          "type": "string",
+          "x-go-name": "Label"
+        },
+        "sku": {
+          "$ref": "#/definitions/Sku"
+        },
+        "skumodelname": {
+          "description": "description: \"The user-supplied sku model name this rack\"",
+          "type": "string",
+          "x-go-name": "SkuModelName"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "Sku": {
+      "description": "TODO: this is just a placeholder\npending a proper definition of\nrack models",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "x-go-name": "Description",
+          "readOnly": true
+        },
+        "machinecount": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "MachineCount",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    },
+    "SystemData": {
+      "type": "object",
+      "title": "SystemData metadata pertaining to creation and last modification of the resource.",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "CreatedAt"
+        },
+        "createdBy": {
+          "type": "string",
+          "x-go-name": "CreatedBy"
+        },
+        "createdByType": {
+          "$ref": "#/definitions/CreatedByType"
+        },
+        "lastModifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "LastModifiedAt"
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "x-go-name": "LastModifiedBy"
+        },
+        "lastModifiedByType": {
+          "$ref": "#/definitions/CreatedByType"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp/api/v20211021preview"
+    }
+  },
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "x-meta-array": [
+    "value1",
+    "value2"
+  ],
+  "x-meta-array-obj": [
+    {
+      "name": "obj",
+      "value": "field"
+    }
+  ],
+  "x-meta-value": "value"
+}
