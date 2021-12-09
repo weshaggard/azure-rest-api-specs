@@ -56,15 +56,136 @@
               "$ref": "#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-examples": {
+          "Lists Operations": {
+            "$ref": "./examples/InstancesOperationList.json"
+          }
         }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{sourceResourceGroupName}/moveResources": {
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "operationId": "Resources_MoveResources",
+        "summary": "Moves resources from one resource group to another resource group.",
+        "description": "The resources to move must be in the same source resource group. The target resource group may be in a different subscription. When moving resources, both the source group and the target group are locked for the duration of the operation. Write and delete operations are blocked on the groups until the move completes. ",
+        "parameters": [
+          {
+            "name": "sourceResourceGroupName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource group containing the resources to move.",
+            "pattern": "^[-\\w\\._\\(\\)]+$",
+            "minLength": 1,
+            "maxLength": 90
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResourcesMoveInfo"
+            },
+            "description": "Parameters for moving resources."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Failed to move resources",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-examples": {
+          "Lists Operations": {
+            "$ref": "./examples/ResourceMove.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{sourceResourceGroupName}/validateMoveResources": {
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "operationId": "Resources_ValidateMoveResources",
+        "summary": "Validates whether resources can be moved from one resource group to another resource group.",
+        "description": "This operation checks whether the specified resources can be moved to the target. The resources to move must be in the same source resource group. The target resource group may be in a different subscription. If validation succeeds, it returns HTTP response code 204 (no content). If validation fails, it returns HTTP response code 409 (Conflict) with an error message. Retrieve the URL in the Location header value to check the result of the long-running operation.",
+        "parameters": [
+          {
+            "name": "sourceResourceGroupName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource group containing the resources to validate for move.",
+            "pattern": "^[-\\w\\._\\(\\)]+$",
+            "minLength": 1,
+            "maxLength": 90
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResourcesMoveInfo"
+            },
+            "description": "Parameters for moving resources."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Failed to validate resource move",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-examples": {
+          "Lists Operations": {
+            "$ref": "./examples/ValidateResourceMove.json"
+          }
+        },
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.HpcWorkbench/instances": {
       "get": {
         "tags": [
-          "Instances"
+          "instances_ListBySubscription"
         ],
-        "operationId": "Instances_ListBySubscription",
+        "operationId": "instances_ListBySubscription",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -108,9 +229,9 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.HpcWorkbench/instances": {
       "get": {
         "tags": [
-          "Instances"
+          "instances_ListByResourceGroup"
         ],
-        "operationId": "Instances_ListByResourceGroup",
+        "operationId": "instances_ListByResourceGroup",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -160,7 +281,7 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.HpcWorkbench/instances/{name}": {
       "get": {
         "tags": [
-          "Instances"
+          "instances_Get"
         ],
         "operationId": "instances_Get",
         "parameters": [
@@ -213,7 +334,7 @@
       },
       "put": {
         "tags": [
-          "Instances"
+          "instances_CreateOrUpdate"
         ],
         "operationId": "instances_CreateOrUpdate",
         "parameters": [
@@ -251,7 +372,10 @@
             }
           },
           "201": {
-            "description": "Success"
+            "description": "Create successful. The operation returns the resulting Instance resource.",
+            "schema": {
+              "$ref": "#/definitions/Instance"
+            }
           },
           "default": {
             "description": "",
@@ -260,6 +384,10 @@
             },
             "x-ms-error-response": true
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
           "Instances create or update": {
@@ -276,7 +404,7 @@
       },
       "patch": {
         "tags": [
-          "Instances"
+          "instances_Patch"
         ],
         "operationId": "instances_Patch",
         "parameters": [
@@ -313,6 +441,12 @@
               "$ref": "#/definitions/Instance"
             }
           },
+          "201": {
+            "description": "Create successful. The operation returns the resulting Instance resource.",
+            "schema": {
+              "$ref": "#/definitions/Instance"
+            }
+          },
           "default": {
             "description": "",
             "schema": {
@@ -329,7 +463,7 @@
       },
       "delete": {
         "tags": [
-          "Instances"
+          "instances_Delete"
         ],
         "operationId": "instances_Delete",
         "parameters": [
@@ -361,6 +495,9 @@
           },
           "204": {
             "description": "Success, no content"
+          },
+          "202": {
+            "description": "Accepted"
           },
           "default": {
             "description": "",
@@ -423,6 +560,23 @@
           "description": "The error additional info."
         }
       }
+    },
+    "ResourcesMoveInfo": {
+      "type": "object",
+      "properties": {
+        "resources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The IDs of the resources."
+        },
+        "targetResourceGroup": {
+          "type": "string",
+          "description": "The target resource group."
+        }
+      },
+      "description": "Parameters of move resources."
     },
     "InstancePageableList": {
       "description": "Microsoft.Sdw.Core.ResourceMetadata.PageableList implementation specific to pageable lists of Microsoft.Sdw.Core.ResourceMetadata.AzureResource`1.",
@@ -523,7 +677,8 @@
         },
         "sku": {
           "type": "string",
-          "description": "Name of SKU."
+          "description": "Name of SKU.",
+          "$ref": "#/definitions/Sku"
         }
       }
     },
@@ -555,7 +710,8 @@
         },
         "sku": {
           "type": "string",
-          "description": "Name of SKU."
+          "description": "Name of SKU.",
+          "$ref": "#/definitions/Sku"
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
