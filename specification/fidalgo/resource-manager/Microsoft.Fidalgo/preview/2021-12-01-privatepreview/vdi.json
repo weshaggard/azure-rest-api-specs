@@ -808,6 +808,54 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fidalgo/networksettings/{networkSettingName}/healthchecks": {
+      "parameters": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/TopParameter"
+        },
+        {
+          "$ref": "#/parameters/NetworkSettingName"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Network Settings"
+        ],
+        "description": "Lists health check status details",
+        "operationId": "NetworkSettings_ListHealthDetails",
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/HealthCheckStatusDetailsListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "NetworkSettings_ListHealthDetails": {
+            "$ref": "./examples/NetworkSettings_ListHealthDetails.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fidalgo/networksettings/{networkSettingName}/healthchecks/latest": {
       "get": {
         "tags": [
@@ -1066,20 +1114,30 @@
       "description": "Properties of a Machine Definition. These properties can be updated after the resource has been created.",
       "type": "object",
       "properties": {
-        "imageType": {
-          "enum": [
-            "Custom",
-            "Gallery"
-          ],
-          "description": "The image type.",
-          "type": "string",
-          "x-ms-enum": {
-            "name": "ImageType",
-            "modelAsString": true
-          }
+        "imageReference": {
+          "$ref": "#/definitions/ImageReference",
+          "description": "Image reference information."
+        }
+      }
+    },
+    "ImageReference": {
+      "type": "object",
+      "description": "Image reference information",
+      "properties": {
+        "id": {
+          "description": "Image resource ID.",
+          "type": "string"
         },
-        "imageId": {
-          "description": "The image identifier of the virtual machine image.",
+        "publisher": {
+          "description": "The image publisher.",
+          "type": "string"
+        },
+        "offer": {
+          "description": "The image offer.",
+          "type": "string"
+        },
+        "sku": {
+          "description": "The image sku.",
           "type": "string"
         }
       }
@@ -1098,7 +1156,10 @@
           "$ref": "commonDefinitions.json#/definitions/ProvisioningState",
           "readOnly": true
         }
-      }
+      },
+      "required": [
+        "imageReference"
+      ]
     },
     "NetworkSettings": {
       "type": "object",
@@ -1309,6 +1370,25 @@
         },
         "additionalDetails": {
           "description": "Additional details about the health check or the recommended action.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "HealthCheckStatusDetailsListResult": {
+      "description": "Result of the network health check list operation.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Current page of results.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HealthCheckStatusDetails"
+          },
+          "readOnly": true
+        },
+        "nextLink": {
+          "description": "URL to get the next set of results if there are any.",
           "type": "string",
           "readOnly": true
         }
