@@ -349,6 +349,12 @@
               "$ref": "#/definitions/GitHubConnectorResource"
             }
           },
+          "201": {
+            "description": "GitHub Connector details.",
+            "schema": {
+              "$ref": "#/definitions/GitHubConnectorResource"
+            }
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -1474,7 +1480,6 @@
         }
       }
     },
-
     "/providers/Microsoft.SecurityDevOps/operations": {
       "get": {
         "description": "Returns list of operations supported by the Microsoft.SecurityDevOps provider.",
@@ -1501,6 +1506,87 @@
         "deprecated": false,
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.SecurityDevOps/locations/{locationName}/operationStatuses/{operationStatusId}" : {
+      "get": {
+        "tags": [
+          "operationStatus"
+        ],
+        "description": "Return the given operationStatus.",
+        "operationId": "OperationStatuses_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "#/parameters/OperationStatusIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "operationStatus details.",
+            "schema": {
+              "$ref": "#/definitions/OperationStatus"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "operationStatus"
+        ],
+        "description": "Patches a given operationStatus.",
+        "operationId": "OperationStatuses_Update",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "#/parameters/OperationStatusIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "operationStatus",
+            "description": "operationStatus details.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OperationStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "operationStatus details.",
+            "schema": {
+              "$ref": "#/definitions/OperationStatus"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -2248,6 +2334,66 @@
           }
         }
       }
+    },
+    "OperationStatus": {
+      "description": "The current status of an async operation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Fully qualified ID for the operation status.",
+          "type": "string",
+          "readOnly": true
+        },
+        "name": {
+          "description": "The operation id name",
+          "type": "string",
+          "readOnly": true
+        },
+        "status": {
+          "description": "Provisioning state of the resource.",
+          "type": "string",
+          "readOnly": true
+        },
+        "startTime": {
+          "description": "The start time of the operation",
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time"
+        },
+        "endTime": {
+          "description": "The end time of the operation",
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time"
+        },
+        "percentComplete": {
+          "description": "Percent of the operation that is complete",
+          "type": "number",
+          "readOnly": true,
+          "minimum": 0,
+          "maximum": 100
+        },
+        "properties": {
+          "description": "Custom operation properties, populated only for a successful operation.",
+          "type": "object",
+          "readOnly": true
+        },
+        "error": {
+          "description": "Operation Error message",
+          "properties": {
+            "code": {
+              "readOnly": true,
+              "type": "string",
+              "description": "The error code."
+            },
+            "message": {
+              "readOnly": true,
+              "type": "string",
+              "description": "The error message."
+            }
+          }
+        }
+      }
     }
   },
   "parameters": {
@@ -2327,6 +2473,22 @@
       "required": true,
       "type": "string",
       "description": "The AzDevOps pipeline name.",
+      "x-ms-parameter-location": "method"
+    },
+    "LocationParameter": {
+      "name": "locationName",
+      "in": "path",
+      "description": "The Azure region",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "OperationStatusIdParameter": {
+      "name": "operationStatusId",
+      "in": "path",
+      "description": "The ID of an ongoing async operation",
+      "required": true,
+      "type": "string",
       "x-ms-parameter-location": "method"
     }
   }
