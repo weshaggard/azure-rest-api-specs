@@ -3,7 +3,7 @@
   "info": {
     "title": "Microsoft.ServiceLinker",
     "description": "Microsoft.ServiceLinker provider",
-    "version": "2021-11-01-preview"
+    "version": "2021-12-01-alpha"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -348,17 +348,13 @@
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ServiceLinker/linkers/{linkerName}/precheck/{precheckName}": {
+    "/{resourceUri}/providers/Microsoft.ServiceLinker/dryruns/{dryrunName}": {
       "put": {
         "tags": [
-          "PreCheck"
+          "Dryrun"
         ],
-        "operationId": "Linker_PreCheck",
-        "description": "precheck for operation satisfaction before actual call",
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
+        "operationId": "Dryrun_CreateOrUpdate",
+        "description": "create a dryrun job to do necessary check before actual creation",
         "parameters": [
           {
             "$ref": "#/parameters/ResourceUriParameter"
@@ -367,23 +363,20 @@
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/LinkerNameParameter"
-          },
-          {
-            "name": "precheckName",
+            "name": "dryrunName",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of precheck.",
+            "description": "The name of dryrun.",
             "x-ms-parameter-location": "method"
           },
           {
             "name": "parameters",
-            "description": "PreCheck details.",
+            "description": "dryrun parameters.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PreCheckRequest"
+              "$ref": "#/definitions/DryrunResource"
             }
           }
         ],
@@ -391,11 +384,14 @@
           "200": {
             "description": "OK. The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/PreCheckResponse"
+              "$ref": "#/definitions/DryrunResource"
             }
           },
-          "202": {
-            "description": "Accepted - Returns this status until the asynchronous operation has completed."
+          "201": {
+            "description": "Long running operation.",
+            "schema": {
+              "$ref": "#/definitions/DryrunResource"
+            }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -747,87 +743,117 @@
         }
       }
     },
-    "PreCheckActionName": {
+    "DryrunResource": {
+      "type": "object",
+      "description": "a dryrun job resource",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
+          "description": "The resource model definition for an Azure Resource Manager proxy resource."
+        }
+      ],
+      "required": [
+        "properties"
+      ],
+      "properties": {
+        "properties": {
+          "description": "The properties of the linker.",
+          "$ref": "#/definitions/DryrunProperties",
+          "x-ms-client-flatten": true
+        },
+        "systemData": {
+          "readOnly": true,
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "description": "The system data."
+        }
+      }
+    },
+    "DryrunProperties": {
+      "description": "The properties of the dryrun job",
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "description": "The parameters of the dryrun",
+          "$ref": "#/definitions/DryrunParameters"
+        },
+        "results": {
+          "readOnly": true,
+          "description": "the result of the dryrun",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DryrunResult"
+          }
+        }
+      }
+    },
+    "DryrunActionName": {
       "description": "The name of action that would be prechecked.",
       "type": "string",
       "enum": [
         "createOrUpdate"
       ],
       "x-ms-enum": {
-        "name": "PreCheckActionName",
+        "name": "DryrunActionName",
         "modelAsString": true
       }
     },
-    "PreCheckRequest": {
-      "description": "The request payload of precheck",
+    "DryrunParameters": {
+      "description": "The parameters of the dryrun",
       "discriminator": "actionName",
       "type": "object",
       "properties": {
         "actionName": {
-          "$ref": "#/definitions/PreCheckActionName"
+          "$ref": "#/definitions/DryrunActionName"
         }
       },
       "required": [
         "actionName"
       ]
     },
-    "CreateOrUpdatePreCheckRequest": {
+    "CreateOrUpdateDryrunParameters": {
       "x-ms-discriminator-value": "createOrUpdate",
       "type": "object",
-      "description": "The PreCheck Request for creation or update",
+      "description": "The dryrun parameters for creation or update a linker",
       "allOf": [
         {
-          "$ref": "#/definitions/PreCheckRequest"
+          "$ref": "#/definitions/DryrunParameters"
         },
         {
           "$ref": "#/definitions/LinkerProperties"
         }
       ]
     },
-    "PreCheckResponse": {
-      "description": "The response of precheck",
-      "type": "object",
-      "properties": {
-        "results": {
-          "description": "The precheck results",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PreCheckResult"
-          }
-        }
-      }
-    },
-    "PreCheckResultType": {
+    "DryrunResultType": {
       "description": "The name of precheck result.",
       "type": "string",
       "enum": [
         "permissionsMissing"
       ],
       "x-ms-enum": {
-        "name": "PreCheckResultType",
+        "name": "DryrunResultType",
         "modelAsString": true
       }
     },
-    "PreCheckResult": {
+    "DryrunResult": {
       "description": "A result of precheck",
       "discriminator": "type",
       "type": "object",
       "properties": {
         "type": {
-          "$ref": "#/definitions/PreCheckResultType"
+          "$ref": "#/definitions/DryrunResultType"
         }
       },
       "required": [
         "type"
       ]
     },
-    "PermissionsMissingPreCheckResult": {
+    "PermissionsMissingDryrunResult": {
       "x-ms-discriminator-value": "permissionsMissing",
       "description": "The represent of missing permissions",
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/PreCheckResult"
+          "$ref": "#/definitions/DryrunResult"
         }
       ],
       "properties": {
