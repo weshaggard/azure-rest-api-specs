@@ -8,9 +8,8 @@ python:
   azure-arm: true
   license-header: MICROSOFT_MIT_NO_VERSION
   payload-flattening-threshold: 2
-  namespace: azure.mgmt.Fidalgo
+  namespace: azure.mgmt.fidalgo
   package-name: azure-mgmt-fidalgo
-  package-version: 2021-06-01-privatepreview
   clear-output-folder: true
 ```
 
