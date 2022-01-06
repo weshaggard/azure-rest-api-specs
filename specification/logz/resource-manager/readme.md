@@ -29,6 +29,15 @@ openapi-type: arm
 tag: package-2020-10-01-preview
 ```
 
+### Tag: package-2022-01-01-preview
+
+These settings apply only when `--tag=package-2022-01-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-01-01-preview'
+input-file:
+  - Microsoft.Logz/preview/2022-01-01-preview/logz.json
+```
+
 ### Tag: package-2020-10-01-preview
 
 These settings apply only when `--tag=package-2020-10-01-preview` is specified on the command line.
@@ -68,6 +77,12 @@ swagger-to-sdk:
 ## Suppression
 ```
 directive:
+  - suppress: SECRET_PROPERTY
+    from:
+      - Microsoft.Logz/preview/2022-01-01-preview/logz.json
+    where:
+      - $.definitions.VMExtensionPayload.properties.apiKey
+    reason: Secrets are OK to return in a POST response.
   - suppress: SECRET_PROPERTY
     from:
       - Microsoft.Logz/preview/2020-10-01-preview/logz.json
