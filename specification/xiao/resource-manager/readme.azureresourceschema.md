@@ -9,6 +9,7 @@ batch:
   - tag: schema-testbase-2020-12-16-preview
   - tag: schema-testbase-2021-09-01-preview
   - tag: schema-testbase-2021-09-01
+  - tag: schema-testbase-2021-12-01
   
 ```
 
@@ -21,7 +22,7 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.TestBase/preview/2020-12-16-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2020-12-16-preview/testbase.json
 ```
 
 ### Tag: schema-testbase-2021-09-01-preview and azureresourceschema
@@ -31,7 +32,7 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.TestBase/preview/2021-09-01-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2021-09-01-preview/testbase.json
 ```
 
 ### Tag: schema-testbase-2021-09-01 and azureresourceschema
@@ -40,5 +41,14 @@ input-file:
 output-folder: $(azureresourceschema-folder)/schemas
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.TestBase/stable/2021-09-01/testbase.json
+  - Microsoft.XiaoTest/stable/2021-09-01/testbase.json
+```
+
+### Tag: schema-testbase-2021-12-01 and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2021-12-01' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.XiaoTest/stable/2021-12-01/testbase.json
 ```

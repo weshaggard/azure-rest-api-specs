@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2020-12-16-preview` is specified o
 
 ```yaml $(tag) == 'package-2020-12-16-preview'
 input-file:
-  - Microsoft.TestBase/preview/2020-12-16-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2020-12-16-preview/testbase.json
 ```
 
 ### Tag: package-2021-09-01-preview
@@ -45,7 +45,7 @@ These settings apply only when `--tag=package-2021-09-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2021-09-01-preview'
 input-file:
-  - Microsoft.TestBase/preview/2021-09-01-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2021-09-01-preview/testbase.json
 ```
 
 ### Tag: package-2021-09-01
@@ -54,7 +54,16 @@ These settings apply only when `--tag=package-2021-09-01` is specified on the co
 
 ```yaml $(tag) == 'package-2021-09-01'
 input-file:
-  - Microsoft.TestBase/stable/2021-09-01/testbase.json
+  - Microsoft.XiaoTest/stable/2021-09-01/testbase.json
+```
+
+### Tag: package-2021-12-01
+
+These settings apply only when `--tag=package-2021-12-01` is specified on the command line.
+
+```yaml $(tag) == 'package-2021-12-01'
+input-file:
+  - Microsoft.XiaoTest/stable/2021-12-01/testbase.json
 ```
 
 ## Suppression
