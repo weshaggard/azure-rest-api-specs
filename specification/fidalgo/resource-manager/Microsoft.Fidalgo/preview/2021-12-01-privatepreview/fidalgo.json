@@ -716,6 +716,165 @@
             "$ref": "./examples/Environments_Get.json"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Environments"
+        ],
+        "description": "Creates or updates an environment.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ProjectNameParameter"
+          },
+          {
+            "$ref": "#/parameters/EnvironmentNameParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Represents a environment.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          }
+        ],
+        "operationId": "Environments_CreateOrUpdate",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "responses": {
+          "200": {
+            "description": "Succeeded",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          },
+          "201": {
+            "description": "Accepted. Operation will complete asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Environments"
+        ],
+        "description": "Partially updates an environment",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ProjectNameParameter"
+          },
+          {
+            "$ref": "#/parameters/EnvironmentNameParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Updatable environment properties.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EnvironmentUpdate"
+            }
+          }
+        ],
+        "operationId": "Environments_Update",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "responses": {
+          "200": {
+            "description": "Succeeded",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          },
+          "201": {
+            "description": "Accepted. Operation will complete asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Environments"
+        ],
+        "description": "Deletes an environment and all it's associated resources",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ProjectNameParameter"
+          },
+          {
+            "$ref": "#/parameters/EnvironmentNameParameter"
+          }
+        ],
+        "operationId": "Environments_Delete",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "responses": {
+          "200": {
+            "description": "OK. Environment has been deleted."
+          },
+          "202": {
+            "description": "Accepted. Operation will complete asynchronously."
+          },
+          "204": {
+            "description": "Resource does not exist."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        }
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fidalgo/projects/{projectName}/catalogItems": {
@@ -2546,34 +2705,44 @@
         "location"
       ]
     },
-    "EnvironmentProperties": {
-      "description": "Properties of an environment.",
+    "EnvironmentUpdateProperties": {
+      "description": "Properties of an environment. These properties can be updated after the resource has been created.",
       "type": "object",
       "properties": {
         "description": {
-          "description": "Description of the Environment.",
           "type": "string",
-          "readOnly": true
-        },
-        "catalogName": {
-          "description": "Name of the catalog item.",
-          "type": "string",
-          "readOnly": true
+          "description": "Description of the Environment."
         },
         "catalogItemName": {
-          "description": "Name of the catalog item.",
           "type": "string",
-          "readOnly": true
+          "description": "Name of the catalog item."
         },
-        "parameters": {
-          "description": "Input parameters passed to environment actions.",
-          "type": "object",
-          "readOnly": true
+        "templateUri": {
+          "type": "string",
+          "description": "Uri of a template used to deploy resources to the environment."
         },
+        "deploymentParameters": {
+          "description": "Deployment parameters passed to catalog item.",
+          "type": "object"
+        }
+      }
+    },
+    "EnvironmentProperties": {
+      "description": "Properties of an environment.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EnvironmentUpdateProperties"
+        }
+      ],
+      "properties": {
         "environmentType": {
-          "description": "Environment type.",
           "type": "string",
-          "readOnly": true
+          "description": "Environment type.",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
         "provisioningState": {
           "description": "The provisioning state of the environment.",
@@ -2584,6 +2753,27 @@
           "description": "The identifier of the resource group containing the environment's resources.",
           "type": "string",
           "readOnly": true
+        },
+        "outputs": {
+          "type": "object",
+          "description": "Outputs from the deployment.",
+          "readOnly": true
+        }
+      }
+    },
+    "EnvironmentUpdate": {
+      "description": "The environment properties for partial update. Properties not provided in the update request will not be changed.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "commonDefinitions.json#/definitions/TrackedResourceUpdate"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/EnvironmentUpdateProperties",
+          "description": "Environment properties to be updated."
         }
       }
     },
