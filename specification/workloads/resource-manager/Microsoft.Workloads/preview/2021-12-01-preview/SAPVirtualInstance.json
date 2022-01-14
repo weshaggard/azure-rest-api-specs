@@ -75,8 +75,17 @@
           }
         },
         "x-ms-examples": {
-          "SAPSizingRecommendations": {
-            "$ref": "./examples/sapvirtualinstances/SAPSizingRecommendations.json"
+          "SAPSizingRecommendations_S4HANA_Distributed": {
+            "$ref": "./examples/sapvirtualinstances/SAPSizingRecommendations_S4HANA_Distributed.json"
+          },
+          "SAPSizingRecommendations_S4HANA_SingleServer": {
+            "$ref": "./examples/sapvirtualinstances/SAPSizingRecommendations_S4HANA_SingleServer.json"
+          },
+          "SAPSizingRecommendations_S4HANA_DistributedHA_AvSet": {
+            "$ref": "./examples/sapvirtualinstances/SAPSizingRecommendations_S4HANA_HA_AvSet.json"
+          },
+          "SAPSizingRecommendations_S4HANA_DistributedHA_AvZone": {
+            "$ref": "./examples/sapvirtualinstances/SAPSizingRecommendations_S4HANA_HA_AvZone.json"
           }
         }
       }
@@ -122,8 +131,17 @@
           }
         },
         "x-ms-examples": {
-          "SAPSupportedSku": {
-            "$ref": "./examples/sapvirtualinstances/SAPSupportedSkus.json"
+          "SAPSupportedSkus_Distributed": {
+            "$ref": "./examples/sapvirtualinstances/SAPSupportedSkus_Distributed.json"
+          },
+          "SAPSupportedSkus_SingleServer": {
+            "$ref": "./examples/sapvirtualinstances/SAPSupportedSkus_SingleServer.json"
+          },
+          "SAPSupportedSkus_DistributedHA_AvSet": {
+            "$ref": "./examples/sapvirtualinstances/SAPSupportedSkus_DistributedHA_AvSet.json"
+          },
+          "SAPSupportedSkus_DistributedHA_AvZone": {
+            "$ref": "./examples/sapvirtualinstances/SAPSupportedSkus_DistributedHA_AvZone.json"
           }
         }
       }
@@ -142,8 +160,17 @@
           "application/json"
         ],
         "x-ms-examples": {
-          "SAPVirtualInstances_Create": {
-            "$ref": "./examples/sapvirtualinstances/SAPVirtualInstances_Create.json"
+          "SAPVirtualInstances_Create_Distributed": {
+            "$ref": "./examples/sapvirtualinstances/SAPVirtualInstances_Create_Distributed.json"
+          },
+          "SAPVirtualInstances_Create_HA_AvSet": {
+            "$ref": "./examples/sapvirtualinstances/SAPVirtualInstances_Create_HA_AvSet.json"
+          },
+          "SAPVirtualInstances_Create_HA_AvZone": {
+            "$ref": "./examples/sapvirtualinstances/SAPVirtualInstances_Create_HA_AvZone.json"
+          },
+          "SAPVirtualInstances_Create_SingleServer": {
+            "$ref": "./examples/sapvirtualinstances/SAPVirtualInstances_Create_SingleServer.json"
           }
         },
         "description": "Creates an SAP Virtual Instance.",
@@ -1357,19 +1384,6 @@
     }
   },
   "definitions": {
-    "HealthState": {
-      "description": "Defines the SAP Virtual Instance health.",
-      "enum": [
-        "Unknown",
-        "Healthy",
-        "Unhealthy"
-      ],
-      "type": "string",
-      "x-ms-enum": {
-        "name": "SAPHealthState",
-        "modelAsString": true
-      }
-    },
     "DeploymentType": {
       "description": "The deployment Type.",
       "enum": [
@@ -1379,6 +1393,37 @@
       "type": "string",
       "x-ms-enum": {
         "name": "SAPDeploymentType",
+        "modelAsString": true
+      },
+      "x-ms-mutability": [
+        "create",
+        "read"
+      ]
+    },
+    "SAPSoftwareInstallationType": {
+      "description": "The SAP software installation Type.",
+      "enum": [
+        "ServiceInitiated"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "SAPSoftwareInstallationType",
+        "modelAsString": true
+      },
+      "x-ms-mutability": [
+        "create",
+        "read"
+      ]
+    },
+    "HighAvailabilityType": {
+      "description": "The high availability Type. AvailabilitySet guarantees 99.95% availability. Availability Zone guarantees 99.99% availability.",
+      "enum": [
+        "AvailabilitySet",
+        "AvailabilityZone"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "SAPHighAvailabilityType",
         "modelAsString": true
       },
       "x-ms-mutability": [
@@ -1417,21 +1462,6 @@
         "read"
       ]
     },
-    "SAPVirtualInstanceStatus": {
-      "description": "Defines the SAP Virtual Instance status.",
-      "enum": [
-        "Starting",
-        "Running",
-        "Stopping",
-        "Stopped",
-        "Unknown"
-      ],
-      "type": "string",
-      "x-ms-enum": {
-        "name": "SAPVirtualInstanceStatus",
-        "modelAsString": true
-      }
-    },
     "SAPVirtualInstanceState": {
       "description": "Defines the SAP Virtual Instance state.",
       "enum": [
@@ -1465,38 +1495,6 @@
       },
       "x-ms-mutability": [
         "create",
-        "read"
-      ]
-    },
-    "ApplicationServerType": {
-      "description": "Defines the SAP Application Server type.",
-      "enum": [
-        "Primary",
-        "Additional"
-      ],
-      "type": "string",
-      "readOnly": true,
-      "x-ms-enum": {
-        "name": "ApplicationServerType",
-        "modelAsString": true
-      },
-      "x-ms-mutability": [
-        "read"
-      ]
-    },
-    "DatabaseVirtualMachineType": {
-      "description": "Defines the type of database VM.",
-      "enum": [
-        "Primary",
-        "Secondary"
-      ],
-      "type": "string",
-      "readOnly": true,
-      "x-ms-enum": {
-        "name": "DatabaseVirtualMachineType",
-        "modelAsString": true
-      },
-      "x-ms-mutability": [
         "read"
       ]
     },
@@ -1853,6 +1851,10 @@
         "dbScaleMethod": {
           "description": "The DB scale method.",
           "$ref": "#/definitions/DatabaseScaleMethod"
+        },
+        "highAvailabilityType": {
+          "description": "The high availability type.",
+          "$ref": "#/definitions/HighAvailabilityType"
         }
       },
       "required": [
@@ -1886,18 +1888,31 @@
           "type": "string",
           "description": "The geo-location where the resource is to be created."
         },
+        "environment": {
+          "$ref": "#/definitions/EnvironmentType"
+        },
         "sapProduct": {
           "$ref": "#/definitions/SAPProductType"
+        },
+        "deploymentType": {
+          "description": "The deployment type. Eg: SingleServer/ThreeTier",
+          "$ref": "#/definitions/DeploymentType"
         },
         "databaseType": {
           "description": "The database type. Eg: HANA, DB2, etc",
           "$ref": "#/definitions/SAPDatabaseType"
+        },
+        "highAvailabilityType": {
+          "description": "The high availability type.",
+          "$ref": "#/definitions/HighAvailabilityType"
         }
       },
       "required": [
         "appLocation",
+        "environment",
         "sapProduct",
-        "databaseType"
+        "databaseType",
+        "deploymentType"
       ]
     },
     "SAPSupportedSku": {
@@ -2000,8 +2015,7 @@
         "subnetId",
         "virtualMachineConfiguration",
         "instanceCount"
-      ],
-      "x-ms-azure-resource": true
+      ]
     },
     "DatabaseConfiguration": {
       "description": "Gets or sets the database configuration.",
@@ -2025,8 +2039,7 @@
         "subnetId",
         "virtualMachineConfiguration",
         "instanceCount"
-      ],
-      "x-ms-azure-resource": true
+      ]
     },
     "ApplicationServerConfiguration": {
       "description": "Gets or sets the application server configuration.",
@@ -2050,8 +2063,20 @@
         "subnetId",
         "virtualMachineConfiguration",
         "instanceCount"
-      ],
-      "x-ms-azure-resource": true
+      ]
+    },
+    "HighAvailabilityConfiguration": {
+      "description": "Gets or sets the high availability configuration.",
+      "type": "object",
+      "properties": {
+        "highAvailabilityType": {
+          "description": "The high availability type.",
+          "$ref": "#/definitions/HighAvailabilityType"
+        }
+      },
+      "required": [
+        "highAvailabilityType"
+      ]
     },
     "ThreeTierConfiguration": {
       "x-ms-discriminator-value": "ThreeTier",
@@ -2075,6 +2100,10 @@
         "databaseServer": {
           "description": "The database configuration.",
           "$ref": "#/definitions/DatabaseConfiguration"
+        },
+        "highAvailabilityConfig": {
+          "description": "The high availability configuration.",
+          "$ref": "#/definitions/HighAvailabilityConfiguration"
         }
       },
       "required": [
@@ -2105,11 +2134,55 @@
       "description": "The SAP Software configuration Input.",
       "type": "object",
       "properties": {
+        "softwareInstallationType": {
+          "$ref": "#/definitions/SAPSoftwareInstallationType"
+        }
+      },
+      "required": [
+        "softwareInstallationType"
+      ],
+      "discriminator": "softwareInstallationType"
+    },
+    "ServiceInitiatedSoftwareConfiguration": {
+      "description": "The SAP Software configuration Input when the software is to be installed by service.",
+      "type": "object",
+      "x-ms-discriminator-value": "ServiceInitiated",
+      "x-ms-client-flatten": true,
+      "allOf": [
+        {
+          "$ref": "#/definitions/SoftwareConfiguration"
+        }
+      ],
+      "properties": {
         "bomUrl": {
           "type": "string",
-          "description": "The URL to the SAP BOM."
+          "description": "The URL to the SAP Build of Materials(BOM) file."
+        },
+        "softwareVersion": {
+          "type": "string",
+          "description": "The software version to install."
+        },
+        "sapBitsStorageAccountId": {
+          "type": "string",
+          "description": "The SAP bits storage account id."
+        },
+        "sapFqdn": {
+          "type": "string",
+          "description": "The FQDN to set for the SAP system during install."
+        },
+        "sshPrivateKey": {
+          "type": "string",
+          "x-ms-secret": true,
+          "description": "The SSH private key."
         }
-      }
+      },
+      "required": [
+        "bomUrl",
+        "softwareVersion",
+        "sapBitsStorageAccountId",
+        "sapFqdn",
+        "sshPrivateKey"
+      ]
     },
     "StartRequest": {
       "description": "Start SAP Request.",
@@ -2159,6 +2232,11 @@
         "centralServerVmId": {
           "type": "string",
           "description": "The virtual machine ID of the Central Server."
+        },
+        "appLocation": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The geo-location where the SAP system exists."
         }
       }
     },
@@ -2172,6 +2250,10 @@
         }
       ],
       "properties": {
+        "appLocation": {
+          "type": "string",
+          "description": "The geo-location where the SAP system is to be created."
+        },
         "infrastructureConfiguration": {
           "$ref": "#/definitions/InfrastructureConfiguration",
           "description": "The infrastructure configuration."
@@ -2186,16 +2268,11 @@
       "description": "The SAP Configuration.",
       "type": "object",
       "required": [
-        "configurationType",
-        "appLocation"
+        "configurationType"
       ],
       "properties": {
         "configurationType": {
           "$ref": "#/definitions/ConfigurationType"
-        },
-        "appLocation": {
-          "type": "string",
-          "description": "The geo-location where the resource is to be created."
         }
       },
       "discriminator": "configurationType"
@@ -2204,13 +2281,12 @@
       "description": "The Central Server VM Details.",
       "type": "object",
       "properties": {
-        "virtualMachineId": {
-          "type": "string",
-          "description": "The central server virtual machine id.",
-          "readOnly": true
-        },
         "type": {
           "$ref": "#/definitions/CentralServerVirtualMachineType",
+          "readOnly": true
+        },
+        "virtualMachineId": {
+          "type": "string",
           "readOnly": true
         }
       }
@@ -2221,12 +2297,17 @@
       "properties": {
         "virtualMachineId": {
           "type": "string",
-          "description": "The database virtual machine id.",
           "readOnly": true
-        },
-        "type": {
-          "$ref": "#/definitions/DatabaseVirtualMachineType",
-          "readOnly": true
+        }
+      }
+    },
+    "ManagedRGConfiguration": {
+      "description": "Managed resource group configuration",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Managed resource group name"
         }
       }
     },
@@ -2256,13 +2337,17 @@
           "description": "The SAP Deployment or discovery configuration",
           "$ref": "#/definitions/SAPConfiguration"
         },
+        "managedResourceGroupConfiguration": {
+          "description": "Managed resource group configuration",
+          "$ref": "#/definitions/ManagedRGConfiguration"
+        },
         "status": {
-          "$ref": "#/definitions/SAPVirtualInstanceStatus",
-          "readOnly": true
+          "description": "Defines the SAP Virtual Instance status.",
+          "type": "string"
         },
         "health": {
-          "$ref": "#/definitions/HealthState",
-          "readOnly": true
+          "description": "Defines the SAP Virtual Instance health.",
+          "type": "string"
         },
         "state": {
           "$ref": "#/definitions/SAPVirtualInstanceState",
@@ -2311,8 +2396,7 @@
       },
       "required": [
         "properties"
-      ],
-      "x-ms-azure-resource": true
+      ]
     },
     "SAPVirtualInstanceList": {
       "description": "Defines the collection of SAP Virtual Instance.",
@@ -2387,11 +2471,9 @@
       "type": "object",
       "properties": {
         "instanceNo": {
-          "type": "integer",
-          "format": "int64",
+          "type": "string",
           "description": "The application server instance id.",
-          "readOnly": true,
-          "x-nullable": true
+          "readOnly": true
         },
         "subnet": {
           "type": "string",
@@ -2400,38 +2482,44 @@
         },
         "hostname": {
           "type": "string",
-          "description": "The application server hostname.",
+          "description": "The application server SAP host name.",
+          "readOnly": true
+        },
+        "kernelVersion": {
+          "type": "string",
+          "description": "The application server SAP kernel version.",
+          "readOnly": true
+        },
+        "kernelPatch": {
+          "type": "string",
+          "description": "The application server SAP kernel patch.",
           "readOnly": true
         },
         "ipAddress": {
           "type": "string",
-          "description": "The application server IP Address.",
+          "description": "The application server SAP IP Address.",
           "readOnly": true
         },
-        "diaPort": {
+        "gatewayPort": {
           "type": "integer",
           "format": "int64",
-          "description": "The application server DIA Port.",
+          "description": "The application server gateway Port.",
           "readOnly": true,
           "x-nullable": true
         },
-        "httpPort": {
+        "icmHttpPort": {
           "type": "integer",
           "format": "int64",
-          "description": "The application server HTTP Port.",
+          "description": "The application server ICM HTTP Port.",
           "readOnly": true,
           "x-nullable": true
         },
-        "httpsPort": {
+        "icmHttpsPort": {
           "type": "integer",
           "format": "int64",
-          "description": "The application server HTTPS Port.",
+          "description": "The application server ICM HTTPS Port.",
           "readOnly": true,
           "x-nullable": true
-        },
-        "applicationServerType": {
-          "$ref": "#/definitions/ApplicationServerType",
-          "readOnly": true
         },
         "virtualMachineId": {
           "type": "string",
@@ -2439,12 +2527,12 @@
           "readOnly": true
         },
         "status": {
-          "$ref": "#/definitions/SAPVirtualInstanceStatus",
-          "readOnly": true
+          "description": "Defines the SAP Virtual Instance status.",
+          "type": "string"
         },
         "health": {
-          "$ref": "#/definitions/HealthState",
-          "readOnly": true
+          "description": "Defines the SAP Virtual Instance health.",
+          "type": "string"
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -2479,66 +2567,174 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SAPApplicationServerProperties"
         }
-      },
-      "x-ms-azure-resource": true
+      }
     },
-    "SAPCentralServerProperties": {
-      "description": "Defines the SAP Central Server properties.",
+    "MessageServerProperties": {
+      "description": "Defines the SAP message server properties.",
       "type": "object",
       "properties": {
-        "instanceNo": {
-          "type": "integer",
-          "format": "int64",
-          "description": "The central server instance id.",
-          "readOnly": true,
-          "x-nullable": true
-        },
-        "subnet": {
-          "type": "string",
-          "description": "The central server subnet.",
-          "readOnly": true
-        },
-        "ipAddress": {
-          "type": "string",
-          "description": "The central server IP Address.",
-          "readOnly": true
-        },
         "msPort": {
           "type": "integer",
           "format": "int64",
-          "description": "The central server MS Port.",
+          "description": "The message server port.",
+          "readOnly": true,
+          "x-nullable": true
+        },
+        "internalMsPort": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The message server internal MS port.",
           "readOnly": true,
           "x-nullable": true
         },
         "httpPort": {
           "type": "integer",
           "format": "int64",
-          "description": "The central server HTTP Port.",
+          "description": "The message server http port.",
           "readOnly": true,
           "x-nullable": true
         },
         "httpsPort": {
           "type": "integer",
           "format": "int64",
-          "description": "The central server HTTPS Port.",
+          "description": "The message server https port.",
+          "readOnly": true,
+          "x-nullable": true
+        },
+        "hostname": {
+          "type": "string",
+          "description": "The message server SAP host name.",
+          "readOnly": true
+        },
+        "ipAddress": {
+          "type": "string",
+          "description": "The message server IP Address.",
+          "readOnly": true
+        },
+        "health": {
+          "description": "Defines the SAP Virtual Instance health.",
+          "type": "string"
+        }
+      }
+    },
+    "EnqueueServerProperties": {
+      "description": "Defines the SAP enqueue server properties.",
+      "type": "object",
+      "properties": {
+        "hostname": {
+          "type": "string",
+          "description": "The enqueue server SAP host name.",
+          "readOnly": true
+        },
+        "ipAddress": {
+          "type": "string",
+          "description": "The enqueue server SAP IP Address.",
+          "readOnly": true
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The enqueue server Port.",
+          "readOnly": true,
+          "x-nullable": true
+        },
+        "health": {
+          "description": "Defines the SAP Virtual Instance health.",
+          "type": "string"
+        }
+      }
+    },
+    "EnqueueReplicationServerProperties": {
+      "description": "Defines the SAP enqueue replication server properties.",
+      "type": "object",
+      "properties": {
+        "instanceNo": {
+          "type": "string",
+          "description": "The enqueue replication server instance number.",
+          "readOnly": true
+        },
+        "hostname": {
+          "type": "string",
+          "description": "The enqueue replication server SAP host name.",
+          "readOnly": true
+        },
+        "ipAddress": {
+          "type": "string",
+          "description": "The enqueue replication server IP Address.",
+          "readOnly": true
+        }
+      }
+    },
+    "GatewayServerProperties": {
+      "description": "Defines the SAP Gateway Server properties.",
+      "type": "object",
+      "properties": {
+        "port": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The gateway Port.",
+          "readOnly": true,
+          "x-nullable": true
+        },
+        "health": {
+          "description": "Defines the SAP Virtual Instance health.",
+          "type": "string"
+        }
+      }
+    },
+    "SAPCentralServerProperties": {
+      "description": "Defines the SAP Central Server properties.",
+      "type": "object",
+      "properties": {
+        "instanceNo": {
+          "type": "string",
+          "description": "The central server instance id.",
+          "readOnly": true
+        },
+        "subnet": {
+          "type": "string",
+          "description": "The central server subnet.",
+          "readOnly": true
+        },
+        "messageServerProperties": {
+          "$ref": "#/definitions/MessageServerProperties"
+        },
+        "enqueueServerProperties": {
+          "$ref": "#/definitions/EnqueueServerProperties"
+        },
+        "enqueueReplicationServerProperties": {
+          "$ref": "#/definitions/EnqueueReplicationServerProperties"
+        },
+        "gatewayServerProperties": {
+          "$ref": "#/definitions/GatewayServerProperties"
+        },
+        "kernelVersion": {
+          "type": "string",
+          "description": "The central server kernel version.",
+          "readOnly": true,
+          "x-nullable": true
+        },
+        "kernelPatch": {
+          "type": "string",
+          "description": "The central server kernel patch.",
           "readOnly": true,
           "x-nullable": true
         },
         "vmDetails": {
-          "type": "object",
           "description": "The list of virtual machines.",
-          "readOnly": true,
-          "additionalProperties": {
+          "type": "array",
+          "items": {
             "$ref": "#/definitions/CentralServerVmDetails"
-          }
+          },
+          "readOnly": true
         },
         "status": {
-          "$ref": "#/definitions/SAPVirtualInstanceStatus",
-          "readOnly": true
+          "description": "Defines the SAP Virtual Instance status.",
+          "type": "string"
         },
         "health": {
-          "$ref": "#/definitions/HealthState",
-          "readOnly": true
+          "description": "Defines the SAP Virtual Instance health.",
+          "type": "string"
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -2573,8 +2769,7 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SAPCentralServerProperties"
         }
-      },
-      "x-ms-azure-resource": true
+      }
     },
     "SAPDatabaseProperties": {
       "description": "Defines the SAP Database properties.",
@@ -2590,33 +2785,31 @@
           "description": "The database SID.",
           "readOnly": true
         },
+        "databaseType": {
+          "type": "string",
+          "description": "The SAP database type.",
+          "readOnly": true
+        },
         "ipAddress": {
           "type": "string",
           "description": "The database IP Address.",
           "readOnly": true
         },
-        "port": {
-          "type": "integer",
-          "format": "int64",
-          "description": "The database port.",
-          "readOnly": true,
-          "x-nullable": true
-        },
         "vmDetails": {
-          "type": "object",
           "description": "The list of virtual machines.",
-          "readOnly": true,
-          "additionalProperties": {
+          "type": "array",
+          "items": {
             "$ref": "#/definitions/DatabaseVmDetails"
-          }
+          },
+          "readOnly": true
         },
         "status": {
-          "$ref": "#/definitions/SAPVirtualInstanceStatus",
-          "readOnly": true
+          "description": "Defines the SAP Virtual Instance status.",
+          "type": "string"
         },
         "health": {
-          "$ref": "#/definitions/HealthState",
-          "readOnly": true
+          "description": "Defines the SAP Virtual Instance health.",
+          "type": "string"
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -2651,8 +2844,7 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SAPDatabaseProperties"
         }
-      },
-      "x-ms-azure-resource": true
+      }
     },
     "ErrorDefinition": {
       "type": "object",

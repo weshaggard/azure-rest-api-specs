@@ -363,8 +363,11 @@
         },
         "description": "Gets properties of a provider instance for the specified subscription, resource group, Monitor name, and resource name.",
         "x-ms-examples": {
-          "Get properties of a SAP monitor provider": {
+          "Get properties of a SAP monitor Hana provider": {
             "$ref": "./examples/sapworkloads/ProviderInstances_Get.json"
+          },
+          "Get properties of a SAP monitor NetWeaver provider": {
+            "$ref": "./examples/sapworkloads/NetWeaverProviderInstances_Get.json"
           }
         },
         "produces": [
@@ -414,8 +417,11 @@
         "summary": "Creates a provider instance.",
         "description": "Creates a provider instance for the specified subscription, resource group, Monitor name, and resource name.",
         "x-ms-examples": {
-          "Create a SAP Monitor provider": {
+          "Create a SAP Monitor Hana provider": {
             "$ref": "./examples/sapworkloads/ProviderInstances_Create.json"
+          },
+          "Create a SAP Monitor NetWeaver provider": {
+            "$ref": "./examples/sapworkloads/NetWeaverProviderInstances_Create.json"
           }
         },
         "parameters": [
@@ -665,6 +671,16 @@
         }
       }
     },
+    "ManagedRGConfiguration": {
+      "description": "Managed resource group configuration",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Managed resource group name"
+        }
+      }
+    },
     "Tags": {
       "type": "object",
       "properties": {
@@ -762,8 +778,11 @@
             "modelAsString": true
           }
         },
+        "managedResourceGroupConfiguration": {
+          "description": "Managed resource group configuration",
+          "$ref": "#/definitions/ManagedRGConfiguration"
+        },
         "managedResourceGroupId": {
-          "readOnly": true,
           "type": "string",
           "description": "The ARM id of the resource group the monitor resources get deployed into."
         },
@@ -778,6 +797,11 @@
         "monitorSubnet": {
           "type": "string",
           "description": "The subnet which the SAP monitor will be deployed in"
+        },
+        "msiArmId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The ARM ID of the MSI used for monitoring."
         }
       },
       "description": "Describes the properties of a SAP monitor."
@@ -820,27 +844,27 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ProviderInstanceProperties"
+          "$ref": "#/definitions/ProviderSpecificProperties"
         }
       ],
       "properties": {
-        "hanaHostname": {
+        "hostname": {
           "description": "Gets or sets the target virtual machine size.",
           "type": "string"
         },
-        "hanaDatabaseName": {
+        "dbName": {
           "description": "Gets or sets the hana database name.",
           "type": "string"
         },
-        "hanaDatabaseSqlPort": {
+        "sqlPort": {
           "description": "Gets or sets the database sql port.",
           "type": "string"
         },
-        "hanaDatabaseUsername": {
+        "dbUsername": {
           "description": "Gets or sets the database user name.",
           "type": "string"
         },
-        "hanaDatabasePassword": {
+        "dbPassword": {
           "description": "Gets or sets the database password.",
           "type": "string",
           "x-ms-secret": true
@@ -848,7 +872,39 @@
       },
       "x-ms-discriminator-value": "SapHana"
     },
-    "ProviderInstanceProperties": {
+    "SapNetWeaverProviderInstanceProperties": {
+      "description": "Gets or sets the provider properties.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProviderSpecificProperties"
+        }
+      ],
+      "properties": {
+        "sapSid": {
+          "description": "Gets or sets the SAP System Identifier",
+          "type": "string"
+        },
+        "sapHostname": {
+          "description": "Gets or sets the target virtual machine IP Address/FQDN.",
+          "type": "string"
+        },
+        "sapInstanceNr": {
+          "description": "Gets or sets the instance number of SAP NetWeaver.",
+          "type": "string"
+        },
+        "sapHostFileEntries": {
+          "description": "Gets or sets the list of HostFile Entries",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "x-ms-discriminator-value": "SapNetWeaver"
+    },
+    "ProviderSpecificProperties": {
+      "description": "Gets or sets the provider specific properties.",
       "type": "object",
       "required": [
         "providerType"
@@ -861,7 +917,13 @@
             "create",
             "read"
           ]
-        },
+        }
+      },
+      "discriminator": "providerType"
+    },
+    "ProviderInstanceProperties": {
+      "type": "object",
+      "properties": {
         "provisioningState": {
           "readOnly": true,
           "type": "string",
@@ -893,10 +955,13 @@
           "readOnly": true,
           "type": "string",
           "description": "The version of the payload."
+        },
+        "providerSettings": {
+          "description": "Defines the provider instance errors.",
+          "$ref": "#/definitions/ProviderSpecificProperties"
         }
       },
-      "description": "Describes the properties of a provider instance.",
-      "discriminator": "providerType"
+      "description": "Describes the properties of a provider instance."
     }
   },
   "parameters": {
