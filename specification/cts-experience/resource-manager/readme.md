@@ -35,7 +35,7 @@ These settings apply only when `--tag=package-2021-09-07-preview` is specified o
 
 ```yaml $(tag) == 'package-2021-09-07-preview'
 input-file:
-  - Microsoft.Flows/preview/2021-09-07-preview/cts-experience.json
+  - Microsoft.CTS/preview/2021-09-07-preview/cts-experience.json
 ```
 
 ---

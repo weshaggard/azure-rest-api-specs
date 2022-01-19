@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.Flows
-  output-folder: $(csharp-sdks-folder)/cts-experience/management/Microsoft.Flows/GeneratedProtocol
+  namespace: Microsoft.CTS
+  output-folder: $(csharp-sdks-folder)/cts-experience/management/Microsoft.CTS/GeneratedProtocol
 ```
