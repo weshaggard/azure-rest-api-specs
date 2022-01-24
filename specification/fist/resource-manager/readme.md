@@ -26,6 +26,8 @@ These are the global settings for the fist.
 
 ```yaml
 openapi-type: arm
+openapi-subtype: providerHub
+
 tag: package-2021-11-10-privatepreview
 ```
 
