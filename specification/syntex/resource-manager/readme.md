@@ -26,6 +26,7 @@ These are the global settings for the syntex.
 
 ```yaml
 openapi-type: arm
+clear-output-folder: true
 tag: package-2021-10-20-preview
 ```
 

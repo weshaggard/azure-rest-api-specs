@@ -3,10 +3,7 @@
   "info": {
     "version": "2021-10-20-preview",
     "title": "Syntex",
-    "description": "Syntex provider",
-    "x-ms-code-generation-settings": {
-      "name": "syntexClient"
-    }
+    "description": "Syntex provider"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -331,6 +328,54 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.syntex/documentProcessors/{processorName}/processDocuments": {
+      "post": {
+        "operationId": "DocumentProcessor_Operation_ProcessDocuments",
+        "description": "Process a list of documents",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ProcessorNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "body",
+            "description": "Documents processor request.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProcessDocumentsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema":{
+              "$ref": "#/definitions/ProcessDocumentsResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Operations_List": {
+            "$ref": "./examples/DocumentProcessor_Operation_ProcessDocuments.json"
+          }
+        }
+      }
+    },
     "/providers/microsoft.syntex/operations": {
       "get": {
         "operationId": "Operations_List",
@@ -466,18 +511,56 @@
         "properties"
       ]
     },
+    "ProcessDocumentsRequest": {
+      "type": "object",
+      "description": "Process documents request.",
+      "properties": {
+        "value": {
+          "description": "Array of document properties",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DocumentProperties"
+          }
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "ResponseStatus": {
+      "type": "string",
+      "enum": [
+        "Success"
+      ],
+      "x-ms-enum": {
+        "name": "ResponseStatus",
+        "modelAsString": true
+      }
+    },
     "ProcessDocumentResponse": {
       "type": "object",
       "description": "Process document response.",
       "properties": {
-        "properties": {
-          "x-ms-client-flatten": false,
-          "description": "Document properties.",
-          "$ref": "#/definitions/DocumentProperties"
+        "responseStatus": {
+          "description": "Response status.",
+          "$ref": "#/definitions/ResponseStatus"
         }
       },
       "required": [
-        "properties"
+        "responseStatus"
+      ]
+    },
+    "ProcessDocumentsResponse": {
+      "type": "object",
+      "description": "Process documents response.",
+      "properties": {
+        "responseStatus": {
+          "description": "Response status.",
+          "$ref": "#/definitions/ResponseStatus"
+        }
+      },
+      "required": [
+        "responseStatus"
       ]
     },
     "DocumentProperties": {
@@ -486,11 +569,33 @@
       "properties": {
         "documentId": {
           "type": "string",
-          "description": "The ID of the processed document"
+          "description": "The ID of the processed document."
+        },
+        "eventId": {
+          "type": "string",
+          "description": "A unique event id corresponding to a usage record."
+        },
+        "meterId": {
+          "type": "string",
+          "description": "A logical meter id that Syntex billing service then translates to a corresponding commerce meter id."
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double",
+          "description": "Quantity corresponding to the logical meter id that Syntex billing service then translates to the unit expected by the commerce meter."
+        },
+        "eventDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The the document was processed.  It could be different from the time the Syntex billing service recives the usage event."
         }
       },
       "required": [
-        "documentId"
+        "documentId",
+        "eventId",
+        "meterId",
+        "quantity",
+        "eventDateTime"
       ]
     },
     "Operation": {
