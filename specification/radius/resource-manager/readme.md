@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2022-01-20-privatepreview` is spec
 
 ```yaml $(tag) == 'package-2022-01-20-privatepreview'
 input-file:
-  - Microsoft.Radius/preview/2021-10-06-preview/radius.json
+  - Microsoft.Radius/preview/2022-01-20-privatepreview/radius.json
 ```
 
 ---
