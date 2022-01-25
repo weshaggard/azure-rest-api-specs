@@ -407,7 +407,6 @@
             "schema": {
               "type": "object",
               "required": [
-                "rackskus",
                 "uplinkcidripv4",
                 "uplinkcidripv6"
               ],
@@ -420,14 +419,6 @@
                 },
                 "bgpsettings": {
                   "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
-                },
-                "rackskus": {
-                  "description": "description: \"The rack sku entries for this cluster\"",
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/RackSkuEntry"
-                  },
-                  "x-go-name": "RackSkuEntries"
                 },
                 "uplinkcidripv4": {
                   "description": "description: \"Cluster uplink cidr ipv4 values\"",
@@ -594,6 +585,601 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines": {
+      "get": {
+        "description": "This will get a list of all network cloud virtual machines from specific resource group.",
+        "summary": "Retrieve all network cloud virtual machines from specific resource group.",
+        "operationId": "VirtualMachines_List",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachineList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}": {
+      "get": {
+        "description": "This will show the properties of a specific network cloud virtual machine.",
+        "summary": "Retrieve a specific virtual machine.",
+        "operationId": "VirtualMachines_Get",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachine"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "This creates or updates the properties of a specific network cloud virtual machine.",
+        "summary": "Creates or updates a specific network cloud virtual machine.",
+        "operationId": "VirtualMachines_CreateOrUpdate",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "Properties",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "imageReference",
+                "cluster",
+                "cpuCores",
+                "memorySizeGB",
+                "diskSizeGB"
+              ],
+              "properties": {
+                "bareMetalMachineURI": {
+                  "description": "URI to the bare metal machine VM has landed to.",
+                  "type": "string",
+                  "x-go-name": "BareMetalMachine",
+                  "readOnly": true
+                },
+                "cluster": {
+                  "description": "Name of undercloud cluster VM is created with.",
+                  "type": "string",
+                  "x-go-name": "Cluster"
+                },
+                "cpuCores": {
+                  "description": "Number virtual machine cpu cores.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "CpuCores"
+                },
+                "diskSizeGB": {
+                  "description": "Virtual machine root disk size in GiB.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "DiskSizeGB"
+                },
+                "imageReference": {
+                  "description": "URL to virtual machine OCI image.",
+                  "type": "string",
+                  "x-go-name": "Image"
+                },
+                "memorySizeGB": {
+                  "description": "Virtual machine memory size in GiB.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "MemorySizeGB"
+                },
+                "networkAttachments": {
+                  "description": "Virtual machine networking properties.",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/VirtualMachineNetworkAttachment"
+                  },
+                  "x-go-name": "VirtualMachineNetworkAttachements"
+                },
+                "networkConfigurationVersion": {
+                  "description": "Version of virtual machine network configuration.",
+                  "type": "string",
+                  "default": "v2",
+                  "enum": [
+                    "v1",
+                    "v2"
+                  ],
+                  "x-go-name": "NetworkConfigurationVersion"
+                },
+                "placementHints": {
+                  "description": "Scheduling hints for virtual machine.",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/VirtualMachinePlacementHint"
+                  },
+                  "x-go-name": "VirtualMachinePlacementHints"
+                },
+                "powerState": {
+                  "description": "Virtual machine power state.",
+                  "type": "string",
+                  "enum": [
+                    "On",
+                    "Off"
+                  ],
+                  "x-go-name": "PowerState",
+                  "readOnly": true
+                },
+                "provisioningState": {
+                  "description": "Virtual machine provisioning status.",
+                  "type": "string",
+                  "enum": [
+                    "Provisioning",
+                    "Succeeded",
+                    "Failed",
+                    "Deleting"
+                  ],
+                  "x-go-name": "ProvisioningState",
+                  "readOnly": true
+                },
+                "sshKey": {
+                  "description": "User ssh key.",
+                  "type": "string",
+                  "x-go-name": "SshKey"
+                },
+                "userData": {
+                  "description": "Base64 encoded cloud-init user data.",
+                  "type": "string",
+                  "x-go-name": "UserData"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachine"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create or Update Network Cloud VirtualMachine": {
+            "$ref": "./examples/VirtualMachines_Create.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}": {
+      "delete": {
+        "description": "This will delete a specific network cloud virtual machine.",
+        "summary": "Deletes a specific network cloud virtual machine.",
+        "operationId": "VirtualMachines_Delete",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "type": "string",
+                "description": "URI to the operationResults resource."
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete Network Cloud Virtual Machine": {
+            "$ref": "./examples/VirtualMachines_Delete.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}/powerOff": {
+      "post": {
+        "description": "This will power off a specific network cloud virtual machine.",
+        "summary": "Powers off a specific network cloud virtual machine.",
+        "operationId": "VirtualMachines_PowerOff",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "boolean",
+            "x-go-name": "SkipShutdown",
+            "description": "Allows to bypass OS shutdown and power virtual machine off immediately.",
+            "name": "skipShutdown",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "type": "string",
+                "description": "URI to the operationResults resource."
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Powers off a Network Cloud Virtual Machine": {
+            "$ref": "./examples/VirtualMachines_PowerOff.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}/reimage": {
+      "post": {
+        "description": "This will reimage a specific network cloud virtual machine.",
+        "summary": "Reimages a specific network cloud virtual machine.",
+        "operationId": "VirtualMachines_Reimage",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "type": "string",
+                "description": "URI to the operationResults resource."
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Reimage a Network Cloud Virtual Machine": {
+            "$ref": "./examples/VirtualMachines_Reimage.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}/restart": {
+      "post": {
+        "description": "This will restart a specific network cloud virtual machine.",
+        "summary": "Restarts a specific network cloud virtual machine.",
+        "operationId": "VirtualMachines_Restart",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "type": "string",
+                "description": "URI to the operationResults resource."
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Restart a Network Cloud Virtual Machine": {
+            "$ref": "./examples/VirtualMachines_Restart.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}/start": {
+      "post": {
+        "description": "This will start a specific network cloud virtual machine.",
+        "summary": "Starts a specific network cloud virtual machine.",
+        "operationId": "VirtualMachines_Start",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "type": "string",
+                "description": "URI to the operationResults resource."
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Start a Network Cloud Virtual Machine": {
+            "$ref": "./examples/VirtualMachines_Start.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
     }
   },
   "definitions": {
@@ -630,6 +1216,74 @@
         "type": {
           "type": "string",
           "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
+    },
+    "BMCCredentials": {
+      "type": "object",
+      "title": "BMCCredentials contains credentials used to communicate with the bare-metal controller on a host.",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
+        "password": {
+          "type": "string",
+          "x-go-name": "Password"
+        },
+        "username": {
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
+    },
+    "BareMetalMachineUserData": {
+      "type": "object",
+      "required": [
+        "rackSlot",
+        "bootMACAddress",
+        "bmcCredentials",
+        "bmcConnectionString",
+        "tpmEndorsementKey",
+        "serialNumber",
+        "bmcMACAddress"
+      ],
+      "properties": {
+        "bmcConnectionString": {
+          "description": "BMCConnectionString is the connection string for the bare-metal controller on this bare-metal machine.",
+          "type": "string",
+          "x-go-name": "BMCConnectionString"
+        },
+        "bmcCredentials": {
+          "$ref": "#/definitions/BMCCredentials"
+        },
+        "bmcMACAddress": {
+          "description": "BMCMACAddress is the MAC address of the bare-metal controller on this machine.",
+          "type": "string",
+          "x-go-name": "BMCMACAddress"
+        },
+        "bootMACAddress": {
+          "description": "BootMACAddress is the MAC address of a NIC connected to the PXE network.",
+          "type": "string",
+          "x-go-name": "BootMACAddress"
+        },
+        "rackSlot": {
+          "description": "RackSlot is the slot in which this physical machine is located, ordered from the bottom up i.e. the lowest slot\nis 1.",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "RackSlot"
+        },
+        "serialNumber": {
+          "description": "SerialNumber is an optional serial number or other asset tag identifier that a user may use to associate with\nthis machine.",
+          "type": "string",
+          "x-go-name": "SerialNumber"
+        },
+        "tpmEndorsementKey": {
+          "description": "TPMEndorsementKey is the thumbprint or SHA of the TPM Endorsement Key that allows the resource provider to ensure\nauthenticity of the machine.",
+          "type": "string",
+          "x-go-name": "TPMEndorsementKey"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
@@ -896,7 +1550,6 @@
       "type": "object",
       "title": "Note, k8s bridge resource types will default to\na singular status field under properties",
       "required": [
-        "rackskus",
         "uplinkcidripv4",
         "uplinkcidripv6"
       ],
@@ -910,14 +1563,6 @@
         "bgpsettings": {
           "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
         },
-        "rackskus": {
-          "description": "description: \"The rack sku entries for this cluster\"",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RackSkuEntry"
-          },
-          "x-go-name": "RackSkuEntries"
-        },
         "uplinkcidripv4": {
           "description": "description: \"Cluster uplink cidr ipv4 values\"",
           "type": "string",
@@ -927,24 +1572,6 @@
           "description": "description: \"Cluster uplink cidr ipv6 values\"",
           "type": "string",
           "x-go-name": "UplinkCidrIPv6"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
-    },
-    "ClusterSKUProperties": {
-      "type": "object",
-      "title": "ClusterSKUProperties represent the properties of a clusters SKU set.",
-      "required": [
-        "rackskus"
-      ],
-      "properties": {
-        "rackskus": {
-          "description": "description: \"The rack sku entries for this cluster\"",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RackSkuEntry"
-          },
-          "x-go-name": "RackSkuEntries"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
@@ -1044,48 +1671,63 @@
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
     },
     "Rack": {
-      "description": "TODO: this is just a placeholder\npending a proper definition of\nrack models",
-      "type": "object",
-      "properties": {
-        "description": {
-          "type": "string",
-          "x-go-name": "Description",
-          "readOnly": true
-        },
-        "machinecount": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "MachineCount",
-          "readOnly": true
-        },
-        "name": {
-          "type": "string",
-          "x-go-name": "Name",
-          "readOnly": true
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
+      "description": "NOTE: There may be some differences between a Rack and RackManifest as we add logic to process a RackManifest;\nhowever, a Rack is just an alias of the RackManifest type in this initial implementation.",
+      "title": "Rack is the validated/processed representation of a rack located in an on-premesis cluster.",
+      "$ref": "#/definitions/RackManifest"
     },
-    "RackSkuEntry": {
+    "RackManifest": {
       "type": "object",
-      "title": "RackSkuEntry represents a rack for the cluster.",
+      "title": "RackManifest is the unprocessed, user-submitted intention for a rack located in an on-premesis cluster.",
       "required": [
-        "skumodelname",
-        "label"
+        "name",
+        "clusterName",
+        "networkRack",
+        "modelId",
+        "rackSerialNumber"
       ],
       "properties": {
-        "label": {
-          "description": "description: \"A unique identifier for the rack\"",
-          "type": "string",
-          "x-go-name": "Label"
+        "baremetalMachineUserData": {
+          "description": "BareMetalMachineUserData is a list of machine objects in this rack.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BareMetalMachineUserData"
+          },
+          "x-go-name": "BareMetalMachineUserData"
         },
-        "sku": {
-          "$ref": "#/definitions/Rack"
-        },
-        "skumodelname": {
-          "description": "description: \"The user-supplied sku model name this rack\"",
+        "clusterName": {
+          "description": "Cluster is the name of the cluster to which this rack will be associated.",
           "type": "string",
-          "x-go-name": "SkuModelName"
+          "x-go-name": "Cluster"
+        },
+        "clusterSlot": {
+          "description": "ClusterSlot identifies this rack's placement within a cluster.",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ClusterSlot"
+        },
+        "modelId": {
+          "description": "ModelId is the Model ID of this rack.",
+          "type": "string",
+          "x-go-name": "ModelId"
+        },
+        "name": {
+          "description": "Name is a user-friendly identifier for this rack.",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "networkRack": {
+          "type": "string",
+          "x-go-name": "NetworkRack"
+        },
+        "rackLocation": {
+          "description": "RackLocation is a user description of the location of this rack, e.g. \"DTN Datacenter, Floor 3, Aisle 9, Rack 2\".",
+          "type": "string",
+          "x-go-name": "RackLocation"
+        },
+        "rackSerialNumber": {
+          "description": "RackSerialNumber is a globally unique identifier for an AFO-NC rack.",
+          "type": "string",
+          "x-go-name": "RackSerialNumber"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
@@ -1115,6 +1757,230 @@
         },
         "lastModifiedByType": {
           "$ref": "#/definitions/CreatedByType"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
+    },
+    "VirtualMachine": {
+      "description": "VirtualMachine represents an on-Premises Network Cloud virtual machine",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
+          "type": "string",
+          "x-go-name": "Id"
+        },
+        "location": {
+          "description": "Location is the Azure location where this resource will exist or already exists.",
+          "type": "string",
+          "x-go-name": "Location"
+        },
+        "name": {
+          "description": "Name is the name of the resource that this resource provider will create.",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "properties": {
+          "$ref": "#/definitions/VirtualMachineProperties"
+        },
+        "systemData": {
+          "$ref": "#/definitions/SystemData"
+        },
+        "tags": {
+          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Tags"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
+    },
+    "VirtualMachineList": {
+      "type": "object",
+      "title": "VirtualMachineList represents a list of VirtualMachines.",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of operations.",
+          "type": "string",
+          "x-go-name": "NextLink"
+        },
+        "value": {
+          "description": "The list of virtual machines.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VirtualMachine"
+          },
+          "x-go-name": "VirtualMachines"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
+    },
+    "VirtualMachineNetworkAttachment": {
+      "description": "VirtualMachineNetworkAttachement represents a single network attachment",
+      "type": "object",
+      "required": [
+        "workloadNetwork",
+        "ipAllocationMethod"
+      ],
+      "properties": {
+        "ipAllocationMethod": {
+          "description": "IPAllocationMethod defines mechanism for ip allocation.",
+          "type": "string",
+          "default": "Dynamic",
+          "enum": [
+            "Dynamic",
+            "Static",
+            "Disabled"
+          ],
+          "x-go-name": "IPAllocationMethod"
+        },
+        "ipv4Address": {
+          "description": "IPv4Address represents ipv4 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv4 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv4 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
+          "type": "string",
+          "x-go-name": "IPv4Address"
+        },
+        "ipv6Address": {
+          "description": "IPv6Address represents ipv6 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv6 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv6 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
+          "type": "string",
+          "x-go-name": "IPv6Address"
+        },
+        "workloadNetwork": {
+          "description": "Workload network to attach.",
+          "type": "string",
+          "x-go-name": "WorkloadNetwork"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
+    },
+    "VirtualMachinePlacementHint": {
+      "description": "VirtualMachinePlacementHint represents a single scheduling hint of virtual machine",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "Virtual machine placement hint key.",
+          "type": "string",
+          "x-go-name": "Key"
+        },
+        "value": {
+          "description": "Virtual machine placement hint value.",
+          "type": "string",
+          "x-go-name": "Value"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
+    },
+    "VirtualMachineProperties": {
+      "type": "object",
+      "title": "VirtualMachineProperties represents the properties of a virtual machine.",
+      "required": [
+        "imageReference",
+        "cluster",
+        "cpuCores",
+        "memorySizeGB",
+        "diskSizeGB"
+      ],
+      "properties": {
+        "bareMetalMachineURI": {
+          "description": "URI to the bare metal machine VM has landed to.",
+          "type": "string",
+          "x-go-name": "BareMetalMachine",
+          "readOnly": true
+        },
+        "cluster": {
+          "description": "Name of undercloud cluster VM is created with.",
+          "type": "string",
+          "x-go-name": "Cluster"
+        },
+        "cpuCores": {
+          "description": "Number virtual machine cpu cores.",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CpuCores"
+        },
+        "diskSizeGB": {
+          "description": "Virtual machine root disk size in GiB.",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "DiskSizeGB"
+        },
+        "imageReference": {
+          "description": "URL to virtual machine OCI image.",
+          "type": "string",
+          "x-go-name": "Image"
+        },
+        "memorySizeGB": {
+          "description": "Virtual machine memory size in GiB.",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "MemorySizeGB"
+        },
+        "networkAttachments": {
+          "description": "Virtual machine networking properties.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VirtualMachineNetworkAttachment"
+          },
+          "x-go-name": "VirtualMachineNetworkAttachements"
+        },
+        "networkConfigurationVersion": {
+          "description": "Version of virtual machine network configuration.",
+          "type": "string",
+          "default": "v2",
+          "enum": [
+            "v1",
+            "v2"
+          ],
+          "x-go-name": "NetworkConfigurationVersion"
+        },
+        "placementHints": {
+          "description": "Scheduling hints for virtual machine.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VirtualMachinePlacementHint"
+          },
+          "x-go-name": "VirtualMachinePlacementHints"
+        },
+        "powerState": {
+          "description": "Virtual machine power state.",
+          "type": "string",
+          "enum": [
+            "On",
+            "Off"
+          ],
+          "x-go-name": "PowerState",
+          "readOnly": true
+        },
+        "provisioningState": {
+          "description": "Virtual machine provisioning status.",
+          "type": "string",
+          "enum": [
+            "Provisioning",
+            "Succeeded",
+            "Failed",
+            "Deleting"
+          ],
+          "x-go-name": "ProvisioningState",
+          "readOnly": true
+        },
+        "sshKey": {
+          "description": "User ssh key.",
+          "type": "string",
+          "x-go-name": "SshKey"
+        },
+        "userData": {
+          "description": "Base64 encoded cloud-init user data.",
+          "type": "string",
+          "x-go-name": "UserData"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/nc-rp.git/api/v20211021preview"
