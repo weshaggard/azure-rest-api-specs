@@ -58,27 +58,26 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.GraphDB/controllers": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.GraphDB/clusters": {
       "get": {
-        "tags": ["Tag1"],
-        "operationId": "ControllerGroup_Get",
-        "x-ms-examples": {
-          "BatchAccountDelete": { "$ref": "./examples/OperationGroupGet.json" }
-        },
-        "description": "This is a sample get operation, please see guidelines in azure-rest-api-specs repository for more info",
+        "tags": [
+          "Clusters"
+        ],
+        "operationId": "Clusters_List",
+        "description": "Lists all clusters in a resource group.",
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/ResourceGroupNameParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Describe the result of a successful operation.",
+            "description": "List of all clusters in a resource group.",
             "schema": {
-              "$ref": "#/definitions/Result"
+              "$ref": "#/definitions/ClusterListResult"
             }
           },
           "default": {
@@ -87,11 +86,352 @@
               "$ref": "#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "List all clusters in a resource group": {
+            "$ref": "./examples/ListClusters.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.GraphDB/clusters/{clusterName}": {
+      "get": {
+        "tags": [
+          "Cluster"
+        ],
+        "summary": "Gets cluster information by name in a resource group.",
+        "operationId": "Clusters_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get cluster details by name": {
+            "$ref": "./examples/GetCluster.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Cluster"
+        ],
+        "summary": "Create or update a cluster.",
+        "operationId": "Clusters_CreateOrUpdate",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The operation will be completed asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Suggested delay to check the status of the asynchronous operation. The value is an integer that specifies the delay in seconds.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "Create a new cluster": {
+            "$ref": "./examples/CreateOrUpdateCluster.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Cluster"
+        ],
+        "summary": "Update a cluster.",
+        "operationId": "Clusters_Update",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          },
+          {
+            "in": "body",
+            "name": "parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ClusterUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "202": {
+            "description": "The operation will be completed asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            },
+            "headers": {
+              "Location": {
+                "description": "The URL of the resource used to check the status of the asynchronous operation.",
+                "type": "string"
+              },
+              "Retry-After": {
+                "description": "Suggested delay to check the status of the asynchronous operation. The value is an integer that specifies the delay in seconds.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "Updates a cluster": {
+            "$ref": "./examples/UpdateCluster.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Cluster"
+        ],
+        "summary": "Delete a cluster by name.",
+        "operationId": "Clusters_Delete",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "202": {
+            "description": "The operation will be completed asynchronously.",
+            "headers": {
+              "Location": {
+                "description": "The URL of the resource used to check the status of the asynchronous operation.",
+                "type": "string"
+              },
+              "Retry-After": {
+                "description": "Suggested delay to check the status of the asynchronous operation. The value is an integer that specifies the delay in seconds.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "Delete a cluster": {
+            "$ref": "./examples/DeleteCluster.json"
+          }
         }
       }
     }
   },
   "definitions": {
+    "ClusterListResult": {
+      "description": "List of all clusters.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Cluster"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URI to fetch the next page of clusters. Call ListNext() with this URI to fetch the next page of clusters."
+        }
+      }
+    },
+    "Cluster": {
+      "description": "Detailed information about GraphDB cluster",
+      "required": [
+        "properties"
+      ],
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v1/types.json#/definitions/TrackedResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ClusterProperties"
+        }
+      }
+    },
+    "ClusterUpdate": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ClusterProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/UpdateResource"
+        }
+      ],
+      "description": "Updated information for AnyBuild cluster (only tags are allowed)."
+    },
+    "UpdateResource": {
+      "description": "The Update Resource model definition.",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        }
+      }
+    },
+    "ClusterProperties": {
+      "description": "Describes the properties of a Cluster.",
+      "properties": {
+        "provisioningState": {
+          "description": "Provisioning state of the cluster.",
+          "enum": [
+            "Accepted",
+            "Initializing",
+            "Creating",
+            "Updating",
+            "RollingBack",
+            "Deleting",
+            "Succeeded",
+            "Failed",
+            "Canceled"
+          ],
+          "type": "string",
+          "readOnly": true,
+          "x-ms-enum": {
+            "name": "ProvisioningState",
+            "modelAsString": true
+          }
+        },
+        "clusterUri": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The fully-qualified cluster URI."
+        },
+        "shardCount": {
+          "type": "integer",
+          "format": "int32",
+          "readOnly": false,
+          "description": "The number of shards in the cluster."
+        },        
+        "brokerCount": {
+          "type": "integer",
+          "format": "int32",
+          "readOnly": false,
+          "description": "The number of brokers in the cluster."
+        }
+      }
+    },
     "Result": {
       "description": "Sample result definition",
       "properties": {
@@ -135,6 +475,14 @@
     }
   },
   "parameters": {
+    "ClusterNameParameter": {
+      "in": "path",
+      "name": "clusterName",
+      "required": true,
+      "type": "string",
+      "description": "The name of an Aquarius cluster.",
+      "x-ms-parameter-location": "method"
+    },
     "SubscriptionIdParameter": {
       "name": "subscriptionId",
       "in": "path",
