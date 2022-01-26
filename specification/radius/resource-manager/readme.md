@@ -27,16 +27,16 @@ These are the global settings for the radius.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2022-01-20-privatepreview
+tag: package-2022-01-25-privatepreview
 ```
 
-### Tag: package-2022-01-20-privatepreview
+### Tag: package-2022-01-25-privatepreview
 
-These settings apply only when `--tag=package-2022-01-20-privatepreview` is specified on the command line.
+These settings apply only when `--tag=package-2022-01-25-privatepreview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-01-20-privatepreview'
+```yaml $(tag) == 'package-2022-01-25-privatepreview'
 input-file:
-  - Microsoft.Radius/preview/2022-01-20-privatepreview/radius.json
+  - Microsoft.Radius/preview/2022-01-25-privatepreview/radius.json
 ```
 
 ---
