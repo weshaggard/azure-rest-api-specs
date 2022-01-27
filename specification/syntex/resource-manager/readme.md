@@ -27,16 +27,16 @@ These are the global settings for the syntex.
 ```yaml
 openapi-type: arm
 clear-output-folder: true
-tag: package-2021-10-20-preview
+tag: package-2021-10-20-privatepreview
 ```
 
-### Tag: package-2021-10-20-preview
+### Tag: package-2021-10-20-privatepreview
 
-These settings apply only when `--tag=package-2021-10-20-preview` is specified on the command line.
+These settings apply only when `--tag=package-2021-10-20-privatepreview` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-10-20-preview'
+```yaml $(tag) == 'package-2021-10-20-privatepreview'
 input-file:
-  - Microsoft.Syntex/preview/2021-10-20-preview/syntex.json
+  - Microsoft.Syntex/preview/2021-10-20-privatepreview/syntex.json
 ```
 
 ---
