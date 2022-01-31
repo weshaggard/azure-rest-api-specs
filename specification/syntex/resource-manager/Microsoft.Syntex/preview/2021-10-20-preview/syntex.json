@@ -34,7 +34,7 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/providers/microsoft.syntex/documentProcessors": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Syntex/documentProcessors": {
       "get": {
         "description": "Returns document processors in the subscription.",
         "operationId": "DocumentProcessor_List",
@@ -60,14 +60,17 @@
             }
           }
         },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
         "x-ms-examples": {
-          "Operations_List": {
+          "DocumentProcessor_List": {
             "$ref": "./examples/DocumentProcessor_List.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.syntex/documentProcessors": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Syntex/documentProcessors": {
       "get": {
         "description": "Returns document processors in a resource group.",
         "operationId": "DocumentProcessor_ListByResourceGroup",
@@ -96,14 +99,17 @@
             }
           }
         },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
         "x-ms-examples": {
-          "Operations_List": {
+          "DocumentProcessor_ListByResourceGroup": {
             "$ref": "./examples/DocumentProcessor_ListByResourceGroup.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.syntex/documentProcessors/{processorName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Syntex/documentProcessors/{processorName}": {
       "get": {
         "description": "Returns a document processor for a given name.",
         "operationId": "DocumentProcessor_Get",
@@ -136,7 +142,7 @@
           }
         },
         "x-ms-examples": {
-          "Operations_List": {
+          "DocumentProcessor_Get": {
             "$ref": "./examples/DocumentProcessor_Get.json"
           }
         }
@@ -162,6 +168,9 @@
           "200": {
             "description": "Deletes the document processor details."
           },
+          "204": {
+            "description": "The document processor details are not present."
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -170,7 +179,7 @@
           }
         },
         "x-ms-examples": {
-          "Operations_List": {
+          "DocumentProcessor_Delete": {
             "$ref": "./examples/DocumentProcessor_Delete.json"
           }
         }
@@ -178,6 +187,10 @@
       "put": {
         "description": "Creates a document processor resource for a given name.",
         "operationId": "DocumentProcessor_Create",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -222,7 +235,7 @@
           }
         },
         "x-ms-examples": {
-          "Operations_List": {
+          "DocumentProcessor_Create": {
             "$ref": "./examples/DocumentProcessor_Create.json"
           }
         }
@@ -249,7 +262,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DocumentProcessorResource"
+              "$ref": "#/definitions/DocumentProcessorPatchableResource"
             }
           }
         ],
@@ -262,6 +275,12 @@
           },
           "202": {
             "description": "Created",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "description": "Tracking URL for long running operation.",
+                "type": "string"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/DocumentProcessorResource"
             }
@@ -273,16 +292,17 @@
             }
           }
         },
+        "x-ms-long-running-operation": true,
         "x-ms-examples": {
-          "Operations_List": {
+          "DocumentProcessor_Update": {
             "$ref": "./examples/DocumentProcessor_Update.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.syntex/documentProcessors/{processorName}/processDocument": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Syntex/documentProcessors/{processorName}/processDocument": {
       "post": {
-        "operationId": "DocumentProcessor_Operation_ProcessDocument",
+        "operationId": "DocumentProcessor_ProcessDocument",
         "description": "Process a document",
         "parameters": [
           {
@@ -310,7 +330,7 @@
         "responses": {
           "200": {
             "description": "Successful.",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ProcessDocumentResponse"
             }
           },
@@ -322,15 +342,15 @@
           }
         },
         "x-ms-examples": {
-          "Operations_List": {
-            "$ref": "./examples/DocumentProcessor_Operation_ProcessDocument.json"
+          "DocumentProcessor_ProcessDocument": {
+            "$ref": "./examples/DocumentProcessor_ProcessDocument.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.syntex/documentProcessors/{processorName}/processDocuments": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Syntex/documentProcessors/{processorName}/processDocuments": {
       "post": {
-        "operationId": "DocumentProcessor_Operation_ProcessDocuments",
+        "operationId": "DocumentProcessor_ProcessDocuments",
         "description": "Process a list of documents",
         "parameters": [
           {
@@ -358,7 +378,7 @@
         "responses": {
           "200": {
             "description": "Successful.",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ProcessDocumentsResponse"
             }
           },
@@ -370,13 +390,13 @@
           }
         },
         "x-ms-examples": {
-          "Operations_List": {
-            "$ref": "./examples/DocumentProcessor_Operation_ProcessDocuments.json"
+          "DocumentProcessor_ProcessDocuments": {
+            "$ref": "./examples/DocumentProcessor_ProcessDocuments.json"
           }
         }
       }
     },
-    "/providers/microsoft.syntex/operations": {
+    "/providers/Microsoft.Syntex/operations": {
       "get": {
         "operationId": "Operations_List",
         "description": "List of all REST operations supported by the Microsoft.Syntex provider.",
@@ -414,56 +434,61 @@
     }
   },
   "definitions": {
-    "Resource": {
-      "type": "object",
-      "description": "An Azure resource.",
-      "properties": {
-        "id": {
-          "description": "Azure resource Id.",
-          "type": "string",
-          "readOnly": true
-        },
-        "name": {
-          "description": "Azure resource name.",
-          "type": "string",
-          "readOnly": true
-        },
-        "type": {
-          "description": "Azure resource type.",
-          "type": "string",
-          "readOnly": true
-        },
-        "location": {
-          "description": "Location of the resource.",
-          "type": "string",
-          "readOnly": false
-        },
-        "tags": {
-          "description": "resource tags.",
-          "type": "object",
-          "readOnly": false,
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      },
-      "x-ms-azure-resource": true
-    },
     "DocumentProcessorResource": {
       "type": "object",
       "description": "Document processor details",
       "allOf": [
         {
-          "$ref": "#/definitions/Resource"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
         }
       ],
       "properties": {
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "readOnly": true
+        },
         "properties": {
           "x-ms-client-flatten": false,
           "description": "Document processor properties.",
           "$ref": "#/definitions/DocumentProcessorProperties"
         }
-     }
+      }
+    },
+    "DocumentProcessorPatchableResource": {
+      "type": "object",
+      "description": "Document processor details",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
+        }
+      ],
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ],
+          "description": "Resource tags."
+        },
+        "location": {
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
+          "description": "The geo-location where the resource lives"
+        },
+        "properties": {
+          "x-ms-client-flatten": false,
+          "description": "Document processor properties.",
+          "$ref": "#/definitions/DocumentProcessorProperties"
+        }
+      }
     },
     "DocumentProcessorProperties": {
       "type": "object",
@@ -475,7 +500,28 @@
           "minLength": 1,
           "maxLength": 20,
           "pattern": "^[A-Za-z0-9-._]+$"
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The managed resource provisioning state."
         }
+      }
+    },
+    "ProvisioningState": {
+      "description": "Provisioning status of the managed resource.",
+      "readOnly": true,
+      "enum": [
+        "Accepted",
+        "Canceled",
+        "Created",
+        "Failed",
+        "Succeeded"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
       }
     },
     "DocumentProcessorList": {
@@ -488,6 +534,9 @@
           "items": {
             "$ref": "#/definitions/DocumentProcessorResource"
           },
+          "x-ms-identifiers": [
+            "properties/processorName"
+          ],
           "readOnly": true
         },
         "nextLink": {
@@ -520,7 +569,10 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/DocumentProperties"
-          }
+          },
+          "x-ms-identifiers": [
+            "documentId"
+          ]
         }
       },
       "required": [
@@ -528,6 +580,7 @@
       ]
     },
     "ResponseStatus": {
+      "description": "Process document response status.",
       "type": "string",
       "enum": [
         "Success"
@@ -598,48 +651,20 @@
         "eventDateTime"
       ]
     },
-    "Operation": {
-      "type": "object",
-      "description": "Details of a REST API operation, returned from the Resource Provider Operations API.",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the operation"
-        },
-        "display": {
-          "type": "object",
-          "description": "Localized display information for this particular operation.",
-          "properties": {
-            "provider": {
-              "type": "string",
-              "description": "Provider name."
-            },
-            "resource": {
-              "type": "string",
-              "description": "Resource name."
-            },
-            "operation": {
-              "type": "string",
-              "description": "Operation name."
-            },
-            "description": {
-              "type": "string",
-              "description": "Description of the operation."
-            }
-          }
-        }
-      }
-    },
     "OperationsListResult": {
       "type": "object",
       "description": "Lists the operations available.",
       "properties": {
         "value": {
-          "description": "Array of operations",
+          "description": "Collection of available operation details",
+          "uniqueItems": false,
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Operation"
-          }
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Operation"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
         },
         "nextLink": {
           "type": "string",
@@ -680,6 +705,9 @@
           "items": {
             "$ref": "#/definitions/ErrorDefinition"
           },
+          "x-ms-identifiers": [
+            "code"
+          ],
           "readOnly": true
         }
       }
