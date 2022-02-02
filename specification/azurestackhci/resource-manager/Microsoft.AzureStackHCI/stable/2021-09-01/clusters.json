@@ -295,6 +295,9 @@
           "200": {
             "description": "OK"
           },
+          "202": {
+            "description": "Accepted"
+          },
           "204": {
             "description": "No content"
           },
@@ -304,6 +307,49 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/uploadCertificate": {
+      "post": {
+        "tags": [
+          "Cluster"
+        ],
+        "description": "Upload certificate.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "uploadCertificateRequest",
+            "in": "body",
+            "description": "Upload certificate request.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UploadCertificateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         }
       }
     }
@@ -370,10 +416,6 @@
     "ClusterProperties": {
       "description": "Cluster properties.",
       "type": "object",
-      "required": [
-        "aadClientId",
-        "aadTenantId"
-      ],
       "properties": {
         "provisioningState": {
           "description": "Provisioning state.",
@@ -640,6 +682,24 @@
           "readOnly": true
         }
       }
+    },
+    "RawCertificateData": {
+      "type": "object",
+      "properties": {
+        "certificate": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "UploadCertificateRequest": {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/RawCertificateData"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "parameters": {
