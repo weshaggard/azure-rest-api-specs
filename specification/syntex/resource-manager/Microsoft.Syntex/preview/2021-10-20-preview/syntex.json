@@ -187,10 +187,6 @@
       "put": {
         "description": "Creates a document processor resource for a given name.",
         "operationId": "DocumentProcessor_Create",
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
         "parameters": [
           {
             "$ref": "#/parameters/SubscriptionIdParameter"
@@ -217,12 +213,6 @@
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/DocumentProcessorResource"
-            }
-          },
-          "201": {
-            "description": "Created",
             "schema": {
               "$ref": "#/definitions/DocumentProcessorResource"
             }
@@ -262,7 +252,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DocumentProcessorPatchableResource"
+              "$ref": "#/definitions/DocumentProcessorPatchableProperties"
             }
           }
         ],
@@ -273,18 +263,6 @@
               "$ref": "#/definitions/DocumentProcessorResource"
             }
           },
-          "202": {
-            "description": "Created",
-            "headers": {
-              "Azure-AsyncOperation": {
-                "description": "Tracking URL for long running operation.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/DocumentProcessorResource"
-            }
-          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -292,58 +270,9 @@
             }
           }
         },
-        "x-ms-long-running-operation": true,
         "x-ms-examples": {
           "DocumentProcessor_Update": {
             "$ref": "./examples/DocumentProcessor_Update.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Syntex/documentProcessors/{processorName}/processDocument": {
-      "post": {
-        "operationId": "DocumentProcessor_ProcessDocument",
-        "description": "Process a document",
-        "parameters": [
-          {
-            "$ref": "#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ProcessorNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ApiVersionParameter"
-          },
-          {
-            "name": "body",
-            "description": "Document processor request.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ProcessDocumentRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/ProcessDocumentResponse"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "DocumentProcessor_ProcessDocument": {
-            "$ref": "./examples/DocumentProcessor_ProcessDocument.json"
           }
         }
       }
@@ -454,39 +383,16 @@
         }
       }
     },
-    "DocumentProcessorPatchableResource": {
+    "DocumentProcessorPatchableProperties": {
       "type": "object",
-      "description": "Document processor details",
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
-        }
-      ],
+      "description": "Document processor properties that can be patched",
       "properties": {
         "tags": {
           "type": "object",
+          "description": "Resource tags.",
           "additionalProperties": {
             "type": "string"
-          },
-          "x-ms-mutability": [
-            "read",
-            "create",
-            "update"
-          ],
-          "description": "Resource tags."
-        },
-        "location": {
-          "type": "string",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ],
-          "description": "The geo-location where the resource lives"
-        },
-        "properties": {
-          "x-ms-client-flatten": false,
-          "description": "Document processor properties.",
-          "$ref": "#/definitions/DocumentProcessorProperties"
+          }
         }
       }
     },
@@ -494,13 +400,6 @@
       "type": "object",
       "description": "Document processor properties",
       "properties": {
-        "processorName": {
-          "type": "string",
-          "description": "The name of document processor resource.",
-          "minLength": 1,
-          "maxLength": 20,
-          "pattern": "^[A-Za-z0-9-._]+$"
-        },
         "provisioningState": {
           "readOnly": true,
           "$ref": "#/definitions/ProvisioningState",
@@ -512,11 +411,8 @@
       "description": "Provisioning status of the managed resource.",
       "readOnly": true,
       "enum": [
-        "Accepted",
-        "Canceled",
-        "Created",
-        "Failed",
-        "Succeeded"
+        "Succeeded",
+        "Failed"
       ],
       "type": "string",
       "x-ms-enum": {
@@ -535,7 +431,7 @@
             "$ref": "#/definitions/DocumentProcessorResource"
           },
           "x-ms-identifiers": [
-            "properties/processorName"
+            "name"
           ],
           "readOnly": true
         },
@@ -545,20 +441,6 @@
           "readOnly": true
         }
       }
-    },
-    "ProcessDocumentRequest": {
-      "type": "object",
-      "description": "Process document request.",
-      "properties": {
-        "properties": {
-          "x-ms-client-flatten": false,
-          "description": "Document properties.",
-          "$ref": "#/definitions/DocumentProperties"
-        }
-      },
-      "required": [
-        "properties"
-      ]
     },
     "ProcessDocumentsRequest": {
       "type": "object",
@@ -589,19 +471,6 @@
         "name": "ResponseStatus",
         "modelAsString": true
       }
-    },
-    "ProcessDocumentResponse": {
-      "type": "object",
-      "description": "Process document response.",
-      "properties": {
-        "responseStatus": {
-          "description": "Response status.",
-          "$ref": "#/definitions/ResponseStatus"
-        }
-      },
-      "required": [
-        "responseStatus"
-      ]
     },
     "ProcessDocumentsResponse": {
       "type": "object",
