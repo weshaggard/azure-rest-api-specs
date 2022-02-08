@@ -18,9 +18,9 @@
   "paths": {
     "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters": {
       "get": {
-        "description": "This will show all network cloud clusters.",
-        "summary": "Lists network cloud clusters.",
-        "operationId": "Clusters_List",
+        "description": "This will show all network cloud clusters in a subscription.",
+        "summary": "Lists network cloud clusters in a subscription.",
+        "operationId": "Clusters_List_Subscription",
         "parameters": [
           {
             "type": "string",
@@ -53,7 +53,99 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{resourceName}": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{resourceName}/bootstrapImages": {
+      "get": {
+        "description": "This will show all network cloud bootstrap Isos for a particular cluster.",
+        "summary": "Lists network cloud cluster bootstrap image.",
+        "operationId": "Clusters_BootstrapImages_List",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClustersBootstrapImagesList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters": {
+      "get": {
+        "description": "This will show all network cloud clusters in a resource group.",
+        "summary": "Lists network cloud clusters in a resource group.",
+        "operationId": "Clusters_List_Resource_Group",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClusterList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{resourceName}": {
       "get": {
         "description": "This will show the properties of a specific network cloud cluster.",
         "summary": "Retrieves a specific network cloud cluster.",
@@ -70,6 +162,15 @@
             "type": "string",
             "x-go-name": "SubscriptionId",
             "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
             "in": "path",
             "required": true
           },
@@ -123,6 +224,15 @@
             "required": true
           },
           {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
             "maxLength": 63,
             "minLength": 1,
             "type": "string",
@@ -132,33 +242,47 @@
             "required": true
           },
           {
-            "name": "Properties",
+            "x-go-name": "Payload",
+            "name": "payload",
             "in": "body",
             "schema": {
               "type": "object",
               "required": [
-                "uplinkcidripv4",
-                "uplinkcidripv6"
+                "properties"
               ],
               "properties": {
-                "bgppeeringstatusipv4": {
-                  "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
-                },
-                "bgppeeringstatusipv6": {
-                  "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
-                },
-                "bgpsettings": {
-                  "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
-                },
-                "uplinkcidripv4": {
-                  "description": "description: \"Cluster uplink cidr ipv4 values\"",
+                "id": {
+                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
                   "type": "string",
-                  "x-go-name": "UplinkCidrIPv4"
+                  "x-go-name": "Id"
                 },
-                "uplinkcidripv6": {
-                  "description": "description: \"Cluster uplink cidr ipv6 values\"",
+                "location": {
+                  "description": "Location is the Azure location where this resource will exist or already exists.",
                   "type": "string",
-                  "x-go-name": "UplinkCidrIPv6"
+                  "x-go-name": "Location"
+                },
+                "name": {
+                  "description": "Name is the name of the resource that this resource provider will create.",
+                  "type": "string",
+                  "x-go-name": "Name"
+                },
+                "properties": {
+                  "$ref": "#/definitions/ClusterProperties"
+                },
+                "systemData": {
+                  "$ref": "#/definitions/SystemData"
+                },
+                "tags": {
+                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "x-go-name": "Tags"
+                },
+                "type": {
+                  "type": "string",
+                  "x-go-name": "Type"
                 }
               }
             }
@@ -184,13 +308,11 @@
           }
         },
         "x-ms-long-running-operation": true
-      }
-    },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{resourceName}/bootstrapImages": {
-      "get": {
-        "description": "This will show all network cloud bootstrap Isos for a particular cluster.",
-        "summary": "Lists network cloud cluster bootstrap image.",
-        "operationId": "Clusters_BootstrapImages_List",
+      },
+      "delete": {
+        "description": "This will delete a network cloud cluster.",
+        "summary": "Deletes a specific network cloud cluster.",
+        "operationId": "Clusters_Delete",
         "parameters": [
           {
             "type": "string",
@@ -207,6 +329,15 @@
             "required": true
           },
           {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
             "maxLength": 63,
             "minLength": 1,
             "type": "string",
@@ -218,9 +349,110 @@
         ],
         "responses": {
           "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete Network Cloud Cluster": {
+            "$ref": "./examples/Clusters_Delete.json"
+          }
+        }
+      },
+      "patch": {
+        "description": "This patches the properties of a specific network cloud cluster.",
+        "summary": "Patches a specific network cloud cluster.",
+        "operationId": "Clusters_Patch",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "x-go-name": "Payload",
+            "name": "payload",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "properties"
+              ],
+              "properties": {
+                "id": {
+                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
+                  "type": "string",
+                  "x-go-name": "Id"
+                },
+                "location": {
+                  "description": "Location is the Azure location where this resource will exist or already exists.",
+                  "type": "string",
+                  "x-go-name": "Location"
+                },
+                "name": {
+                  "description": "Name is the name of the resource that this resource provider will create.",
+                  "type": "string",
+                  "x-go-name": "Name"
+                },
+                "properties": {
+                  "$ref": "#/definitions/ClusterProperties"
+                },
+                "systemData": {
+                  "$ref": "#/definitions/SystemData"
+                },
+                "tags": {
+                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "x-go-name": "Tags"
+                },
+                "type": {
+                  "type": "string",
+                  "x-go-name": "Type"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClustersBootstrapImagesList"
+              "$ref": "#/definitions/Cluster"
             }
           },
           "default": {
@@ -229,10 +461,16 @@
               "$ref": "#/definitions/CloudError"
             }
           }
-        }
+        },
+        "x-ms-examples": {
+          "Patch Network Cloud Cluster": {
+            "$ref": "./examples/Clusters_Patch.json"
+          }
+        },
+        "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{resourceName}/bootstrapImages/{bootstrapImageName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{resourceName}/bootstrapImages/{bootstrapImageName}": {
       "get": {
         "description": "This will show the properties of a specific bootstrap image.",
         "summary": "Retrieve a specific bootstrap image for a cluster.",
@@ -249,6 +487,15 @@
             "type": "string",
             "x-go-name": "SubscriptionId",
             "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
             "in": "path",
             "required": true
           },
@@ -288,7 +535,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusters/{resourceName}/createBootstrapImage/{bootstrapImageName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters/{resourceName}/createBootstrapImage/{bootstrapImageName}": {
       "put": {
         "description": "This will generate a bootable image for this network cloud cluster.",
         "summary": "Generate a bootable image for this cluster.",
@@ -305,6 +552,15 @@
             "type": "string",
             "x-go-name": "SubscriptionId",
             "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
             "in": "path",
             "required": true
           },
@@ -1166,7 +1422,43 @@
     }
   },
   "definitions": {
-    "AzureCommonProperties": {},
+    "AzureCommonProperties": {
+      "description": "AzureCommonProperties are parameters that can be included on requests but are processed by RPaaS and not by this\nresource provider. They are listed as optional resources because RPaaS will enforce which parameters are required.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
+          "type": "string",
+          "x-go-name": "Id"
+        },
+        "location": {
+          "description": "Location is the Azure location where this resource will exist or already exists.",
+          "type": "string",
+          "x-go-name": "Location"
+        },
+        "name": {
+          "description": "Name is the name of the resource that this resource provider will create.",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "systemData": {
+          "$ref": "#/definitions/SystemData"
+        },
+        "tags": {
+          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Tags"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
     "BMCCredentials": {
       "type": "object",
       "title": "BMCCredentials contains credentials used to communicate with the bare-metal controller on a host.",
@@ -1299,21 +1591,19 @@
       "description": "A cluster is the top level object for the on-premise environment.",
       "type": "object",
       "title": "Cluster represents an on-Premise Network Cloud cluster",
-      "required": [
-        "id",
-        "name",
-        "type"
-      ],
       "properties": {
         "id": {
+          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "ID"
+          "x-go-name": "Id"
         },
         "location": {
+          "description": "Location is the Azure location where this resource will exist or already exists.",
           "type": "string",
           "x-go-name": "Location"
         },
         "name": {
+          "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
           "x-go-name": "Name"
         },
@@ -1324,6 +1614,7 @@
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
+          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1357,182 +1648,59 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
-    "ClusterNetworkingProperties": {
-      "type": "object",
-      "title": "ClusterNetworkingProperties represents the clusters networking properties.",
-      "required": [
-        "uplinkcidripv4",
-        "uplinkcidripv6"
-      ],
-      "properties": {
-        "bgpsettings": {
-          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
-        },
-        "uplinkcidripv4": {
-          "description": "description: \"Cluster uplink cidr ipv4 values\"",
-          "type": "string",
-          "x-go-name": "UplinkCidrIPv4"
-        },
-        "uplinkcidripv6": {
-          "description": "description: \"Cluster uplink cidr ipv6 values\"",
-          "type": "string",
-          "x-go-name": "UplinkCidrIPv6"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "ClusterNetworkingPropertiesUplink": {
-      "type": "object",
-      "title": "lusterNetworkingPropertiesUplink represents the clusters networking properties for the uplink between the CE and PE.",
-      "required": [
-        "uplinkcidripv4",
-        "uplinkcidripv6"
-      ],
-      "properties": {
-        "bgpsettings": {
-          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
-        },
-        "uplinkcidripv4": {
-          "description": "description: \"Cluster uplink cidr ipv4 values\"",
-          "type": "string",
-          "x-go-name": "UplinkCidrIPv4"
-        },
-        "uplinkcidripv6": {
-          "description": "description: \"Cluster uplink cidr ipv6 values\"",
-          "type": "string",
-          "x-go-name": "UplinkCidrIPv6"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "ClusterNetworkingPropertiesUplinkBgpSettings": {
-      "description": "ClusterNetworkingPropertiesUplinkBgpSettings represents bgp uplink settings for the cluster",
-      "type": "object",
-      "required": [
-        "asn",
-        "bgppeeraddressipv4",
-        "bgppeeraddressipv6"
-      ],
-      "properties": {
-        "asn": {
-          "description": "description: \"Cluster uplink bgp properties asn value\"",
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "Asn"
-        },
-        "bgppeeraddressipv4": {
-          "description": "description: \"Cluster uplink bgp properties ipv4 value\"",
-          "type": "string",
-          "x-go-name": "BgpPeeringAddressIpv4"
-        },
-        "bgppeeraddressipv6": {
-          "description": "description: \"Cluster uplink bgp properties ipv6 value\"",
-          "type": "string",
-          "x-go-name": "BgpPeeringAddressIpv6"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "ClusterNetworkingPropertiesUplinkBgpStatus": {
-      "description": "ClusterNetworkingPropertiesUplinkBgpStatus represents bgp uplink status for the cluster",
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string",
-          "x-go-name": "Neighbor",
-          "readOnly": true
-        },
-        "asn": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "Asn",
-          "readOnly": true
-        },
-        "connectedduration": {
-          "type": "string",
-          "x-go-name": "ConnectedDuration",
-          "readOnly": true
-        },
-        "localaddress": {
-          "type": "string",
-          "x-go-name": "LocalAddress",
-          "readOnly": true
-        },
-        "messagesreceived": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "MessagesReceived",
-          "readOnly": true
-        },
-        "messagessent": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "MessagesSent",
-          "readOnly": true
-        },
-        "routesreceived": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "RoutesReceived",
-          "readOnly": true
-        },
-        "state": {
-          "description": "\nUnknown BgpUnknown\nStopped BgpStopped\nIdle BgpIdle\nConnecting BgpConnecting\nConnected BgpConnected",
-          "type": "string",
-          "enum": [
-            "Unknown",
-            "Stopped",
-            "Idle",
-            "Connecting",
-            "Connected"
-          ],
-          "x-go-enum-desc": "Unknown BgpUnknown\nStopped BgpStopped\nIdle BgpIdle\nConnecting BgpConnecting\nConnected BgpConnected",
-          "x-go-name": "State",
-          "readOnly": true
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
     "ClusterProperties": {
       "description": "https://armwiki.azurewebsites.net/rpaas/arc-rp/conversion/SchemaTranslation.html#default-kubernetes-bridge-mapping\n\nfor now, we'll align on the same concept for our RPaaS\nobjects as well\n\nClusterProperties represents the properties of a cluster.",
       "type": "object",
       "title": "Note, k8s bridge resource types will default to\na singular status field under properties",
       "required": [
-        "uplinkcidripv4",
-        "uplinkcidripv6"
+        "networkFabric",
+        "oobConnectionString",
+        "oobCredentials",
+        "clusterType",
+        "storageAccount",
+        "natSubnet",
+        "generatedSubnets"
       ],
       "properties": {
-        "bgppeeringstatusipv4": {
-          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
-        },
-        "bgppeeringstatusipv6": {
-          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
-        },
-        "bgpsettings": {
-          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpSettings"
-        },
-        "uplinkcidripv4": {
-          "description": "description: \"Cluster uplink cidr ipv4 values\"",
+        "clusterType": {
+          "description": "ClusterType is the type of rack configuration for this cluster.\nsingle-rack SingleRack\nmulti-rack MultiRack",
           "type": "string",
-          "x-go-name": "UplinkCidrIPv4"
+          "enum": [
+            "single-rack",
+            "multi-rack"
+          ],
+          "x-go-enum-desc": "single-rack SingleRack\nmulti-rack MultiRack",
+          "x-go-name": "ClusterType"
         },
-        "uplinkcidripv6": {
-          "description": "description: \"Cluster uplink cidr ipv6 values\"",
+        "generatedSubnets": {
+          "description": "GeneratedSubnets includes generated RFC1918 subnets for this cluster. These will be unique across the entire\nmanagement group/customer, but repeated across customers. Each new cluster will get blocks assigned for all\ninfrastructure networks. Some of the networks will span the entire cluster (e.g. PXE, and Management/iDRAC) and\nthe customer needs to know these blocks before they add racks because customers need to assign iDRAC IP addresses\n(uniquely) to each host. Block(s) can also be generated for infrastructure networks that can be used each time a\nrack manifest is added, allocations can be made from this.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "GeneratedSubnets"
+        },
+        "natSubnet": {
+          "description": "NatSubnet is the outbound subnet used to NAT outbound management traffic (e.g. OAM leaving CE devices and heading\ntowards expressroute).",
           "type": "string",
-          "x-go-name": "UplinkCidrIPv6"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "ClusterStatus": {
-      "description": "ClusterStatus represents all the status properties of a cluster",
-      "type": "object",
-      "properties": {
-        "bgppeeringstatusipv4": {
-          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
+          "x-go-name": "NatSubnet"
         },
-        "bgppeeringstatusipv6": {
-          "$ref": "#/definitions/ClusterNetworkingPropertiesUplinkBgpStatus"
+        "networkFabric": {
+          "type": "string",
+          "x-go-name": "NetworkFabric"
+        },
+        "oobConnectionString": {
+          "description": "OOBConnection is the connection details of the OOB device that enables bootstrapping the storage or other\nappliances.",
+          "type": "string",
+          "x-go-name": "OOBConnectionString"
+        },
+        "oobCredentials": {
+          "$ref": "#/definitions/OOBCredentials"
+        },
+        "storageAccount": {
+          "description": "StorageAccount is the URI reference (ID) to an associated StorageAccount to which bootstrapImages will be",
+          "type": "string",
+          "x-go-name": "StorageAccount"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
@@ -1540,21 +1708,19 @@
     "ClustersBootstrapImages": {
       "description": "Bootstrap Image resource",
       "type": "object",
-      "required": [
-        "id",
-        "name",
-        "type"
-      ],
       "properties": {
         "id": {
+          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "ID"
+          "x-go-name": "Id"
         },
         "location": {
+          "description": "Location is the Azure location where this resource will exist or already exists.",
           "type": "string",
           "x-go-name": "Location"
         },
         "name": {
+          "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
           "x-go-name": "Name"
         },
@@ -1565,6 +1731,7 @@
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
+          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1618,6 +1785,20 @@
       "description": "CreatedByType defines user type, which executed the request",
       "type": "string",
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
+    "OOBCredentials": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string",
+          "x-go-name": "Password"
+        },
+        "username": {
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "Rack": {
       "description": "NOTE: There may be some differences between a Rack and RackManifest as we add logic to process a RackManifest;\nhowever, a Rack is just an alias of the RackManifest type in this initial implementation.",
@@ -1713,21 +1894,19 @@
     "VirtualMachine": {
       "description": "VirtualMachine represents an on-Premises Network Cloud virtual machine",
       "type": "object",
-      "required": [
-        "id",
-        "name",
-        "type"
-      ],
       "properties": {
         "id": {
+          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "ID"
+          "x-go-name": "Id"
         },
         "location": {
+          "description": "Location is the Azure location where this resource will exist or already exists.",
           "type": "string",
           "x-go-name": "Location"
         },
         "name": {
+          "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
           "x-go-name": "Name"
         },
@@ -1738,6 +1917,7 @@
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
+          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1938,21 +2118,19 @@
     "WorkloadNetwork": {
       "description": "WorkloadNetwork represents an on-premise WorkloadNetwork",
       "type": "object",
-      "required": [
-        "id",
-        "name",
-        "type"
-      ],
       "properties": {
         "id": {
+          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "ID"
+          "x-go-name": "Id"
         },
         "location": {
+          "description": "Location is the Azure location where this resource will exist or already exists.",
           "type": "string",
           "x-go-name": "Location"
         },
         "name": {
+          "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
           "x-go-name": "Name"
         },
@@ -1963,6 +2141,7 @@
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
+          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
