@@ -99,6 +99,43 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/workloadNetworks": {
+      "get": {
+        "description": "This will show all network cloud workload networks in a subscription.",
+        "summary": "Lists network cloud workload networks in a subscription.",
+        "operationId": "WorkloadNetworks_List_Subscription",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/WorkloadNetworkList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusters": {
       "get": {
         "description": "This will show all network cloud clusters in a resource group.",
@@ -863,6 +900,173 @@
         "x-ms-examples": {
           "Create or Update Network Cloud VirtualMachine": {
             "$ref": "./examples/VirtualMachines_Create.json"
+          }
+        },
+        "x-ms-long-running-operation": true
+      },
+      "patch": {
+        "description": "This creates or updates the properties of a specific network cloud virtual machine.",
+        "summary": "Patches a specific network cloud virtual machine.",
+        "operationId": "VirtualMachines_Patch",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "Properties",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "imageReference",
+                "cluster",
+                "cpuCores",
+                "memorySizeGB",
+                "diskSizeGB"
+              ],
+              "properties": {
+                "bareMetalMachineURI": {
+                  "description": "URI to the bare metal machine VM has landed to.",
+                  "type": "string",
+                  "x-go-name": "BareMetalMachine",
+                  "readOnly": true
+                },
+                "cluster": {
+                  "description": "Name of undercloud cluster VM is created with.",
+                  "type": "string",
+                  "x-go-name": "Cluster"
+                },
+                "cpuCores": {
+                  "description": "Number virtual machine cpu cores.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "CpuCores"
+                },
+                "diskSizeGB": {
+                  "description": "Virtual machine root disk size in GiB.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "DiskSizeGB"
+                },
+                "imageReference": {
+                  "description": "URL to virtual machine OCI image.",
+                  "type": "string",
+                  "x-go-name": "Image"
+                },
+                "memorySizeGB": {
+                  "description": "Virtual machine memory size in GiB.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "MemorySizeGB"
+                },
+                "networkAttachments": {
+                  "description": "Virtual machine networking properties.",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/VirtualMachineNetworkAttachment"
+                  },
+                  "x-go-name": "VirtualMachineNetworkAttachements"
+                },
+                "networkConfigurationVersion": {
+                  "description": "Version of virtual machine network configuration.",
+                  "type": "string",
+                  "default": "v2",
+                  "enum": [
+                    "v1",
+                    "v2"
+                  ],
+                  "x-go-name": "NetworkConfigurationVersion"
+                },
+                "placementHints": {
+                  "description": "Scheduling hints for virtual machine.",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/VirtualMachinePlacementHint"
+                  },
+                  "x-go-name": "VirtualMachinePlacementHints"
+                },
+                "powerState": {
+                  "description": "Virtual machine power state.",
+                  "type": "string",
+                  "enum": [
+                    "On",
+                    "Off"
+                  ],
+                  "x-go-name": "PowerState",
+                  "readOnly": true
+                },
+                "provisioningState": {
+                  "description": "Virtual machine provisioning status.",
+                  "type": "string",
+                  "enum": [
+                    "Provisioning",
+                    "Succeeded",
+                    "Failed",
+                    "Deleting"
+                  ],
+                  "x-go-name": "ProvisioningState",
+                  "readOnly": true
+                },
+                "sshKey": {
+                  "description": "User ssh key.",
+                  "type": "string",
+                  "x-go-name": "SshKey"
+                },
+                "userData": {
+                  "description": "Base64 encoded cloud-init user data.",
+                  "type": "string",
+                  "x-go-name": "UserData"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachine"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create or Update Network Cloud VirtualMachine": {
+            "$ref": "./examples/VirtualMachines_Patch.json"
           }
         },
         "x-ms-long-running-operation": true
