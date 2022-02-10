@@ -1134,7 +1134,7 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}/powerOff": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}/powerOff": {
       "post": {
         "description": "This will power off a specific network cloud virtual machine.",
         "summary": "Powers off a specific network cloud virtual machine.",
@@ -1205,7 +1205,7 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}/reimage": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}/reimage": {
       "post": {
         "description": "This will reimage a specific network cloud virtual machine.",
         "summary": "Reimages a specific network cloud virtual machine.",
@@ -1269,7 +1269,7 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}/restart": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}/restart": {
       "post": {
         "description": "This will restart a specific network cloud virtual machine.",
         "summary": "Restarts a specific network cloud virtual machine.",
@@ -1333,7 +1333,7 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualmachines/{resourceName}/start": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}/start": {
       "post": {
         "description": "This will start a specific network cloud virtual machine.",
         "summary": "Starts a specific network cloud virtual machine.",
@@ -1659,47 +1659,125 @@
             "required": true
           },
           {
-            "x-go-name": "Payload",
-            "name": "payload",
+            "name": "Properties",
             "in": "body",
             "schema": {
               "type": "object",
               "required": [
-                "properties"
+                "cluster",
+                "ipAllocationType",
+                "hybridAksPluginType",
+                "hybridAksIpamEnabled",
+                "routingDomain"
               ],
               "properties": {
-                "id": {
-                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
+                "adminStatus": {
+                  "description": "AdminStatus is the admin status of the Workload network.",
                   "type": "string",
-                  "x-go-name": "Id"
+                  "enum": [
+                    "Enabled",
+                    "Disabled"
+                  ],
+                  "x-go-name": "AdminStatus",
+                  "readOnly": true
                 },
-                "location": {
-                  "description": "Location is the Azure location where this resource will exist or already exists.",
+                "cluster": {
+                  "description": "Cluster is the name of the undercloud cluster this workload network is associated with.",
                   "type": "string",
-                  "x-go-name": "Location"
+                  "x-go-name": "Cluster"
                 },
-                "name": {
-                  "description": "Name is the name of the resource that this resource provider will create.",
+                "hostPluginType": {
+                  "description": "HostPluginType Type",
                   "type": "string",
-                  "x-go-name": "Name"
+                  "enum": [
+                    "SRIOV",
+                    "FUTURE"
+                  ],
+                  "x-go-name": "HostPluginType",
+                  "readOnly": true
                 },
-                "properties": {
-                  "$ref": "#/definitions/ClusterProperties"
+                "hybridAksIpamEnabled": {
+                  "description": "HybridAksIpamEnabled",
+                  "type": "boolean",
+                  "default": true,
+                  "x-go-name": "HybridAksIpamEnabled"
                 },
-                "systemData": {
-                  "$ref": "#/definitions/SystemData"
-                },
-                "tags": {
-                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "x-go-name": "Tags"
-                },
-                "type": {
+                "hybridAksPluginType": {
+                  "description": "HybridAksPluginType",
                   "type": "string",
-                  "x-go-name": "Type"
+                  "default": "HOST-DEVICE",
+                  "enum": [
+                    "HOST-DEVICE",
+                    "MACVLAN",
+                    "DPDK"
+                  ],
+                  "x-go-name": "HybridAksPluginType"
+                },
+                "ipAllocationType": {
+                  "description": "IPAllocation Type defaults to Dual-Stack",
+                  "type": "string",
+                  "enum": [
+                    "IPv4",
+                    "IPv6",
+                    "Dual-Stack"
+                  ],
+                  "x-go-name": "IPAllocationType"
+                },
+                "ipv4AddressPrefixIndex": {
+                  "description": "IPv4AddressPrefixIndex of the Workload network",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "IPv4AddressPrefixIndex"
+                },
+                "ipv6AddressRangeIndex": {
+                  "description": "IPv6AddressRangeIndex of the Workload network",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "IPv6AddressRangeIndex"
+                },
+                "maxTxRate": {
+                  "description": "Maximum tx rate, in Mbps, for the VF.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "MaxTxRate"
+                },
+                "minTxRate": {
+                  "description": "Minimum tx rate, in Mbps, for the VF.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "MinTxRate"
+                },
+                "mtu": {
+                  "description": "Mtu of workload network",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "Mtu"
+                },
+                "provisioningState": {
+                  "description": "ProvisioningState of the Workload network.",
+                  "type": "string",
+                  "enum": [
+                    "Provisioning",
+                    "Succeeded",
+                    "Failed"
+                  ],
+                  "x-go-name": "ProvisioningState",
+                  "readOnly": true
+                },
+                "routingDomain": {
+                  "description": "RoutingDomain associated to the Workload network",
+                  "type": "string",
+                  "x-go-name": "RoutingDomain"
+                },
+                "spoofCheckEnabled": {
+                  "description": "SpoofCheckEnabled encoded cloud-init user data.",
+                  "type": "boolean",
+                  "x-go-name": "SpoofCheckEnabled"
+                },
+                "trustedModeEnabled": {
+                  "description": "TrustedModeEnabled encoded cloud-init user data.",
+                  "type": "boolean",
+                  "x-go-name": "TrustedModeEnabled"
                 }
               }
             }
