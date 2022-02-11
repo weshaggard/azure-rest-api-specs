@@ -483,10 +483,11 @@
           "description": "Status of the verification operation.",
           "enum": [
             "NotStarted",
-            "RequestReceived",
-            "InProgress",
-            "UnableToVerify",
-            "Verified"
+            "VerificationRequested",
+            "VerificationInProgress",
+            "VerificationFailed",
+            "Verified",
+            "CancellationRequested"
           ],
           "type": "string",
           "readOnly": true,
@@ -529,6 +530,13 @@
         }
       }
     },
+    "ValidSenderUsernameCollection": {
+      "description": "Collection of valid sender usernames. This is a key-value pair where key=username and value=default display name.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "DomainProperties": {
       "description": "A class that describes the properties of a Domains resource.",
       "type": "object",
@@ -564,10 +572,7 @@
         "fromSenderDomain": {
           "description": "P2 sender domain that is displayed to the email recipients [RFC 5322].",
           "type": "string",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
+          "readOnly": true
         },
         "mailFromSenderDomain": {
           "description": "P1 sender domain that is present on the email envelope [RFC 5321].",
@@ -616,6 +621,9 @@
             }
           },
           "readOnly": true
+        },
+        "validSenderUsernames": {
+          "$ref": "#/definitions/ValidSenderUsernameCollection"
         }
       }
     },
@@ -674,6 +682,9 @@
         },
         "spfManagement": {
           "$ref": "#/definitions/SPFManagement"
+        },
+        "validSenderUsernames": {
+          "$ref": "#/definitions/ValidSenderUsernameCollection"
         }
       }
     },
