@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2022-03-01",
+    "version": "2022-03-01-preview",
     "title": "AzureArcDataManagementClient",
     "description": "The AzureArcData management API provides a RESTful set of web APIs to manage Azure Data Services on Azure Arc Resources."
   },
@@ -43,7 +43,11 @@
           "enum": [
             "vCore"
           ],
-          "description": "The name of the SKU."
+          "description": "The name of the SKU.",
+          "x-ms-enum": {
+            "name": "SqlManagedInstanceSkuName",
+            "modelAsString": false
+          }
         },
         "tier": {
           "type": "string",
@@ -68,11 +72,13 @@
           "description": "The SKU size. When the name field is the combination of tier and some other value, this would be the standalone code. "
         },
         "family": {
-          "type": "string"
+          "type": "string",
+          "description": "The SKU family"
         },
         "capacity": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "The SKU capacity"
         }
       },
       "required": [
@@ -114,7 +120,8 @@
         },
         "provisioningState": {
           "type": "string",
-          "readOnly": true
+          "readOnly": true,
+          "description": "The provisioning state of the Arc-enabled SQL Managed Instance resource."
         },
         "licenseType": {
           "type": "string",
@@ -246,6 +253,17 @@
           "type": "string",
           "readOnly": true
         }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "description": "Azure Active Directory OAuth2 Flow",
+      "flow": "implicit",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
       }
     }
   }

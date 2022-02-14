@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2022-03-01",
+    "version": "2022-03-01-preview",
     "title": "AzureArcDataManagementClient",
     "description": "The AzureArcData management API provides a RESTful set of web APIs to manage Azure Data Services on Azure Arc Resources."
   },
@@ -47,10 +47,11 @@
     },
     "ActiveDirectoryConnectorProperties": {
       "type": "object",
-      "description": "The properties of an Active directory connector resource",
+      "description": "The properties of an Active Directory connector resource",
       "properties": {
         "provisioningState": {
           "type": "string",
+          "description": "The provisioning state of the Active Directory connector resource.",
           "readOnly": true
         },
         "spec": {
@@ -101,40 +102,9 @@
           "description": "NETBIOS name of the Active Directory domain."
         },
         "domainControllers": {
-          "type": "object",
-          "properties": {
-            "primaryDomainController": {
-              "type": "object",
-              "properties": {
-                "hostname": {
-                  "type": "string",
-                  "description": "Fully-qualified domain name of the Primary Domain Controller (PDC) in the AD domain."
-                }
-              },
-              "required": [
-                "hostname"
-              ]
-            },
-            "secondaryDomainControllers": {
-              "type": "array",
-              "description": "List of the fully-qualified domain names of the secondary domain controllers in the AD domain.",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "hostname": {
-                    "type": "string",
-                    "description": "Fully-qualified domain name of a secondary domain controller in the AD domain."
-                  }
-                },
-                "required": [
-                  "hostname"
-                ]
-              }
-            }
-          },
-          "required": [
-            "primaryDomainController"
-          ]
+          "$ref": "#/definitions/ActiveDirectoryDomainControllers",
+          "description": "null",
+          "x-ms-client-flatten": false
         }
       },
       "required": [
@@ -161,7 +131,8 @@
         "replicas": {
           "type": "integer",
           "description": "Replica count for DNS proxy service. Default value is 1.",
-          "default": 1
+          "default": 1,
+          "format": "int64"
         },
         "preferK8sDnsForPtrLookups": {
           "type": "boolean",
@@ -173,22 +144,88 @@
         "nameserverIPAddresses"
       ]
     },
+    "ActiveDirectoryDomainControllers": {
+      "type": "object",
+      "description": "Details about the Active Directory domain controllers associated with this AD connector instance",
+      "properties": {
+        "primaryDomainController": {
+          "$ref": "#/definitions/ActiveDirectoryPrimaryDomainController",
+          "description": "null",
+          "x-ms-client-flatten": false
+        },
+        "secondaryDomainControllers": {
+          "$ref": "#/definitions/ActiveDirectorySecondaryDomainControllers",
+          "description": "null",
+          "x-ms-client-flatten": false
+        }
+      },
+      "required": [
+        "primaryDomainController"
+      ]
+    },
+    "ActiveDirectoryPrimaryDomainController": {
+      "type": "object",
+      "description": "Information about the Primary Domain Controller (PDC) in the AD domain.",
+      "properties": {
+        "hostname": {
+          "type": "string",
+          "description": "Fully-qualified domain name of the Primary Domain Controller (PDC) in the AD domain."
+        }
+      },
+      "required": [
+        "hostname"
+      ]
+    },
+    "ActiveDirectorySecondaryDomainControllers": {
+      "type": "array",
+      "description": "List of the fully-qualified domain names of the secondary domain controllers in the AD domain.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "description": "Fully-qualified domain name of a secondary domain controller in the AD domain."
+          }
+        },
+        "required": [
+          "hostname"
+        ]
+      },
+      "x-ms-identifiers": [
+        "hostname"
+      ]
+    },
     "ActiveDirectoryConnectorStatus": {
       "type": "object",
       "description": "The status of the Kubernetes custom resource.",
       "properties": {
         "lastUpdateTime": {
-          "type": "string"
+          "type": "string",
+          "description": "The time that the custom resource was last updated."
         },
         "observedGeneration": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int64",
+          "description": "The version of the replicaSet associated with the AD connector custom resource."
         },
         "state": {
-          "type": "string"
+          "type": "string",
+          "description": "The state of the AD connector custom resource."
         }
       },
       "additionalProperties": {
         "type": "object"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "description": "Azure Active Directory OAuth2 Flow",
+      "flow": "implicit",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
       }
     }
   }
