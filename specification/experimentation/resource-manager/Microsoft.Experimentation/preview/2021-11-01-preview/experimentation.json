@@ -46,7 +46,7 @@
           {
             "name": "api-version",
             "in": "query",
-            "description": "The version of the Experimentation resouce provider API",
+            "description": "The version of the Experimentation resource provider API",
             "required": true,
             "type": "string"
           }
@@ -67,6 +67,11 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "ListOperations": {
+            "$ref": "./examples/ExperimentWorkspaces_OperationsList.json"
+          }
         }
       }
     },
@@ -76,6 +81,10 @@
           "ExperimentWorkspace"
         ],
         "operationId": "experimentWorkspaces_CreateOrUpdate",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "x-ms-examples": {
           "GetWorkspaces": {
             "$ref": "./examples/ExperimentWorkspaces_CreateOrUpdate.json"
@@ -83,10 +92,18 @@
         },
         "description": "Create an experiment workspace, or update an existing workspace",
         "parameters": [
-          { "$ref": "#/parameters/subscriptionIdParameter" },
-          { "$ref": "#/parameters/experimentWorkspaceParameter" },
-          { "$ref": "#/parameters/apiVersionParameter" },
-          { "$ref": "#/parameters/resourceGroupNameParameter" },
+          {
+            "$ref": "#/parameters/subscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/experimentWorkspaceParameter"
+          },
+          {
+            "$ref": "#/parameters/apiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupNameParameter"
+          },
           {
             "name": "parameters",
             "in": "body",
@@ -99,13 +116,13 @@
         ],
         "responses": {
           "201": {
-            "description": "The request to create the experiment workspace is accepted and is running asynchoronously",
+            "description": "The request to create the experiment workspace is accepted and is running asynchronously",
             "schema": {
               "$ref": "#/definitions/ExperimentWorkspace"
             }
           },
           "200": {
-            "description": "The request to update the experiment workspace is accepted and is running asynchoronously",
+            "description": "The request to update the experiment workspace is accepted and is running asynchronously",
             "schema": {
               "$ref": "#/definitions/ExperimentWorkspace"
             }
@@ -130,10 +147,18 @@
         },
         "description": "Patch an experiment workspace",
         "parameters": [
-          { "$ref": "#/parameters/subscriptionIdParameter" },
-          { "$ref": "#/parameters/experimentWorkspaceParameter" },
-          { "$ref": "#/parameters/apiVersionParameter" },
-          { "$ref": "#/parameters/resourceGroupNameParameter" },
+          {
+            "$ref": "#/parameters/subscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/experimentWorkspaceParameter"
+          },
+          {
+            "$ref": "#/parameters/apiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupNameParameter"
+          },
           {
             "name": "parameters",
             "in": "body",
@@ -171,8 +196,12 @@
         },
         "description": "Deletes an experiment workspace",
         "parameters": [
-          { "$ref": "#/parameters/subscriptionIdParameter" },
-          { "$ref": "#/parameters/experimentWorkspaceParameter" },
+          {
+            "$ref": "#/parameters/subscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/experimentWorkspaceParameter"
+          },
           {
             "$ref": "#/parameters/apiVersionParameter"
           },
@@ -182,10 +211,10 @@
         ],
         "responses": {
           "200": {
-            "description": "The request to delete the experiment workspace is accepted and is running asynchoronously"
+            "description": "The request to delete the experiment workspace is accepted and is running asynchronously"
           },
           "202": {
-            "description": "The request to delete the experiment workspace is accepted and is running asynchoronously"
+            "description": "The request to delete the experiment workspace is accepted and is running asynchronously"
           },
           "204": {
             "description": "The experiment Workspace doesn't exist"
@@ -210,8 +239,12 @@
         },
         "description": "Gets an experiment workspace",
         "parameters": [
-          { "$ref": "#/parameters/subscriptionIdParameter" },
-          { "$ref": "#/parameters/experimentWorkspaceParameter" },
+          {
+            "$ref": "#/parameters/subscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/experimentWorkspaceParameter"
+          },
           {
             "$ref": "#/parameters/apiVersionParameter"
           },
@@ -248,7 +281,9 @@
         },
         "description": "Gets all experiment workspaces in a resource group.",
         "parameters": [
-          { "$ref": "#/parameters/subscriptionIdParameter" },
+          {
+            "$ref": "#/parameters/subscriptionIdParameter"
+          },
           {
             "$ref": "#/parameters/apiVersionParameter"
           },
@@ -274,7 +309,6 @@
           "nextLinkName": "nextLink"
         }
       }
-
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.Experimentation/experimentWorkspaces": {
       "get": {
@@ -289,7 +323,9 @@
         },
         "description": "Gets all experiment workspaces in the specified subscription.",
         "parameters": [
-          { "$ref": "#/parameters/subscriptionIdParameter" },
+          {
+            "$ref": "#/parameters/subscriptionIdParameter"
+          },
           {
             "$ref": "#/parameters/apiVersionParameter"
           }
@@ -316,6 +352,7 @@
   },
   "definitions": {
     "ExperimentWorkspacePatch": {
+      "type": "object",
       "description": "An experiment workspace properties.",
       "properties": {
         "tags": {
@@ -333,6 +370,7 @@
       }
     },
     "ExperimentWorkspace": {
+      "type": "object",
       "description": "An experiment workspace.",
       "allOf": [
         {
@@ -352,15 +390,21 @@
       }
     },
     "ExperimentWorkspaceProperties": {
+      "type": "object",
       "description": "An experiment workspace properties.",
       "properties": {
-        "id": {
+        "expWorkspaceId": {
           "description": "The id for experiment workspace",
           "type": "string",
           "readOnly": true
         },
         "provisioningState": {
           "description": "The provisioning state for the resource",
+          "type": "string",
+          "readOnly": true
+        },
+        "afdTasUrl": {
+          "description": "Afd Tas Url",
           "type": "string",
           "readOnly": true
         },
@@ -374,6 +418,7 @@
       }
     },
     "ExperimentWorkspaceCreate": {
+      "type": "object",
       "description": "An experiment workspace.",
       "properties": {
         "location": {
@@ -383,10 +428,11 @@
       }
     },
     "ExperimentWorkspaceCreateProperties": {
+      "type": "object",
       "description": "An experiment workspace properties.",
       "properties": {
         "tasEndpoint": {
-          "description": "A tretment assignment service ednpoint.",
+          "description": "A treatment assignment service endpoint.",
           "type": "string",
           "readOnly": true
         },
@@ -404,6 +450,7 @@
       }
     },
     "ManagementGroup": {
+      "type": "object",
       "description": "A management group.",
       "properties": {
         "name": {
@@ -411,7 +458,7 @@
           "type": "string"
         },
         "tasEndpoint": {
-          "description": "A tretment assignment service ednpoint.",
+          "description": "A treatment assignment service endpoint.",
           "type": "string",
           "readOnly": true
         },
@@ -429,6 +476,7 @@
       }
     },
     "TASCluster": {
+      "type": "object",
       "description": "An experiment workspace.",
       "properties": {
         "region": {
@@ -442,13 +490,14 @@
       }
     },
     "ExperimentWorkspaceListResult": {
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
+          "description": "Results of the list operation.",
           "items": {
             "$ref": "#/definitions/ExperimentWorkspace"
-          },
-          "description": "Results of the list operation."
+          }
         },
         "nextLink": {
           "type": "string",
@@ -458,6 +507,7 @@
       "description": "The response of list experiment workspace operation."
     },
     "ExperimentWorkspacePatchParameters": {
+      "type": "object",
       "properties": {
         "tags": {
           "type": "object",
@@ -493,7 +543,7 @@
     },
     "OperationResult": {
       "description": "Available operation list result",
-      "type":  "object",
+      "type": "object",
       "properties": {
         "name": {
           "type": "string",
@@ -519,7 +569,7 @@
     },
     "AvailableOperationDisplay": {
       "description": "Operation supported by Experimentation resource provider",
-      "type":  "object",
+      "type": "object",
       "properties": {
         "provider": {
           "type": "string",
@@ -551,6 +601,7 @@
     },
     "ErrorDetails": {
       "description": "The details of the error.",
+      "type": "object",
       "properties": {
         "code": {
           "description": "Error code.",
@@ -597,4 +648,4 @@
       "x-ms-parameter-location": "client"
     }
   }
-} 
+}
