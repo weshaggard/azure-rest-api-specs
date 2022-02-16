@@ -138,8 +138,8 @@
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/workloadNetworks": {
       "get": {
-        "description": "This will show all network cloud workload networks in a subscription.",
-        "summary": "Lists network cloud workload networks in a subscription.",
+        "description": "This will show all network cloud Workload Networks in a subscription.",
+        "summary": "Lists network cloud Workload Networks in a subscription.",
         "operationId": "WorkloadNetworks_List_Subscription",
         "parameters": [
           {
@@ -1442,8 +1442,8 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/workloadNetworks": {
       "get": {
-        "description": "This will get a list of all workload network resources from specific resource group.",
-        "summary": "Retrieve all workload network resources from specific resource group.",
+        "description": "This will get a list of all Workload Network resources from specific resource group.",
+        "summary": "Retrieve all Workload Network resources from specific resource group.",
         "operationId": "WorkloadNetworks_List",
         "parameters": [
           {
@@ -1488,8 +1488,8 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/workloadNetworks/{resourceName}": {
       "get": {
-        "description": "This will show the properties of a specific network cloud workload network.",
-        "summary": "Retrieve a specific workload network.",
+        "description": "This will show the properties of a specific network cloud Workload Network.",
+        "summary": "Retrieve a specific Workload Network.",
         "operationId": "WorkloadNetworks_Get",
         "parameters": [
           {
@@ -1603,8 +1603,8 @@
         }
       },
       "delete": {
-        "description": "This will delete a specific workload network.",
-        "summary": "Deletes a specific network cloud workload network.",
+        "description": "This will delete a specific Workload Network.",
+        "summary": "Deletes a specific network cloud Workload Network.",
         "operationId": "WorkloadNetworks_Delete",
         "parameters": [
           {
@@ -1708,14 +1708,11 @@
               "type": "object",
               "required": [
                 "cluster",
-                "ipAllocationType",
-                "hybridAksPluginType",
-                "hybridAksIpamEnabled",
-                "routingDomain"
+                "routingDomains"
               ],
               "properties": {
                 "adminStatus": {
-                  "description": "AdminStatus is the admin status of the Workload network.",
+                  "description": "AdminStatus is the admin status of the Workload Network.",
                   "type": "string",
                   "enum": [
                     "Enabled",
@@ -1725,39 +1722,37 @@
                   "readOnly": true
                 },
                 "cluster": {
-                  "description": "Cluster is the name of the undercloud cluster this workload network is associated with.",
+                  "description": "Cluster is the name of the undercloud cluster this Workload Network is associated with.",
                   "type": "string",
                   "x-go-name": "Cluster"
                 },
                 "hostPluginType": {
-                  "description": "HostPluginType Type",
+                  "description": "Host Plugin Type.",
                   "type": "string",
                   "enum": [
                     "SRIOV",
                     "FUTURE"
                   ],
-                  "x-go-name": "HostPluginType",
-                  "readOnly": true
+                  "x-go-name": "HostPluginType"
                 },
                 "hybridAksIpamEnabled": {
-                  "description": "HybridAksIpamEnabled",
+                  "description": "HybridAKS IPAM Enabled.",
                   "type": "boolean",
-                  "default": true,
                   "x-go-name": "HybridAksIpamEnabled"
                 },
                 "hybridAksPluginType": {
-                  "description": "HybridAksPluginType",
+                  "description": "Network plugin type for HybridAKS.",
                   "type": "string",
-                  "default": "HOST-DEVICE",
                   "enum": [
                     "HOST-DEVICE",
                     "MACVLAN",
-                    "DPDK"
+                    "DPDK",
+                    "IPVLAN"
                   ],
                   "x-go-name": "HybridAksPluginType"
                 },
                 "ipAllocationType": {
-                  "description": "IPAllocation Type defaults to Dual-Stack",
+                  "description": "IP Allocation Type defaults to Dual-Stack.",
                   "type": "string",
                   "enum": [
                     "IPv4",
@@ -1767,37 +1762,44 @@
                   "x-go-name": "IPAllocationType"
                 },
                 "ipv4AddressPrefixIndex": {
-                  "description": "IPv4AddressPrefixIndex of the Workload network",
+                  "description": "Index of the IPv4AddressPrefix array from the Routing Domain to be used for this Workload Network.",
                   "type": "integer",
                   "format": "int64",
+                  "minimum": 0,
                   "x-go-name": "IPv4AddressPrefixIndex"
                 },
                 "ipv6AddressRangeIndex": {
-                  "description": "IPv6AddressRangeIndex of the Workload network",
+                  "description": "Index of the IPv6RangePrefix array from the Routing Domain to be used for this Workload Network.",
                   "type": "integer",
                   "format": "int64",
+                  "minimum": 0,
                   "x-go-name": "IPv6AddressRangeIndex"
                 },
                 "maxTxRate": {
                   "description": "Maximum tx rate, in Mbps, for the VF.",
                   "type": "integer",
                   "format": "int64",
+                  "default": 0,
+                  "minimum": 0,
                   "x-go-name": "MaxTxRate"
                 },
                 "minTxRate": {
                   "description": "Minimum tx rate, in Mbps, for the VF.",
                   "type": "integer",
                   "format": "int64",
+                  "default": 0,
+                  "minimum": 0,
                   "x-go-name": "MinTxRate"
                 },
                 "mtu": {
-                  "description": "Mtu of workload network",
+                  "description": "Mtu of this Workload Network.",
                   "type": "integer",
                   "format": "int64",
+                  "default": 1500,
                   "x-go-name": "Mtu"
                 },
                 "provisioningState": {
-                  "description": "ProvisioningState of the Workload network.",
+                  "description": "ProvisioningState of the Workload Network.",
                   "type": "string",
                   "enum": [
                     "Provisioning",
@@ -1807,10 +1809,14 @@
                   "x-go-name": "ProvisioningState",
                   "readOnly": true
                 },
-                "routingDomain": {
-                  "description": "RoutingDomain associated to the Workload network",
-                  "type": "string",
-                  "x-go-name": "RoutingDomain"
+                "routingDomains": {
+                  "description": "RoutingDomain associated to the Workload Network.",
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string"
+                  },
+                  "x-go-name": "RoutingDomains"
                 },
                 "spoofCheckEnabled": {
                   "description": "SpoofCheckEnabled encoded cloud-init user data.",
@@ -2625,7 +2631,7 @@
           "x-go-name": "NextLink"
         },
         "workloadNetworks": {
-          "description": "The list of workload networks.",
+          "description": "The list of Workload Networks.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/WorkloadNetwork"
@@ -2637,17 +2643,14 @@
     },
     "WorkloadNetworkProperties": {
       "type": "object",
-      "title": "WorkloadNetworkProperties represents the properties of a workload network.",
+      "title": "WorkloadNetworkProperties represents the properties of a Workload Network.",
       "required": [
         "cluster",
-        "ipAllocationType",
-        "hybridAksPluginType",
-        "hybridAksIpamEnabled",
-        "routingDomain"
+        "routingDomains"
       ],
       "properties": {
         "adminStatus": {
-          "description": "AdminStatus is the admin status of the Workload network.",
+          "description": "AdminStatus is the admin status of the Workload Network.",
           "type": "string",
           "enum": [
             "Enabled",
@@ -2657,39 +2660,37 @@
           "readOnly": true
         },
         "cluster": {
-          "description": "Cluster is the name of the undercloud cluster this workload network is associated with.",
+          "description": "Cluster is the name of the undercloud cluster this Workload Network is associated with.",
           "type": "string",
           "x-go-name": "Cluster"
         },
         "hostPluginType": {
-          "description": "HostPluginType Type",
+          "description": "Host Plugin Type.",
           "type": "string",
           "enum": [
             "SRIOV",
             "FUTURE"
           ],
-          "x-go-name": "HostPluginType",
-          "readOnly": true
+          "x-go-name": "HostPluginType"
         },
         "hybridAksIpamEnabled": {
-          "description": "HybridAksIpamEnabled",
+          "description": "HybridAKS IPAM Enabled.",
           "type": "boolean",
-          "default": true,
           "x-go-name": "HybridAksIpamEnabled"
         },
         "hybridAksPluginType": {
-          "description": "HybridAksPluginType",
+          "description": "Network plugin type for HybridAKS.",
           "type": "string",
-          "default": "HOST-DEVICE",
           "enum": [
             "HOST-DEVICE",
             "MACVLAN",
-            "DPDK"
+            "DPDK",
+            "IPVLAN"
           ],
           "x-go-name": "HybridAksPluginType"
         },
         "ipAllocationType": {
-          "description": "IPAllocation Type defaults to Dual-Stack",
+          "description": "IP Allocation Type defaults to Dual-Stack.",
           "type": "string",
           "enum": [
             "IPv4",
@@ -2699,37 +2700,44 @@
           "x-go-name": "IPAllocationType"
         },
         "ipv4AddressPrefixIndex": {
-          "description": "IPv4AddressPrefixIndex of the Workload network",
+          "description": "Index of the IPv4AddressPrefix array from the Routing Domain to be used for this Workload Network.",
           "type": "integer",
           "format": "int64",
+          "minimum": 0,
           "x-go-name": "IPv4AddressPrefixIndex"
         },
         "ipv6AddressRangeIndex": {
-          "description": "IPv6AddressRangeIndex of the Workload network",
+          "description": "Index of the IPv6RangePrefix array from the Routing Domain to be used for this Workload Network.",
           "type": "integer",
           "format": "int64",
+          "minimum": 0,
           "x-go-name": "IPv6AddressRangeIndex"
         },
         "maxTxRate": {
           "description": "Maximum tx rate, in Mbps, for the VF.",
           "type": "integer",
           "format": "int64",
+          "default": 0,
+          "minimum": 0,
           "x-go-name": "MaxTxRate"
         },
         "minTxRate": {
           "description": "Minimum tx rate, in Mbps, for the VF.",
           "type": "integer",
           "format": "int64",
+          "default": 0,
+          "minimum": 0,
           "x-go-name": "MinTxRate"
         },
         "mtu": {
-          "description": "Mtu of workload network",
+          "description": "Mtu of this Workload Network.",
           "type": "integer",
           "format": "int64",
+          "default": 1500,
           "x-go-name": "Mtu"
         },
         "provisioningState": {
-          "description": "ProvisioningState of the Workload network.",
+          "description": "ProvisioningState of the Workload Network.",
           "type": "string",
           "enum": [
             "Provisioning",
@@ -2739,10 +2747,14 @@
           "x-go-name": "ProvisioningState",
           "readOnly": true
         },
-        "routingDomain": {
-          "description": "RoutingDomain associated to the Workload network",
-          "type": "string",
-          "x-go-name": "RoutingDomain"
+        "routingDomains": {
+          "description": "RoutingDomain associated to the Workload Network.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "RoutingDomains"
         },
         "spoofCheckEnabled": {
           "description": "SpoofCheckEnabled encoded cloud-init user data.",
