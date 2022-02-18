@@ -146,6 +146,106 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Workloads/locations/{location}/sapVirtualInstanceMetadata/default/getDiskConfigurations": {
+      "post": {
+        "tags": [
+          "SAPDiskConfigurations"
+        ],
+        "description": "Get SAP Disk Configurations.",
+        "operationId": "SAPDiskConfigurations",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "SAPDiskConfigurations",
+            "description": "SAP Disk Configurations Request body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/SAPDiskConfigurationsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SAP Disk Configurations Result.",
+            "schema": {
+              "$ref": "#/definitions/SAPDiskConfigurationsResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "SAPDiskConfigurations_Prod": {
+            "$ref": "./examples/sapvirtualinstances/SAPDiskConfigurations_Prod.json"
+          },
+          "SAPDiskConfigurations_NonProd": {
+            "$ref": "./examples/sapvirtualinstances/SAPDiskConfigurations_NonProd.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Workloads/locations/{location}/sapVirtualInstanceMetadata/default/getAvailabilityZoneDetails": {
+      "post": {
+        "tags": [
+          "SAPAvailabilityZoneDetails"
+        ],
+        "description": "Get SAP Availability Zone Details.",
+        "operationId": "SAPAvailabilityZoneDetails",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "SAPAvailabilityZoneDetails",
+            "description": "SAP Availability Zone Details Request body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/SAPAvailabilityZoneDetailsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SAP Availability Zone Details Result.",
+            "schema": {
+              "$ref": "#/definitions/SAPAvailabilityZoneDetailsResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "SAPAvailabilityZoneDetails_eastus": {
+            "$ref": "./examples/sapvirtualinstances/SAPAvailabilityZoneDetails_eastus.json"
+          },
+          "SAPAvailabilityZoneDetails_northeurope": {
+            "$ref": "./examples/sapvirtualinstances/SAPAvailabilityZoneDetails_northeurope.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Workloads/sapVirtualInstances/{sapVirtualInstanceName}": {
       "put": {
         "tags": [
@@ -1384,6 +1484,20 @@
     }
   },
   "definitions": {
+    "HealthState": {
+      "description": "Defines the SAP Virtual Instance health.",
+      "enum": [
+        "Unknown",
+        "Healthy",
+        "Unhealthy",
+        "Degraded"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "SAPHealthState",
+        "modelAsString": true
+      }
+    },
     "DeploymentType": {
       "description": "The deployment Type.",
       "enum": [
@@ -1462,6 +1576,22 @@
         "read"
       ]
     },
+    "SAPVirtualInstanceStatus": {
+      "description": "Defines the SAP Virtual Instance status.",
+      "enum": [
+        "Starting",
+        "Running",
+        "Stopping",
+        "Offline",
+        "PartiallyRunning",
+        "Unavailable"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "SAPVirtualInstanceStatus",
+        "modelAsString": true
+      }
+    },
     "SAPVirtualInstanceState": {
       "description": "Defines the SAP Virtual Instance state.",
       "enum": [
@@ -1502,7 +1632,8 @@
       "description": "Defines the type of central server VM.",
       "enum": [
         "Primary",
-        "Secondary"
+        "Secondary",
+        "Unknown"
       ],
       "type": "string",
       "readOnly": true,
@@ -1552,7 +1683,8 @@
         "Succeeded",
         "Updating",
         "Creating",
-        "Failed"
+        "Failed",
+        "Deleting"
       ],
       "type": "string",
       "readOnly": true,
@@ -1691,7 +1823,8 @@
           "items": {
             "$ref": "#/definitions/SshPublicKey"
           },
-          "description": "The list of SSH public keys used to authenticate with linux based VMs."
+          "description": "The list of SSH public keys used to authenticate with linux based VMs.",
+          "x-ms-identifiers": []
         }
       },
       "description": "SSH configuration for Linux based VMs running on Azure"
@@ -1942,7 +2075,148 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/SAPSupportedSku"
-          }
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
+    "SAPDiskConfigurationsRequest": {
+      "description": "The SAP request to get list of disk configurations.",
+      "type": "object",
+      "properties": {
+        "appLocation": {
+          "type": "string",
+          "description": "The geo-location where the SAP resources will be created."
+        },
+        "environment": {
+          "$ref": "#/definitions/EnvironmentType"
+        },
+        "sapProduct": {
+          "$ref": "#/definitions/SAPProductType"
+        },
+        "databaseType": {
+          "description": "The database type. Eg: HANA, DB2, etc",
+          "$ref": "#/definitions/SAPDatabaseType"
+        },
+        "deploymentType": {
+          "description": "The deployment type. Eg: SingleServer/ThreeTier",
+          "$ref": "#/definitions/DeploymentType"
+        },
+        "dbVmSku": {
+          "description": "The VM SKU for database instance.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "appLocation",
+        "environment",
+        "sapProduct",
+        "databaseType",
+        "deploymentType",
+        "dbVmSku"
+      ]
+    },
+    "SAPDiskConfiguration": {
+      "description": "The SAP Disk Configuration.",
+      "type": "object",
+      "properties": {
+        "volume": {
+          "type": "string",
+          "description": "The volume name."
+        },
+        "diskType": {
+          "type": "string",
+          "description": "The disk type."
+        },
+        "diskCount": {
+          "description": "The disk count.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "diskSizeGB": {
+          "description": "The disk size in GB.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "diskIopsReadWrite": {
+          "description": "The disk Iops.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "diskMBpsReadWrite": {
+          "description": "The disk provisioned throughput in MBps.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "diskStorageType": {
+          "description": "The disk storage type",
+          "type": "string"
+        }
+      }
+    },
+    "SAPDiskConfigurationsResult": {
+      "description": "The list of disk configuration for vmSku which are part of SAP deployment.",
+      "type": "object",
+      "properties": {
+        "diskConfigurations": {
+          "description": "Gets the list of Disk Configurations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SAPDiskConfiguration"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
+    "SAPAvailabilityZoneDetailsRequest": {
+      "description": "The SAP request to get list of availability zones.",
+      "type": "object",
+      "properties": {
+        "appLocation": {
+          "type": "string",
+          "description": "The geo-location where the SAP resources will be created."
+        },
+        "sapProduct": {
+          "$ref": "#/definitions/SAPProductType"
+        },
+        "databaseType": {
+          "description": "The database type. Eg: HANA, DB2, etc",
+          "$ref": "#/definitions/SAPDatabaseType"
+        }
+      },
+      "required": [
+        "appLocation",
+        "sapProduct",
+        "databaseType"
+      ]
+    },
+    "SAPAvailabilityZonePair": {
+      "description": "The SAP Availability Zone Pair.",
+      "type": "object",
+      "properties": {
+        "zoneA": {
+          "description": "The zone A.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "zoneB": {
+          "description": "The zone B.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "SAPAvailabilityZoneDetailsResult": {
+      "description": "The list of supported availability zone pairs which are part of SAP HA deployment.",
+      "type": "object",
+      "properties": {
+        "availabilityZonePairs": {
+          "description": "Gets the list of availability zone pairs.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SAPAvailabilityZonePair"
+          },
+          "x-ms-identifiers": []
         }
       }
     },
@@ -2174,6 +2448,9 @@
           "type": "string",
           "x-ms-secret": true,
           "description": "The SSH private key."
+        },
+        "highAvailabilitySoftwareConfiguration": {
+          "$ref": "#/definitions/HighAvailabilitySoftwareConfiguration"
         }
       },
       "required": [
@@ -2182,6 +2459,25 @@
         "sapBitsStorageAccountId",
         "sapFqdn",
         "sshPrivateKey"
+      ]
+    },
+    "HighAvailabilitySoftwareConfiguration": {
+      "description": "Gets or sets the HA software configuration.",
+      "type": "object",
+      "properties": {
+        "fencingClientId": {
+          "description": "The fencing client id.",
+          "type": "string"
+        },
+        "fencingClientPassword": {
+          "description": "The fencing client id secret/password. The secret should never expire. This will be used pacemaker to start/stop the cluster VMs.",
+          "x-ms-secret": true,
+          "type": "string"
+        }
+      },
+      "required": [
+        "fencingClientId",
+        "fencingClientPassword"
       ]
     },
     "StartRequest": {
@@ -2342,12 +2638,12 @@
           "$ref": "#/definitions/ManagedRGConfiguration"
         },
         "status": {
-          "description": "Defines the SAP Virtual Instance status.",
-          "type": "string"
+          "$ref": "#/definitions/SAPVirtualInstanceStatus",
+          "readOnly": true
         },
         "health": {
-          "description": "Defines the SAP Virtual Instance health.",
-          "type": "string"
+          "$ref": "#/definitions/HealthState",
+          "readOnly": true
         },
         "state": {
           "$ref": "#/definitions/SAPVirtualInstanceState",
@@ -2407,7 +2703,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/SAPVirtualInstance"
-          }
+          },
+          "x-ms-identifiers": []
         },
         "nextLink": {
           "description": "Gets the value of next link.",
@@ -2424,7 +2721,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/SAPCentralServerInstance"
-          }
+          },
+          "x-ms-identifiers": []
         },
         "nextLink": {
           "description": "Gets the value of next link.",
@@ -2441,7 +2739,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/SAPDatabaseInstance"
-          }
+          },
+          "x-ms-identifiers": []
         },
         "nextLink": {
           "description": "Gets the value of next link.",
@@ -2458,7 +2757,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/SAPApplicationServerInstance"
-          }
+          },
+          "x-ms-identifiers": []
         },
         "nextLink": {
           "description": "Gets the value of next link.",
@@ -2527,12 +2827,12 @@
           "readOnly": true
         },
         "status": {
-          "description": "Defines the SAP Virtual Instance status.",
-          "type": "string"
+          "$ref": "#/definitions/SAPVirtualInstanceStatus",
+          "readOnly": true
         },
         "health": {
-          "description": "Defines the SAP Virtual Instance health.",
-          "type": "string"
+          "$ref": "#/definitions/HealthState",
+          "readOnly": true
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -2612,8 +2912,8 @@
           "readOnly": true
         },
         "health": {
-          "description": "Defines the SAP Virtual Instance health.",
-          "type": "string"
+          "$ref": "#/definitions/HealthState",
+          "readOnly": true
         }
       }
     },
@@ -2639,28 +2939,7 @@
           "x-nullable": true
         },
         "health": {
-          "description": "Defines the SAP Virtual Instance health.",
-          "type": "string"
-        }
-      }
-    },
-    "EnqueueReplicationServerProperties": {
-      "description": "Defines the SAP enqueue replication server properties.",
-      "type": "object",
-      "properties": {
-        "instanceNo": {
-          "type": "string",
-          "description": "The enqueue replication server instance number.",
-          "readOnly": true
-        },
-        "hostname": {
-          "type": "string",
-          "description": "The enqueue replication server SAP host name.",
-          "readOnly": true
-        },
-        "ipAddress": {
-          "type": "string",
-          "description": "The enqueue replication server IP Address.",
+          "$ref": "#/definitions/HealthState",
           "readOnly": true
         }
       }
@@ -2677,8 +2956,8 @@
           "x-nullable": true
         },
         "health": {
-          "description": "Defines the SAP Virtual Instance health.",
-          "type": "string"
+          "$ref": "#/definitions/HealthState",
+          "readOnly": true
         }
       }
     },
@@ -2702,9 +2981,6 @@
         "enqueueServerProperties": {
           "$ref": "#/definitions/EnqueueServerProperties"
         },
-        "enqueueReplicationServerProperties": {
-          "$ref": "#/definitions/EnqueueReplicationServerProperties"
-        },
         "gatewayServerProperties": {
           "$ref": "#/definitions/GatewayServerProperties"
         },
@@ -2726,15 +3002,16 @@
           "items": {
             "$ref": "#/definitions/CentralServerVmDetails"
           },
+          "x-ms-identifiers": [],
           "readOnly": true
         },
         "status": {
-          "description": "Defines the SAP Virtual Instance status.",
-          "type": "string"
+          "$ref": "#/definitions/SAPVirtualInstanceStatus",
+          "readOnly": true
         },
         "health": {
-          "description": "Defines the SAP Virtual Instance health.",
-          "type": "string"
+          "$ref": "#/definitions/HealthState",
+          "readOnly": true
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -2801,15 +3078,16 @@
           "items": {
             "$ref": "#/definitions/DatabaseVmDetails"
           },
+          "x-ms-identifiers": [],
           "readOnly": true
         },
         "status": {
-          "description": "Defines the SAP Virtual Instance status.",
-          "type": "string"
+          "$ref": "#/definitions/SAPVirtualInstanceStatus",
+          "readOnly": true
         },
         "health": {
-          "description": "Defines the SAP Virtual Instance health.",
-          "type": "string"
+          "$ref": "#/definitions/HealthState",
+          "readOnly": true
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -2866,6 +3144,7 @@
           "items": {
             "$ref": "#/definitions/ErrorDefinition"
           },
+          "x-ms-identifiers": [],
           "readOnly": true
         }
       }
