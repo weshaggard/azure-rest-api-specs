@@ -1430,69 +1430,6 @@
         }
       ]
     },
-    "SegmentFilter": {
-      "type": "object",
-      "discriminator": "filterName",
-      "properties": {
-        "filterName": {
-          "type": "string",
-          "description": "Name of the Segment filter."
-        },
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        }
-      },
-      "description": "Details about Segment Filter",
-      "required": [
-        "filterName",
-        "comparison",
-        "value"
-      ]
-    },
-    "SegmentGroup": {
-      "type": "object",
-      "properties": {
-        "filters": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SegmentStatisticsFilter"
-          },
-          "x-cadl-name": "Microsoft.PlayFab.SegmentStatisticsFilter[]",
-          "description": "List of Filters for defining groups",
-          "x-ms-identifiers": []
-        }
-      },
-      "description": "Details about Segment Group",
-      "required": [
-        "filters"
-      ]
-    },
-    "SegmentListResult": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Segment"
-          },
-          "x-cadl-name": "Microsoft.PlayFab.Segment[]",
-          "description": "The items on this page"
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "The link to the next page of items"
-        }
-      },
-      "description": "The response of a Segment list operation.",
-      "required": [
-        "value"
-      ]
-    },
     "SegmentProperties": {
       "type": "object",
       "properties": {
@@ -1534,29 +1471,290 @@
         "groups"
       ]
     },
-    "SegmentStatisticsFilter": {
+    "SegmentGroup": {
       "type": "object",
-      "x-ms-discriminator-value": "Statistic",
       "properties": {
-        "statisticName": {
-          "type": "string",
-          "description": "Statistic Filter name"
-        },
-        "version": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Version of Statistic to be used"
-        },
-        "useCurrentVersion": {
-          "type": "boolean",
-          "description": "Use current version of Statistic filter"
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SegmentFilter"
+          },
+          "x-cadl-name": "Microsoft.PlayFab.SegmentFilter[]",
+          "description": "List of Filters for defining groups",
+          "x-ms-identifiers": []
         }
       },
-      "description": "Details about Segment Statistics Filter",
+      "description": "Details about Segment Group",
+      "required": [
+        "filters"
+      ]
+    },
+    "SegmentFilter": {
+      "type": "object",
+      "discriminator": "filterName",
+      "properties": {
+        "filterName": {
+          "type": "string",
+          "description": "Name of the Segment filter.",
+          "enum": [
+            "FirstLogin",
+            "LastLogin",
+            "FirstLoginDate",
+            "LastLoginDate",
+            "Location",
+            "UserOrigination",
+            "Tag",
+            "Statistic",
+            "AllPlayers"
+          ],
+          "x-ms-enum": {
+            "name": "filterName",
+            "modelAsString": true
+          }
+        }
+      },
+      "description": "Details about Segment Filter",
+      "required": [
+        "filterName"
+      ]
+    },
+    "SegmentFilterByFirstLogin": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "FirstLogin",
+      "description": "Some description.",
+      "properties": {
+        "properties": {
+          "description": "Some description.",
+          "$ref": "#/definitions/SegmentFilterProperties",
+          "x-ms-client-flatten": true
+        }
+      },
       "allOf": [
         {
           "$ref": "#/definitions/SegmentFilter"
         }
+      ]
+    },
+    "SegmentFilterByLastLogin": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "LastLogin",
+      "description": "Some description.",
+      "properties": {
+        "properties": {
+          "description": "Some description.",
+          "$ref": "#/definitions/SegmentFilterProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
+    "SegmentFilterByFirstLoginDate": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "FirstLoginDate",
+      "description": "Some description.",
+      "properties": {
+        "properties": {
+          "description": "Some description.",
+          "$ref": "#/definitions/SegmentFilterProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
+    "SegmentFilterByLastLoginDate": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "LastLoginDate",
+      "description": "Some description.",
+      "properties": {
+        "properties": {
+          "description": "Some description.",
+          "$ref": "#/definitions/SegmentFilterProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
+    "SegmentFilterByLocation": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "Location",
+      "description": "Some description.",
+      "properties": {
+        "properties": {
+          "description": "Some description.",
+          "$ref": "#/definitions/SegmentFilterProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
+    "SegmentFilterByTag": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "Tag",
+      "description": "Some description.",
+      "properties": {
+        "properties": {
+          "description": "Some description.",
+          "$ref": "#/definitions/SegmentFilterProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
+    "SegmentFilterByUserOrigination": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "UserOrigination",
+      "description": "Some description.",
+      "properties": {
+        "properties": {
+          "description": "Some description.",
+          "$ref": "#/definitions/SegmentFilterProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
+    "SegmentFilterByStatistics": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "Statistic",
+      "description": "Some description.",
+      "properties": {
+        "properties": {
+          "description": "Some description.",
+          "$ref": "#/definitions/SegmentStatisticsFilter",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
+    "SegmentFilterByAllPlayers": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "x-ms-discriminator-value": "AllPlayers",
+      "description": "Some description.",
+      "properties": {
+        "properties": {}
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFilter"
+        }
+      ]
+    },
+    "SegmentFilterProperties": {
+    "type": "object",
+    "properties": {
+      "comparison": {
+          "$ref": "#/definitions/Comparison",
+          "description": "Comparator used for the filter."
+      },
+      "value": {
+          "type": "string",
+          "description": "Value to be compared"
+      }
+    },
+    "description": "Details about Segment Filter",
+    "required": [
+      "comparison",
+      "value"
+    ]
+    },
+    "SegmentStatisticsFilter": {
+    "type": "object",
+    "properties": {
+    "statisticName": {
+      "type": "string",
+      "description": "Statistic Filter name"
+    },
+    "version": {
+      "type": "integer",
+      "format": "int32",
+      "description": "Version of Statistic to be used"
+    },
+    "useCurrentVersion": {
+      "type": "boolean",
+      "description": "Use current version of Statistic filter"
+    }
+  },
+  "description": "Details about Segment Statistics Filter",
+  "allOf": [
+    {
+      "$ref": "#/definitions/SegmentFilterProperties"
+    }
+  ]
+    },
+    "SegmentListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Segment"
+          },
+          "x-cadl-name": "Microsoft.PlayFab.Segment[]",
+          "description": "The items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The link to the next page of items"
+        }
+      },
+      "description": "The response of a Segment list operation.",
+      "required": [
+        "value"
       ]
     },
     "Title": {
