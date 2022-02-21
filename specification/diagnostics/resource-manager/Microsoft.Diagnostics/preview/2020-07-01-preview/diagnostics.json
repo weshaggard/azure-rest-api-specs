@@ -793,44 +793,42 @@
     },
     "Insight": {
       "description": "Detailed insights(s) obtained via the invocation of an insight diagnostic troubleshooter.",
+      "type": "object",
+      "properties": {
+        "solutionId": {
+          "description": "solution Id of the insight",
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommonInsightModel"
+        }
+      ]
+    },
+    "CommonInsightModel": {
+      "description": "Common Insight Model shared across all solution types.",
+      "type": "object",
       "properties": {
         "title": {
           "description": "This insight's title.",
           "type": "string"
         },
-        "description": {
-          "description": "A user friendly description of what this insight has detected.",
+        "results": {
+          "description": "detailed result content",
           "type": "string"
         },
-        "issueCategory": {
-          "description": "The category for the issue that this insight detected",
-          "type": "string"
-        },
-        "issueSubcategory": {
-          "description": "The subcategory for the issue that this insight detected.",
-          "type": "string"
-        },
-        "recommendedAction": {
-          "description": "The recommended action to resolve the detected issue.",
-          "type": "object",
-          "$ref": "#/definitions/RecommendedAction"
-        },
-        "additionalDetails": {
-          "description": "Additional supporting information for additional context about this problem.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "curatedContent": {
-          "description": "Curated HTML Markup intended to be consumed by customer's or their designated third parties.",
-          "type": "string"
-        },
-        "relatedLinks": {
-          "description": "Any other related and relevant links to additional information about the problems detected by this insight.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Link"
+        "importanceLevel": {
+          "description": "importance level of the insight",
+          "type": "string",
+          "enum": [
+            "Critical",
+            "Warning",
+            "Information"
+          ],
+          "x-ms-enum": {
+            "name": "importanceLevel",
+            "modelAsString": true
           }
         }
       }
@@ -1293,7 +1291,7 @@
           "description": "The problems (if any) detected by this insight",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Insight"
+            "$ref": "#/definitions/CommonInsightModel"
           }
         }
       }
