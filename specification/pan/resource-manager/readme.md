@@ -26,6 +26,7 @@ These are the global settings for the PAN.cloudngfw.
 
 ```yaml
 openapi-type: arm
+openapi-subtype: rpaas
 tag: package-2022-02-17-preview
 ```
 
@@ -35,7 +36,7 @@ These settings apply only when `--tag=package-2022-02-17-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-02-17-preview'
 input-file:
-  - PAN.cloudngfw/preview/2022-02-17-preview/PAN.cloudngfw.json
+  - Pan.Cloudngfw/preview/2022-02-17-preview/Pan.Cloudngfw.json
 ```
 
 ---
@@ -52,6 +53,7 @@ swagger-to-sdk:
   - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
+  - repo: azure-sdk-for-go-track2
   - repo: azure-sdk-for-js
   - repo: azure-resource-manager-schemas
   - repo: azure-cli-extensions

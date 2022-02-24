@@ -7,8 +7,8 @@ Please also specify `--csharp-sdks-folder=<path to "SDKs" directory of your azur
 csharp:
   azure-arm: true
   license-header: MICROSOFT_MIT_NO_VERSION
-  namespace: Microsoft.Azure.Management.PAN.cloudngfw
+  namespace: Microsoft.Azure.Management.Pan.Cloudngfw
   payload-flattening-threshold: 1
-  output-folder: $(csharp-sdks-folder)/PAN.cloudngfw/Microsoft.Azure.Management.PAN.cloudngfw/src/Generated
+  output-folder: $(csharp-sdks-folder)/Pan.Cloudngfw/Microsoft.Azure.Management.Pan.Cloudngfw/src/Generated
   clear-output-folder: true
 ```
