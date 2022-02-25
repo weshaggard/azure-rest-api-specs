@@ -1412,8 +1412,16 @@
     },
     "SphereProperties": {
       "type": "object",
-      "properties": {},
+      "properties": {
+        "baseUri": {
+          "type": "string",
+          "description": "Base URI of the different endpoints for this sphere"
+        }
+      },
       "description": "Properties of the sphere",
+      "required": [
+        "baseUri"
+      ],
       "allOf": [
         {
           "$ref": "#/definitions/AzureSphereProperties"
@@ -1422,8 +1430,26 @@
     },
     "DeviceRegistrationProperties": {
       "type": "object",
-      "properties": {},
+      "properties": {
+        "deviceResourceIdentifier": {
+          "type": "string",
+          "description": "Azure identifier for the device resource of this registration"
+        },
+        "devicePublicKey": {
+          "type": "string",
+          "description": "Public key of the device"
+        },
+        "state": {
+          "$ref": "#/definitions/RegistrationState",
+          "description": "State of the device registration"
+        }
+      },
       "description": "Properties of the device registration",
+      "required": [
+        "deviceResourceIdentifier",
+        "devicePublicKey",
+        "state"
+      ],
       "allOf": [
         {
           "$ref": "#/definitions/AzureSphereProperties"
@@ -1432,8 +1458,44 @@
     },
     "BulkDeviceRegistrationProperties": {
       "type": "object",
-      "properties": {},
+      "properties": {
+        "prefixDeviceName": {
+          "type": "string",
+          "description": "Prefix for the device name to be used when registrating the device"
+        },
+        "sharedKey": {
+          "type": "string",
+          "description": "Shared key to be expected from devices to send during registration process"
+        },
+        "registrationUri": {
+          "type": "string",
+          "description": "Registration URI for the devices on this batch to point"
+        },
+        "maxRegistrationCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Max count of devices to be registered for this registration bulk"
+        },
+        "registrationCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Count of current devices registered for this registration bulk. Starts in 0"
+        },
+        "expirationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Expiration date for his bulk device registration"
+        }
+      },
       "description": "Properties of the bulk device registration",
+      "required": [
+        "prefixDeviceName",
+        "sharedKey",
+        "registrationUri",
+        "maxRegistrationCount",
+        "registrationCount",
+        "expirationDate"
+      ],
       "allOf": [
         {
           "$ref": "#/definitions/AzureSphereProperties"
@@ -1448,6 +1510,17 @@
           "description": "Provisioning state of the resource.",
           "readOnly": true
         }
+      }
+    },
+    "RegistrationState": {
+      "type": "string",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "x-ms-enum": {
+        "name": "RegistrationState",
+        "modelAsString": true
       }
     },
     "ProvisioningState": {
