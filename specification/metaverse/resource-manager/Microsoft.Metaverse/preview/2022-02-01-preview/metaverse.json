@@ -75,7 +75,7 @@
           "200": {
             "description": "Event details.",
             "schema": {
-              "$ref": "#/definitions/EventResourceList"
+              "$ref": "#/definitions/EventResource"
             }
           }
         }
@@ -120,13 +120,13 @@
           "200": {
             "description": "Successful.",
             "schema": {
-              "$ref": "#/definitions/EventInternalMetadata"
+              "$ref": "#/definitions/EventResource"
             }
           },
           "201": {
             "description": "Long running operation.",
             "schema": {
-              "$ref": "#/definitions/EventInternalMetadata"
+              "$ref": "#/definitions/EventResource"
             }
           }
         }
@@ -171,7 +171,7 @@
           "200": {
             "description": "Successful.",
             "schema": {
-              "$ref": "#/definitions/EventInternalMetadata"
+              "$ref": "#/definitions/EventResource"
             }
           }
         }
@@ -741,6 +741,7 @@
   },
   "definitions": {
     "EventBase": {
+      "description": "Space API event model.",
       "type": "object",
       "properties": {
         "eventType": {
@@ -797,22 +798,11 @@
         }
       }
     },
-    "EventInternalMetadata": {
-      "description": "Event details.",
-      "type": "object",
-      "properties": {
-        "eventId": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "eTag": {
-          "type": "string"
-        }
-      }
-    },
     "EventResource": {
+      "description": "Event details.",
+      "required": [
+        "properties"
+      ],
       "type": "object",
       "allOf": [
         {
@@ -822,9 +812,6 @@
       "properties": {
         "properties": {
           "$ref": "#/definitions/EventBase"
-        },
-        "internalMetadata": {
-          "$ref": "#/definitions/EventInternalMetadata"
         }
       }
     },
@@ -847,6 +834,25 @@
       "type": "array",
       "items": {
         "$ref": "#/definitions/JToken"
+      }
+    },
+    "MeshEvent": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EventBase"
+        }
+      ],
+      "properties": {
+        "eventId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "eTag": {
+          "type": "string"
+        }
       }
     },
     "MeshSpaceTemplate": {
