@@ -112,7 +112,7 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/EventResource"
+              "$ref": "#/definitions/EventInternalMetadata"
             }
           }
         ],
@@ -120,13 +120,13 @@
           "200": {
             "description": "Successful.",
             "schema": {
-              "$ref": "#/definitions/EventResource"
+              "$ref": "#/definitions/EventInternalMetadata"
             }
           },
           "201": {
             "description": "Long running operation.",
             "schema": {
-              "$ref": "#/definitions/EventResource"
+              "$ref": "#/definitions/EventInternalMetadata"
             }
           }
         }
@@ -163,7 +163,7 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/EventResource"
+              "$ref": "#/definitions/EventInternalMetadata"
             }
           }
         ],
@@ -171,7 +171,7 @@
           "200": {
             "description": "Successful.",
             "schema": {
-              "$ref": "#/definitions/EventResource"
+              "$ref": "#/definitions/EventInternalMetadata"
             }
           }
         }
@@ -415,6 +415,94 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.metaverse/metaverses/{metaverseId}/SetImage": {
+      "patch": {
+        "tags": [
+          "Metaverse"
+        ],
+        "description": "Set an image and return its corresponding image id.",
+        "operationId": "Metaverse_SetImage",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MetaverseIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.metaverse/metaverses/{metaverseId}/GetImage": {
+      "patch": {
+        "tags": [
+          "Metaverse"
+        ],
+        "description": "Get an image.",
+        "operationId": "Metaverse_GetImage",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/MetaverseIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/providers/microsoft.metaverse/operations": {
       "get": {
         "tags": [
@@ -652,31 +740,6 @@
     }
   },
   "definitions": {
-    "ArmResource": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string",
-          "readOnly": true
-        },
-        "location": {
-          "type": "string"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      },
-      "x-ms-azure-resource": true
-    },
     "EventBase": {
       "type": "object",
       "properties": {
@@ -734,20 +797,34 @@
         }
       }
     },
-    "EventResource": {
+    "EventInternalMetadata": {
       "description": "Event details.",
-      "required": [
-        "properties"
-      ],
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "eTag": {
+          "type": "string"
+        }
+      }
+    },
+    "EventResource": {
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResource"
+          "$ref": "#/definitions/Resource"
         }
       ],
       "properties": {
         "properties": {
           "$ref": "#/definitions/EventBase"
+        },
+        "internalMetadata": {
+          "$ref": "#/definitions/EventInternalMetadata"
         }
       }
     },
@@ -766,23 +843,10 @@
         }
       }
     },
-    "MeshEvent": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/EventBase"
-        }
-      ],
-      "properties": {
-        "eventId": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "eTag": {
-          "type": "string"
-        }
+    "JToken": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/JToken"
       }
     },
     "MeshSpaceTemplate": {
@@ -810,41 +874,43 @@
       "properties": {
         "title": {
           "description": "Metaverse title.",
-          "maxLength": 30,
-          "minLength": 1,
-          "pattern": "^[A-Za-z0-9-._ ]+$",
           "type": "string"
         },
         "layout": {
           "description": "Metaverse layout.",
-          "maxLength": 20,
-          "minLength": 1,
-          "pattern": "^[A-Za-z0-9-._ ]+$",
           "type": "string"
         },
         "iconImageId": {
-          "description": "ID for metaverse icon image.",
-          "maxLength": 20,
-          "minLength": 1,
-          "pattern": "^[A-Za-z0-9-._ ]+$",
+          "type": "string"
+        }
+      }
+    },
+    "MetaverseInternalMetadata": {
+      "type": "object",
+      "properties": {
+        "metaverseId": {
+          "description": "Metaverse internal id.",
+          "type": "string"
+        },
+        "etag": {
+          "description": "Metaverse etag.",
           "type": "string"
         }
       }
     },
     "MetaverseResource": {
-      "description": "Metaverse details.",
-      "required": [
-        "properties"
-      ],
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResource"
+          "$ref": "#/definitions/Resource"
         }
       ],
       "properties": {
         "properties": {
           "$ref": "#/definitions/MetaverseBase"
+        },
+        "internalMetadata": {
+          "$ref": "#/definitions/MetaverseInternalMetadata"
         }
       }
     },
@@ -856,7 +922,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/MetaverseResource"
-          }
+          },
+          "readOnly": true
         },
         "nextLink": {
           "type": "string"
@@ -917,6 +984,79 @@
         }
       }
     },
+    "Resource": {
+      "description": "The resource proxy definition object.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "Gets or sets the {API} version of the resource.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Gets or sets the id for the resource.",
+          "type": "string"
+        },
+        "subscriptionId": {
+          "description": "Gets or sets the subscription.",
+          "type": "string"
+        },
+        "resourceGroup": {
+          "description": "Gets or sets the name of the resource group to which the resource belongs.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Gets or sets the name of the resource definition.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Gets or sets the type of the resource definition.",
+          "type": "string"
+        },
+        "sku": {
+          "$ref": "#/definitions/JToken"
+        },
+        "kind": {
+          "description": "Gets or sets the kind of the resource definition.",
+          "type": "string"
+        },
+        "managedBy": {
+          "description": "Gets or sets the managed by property.",
+          "type": "string"
+        },
+        "location": {
+          "description": "Gets or sets the resource location.",
+          "type": "string"
+        },
+        "zones": {
+          "description": "Gets or sets the availability zones.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "plan": {
+          "$ref": "#/definitions/JToken"
+        },
+        "eTag": {
+          "description": "Gets or sets the {etag}.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Gets or sets the tags.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "scale": {
+          "$ref": "#/definitions/JToken"
+        },
+        "identity": {
+          "$ref": "#/definitions/JToken"
+        }
+      },
+      "x-ms-azure-resource": true
+    },
     "SpaceTemplateBase": {
       "type": "object",
       "properties": {
@@ -967,7 +1107,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ArmResource"
+          "$ref": "#/definitions/Resource"
         }
       ],
       "properties": {
