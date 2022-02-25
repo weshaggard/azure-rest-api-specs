@@ -817,21 +817,12 @@
             "schema": {
               "type": "object",
               "required": [
+                "extendedLocation",
                 "properties"
               ],
               "properties": {
                 "extendedLocation": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "description": "The extended location type."
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The extended location name."
-                    }
-                  }
+                  "$ref": "#/definitions/ExtendedLocation"
                 },
                 "id": {
                   "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
@@ -1004,6 +995,7 @@
               "required": [
                 "imageReference",
                 "cluster",
+                "networkConfigurationVersion",
                 "cpuCores",
                 "memorySizeGB",
                 "diskSizeGB"
@@ -1534,21 +1526,12 @@
             "schema": {
               "type": "object",
               "required": [
+                "extendedLocation",
                 "properties"
               ],
               "properties": {
                 "extendedLocation": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "description": "The extended location type."
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The extended location name."
-                    }
-                  }
+                  "$ref": "#/definitions/ExtendedLocation"
                 },
                 "id": {
                   "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
@@ -1910,8 +1893,8 @@
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
     "BMCCredentials": {
+      "description": "Credentials for the BMC device on this baremetal machine",
       "type": "object",
-      "title": "BMCCredentials contains credentials used to communicate with the bare-metal controller on a host.",
       "required": [
         "username",
         "password"
@@ -1926,7 +1909,119 @@
           "x-go-name": "Username"
         }
       },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "BareMetalMachineProperties": {
+      "type": "object",
+      "title": "BareMetalMachineProperties represents the properties of a baremetal machine.",
+      "required": [
+        "clusterID",
+        "rackID"
+      ],
+      "properties": {
+        "adminStatus": {
+          "description": "Admin status of the BareMetalMachine",
+          "type": "string",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "x-go-name": "AdminStatus"
+        },
+        "bmcConnectionString": {
+          "description": "BMCConnectionString is the connection string for the bare-metal controller on this bare-metal machine.\n+kubebuilder:validation:Required",
+          "type": "string",
+          "x-go-name": "BMCConnectionString"
+        },
+        "bmcCredentials": {
+          "$ref": "#/definitions/BMCCredentials"
+        },
+        "bootMACAddress": {
+          "description": "BootMACAddress is the MAC address of a NIC connected to the PXE network.\n+kubebuilder:validation:Required",
+          "type": "string",
+          "x-go-name": "BootMACAddress"
+        },
+        "clusterID": {
+          "description": "ClusterID is the fully-qualified identifier of the undercloud cluster this BareMetalMachine is associated with.",
+          "type": "string",
+          "x-go-name": "ClusterID"
+        },
+        "cordonStatus": {
+          "description": "Cordon status of the BareMetalMachine",
+          "type": "string",
+          "enum": [
+            "Cordoned",
+            "Uncordoned"
+          ],
+          "x-go-name": "CordonStatus"
+        },
+        "hardwareConfiguration": {
+          "$ref": "#/definitions/HardwareConfiguration"
+        },
+        "internalMetadata": {
+          "$ref": "#/definitions/internalMetadata"
+        },
+        "machineDetails": {
+          "description": "Details provided by the customer during the creation of rack manifests\nthat allows for “custom data” to be associated with this machine\n+kubebuilder:validation:Optional",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "MachineDetails"
+        },
+        "machineLocation": {
+          "description": "A user-friendly description of the BareMetalMachine's location\n+kubebuilder:validation:Optional",
+          "type": "string",
+          "x-go-name": "MachineLocation"
+        },
+        "oamMACAddress": {
+          "description": "OamMACAddress is the MAC address of a NIC connected to the OAM network.\n+kubebuilder:validation:Required",
+          "type": "string",
+          "x-go-name": "OamMACAddress"
+        },
+        "powerState": {
+          "description": "Power state of the BareMetalMachine",
+          "type": "string",
+          "enum": [
+            "On",
+            "Off"
+          ],
+          "x-go-name": "PowerState"
+        },
+        "provisioningState": {
+          "description": "ProvisioningState of the BareMetalMachine.",
+          "type": "string",
+          "enum": [
+            "Provisioning",
+            "Succeeded",
+            "Failed",
+            "Canceled"
+          ],
+          "x-go-name": "ProvisioningState"
+        },
+        "rackID": {
+          "description": "Associated Microsoft.NetworkCloud/racks/rackName where this BareMetalMachine resides",
+          "type": "string",
+          "x-go-name": "RackID"
+        },
+        "rackSlot": {
+          "description": "RackSlot is the slot in which this physical machine is located, ordered from the bottom up i.e. the lowest slot\nis 1.\n+kubebuilder:validation:Optional\n+kubebuilder:validation:Minimum=1",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "RackSlot"
+        },
+        "readyState": {
+          "description": "Is the BareMetalMachine ready to receive workloads\n+kubebuilder:validation:Optional\n+kubebuilder:default=true",
+          "type": "boolean",
+          "x-go-name": "ReadyState"
+        },
+        "tpmEndorsementKey": {
+          "description": "TPMEndorsementKey is the thumbprint or SHA of the TPM Endorsement Key that allows the resource provider to ensure\nauthenticity of the machine.\n+kubebuilder:validation:Optional",
+          "type": "string",
+          "x-go-name": "TPMEndorsementKey"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "BareMetalMachineUserData": {
       "type": "object",
@@ -2257,6 +2352,51 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
+    "HardwareConfiguration": {
+      "description": "including information acquired from the model/sku information and from the ironic inspector.",
+      "type": "object",
+      "title": "Hardwareconfiguration is the hardware configuration of this machine as exposed to the customer,",
+      "properties": {
+        "model": {
+          "description": "Note: This struct is expected to change over time as details are agreed upon\nModelNumber represents the SKU of this machine",
+          "type": "string",
+          "x-go-name": "ModelNumber"
+        },
+        "serialNumber": {
+          "description": "SerialNumber is an optional serial number or other asset tag identifier that a user may use to associate with\nthis machine.",
+          "type": "string",
+          "x-go-name": "SerialNumber"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "NetworkAddresses": {
+      "description": "Network addresses that are assigned to this machine from the CIDRs assigned to the rack that contains this machine",
+      "type": "object",
+      "properties": {
+        "oamIpv4Address": {
+          "description": "+kubebuilder:validation:Optional",
+          "type": "string",
+          "x-go-name": "OamIpv4Address"
+        },
+        "oamIpv6Address": {
+          "description": "+kubebuilder:validation:Optional",
+          "type": "string",
+          "x-go-name": "OamIpv46Address"
+        },
+        "pxeIpv4Address": {
+          "description": "+kubebuilder:validation:Optional",
+          "type": "string",
+          "x-go-name": "PxeIpv4Address"
+        },
+        "pxeIpv6Address": {
+          "description": "+kubebuilder:validation:Optional",
+          "type": "string",
+          "x-go-name": "PxeIpv46Address"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
     "OOBCredentials": {
       "type": "object",
       "properties": {
@@ -2365,6 +2505,10 @@
     "VirtualMachine": {
       "description": "VirtualMachine represents an on-Premises Network Cloud virtual machine",
       "type": "object",
+      "required": [
+        "properties",
+        "extendedLocation"
+      ],
       "properties": {
         "extendedLocation": {
           "type": "object",
@@ -2499,6 +2643,7 @@
       "required": [
         "imageReference",
         "cluster",
+        "networkConfigurationVersion",
         "cpuCores",
         "memorySizeGB",
         "diskSizeGB"
@@ -2603,6 +2748,10 @@
     "WorkloadNetwork": {
       "description": "WorkloadNetwork represents an on-premise WorkloadNetwork",
       "type": "object",
+      "required": [
+        "properties",
+        "extendedLocation"
+      ],
       "properties": {
         "extendedLocation": {
           "type": "object",
@@ -2801,6 +2950,9 @@
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "internalMetadata": {
+      "description": "Configuration details of this machine that are NOT exposed to the customer"
     }
   },
   "securityDefinitions": {
