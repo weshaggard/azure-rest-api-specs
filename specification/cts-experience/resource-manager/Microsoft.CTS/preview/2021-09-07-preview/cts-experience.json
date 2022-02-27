@@ -1112,6 +1112,11 @@
           },
           "readOnly": true
         },
+        "statusReason": {
+          "type": "string",
+          "description": "Reason for status",
+          "readOnly": true
+        },
         "provisioningState": {
           "enum": [
             "Failed",
@@ -1216,6 +1221,40 @@
       ],
       "description": "Properties of pipeline"
     },
+    "pipelineConnectionPatchObject": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Azure id of the associated connection"
+        },
+        "status": {
+          "enum": [
+            "InReview",
+            "Approved",
+            "Rejected",
+            "Accepted"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "status",
+            "modelAsString": true
+          }
+        },
+        "statusReason": {
+          "type": "string",
+          "description": "Reason for status"
+        },
+        "internalMetadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Connection internal metadata properties to edit"
+        }
+      },
+      "description": "Connection resource nested inside pipeline to patch"
+    },
     "pipeline": {
       "type": "object",
       "x-ms-azure-resource": true,
@@ -1243,6 +1282,9 @@
             "type": "string"
           },
           "description": "Resource tags"
+        },
+        "connection": {
+          "$ref": "#/definitions/pipelineConnectionPatchObject"
         }
       },
       "description": "The flows resource patch definition."
