@@ -36,7 +36,15 @@ These settings apply only when `--tag=package-2022-01-15-privatepreview` is spec
 
 ```yaml $(tag) == 'package-2022-01-15-privatepreview'
 input-file:
-  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/managednetworkfabric.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/common.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/Operations.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkFabricControllers.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkRacks.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkFabrics.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkDevices.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkDeviceSkus.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkFabricSkus.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkRackSkus.json
 ```
 
 ---
