@@ -1183,6 +1183,23 @@
         }
       }
     },
+    "pipelineConnection": {
+      "type": "object",
+      "properties": {
+        "connectionMetadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Connection metadata"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/connection"
+        }
+      ]
+    },
     "pipelineProperties": {
       "type": "object",
       "properties": {
@@ -1197,8 +1214,9 @@
         "connections": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/connection"
-          }
+            "$ref": "#/definitions/pipelineConnection"
+          },
+          "description": "Connections assciated with pipeline"
         },
         "provisioningState": {
           "enum": [
@@ -1220,40 +1238,6 @@
         "destinationCloud"
       ],
       "description": "Properties of pipeline"
-    },
-    "pipelineConnectionPatchObject": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Azure id of the associated connection"
-        },
-        "status": {
-          "enum": [
-            "InReview",
-            "Approved",
-            "Rejected",
-            "Accepted"
-          ],
-          "type": "string",
-          "x-ms-enum": {
-            "name": "status",
-            "modelAsString": true
-          }
-        },
-        "statusReason": {
-          "type": "string",
-          "description": "Reason for status"
-        },
-        "internalMetadata": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Connection internal metadata properties to edit"
-        }
-      },
-      "description": "Connection resource nested inside pipeline to patch"
     },
     "pipeline": {
       "type": "object",
@@ -1283,8 +1267,12 @@
           },
           "description": "Resource tags"
         },
-        "connection": {
-          "$ref": "#/definitions/pipelineConnectionPatchObject"
+        "connections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pipelineConnection"
+          },
+          "description": "Connections assciated with pipeline"
         }
       },
       "description": "The flows resource patch definition."
