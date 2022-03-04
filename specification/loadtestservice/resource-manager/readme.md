@@ -28,7 +28,7 @@ These are the global settings for the loadtestservice.
 openapi-type: arm
 openapi-subtype: rpaas
 tag: package-2022-04-01-preview
-```
+``
 
 ### Tag: package-2022-04-01-preview
 
