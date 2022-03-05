@@ -1,8 +1,8 @@
-# PAN.cloudngfw
+# Pan.Cloudngfw
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for PAN.cloudngfw.
+This is the AutoRest configuration file for Pan.Cloudngfw.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the PAN.cloudngfw.
+These are the global settings for the Pan.Cloudngfw.
 
 ```yaml
 openapi-type: arm
