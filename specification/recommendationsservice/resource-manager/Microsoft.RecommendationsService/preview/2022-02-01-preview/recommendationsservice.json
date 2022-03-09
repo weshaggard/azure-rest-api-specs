@@ -242,7 +242,7 @@
           "Create or update RecommendationsService Account resource": {
             "$ref": "./examples/Accounts_CreateOrUpdate.json"
           },
-          "Create or update RecommendationsService Account resource with System Identity": {
+          "Create or update RecommendationsService Account resource with system identity": {
             "$ref": "./examples/Accounts_CreateOrUpdateWithSystemIdentity.json"
           }
         },
@@ -300,6 +300,9 @@
         "x-ms-examples": {
           "Update existing RecommendationsService Account resource": {
             "$ref": "./examples/Accounts_Update.json"
+          },
+          "Update existing RecommendationsService Account resource With system identity": {
+            "$ref": "./examples/Accounts_UpdateWithSystemIdentity.json"
           }
         },
         "x-ms-long-running-operation": true,
@@ -1055,64 +1058,6 @@
         "$ref": "#/definitions/CorsRule"
       }
     },
-
-
-    "AccountIdentity": {
-      "description": "Identity for the Account.",
-      "properties": {
-        "principalId": {
-          "description": "The principal id of account identity. This property will only be provided for a system assigned identity.",
-          "type": "string",
-          "readOnly": true
-        },
-        "tenantId": {
-          "description": "The tenant id associated with the account. This property will only be provided for a system assigned identity.",
-          "type": "string",
-          "readOnly": true
-        },
-        "type": {
-          "description": "The type of identity used for the account. The type 'SystemAssigned, UserAssigned' includes both an implicitly created identity and a set of user assigned identities. The type 'None' will remove any identities from the account.",
-          "type": "string",
-          "enum": [
-            "None",
-            "SystemAssigned"
-          ],
-          "x-ms-enum": {
-            "name": "ResourceIdentityType",
-            "modelAsString": true
-          }
-        }
-      }
-    },
-
-    "SourceResourceIdentities":{
-      "description":"The identities for the source resource.",
-      "type":"object",
-      "properties":{
-        "resourceId":{
-          "description":"source azure resource resourceId",
-          "type":"string"
-        },
-        "tenantId":{
-          "description":"AAD tenant guid of the source resource identity",
-          "type":"string"
-        },
-        "referralResource":{
-          "description":"delegationid of the referral delegation (optional)",
-          "type":"string"
-        },
-        "delegatedIdentities":{
-          "description":"dictionary of identity resourceIds, or a wildcard for all",
-          "type": "object",
-          "additionalProperties":{
-            "description":"",
-            "type":"object"
-          }
-        }
-      }
-    },
-
-
     "AccountResource": {
       "description": "Account resource details.",
       "type": "object",
@@ -1161,13 +1106,13 @@
             }
           }
         },
-        "identity":{
-          "description": "The identity of the virtual machine, if configured.",
-          "$ref":"#/definitions/AccountIdentity"
-        },
         "systemData": {
           "description": "Metadata pertaining to creation and last modification of the resource.",
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+        },
+        "identity" : {
+          "description": "The type of identity used for the resource.",
+          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/SystemAssignedServiceIdentity"
         }
       }
     },
@@ -1214,9 +1159,9 @@
             }
           }
         },
-        "identity":{
-          "description": "The identity of the virtual machine, if configured.",
-          "$ref":"#/definitions/AccountIdentity"
+        "identity" : {
+          "description": "The type of identity used for the resource.",
+          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/SystemAssignedServiceIdentity"
         }
       }
     },
@@ -1391,29 +1336,6 @@
         "systemData": {
           "description": "Metadata pertaining to creation and last modification of the resource.",
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
-        },
-        "identity":{
-          "type":"object",
-          "properties":{
-            "type": {
-              "description": "The type of identity used for the account. The type 'SystemAssigned, UserAssigned' includes both an implicitly created identity and a set of user assigned identities. The type 'None' will remove any identities from the account.",
-              "type": "string",
-              "enum": [
-                "None"
-              ],
-              "x-ms-enum": {
-                "name": "ResourceIdentityType",
-                "modelAsString": true
-              }
-            },
-            "delegatedResources":{
-              "description": "dictionary of source resource internal_ids and identities",
-              "type": "object",
-              "additionalProperties":{
-                "$ref":"#/definitions/SourceResourceIdentities"
-              }
-            }
-          }
         }
       }
     },
@@ -1441,29 +1363,6 @@
         "tags": {
           "description": "Resource tags.",
           "$ref": "#/definitions/Tags"
-        },
-        "identity":{
-          "type":"object",
-          "properties":{
-            "type": {
-              "description": "The type of identity used for the account. The type 'SystemAssigned, UserAssigned' includes both an implicitly created identity and a set of user assigned identities. The type 'None' will remove any identities from the account.",
-              "type": "string",
-              "enum": [
-                "None"
-              ],
-              "x-ms-enum": {
-                "name": "ResourceIdentityType",
-                "modelAsString": true
-              }
-            },
-            "delegatedResources":{
-              "description": "dictionary of source resource internal_ids and identities",
-              "type": "object",
-              "additionalProperties":{
-                "$ref":"#/definitions/SourceResourceIdentities"
-              }
-            }
-          }
         }
       }
     },
