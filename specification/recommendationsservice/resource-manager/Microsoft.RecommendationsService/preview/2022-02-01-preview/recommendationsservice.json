@@ -1074,39 +1074,40 @@
           "description": "The type of identity used for the account. The type 'SystemAssigned, UserAssigned' includes both an implicitly created identity and a set of user assigned identities. The type 'None' will remove any identities from the account.",
           "type": "string",
           "enum": [
-            "SystemAssigned",
-            "UserAssigned",
-            "SystemAssigned, UserAssigned",
-            "None"
+            "None",
+            "SystemAssigned"
           ],
           "x-ms-enum": {
             "name": "ResourceIdentityType",
-            "modelAsString": false
-          }
-        },
-        "userAssignedIdentities": {
-          "description": "The list of user identities associated with the Account. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref":"#/definitions/UserAssignedIdentity"
+            "modelAsString": true
           }
         }
       }
     },
 
-    "UserAssignedIdentity": {
-      "type": "object",
-      "x-ms-client-name": "userAssignedIdentitiesValue",
-      "properties": {
-        "principalId": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The principal id of user assigned identity."
+    "SourceResourceIdentities":{
+      "description":"The identities for the source resource.",
+      "type":"object",
+      "properties":{
+        "resourceId":{
+          "description":"source azure resource resourceId",
+          "type":"string"
         },
-        "clientId": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The client id of user assigned identity."
+        "tenantId":{
+          "description":"AAD tenant guid of the source resource identity",
+          "type":"string"
+        },
+        "referralResource":{
+          "description":"delegationid of the referral delegation (optional)",
+          "type":"string"
+        },
+        "delegatedIdentities":{
+          "description":"dictionary of identity resourceIds, or a wildcard for all",
+          "type": "object",
+          "additionalProperties":{
+            "description":"",
+            "type":"object"
+          }
         }
       }
     },
@@ -1390,6 +1391,29 @@
         "systemData": {
           "description": "Metadata pertaining to creation and last modification of the resource.",
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+        },
+        "identity":{
+          "type":"object",
+          "properties":{
+            "type": {
+              "description": "The type of identity used for the account. The type 'SystemAssigned, UserAssigned' includes both an implicitly created identity and a set of user assigned identities. The type 'None' will remove any identities from the account.",
+              "type": "string",
+              "enum": [
+                "None"
+              ],
+              "x-ms-enum": {
+                "name": "ResourceIdentityType",
+                "modelAsString": true
+              }
+            },
+            "delegatedResources":{
+              "description": "dictionary of source resource internal_ids and identities",
+              "type": "object",
+              "additionalProperties":{
+                "$ref":"#/definitions/SourceResourceIdentities"
+              }
+            }
+          }
         }
       }
     },
@@ -1417,6 +1441,29 @@
         "tags": {
           "description": "Resource tags.",
           "$ref": "#/definitions/Tags"
+        },
+        "identity":{
+          "type":"object",
+          "properties":{
+            "type": {
+              "description": "The type of identity used for the account. The type 'SystemAssigned, UserAssigned' includes both an implicitly created identity and a set of user assigned identities. The type 'None' will remove any identities from the account.",
+              "type": "string",
+              "enum": [
+                "None"
+              ],
+              "x-ms-enum": {
+                "name": "ResourceIdentityType",
+                "modelAsString": true
+              }
+            },
+            "delegatedResources":{
+              "description": "dictionary of source resource internal_ids and identities",
+              "type": "object",
+              "additionalProperties":{
+                "$ref":"#/definitions/SourceResourceIdentities"
+              }
+            }
+          }
         }
       }
     },
