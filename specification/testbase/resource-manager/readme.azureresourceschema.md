@@ -60,5 +60,5 @@ input-file:
 output-folder: $(azureresourceschema-folder)/schemas
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.TestBase/stable/2022-03-01-preview/testbase.json
+  - Microsoft.TestBase/preview/2022-03-01-preview/testbase.json
 ```
