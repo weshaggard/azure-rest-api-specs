@@ -16,11 +16,11 @@
   },
   "host": "management.azure.com",
   "paths": {
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusterControllers": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/clusterManagers": {
       "get": {
-        "description": "This will show all cluster controllers in a subscription.",
-        "summary": "Lists cluster controllers in a subscription.",
-        "operationId": "ClusterControllers_List_Subscription",
+        "description": "Get a list of all cluster managers in a given subscription.",
+        "summary": "Lists cluster managers in a subscription.",
+        "operationId": "ClusterManagers_List_Subscription",
         "parameters": [
           {
             "type": "string",
@@ -41,7 +41,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterControllerList"
+              "$ref": "#/definitions/ClusterManagerList"
             }
           },
           "default": {
@@ -52,8 +52,8 @@
           }
         },
         "x-ms-examples": {
-          "List Cluster Controller from Subscription": {
-            "$ref": "./examples/ClusterControllers_List_Subscription.json"
+          "List Cluster Manager from Subscription": {
+            "$ref": "./examples/ClusterManagers_List_Subscription.json"
           }
         }
       }
@@ -141,10 +141,47 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/virtualMachines": {
+      "get": {
+        "description": "Get a list of all Network Cloud Virtual Machines from specific subscription. The API returns 200 OK when the API is successful.",
+        "summary": "Retrieve all Network Cloud Virtual Machines from specific subscription.",
+        "operationId": "VirtualMachines_List_Subscription",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachineList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/workloadNetworks": {
       "get": {
-        "description": "This will show all network cloud Workload Networks in a subscription.",
-        "summary": "Lists network cloud Workload Networks in a subscription.",
+        "description": "Get a list of all Workload Networks in a given subscription.  The API returns 200 OK when the API is successful.",
+        "summary": "Lists Network Cloud Workload Networks in a subscription.",
         "operationId": "WorkloadNetworks_List_Subscription",
         "parameters": [
           {
@@ -178,11 +215,11 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusterControllers": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusterManagers": {
       "get": {
-        "description": "This will show all cluster controllers in a resource group.",
-        "summary": "Lists cluster controllers from a specific resource group.",
-        "operationId": "ClusterControllers_List_Resource_Group",
+        "description": "Get a list of all cluster managers in a given resource group.",
+        "summary": "Lists cluster managers from a specific resource group.",
+        "operationId": "ClusterManagers_List_Resource_Group",
         "parameters": [
           {
             "type": "string",
@@ -212,7 +249,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterControllerList"
+              "$ref": "#/definitions/ClusterManagerList"
             }
           },
           "default": {
@@ -223,17 +260,17 @@
           }
         },
         "x-ms-examples": {
-          "List Cluster Controller from ResourceGroup": {
-            "$ref": "./examples/ClusterControllers_List_ResourceGroup.json"
+          "List Cluster Manager from ResourceGroup": {
+            "$ref": "./examples/ClusterManagers_List_ResourceGroup.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusterControllers/{resourceName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusterManagers/{resourceName}": {
       "get": {
-        "description": "This will show the properties of a specific cluster controller.",
-        "summary": "Retrieves a specific cluster controller.",
-        "operationId": "ClusterControllers_Get",
+        "description": "Get the properties of a specific cluster manager.",
+        "summary": "Retrieves a specific cluster manager.",
+        "operationId": "ClusterManagers_Get",
         "parameters": [
           {
             "type": "string",
@@ -272,7 +309,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterControllers"
+              "$ref": "#/definitions/ClusterManager"
             }
           },
           "default": {
@@ -283,15 +320,15 @@
           }
         },
         "x-ms-examples": {
-          "Get a Cluster Controller": {
-            "$ref": "./examples/ClusterControllers_Get.json"
+          "Get a Cluster Manager": {
+            "$ref": "./examples/ClusterManagers_Get.json"
           }
         }
       },
       "delete": {
-        "description": "This will delete a specific cluster controller.",
-        "summary": "Deletes a specific cluster controller.",
-        "operationId": "ClusterControllers_Delete",
+        "description": "Delete a specific cluster manager.The API returns 204 No Content when the cluster manager is deleted successfully.",
+        "summary": "Deletes a specific cluster manager.",
+        "operationId": "ClusterManagers_Delete",
         "parameters": [
           {
             "type": "string",
@@ -327,8 +364,8 @@
           }
         ],
         "responses": {
-          "202": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -338,8 +375,8 @@
           }
         },
         "x-ms-examples": {
-          "Delete Cluster Controller": {
-            "$ref": "./examples/ClusterControllers_Delete.json"
+          "Delete Cluster Manager": {
+            "$ref": "./examples/ClusterManagers_Delete.json"
           }
         }
       }
@@ -661,7 +698,7 @@
               "type": "object",
               "properties": {
                 "properties": {
-                  "$ref": "#/definitions/ClusterProperties"
+                  "$ref": "#/definitions/ClusterPatchProperties"
                 },
                 "tags": {
                   "description": "Azure resource tags that will replace the existing ones. Tags update can be performed separately from the properties.",
@@ -833,11 +870,11 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusterControllers/{resourceName}": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusterManagers/{resourceName}": {
       "put": {
-        "description": "This creates or updates the properties of a specific cluster controller.With x-ms-long-running-operation set to true and corresponding option set to default value(\"azure-async-operation\")",
-        "summary": "Creates or updates a specific cluster controller(asynchronously)",
-        "operationId": "ClusterControllers_CreateOrUpdate",
+        "description": "Create a new cluster manager or update the properties of cluster manager if it exits.The API returns 201 Created when a new cluster is created along with its properties. For the existing cluster update, the API returns 200 OK and the updated properties.",
+        "summary": "Creates or updates a specific cluster manager(asynchronously)",
+        "operationId": "ClusterManagers_CreateOrUpdate",
         "parameters": [
           {
             "type": "string",
@@ -897,7 +934,7 @@
                   "x-go-name": "Name"
                 },
                 "properties": {
-                  "$ref": "#/definitions/ClusterControllerManifest"
+                  "$ref": "#/definitions/ClusterManagerProperties"
                 },
                 "systemData": {
                   "$ref": "#/definitions/SystemData"
@@ -922,7 +959,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterControllers"
+              "$ref": "#/definitions/ClusterManager"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ClusterManager"
             }
           },
           "default": {
@@ -933,21 +976,19 @@
           }
         },
         "x-ms-examples": {
-          "Create or Update Cluster Controller": {
-            "$ref": "./examples/ClusterControllers_Create.json"
+          "Create or Update Cluster Manager": {
+            "$ref": "./examples/ClusterManagers_Create.json"
           }
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/clusterControllers/{resourceName}": {
-      "put": {
-        "description": "This creates or updates the properties of a specific cluster controller.With x-ms-long-running-operation set to true and corresponding option set to default value(\"azure-async-operation\")",
-        "summary": "Creates or updates a specific cluster controller(asynchronously)",
-        "operationId": "ClusterControllers_CreateOrUpdate",
+      },
+      "patch": {
+        "description": "Patch the properties of a specific cluster manager, or update the tags assigned to the cluster manager. The API returns 202 Accepted when a cluster is patched for processing along with properties. The API returns 200 OK when the API is successful along with its properties.",
+        "summary": "Patches a specific cluster manager.",
+        "operationId": "ClusterManagers_Patch",
         "parameters": [
           {
             "type": "string",
@@ -987,42 +1028,13 @@
             "in": "body",
             "schema": {
               "type": "object",
-              "required": [
-                "properties"
-              ],
               "properties": {
-                "id": {
-                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
-                  "type": "string",
-                  "x-go-name": "Id"
-                },
-                "location": {
-                  "description": "Location is the Azure location where this resource will exist or already exists.",
-                  "type": "string",
-                  "x-go-name": "Location"
-                },
-                "name": {
-                  "description": "Name is the name of the resource that this resource provider will create.",
-                  "type": "string",
-                  "x-go-name": "Name"
-                },
-                "properties": {
-                  "$ref": "#/definitions/ClusterControllerManifest"
-                },
-                "systemData": {
-                  "$ref": "#/definitions/SystemData"
-                },
                 "tags": {
-                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
                   "type": "object",
                   "additionalProperties": {
                     "type": "string"
                   },
                   "x-go-name": "Tags"
-                },
-                "type": {
-                  "type": "string",
-                  "x-go-name": "Type"
                 }
               }
             }
@@ -1032,7 +1044,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterControllers"
+              "$ref": "#/definitions/ClusterManager"
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/ClusterManager"
             }
           },
           "default": {
@@ -1043,20 +1061,17 @@
           }
         },
         "x-ms-examples": {
-          "Create or Update Cluster Controller": {
-            "$ref": "./examples/ClusterControllers_Create.json"
+          "Create or Update Cluster Manager": {
+            "$ref": "./examples/ClusterManagers_Patch.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        }
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines": {
       "get": {
-        "description": "This will get a list of all network cloud virtual machines from specific resource group.",
-        "summary": "Retrieve all network cloud virtual machines from specific resource group.",
+        "description": "Get a list of all Network Cloud Virtual Machines in a given resource group. The API returns 200 OK when the API is successful.",
+        "summary": "Lists Network Cloud Virtual Machines in a resource group.",
         "operationId": "VirtualMachines_List",
         "parameters": [
           {
@@ -1101,8 +1116,8 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}": {
       "get": {
-        "description": "This will show the properties of a specific network cloud virtual machine.",
-        "summary": "Retrieve a specific virtual machine.",
+        "description": "Get the properties of a specific Network Cloud Virtual Machine. The API returns 200 OK when the operation is successful.",
+        "summary": "Retrieves a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_Get",
         "parameters": [
           {
@@ -1154,8 +1169,8 @@
         }
       },
       "put": {
-        "description": "This creates or updates the properties of a specific network cloud virtual machine.",
-        "summary": "Creates or updates a specific network cloud virtual machine.",
+        "description": "Create a new Network Cloud Virtual Machine or update the properties of the Virtual Machine if it exists. The API returns 201 Created when a new Virtual Machine is created along with its properties. For the existing Virtual Machine update, the API returns 200 OK and the updated properties.",
+        "summary": "Creates or updates a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_CreateOrUpdate",
         "parameters": [
           {
@@ -1191,17 +1206,50 @@
             "required": true
           },
           {
-            "name": "Properties",
+            "name": "Payload",
             "in": "body",
             "schema": {
               "type": "object",
               "required": [
-
+                "extendedLocation",
                 "properties"
               ],
               "properties": {
+                "extendedLocation": {
+                  "$ref": "#/definitions/ExtendedLocation"
+                },
+                "id": {
+                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
+                  "type": "string",
+                  "x-go-name": "Id"
+                },
+                "location": {
+                  "description": "Location is the Azure location where this resource will exist or already exists.",
+                  "type": "string",
+                  "x-go-name": "Location"
+                },
+                "name": {
+                  "description": "Name is the name of the resource that this resource provider will create.",
+                  "type": "string",
+                  "x-go-name": "Name"
+                },
                 "properties": {
-                  "$ref": "#/definitions/WorkloadNetworkProperties"
+                  "$ref": "#/definitions/VirtualMachineProperties"
+                },
+                "systemData": {
+                  "$ref": "#/definitions/SystemData"
+                },
+                "tags": {
+                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "x-go-name": "Tags"
+                },
+                "type": {
+                  "type": "string",
+                  "x-go-name": "Type"
                 }
               }
             }
@@ -1210,6 +1258,12 @@
         "responses": {
           "200": {
             "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/VirtualMachine"
+            }
+          },
+          "201": {
+            "description": "Created",
             "schema": {
               "$ref": "#/definitions/VirtualMachine"
             }
@@ -1229,8 +1283,8 @@
         "x-ms-long-running-operation": true
       },
       "delete": {
-        "description": "This will delete a specific network cloud virtual machine.",
-        "summary": "Deletes a specific network cloud virtual machine.",
+        "description": "Delete a provided Network Cloud Virtual Machine. The API returns 202 Accepted when the deletion is successful.",
+        "summary": "Delete a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_Delete",
         "parameters": [
           {
@@ -1291,8 +1345,8 @@
         "x-ms-long-running-operation": true
       },
       "patch": {
-        "description": "This creates or updates the properties of a specific network cloud virtual machine.",
-        "summary": "Patches a specific network cloud virtual machine.",
+        "description": "Patch the properties of a specific Network cloud Virtual Machine, or update the tags assigned to the Virtual Machine. Properties and tag updates can be done independently. The API returns 202 Accepted when the API is successful.",
+        "summary": "Patch a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_Patch",
         "parameters": [
           {
@@ -1333,15 +1387,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "properties": {
-                  "$ref": "#/definitions/VirtualMachineProperties"
-                },
                 "tags": {
                   "description": "Azure resource tags that will replace the existing ones. Tags update can be performed separately from the properties.",
                   "type": "object",
                   "additionalProperties": {
                     "type": "string"
-                  }
+                  },
+                  "x-go-name": "Tags"
                 }
               }
             }
@@ -1377,8 +1429,8 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}/powerOff": {
       "post": {
-        "description": "This will power off a specific network cloud virtual machine.",
-        "summary": "Powers off a specific network cloud virtual machine.",
+        "description": "Power off a provided Network Cloud Virtual Machine. The API returns 202 Accepted when the API operation is successful.",
+        "summary": "Power off a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_PowerOff",
         "parameters": [
           {
@@ -1448,8 +1500,8 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}/reimage": {
       "post": {
-        "description": "This will reimage a specific network cloud virtual machine.",
-        "summary": "Reimages a specific network cloud virtual machine.",
+        "description": "Reimage a provided Network Cloud Virtual Machine. The API returns 202 Accepted when the operation is successful.",
+        "summary": "Reimage a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_Reimage",
         "parameters": [
           {
@@ -1512,8 +1564,8 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}/restart": {
       "post": {
-        "description": "This will restart a specific network cloud virtual machine.",
-        "summary": "Restarts a specific network cloud virtual machine.",
+        "description": "Restarts a specific Network Cloud Virtual Machine. The API returns 202 Accepted when the API is successful.",
+        "summary": "Restarts a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_Restart",
         "parameters": [
           {
@@ -1576,8 +1628,8 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{resourceName}/start": {
       "post": {
-        "description": "This will start a specific network cloud virtual machine.",
-        "summary": "Starts a specific network cloud virtual machine.",
+        "description": "Start a provided Network Cloud Virtual Machine. The API returns 202 Accepted when the API is successful.",
+        "summary": "Start a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_Start",
         "parameters": [
           {
@@ -1640,7 +1692,7 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/workloadNetworks": {
       "get": {
-        "description": "This will get a list of all Workload Network resources from specific resource group.",
+        "description": "Get a list of all Workload Networks in a given resource group.  The API returns 200 OK when the API is successful.",
         "summary": "Retrieve all Workload Network resources from specific resource group.",
         "operationId": "WorkloadNetworks_List",
         "parameters": [
@@ -1686,7 +1738,7 @@
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/workloadNetworks/{resourceName}": {
       "get": {
-        "description": "This will show the properties of a specific network cloud Workload Network.",
+        "description": "Get the properties of a specific Network Cloud Workload Network. The API returns 200 OK when the API operation is successful.",
         "summary": "Retrieve a specific Workload Network.",
         "operationId": "WorkloadNetworks_Get",
         "parameters": [
@@ -1739,8 +1791,8 @@
         }
       },
       "put": {
-        "description": "This creates or updates the properties of a specific WorkloadNetwork.\n\nWith x-ms-long-running-operation set to true,\nx-ms-long-running-operation-options is set to default value(\"azure-async-operation\")",
-        "summary": "Creates or updates a specific network cloud WorkloadNetwork(ASYNC)",
+        "description": "Create a new Network Cloud Workload Network or update the properties of the Workload Network if it exists. The API returns 201 Created when a new Workload Network is created along with its properties. For the existing Workload Network update, the API returns 200 OK and the updated properties.\n\nWith x-ms-long-running-operation set to true,\nx-ms-long-running-operation-options is set to default value(\"azure-async-operation\")",
+        "summary": "Create or update a specific Network Cloud Workload Network.",
         "operationId": "WorkloadNetworks_CreateOrUpdate",
         "parameters": [
           {
@@ -1774,11 +1826,66 @@
             "name": "resourceName",
             "in": "path",
             "required": true
+          },
+          {
+            "name": "Payload",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "extendedLocation",
+                "properties"
+              ],
+              "properties": {
+                "extendedLocation": {
+                  "$ref": "#/definitions/ExtendedLocation"
+                },
+                "id": {
+                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
+                  "type": "string",
+                  "x-go-name": "Id"
+                },
+                "location": {
+                  "description": "Location is the Azure location where this resource will exist or already exists.",
+                  "type": "string",
+                  "x-go-name": "Location"
+                },
+                "name": {
+                  "description": "Name is the name of the resource that this resource provider will create.",
+                  "type": "string",
+                  "x-go-name": "Name"
+                },
+                "properties": {
+                  "$ref": "#/definitions/WorkloadNetworkProperties"
+                },
+                "systemData": {
+                  "$ref": "#/definitions/SystemData"
+                },
+                "tags": {
+                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "x-go-name": "Tags"
+                },
+                "type": {
+                  "type": "string",
+                  "x-go-name": "Type"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/WorkloadNetwork"
+            }
+          },
+          "201": {
+            "description": "Created",
             "schema": {
               "$ref": "#/definitions/WorkloadNetwork"
             }
@@ -1801,8 +1908,8 @@
         }
       },
       "delete": {
-        "description": "This will delete a specific Workload Network.",
-        "summary": "Deletes a specific network cloud Workload Network.",
+        "description": "Delete a provided Network Cloud Workload Network. The API returns 202 Accepted when the deletion is successful.",
+        "summary": "Delete a specific Network Cloud Workload Network.",
         "operationId": "WorkloadNetworks_Delete",
         "parameters": [
           {
@@ -1863,8 +1970,8 @@
         "x-ms-long-running-operation": true
       },
       "patch": {
-        "description": "This patches the properties of a specific WorkloadNetwork.",
-        "summary": "Patches a specific WorkloadNetwork.",
+        "description": "Patch the properties of a specific Network cloud Workload Network, or update the tags assigned to the Workload Network. Properties and tag updates can be done independently. The API returns 202 Accepted when the API is successful.",
+        "summary": "Patch a specific WorkloadNetwork.",
         "operationId": "WorkloadNetworks_Patch",
         "parameters": [
           {
@@ -1905,9 +2012,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "properties": {
-                  "$ref": "#/definitions/WorkloadNetworkProperties"
-                },
                 "tags": {
                   "description": "Azure resource tags that will replace the existing ones. Tags update can be performed separately from the properties.",
                   "type": "object",
@@ -2272,136 +2376,42 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
-    "ClusterControllerList": {
-      "description": "ClusterControllerList represents a list of cluster controller objects.",
+    "ClusterAvailableUpgradeVersion": {
+      "description": "ClusterAvailableUpgradeVersion represents the various cluster upgrade parameters",
       "type": "object",
-      "title": "List of cluster controller objects.",
       "properties": {
-        "nextLink": {
-          "description": "The link used to get the next page of operations.",
-          "type": "string",
-          "x-go-name": "NextLink"
+        "controlImpact": {
+          "description": "ControlImpact indicates the impact of the upgrade (e.g. True, False)",
+          "type": "boolean",
+          "x-go-name": "ControlImpact",
+          "readOnly": true
         },
-        "value": {
-          "description": "The list of cluster controllers.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ClusterControllers"
-          },
-          "x-go-name": "ClusterControllers"
+        "expectedDuration": {
+          "description": "ExpectedDuration indicates the expected duration needed for this upgrade",
+          "type": "string",
+          "x-go-name": "ExpectedDuration",
+          "readOnly": true
+        },
+        "impactDescription": {
+          "description": "ImpactDescription indicates the Details / Release Notes",
+          "type": "string",
+          "x-go-name": "ImpactDescription",
+          "readOnly": true
+        },
+        "targetClusterVersion": {
+          "description": "TargetClusterVersion indicates the version of the cluster upgrade",
+          "type": "string",
+          "x-go-name": "TargetClusterVersion",
+          "readOnly": true
+        },
+        "workloadImpact": {
+          "description": "WorkloadImpact indicates the workloadimpact (e.g. True, False)",
+          "type": "boolean",
+          "x-go-name": "WorkloadImpact",
+          "readOnly": true
         }
       },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
-    },
-    "ClusterControllerManifest": {
-      "description": "ClusterControllerManifest includes request body parameters for create cluster controller",
-      "type": "object",
-      "required": [
-        "fabricControllerId",
-        "analyticsWorkspaceId"
-      ],
-      "properties": {
-        "analyticsWorkspaceId": {
-          "description": "AnalyticsWorkspace is where any logs relevant to customer will be relayed for example \"/microsoft.operationalinsights/workspaces/{logAnalyticsWorkspaceName}",
-          "type": "string",
-          "x-go-name": "AnalyticsWorkspaceId"
-        },
-        "fabricControllerId": {
-          "description": "URI reference to the fabric controller that is 1:1 with the cluster controller.",
-          "type": "string",
-          "x-go-name": "FabricControllerId"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
-    },
-    "ClusterControllerProperties": {
-      "description": "ClusterControllerProperties represents the properties of a cluster controller",
-      "type": "object",
-      "required": [
-        "fabricControllerId",
-        "analyticsWorkspaceId",
-        "controllerExtendedLocation",
-        "clusterVersions"
-      ],
-      "properties": {
-        "analyticsWorkspaceId": {
-          "description": "AnalyticsWorkspace is where any logs relevant to customer will be relayed for example \"/microsoft.operationalinsights/workspaces/{logAnalyticsWorkspaceName}",
-          "type": "string",
-          "x-go-name": "AnalyticsWorkspaceId"
-        },
-        "clusterVersions": {
-          "description": "ClusterVersions represents all the cluster versions the controller supports. which would be used as input in the cluster clusterVersion property.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-go-name": "ClusterVersions"
-        },
-        "controllerExtendedLocation": {
-          "description": "ControllerExtendedLocation used when creating cluster and rack manifest.",
-          "type": "string",
-          "x-go-name": "ControllerExtendedLocation"
-        },
-        "fabricControllerId": {
-          "description": "URI reference to the fabric controller that is 1:1 with the cluster controller",
-          "type": "string",
-          "x-go-name": "FabricControllerId"
-        },
-        "provisioningState": {
-          "description": "Cluster controller provisioning status.",
-          "type": "string",
-          "enum": [
-            "Provisioning",
-            "Canceled",
-            "Failed",
-            "Succeeded"
-          ],
-          "x-go-name": "ProvisioningState"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
-    },
-    "ClusterControllers": {
-      "description": "A ClusterController creates and  manages customer controller instances on demand.",
-      "type": "object",
-      "title": "ClusterController represents a control-plane to manage one or more on-premises Clusters.",
-      "properties": {
-        "id": {
-          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
-          "type": "string",
-          "x-go-name": "Id"
-        },
-        "location": {
-          "description": "Location is the Azure location where this resource will exist or already exists.",
-          "type": "string",
-          "x-go-name": "Location"
-        },
-        "name": {
-          "description": "Name is the name of the resource that this resource provider will create.",
-          "type": "string",
-          "x-go-name": "Name"
-        },
-        "properties": {
-          "$ref": "#/definitions/ClusterControllerProperties"
-        },
-        "systemData": {
-          "$ref": "#/definitions/SystemData"
-        },
-        "tags": {
-          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-go-name": "Tags"
-        },
-        "type": {
-          "type": "string",
-          "x-go-name": "Type"
-        }
-      },
-      "x-go-name": "ClusterController",
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "ClusterList": {
       "type": "object",
@@ -2423,19 +2433,137 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
+    "ClusterManager": {
+      "description": "A ClusterManager creates and  manages customer manager instances on demand.",
+      "type": "object",
+      "title": "ClusterManager represents a control-plane to manage one or more on-premises clusters.",
+      "properties": {
+        "id": {
+          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
+          "type": "string",
+          "x-go-name": "Id"
+        },
+        "location": {
+          "description": "Location is the Azure location where this resource will exist or already exists.",
+          "type": "string",
+          "x-go-name": "Location"
+        },
+        "name": {
+          "description": "Name is the name of the resource that this resource provider will create.",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "properties": {
+          "$ref": "#/definitions/ClusterManagerProperties"
+        },
+        "systemData": {
+          "$ref": "#/definitions/SystemData"
+        },
+        "tags": {
+          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Tags"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
+    "ClusterManagerList": {
+      "description": "ClusterManagerList represents a list of cluster manager objects.",
+      "type": "object",
+      "title": "List of cluster manager objects.",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of operations.",
+          "type": "string",
+          "x-go-name": "NextLink"
+        },
+        "value": {
+          "description": "The list of cluster managers.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClusterManager"
+          },
+          "x-go-name": "ClusterManager"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
+    "ClusterManagerProperties": {
+      "description": "ClusterManagerProperties represents the properties of a cluster manager",
+      "type": "object",
+      "required": [
+        "fabricControllerId",
+        "analyticsWorkspaceId"
+      ],
+      "properties": {
+        "analyticsWorkspaceId": {
+          "description": "AnalyticsWorkspace is where any logs relevant to customer will be relayed for example \"/microsoft.operationalinsights/workspaces/{logAnalyticsWorkspaceName}\"",
+          "type": "string",
+          "x-go-name": "AnalyticsWorkspaceId"
+        },
+        "clusterVersions": {
+          "description": "ClusterVersions represents all the cluster versions the manager supports which would be used as input in the cluster clusterVersion property.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "ClusterVersions",
+          "readOnly": true
+        },
+        "fabricControllerId": {
+          "description": "URI reference to the fabric controller that is 1:1 with the cluster manager",
+          "type": "string",
+          "x-go-name": "FabricControllerId"
+        },
+        "managerExtendedLocation": {
+          "description": "ManagerExtendedLocation is the ExtendedLocation associated with the cluster manager's cluster operator and is used when creating cluster and rack manifest resources.",
+          "type": "string",
+          "x-go-name": "ManagerExtendedLocation",
+          "readOnly": true
+        },
+        "provisioningState": {
+          "description": "Cluster manager provisioning status.",
+          "type": "string",
+          "enum": [
+            "Provisioning",
+            "Canceled",
+            "Failed",
+            "Succeeded"
+          ],
+          "x-go-name": "ProvisioningState",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "ClusterPatchProperties": {
+      "type": "object",
+      "title": "ClusterPatchProperties represents the properties of a cluster during Patch.",
+      "properties": {
+        "clusterLocation": {
+          "description": "ClusterLocation is customer-provided location information provided to identify where the cluster resides.",
+          "type": "string",
+          "x-go-name": "ClusterLocation"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
     "ClusterProperties": {
       "description": "https://armwiki.azurewebsites.net/rpaas/arc-rp/conversion/SchemaTranslation.html#default-kubernetes-bridge-mapping\n\nfor now, we'll align on the same concept for our RPaaS\nobjects as well\n\nClusterProperties represents the properties of a cluster.",
       "type": "object",
       "title": "Note, k8s bridge resource types will default to\na singular status field under properties",
       "required": [
-        "clusterExtendedLocation",
-        "clusterManagerId",
         "networkFabricId",
         "clusterType",
         "analyticsWorkspaceId",
-        "clusterLocation",
-        "clusterVersion",
-        "availableUpgradeVersions"
+        "clusterVersion"
       ],
       "properties": {
         "analyticsWorkspaceId": {
@@ -2447,14 +2575,16 @@
           "description": "AvailableUpgradeVersions represents all the cluster runtime version upgrades available for this cluster.",
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/ClusterAvailableUpgradeVersion"
           },
-          "x-go-name": "AvailableUpgradeVersions"
+          "x-go-name": "AvailableUpgradeVersions",
+          "readOnly": true
         },
         "clusterExtendedLocation": {
           "description": "The extended location (custom location) represents the cluster's control plane location.\nThis extended location is used to route the requests of child objects of the cluster that are handled by the platform operator.",
           "type": "string",
-          "x-go-name": "ClusterExtendedLocation"
+          "x-go-name": "ClusterExtendedLocation",
+          "readOnly": true
         },
         "clusterLocation": {
           "description": "ClusterLocation is customer-provided location information provided to identify where the cluster resides.",
@@ -2464,7 +2594,8 @@
         "clusterManagerId": {
           "description": "ClusterManagerId is an reference to the ID of the cluster manager that manages this cluster.\nThis is set by the Cluster Manager when the cluster is created.",
           "type": "string",
-          "x-go-name": "ClusterManagerId"
+          "x-go-name": "ClusterManagerId",
+          "readOnly": true
         },
         "clusterType": {
           "description": "ClusterType is the type of rack configuration for this cluster.\nsingle-rack SingleRack\nmulti-rack MultiRack",
@@ -2495,7 +2626,8 @@
             "Failed"
           ],
           "x-go-enum-desc": "Validating Validating\nProvisioning Provisioning\nSucceeded Succeeded\nFailed Failed",
-          "x-go-name": "ProvisioningState"
+          "x-go-name": "ProvisioningState",
+          "readOnly": true
         },
         "status": {
           "$ref": "#/definitions/ClusterStatus"
@@ -2504,15 +2636,19 @@
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "ClusterStatus": {
+      "description": "ClusterStatus denotes the status of a cluster",
       "type": "object",
       "properties": {
         "clusterTrusted": {
           "description": "ClusterTrusted indicates whether or not to trust that the cluster is uncompromised.",
-          "x-go-name": "ClusterTrusted"
+          "type": "boolean",
+          "x-go-name": "ClusterTrusted",
+          "readOnly": true
         },
         "deploymentState": {
           "description": "DeploymentState indicates the status of the cluster's deployment (e.g. Pending, Deployed)",
-          "x-go-name": "DeploymentState"
+          "x-go-name": "DeploymentState",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
@@ -2598,6 +2734,27 @@
       "type": "string",
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
+    "ExtendedLocation": {
+      "description": "ExtendedLocation is the Azure Cluster location where this resource will be created",
+      "type": "object",
+      "required": [
+        "type",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "ResourceId of the custom location on which resource will be created",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "type": {
+          "description": "Extended location type e.g CustomLocation",
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
     "HardwareConfiguration": {
       "description": "including information acquired from the model/sku information and from the ironic inspector.",
       "type": "object",
@@ -2642,11 +2799,6 @@
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "Rack": {
-      "description": "NOTE: There may be some differences between a Rack and RackManifest as we add logic to process a RackManifest;\nhowever, a Rack is just an alias of the RackManifest type in this initial implementation.",
-      "title": "Rack is the validated/processed representation of a rack located in an on-premises cluster.",
-      "$ref": "#/definitions/RackManifest"
     },
     "RackManifest": {
       "type": "object",
@@ -2795,9 +2947,16 @@
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
     "VirtualMachine": {
-      "description": "VirtualMachine represents an on-Premises Network Cloud virtual machine",
+      "description": "VirtualMachine represents an on-Premises Network Cloud Virtual Machine",
       "type": "object",
+      "required": [
+        "properties",
+        "extendedLocation"
+      ],
       "properties": {
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation"
+        },
         "id": {
           "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
@@ -2836,7 +2995,7 @@
     },
     "VirtualMachineList": {
       "type": "object",
-      "title": "VirtualMachineList represents a list of VirtualMachines.",
+      "title": "VirtualMachineList represents a list of Virtual Machines.",
       "properties": {
         "nextLink": {
           "description": "The link used to get the next page of operations.",
@@ -2844,7 +3003,7 @@
           "x-go-name": "NextLink"
         },
         "value": {
-          "description": "The list of virtual machines.",
+          "description": "The list of Virtual Machines.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/VirtualMachine"
@@ -2863,7 +3022,7 @@
       ],
       "properties": {
         "ipAllocationMethod": {
-          "description": "IPAllocationMethod defines mechanism for ip allocation.",
+          "description": "IPAllocationMethod defines mechanism for IP allocation.",
           "type": "string",
           "default": "Dynamic",
           "enum": [
@@ -2874,17 +3033,17 @@
           "x-go-name": "IPAllocationMethod"
         },
         "ipv4Address": {
-          "description": "IPv4Address represents ipv4 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv4 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv4 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
+          "description": "IPv4Address represents IPv4 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv4 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv4 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
           "type": "string",
           "x-go-name": "IPv4Address"
         },
         "ipv6Address": {
-          "description": "IPv6Address represents ipv6 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv6 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv6 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
+          "description": "IPv6Address represents IPv6 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv6 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv6 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
           "type": "string",
           "x-go-name": "IPv6Address"
         },
         "workloadNetwork": {
-          "description": "Workload network to attach.",
+          "description": "Workload network attached to the VM.",
           "type": "string",
           "x-go-name": "WorkloadNetwork"
         }
@@ -2900,12 +3059,12 @@
       ],
       "properties": {
         "key": {
-          "description": "Virtual machine placement hint key.",
+          "description": "Virtual Machine placement hint key.",
           "type": "string",
           "x-go-name": "Key"
         },
         "value": {
-          "description": "Virtual machine placement hint value.",
+          "description": "Virtual Machine placement hint value.",
           "type": "string",
           "x-go-name": "Value"
         }
@@ -2918,13 +3077,14 @@
       "required": [
         "imageReference",
         "cluster",
+        "networkConfigurationVersion",
         "cpuCores",
         "memorySizeGB",
         "diskSizeGB"
       ],
       "properties": {
         "bareMetalMachineURI": {
-          "description": "URI to the bare metal machine VM has landed to.",
+          "description": "URI of the bare metal machine VM has landed to.",
           "type": "string",
           "x-go-name": "BareMetalMachine",
           "readOnly": true
@@ -2935,7 +3095,7 @@
           "x-go-name": "Cluster"
         },
         "cpuCores": {
-          "description": "Number virtual machine cpu cores.",
+          "description": "Number of CPU cores in the virtual machine.",
           "type": "integer",
           "format": "int64",
           "x-go-name": "CpuCores"
@@ -2984,7 +3144,7 @@
           "x-go-name": "VirtualMachinePlacementHints"
         },
         "powerState": {
-          "description": "Virtual machine power state.",
+          "description": "PowerState reflects the state that of the Virtual Machine.",
           "type": "string",
           "enum": [
             "On",
@@ -2994,9 +3154,10 @@
           "readOnly": true
         },
         "provisioningState": {
-          "description": "Virtual machine provisioning status.",
+          "description": "Provisioning state of the Virtual Machine. This field should not be visible to the customer.",
           "type": "string",
           "enum": [
+            "Accepted",
             "Provisioning",
             "Succeeded",
             "Failed",
@@ -3021,7 +3182,14 @@
     "WorkloadNetwork": {
       "description": "WorkloadNetwork represents an on-premise WorkloadNetwork",
       "type": "object",
+      "required": [
+        "properties",
+        "extendedLocation"
+      ],
       "properties": {
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation"
+        },
         "id": {
           "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
@@ -3060,14 +3228,14 @@
     },
     "WorkloadNetworkList": {
       "type": "object",
-      "title": "WorkloadNetworkList represents a list of WorkloadNetwork.",
+      "title": "WorkloadNetworkList represents a list of WorkloadNetworks.",
       "properties": {
         "nextLink": {
           "description": "The link used to get the next page of operations.",
           "type": "string",
           "x-go-name": "NextLink"
         },
-        "workloadNetworks": {
+        "value": {
           "description": "The list of Workload Networks.",
           "type": "array",
           "items": {
@@ -3083,7 +3251,7 @@
       "title": "WorkloadNetworkProperties represents the properties of a Workload Network.",
       "required": [
         "cluster",
-        "routingDomains"
+        "routingDomainIds"
       ],
       "properties": {
         "adminStatus": {
@@ -3102,7 +3270,7 @@
           "x-go-name": "Cluster"
         },
         "hostPluginType": {
-          "description": "Host Plugin Type.",
+          "description": "Network plugin type of the workload network, defaulted to \"SRIOV\".",
           "type": "string",
           "enum": [
             "SRIOV",
@@ -3177,6 +3345,7 @@
           "description": "ProvisioningState of the Workload Network.",
           "type": "string",
           "enum": [
+            "Accepted",
             "Provisioning",
             "Succeeded",
             "Failed"
@@ -3184,14 +3353,14 @@
           "x-go-name": "ProvisioningState",
           "readOnly": true
         },
-        "routingDomains": {
-          "description": "RoutingDomain associated to the Workload Network.",
+        "routingDomainIds": {
+          "description": "RoutingDomain IDs associated to the Workload Network.",
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "string"
           },
-          "x-go-name": "RoutingDomains"
+          "x-go-name": "RoutingDomainIds"
         },
         "spoofCheckEnabled": {
           "description": "SpoofCheckEnabled encoded cloud-init user data.",
