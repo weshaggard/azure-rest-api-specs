@@ -34,6 +34,46 @@
     }
   },
   "paths": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Search/indexes": {
+      "get": {
+        "tags": [
+          "Indexes"
+        ],
+        "operationId": "Indexes_List",
+        "description": "Lists all indexes available.",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/rest/api/searchservice/List-Indexes"
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ClientRequestIdParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/IndexListResult"
+            }
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Search/indexes/{indexName}": {
       "put": {
         "tags": [
@@ -46,6 +86,75 @@
           }
         },
         "description": "Creates a new search index or updates an index if it already exists.",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/rest/api/searchservice/Update-Index"
+        },
+        "parameters": [
+          {
+            "name": "index",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Index"
+            },
+            "description": "The definition of the index to create or update."
+          },
+          {
+            "name": "allowIndexDowntime",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": "Allows new analyzers, tokenizers, token filters, or char filters to be added to an index by taking the index offline for at least a few seconds. This temporarily causes indexing and query requests to fail. Performance and write availability of the index can be impaired for several minutes after the index is updated, or longer for very large indexes."
+          },
+          {
+            "$ref": "#/parameters/IfMatchParameter"
+          },
+          {
+            "$ref": "#/parameters/IfNoneMatchParameter"
+          },
+          {
+            "$ref": "#/parameters/ClientRequestIdParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/IndexNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Index"
+            }
+          },
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Index"
+            }
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Indexes"
+        ],
+        "operationId": "Indexes_Update",
+        "description": "Updates an index if it already exists.",
         "externalDocs": {
           "url": "https://docs.microsoft.com/rest/api/searchservice/Update-Index"
         },
@@ -2923,6 +3032,24 @@
       "description": "A character filter that replaces characters in the input string. It uses a regular expression to identify character sequences to preserve and a replacement pattern to identify characters to replace. For example, given the input text \"aa bb aa bb\", pattern \"(aa)\\s+(bb)\", and replacement \"$1#$2\", the result would be \"aa#bb aa#bb\". This character filter is implemented using Apache Lucene.",
       "externalDocs": {
         "url": "https://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/pattern/PatternReplaceCharFilter.html"
+      }
+    },
+    "IndexListResult": {
+      "description": "The result of the request to list REST API operations. It contains a list of Indexes and a URL to get the next set of results.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Index"
+          },
+          "readOnly": true,
+          "description": "The list of Indexes."
+        },
+        "nextLink": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The URL to get the next set of operation list results, if any."
+        }
       }
     }
   },
