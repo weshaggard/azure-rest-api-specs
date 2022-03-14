@@ -47,10 +47,10 @@
         ],
         "parameters": [
           {
-            "$ref": "./common.json#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "./common.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "in": "path",
@@ -70,7 +70,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "./common.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -83,10 +83,10 @@
         "description": "Implements NetworkRackSkus list by subscription GET method.",
         "parameters": [
           {
-            "$ref": "./common.json#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "./common.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -99,7 +99,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "./common.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -113,18 +113,9 @@
     "NetworkRackSkuProperties": {
       "type": "object",
       "properties": {
-        "networkRackSkuName": {
-          "type": "string",
-          "description": "networkRackSkuName is the resource name."
-        },
         "roleName": {
           "type": "string",
           "description": "roleName is the resource role. Example: Compute Rack."
-        },
-        "networkDeviceCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "networkDeviceCount is the number of the network devices present on the rack."
         },
         "maximumServerCount": {
           "type": "integer",
@@ -141,12 +132,18 @@
           "format": "int32",
           "description": "MaximumUplinks is the max number of uplink connections present on the rack."
         },
-        "networkDevices": {
-          "type": "array",
-          "description": "The networkDevices present on the rack.",
-          "items": {
-            "description": "The networkDevice model.",
-            "$ref": "#/definitions/NetworkRackDeviceProperties"
+        "networkConfiguration": {
+          "type": "object",
+          "description": "The networkConfiguration present on the rack.",
+          "properties": {
+            "networkDevices": {
+              "type": "array",
+              "description": "The networkDevices present on the rack.",
+              "items": {
+                "description": "The networkDevice model.",
+                "$ref": "#/definitions/NetworkRackDeviceProperties"
+              }
+            }
           }
         },
         "provisioningState": {
@@ -155,9 +152,6 @@
           "readOnly": true
         }
       },
-      "required": [
-        "networkRackSkuName"
-      ],
       "description": "NetworkRackSkuProperties define the resource properties."
     },
     "NetworkRackDeviceProperties": {
@@ -166,6 +160,10 @@
         "name": {
           "type": "string",
           "description": "Name is the network device name. Example: ToR1."
+        },
+        "networkDeviceSkuId": {
+          "type": "string",
+          "description": "networkDeviceSkuId is the ARM resource network device sku id for this network device."
         },
         "roleName": {
           "type": "string",
@@ -176,29 +174,69 @@
           "format": "int32",
           "description": "rackSlot is the device rack slot number on the rack."
         },
-        "portMap": {
+        "interfaceMap": {
           "type": "array",
-          "description": "portMap is the mapping of ports to devices on the rack.",
+          "description": "interfaceMap is the mapping of interfaces / ports to devices on the rack.",
           "items": {
-            "description": "PortMapping model.",
+            "description": "interfaceMap model.",
             "properties": {
               "name": {
                 "type": "string",
-                "description": "name is the port map / connector type identifier."
+                "description": "name is the interface name. Example: Ethernet1."
+              },
+              "description": {
+                "type": "string",
+                "description": "description is the interface description. Example: Downlinks to Tenant Servers."
+              },
+              "identifier": {
+                "type": "string",
+                "description": "name is the interface identifier. Example: Ethernet1/1"
+              },
+              "interfaceType": {
+                "type": "string",
+                "description": "interfaceType is the interface type. Example: Ethernet"
               },
               "connectorType": {
                 "type": "string",
-                "description": "ConnectorType is the physical connector description. Example: 25-26 ,32  10G SFP"
+                "description": "interfaceType is the interface connectorType. Example: TBD."
               },
-              "connectedTo": {
+              "speed": {
+                "type": "integer",
+                "description": "speed is the interface speed in Gb. Example: 100."
+              },
+              "hasSubInterfaces": {
+                "type": "boolean",
+                "description": "hasSubInterfaces if the interface has sub interfaces."
+              },
+              "interfaceMap": {
                 "type": "array",
-                "description": "connectedTo is a list of other devices the port is connected to.",
+                "description": "interfaceMap is a list of interface maps.",
                 "items": {
-                  "description": "connectedTo model.",
+                  "description": "interfaceMap model.",
                   "properties": {
-                    "deviceName": {
+                    "name": {
                       "type": "string",
-                      "description": "deviceName is the name of the device connected to."
+                      "description": "name is the interface map name. Example: Ethernet1/1"
+                    },
+                    "identifier": {
+                      "type": "string",
+                      "description": "name is the interface identifier. Example: Ethernet1/1"
+                    },
+                    "interfaceType": {
+                      "type": "string",
+                      "description": "interfaceType is the interface type. Example: Ethernet"
+                    },
+                    "connectorType": {
+                      "type": "string",
+                      "description": "interfaceType is the interface connectorType. Example: TBD."
+                    },
+                    "speed": {
+                      "type": "integer",
+                      "description": "speed is the interface speed in Gb. Example: 100."
+                    },
+                    "connectedToId": {
+                      "type": "string",
+                      "description": "connectedToId is the TBD id."
                     }
                   }
                 }
