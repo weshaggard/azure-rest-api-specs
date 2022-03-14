@@ -27,7 +27,7 @@ These are the global settings for the recommendationsservice.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2021-06-01
+tag: package-2022-02-01-preview
 ```
 
 ### Tag: package-2021-02-01-preview
@@ -42,6 +42,11 @@ input-file:
 ```yaml $(tag) == 'package-2021-06-01'
 input-file:
   - Microsoft.RecommendationsService/stable/2021-06-01/recommendationsservice.json
+```
+
+```yaml $(tag) == 'package-2022-02-01-preview'
+input-file:
+  - Microsoft.RecommendationsService/preview/2022-02-01-preview/recommendationsservice.json
 ```
 
 ---
