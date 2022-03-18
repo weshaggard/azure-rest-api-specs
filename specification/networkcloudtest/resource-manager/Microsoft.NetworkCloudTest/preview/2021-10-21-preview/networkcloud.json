@@ -10,21 +10,53 @@
   ],
   "swagger": "2.0",
   "info": {
-    "description": "The Network Cloud Test Client.",
-    "title": "Network Cloud Test Client",
+    "description": "The Network Cloud Test APIs provide management of the on-premises clusters and their resources, such as, racks, bare-metal hosts, virtual machines, workload networks and more.",
+    "title": "NetworkCloudTest",
     "version": "2021-10-21-preview"
   },
   "host": "management.azure.com",
   "paths": {
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloudTest/clusters": {
+    "/providers/Microsoft.NetworkCloudTest/operations": {
       "get": {
-        "description": "This will show all network cloud clusters in a subscription.",
-        "summary": "Lists network cloud clusters in a subscription.",
-        "operationId": "Clusters_List_Subscription",
+        "description": "Get a list of all available resource provider operations. It contains a URL link to get the next set of results.",
+        "summary": "List resource provider operations.",
+        "operationId": "Operations_List",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/OperationListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "List resource provider operations": {
+            "$ref": "./examples/Operations_List.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloudTest/clusterManagers": {
+      "get": {
+        "description": "Get a list of all cluster managers in a given subscription.",
+        "summary": "List cluster managers in a subscription.",
+        "operationId": "ClusterManagers_ListSubscription",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -32,6 +64,51 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClusterManagerList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "List cluster manager for the subscription": {
+            "$ref": "./examples/ClusterManagers_ListSubscription.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloudTest/clusters": {
+      "get": {
+        "description": "Get a list of all clusters in a given subscription.",
+        "summary": "List clusters in a subscription.",
+        "operationId": "Clusters_ListSubscription",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "description": "Client API Version",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -47,67 +124,67 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "List clusters for subscription": {
+            "$ref": "./examples/Clusters_ListSubscription.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloudTest/clusters/{resourceName}/bootstrapImages": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloudTest/locations/{location}/operationStatuses/{operationId}": {
       "get": {
-        "description": "This will show all network cloud bootstrap Isos for a particular cluster.",
-        "summary": "Lists network cloud cluster bootstrap image.",
-        "operationId": "Clusters_BootstrapImages_List",
+        "description": "Get the latest details of the long running operation.",
+        "summary": "Get the long running operation status.",
+        "operationId": "OperationStatuses_Get",
         "parameters": [
           {
-            "type": "string",
-            "x-go-name": "ApiVersion",
-            "name": "api-version",
-            "in": "query",
-            "required": true
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "type": "string",
-            "x-go-name": "SubscriptionId",
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "maxLength": 63,
-            "minLength": 1,
-            "type": "string",
-            "x-go-name": "ResourceName",
-            "name": "resourceName",
-            "in": "path",
-            "required": true
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/OperationIdParameter"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClustersBootstrapImagesList"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/OperationStatusResult"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "Get log running operation status": {
+            "$ref": "./examples/OperationStatuses_Get.json"
           }
         }
       }
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloudTest/virtualMachines": {
       "get": {
-        "description": "This will get a list of all network cloud virtual machines from specific subscription.",
-        "summary": "Retrieve all network cloud virtual machines from specific subscription.",
-        "operationId": "VirtualMachines_List_Subscription",
+        "description": "Get a list of all virtual machines for a specific subscription. The API returns 200 OK when the API is successful.",
+        "summary": "Retrieve all virtual machines for a specific subscription.",
+        "operationId": "VirtualMachines_ListSubscription",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -115,6 +192,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -130,21 +208,27 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "List virtual machines for subscription": {
+            "$ref": "./examples/VirtualMachines_ListSubscription.json"
           }
         }
       }
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloudTest/workloadNetworks": {
       "get": {
-        "description": "This will show all network cloud Workload Networks in a subscription.",
-        "summary": "Lists network cloud Workload Networks in a subscription.",
-        "operationId": "WorkloadNetworks_List_Subscription",
+        "description": "Get a list of all workload networks in a given subscription.  The API returns 200 OK when the API is successful.",
+        "summary": "List workload networks in a subscription.",
+        "operationId": "WorkloadNetworks_ListSubscription",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -152,6 +236,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -167,21 +252,27 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "List workload networks for subscription": {
+            "$ref": "./examples/WorkloadNetworks_ListSubscription.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusterManagers": {
       "get": {
-        "description": "This will show all network cloud clusters in a resource group.",
-        "summary": "Lists network cloud clusters in a resource group.",
-        "operationId": "Clusters_List_Resource_Group",
+        "description": "Get a list of all cluster managers in a given resource group.",
+        "summary": "List cluster managers from a specific resource group.",
+        "operationId": "ClusterManagers_List",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -189,6 +280,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -198,6 +290,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -207,27 +300,33 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterList"
+              "$ref": "#/definitions/ClusterManagerList"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "List cluster manager for the resource group": {
+            "$ref": "./examples/ClusterManagers_List.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters/{resourceName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusterManagers/{resourceName}": {
       "get": {
-        "description": "This will show the properties of a specific network cloud cluster.",
-        "summary": "Retrieves a specific network cloud cluster.",
-        "operationId": "Clusters_Get",
+        "description": "Get the properties of a specific cluster manager.",
+        "summary": "Retrieve a specific cluster manager.",
+        "operationId": "ClusterManagers_Get",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -235,6 +334,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -244,6 +344,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -253,6 +354,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
@@ -262,30 +364,31 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ClusterList"
+              "$ref": "#/definitions/ClusterManager"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Get Network Cloud Cluster": {
-            "$ref": "./examples/Clusters_Get.json"
+          "Get cluster manager": {
+            "$ref": "./examples/ClusterManagers_Get.json"
           }
         }
       },
       "put": {
-        "description": "This create or update the properties of a specific network cloud cluster.",
-        "summary": "Creates or updates a specific network cloud cluster.",
-        "operationId": "Clusters_CreateOrUpdate",
+        "description": "Create a new cluster manager or update the properties of cluster manager if it exists. The API returns 200 OK in case of the successful creation or update. 201 Created is returned when the operation is performed asynchronously.",
+        "summary": "Create or update a specific cluster manager.",
+        "operationId": "ClusterManagers_CreateOrUpdate",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -293,6 +396,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -302,6 +406,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -311,54 +416,18 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           },
           {
             "x-go-name": "Payload",
+            "description": "The request body",
             "name": "payload",
             "in": "body",
             "schema": {
-              "type": "object",
-              "required": [
-                "properties"
-              ],
-              "properties": {
-                "id": {
-                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
-                  "type": "string",
-                  "x-go-name": "Id"
-                },
-                "location": {
-                  "description": "Location is the Azure location where this resource will exist or already exists.",
-                  "type": "string",
-                  "x-go-name": "Location"
-                },
-                "name": {
-                  "description": "Name is the name of the resource that this resource provider will create.",
-                  "type": "string",
-                  "x-go-name": "Name"
-                },
-                "properties": {
-                  "$ref": "#/definitions/ClusterProperties"
-                },
-                "systemData": {
-                  "$ref": "#/definitions/SystemData"
-                },
-                "tags": {
-                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "x-go-name": "Tags"
-                },
-                "type": {
-                  "type": "string",
-                  "x-go-name": "Type"
-                }
-              }
+              "$ref": "#/definitions/ClusterManager"
             }
           }
         ],
@@ -366,31 +435,41 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Cluster"
+              "$ref": "#/definitions/ClusterManager"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ClusterManager"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Create or Update Network Cloud Cluster": {
-            "$ref": "./examples/Clusters_Create.json"
+          "Create or update cluster manager": {
+            "$ref": "./examples/ClusterManagers_Create.json"
           }
         },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       },
       "delete": {
-        "description": "This will delete a network cloud cluster.",
-        "summary": "Deletes a specific network cloud cluster.",
-        "operationId": "Clusters_Delete",
+        "description": "Delete a specific cluster manager.The API returns 200 OK when the cluster manager is deleted successfully. 202 Accepted is returned when the operation is performed asynchronously.",
+        "summary": "Delete a specific cluster manager.",
+        "operationId": "ClusterManagers_Delete",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -398,6 +477,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -407,6 +487,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -416,6 +497,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
@@ -425,27 +507,38 @@
           "200": {
             "description": "OK"
           },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Delete Network Cloud Cluster": {
-            "$ref": "./examples/Clusters_Delete.json"
+          "Delete cluster manager": {
+            "$ref": "./examples/ClusterManagers_Delete.json"
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         }
       },
       "patch": {
-        "description": "This patches the properties of a specific network cloud cluster.",
-        "summary": "Patches a specific network cloud cluster.",
-        "operationId": "Clusters_Patch",
+        "description": "Patch the properties of a specific cluster manager, or update the tags assigned to the cluster manager. Properties and tag updates can be done independently. The API returns 200 OK when the API is successful.",
+        "summary": "Patch a specific cluster manager.",
+        "operationId": "ClusterManagers_Update",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -453,6 +546,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -462,6 +556,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -471,54 +566,357 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           },
           {
             "x-go-name": "Payload",
+            "description": "The request body",
             "name": "payload",
             "in": "body",
             "schema": {
-              "type": "object",
-              "required": [
-                "properties"
-              ],
-              "properties": {
-                "id": {
-                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
-                  "type": "string",
-                  "x-go-name": "Id"
-                },
-                "location": {
-                  "description": "Location is the Azure location where this resource will exist or already exists.",
-                  "type": "string",
-                  "x-go-name": "Location"
-                },
-                "name": {
-                  "description": "Name is the name of the resource that this resource provider will create.",
-                  "type": "string",
-                  "x-go-name": "Name"
-                },
-                "properties": {
-                  "$ref": "#/definitions/ClusterProperties"
-                },
-                "systemData": {
-                  "$ref": "#/definitions/SystemData"
-                },
-                "tags": {
-                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "x-go-name": "Tags"
-                },
-                "type": {
-                  "type": "string",
-                  "x-go-name": "Type"
-                }
-              }
+              "$ref": "#/definitions/AzureCommonParameterTags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClusterManager"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Patch cluster manager": {
+            "$ref": "./examples/ClusterManagers_Update.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters": {
+      "get": {
+        "description": "Get a list of all clusters in a given resource group.",
+        "summary": "List clusters in a resource group.",
+        "operationId": "Clusters_List",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "description": "Client API Version",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ClusterList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "List clusters for resource group": {
+            "$ref": "./examples/Clusters_List.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters/{resourceName}": {
+      "get": {
+        "description": "Get the properties of a specific cluster.",
+        "summary": "Retrieve a specific cluster.",
+        "operationId": "Clusters_Get",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "description": "Client API Version",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get cluster": {
+            "$ref": "./examples/Clusters_Get.json"
+          }
+        }
+      },
+      "put": {
+        "description": "Create a new cluster or update the properties of the cluster if it exists. The API returns 200 OK in case of the successful creation or update. 201 Created is returned when the operation is performed asynchronously.",
+        "summary": "Create or update a specific cluster.",
+        "operationId": "Clusters_CreateOrUpdate",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "description": "Client API Version",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "x-go-name": "Payload",
+            "description": "The request body",
+            "name": "payload",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create or Update cluster": {
+            "$ref": "./examples/Clusters_Create.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "delete": {
+        "description": "Delete a specific cluster. The API returns 200 OK when the deletion is successful. 202 Accepted is returned when the operation is performed asynchronously.",
+        "summary": "Delete a specific cluster.",
+        "operationId": "Clusters_Delete",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "description": "Client API Version",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete cluster": {
+            "$ref": "./examples/Clusters_Delete.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "patch": {
+        "description": "Patch the properties of a specific cluster, or update the tags assigned to the cluster. Properties and tag updates can be done independently. The API returns 200 OK when the API is successful.",
+        "summary": "Patch a specific cluster.",
+        "operationId": "Clusters_Update",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "description": "Client API Version",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "x-go-name": "Payload",
+            "description": "The request body",
+            "name": "payload",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ClustersPatchPayload"
             }
           }
         ],
@@ -532,92 +930,27 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Patch Network Cloud Cluster": {
-            "$ref": "./examples/Clusters_Patch.json"
-          }
-        },
-        "x-ms-long-running-operation": true
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters/{resourceName}/bootstrapImages/{bootstrapImageName}": {
-      "get": {
-        "description": "This will show the properties of a specific bootstrap image.",
-        "summary": "Retrieve a specific bootstrap image for a cluster.",
-        "operationId": "Clusters_BootstrapImages_Get",
-        "parameters": [
-          {
-            "type": "string",
-            "x-go-name": "ApiVersion",
-            "name": "api-version",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "string",
-            "x-go-name": "SubscriptionId",
-            "name": "subscriptionId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 90,
-            "minLength": 1,
-            "type": "string",
-            "x-go-name": "ResourceGroupName",
-            "name": "resourceGroupName",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 63,
-            "minLength": 1,
-            "type": "string",
-            "x-go-name": "ResourceName",
-            "name": "resourceName",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 63,
-            "minLength": 1,
-            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
-            "type": "string",
-            "x-go-name": "BootstrapImageName",
-            "name": "bootstrapImageName",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ClustersBootstrapImages"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/CloudError"
-            }
+          "Patch cluster": {
+            "$ref": "./examples/Clusters_Update.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters/{resourceName}/createBootstrapImage/{bootstrapImageName}": {
-      "put": {
-        "description": "This will generate a bootable image for this network cloud cluster.",
-        "summary": "Generate a bootable image for this cluster.",
-        "operationId": "Clusters_BootstrapImages_Create",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters/{resourceName}/applyRackManifests": {
+      "post": {
+        "description": "Apply rack manifests to a cluster. This would update the existing cluster by applying rack manifests that have no rack associated yet.\nThe API returns 202 Accepted as the operation is performed asynchronously.",
+        "summary": "Apply rack manifests to a cluster.",
+        "operationId": "Clusters_ApplyRackManifests",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -625,6 +958,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -634,6 +968,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -643,46 +978,190 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Apply rack manifests to cluster": {
+            "$ref": "./examples/Clusters_ApplyRackManifests.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters/{resourceName}/deploy": {
+      "post": {
+        "description": "Deploy a cluster to a provided rack. The API returns 202 Accepted as the operation is performed asynchronously.",
+        "summary": "Deploy a cluster to a provided rack.",
+        "operationId": "Clusters_Deploy",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "description": "Client API Version",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
+            "name": "resourceGroupName",
             "in": "path",
             "required": true
           },
           {
             "maxLength": 63,
             "minLength": 1,
-            "pattern": "\"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$\"",
             "type": "string",
-            "x-go-name": "BootstrapImageName",
-            "name": "bootstrapImageName",
+            "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
+            "name": "resourceName",
             "in": "path",
             "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "RackName",
+            "description": "The name of the rack (rack-manifest) to use for bootstrapping the deployment. The system will determine which rack to use if this is not provided.",
+            "name": "rackName",
+            "in": "query"
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ClustersBootstrapImages"
-            }
+          "202": {
+            "description": "Accepted"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-examples": {
+          "Deploy cluster": {
+            "$ref": "./examples/Clusters_Deploy.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/clusters/{resourceName}/updateVersion": {
+      "post": {
+        "description": "Update a version of a provided cluster to one of the available supported versions. The API returns 202 Accepted as the operation is performed asynchronously.",
+        "summary": "Update a cluster version.",
+        "operationId": "Clusters_UpdateVersion",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ApiVersion",
+            "description": "Client API Version",
+            "name": "api-version",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 90,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 63,
+            "minLength": 1,
+            "type": "string",
+            "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
+            "name": "resourceName",
+            "in": "path",
+            "required": true
+          },
+          {
+            "x-go-name": "Payload",
+            "description": "The request body",
+            "name": "payload",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ClustersUpdateVersionPayload"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update cluster version": {
+            "$ref": "./examples/Clusters_UpdateVersion.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         }
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/virtualMachines": {
       "get": {
-        "description": "This will get a list of all network cloud virtual machines from specific resource group.",
-        "summary": "Retrieve all network cloud virtual machines from specific resource group.",
+        "description": "Get a list of all virtual machines in a given resource group. The API returns 200 OK when the API is successful.",
+        "summary": "List virtual machines in a resource group.",
         "operationId": "VirtualMachines_List",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -690,6 +1169,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -699,6 +1179,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -714,21 +1195,27 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "List virtual machines for resource group": {
+            "$ref": "./examples/VirtualMachines_List.json"
           }
         }
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/virtualMachines/{resourceName}": {
       "get": {
-        "description": "This will show the properties of a specific network cloud virtual machine.",
+        "description": "Get the properties of a specific virtual machine. The API returns 200 OK when the operation is successful.",
         "summary": "Retrieve a specific virtual machine.",
         "operationId": "VirtualMachines_Get",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -736,6 +1223,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -745,6 +1233,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -754,6 +1243,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
@@ -769,19 +1259,25 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "Get virtual machine": {
+            "$ref": "./examples/VirtualMachines_Get.json"
           }
         }
       },
       "put": {
-        "description": "This creates or updates the properties of a specific network cloud virtual machine.",
-        "summary": "Creates or updates a specific network cloud virtual machine.",
+        "description": "Create a new virtual machine or update the properties of the existing virtual machine. The API returns 200 OK in case of the successful creation or update. 201 Created is returned when the operation is performed asynchronously.",
+        "summary": "Creates or updates a specific virtual machine.",
         "operationId": "VirtualMachines_CreateOrUpdate",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -789,6 +1285,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -798,6 +1295,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -807,57 +1305,18 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           },
           {
-            "name": "Payload",
+            "x-go-name": "Payload",
+            "description": "The request body",
+            "name": "payload",
             "in": "body",
             "schema": {
-              "type": "object",
-              "required": [
-                "extendedLocation",
-                "properties"
-              ],
-              "properties": {
-                "extendedLocation": {
-                  "$ref": "#/definitions/ExtendedLocation"
-                },
-                "id": {
-                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
-                  "type": "string",
-                  "x-go-name": "Id"
-                },
-                "location": {
-                  "description": "Location is the Azure location where this resource will exist or already exists.",
-                  "type": "string",
-                  "x-go-name": "Location"
-                },
-                "name": {
-                  "description": "Name is the name of the resource that this resource provider will create.",
-                  "type": "string",
-                  "x-go-name": "Name"
-                },
-                "properties": {
-                  "$ref": "#/definitions/VirtualMachineProperties"
-                },
-                "systemData": {
-                  "$ref": "#/definitions/SystemData"
-                },
-                "tags": {
-                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "x-go-name": "Tags"
-                },
-                "type": {
-                  "type": "string",
-                  "x-go-name": "Type"
-                }
-              }
+              "$ref": "#/definitions/VirtualMachine"
             }
           }
         ],
@@ -869,7 +1328,7 @@
             }
           },
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
               "$ref": "#/definitions/VirtualMachine"
             }
@@ -877,25 +1336,29 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Create or Update Network Cloud VirtualMachine": {
+          "Create or Update virtual machine": {
             "$ref": "./examples/VirtualMachines_Create.json"
           }
         },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       },
       "delete": {
-        "description": "This will delete a specific network cloud virtual machine.",
-        "summary": "Deletes a specific network cloud virtual machine.",
+        "description": "Delete a provided virtual machine. The API returns 200 OK when the deletion is successful. 202 Accepted is returned when the operation is performed asynchronously.",
+        "summary": "Delete a specific virtual machine.",
         "operationId": "VirtualMachines_Delete",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -903,6 +1366,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -912,6 +1376,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -921,43 +1386,48 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "type": "string",
-                "description": "URI to the operationResults resource."
-              }
-            }
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Delete Network Cloud Virtual Machine": {
+          "Delete virtual machine": {
             "$ref": "./examples/VirtualMachines_Delete.json"
           }
         },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       },
       "patch": {
-        "description": "This creates or updates the properties of a specific network cloud virtual machine.",
-        "summary": "Patches a specific network cloud virtual machine.",
-        "operationId": "VirtualMachines_Patch",
+        "description": "Patch the properties of a specific virtual machine, or update the tags assigned to the virtual machine. Properties and tag updates can be done independently. The API returns 200 OK when the API is successful.",
+        "summary": "Patch a specific virtual machine.",
+        "operationId": "VirtualMachines_Update",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -965,6 +1435,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -974,6 +1445,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -983,123 +1455,23 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           },
           {
-            "name": "Properties",
+            "x-go-name": "Payload",
+            "description": "The request body",
+            "name": "payload",
             "in": "body",
             "schema": {
-              "type": "object",
-              "required": [
-                "imageReference",
-                "cluster",
-                "networkConfigurationVersion",
-                "cpuCores",
-                "memorySizeGB",
-                "diskSizeGB"
-              ],
-              "properties": {
-                "bareMetalMachineURI": {
-                  "description": "URI to the bare metal machine VM has landed to.",
-                  "type": "string",
-                  "x-go-name": "BareMetalMachine",
-                  "readOnly": true
-                },
-                "cluster": {
-                  "description": "Name of undercloud cluster VM is created with.",
-                  "type": "string",
-                  "x-go-name": "Cluster"
-                },
-                "cpuCores": {
-                  "description": "Number virtual machine cpu cores.",
-                  "type": "integer",
-                  "format": "int64",
-                  "x-go-name": "CpuCores"
-                },
-                "diskSizeGB": {
-                  "description": "Virtual machine root disk size in GiB.",
-                  "type": "integer",
-                  "format": "int64",
-                  "x-go-name": "DiskSizeGB"
-                },
-                "imageReference": {
-                  "description": "URL to virtual machine OCI image.",
-                  "type": "string",
-                  "x-go-name": "Image"
-                },
-                "memorySizeGB": {
-                  "description": "Virtual machine memory size in GiB.",
-                  "type": "integer",
-                  "format": "int64",
-                  "x-go-name": "MemorySizeGB"
-                },
-                "networkAttachments": {
-                  "description": "Virtual machine networking properties.",
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/VirtualMachineNetworkAttachment"
-                  },
-                  "x-go-name": "VirtualMachineNetworkAttachements"
-                },
-                "networkConfigurationVersion": {
-                  "description": "Version of virtual machine network configuration.",
-                  "type": "string",
-                  "default": "v2",
-                  "enum": [
-                    "v1",
-                    "v2"
-                  ],
-                  "x-go-name": "NetworkConfigurationVersion"
-                },
-                "placementHints": {
-                  "description": "Scheduling hints for virtual machine.",
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/VirtualMachinePlacementHint"
-                  },
-                  "x-go-name": "VirtualMachinePlacementHints"
-                },
-                "powerState": {
-                  "description": "Virtual machine power state.",
-                  "type": "string",
-                  "enum": [
-                    "On",
-                    "Off"
-                  ],
-                  "x-go-name": "PowerState",
-                  "readOnly": true
-                },
-                "provisioningState": {
-                  "description": "Virtual machine provisioning status.",
-                  "type": "string",
-                  "enum": [
-                    "Accepted",
-                    "Provisioning",
-                    "Succeeded",
-                    "Failed",
-                    "Deleting"
-                  ],
-                  "x-go-name": "ProvisioningState",
-                  "readOnly": true
-                },
-                "sshKey": {
-                  "description": "User ssh key.",
-                  "type": "string",
-                  "x-go-name": "SshKey"
-                },
-                "userData": {
-                  "description": "Base64 encoded cloud-init user data.",
-                  "type": "string",
-                  "x-go-name": "UserData"
-                }
-              }
+              "$ref": "#/definitions/AzureCommonParameterTags"
             }
           }
         ],
         "responses": {
-          "202": {
+          "200": {
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/VirtualMachine"
@@ -1108,27 +1480,27 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Create or Update Network Cloud VirtualMachine": {
-            "$ref": "./examples/VirtualMachines_Patch.json"
+          "Patch virtual machine": {
+            "$ref": "./examples/VirtualMachines_Update.json"
           }
-        },
-        "x-ms-long-running-operation": true
+        }
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/virtualMachines/{resourceName}/powerOff": {
       "post": {
-        "description": "This will power off a specific network cloud virtual machine.",
-        "summary": "Powers off a specific network cloud virtual machine.",
+        "description": "Power off a provided Network Cloud Virtual Machine. The API returns 202 Accepted as the operation is performed asynchronously.",
+        "summary": "Power off a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_PowerOff",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1136,6 +1508,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1145,6 +1518,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1154,12 +1528,17 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           },
           {
-            "type": "boolean",
+            "enum": [
+              "True",
+              "False"
+            ],
+            "type": "string",
             "x-go-name": "SkipShutdown",
             "description": "Allows to bypass OS shutdown and power virtual machine off immediately.",
             "name": "skipShutdown",
@@ -1168,38 +1547,36 @@
         ],
         "responses": {
           "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "type": "string",
-                "description": "URI to the operationResults resource."
-              }
-            }
+            "description": "Accepted"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Powers off a Network Cloud Virtual Machine": {
+          "Power off a virtual machine": {
             "$ref": "./examples/VirtualMachines_PowerOff.json"
           }
         },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/virtualMachines/{resourceName}/reimage": {
       "post": {
-        "description": "This will reimage a specific network cloud virtual machine.",
-        "summary": "Reimages a specific network cloud virtual machine.",
+        "description": "Reimage a specific virtual Machine. The API returns 202 Accepted as the operation is performed asynchronously.",
+        "summary": "Reimage a specific virtual machine.",
         "operationId": "VirtualMachines_Reimage",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1207,6 +1584,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1216,6 +1594,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1225,6 +1604,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
@@ -1232,18 +1612,12 @@
         ],
         "responses": {
           "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "type": "string",
-                "description": "URI to the operationResults resource."
-              }
-            }
+            "description": "Accepted"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -1252,18 +1626,22 @@
             "$ref": "./examples/VirtualMachines_Reimage.json"
           }
         },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/virtualMachines/{resourceName}/restart": {
       "post": {
-        "description": "This will restart a specific network cloud virtual machine.",
-        "summary": "Restarts a specific network cloud virtual machine.",
+        "description": "Restart a specific virtual machine. The API returns 202 Accepted as the operation is performed asynchronously.",
+        "summary": "Restart a specific virtual machine.",
         "operationId": "VirtualMachines_Restart",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1271,6 +1649,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1280,6 +1659,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1289,6 +1669,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
@@ -1296,38 +1677,36 @@
         ],
         "responses": {
           "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "type": "string",
-                "description": "URI to the operationResults resource."
-              }
-            }
+            "description": "Accepted"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Restart a Network Cloud Virtual Machine": {
+          "Restart a virtual machine": {
             "$ref": "./examples/VirtualMachines_Restart.json"
           }
         },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/virtualMachines/{resourceName}/start": {
       "post": {
-        "description": "This will start a specific network cloud virtual machine.",
-        "summary": "Starts a specific network cloud virtual machine.",
+        "description": "Start a provided Network Cloud Virtual Machine. The API returns 202 Accepted as the operation is performed asynchronously.",
+        "summary": "Start a specific Network Cloud Virtual Machine.",
         "operationId": "VirtualMachines_Start",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1335,6 +1714,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1344,6 +1724,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1353,6 +1734,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
@@ -1360,38 +1742,36 @@
         ],
         "responses": {
           "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "type": "string",
-                "description": "URI to the operationResults resource."
-              }
-            }
+            "description": "Accepted"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Start a Network Cloud Virtual Machine": {
+          "Start a virtual machine": {
             "$ref": "./examples/VirtualMachines_Start.json"
           }
         },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/workloadNetworks": {
       "get": {
-        "description": "This will get a list of all Workload Network resources from specific resource group.",
-        "summary": "Retrieve all Workload Network resources from specific resource group.",
+        "description": "Get a list of all workload networks in a given resource group.  The API returns 200 OK when the API is successful.",
+        "summary": "List workload networks in a resource group.",
         "operationId": "WorkloadNetworks_List",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1399,6 +1779,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1408,6 +1789,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1423,21 +1805,27 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "List workload networks for subscription": {
+            "$ref": "./examples/WorkloadNetworks_List.json"
           }
         }
       }
     },
     "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloudTest/workloadNetworks/{resourceName}": {
       "get": {
-        "description": "This will show the properties of a specific network cloud Workload Network.",
-        "summary": "Retrieve a specific Workload Network.",
+        "description": "Get the properties of a specific workload network. The API returns 200 OK when the API operation is successful.",
+        "summary": "Retrieve a specific workload network.",
         "operationId": "WorkloadNetworks_Get",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1445,6 +1833,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1454,6 +1843,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1463,6 +1853,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
@@ -1478,19 +1869,25 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "Get workload network": {
+            "$ref": "./examples/WorkloadNetworks_Get.json"
           }
         }
       },
       "put": {
-        "description": "This creates or updates the properties of a specific WorkloadNetwork.\n\nWith x-ms-long-running-operation set to true,\nx-ms-long-running-operation-options is set to default value(\"azure-async-operation\")",
-        "summary": "Creates or updates a specific network cloud WorkloadNetwork(ASYNC)",
+        "description": "Create a new workload network or update the properties of the existing workload network. The API returns 200 OK in case of the successful creation or update. 201 Created is returned when the operation is performed asynchronously.",
+        "summary": "Create or update a specific workload network.",
         "operationId": "WorkloadNetworks_CreateOrUpdate",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1498,6 +1895,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1507,6 +1905,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1516,57 +1915,18 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           },
           {
-            "name": "Payload",
+            "x-go-name": "Payload",
+            "description": "The request body",
+            "name": "payload",
             "in": "body",
             "schema": {
-              "type": "object",
-              "required": [
-                "extendedLocation",
-                "properties"
-              ],
-              "properties": {
-                "extendedLocation": {
-                  "$ref": "#/definitions/ExtendedLocation"
-                },
-                "id": {
-                  "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
-                  "type": "string",
-                  "x-go-name": "Id"
-                },
-                "location": {
-                  "description": "Location is the Azure location where this resource will exist or already exists.",
-                  "type": "string",
-                  "x-go-name": "Location"
-                },
-                "name": {
-                  "description": "Name is the name of the resource that this resource provider will create.",
-                  "type": "string",
-                  "x-go-name": "Name"
-                },
-                "properties": {
-                  "$ref": "#/definitions/WorkloadNetworkProperties"
-                },
-                "systemData": {
-                  "$ref": "#/definitions/SystemData"
-                },
-                "tags": {
-                  "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "x-go-name": "Tags"
-                },
-                "type": {
-                  "type": "string",
-                  "x-go-name": "Type"
-                }
-              }
+              "$ref": "#/definitions/WorkloadNetwork"
             }
           }
         ],
@@ -1578,7 +1938,7 @@
             }
           },
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
               "$ref": "#/definitions/WorkloadNetwork"
             }
@@ -1586,12 +1946,12 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Create or Update Network Cloud WorkloadNetwork": {
+          "Create or update workload network": {
             "$ref": "./examples/WorkloadNetworks_Create.json"
           }
         },
@@ -1601,13 +1961,14 @@
         }
       },
       "delete": {
-        "description": "This will delete a specific Workload Network.",
-        "summary": "Deletes a specific network cloud Workload Network.",
+        "description": "Delete a provided workload network. The API returns 200 OK when the deletion is successful. 202 Accepted is returned when the operation is performed asynchronously.",
+        "summary": "Delete a specific workload network.",
         "operationId": "WorkloadNetworks_Delete",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1615,6 +1976,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1624,6 +1986,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1633,43 +1996,48 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "type": "string",
-                "description": "URI to the operationResults resource."
-              }
-            }
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Deletes Network Cloud WorkloadNetwork": {
+          "Delete workload network": {
             "$ref": "./examples/WorkloadNetworks_Delete.json"
           }
         },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
       },
       "patch": {
-        "description": "This patches the properties of a specific WorkloadNetwork.",
-        "summary": "Patches a specific WorkloadNetwork.",
-        "operationId": "WorkloadNetworks_Patch",
+        "description": "Patch the properties of a specific workload network, or update the tags assigned to the workload network. Properties and tag updates can be done independently. The API returns 200 OK when the API is successful.",
+        "summary": "Patch a specific workload network.",
+        "operationId": "WorkloadNetworks_Update",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "ApiVersion",
+            "description": "Client API Version",
             "name": "api-version",
             "in": "query",
             "required": true
@@ -1677,6 +2045,7 @@
           {
             "type": "string",
             "x-go-name": "SubscriptionId",
+            "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
             "name": "subscriptionId",
             "in": "path",
             "required": true
@@ -1686,6 +2055,7 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceGroupName",
+            "description": "The name of the resource group containing the managed cluster resource. The name is case insensitive.",
             "name": "resourceGroupName",
             "in": "path",
             "required": true
@@ -1695,144 +2065,23 @@
             "minLength": 1,
             "type": "string",
             "x-go-name": "ResourceName",
+            "description": "The name of the managed resource.",
             "name": "resourceName",
             "in": "path",
             "required": true
           },
           {
-            "name": "Properties",
+            "x-go-name": "Payload",
+            "description": "The request body",
+            "name": "payload",
             "in": "body",
             "schema": {
-              "type": "object",
-              "required": [
-                "cluster",
-                "routingDomains"
-              ],
-              "properties": {
-                "adminStatus": {
-                  "description": "AdminStatus is the admin status of the Workload Network.",
-                  "type": "string",
-                  "enum": [
-                    "Enabled",
-                    "Disabled"
-                  ],
-                  "x-go-name": "AdminStatus",
-                  "readOnly": true
-                },
-                "cluster": {
-                  "description": "Cluster is the name of the undercloud cluster this Workload Network is associated with.",
-                  "type": "string",
-                  "x-go-name": "Cluster"
-                },
-                "hostPluginType": {
-                  "description": "Host Plugin Type.",
-                  "type": "string",
-                  "enum": [
-                    "SRIOV",
-                    "FUTURE"
-                  ],
-                  "x-go-name": "HostPluginType"
-                },
-                "hybridAksIpamEnabled": {
-                  "description": "HybridAKS IPAM Enabled.",
-                  "type": "boolean",
-                  "x-go-name": "HybridAksIpamEnabled"
-                },
-                "hybridAksPluginType": {
-                  "description": "Network plugin type for HybridAKS.",
-                  "type": "string",
-                  "enum": [
-                    "HOST-DEVICE",
-                    "MACVLAN",
-                    "DPDK",
-                    "IPVLAN"
-                  ],
-                  "x-go-name": "HybridAksPluginType"
-                },
-                "ipAllocationType": {
-                  "description": "IP Allocation Type defaults to Dual-Stack.",
-                  "type": "string",
-                  "enum": [
-                    "IPv4",
-                    "IPv6",
-                    "Dual-Stack"
-                  ],
-                  "x-go-name": "IPAllocationType"
-                },
-                "ipv4AddressPrefixIndex": {
-                  "description": "Index of the IPv4AddressPrefix array from the Routing Domain to be used for this Workload Network.",
-                  "type": "integer",
-                  "format": "int64",
-                  "minimum": 0,
-                  "x-go-name": "IPv4AddressPrefixIndex"
-                },
-                "ipv6AddressRangeIndex": {
-                  "description": "Index of the IPv6RangePrefix array from the Routing Domain to be used for this Workload Network.",
-                  "type": "integer",
-                  "format": "int64",
-                  "minimum": 0,
-                  "x-go-name": "IPv6AddressRangeIndex"
-                },
-                "maxTxRate": {
-                  "description": "Maximum tx rate, in Mbps, for the VF.",
-                  "type": "integer",
-                  "format": "int64",
-                  "default": 0,
-                  "minimum": 0,
-                  "x-go-name": "MaxTxRate"
-                },
-                "minTxRate": {
-                  "description": "Minimum tx rate, in Mbps, for the VF.",
-                  "type": "integer",
-                  "format": "int64",
-                  "default": 0,
-                  "minimum": 0,
-                  "x-go-name": "MinTxRate"
-                },
-                "mtu": {
-                  "description": "Mtu of this Workload Network.",
-                  "type": "integer",
-                  "format": "int64",
-                  "default": 1500,
-                  "x-go-name": "Mtu"
-                },
-                "provisioningState": {
-                  "description": "ProvisioningState of the Workload Network.",
-                  "type": "string",
-                  "enum": [
-                    "Accepted",
-                    "Provisioning",
-                    "Succeeded",
-                    "Failed"
-                  ],
-                  "x-go-name": "ProvisioningState",
-                  "readOnly": true
-                },
-                "routingDomains": {
-                  "description": "RoutingDomain associated to the Workload Network.",
-                  "type": "array",
-                  "minItems": 1,
-                  "items": {
-                    "type": "string"
-                  },
-                  "x-go-name": "RoutingDomains"
-                },
-                "spoofCheckEnabled": {
-                  "description": "SpoofCheckEnabled encoded cloud-init user data.",
-                  "type": "boolean",
-                  "x-go-name": "SpoofCheckEnabled"
-                },
-                "trustedModeEnabled": {
-                  "description": "TrustedModeEnabled encoded cloud-init user data.",
-                  "type": "boolean",
-                  "x-go-name": "TrustedModeEnabled"
-                }
-              }
+              "$ref": "#/definitions/AzureCommonParameterTags"
             }
           }
         ],
         "responses": {
-          "202": {
+          "200": {
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/WorkloadNetwork"
@@ -1841,20 +2090,49 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/CloudError"
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "Patch Network Cloud WorkloadNetwork": {
-            "$ref": "./examples/WorkloadNetworks_Patch.json"
+          "Patch workload network": {
+            "$ref": "./examples/WorkloadNetworks_Update.json"
           }
-        },
-        "x-ms-long-running-operation": true
+        }
       }
     }
   },
   "definitions": {
+    "AggregatorRackSkuSpported": {
+      "description": "Note that this will only contain references to the aggregator rack.\nA secondary lookup of that aggregator rack SKU will provide the references to the Compute rack SKU information.",
+      "type": "object",
+      "title": "Aaggregator rack SKU details supported by the cluster manager.",
+      "properties": {
+        "id": {
+          "description": "Resource ID of the Rack SKU",
+          "type": "string",
+          "x-go-name": "Id",
+          "readOnly": true
+        },
+        "name": {
+          "description": "A descriptive name of the rack sku",
+          "type": "string",
+          "x-go-name": "Name",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "AzureCommonParameterTags": {
+      "type": "object",
+      "title": "AzureCommonParameterTags represents the resource tags.",
+      "properties": {
+        "tags": {
+          "$ref": "#/definitions/Tags"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
     "AzureCommonProperties": {
       "description": "AzureCommonProperties are parameters that can be included on requests but are processed by RPaaS and not by this\nresource provider. They are listed as optional resources because RPaaS will enforce which parameters are required.",
       "type": "object",
@@ -1862,7 +2140,8 @@
         "id": {
           "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "Id"
+          "x-go-name": "Id",
+          "readOnly": true
         },
         "location": {
           "description": "Location is the Azure location where this resource will exist or already exists.",
@@ -1872,275 +2151,289 @@
         "name": {
           "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Name"
+          "x-go-name": "Name",
+          "readOnly": true
         },
         "systemData": {
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
-          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-go-name": "Tags"
+          "$ref": "#/definitions/Tags"
         },
         "type": {
+          "description": "Type is the type of resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Type"
+          "x-go-name": "Type",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
-    },
-    "BMCCredentials": {
-      "description": "Credentials for the BMC device on this baremetal machine",
-      "type": "object",
-      "required": [
-        "username",
-        "password"
-      ],
-      "properties": {
-        "password": {
-          "type": "string",
-          "x-go-name": "Password"
-        },
-        "username": {
-          "type": "string",
-          "x-go-name": "Username"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "BareMetalMachineProperties": {
       "type": "object",
       "title": "BareMetalMachineProperties represents the properties of a baremetal machine.",
       "required": [
-        "clusterID",
-        "rackID"
+        "bootMacAddress"
       ],
       "properties": {
         "adminStatus": {
-          "description": "Admin status of the BareMetalMachine",
+          "description": "Admin status of the bare-metal machine.",
           "type": "string",
           "enum": [
             "Enabled",
             "Disabled"
           ],
-          "x-go-name": "AdminStatus"
+          "x-go-name": "AdminStatus",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AdminState"
+          },
+          "readOnly": true
         },
         "bmcConnectionString": {
-          "description": "BMCConnectionString is the connection string for the bare-metal controller on this bare-metal machine.\n+kubebuilder:validation:Required",
+          "description": "The connection string for the bare-metal controller on this bare-metal machine.",
           "type": "string",
-          "x-go-name": "BMCConnectionString"
+          "x-go-name": "BmcConnectionString",
+          "readOnly": true
         },
         "bmcCredentials": {
-          "$ref": "#/definitions/BMCCredentials"
+          "$ref": "#/definitions/BmcCredentials"
         },
-        "bootMACAddress": {
-          "description": "BootMACAddress is the MAC address of a NIC connected to the PXE network.\n+kubebuilder:validation:Required",
+        "bootMacAddress": {
+          "description": "MAC address of a NIC connected to the PXE network.",
           "type": "string",
-          "x-go-name": "BootMACAddress"
+          "x-go-name": "BootMacAddress"
         },
-        "clusterID": {
-          "description": "ClusterID is the fully-qualified identifier of the undercloud cluster this BareMetalMachine is associated with.",
+        "clusterId": {
+          "description": "A fully-qualified identifier of the undercloud cluster this bare-metal machine is associated with.",
           "type": "string",
-          "x-go-name": "ClusterID"
+          "x-go-name": "ClusterId",
+          "readOnly": true
         },
         "cordonStatus": {
-          "description": "Cordon status of the BareMetalMachine",
+          "description": "Cordon status of the bare-metal machine.",
           "type": "string",
           "enum": [
             "Cordoned",
             "Uncordoned"
           ],
-          "x-go-name": "CordonStatus"
+          "x-go-name": "CordonStatus",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CordonStatus"
+          },
+          "readOnly": true
         },
-        "hardwareConfiguration": {
-          "$ref": "#/definitions/HardwareConfiguration"
-        },
-        "internalMetadata": {
-          "$ref": "#/definitions/internalMetadata"
+        "hardwareInventory": {
+          "$ref": "#/definitions/HardwareInventory"
         },
         "machineDetails": {
-          "description": "Details provided by the customer during the creation of rack manifests\nthat allows for “custom data” to be associated with this machine\n+kubebuilder:validation:Optional",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-go-name": "MachineDetails"
+          "description": "Details provided by the customer during the creation of rack manifests\nthat allows for “custom data” to be associated with this machine",
+          "type": "string",
+          "x-go-name": "MachineDetails",
+          "readOnly": true
         },
         "machineLocation": {
-          "description": "A user-friendly description of the BareMetalMachine's location\n+kubebuilder:validation:Optional",
+          "description": "A user-friendly description of the bare-metal machine's location.\n+kubebuilder:validation:Optional",
           "type": "string",
           "x-go-name": "MachineLocation"
         },
-        "oamMACAddress": {
-          "description": "OamMACAddress is the MAC address of a NIC connected to the OAM network.\n+kubebuilder:validation:Required",
+        "machineSkuId": {
+          "description": "A unique internal identifier of the bare-metal machine SKU.",
           "type": "string",
-          "x-go-name": "OamMACAddress"
+          "x-go-name": "MachineSkuId",
+          "readOnly": true
         },
         "powerState": {
-          "description": "Power state of the BareMetalMachine",
+          "description": "Power state of the bare-metal machine.",
           "type": "string",
           "enum": [
             "On",
             "Off"
           ],
-          "x-go-name": "PowerState"
+          "x-go-name": "PowerState",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PowerState"
+          },
+          "readOnly": true
         },
         "provisioningState": {
-          "description": "ProvisioningState of the BareMetalMachine.",
+          "description": "Provisioning state of the bare-metal machine.",
           "type": "string",
           "enum": [
-            "Provisioning",
             "Succeeded",
             "Failed",
-            "Canceled"
+            "Canceled",
+            "Pending"
           ],
-          "x-go-name": "ProvisioningState"
+          "x-go-name": "ProvisioningState",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "BareMetalMachineProvisioningState"
+          },
+          "readOnly": true
         },
-        "rackID": {
-          "description": "Associated Microsoft.NetworkCloudTest/racks/rackName where this BareMetalMachine resides",
+        "rackId": {
+          "description": "Resource identifier of the rack where this bare-metal machine resides.",
           "type": "string",
-          "x-go-name": "RackID"
+          "x-go-name": "RackId",
+          "readOnly": true
         },
         "rackSlot": {
-          "description": "RackSlot is the slot in which this physical machine is located, ordered from the bottom up i.e. the lowest slot\nis 1.\n+kubebuilder:validation:Optional\n+kubebuilder:validation:Minimum=1",
+          "description": "Rack slot in which this bare-metal machine is located, ordered from the bottom up i.e. the lowest slot is 1.",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "RackSlot",
+          "readOnly": true
+        },
+        "readyState": {
+          "description": "Indicator of whether the bare-metal machine is ready to receive workloads.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-go-name": "ReadyState",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReadyState"
+          },
+          "readOnly": true
+        },
+        "status": {
+          "$ref": "#/definitions/BareMetalMachineStatus"
+        },
+        "tpmEndorsementKey": {
+          "description": "A thumbprint or SHA of the TPM endorsement key that ensures authenticity of the bare-metal machine.",
+          "type": "string",
+          "x-go-name": "TPMEndorsementKey",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "BareMetalMachineStatus": {
+      "description": "BareMetalMachineStatus denotes the status of the bare-metal machine",
+      "type": "object",
+      "properties": {
+        "detailedStatus": {
+          "description": "A more detailed status of the bare-metal machine.",
+          "type": "string",
+          "enum": [
+            "Preparing",
+            "Error",
+            "Available",
+            "Provisioning",
+            "Provisioned",
+            "Deprovisioning"
+          ],
+          "x-go-name": "DetailedStatus",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DetailedStatus"
+          },
+          "readOnly": true
+        },
+        "detailedStatusMessage": {
+          "description": "A descriptive message about the current detailed status.",
+          "type": "string",
+          "x-go-name": "DetailedStatusMessage",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "BareMetalMachineUserData": {
+      "description": "Bare-metal machine user data",
+      "type": "object",
+      "required": [
+        "rackSlot",
+        "bootMacAddress",
+        "bmcCredentials",
+        "tpmEndorsementKey",
+        "bmcMacAddress"
+      ],
+      "properties": {
+        "bmcConnectionString": {
+          "description": "The connection string for the bare-metal controller on this bare-metal machine.",
+          "type": "string",
+          "x-go-name": "BmcConnectionString",
+          "readOnly": true
+        },
+        "bmcCredentials": {
+          "$ref": "#/definitions/BmcCredentials"
+        },
+        "bmcMacAddress": {
+          "description": "MAC address of the bare-metal controller on this machine.",
+          "type": "string",
+          "x-go-name": "BmcMacAddress"
+        },
+        "bootMacAddress": {
+          "description": "The MAC address of a NIC connected to the PXE network.",
+          "type": "string",
+          "x-go-name": "BootMacAddress"
+        },
+        "machineDetails": {
+          "description": "Additional optional details such as SerialNumber, AssetTag, etc.",
+          "type": "string",
+          "x-go-name": "MachineDetails"
+        },
+        "machineName": {
+          "description": "A user provided name for the bare-metal machine created from this user data.\nIf not provided, a name will be generated programmatically.",
+          "type": "string",
+          "x-go-name": "MachineName"
+        },
+        "rackSlot": {
+          "description": "The slot in which this physical machine is located, ordered from the bottom up i.e. the lowest slot is 1.\nIt is positional, so the first machine at the bottom is rackSlot: 1, the second machine up is rackSlot: 2.",
           "type": "integer",
           "format": "int64",
           "x-go-name": "RackSlot"
         },
-        "readyState": {
-          "description": "Is the BareMetalMachine ready to receive workloads\n+kubebuilder:validation:Optional\n+kubebuilder:default=true",
-          "type": "boolean",
-          "x-go-name": "ReadyState"
-        },
         "tpmEndorsementKey": {
-          "description": "TPMEndorsementKey is the thumbprint or SHA of the TPM Endorsement Key that allows the resource provider to ensure\nauthenticity of the machine.\n+kubebuilder:validation:Optional",
+          "description": "The thumbprint or SHA of the TPM Endorsement Key that allows the resource provider to ensure\nauthenticity of the machine.",
           "type": "string",
           "x-go-name": "TPMEndorsementKey"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
-    "BareMetalMachineUserData": {
+    "BmcCredentials": {
       "type": "object",
-      "required": [
-        "rackSlot",
-        "bootMACAddress",
-        "bmcCredentials",
-        "bmcConnectionString",
-        "tpmEndorsementKey",
-        "serialNumber",
-        "bmcMACAddress"
-      ],
+      "title": "Credentials for the baseboard management controller device on this baremetal machine.",
       "properties": {
-        "bmcConnectionString": {
-          "description": "BMCConnectionString is the connection string for the bare-metal controller on this bare-metal machine.",
+        "password": {
+          "description": "The baseboard management controller device server password.",
           "type": "string",
-          "x-go-name": "BMCConnectionString"
+          "x-go-name": "Password",
+          "readOnly": true
         },
-        "bmcCredentials": {
-          "$ref": "#/definitions/BMCCredentials"
-        },
-        "bmcMACAddress": {
-          "description": "BMCMACAddress is the MAC address of the bare-metal controller on this machine.",
+        "username": {
+          "description": "The baseboard management controller device user name",
           "type": "string",
-          "x-go-name": "BMCMACAddress"
-        },
-        "bootMACAddress": {
-          "description": "BootMACAddress is the MAC address of a NIC connected to the PXE network.",
-          "type": "string",
-          "x-go-name": "BootMACAddress"
-        },
-        "rackSlot": {
-          "description": "RackSlot is the slot in which this physical machine is located, ordered from the bottom up i.e. the lowest slot\nis 1.",
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "RackSlot"
-        },
-        "serialNumber": {
-          "description": "SerialNumber is an optional serial number or other asset tag identifier that a user may use to associate with\nthis machine.",
-          "type": "string",
-          "x-go-name": "SerialNumber"
-        },
-        "tpmEndorsementKey": {
-          "description": "TPMEndorsementKey is the thumbprint or SHA of the TPM Endorsement Key that allows the resource provider to ensure\nauthenticity of the machine.",
-          "type": "string",
-          "x-go-name": "TPMEndorsementKey"
+          "x-go-name": "Username",
+          "readOnly": true
         }
       },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
-    },
-    "CloudError": {
-      "type": "object",
-      "title": "CloudError represents a cloud error.",
-      "properties": {
-        "code": {
-          "description": "An identifier for the error. Codes are invariant and are intended to be consumed programmatically.",
-          "type": "string",
-          "x-go-name": "Code"
-        },
-        "details": {
-          "description": "A list of additional details about the error.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CloudErrorBody"
-          },
-          "x-go-name": "Details"
-        },
-        "message": {
-          "description": "A message describing the error, intended to be suitable for display in a user interface.",
-          "type": "string",
-          "x-go-name": "Message"
-        },
-        "target": {
-          "description": "The target of the particular error. For example, the name of the property in error.",
-          "type": "string",
-          "x-go-name": "Target"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
-    },
-    "CloudErrorBody": {
-      "type": "object",
-      "title": "CloudErrorBody represents the body of a cloud error.",
-      "properties": {
-        "code": {
-          "description": "An identifier for the error. Codes are invariant and are intended to be consumed programmatically.",
-          "type": "string",
-          "x-go-name": "Code"
-        },
-        "details": {
-          "description": "A list of additional details about the error.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CloudErrorBody"
-          },
-          "x-go-name": "Details"
-        },
-        "message": {
-          "description": "A message describing the error, intended to be suitable for display in a user interface.",
-          "type": "string",
-          "x-go-name": "Message"
-        },
-        "target": {
-          "description": "The target of the particular error. For example, the name of the property in error.",
-          "type": "string",
-          "x-go-name": "Target"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "Cluster": {
       "description": "A cluster is the top level object for the on-premise environment.",
       "type": "object",
       "title": "Cluster represents an on-Premise Network Cloud cluster",
+      "required": [
+        "extendedLocation",
+        "properties"
+      ],
       "properties": {
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation"
+        },
         "id": {
           "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "Id"
+          "x-go-name": "Id",
+          "readOnly": true
         },
         "location": {
           "description": "Location is the Azure location where this resource will exist or already exists.",
@@ -2150,7 +2443,8 @@
         "name": {
           "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Name"
+          "x-go-name": "Name",
+          "readOnly": true
         },
         "properties": {
           "$ref": "#/definitions/ClusterProperties"
@@ -2159,19 +2453,69 @@
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
-          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-go-name": "Tags"
+          "$ref": "#/definitions/Tags"
         },
         "type": {
+          "description": "Type is the type of resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Type"
+          "x-go-name": "Type",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
+    "ClusterAvailableUpgradeVersion": {
+      "description": "ClusterAvailableUpgradeVersion represents the various cluster upgrade parameters",
+      "type": "object",
+      "properties": {
+        "controlImpact": {
+          "description": "The indicator of whether the control plane will be impacted during the upgrade.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-go-name": "ControlImpact",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ControlImpact"
+          },
+          "readOnly": true
+        },
+        "expectedDuration": {
+          "description": "The expected duration needed for this upgrade.",
+          "type": "string",
+          "x-go-name": "ExpectedDuration",
+          "readOnly": true
+        },
+        "impactDescription": {
+          "description": "The impact description including the speficil details and release notes.",
+          "type": "string",
+          "x-go-name": "ImpactDescription",
+          "readOnly": true
+        },
+        "targetClusterVersion": {
+          "description": "The target version this cluster will be upgraded to.",
+          "type": "string",
+          "x-go-name": "TargetClusterVersion",
+          "readOnly": true
+        },
+        "workloadImpact": {
+          "description": "The indicator of whether the workload will be impacted during the upgrade.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-go-name": "WorkloadImpact",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "WorkloadImpact"
+          },
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "ClusterList": {
       "type": "object",
@@ -2193,71 +2537,19 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
-    "ClusterProperties": {
-      "description": "https://armwiki.azurewebsites.net/rpaas/arc-rp/conversion/SchemaTranslation.html#default-kubernetes-bridge-mapping\n\nfor now, we'll align on the same concept for our RPaaS\nobjects as well\n\nClusterProperties represents the properties of a cluster.",
+    "ClusterManager": {
+      "description": "A ClusterManager creates and  manages customer manager instances on demand.",
       "type": "object",
-      "title": "Note, k8s bridge resource types will default to\na singular status field under properties",
+      "title": "ClusterManager represents a control-plane to manage one or more on-premises clusters.",
       "required": [
-        "networkFabric",
-        "oobConnectionString",
-        "oobCredentials",
-        "clusterType",
-        "storageAccount",
-        "natSubnet",
-        "generatedSubnets"
+        "properties"
       ],
-      "properties": {
-        "clusterType": {
-          "description": "ClusterType is the type of rack configuration for this cluster.\nsingle-rack SingleRack\nmulti-rack MultiRack",
-          "type": "string",
-          "enum": [
-            "single-rack",
-            "multi-rack"
-          ],
-          "x-go-enum-desc": "single-rack SingleRack\nmulti-rack MultiRack",
-          "x-go-name": "ClusterType"
-        },
-        "generatedSubnets": {
-          "description": "GeneratedSubnets includes generated RFC1918 subnets for this cluster. These will be unique across the entire\nmanagement group/customer, but repeated across customers. Each new cluster will get blocks assigned for all\ninfrastructure networks. Some of the networks will span the entire cluster (e.g. PXE, and Management/iDRAC) and\nthe customer needs to know these blocks before they add racks because customers need to assign iDRAC IP addresses\n(uniquely) to each host. Block(s) can also be generated for infrastructure networks that can be used each time a\nrack manifest is added, allocations can be made from this.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-go-name": "GeneratedSubnets"
-        },
-        "natSubnet": {
-          "description": "NatSubnet is the outbound subnet used to NAT outbound management traffic (e.g. OAM leaving CE devices and heading\ntowards expressroute).",
-          "type": "string",
-          "x-go-name": "NatSubnet"
-        },
-        "networkFabric": {
-          "type": "string",
-          "x-go-name": "NetworkFabric"
-        },
-        "oobConnectionString": {
-          "description": "OOBConnection is the connection details of the OOB device that enables bootstrapping the storage or other\nappliances.",
-          "type": "string",
-          "x-go-name": "OOBConnectionString"
-        },
-        "oobCredentials": {
-          "$ref": "#/definitions/OOBCredentials"
-        },
-        "storageAccount": {
-          "description": "StorageAccount is the URI reference (ID) to an associated StorageAccount to which bootstrapImages will be",
-          "type": "string",
-          "x-go-name": "StorageAccount"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "ClustersBootstrapImages": {
-      "description": "Bootstrap Image resource",
-      "type": "object",
       "properties": {
         "id": {
           "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "Id"
+          "x-go-name": "Id",
+          "readOnly": true
         },
         "location": {
           "description": "Location is the Azure location where this resource will exist or already exists.",
@@ -2267,32 +2559,31 @@
         "name": {
           "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Name"
+          "x-go-name": "Name",
+          "readOnly": true
         },
         "properties": {
-          "$ref": "#/definitions/ClustersBootstrapImagesProperties"
+          "$ref": "#/definitions/ClusterManagerProperties"
         },
         "systemData": {
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
-          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-go-name": "Tags"
+          "$ref": "#/definitions/Tags"
         },
         "type": {
+          "description": "Type is the type of resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Type"
+          "x-go-name": "Type",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
-    "ClustersBootstrapImagesList": {
+    "ClusterManagerList": {
+      "description": "ClusterManagerList represents a list of cluster manager objects.",
       "type": "object",
-      "title": "BootstrapImageList represents a list of bootstrap Images for a cluster.",
+      "title": "List of cluster manager objects.",
       "properties": {
         "nextLink": {
           "description": "The link used to get the next page of operations.",
@@ -2300,28 +2591,221 @@
           "x-go-name": "NextLink"
         },
         "value": {
-          "description": "The list of BootstrapImages",
+          "description": "The list of cluster managers.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ClustersBootstrapImages"
+            "$ref": "#/definitions/ClusterManager"
           },
-          "x-go-name": "ClustersBootstrapImages"
+          "x-go-name": "ClusterManager"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
-    "ClustersBootstrapImagesProperties": {
+    "ClusterManagerProperties": {
+      "description": "ClusterManagerProperties represents the properties of a cluster manager",
       "type": "object",
-      "title": "ClusterBootstrapImagesProperties represents the properties of a cluster bootstrap Image.",
+      "required": [
+        "fabricControllerId",
+        "analyticsWorkspaceId"
+      ],
       "properties": {
-        "mediaurl": {
-          "type": "string",
-          "x-go-name": "MediaUrl",
+        "aggregatorRackSkusSpported": {
+          "description": "A list of the aggregrator rack SKUs supported by the cluster manager.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AggregatorRackSkuSpported"
+          },
+          "x-go-name": "AggregatorRackSkusSpported",
           "readOnly": true
         },
-        "provisioningState": {
-          "x-go-name": "ProvisioningState",
+        "analyticsWorkspaceId": {
+          "description": "AnalyticsWorkspace is where any logs relevant to customer will be relayed for example \"/microsoft.operationalinsights/workspaces/{logAnalyticsWorkspaceName}\"",
+          "type": "string",
+          "x-go-name": "AnalyticsWorkspaceId"
+        },
+        "clusterVersions": {
+          "description": "ClusterVersions represents all the cluster versions the manager supports which would be used as input in the cluster clusterVersion property.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "ClusterVersions",
           "readOnly": true
+        },
+        "fabricControllerId": {
+          "description": "URI reference to the fabric controller that is 1:1 with the cluster manager",
+          "type": "string",
+          "x-go-name": "FabricControllerId"
+        },
+        "managerExtendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation"
+        },
+        "provisioningState": {
+          "description": "Cluster manager provisioning status.",
+          "type": "string",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Provisioning"
+          ],
+          "x-go-name": "ProvisioningState",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ClusterManagerProvisioningState"
+          },
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "ClusterPatchProperties": {
+      "type": "object",
+      "title": "ClusterPatchProperties represents the properties of a cluster during Patch.",
+      "properties": {
+        "clusterLocation": {
+          "description": "The customer-provided location information to identify where the cluster resides.",
+          "type": "string",
+          "x-go-name": "ClusterLocation"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "ClusterProperties": {
+      "description": "https://armwiki.azurewebsites.net/rpaas/arc-rp/conversion/SchemaTranslation.html#default-kubernetes-bridge-mapping\n\nfor now, we'll align on the same concept for our RPaaS\nobjects as well\n\nClusterProperties represents the properties of a cluster.",
+      "type": "object",
+      "title": "Note, k8s bridge resource types will default to\na singular status field under properties",
+      "required": [
+        "networkFabricId",
+        "clusterType",
+        "analyticsWorkspaceId",
+        "clusterVersion"
+      ],
+      "properties": {
+        "analyticsWorkspaceId": {
+          "description": "The customer must specify a Log Analytics Workspace upon creation. This workspace will be where any logs that are relevant to",
+          "type": "string",
+          "x-go-name": "AnalyticsWorkspaceId"
+        },
+        "availableUpgradeVersions": {
+          "description": "The list of cluster runtime version upgrades available for this cluster.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClusterAvailableUpgradeVersion"
+          },
+          "x-go-name": "AvailableUpgradeVersions",
+          "readOnly": true
+        },
+        "clusterExtendedLocation": {
+          "description": "The extended location (custom location) represents the cluster's control plane location.\nThis extended location is used to route the requests of child objects of the cluster that are handled by the platform operator.",
+          "type": "string",
+          "x-go-name": "ClusterExtendedLocation",
+          "readOnly": true
+        },
+        "clusterLocation": {
+          "description": "The customer-provided location information to identify where the cluster resides.",
+          "type": "string",
+          "x-go-name": "ClusterLocation"
+        },
+        "clusterManagerId": {
+          "description": "The resource ID of the cluster manager that manages this cluster.\nThis is set by the Cluster Manager when the cluster is created.",
+          "type": "string",
+          "x-go-name": "ClusterManagerId",
+          "readOnly": true
+        },
+        "clusterType": {
+          "description": "The type of rack configuration for this cluster.\nsingle-rack SingleRack\nmulti-rack MultiRack",
+          "type": "string",
+          "enum": [
+            "single-rack",
+            "multi-rack"
+          ],
+          "x-go-name": "ClusterType",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ClusterType"
+          }
+        },
+        "clusterVersion": {
+          "description": "The current version of the cluster runtime.",
+          "type": "string",
+          "x-go-name": "ClusterVersion"
+        },
+        "networkFabricId": {
+          "description": "The resource ID of the network fabric associated with the cluster.",
+          "type": "string",
+          "x-go-name": "NetworkFabricId"
+        },
+        "provisioningState": {
+          "description": "The provisioning state of the cluster.",
+          "type": "string",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Validating",
+            "Provisioning"
+          ],
+          "x-go-name": "ProvisioningState",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ClusterProvisioningState"
+          },
+          "readOnly": true
+        },
+        "status": {
+          "$ref": "#/definitions/ClusterStatus"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "ClusterStatus": {
+      "description": "ClusterStatus denotes the status of a cluster",
+      "type": "object",
+      "properties": {
+        "clusterTrusted": {
+          "description": "The indicator of whether or not to trust that the cluster is uncompromised.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-go-name": "ClusterTrusted",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ClusterTrusted"
+          },
+          "readOnly": true
+        },
+        "deploymentState": {
+          "description": "The state of the cluster's deployment.",
+          "x-go-name": "DeploymentState",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "ClustersPatchPayload": {
+      "description": "ClustersPatchPayload represents the body of the request",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/ClusterPatchProperties"
+        },
+        "tags": {
+          "$ref": "#/definitions/Tags"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
+    "ClustersUpdateVersionPayload": {
+      "type": "object",
+      "title": "ClustersUpdateVersionPayload represents the body of the request.",
+      "properties": {
+        "targetClusterVersion": {
+          "description": "Version to be applied to the cluster during update.",
+          "type": "string",
+          "x-go-name": "TargetClusterVersion"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
@@ -2332,7 +2816,7 @@
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
     "ExtendedLocation": {
-      "description": "ExtendedLocation is the Azure Cluster location where this resource will be created",
+      "description": "ExtendedLocation is the Azure custom location where this resource will be created\nrequired: true",
       "type": "object",
       "required": [
         "type",
@@ -2350,182 +2834,224 @@
           "x-go-name": "Type"
         }
       },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
-    "HardwareConfiguration": {
+    "HardwareInventory": {
       "description": "including information acquired from the model/sku information and from the ironic inspector.",
       "type": "object",
-      "title": "Hardwareconfiguration is the hardware configuration of this machine as exposed to the customer,",
+      "title": "HardwareInventory is the hardware configuration of this machine as exposed to the customer,",
       "properties": {
-        "model": {
-          "description": "Note: This struct is expected to change over time as details are agreed upon\nModelNumber represents the SKU of this machine",
-          "type": "string",
-          "x-go-name": "ModelNumber"
-        },
-        "serialNumber": {
-          "description": "SerialNumber is an optional serial number or other asset tag identifier that a user may use to associate with\nthis machine.",
-          "type": "string",
-          "x-go-name": "SerialNumber"
+        "nics": {
+          "description": "A list of network interface cards and associated details for the bare-metal machine.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Nic"
+          },
+          "x-go-name": "Nics",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
-    "NetworkAddresses": {
-      "description": "Network addresses that are assigned to this machine from the CIDRs assigned to the rack that contains this machine",
+    "NetworkAttachment": {
+      "description": "NetworkAttachment represents a single network attachment",
       "type": "object",
+      "required": [
+        "workloadNetworkId",
+        "ipAllocationMethod"
+      ],
       "properties": {
-        "oamIpv4Address": {
-          "description": "+kubebuilder:validation:Optional",
+        "ipAllocationMethod": {
+          "description": "The IP allocation mechanism for the virtual machine.",
           "type": "string",
-          "x-go-name": "OamIpv4Address"
+          "default": "Dynamic",
+          "enum": [
+            "Dynamic",
+            "Static",
+            "Disabled"
+          ],
+          "x-go-name": "IPAllocationMethod",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IPAllocationMethod"
+          }
         },
-        "oamIpv6Address": {
-          "description": "+kubebuilder:validation:Optional",
+        "ipv4Address": {
+          "description": "The IPv4 address of the virtual machine.\n\nThis field is used only if the associated Workload network has a IPAllocationType of IPv4 or Dual-Stack.\n\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv4 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
           "type": "string",
-          "x-go-name": "OamIpv46Address"
+          "x-go-name": "IPv4Address"
         },
-        "pxeIpv4Address": {
-          "description": "+kubebuilder:validation:Optional",
+        "ipv6Address": {
+          "description": "The IPv6 address of the virtual machine.\n\nThis field is used only if the associated WorkloadNetwork has a IPAllocationType of IPv6 or Dual-Stack.\n\nIf IPAllocationMethod is:\nStatic - this field must contain an IPv6 address range from within the range specified in the WorkloadNetwork.\nDynamic - tthis field is read-only, but will be populated with an range from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
           "type": "string",
-          "x-go-name": "PxeIpv4Address"
+          "x-go-name": "IPv6Address"
         },
-        "pxeIpv6Address": {
-          "description": "+kubebuilder:validation:Optional",
+        "workloadNetworkId": {
+          "description": "The resource ID of the workload network attached to the VM.",
           "type": "string",
-          "x-go-name": "PxeIpv46Address"
+          "x-go-name": "WorkloadNetworkId"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
-    "OOBCredentials": {
+    "Nic": {
       "type": "object",
+      "title": "Nic is the network interface card details.",
       "properties": {
-        "password": {
+        "macAddress": {
+          "description": "The MAC address associated with this NIC.",
           "type": "string",
-          "x-go-name": "Password"
+          "x-go-name": "MacAddress",
+          "readOnly": true
         },
-        "username": {
+        "name": {
+          "description": "Name of the NIC/interface.",
           "type": "string",
-          "x-go-name": "Username"
+          "x-go-name": "Name",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
-    "Rack": {
-      "description": "NOTE: There may be some differences between a Rack and RackManifest as we add logic to process a RackManifest;\nhowever, a Rack is just an alias of the RackManifest type in this initial implementation.",
-      "title": "Rack is the validated/processed representation of a rack located in an on-premesis cluster.",
-      "$ref": "#/definitions/RackManifest"
+    "PlacementHint": {
+      "description": "PlacementHint represents a single scheduling hint of virtual machine",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "The key for the virtual machine placement hint.",
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1,
+          "x-go-name": "Key"
+        },
+        "value": {
+          "description": "The value for the virtual machine placement hint.",
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1,
+          "x-go-name": "Value"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "RackManifest": {
       "type": "object",
-      "title": "RackManifest is the unprocessed, user-submitted intention for a rack located in an on-premesis cluster.",
+      "title": "RackManifest is the unprocessed, user-submitted intention for a rack located in an on-premises cluster.",
+      "properties": {
+        "extendedLocation": {
+          "description": "the extended location of the cluster controller that manages this rack manifest",
+          "type": "string",
+          "x-go-name": "ExtendedLocation"
+        },
+        "id": {
+          "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
+          "type": "string",
+          "x-go-name": "Id",
+          "readOnly": true
+        },
+        "location": {
+          "description": "Location is the Azure location where this resource will exist or already exists.",
+          "type": "string",
+          "x-go-name": "Location"
+        },
+        "name": {
+          "description": "Name is the name of the resource that this resource provider will create.",
+          "type": "string",
+          "x-go-name": "Name",
+          "readOnly": true
+        },
+        "properties": {
+          "$ref": "#/definitions/RackManifestProperties"
+        },
+        "systemData": {
+          "$ref": "#/definitions/SystemData"
+        },
+        "tags": {
+          "$ref": "#/definitions/Tags"
+        },
+        "type": {
+          "description": "Type is the type of resource that this resource provider will create.",
+          "type": "string",
+          "x-go-name": "Type",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
+    "RackManifestList": {
+      "type": "object",
+      "title": "RackManifestList represents a list of RackManifests.",
+      "properties": {
+        "value": {
+          "description": "The list of rack manifests.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RackManifest"
+          },
+          "x-go-name": "RackManifests"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
+    "RackManifestProperties": {
+      "type": "object",
+      "title": "RackManifestProperties represesnts the properties of a rack manifest.",
       "required": [
-        "name",
-        "clusterName",
-        "networkRack",
-        "modelId",
-        "rackSerialNumber"
+        "clusterId",
+        "networkRackId",
+        "rackSkuId",
+        "rackSerialNumber",
+        "baremetalMachineUserData"
       ],
       "properties": {
         "baremetalMachineUserData": {
-          "description": "BareMetalMachineUserData is a list of machine objects in this rack.",
+          "description": "A list of bare-metal machine objects in this rack (not ordered).",
           "type": "array",
           "items": {
             "$ref": "#/definitions/BareMetalMachineUserData"
           },
           "x-go-name": "BareMetalMachineUserData"
         },
-        "clusterName": {
-          "description": "Cluster is the name of the cluster to which this rack will be associated.",
+        "clusterId": {
+          "description": "The resource ID of the cluster to which this rack is associated.",
           "type": "string",
-          "x-go-name": "Cluster"
+          "x-go-name": "ClusterId"
         },
-        "clusterSlot": {
-          "description": "ClusterSlot identifies this rack's placement within a cluster.",
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "ClusterSlot"
-        },
-        "modelId": {
-          "description": "ModelId is the Model ID of this rack.",
+        "clusterManagerId": {
+          "description": "The resource ID of the cluster manager that manages this rack manifest.\nThis is set by the Cluster Manager when the rack manifest is created.",
           "type": "string",
-          "x-go-name": "ModelId"
+          "x-go-name": "ClusterManagerId",
+          "readOnly": true
         },
-        "name": {
-          "description": "Name is a user-friendly identifier for this rack.",
+        "networkRackId": {
+          "description": "The resource ID to the associated network rack resource",
           "type": "string",
-          "x-go-name": "Name"
+          "x-go-name": "NetworkRackId"
         },
-        "networkRack": {
+        "rackId": {
+          "description": "The resource ID of the rack that was realized by the deployment of this rack manifest.\nOnce assigned, this rack manifest can no longer be used in a future deployment or update operations.\nIt is effectively “used up”.",
           "type": "string",
-          "x-go-name": "NetworkRack"
+          "x-go-name": "RackId",
+          "readOnly": true
         },
         "rackLocation": {
-          "description": "RackLocation is a user description of the location of this rack, e.g. \"DTN Datacenter, Floor 3, Aisle 9, Rack 2\".",
+          "description": "A free-form customer description of this rack location. FOr example, \"DTN Datacenter, Floor 3, Aisle 9, Rack 2\".",
           "type": "string",
           "x-go-name": "RackLocation"
         },
         "rackSerialNumber": {
-          "description": "RackSerialNumber is a globally unique identifier for an AFO-NC rack.",
+          "description": "A globally unique identifier for the rack.",
           "type": "string",
           "x-go-name": "RackSerialNumber"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
-    },
-    "RoutingDomain": {
-      "type": "object",
-      "title": "RoutingDomain represents the properties of a Routing Domain.",
-      "properties": {
-        "acls": {
-          "description": "Microsoft.Network/networkSecurityGroups",
+        },
+        "rackSkuId": {
+          "description": "The resource ID of the SKU for the rack being added.",
           "type": "string",
-          "x-go-name": "ACLs"
-        },
-        "ipv4AddressPrefix": {
-          "description": "IPv4 Address Prefixes e.g. 10.1.10/24.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-go-name": "IPv4AddressPrefix"
-        },
-        "ipv6AddressRange": {
-          "description": "IPv6 Address Ranges e.g. 2001::8/64.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-go-name": "IPv6AddressRange"
-        },
-        "isolationID": {
-          "description": "VLAN ID.",
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "IsolationID"
-        },
-        "location": {
-          "description": "Name of Location where resource will be created.",
-          "type": "string",
-          "x-go-name": "Location"
-        },
-        "name": {
-          "description": "Name of the NCRoutingDomain resource.",
-          "type": "string",
-          "x-go-name": "Name"
-        },
-        "publicIPAddresses": {
-          "description": "Microsoft.Network/publicIPAddresses.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-go-name": "PublicIPAddresses"
-        },
-        "state": {
-          "description": "The current configuration status of the RoutingDomain",
-          "type": "string",
-          "x-go-name": "State"
+          "x-go-name": "RackSkuId"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
@@ -2535,10 +3061,12 @@
       "title": "SystemData metadata pertaining to creation and last modification of the resource.",
       "properties": {
         "createdAt": {
+          "description": "The timestamp of the resource creation.",
           "type": "string",
           "x-go-name": "CreatedAt"
         },
         "createdBy": {
+          "description": "The identity that created the resource.",
           "type": "string",
           "x-go-name": "CreatedBy"
         },
@@ -2546,10 +3074,12 @@
           "$ref": "#/definitions/CreatedByType"
         },
         "lastModifiedAt": {
+          "description": "The timestamp of the last resource update.",
           "type": "string",
           "x-go-name": "LastModifiedAt"
         },
         "lastModifiedBy": {
+          "description": "The identity that modified the resource last.",
           "type": "string",
           "x-go-name": "LastModifiedBy"
         },
@@ -2559,12 +3089,20 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
+    "Tags": {
+      "type": "object",
+      "title": "Azure resource tags key:value map that is attached to the referenced resource.",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
+    },
     "VirtualMachine": {
-      "description": "VirtualMachine represents an on-Premises Network Cloud virtual machine",
+      "description": "VirtualMachine represents an on-Premises Network Cloud Virtual Machine",
       "type": "object",
       "required": [
-        "properties",
-        "extendedLocation"
+        "extendedLocation",
+        "properties"
       ],
       "properties": {
         "extendedLocation": {
@@ -2573,7 +3111,8 @@
         "id": {
           "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "Id"
+          "x-go-name": "Id",
+          "readOnly": true
         },
         "location": {
           "description": "Location is the Azure location where this resource will exist or already exists.",
@@ -2583,7 +3122,8 @@
         "name": {
           "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Name"
+          "x-go-name": "Name",
+          "readOnly": true
         },
         "properties": {
           "$ref": "#/definitions/VirtualMachineProperties"
@@ -2592,23 +3132,20 @@
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
-          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-go-name": "Tags"
+          "$ref": "#/definitions/Tags"
         },
         "type": {
+          "description": "Type is the type of resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Type"
+          "x-go-name": "Type",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
     "VirtualMachineList": {
       "type": "object",
-      "title": "VirtualMachineList represents a list of VirtualMachines.",
+      "title": "VirtualMachineList represents a list of Virtual Machines.",
       "properties": {
         "nextLink": {
           "description": "The link used to get the next page of operations.",
@@ -2616,7 +3153,7 @@
           "x-go-name": "NextLink"
         },
         "value": {
-          "description": "The list of virtual machines.",
+          "description": "The list of Virtual Machines.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/VirtualMachine"
@@ -2626,178 +3163,128 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
-    "VirtualMachineNetworkAttachment": {
-      "description": "VirtualMachineNetworkAttachement represents a single network attachment",
-      "type": "object",
-      "required": [
-        "workloadNetwork",
-        "ipAllocationMethod"
-      ],
-      "properties": {
-        "ipAllocationMethod": {
-          "description": "IPAllocationMethod defines mechanism for ip allocation.",
-          "type": "string",
-          "default": "Dynamic",
-          "enum": [
-            "Dynamic",
-            "Static",
-            "Disabled"
-          ],
-          "x-go-name": "IPAllocationMethod"
-        },
-        "ipv4Address": {
-          "description": "IPv4Address represents ipv4 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv4 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv4 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
-          "type": "string",
-          "x-go-name": "IPv4Address"
-        },
-        "ipv6Address": {
-          "description": "IPv6Address represents ipv6 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv6 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv6 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
-          "type": "string",
-          "x-go-name": "IPv6Address"
-        },
-        "workloadNetwork": {
-          "description": "Workload network to attach.",
-          "type": "string",
-          "x-go-name": "WorkloadNetwork"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "VirtualMachinePlacementHint": {
-      "description": "VirtualMachinePlacementHint represents a single scheduling hint of virtual machine",
-      "type": "object",
-      "required": [
-        "key",
-        "value"
-      ],
-      "properties": {
-        "key": {
-          "description": "Virtual machine placement hint key.",
-          "type": "string",
-          "x-go-name": "Key"
-        },
-        "value": {
-          "description": "Virtual machine placement hint value.",
-          "type": "string",
-          "x-go-name": "Value"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
     "VirtualMachineProperties": {
       "type": "object",
       "title": "VirtualMachineProperties represents the properties of a virtual machine.",
       "required": [
-        "imageReference",
-        "cluster",
-        "networkConfigurationVersion",
+        "clusterId",
+        "vmImage",
         "cpuCores",
         "memorySizeGB",
-        "diskSizeGB"
+        "diskSizeGB",
+        "networkAttachments",
+        "sshKey"
       ],
       "properties": {
-        "bareMetalMachineURI": {
-          "description": "URI to the bare metal machine VM has landed to.",
+        "bareMetalMachineId": {
+          "description": "The resource ID of the bare metal machine the virtual machine has landed to.",
           "type": "string",
-          "x-go-name": "BareMetalMachine",
+          "x-go-name": "BareMetalMachineId",
           "readOnly": true
         },
-        "cluster": {
-          "description": "Name of undercloud cluster VM is created with.",
+        "clusterId": {
+          "description": "The resource ID of the cluster the virtual machine is created for.",
           "type": "string",
-          "x-go-name": "Cluster"
+          "x-go-name": "ClusterId"
         },
         "cpuCores": {
-          "description": "Number virtual machine cpu cores.",
+          "description": "The number of CPU cores in the virtual machine.",
           "type": "integer",
           "format": "int64",
+          "minimum": 1,
           "x-go-name": "CpuCores"
         },
         "diskSizeGB": {
-          "description": "Virtual machine root disk size in GiB.",
+          "description": "The root disk size of the virtual machine in GB.",
           "type": "integer",
           "format": "int64",
+          "minimum": 1,
           "x-go-name": "DiskSizeGB"
         },
-        "imageReference": {
-          "description": "URL to virtual machine OCI image.",
-          "type": "string",
-          "x-go-name": "Image"
-        },
         "memorySizeGB": {
-          "description": "Virtual machine memory size in GiB.",
+          "description": "The memory size of the virtual machine in GB.",
           "type": "integer",
           "format": "int64",
+          "minimum": 1,
           "x-go-name": "MemorySizeGB"
         },
         "networkAttachments": {
-          "description": "Virtual machine networking properties.",
+          "description": "The list of network attachments to the virtual machine.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/VirtualMachineNetworkAttachment"
+            "$ref": "#/definitions/NetworkAttachment"
           },
-          "x-go-name": "VirtualMachineNetworkAttachements"
+          "x-go-name": "NetworkAttachments"
         },
-        "networkConfigurationVersion": {
-          "description": "Version of virtual machine network configuration.",
+        "networkData": {
+          "description": "The Base64 encoded cloud-init network data.",
           "type": "string",
-          "default": "v2",
-          "enum": [
-            "v1",
-            "v2"
-          ],
-          "x-go-name": "NetworkConfigurationVersion"
+          "x-go-name": "NetworkData"
         },
         "placementHints": {
-          "description": "Scheduling hints for virtual machine.",
+          "description": "The scheduling hints for the virtual machine.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/VirtualMachinePlacementHint"
+            "$ref": "#/definitions/PlacementHint"
           },
-          "x-go-name": "VirtualMachinePlacementHints"
+          "x-go-name": "PlacementHints"
         },
         "powerState": {
-          "description": "Virtual machine power state.",
+          "description": "The power state of the virtual machine.",
           "type": "string",
           "enum": [
             "On",
             "Off"
           ],
           "x-go-name": "PowerState",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PowerState"
+          },
           "readOnly": true
         },
         "provisioningState": {
-          "description": "Virtual machine provisioning status.",
+          "description": "The provisioning state of the virtual machine.",
           "type": "string",
+          "default": "Accepted",
           "enum": [
-            "Accepted",
-            "Provisioning",
             "Succeeded",
             "Failed",
-            "Deleting"
+            "Canceled",
+            "Provisioning",
+            "Accepted"
           ],
           "x-go-name": "ProvisioningState",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState"
+          },
           "readOnly": true
         },
         "sshKey": {
-          "description": "User ssh key.",
+          "description": "The Base64 encoded public ssh key of the user.",
           "type": "string",
           "x-go-name": "SshKey"
         },
         "userData": {
-          "description": "Base64 encoded cloud-init user data.",
+          "description": "The Base64 encoded cloud-init user data.",
           "type": "string",
           "x-go-name": "UserData"
+        },
+        "vmImage": {
+          "description": "The URL to virtual machine OCI image, could be from ACR or other OCI repository.",
+          "type": "string",
+          "x-go-name": "VmImage"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
     "WorkloadNetwork": {
-      "description": "WorkloadNetwork represents an on-premise WorkloadNetwork",
+      "description": "WorkloadNetwork represents an on-premises workload network",
       "type": "object",
       "required": [
-        "properties",
-        "extendedLocation"
+        "extendedLocation",
+        "properties"
       ],
       "properties": {
         "extendedLocation": {
@@ -2806,7 +3293,8 @@
         "id": {
           "description": "Id is the ID of an existing Azure resource that this resource provider will manage.",
           "type": "string",
-          "x-go-name": "Id"
+          "x-go-name": "Id",
+          "readOnly": true
         },
         "location": {
           "description": "Location is the Azure location where this resource will exist or already exists.",
@@ -2816,7 +3304,8 @@
         "name": {
           "description": "Name is the name of the resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Name"
+          "x-go-name": "Name",
+          "readOnly": true
         },
         "properties": {
           "$ref": "#/definitions/WorkloadNetworkProperties"
@@ -2825,23 +3314,20 @@
           "$ref": "#/definitions/SystemData"
         },
         "tags": {
-          "description": "Tags are Azure resource tags that will be added to the referenced resource.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-go-name": "Tags"
+          "$ref": "#/definitions/Tags"
         },
         "type": {
+          "description": "Type is the type of resource that this resource provider will create.",
           "type": "string",
-          "x-go-name": "Type"
+          "x-go-name": "Type",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
     "WorkloadNetworkList": {
       "type": "object",
-      "title": "WorkloadNetworkList represents a list of WorkloadNetwork.",
+      "title": "WorkloadNetworkList represents a list of WorkloadNetworks.",
       "properties": {
         "nextLink": {
           "description": "The link used to get the next page of operations.",
@@ -2849,7 +3335,7 @@
           "x-go-name": "NextLink"
         },
         "value": {
-          "description": "The list of Workload Networks.",
+          "description": "The list of workload networks.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/WorkloadNetwork"
@@ -2861,43 +3347,67 @@
     },
     "WorkloadNetworkProperties": {
       "type": "object",
-      "title": "WorkloadNetworkProperties represents the properties of a Workload Network.",
+      "title": "WorkloadNetworkProperties represents the properties of a workload network.",
       "required": [
-        "cluster",
-        "routingDomains"
+        "routingDomainIds"
       ],
       "properties": {
-        "adminStatus": {
-          "description": "AdminStatus is the admin status of the Workload Network.",
+        "allowMulticast": {
+          "description": "The parameter enables the required features of the NIC/Driver to support multicast.",
           "type": "string",
           "enum": [
-            "Enabled",
-            "Disabled"
+            "True",
+            "False"
           ],
-          "x-go-name": "AdminStatus",
+          "x-go-name": "AllowMulticast",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "AllowMulticast"
+          }
+        },
+        "clusterId": {
+          "description": "The resourceId of the Network Cloud cluster this workload network is associated with.",
+          "type": "string",
+          "x-go-name": "ClusterId",
           "readOnly": true
         },
-        "cluster": {
-          "description": "Cluster is the name of the undercloud cluster this Workload Network is associated with.",
-          "type": "string",
-          "x-go-name": "Cluster"
-        },
         "hostPluginType": {
-          "description": "Host Plugin Type.",
+          "description": "The network plugin type of the workload network, defaults to \"SRIOV\".",
           "type": "string",
           "enum": [
-            "SRIOV",
-            "FUTURE"
+            "SRIOV"
           ],
-          "x-go-name": "HostPluginType"
+          "x-go-name": "HostPluginType",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HostPluginType"
+          }
+        },
+        "hybridAksClustersAssociatedIds": {
+          "description": "The list of Hybrid AKS cluster ID(s) that are associated with this workload network.",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "HybridAksClustersAssociatedIds",
+          "readOnly": true
         },
         "hybridAksIpamEnabled": {
-          "description": "HybridAKS IPAM Enabled.",
-          "type": "boolean",
-          "x-go-name": "HybridAksIpamEnabled"
+          "description": "The HybridAksIpam Enabled parameter denotes whether or not to disable IP Address Management(IPAM) allocation on this network attachment definition.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-go-name": "HybridAksIpamEnabled",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HybridAksIpamEnabled"
+          }
         },
         "hybridAksPluginType": {
-          "description": "Network plugin type for HybridAKS.",
+          "description": "The network plugin type for HybridAKS, defaults to \"HOST-DEVICE\".",
           "type": "string",
           "enum": [
             "HOST-DEVICE",
@@ -2905,34 +3415,48 @@
             "DPDK",
             "IPVLAN"
           ],
-          "x-go-name": "HybridAksPluginType"
+          "x-go-name": "HybridAksPluginType",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HybridAksPluginType"
+          }
+        },
+        "interfaceName": {
+          "description": "The interface related to the workload network.",
+          "type": "string",
+          "x-go-name": "InterfaceName",
+          "readOnly": true
         },
         "ipAllocationType": {
-          "description": "IP Allocation Type defaults to Dual-Stack.",
+          "description": "The type of the IP address allocation, defaulted to \"Dual-Stack\".",
           "type": "string",
           "enum": [
             "IPv4",
             "IPv6",
             "Dual-Stack"
           ],
-          "x-go-name": "IPAllocationType"
+          "x-go-name": "IPAllocationType",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IPAllocationType"
+          }
         },
         "ipv4AddressPrefixIndex": {
-          "description": "Index of the IPv4AddressPrefix array from the Routing Domain to be used for this Workload Network.",
+          "description": "The index of IPv4AddressPrefix list to be used for this workload network. Given a routing domain can have multiple IPv4 prefixes assigned to it, this parameter defines the prefix this workload network is associated with. The index value is zero-based, with the first entry being an index value of 0.",
           "type": "integer",
           "format": "int64",
           "minimum": 0,
           "x-go-name": "IPv4AddressPrefixIndex"
         },
         "ipv6AddressRangeIndex": {
-          "description": "Index of the IPv6RangePrefix array from the Routing Domain to be used for this Workload Network.",
+          "description": "The index of the IPv6RangePrefix list to be used for this Workload Network. Given a routing domain can have multiple IPv6 ranges assigned to it, this parameter defines the range this workload network is associated with.The index value is zero-based, with the first entry being an index value of 0.",
           "type": "integer",
           "format": "int64",
           "minimum": 0,
           "x-go-name": "IPv6AddressRangeIndex"
         },
         "maxTxRate": {
-          "description": "Maximum tx rate, in Mbps, for the VF.",
+          "description": "The maximum transmission rate, in Mbps, for the virtual function (VF).",
           "type": "integer",
           "format": "int64",
           "default": 0,
@@ -2940,60 +3464,82 @@
           "x-go-name": "MaxTxRate"
         },
         "minTxRate": {
-          "description": "Minimum tx rate, in Mbps, for the VF.",
+          "description": "The minimum transmission rate, in Mbps, for the virtual function (VF).",
           "type": "integer",
           "format": "int64",
           "default": 0,
           "minimum": 0,
           "x-go-name": "MinTxRate"
         },
-        "mtu": {
-          "description": "Mtu of this Workload Network.",
-          "type": "integer",
-          "format": "int64",
-          "default": 1500,
-          "x-go-name": "Mtu"
-        },
         "provisioningState": {
-          "description": "ProvisioningState of the Workload Network.",
+          "description": "The provisioning state of the workload network.",
           "type": "string",
           "enum": [
-            "Accepted",
-            "Provisioning",
             "Succeeded",
-            "Failed"
+            "Failed",
+            "Canceled",
+            "Accepted",
+            "Provisioning"
           ],
           "x-go-name": "ProvisioningState",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "WorkloadNetworkProvisioningState"
+          },
           "readOnly": true
         },
-        "routingDomains": {
-          "description": "RoutingDomain associated to the Workload Network.",
+        "routingDomainIds": {
+          "description": "The list of routing domain ID(s) associated with this workload network.",
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "string"
           },
-          "x-go-name": "RoutingDomains"
+          "x-go-name": "RoutingDomainIds"
         },
         "spoofCheckEnabled": {
-          "description": "SpoofCheckEnabled encoded cloud-init user data.",
-          "type": "boolean",
-          "x-go-name": "SpoofCheckEnabled"
+          "description": "This denotes whether or not to enable spoof checking on the VF allocated for this network. Note: you may not configure this when we are leveraging a VirtualPluginType of MACVLAN. This leverages multiple mac addresses and thus spoofchecking must be disabled on the VF.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-go-name": "SpoofCheckEnabled",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "SpoofCheckEnabled"
+          }
         },
-        "trustedModeEnabled": {
-          "description": "TrustedModeEnabled encoded cloud-init user data.",
-          "type": "boolean",
-          "x-go-name": "TrustedModeEnabled"
+        "trunkRoutingDomains": {
+          "description": "The parameter indicates if the routing domains should be trunked. If more than one routing domain is supplied, and this value is set to \"False\", only the first Routing Domain will be utilized.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-go-name": "TrunkRoutingDomains",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "TrunkRoutingDomains"
+          }
+        },
+        "virtualMachinesAssociatedIds": {
+          "description": "The list of virtual machine ID(s), excluding any Hybrid AKS virtual machines, that are currently using this workload network.",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "VirtualMachinesAssociatedIds",
+          "readOnly": true
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "internalMetadata": {
-      "description": "Configuration details of this machine that are NOT exposed to the customer"
     }
   },
   "securityDefinitions": {
     "azure_auth": {
+      "description": "Azure Active Directory OAuth2 Flow",
       "type": "oauth2",
       "flow": "implicit",
       "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",

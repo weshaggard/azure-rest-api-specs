@@ -2853,6 +2853,47 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
     },
+    "NetworkAttachment": {
+      "description": "NetworkAttachment represents a single network attachment",
+      "type": "object",
+      "required": [
+        "workloadNetworkId",
+        "ipAllocationMethod"
+      ],
+      "properties": {
+        "ipAllocationMethod": {
+          "description": "The IP allocation mechanism for the virtual machine.",
+          "type": "string",
+          "default": "Dynamic",
+          "enum": [
+            "Dynamic",
+            "Static",
+            "Disabled"
+          ],
+          "x-go-name": "IPAllocationMethod",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IPAllocationMethod"
+          }
+        },
+        "ipv4Address": {
+          "description": "The IPv4 address of the virtual machine.\n\nThis field is used only if the associated Workload network has a IPAllocationType of IPv4 or Dual-Stack.\n\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv4 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
+          "type": "string",
+          "x-go-name": "IPv4Address"
+        },
+        "ipv6Address": {
+          "description": "The IPv6 address of the virtual machine.\n\nThis field is used only if the associated WorkloadNetwork has a IPAllocationType of IPv6 or Dual-Stack.\n\nIf IPAllocationMethod is:\nStatic - this field must contain an IPv6 address range from within the range specified in the WorkloadNetwork.\nDynamic - tthis field is read-only, but will be populated with an range from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
+          "type": "string",
+          "x-go-name": "IPv6Address"
+        },
+        "workloadNetworkId": {
+          "description": "The resource ID of the workload network attached to the VM.",
+          "type": "string",
+          "x-go-name": "WorkloadNetworkId"
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
     "Nic": {
       "type": "object",
       "title": "Nic is the network interface card details.",
@@ -2868,6 +2909,31 @@
           "type": "string",
           "x-go-name": "Name",
           "readOnly": true
+        }
+      },
+      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
+    },
+    "PlacementHint": {
+      "description": "PlacementHint represents a single scheduling hint of virtual machine",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "The key for the virtual machine placement hint.",
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1,
+          "x-go-name": "Key"
+        },
+        "value": {
+          "description": "The value for the virtual machine placement hint.",
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1,
+          "x-go-name": "Value"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
@@ -3097,146 +3163,74 @@
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview"
     },
-    "VirtualMachineNetworkAttachment": {
-      "description": "VirtualMachineNetworkAttachement represents a single network attachment",
-      "type": "object",
-      "required": [
-        "workloadNetwork",
-        "ipAllocationMethod"
-      ],
-      "properties": {
-        "ipAllocationMethod": {
-          "description": "IPAllocationMethod defines mechanism for IP allocation.",
-          "type": "string",
-          "default": "Dynamic",
-          "enum": [
-            "Dynamic",
-            "Static",
-            "Disabled"
-          ],
-          "x-go-name": "IPAllocationMethod",
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "IPAllocationMethod"
-          }
-        },
-        "ipv4Address": {
-          "description": "IPv4Address represents IPv4 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv4 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv4 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
-          "type": "string",
-          "x-go-name": "IPv4Address"
-        },
-        "ipv6Address": {
-          "description": "IPv6Address represents IPv6 address of a VM.\nThis field is only used if the associated WorkloadNetwork has a IPAllocationType of IPv6 or Dual-Stack.\nIf IPAllocationMethod is:\nStatic - this field must contain a user specified IPv6 address from within the subnet specified in the WorkloadNetwork.\nDynamic - this field is read-only, but will be populated with an address from within the subnet specified in the WorkloadNetwork.\nDisabled - this field will be empty.",
-          "type": "string",
-          "x-go-name": "IPv6Address"
-        },
-        "workloadNetwork": {
-          "description": "Workload network attached to the VM.",
-          "type": "string",
-          "x-go-name": "WorkloadNetwork"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
-    "VirtualMachinePlacementHint": {
-      "description": "VirtualMachinePlacementHint represents a single scheduling hint of virtual machine",
-      "type": "object",
-      "required": [
-        "key",
-        "value"
-      ],
-      "properties": {
-        "key": {
-          "description": "Virtual Machine placement hint key.",
-          "type": "string",
-          "x-go-name": "Key"
-        },
-        "value": {
-          "description": "Virtual Machine placement hint value.",
-          "type": "string",
-          "x-go-name": "Value"
-        }
-      },
-      "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
-    },
     "VirtualMachineProperties": {
       "type": "object",
       "title": "VirtualMachineProperties represents the properties of a virtual machine.",
       "required": [
-        "imageReference",
-        "cluster",
-        "networkConfigurationVersion",
+        "clusterId",
+        "vmImage",
         "cpuCores",
         "memorySizeGB",
-        "diskSizeGB"
+        "diskSizeGB",
+        "networkAttachments",
+        "sshKey"
       ],
       "properties": {
-        "bareMetalMachineURI": {
-          "description": "URI of the bare metal machine VM has landed to.",
+        "bareMetalMachineId": {
+          "description": "The resource ID of the bare metal machine the virtual machine has landed to.",
           "type": "string",
-          "x-go-name": "BareMetalMachine",
+          "x-go-name": "BareMetalMachineId",
           "readOnly": true
         },
-        "cluster": {
-          "description": "Name of undercloud cluster VM is created with.",
+        "clusterId": {
+          "description": "The resource ID of the cluster the virtual machine is created for.",
           "type": "string",
-          "x-go-name": "Cluster"
+          "x-go-name": "ClusterId"
         },
         "cpuCores": {
-          "description": "Number of CPU cores in the virtual machine.",
+          "description": "The number of CPU cores in the virtual machine.",
           "type": "integer",
           "format": "int64",
+          "minimum": 1,
           "x-go-name": "CpuCores"
         },
         "diskSizeGB": {
-          "description": "Virtual machine root disk size in GiB.",
+          "description": "The root disk size of the virtual machine in GB.",
           "type": "integer",
           "format": "int64",
+          "minimum": 1,
           "x-go-name": "DiskSizeGB"
         },
-        "imageReference": {
-          "description": "URL to virtual machine OCI image.",
-          "type": "string",
-          "x-go-name": "Image"
-        },
         "memorySizeGB": {
-          "description": "Virtual machine memory size in GiB.",
+          "description": "The memory size of the virtual machine in GB.",
           "type": "integer",
           "format": "int64",
+          "minimum": 1,
           "x-go-name": "MemorySizeGB"
         },
         "networkAttachments": {
-          "description": "Virtual machine networking properties.",
+          "description": "The list of network attachments to the virtual machine.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/VirtualMachineNetworkAttachment"
+            "$ref": "#/definitions/NetworkAttachment"
           },
-          "x-go-name": "VirtualMachineNetworkAttachements"
+          "x-go-name": "NetworkAttachments"
         },
-        "networkConfigurationVersion": {
-          "description": "Version of virtual machine network configuration.",
+        "networkData": {
+          "description": "The Base64 encoded cloud-init network data.",
           "type": "string",
-          "default": "v2",
-          "enum": [
-            "v1",
-            "v2"
-          ],
-          "x-go-name": "NetworkConfigurationVersion",
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "NetworkConfigurationVersion"
-          }
+          "x-go-name": "NetworkData"
         },
         "placementHints": {
-          "description": "Scheduling hints for virtual machine.",
+          "description": "The scheduling hints for the virtual machine.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/VirtualMachinePlacementHint"
+            "$ref": "#/definitions/PlacementHint"
           },
-          "x-go-name": "VirtualMachinePlacementHints"
+          "x-go-name": "PlacementHints"
         },
         "powerState": {
-          "description": "PowerState reflects the state that of the Virtual Machine.",
+          "description": "The power state of the virtual machine.",
           "type": "string",
           "enum": [
             "On",
@@ -3250,32 +3244,37 @@
           "readOnly": true
         },
         "provisioningState": {
-          "description": "Provisioning state of the Virtual Machine. This field should not be visible to the customer.",
+          "description": "The provisioning state of the virtual machine.",
           "type": "string",
+          "default": "Accepted",
           "enum": [
             "Succeeded",
             "Failed",
             "Canceled",
-            "Accepted",
             "Provisioning",
-            "Deleting"
+            "Accepted"
           ],
           "x-go-name": "ProvisioningState",
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "VirtualMachineProvisioningState"
+            "name": "ProvisioningState"
           },
           "readOnly": true
         },
         "sshKey": {
-          "description": "User ssh key.",
+          "description": "The Base64 encoded public ssh key of the user.",
           "type": "string",
           "x-go-name": "SshKey"
         },
         "userData": {
-          "description": "Base64 encoded cloud-init user data.",
+          "description": "The Base64 encoded cloud-init user data.",
           "type": "string",
           "x-go-name": "UserData"
+        },
+        "vmImage": {
+          "description": "The URL to virtual machine OCI image, could be from ACR or other OCI repository.",
+          "type": "string",
+          "x-go-name": "VmImage"
         }
       },
       "x-go-package": "dev.azure.com/msazuredev/AzureForOperatorsIndustry/_git/nc-rp.git/api/v20211021preview/properties"
