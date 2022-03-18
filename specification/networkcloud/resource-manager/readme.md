@@ -19,6 +19,5 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 ### General settings
 
 ```yaml
-go: true
 input-file: Microsoft.NetworkCloud/preview/2021-10-21-preview/networkcloud.json
 ```
