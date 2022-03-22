@@ -6,8 +6,8 @@ Please also specify `--typescript-sdks-folder=<path to root folder of your azure
 ```yaml $(typescript)
 typescript:
   azure-arm: true
-  package-name: "@azure/arm-Pan.Cloudngfw"
-  output-folder: "$(typescript-sdks-folder)/sdk/Pan.Cloudngfw/arm-Pan.Cloudngfw"
+  package-name: "@azure/arm-PaloAltoNetworks.Cloudngfw"
+  output-folder: "$(typescript-sdks-folder)/sdk/PaloAltoNetworks.Cloudngfw/arm-PaloAltoNetworks.Cloudngfw"
   payload-flattening-threshold: 1
   generate-metadata: true
 ```

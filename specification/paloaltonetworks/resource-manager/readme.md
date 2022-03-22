@@ -1,8 +1,8 @@
-# Pan.Cloudngfw
+# PaloAltoNetworks.Cloudngfw
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for Pan.Cloudngfw.
+This is the AutoRest configuration file for PaloAltoNetworks.Cloudngfw.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the Pan.Cloudngfw.
+These are the global settings for the PaloAltoNetworks.Cloudngfw.
 
 ```yaml
 openapi-type: arm
@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2022-02-17-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-02-17-preview'
 input-file:
-  - Pan.Cloudngfw/preview/2022-02-17-preview/Pan.Cloudngfw.json
+  - PaloAltoNetworks.Cloudngfw/preview/2022-02-17-preview/PaloAltoNetworks.Cloudngfw.json
 ```
 
 ---

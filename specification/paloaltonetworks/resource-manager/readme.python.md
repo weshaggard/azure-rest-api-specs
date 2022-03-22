@@ -6,17 +6,17 @@ Please also specify `--python-sdks-folder=<path to the root directory of your az
 ```yaml $(python)
 azure-arm: true
 license-header: MICROSOFT_MIT_NO_VERSION
-package-name: azure-mgmt-Pan.Cloudngfw
+package-name: azure-mgmt-PaloAltoNetworks.Cloudngfw
 package-version: 1.0.0b1
 no-namespace-folders: true
 ```
 
 ```yaml $(python-mode) == 'update' && $(track2)
 no-namespace-folders: true
-output-folder: $(python-sdks-folder)/Pan.Cloudngfw/azure-mgmt-Pan.Cloudngfw/azure/mgmt/Pan.Cloudngfw
+output-folder: $(python-sdks-folder)/PaloAltoNetworks.Cloudngfw/azure-mgmt-PaloAltoNetworks.Cloudngfw/azure/mgmt/PaloAltoNetworks.Cloudngfw
 ```
 
 ```yaml $(python-mode) == 'create' && $(track2)
 basic-setup-py: true
-output-folder: $(python-sdks-folder)/Pan.Cloudngfw/azure-mgmt-Pan.Cloudngfw
+output-folder: $(python-sdks-folder)/PaloAltoNetworks.Cloudngfw/azure-mgmt-PaloAltoNetworks.Cloudngfw
 ```
