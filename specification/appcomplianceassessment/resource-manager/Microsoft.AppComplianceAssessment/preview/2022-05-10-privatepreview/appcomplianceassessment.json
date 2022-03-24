@@ -34,6 +34,45 @@
     }
   },
   "paths": {
+    "/providers/Microsoft.AppComplianceAssessment/operationResults/{operationId}": {
+      "get": {
+        "tags": [
+          "AppComplianceAssessment"
+        ],
+        "description": "Query the ongoing operation status.",
+        "operationId": "OperationResults_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/OperationIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success."
+          },
+          "202": {
+            "description": "Accepted. The response indicates the exiting AppComplianceAssessment report is now updating and contains a Location header to query the operation result."
+          },
+          "default": {
+            "description": "Error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Operations_List": {
+            "$ref": "./examples/OperationResults_Get.json"
+          }
+        }
+      }
+    },
     "/providers/Microsoft.AppComplianceAssessment/operations": {
       "get": {
         "tags": [
@@ -69,51 +108,6 @@
         "x-ms-examples": {
           "Operations_List": {
             "$ref": "./examples/Operations_List.json"
-          }
-        }
-      }
-    },
-    "/providers/Microsoft.AppComplianceAssessment/checkNameAvailability": {
-      "post": {
-        "tags": [
-          "AppComplianceAssessment"
-        ],
-        "description": "Checks whether the resource name is available.",
-        "operationId": "Resource_CheckNameAvailability",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/ClientTenantIdHeaderParameter"
-          },
-          {
-            "name": "parameters",
-            "in": "body",
-            "description": "Parameters for the check Check Name Availability operation",
-            "required": true,
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/CheckNameAvailabilityRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/CheckNameAvailabilityResponse"
-            }
-          },
-          "default": {
-            "description": "Detailed error information.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "Check Name Availability": {
-            "$ref": "examples/Resource_CheckNameAvailability.json"
           }
         }
       }
@@ -998,26 +992,6 @@
         }
       }
     },
-    "ReportUpdateProperties": {
-      "type": "object",
-      "description": "The properties to update a report.",
-      "properties": {
-        "offerGuid": {
-          "description": "The App offer's Guid",
-          "type": "string"
-        },
-        "timeZone": {
-          "default": "GMT Standard Time",
-          "description": "Trigger time's time zone",
-          "type": "string"
-        },
-        "triggerTime": {
-          "description": "Compliance report generation trigger time",
-          "format": "date-time",
-          "type": "string"
-        }
-      }
-    },
     "ReportResourceList": {
       "description": "Object that includes an array of resources and a possible link for next set.",
       "type": "object",
@@ -1111,6 +1085,11 @@
           "readOnly": true
         },
         "controlName": {
+          "type": "string",
+          "description": "The control name.",
+          "readOnly": true
+        },
+        "controlType": {
           "type": "string",
           "description": "The control name.",
           "readOnly": true
@@ -1287,7 +1266,7 @@
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "OData Select statement. Limits the properties on each entry to just those requested, e.g. Categories?$select=reportName,id.",
+      "description": "OData Select statement. Limits the properties on each entry to just those requested, e.g. ?$select=reportName,id.",
       "x-ms-parameter-location": "method",
       "minLength": 1
     }
