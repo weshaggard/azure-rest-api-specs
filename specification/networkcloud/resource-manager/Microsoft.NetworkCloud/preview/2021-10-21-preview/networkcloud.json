@@ -51,7 +51,7 @@
       "get": {
         "description": "Get a list of all cluster managers in a given subscription.",
         "summary": "List cluster managers in a subscription.",
-        "operationId": "ClusterManagers_ListSubscription",
+        "operationId": "ClusterManagers_ListBySubscription",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -76,7 +76,7 @@
         },
         "x-ms-examples": {
           "List cluster manager for the subscription": {
-            "$ref": "./examples/ClusterManagers_ListSubscription.json"
+            "$ref": "./examples/ClusterManagers_ListBySubscription.json"
           }
         }
       }
@@ -85,7 +85,7 @@
       "get": {
         "description": "Get a list of all clusters in a given subscription.",
         "summary": "List clusters in a subscription.",
-        "operationId": "Clusters_ListSubscription",
+        "operationId": "Clusters_ListBySubscription",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -110,7 +110,7 @@
         },
         "x-ms-examples": {
           "List clusters for subscription": {
-            "$ref": "./examples/Clusters_ListSubscription.json"
+            "$ref": "./examples/Clusters_ListBySubscription.json"
           }
         }
       }
@@ -155,11 +155,45 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/racks": {
+      "get": {
+        "description": "Get a list of all racks for a specific subscription. The API returns 200 OK when the API is successful.",
+        "summary": "Retrieve all racks for a specific subscription.",
+        "operationId": "Racks_ListBySubscription",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RackList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "List racks for subscription": {
+            "$ref": "./examples/Racks_ListBySubscription.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/virtualMachines": {
       "get": {
         "description": "Get a list of all virtual machines for a specific subscription. The API returns 200 OK when the API is successful.",
         "summary": "Retrieve all virtual machines for a specific subscription.",
-        "operationId": "VirtualMachines_ListSubscription",
+        "operationId": "VirtualMachines_ListBySubscription",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -184,7 +218,7 @@
         },
         "x-ms-examples": {
           "List virtual machines for subscription": {
-            "$ref": "./examples/VirtualMachines_ListSubscription.json"
+            "$ref": "./examples/VirtualMachines_ListBySubscription.json"
           }
         }
       }
@@ -193,7 +227,7 @@
       "get": {
         "description": "Get a list of all workload networks in a given subscription.  The API returns 200 OK when the API is successful.",
         "summary": "List workload networks in a subscription.",
-        "operationId": "WorkloadNetworks_ListSubscription",
+        "operationId": "WorkloadNetworks_ListBySubscription",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -218,7 +252,7 @@
         },
         "x-ms-examples": {
           "List workload networks for subscription": {
-            "$ref": "./examples/WorkloadNetworks_ListSubscription.json"
+            "$ref": "./examples/WorkloadNetworks_ListBySubscription.json"
           }
         }
       }
@@ -442,7 +476,7 @@
         },
         "x-ms-examples": {
           "Patch cluster manager": {
-            "$ref": "./examples/ClusterManagers_Update.json"
+            "$ref": "./examples/ClusterManagers_Patch.json"
           }
         }
       }
@@ -666,7 +700,7 @@
         },
         "x-ms-examples": {
           "Patch cluster": {
-            "$ref": "./examples/Clusters_Update.json"
+            "$ref": "./examples/Clusters_Patch.json"
           }
         }
       }
@@ -693,6 +727,9 @@
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -743,6 +780,9 @@
           "202": {
             "description": "Accepted"
           },
+          "204": {
+            "description": "No Content"
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -792,6 +832,9 @@
           "202": {
             "description": "Accepted"
           },
+          "204": {
+            "description": "No Content"
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -807,6 +850,232 @@
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/racks/{rackName}": {
+      "put": {
+        "description": "Update the properties of the rack if it exists. The API returns 200 OK in case of the successful update. 201 Created is returned when the operation is performed asynchronously.",
+        "summary": "Update a specific rack.",
+        "operationId": "Racks_CreateOrUpdate",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/RackNameParameter"
+          },
+          {
+            "description": "The request body.",
+            "name": "rackParameters",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Rack"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Rack"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Rack"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update rack": {
+            "$ref": "./examples/Racks_Update.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/racks": {
+      "get": {
+        "description": "Get a list of all racks in a given resource group. The API returns 200 OK when the API is successful.",
+        "summary": "List racks in a resource group.",
+        "operationId": "Racks_List",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RackList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "List racks for resource group": {
+            "$ref": "./examples/Racks_List.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/racks/{rackName}": {
+      "get": {
+        "description": "Get the properties of a specific rack. The API returns 200 OK when the operation is successful.",
+        "summary": "Retrieve a specific rack.",
+        "operationId": "Racks_Get",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/RackNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Rack"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get rack resource": {
+            "$ref": "./examples/Racks_Get.json"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete a provided rack. The API returns 200 OK when the deletion is successful. 202 Accepted is returned when the operation is performed asynchronously.",
+        "summary": "Delete a specific rack.",
+        "operationId": "Racks_Delete",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/RackNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete rack resource": {
+            "$ref": "./examples/Racks_Delete.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
+      "patch": {
+        "description": "Patch the properties of a specific rack, or update the tags assigned to the rack. Properties and tag updates can be done independently. The API returns 200 OK when the API is successful.",
+        "summary": "Patch a specific rack.",
+        "operationId": "Racks_Update",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/RackNameParameter"
+          },
+          {
+            "description": "The request body.",
+            "name": "rackUpdateParameters",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RackPatchParameters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Rack"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Patch rack": {
+            "$ref": "./examples/Racks_Patch.json"
+          }
         }
       }
     },
@@ -1029,7 +1298,7 @@
         },
         "x-ms-examples": {
           "Patch virtual machine": {
-            "$ref": "./examples/VirtualMachines_Update.json"
+            "$ref": "./examples/VirtualMachines_Patch.json"
           }
         }
       }
@@ -1064,6 +1333,9 @@
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -1106,6 +1378,9 @@
           "202": {
             "description": "Accepted"
           },
+          "204": {
+            "description": "No Content"
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -1147,6 +1422,9 @@
           "202": {
             "description": "Accepted"
           },
+          "204": {
+            "description": "No Content"
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -1187,6 +1465,9 @@
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -1425,7 +1706,7 @@
         },
         "x-ms-examples": {
           "Patch workload network": {
-            "$ref": "./examples/WorkloadNetworks_Update.json"
+            "$ref": "./examples/WorkloadNetworks_Patch.json"
           }
         }
       }
@@ -1465,7 +1746,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "AdminState"
+            "name": "BareMetalMachineAdminStatus"
           },
           "readOnly": true
         },
@@ -1495,7 +1776,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "CordonStatus"
+            "name": "BareMetalMachineCordonStatus"
           },
           "readOnly": true
         },
@@ -1525,7 +1806,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "PowerState"
+            "name": "BareMetalMachinePowerState"
           },
           "readOnly": true
         },
@@ -1596,7 +1877,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "DetailedStatus"
+            "name": "BareMetalMachineDetailedStatus"
           },
           "readOnly": true
         },
@@ -1660,6 +1941,7 @@
         "password": {
           "description": "The baseboard management controller device server password.",
           "type": "string",
+          "x-ms-secret": true,
           "readOnly": true
         },
         "username": {
@@ -1696,15 +1978,16 @@
           ]
         },
         "name": {
-          "description": "The name of the resource",
+          "description": "The name of the resource.",
           "type": "string",
           "readOnly": true
         },
         "properties": {
-          "$ref": "#/definitions/ClusterProperties"
+          "$ref": "#/definitions/ClusterProperties",
+          "x-ms-client-flatten": true
         },
         "systemData": {
-          "$ref": "#/definitions/systemData"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "tags": {
           "description": "Resource tags.",
@@ -1818,15 +2101,16 @@
           ]
         },
         "name": {
-          "description": "The name of the resource",
+          "description": "The name of the resource.",
           "type": "string",
           "readOnly": true
         },
         "properties": {
-          "$ref": "#/definitions/ClusterManagerProperties"
+          "$ref": "#/definitions/ClusterManagerProperties",
+          "x-ms-client-flatten": true
         },
         "systemData": {
-          "$ref": "#/definitions/systemData"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "tags": {
           "description": "Resource tags.",
@@ -1919,7 +2203,8 @@
       "title": "ClusterPatchParameters represents the body of the request to patch cluster properties.",
       "properties": {
         "properties": {
-          "$ref": "#/definitions/ClusterPatchProperties"
+          "$ref": "#/definitions/ClusterPatchProperties",
+          "x-ms-client-flatten": true
         },
         "tags": {
           "description": "Azure resource tags that will replace the existing ones.",
@@ -1967,7 +2252,7 @@
           "readOnly": true
         },
         "clusterExtendedLocation": {
-          "description": "The extended location (custom location) represents the cluster's control plane location.\nThis extended location is used to route the requests of child objects of the cluster that are handled by the platform operator.",
+          "description": "The extended location (custom location) that represents the cluster's control plane location.\nThis extended location is used to route the requests of child objects of the cluster that are handled by the platform operator.",
           "type": "string",
           "readOnly": true
         },
@@ -1984,8 +2269,8 @@
           "description": "The type of rack configuration for this cluster.",
           "type": "string",
           "enum": [
-            "single-rack",
-            "multi-rack"
+            "SingleRack",
+            "MultiRack"
           ],
           "x-ms-enum": {
             "modelAsString": true,
@@ -1995,6 +2280,11 @@
         "clusterVersion": {
           "description": "The current version of the cluster runtime.",
           "type": "string"
+        },
+        "hybridAksExtendedLocation": {
+          "description": "The extended location (custom location) that is used when creating provisioned clusters (Hybrid AKS clusters).",
+          "type": "string",
+          "readOnly": true
         },
         "networkFabricId": {
           "description": "The resource ID of the network fabric associated with the cluster.",
@@ -2048,7 +2338,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "ClusterTrusted"
+            "name": "ClusterDeploymentState"
           },
           "readOnly": true
         }
@@ -2064,25 +2354,20 @@
         }
       }
     },
-    "DateTime": {
-      "description": "DateTime is a time but it serializes to ISO8601 format with millis\nIt knows how to read 3 different variations of a RFC3339 date time.\nMost APIs we encounter want either millisecond or second precision times.\nThis just tries to make it worry-free.",
-      "type": "string",
-      "format": "date-time"
-    },
     "ExtendedLocation": {
-      "description": "ExtendedLocation is the Azure custom location where this resource will be created",
       "type": "object",
+      "title": "ExtendedLocation is the Azure custom location where this resource will be created.",
       "required": [
         "type",
         "name"
       ],
       "properties": {
         "name": {
-          "description": "ResourceId of the custom location on which resource will be created",
+          "description": "ResourceId of the custom location on which resource will be created.",
           "type": "string"
         },
         "type": {
-          "description": "Extended location type e.g CustomLocation",
+          "description": "Extended location type e.g CustomLocation.",
           "type": "string"
         }
       }
@@ -2124,7 +2409,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "IPAllocationMethod"
+            "name": "VirtualMachineIPAllocationMethod"
           }
         },
         "ipv4Address": {
@@ -2179,6 +2464,75 @@
         }
       }
     },
+    "Rack": {
+      "type": "object",
+      "title": "The rack represents the hardware of a rack and is dependent upon the Cluster for lifecycle.",
+      "required": [
+        "location",
+        "extendedLocation",
+        "properties"
+      ],
+      "properties": {
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation"
+        },
+        "id": {
+          "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+          "type": "string",
+          "readOnly": true
+        },
+        "location": {
+          "description": "The geo-location where the resource lives",
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "name": {
+          "description": "The name of the resource.",
+          "type": "string",
+          "readOnly": true
+        },
+        "properties": {
+          "$ref": "#/definitions/RackProperties",
+          "x-ms-client-flatten": true
+        },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+        },
+        "tags": {
+          "description": "Resource tags.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "x-ms-azure-resource": true
+    },
+    "RackList": {
+      "type": "object",
+      "title": "RackList represents a list of rack.",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of operations.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The list of Rack.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rack"
+          }
+        }
+      }
+    },
     "RackManifest": {
       "type": "object",
       "title": "RackManifest is the unprocessed, user-submitted intention for a rack located in an on-premises cluster.",
@@ -2204,15 +2558,16 @@
           ]
         },
         "name": {
-          "description": "The name of the resource",
+          "description": "The name of the resource.",
           "type": "string",
           "readOnly": true
         },
         "properties": {
-          "$ref": "#/definitions/RackManifestProperties"
+          "$ref": "#/definitions/RackManifestProperties",
+          "x-ms-client-flatten": true
         },
         "systemData": {
-          "$ref": "#/definitions/systemData"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "tags": {
           "description": "Resource tags.",
@@ -2230,7 +2585,7 @@
     },
     "RackManifestList": {
       "type": "object",
-      "title": "RackManifestList represents a list of RackManifests.",
+      "title": "RackManifestList represents a list of rack manifests.",
       "properties": {
         "value": {
           "description": "The list of rack manifests.",
@@ -2311,28 +2666,82 @@
         }
       }
     },
-    "Resource": {
-      "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+    "RackPatchParameters": {
       "type": "object",
-      "title": "Resource Resource",
+      "title": "RackPatchParameters represents the body of the request to patch rack properties.",
       "properties": {
-        "id": {
-          "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+        "properties": {
+          "$ref": "#/definitions/RacksPatchProperties",
+          "x-ms-client-flatten": true
+        },
+        "tags": {
+          "description": "Azure resource tags that will replace the existing ones.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RackProperties": {
+      "type": "object",
+      "title": "RackProperties represents the properties of a rack.",
+      "properties": {
+        "clusterId": {
+          "description": "The resource ID of the cluster the rack is created for. This value is set when the Rack is created by the Cluster and derived from the extended location above.",
           "type": "string",
           "readOnly": true
         },
-        "name": {
-          "description": "The name of the resource",
+        "provisioningState": {
+          "description": "The provisioning state of the rack resource.",
+          "type": "string",
+          "default": "Accepted",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Provisioning",
+            "Accepted"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "RackProvisioningState"
+          },
+          "readOnly": true
+        },
+        "rackLocation": {
+          "description": "This is a customer description of the rack. (e.g. “DTN Datacenter, Floor 3, Isle 9, Rack 2B”)",
+          "type": "string"
+        },
+        "rackManifestId": {
+          "description": "A reference to the rack manifest used to deploy this Rack.",
           "type": "string",
           "readOnly": true
         },
-        "type": {
-          "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+        "rackSerialNumber": {
+          "description": "This is a globally unique identifier for an network cloud rack.",
+          "type": "string"
+        },
+        "rackSkuId": {
+          "description": "The SKU for this rack",
           "type": "string",
           "readOnly": true
         }
-      },
-      "x-ms-azure-resource": true
+      }
+    },
+    "RacksPatchProperties": {
+      "type": "object",
+      "title": "RacksPatchProperties represents the properties of a rack during Patch.",
+      "properties": {
+        "rackLocation": {
+          "description": "This is a customer description of the rack. (e.g. “Datacenter, Floor 3, Isle 9, Rack 2B”)",
+          "type": "string"
+        },
+        "rackSerialNumber": {
+          "description": "This is a globally unique identifier for an network cloud rack.",
+          "type": "string"
+        }
+      }
     },
     "TagsParameter": {
       "type": "object",
@@ -2344,46 +2753,6 @@
           "additionalProperties": {
             "type": "string"
           }
-        }
-      }
-    },
-    "TrackedResource": {
-      "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
-      "type": "object",
-      "title": "TrackedResource Tracked Resource",
-      "required": [
-        "location"
-      ],
-      "properties": {
-        "id": {
-          "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
-          "type": "string",
-          "readOnly": true
-        },
-        "location": {
-          "description": "The geo-location where the resource lives",
-          "type": "string",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        },
-        "name": {
-          "description": "The name of the resource",
-          "type": "string",
-          "readOnly": true
-        },
-        "tags": {
-          "description": "Resource tags.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "type": {
-          "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
-          "type": "string",
-          "readOnly": true
         }
       }
     },
@@ -2413,15 +2782,16 @@
           ]
         },
         "name": {
-          "description": "The name of the resource",
+          "description": "The name of the resource.",
           "type": "string",
           "readOnly": true
         },
         "properties": {
-          "$ref": "#/definitions/VirtualMachineProperties"
+          "$ref": "#/definitions/VirtualMachineProperties",
+          "x-ms-client-flatten": true
         },
         "systemData": {
-          "$ref": "#/definitions/systemData"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "tags": {
           "description": "Resource tags.",
@@ -2545,7 +2915,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "PowerState"
+            "name": "VirtualMachinePowerState"
           },
           "readOnly": true
         },
@@ -2562,7 +2932,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "ProvisioningState"
+            "name": "VirtualMachineProvisioningState"
           },
           "readOnly": true
         },
@@ -2606,15 +2976,16 @@
           ]
         },
         "name": {
-          "description": "The name of the resource",
+          "description": "The name of the resource.",
           "type": "string",
           "readOnly": true
         },
         "properties": {
-          "$ref": "#/definitions/WorkloadNetworkProperties"
+          "$ref": "#/definitions/WorkloadNetworkProperties",
+          "x-ms-client-flatten": true
         },
         "systemData": {
-          "$ref": "#/definitions/systemData"
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "tags": {
           "description": "Resource tags.",
@@ -2663,7 +3034,7 @@
             "False"
           ],
           "x-ms-enum": {
-            "modelAsString": false,
+            "modelAsString": true,
             "name": "AllowMulticast"
           }
         },
@@ -2680,7 +3051,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "HostPluginType"
+            "name": "WorkloadNetworkHostPluginType"
           }
         },
         "hybridAksClustersAssociatedIds": {
@@ -2708,14 +3079,14 @@
           "description": "The network plugin type for HybridAKS, defaults to \"HOST-DEVICE\".",
           "type": "string",
           "enum": [
-            "HOST-DEVICE",
+            "HostDevice",
             "MACVLAN",
             "DPDK",
             "IPVLAN"
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "HybridAksPluginType"
+            "name": "WorkloadNetworkHybridAksPluginType"
           }
         },
         "interfaceName": {
@@ -2727,13 +3098,13 @@
           "description": "The type of the IP address allocation, defaulted to \"Dual-Stack\".",
           "type": "string",
           "enum": [
-            "IPv4",
-            "IPv6",
-            "Dual-Stack"
+            "IPV4",
+            "IPV6",
+            "DualStack"
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "IPAllocationType"
+            "name": "WorkloadNetworkIPAllocationType"
           }
         },
         "ipv4AddressPrefixIndex": {
@@ -2769,8 +3140,8 @@
             "Succeeded",
             "Failed",
             "Canceled",
-            "Accepted",
-            "Provisioning"
+            "Provisioning",
+            "Accepted"
           ],
           "x-ms-enum": {
             "modelAsString": true,
@@ -2794,7 +3165,7 @@
             "False"
           ],
           "x-ms-enum": {
-            "modelAsString": false,
+            "modelAsString": true,
             "name": "SpoofCheckEnabled"
           }
         },
@@ -2806,7 +3177,7 @@
             "False"
           ],
           "x-ms-enum": {
-            "modelAsString": false,
+            "modelAsString": true,
             "name": "TrunkRoutingDomains"
           }
         },
@@ -2818,52 +3189,6 @@
             "type": "string"
           },
           "readOnly": true
-        }
-      }
-    },
-    "systemData": {
-      "type": "object",
-      "title": "SystemData Metadata pertaining to creation and last modification of the resource.",
-      "properties": {
-        "createdAt": {
-          "description": "The timestamp of resource creation (UTC).\nFormat: date-time",
-          "type": "string",
-          "format": "date-time"
-        },
-        "createdBy": {
-          "description": "The identity that created the resource.",
-          "type": "string"
-        },
-        "createdByType": {
-          "description": "The type of identity that created the resource.",
-          "type": "string",
-          "enum": [
-            "[User Application ManagedIdentity Key]"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "CreatedByType"
-          }
-        },
-        "lastModifiedAt": {
-          "description": "The timestamp of resource last modification (UTC)\nFormat: date-time",
-          "type": "string",
-          "format": "date-time"
-        },
-        "lastModifiedBy": {
-          "description": "The identity that last modified the resource.",
-          "type": "string"
-        },
-        "lastModifiedByType": {
-          "description": "The type of identity that last modified the resource.",
-          "type": "string",
-          "enum": [
-            "[User Application ManagedIdentity Key]"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "LastModifiedByType"
-          }
         }
       }
     }
@@ -2882,6 +3207,14 @@
       "x-ms-parameter-location": "method",
       "description": "The name of the cluster.",
       "name": "clusterName",
+      "in": "path",
+      "required": true
+    },
+    "RackNameParameter": {
+      "type": "string",
+      "x-ms-parameter-location": "method",
+      "description": "The name of the rack.",
+      "name": "rackName",
       "in": "path",
       "required": true
     },
