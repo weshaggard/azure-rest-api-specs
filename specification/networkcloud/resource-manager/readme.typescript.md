@@ -6,8 +6,8 @@ Please also specify `--typescript-sdks-folder=<path to root folder of your azure
 ``` yaml $(typescript)
 typescript:
   azure-arm: true
-  package-name: "@azure/arm-NetworkCloud"
-  output-folder: "$(typescript-sdks-folder)/sdk/NetworkCloud/arm-NetworkCloud"
+  package-name: "@azure/arm-networkcloud"
+  output-folder: "$(typescript-sdks-folder)/sdk/networkcloud/arm-networkcloud"
   payload-flattening-threshold: 1
   clear-output-folder: true
   generate-metadata: true

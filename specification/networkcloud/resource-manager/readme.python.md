@@ -6,18 +6,20 @@ Please also specify `--python-sdks-folder=<path to the root directory of your az
 ``` yaml $(track2)
 azure-arm: true
 license-header: MICROSOFT_MIT_NO_VERSION
-package-name: azure-mgmt-NetworkCloud
+namespace: azure.mgmt.networkcloud
+payload-flattening-threshold: 2
+package-name: azure-mgmt-networkcloud
 no-namespace-folders: true
-package-version: 1.0.0b1
+package-version: 2021-10-21-preview
 clear-output-folder: true
 ```
 
 ``` yaml $(python-mode) == 'update' && $(track2)
 no-namespace-folders: true
-output-folder: $(python-sdks-folder)/NetworkCloud/azure-mgmt-NetworkCloud/azure/mgmt/NetworkCloud
+output-folder: $(python-sdks-folder)/networkcloud/azure-mgmt-networkcloud/azure/mgmt/networkcloud
 ```
 
 ``` yaml $(python-mode) == 'create' && $(track2)
 basic-setup-py: true
-output-folder: $(python-sdks-folder)/NetworkCloud/azure-mgmt-NetworkCloud
+output-folder: $(python-sdks-folder)/networkcloud/azure-mgmt-networkcloud
 ```

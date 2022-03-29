@@ -11,5 +11,5 @@ csharp:
   clear-output-folder: true
   client-side-validation: false
   namespace: Microsoft.NetworkCloud
-  output-folder: $(csharp-sdks-folder)/NetworkCloud/management/Microsoft.NetworkCloud/GeneratedProtocol
+  output-folder: $(csharp-sdks-folder)/networkcloud/management/Microsoft.NetworkCloud/GeneratedProtocol
 ```
