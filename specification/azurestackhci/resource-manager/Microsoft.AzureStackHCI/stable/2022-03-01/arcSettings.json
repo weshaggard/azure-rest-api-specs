@@ -221,6 +221,11 @@
         ],
         "operationId": "ArcSettings_GeneratePassword",
         "description": "Generate password for arc settings.",
+        "x-ms-examples": {
+          "Generate Password": {
+            "$ref": "./examples/GeneratePassword.json"
+          }
+        },
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -244,6 +249,12 @@
             "schema": {
               "$ref": "#/definitions/PasswordCredential"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -255,6 +266,11 @@
         ],
         "operationId": "ArcSettings_CreateIdentity",
         "description": "Create Aad identity for arc settings.",
+        "x-ms-examples": {
+          "Create Arc Identity": {
+            "$ref": "./examples/CreateArcIdentity.json"
+          }
+        },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
@@ -280,14 +296,11 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ArcSetting"
+              "$ref": "#/definitions/ArcIdentityResponse"
             }
           },
           "202": {
             "description": "Accepted"
-          },
-          "204": {
-            "description": "NoContent"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -363,11 +376,14 @@
         },
         "arcInstanceResourceGroup": {
           "description": "The resource group that hosts the Arc agents, ie. Hybrid Compute Machine resources.",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "arcApplicationClientId": {
           "description": "App id of arc AAD identity.",
+          "type": "string"
+        },
+        "arcApplicationTenantId": {
+          "description": "Tenant id of arc AAD identity.",
           "type": "string"
         },
         "arcServicePrincipalObjectId": {
@@ -469,6 +485,36 @@
         "endDateTime": {
           "type": "string",
           "format": "date-time"
+        }
+      },
+      "additionalProperties": false,
+      "readOnly": true
+    },
+    "ArcIdentityResponse": {
+      "description": "ArcIdentity details.",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "description": "ArcIdentity properties.",
+          "$ref": "#/definitions/ArcIdentityResponseProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "ArcIdentityResponseProperties": {
+      "type": "object",
+      "properties": {
+        "arcApplicationClientId": {
+          "type": "string"
+        },
+        "arcApplicationTenantId": {
+          "type": "string"
+        },
+        "arcServicePrincipalObjectId": {
+          "type": "string"
+        },
+        "arcApplicationObjectId": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
