@@ -28,12 +28,14 @@ These are the global settings for the Azure Communication Services API.
 title: CommunicationServiceManagementClient
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-preview-2021-10
+tag: package-preview-2022-03-29
+tag: package-preview-2021-10-01
+tag: package-2020-08-20
 ```
 
-### Tag: package-preview-2021-10
+### Tag: package-preview-2021-10-01
 
-These settings apply only when `--tag=package-preview-2021-10` is specified on the command line.
+These settings apply only when `--tag=package-preview-2021-10-01` is specified on the command line.
 
 ``` yaml $(tag) == 'package-preview-2021-10'
 input-file:
@@ -42,8 +44,13 @@ input-file:
   - Microsoft.Communication/preview/2021-10-01-preview/EmailServices.json
 ```
 
-``` yaml $(tag) == 'package-preview-2021-10' && $(generate-private)
-  - Microsoft.Communication/preview/2021-10-01-preview/CommunicationService-private.json
+### Tag: package-preview-2022-03-29
+
+These settings apply only when `--tag=package-preview-2022-03-29` is specified on the command line.
+
+``` yaml $(tag) == 'package-preview-2022-03-29'
+input-file:
+  - Microsoft.Communication/preview/2022-03-29-preview/CommunicationServices.json
 ```
 
 ### Tag: package-2020-08-20
