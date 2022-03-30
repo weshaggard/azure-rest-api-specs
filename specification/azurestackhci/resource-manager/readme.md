@@ -29,7 +29,7 @@ title: AzureStackHCIClient
 description: Azure Stack HCI management service
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-preview-2022-03
+tag: package-preview-2022-04
 ```
 
 ## Suppression
@@ -52,26 +52,44 @@ directive:
 ```
 
 
+### Tag: package-preview-2022-04
+
+These settings apply only when `--tag=package-preview-2022-04` is specified on the command line.
+
+```yaml $(tag) == 'package-preview-2022-04'
+input-file:
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/arcSettings.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/clusters.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/extensions.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/galleryImages.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/networkInterfaces.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/offers.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/operations.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/publishers.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/skus.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/storageContainers.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/virtualHardDisks.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/virtualMachines.json
+  - Microsoft.AzureStackHCI/preview/2022-04-01-preview/virtualNetworks.json
+```
 ### Tag: package-preview-2022-03
 
 These settings apply only when `--tag=package-preview-2022-03` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2022-03'
+``` yaml $(tag) == 'package-preview-2022-03'
 input-file:
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/arcSettings.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/clusters.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/extensions.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/galleryImages.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/networkInterfaces.json
-  - Microsoft.AzureStackHCI/preview/2022-03-01-preview/offers.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/operations.json
-  - Microsoft.AzureStackHCI/preview/2022-03-01-preview/publishers.json
-  - Microsoft.AzureStackHCI/preview/2022-03-01-preview/skus.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/storageContainers.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/virtualHardDisks.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/virtualMachines.json
   - Microsoft.AzureStackHCI/preview/2022-03-01-preview/virtualNetworks.json
 ```
+
 ### Tag: package-2022-01
 
 These settings apply only when `--tag=package-2022-01` is specified on the command line.
