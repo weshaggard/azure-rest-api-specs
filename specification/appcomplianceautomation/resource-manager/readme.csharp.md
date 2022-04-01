@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.AppComplianceAssessment
-  output-folder: $(csharp-sdks-folder)/appcomplianceassessment/management/Microsoft.AppComplianceAssessment/GeneratedProtocol
+  namespace: Microsoft.AppComplianceAutomation
+  output-folder: $(csharp-sdks-folder)/appcomplianceautomation/management/Microsoft.AppComplianceAutomation/GeneratedProtocol
 ```

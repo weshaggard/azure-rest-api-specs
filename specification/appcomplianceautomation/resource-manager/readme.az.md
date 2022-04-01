@@ -6,11 +6,11 @@ For new Resource Provider. It is highly recommended to onboard Azure CLI extensi
 
 ``` yaml $(az) && $(target-mode) != 'core'
 az:
-    extensions: appcomplianceassessment
-    namespace: azure.mgmt.appcomplianceassessment
-    package-name: azure-mgmt-appcomplianceassessment
-az-output-folder: $(azure-cli-extension-folder)/src/appcomplianceassessment
-python-sdk-output-folder: "$(az-output-folder)/azext_appcomplianceassessment/vendored_sdks/appcomplianceassessment"
+    extensions: appcomplianceautomation
+    namespace: azure.mgmt.appcomplianceautomation
+    package-name: azure-mgmt-appcomplianceautomation
+az-output-folder: $(azure-cli-extension-folder)/src/appcomplianceautomation
+python-sdk-output-folder: "$(az-output-folder)/azext_appcomplianceautomation/vendored_sdks/appcomplianceautomation"
 # add additional configuration here specific for Azure CLI
 # refer to the faq.md for more details
 ```
@@ -20,9 +20,9 @@ python-sdk-output-folder: "$(az-output-folder)/azext_appcomplianceassessment/ven
 This is for command modules that already in azure cli main repo. 
 ``` yaml $(az) && $(target-mode) == 'core'
 az:
-  extensions: appcomplianceassessment
-  namespace: azure.mgmt.appcomplianceassessment
-  package-name: azure-mgmt-appcomplianceassessment
-az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/appcomplianceassessment
-python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/appcomplianceassessment"
+  extensions: appcomplianceautomation
+  namespace: azure.mgmt.appcomplianceautomation
+  package-name: azure-mgmt-appcomplianceautomation
+az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/appcomplianceautomation
+python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/appcomplianceautomation"
 ``` 

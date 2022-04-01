@@ -1,8 +1,8 @@
-# appcomplianceassessment
+# appcomplianceautomation
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for appcomplianceassessment.
+This is the AutoRest configuration file for appcomplianceautomation.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the appcomplianceassessment.
+These are the global settings for the appcomplianceautomation.
 
 ```yaml
 openapi-type: arm
@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2022-05-10-privatepreview` is spec
 
 ```yaml $(tag) == 'package-2022-05-10-privatepreview'
 input-file:
-  - Microsoft.AppComplianceAssessment/preview/2022-05-10-privatepreview/appcomplianceassessment.json
+  - Microsoft.AppComplianceAutomation/preview/2022-05-10-privatepreview/appcomplianceautomation.json
 ```
 
 ---

@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "App Compliance Automation Tool for Microsoft 365",
+    "title": "Microsoft 365 App Compliance Assessment Tool",
     "version": "2022-05-10-privatepreview",
-    "description": "App Compliance Automation Tool for Microsoft 365 API spec"
+    "description": "The Microsoft 365 App Compliance Assessment Tool service API spec"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -34,54 +34,12 @@
     }
   },
   "paths": {
-    "/providers/Microsoft.AppComplianceAutomation/operationResults/{operationId}": {
+    "/providers/Microsoft.AppComplianceAssessment/operations": {
       "get": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
-        "description": "Query the ongoing operation status.",
-        "operationId": "OperationResults_Get",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/OperationIdParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK. The request has succeeded."
-          },
-          "202": {
-            "description": "Accepted. The request is still running."
-          },
-          "204": {
-            "description": "No Content. For Delete operation results."
-          },
-          "default": {
-            "description": "Error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "OperationResults_Get": {
-            "$ref": "./examples/OperationResults_Get.json"
-          }
-        }
-      }
-    },
-    "/providers/Microsoft.AppComplianceAutomation/operations": {
-      "get": {
-        "tags": [
-          "AppComplianceAutomation"
-        ],
-        "description": "Lists all of the available REST API operations of the Microsoft.AppComplianceAutomation provider.",
+        "description": "Lists all of the available REST API operations of the Microsoft.AppComplianceAssessment provider.",
         "operationId": "Operations_List",
         "produces": [
           "application/json"
@@ -115,12 +73,57 @@
         }
       }
     },
-    "/providers/Microsoft.AppComplianceAutomation/reports": {
+    "/providers/Microsoft.AppComplianceAssessment/checkNameAvailability": {
+      "post": {
+        "tags": [
+          "AppComplianceAssessment"
+        ],
+        "description": "Checks whether the resource name is available.",
+        "operationId": "Resource_CheckNameAvailability",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ClientTenantIdHeaderParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "Parameters for the check Check Name Availability operation",
+            "required": true,
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/CheckNameAvailabilityRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/CheckNameAvailabilityResponse"
+            }
+          },
+          "default": {
+            "description": "Detailed error information.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Check Name Availability": {
+            "$ref": "examples/Resource_CheckNameAvailability.json"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.AppComplianceAssessment/reports": {
       "get": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
-        "description": "Get the AppComplianceAutomation report list.",
+        "description": "Get the AppComplianceAssessment report list.",
         "operationId": "Reports_List",
         "parameters": [
           {
@@ -133,16 +136,16 @@
             "$ref": "#/parameters/ClientObjectIdHeaderParameter"
           },
           {
-            "$ref": "#/parameters/SkipTokenParameter"
+            "$ref": "#/parameters/SkipParameter"
           },
           {
             "$ref": "#/parameters/TopParameter"
           },
           {
-            "$ref": "#/parameters/SelectParameter"
+            "$ref": "#/parameters/OfferGuidParameter"
           },
           {
-            "$ref": "#/parameters/OfferGuidParameter"
+            "$ref": "#/parameters/SelectParameter"
           },
           {
             "$ref": "#/parameters/ReportCreatorTenantIdParameter"
@@ -172,12 +175,12 @@
         }
       }
     },
-    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}": {
+    "/providers/Microsoft.AppComplianceAssessment/reports/{reportName}": {
       "get": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
-        "description": "Get the AppComplianceAutomation report and its properties.",
+        "description": "Get the AppComplianceAssessment report and its properties.",
         "operationId": "Report_Get",
         "parameters": [
           {
@@ -212,9 +215,9 @@
       },
       "put": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
-        "description": "Create a new AppComplianceAutomation report or update an exiting AppComplianceAutomation report.",
+        "description": "Create a new AppComplianceAssessment report or update an exiting AppComplianceAssessment report.",
         "operationId": "Report_CreateOrUpdate",
         "parameters": [
           {
@@ -241,7 +244,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success. The response describes a AppComplianceAutomation report.",
+            "description": "Success. The response describes a AppComplianceAssessment report.",
             "schema": {
               "$ref": "#/definitions/ReportResource"
             }
@@ -260,9 +263,6 @@
           }
         },
         "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
         "x-ms-examples": {
           "Report_CreateOrUpdate": {
             "$ref": "./examples/Report_CreateOrUpdate.json"
@@ -271,9 +271,9 @@
       },
       "patch": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
-        "description": "Update an exiting AppComplianceAutomation report.",
+        "description": "Update an exiting AppComplianceAssessment report.",
         "operationId": "Report_Update",
         "parameters": [
           {
@@ -282,7 +282,7 @@
             "description": "Parameters for the create or update operation",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ReportResource"
+              "$ref": "#/definitions/ReportUpdateRequest"
             }
           },
           {
@@ -300,13 +300,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Success. The response describes a AppComplianceAutomation report.",
+            "description": "Success. The response describes a AppComplianceAssessment report.",
             "schema": {
               "$ref": "#/definitions/ReportResource"
             }
           },
           "202": {
-            "description": "Accepted. The response indicates the exiting AppComplianceAutomation report is now updating and contains a Location header to query the operation result."
+            "description": "Accepted. The response indicates the exiting AppComplianceAssessment report is now updating and contains a Location header to query the operation result."
           },
           "default": {
             "description": "Error response.",
@@ -316,9 +316,6 @@
           }
         },
         "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
         "x-ms-examples": {
           "Report_Update": {
             "$ref": "./examples/Report_Update.json"
@@ -327,9 +324,9 @@
       },
       "delete": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
-        "description": "Delete an AppComplianceAutomation report.",
+        "description": "Delete an AppComplianceAssessment report.",
         "operationId": "Report_Delete",
         "parameters": [
           {
@@ -360,9 +357,6 @@
           }
         },
         "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
         "x-ms-examples": {
           "Report_Delete": {
             "$ref": "./examples/Report_Delete.json"
@@ -370,12 +364,12 @@
         }
       }
     },
-    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/snapshots": {
+    "/providers/Microsoft.AppComplianceAssessment/reports/{reportName}/snapshots": {
       "get": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
-        "description": "Get the AppComplianceAutomation snapshot list.",
+        "description": "Get the AppComplianceAssessment snapshot list.",
         "operationId": "Snapshots_List",
         "parameters": [
           {
@@ -385,7 +379,10 @@
             "$ref": "#/parameters/ReportNameParameter"
           },
           {
-            "$ref": "#/parameters/SkipTokenParameter"
+            "$ref": "#/parameters/OfferGuidParameter"
+          },
+          {
+            "$ref": "#/parameters/SkipParameter"
           },
           {
             "$ref": "#/parameters/TopParameter"
@@ -401,9 +398,6 @@
           },
           {
             "$ref": "#/parameters/ReportCreatorTenantIdParameter"
-          },
-          {
-            "$ref": "#/parameters/OfferGuidParameter"
           }
         ],
         "responses": {
@@ -430,12 +424,12 @@
         }
       }
     },
-    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/snapshots/{snapshotName}": {
+    "/providers/Microsoft.AppComplianceAssessment/reports/{reportName}/snapshots/{snapshotName}": {
       "get": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
-        "description": "Get the AppComplianceAutomation snapshot and its properties.",
+        "description": "Get the AppComplianceAssessment snapshot and its properties.",
         "operationId": "Snapshot_Get",
         "parameters": [
           {
@@ -472,10 +466,10 @@
         }
       }
     },
-    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/snapshots/{snapshotName}/download": {
+    "/providers/Microsoft.AppComplianceAssessment/reports/{reportName}/snapshots/{snapshotName}/download": {
       "post": {
         "tags": [
-          "AppComplianceAutomation"
+          "AppComplianceAssessment"
         ],
         "description": "Download compliance needs from snapshot, like: Compliance Report, Resource List.",
         "operationId": "Snapshot_Download",
@@ -490,6 +484,9 @@
             "$ref": "#/parameters/SnapshotNameParameter"
           },
           {
+            "$ref": "#/parameters/OfferGuidParameter"
+          },
+          {
             "$ref": "#/parameters/ClientTenantIdHeaderParameter"
           },
           {
@@ -500,9 +497,6 @@
           },
           {
             "$ref": "#/parameters/DownloadTypeParameter"
-          },
-          {
-            "$ref": "#/parameters/OfferGuidParameter"
           }
         ],
         "responses": {
@@ -512,19 +506,12 @@
               "$ref": "#/definitions/DownloadResponse"
             }
           },
-          "202": {
-            "description": "Accepted. The response indicates the exiting AppComplianceAutomation report is now updating and contains a Location header to query the operation result."
-          },
           "default": {
             "description": "Error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
           "Snapshot_Download_ComplianceReport": {
@@ -545,17 +532,17 @@
         "passed": {
           "format": "int32",
           "type": "integer",
-          "description": "The count of all passed full automation control."
+          "description": "The amount of all passed full automation control."
         },
         "failed": {
           "format": "int32",
           "type": "integer",
-          "description": "The count of all failed full automation control."
+          "description": "The amount of all failed full automation control."
         },
         "manual": {
           "format": "int32",
           "type": "integer",
-          "description": "The count of all manual control."
+          "description": "The amount of all manual control."
         }
       }
     },
@@ -589,6 +576,11 @@
       }
     },
     "ReportProperties": {
+      "required": [
+        "resources",
+        "timeZone",
+        "triggerTime"
+      ],
       "type": "object",
       "description": "Report's properties.",
       "properties": {
@@ -680,7 +672,7 @@
     },
     "ReportResource": {
       "type": "object",
-      "description": "A class represent a AppComplianceAutomation report resource.",
+      "description": "A class represent a AppComplianceAssessment report resource.",
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
@@ -774,7 +766,6 @@
         },
         "severity": {
           "$ref": "#/definitions/AssessmentSeverity",
-          "readOnly": true,
           "description": "The severity level of this assessment."
         },
         "description": {
@@ -789,7 +780,6 @@
         },
         "isPass": {
           "type": "boolean",
-          "readOnly": true,
           "description": "Indicates whether all the resource(s) are compliant."
         },
         "policyId": {
@@ -822,7 +812,6 @@
         },
         "resourceStatus": {
           "description": "Resource status.",
-          "readOnly": true,
           "$ref": "#/definitions/ResourceStatus"
         },
         "reason": {
@@ -857,7 +846,7 @@
           "readOnly": true
         },
         "controlType": {
-          "description": "The control type ",
+          "description": "The control's  ",
           "$ref": "#/definitions/ControlType",
           "readOnly": true
         },
@@ -989,7 +978,7 @@
     },
     "SnapshotResource": {
       "type": "object",
-      "description": "A class represent a AppComplianceAutomation snapshot resource.",
+      "description": "A class represent a AppComplianceAssessment snapshot resource.",
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
@@ -1004,6 +993,37 @@
         }
       }
     },
+    "ReportUpdateProperties": {
+      "type": "object",
+      "description": "The properties to update a report.",
+      "properties": {
+        "offerGuid": {
+          "description": "The App offer's Guid",
+          "type": "string"
+        },
+        "timeZone": {
+          "default": "GMT Standard Time",
+          "description": "Trigger time's time zone",
+          "type": "string"
+        },
+        "triggerTime": {
+          "description": "Compliance report generation trigger time",
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "ReportUpdateRequest": {
+      "type": "object",
+      "description": "A request to update a report.",
+      "properties": {
+        "properties": {
+          "description": "Report update property.",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ReportUpdateProperties"
+        }
+      }
+    },
     "ReportResourceList": {
       "description": "Object that includes an array of resources and a possible link for next set.",
       "type": "object",
@@ -1011,7 +1031,6 @@
         "value": {
           "description": "List of the reports",
           "type": "array",
-          "readOnly": true,
           "items": {
             "$ref": "#/definitions/ReportResource"
           }
@@ -1029,7 +1048,6 @@
         "value": {
           "description": "List of the snapshots",
           "type": "array",
-          "readOnly": true,
           "items": {
             "$ref": "#/definitions/SnapshotResource"
           }
@@ -1046,23 +1064,19 @@
       "properties": {
         "subscriptionId": {
           "description": "The subscription Id of this resource.",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "resourceGroup": {
           "description": "The resource group name of this resource.",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "resourceType": {
           "description": "The resource type of this resource.",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "resourceId": {
           "description": "The resource Id.",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         }
       }
     },
@@ -1073,7 +1087,6 @@
         "resourceList": {
           "description": "List of the reports",
           "type": "array",
-          "readOnly": true,
           "items": {
             "$ref": "#/definitions/ResourceItem"
           },
@@ -1082,7 +1095,6 @@
         "complianceReport": {
           "description": "List of the compliance result",
           "type": "array",
-          "readOnly": true,
           "items": {
             "$ref": "#/definitions/ComplianceReportItem"
           },
@@ -1109,12 +1121,6 @@
           "description": "The control name.",
           "readOnly": true
         },
-        "controlType": {
-          "type": "string",
-          "description": "The control type.",
-          "$ref": "#/definitions/ControlType",
-          "readOnly": true
-        },
         "complianceState": {
           "type": "string",
           "description": "The compliance result's status.",
@@ -1123,16 +1129,6 @@
         "policyId": {
           "type": "string",
           "description": "The compliance result mapped policy Id.",
-          "readOnly": true
-        },
-        "policyDisplayName": {
-          "type": "string",
-          "description": "The policy's display name.",
-          "readOnly": true
-        },
-        "policyDescription": {
-          "type": "string",
-          "description": "The policy's detail description.",
           "readOnly": true
         },
         "subscriptionId": {
@@ -1225,14 +1221,19 @@
       "description": "Snapshot Name.",
       "required": true,
       "type": "string",
+      "format": "regex",
+      "pattern": "^[-a-zA-Z0-9_]+$",
       "x-ms-parameter-location": "method"
     },
-    "SkipTokenParameter": {
-      "name": "$skipToken",
-      "description": "Skip over when retrieving results.",
+    "SkipParameter": {
+      "name": "$skip",
+      "description": "Number of entities to skip over when retrieving results.",
       "in": "query",
       "required": false,
-      "type": "string",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647,
+      "format": "int32",
       "x-ms-parameter-location": "method"
     },
     "TopParameter": {
@@ -1259,20 +1260,19 @@
       "name": "reportCreatorTenantId",
       "in": "query",
       "type": "string",
-      "required": false,
       "description": "The tenant id of the report creator.",
       "x-ms-parameter-location": "method",
       "minLength": 1
     },
     "DownloadTypeParameter": {
-      "name": "downloadtype",
+      "name": "downloadType",
       "in": "query",
       "required": true,
       "description": "Indicates the download type.",
       "x-ms-parameter-location": "method",
       "enum": [
-        "compliancereport",
-        "resourcelist"
+        "ComplianceReport",
+        "ResourceList"
       ],
       "type": "string",
       "x-ms-enum": {
@@ -1285,7 +1285,7 @@
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "OData Select statement. Limits the properties on each entry to just those requested, e.g. ?$select=reportName,id.",
+      "description": "OData Select statement. Limits the properties on each entry to just those requested, e.g. Categories?$select=reportName,id.",
       "x-ms-parameter-location": "method",
       "minLength": 1
     }
