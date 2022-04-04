@@ -451,6 +451,14 @@
         }
       ],
       "properties": {
+        "identity": {
+          "description": "The Azure Active Directory identity of the SCOM instance",
+          "$ref": "#/definitions/ManagedIdentity",
+		  "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        }, 
         "properties": {
           "description": "The properties of a SCOM instance resource",
           "$ref": "#/definitions/MonitoringInstanceProperties"
@@ -585,7 +593,79 @@
         }
       }
     },
-	"ManagedIdentities": {
+    "UserIdentity": {
+      "description": "Azure Active Directory identity configuration for a resource.",
+      "type": "object",
+      "properties": {
+        "principalId": {
+          "format": "uuid",
+          "description": "The Azure Active Directory principal id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "clientId": {
+          "format": "uuid",
+          "description": "The Azure Active Directory client id.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "Delegation": {
+      "description": "Delegated Resource Properties - Internal Use Only",
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "description": "The resource id of the source resource - Internal Use Only",
+          "type": "string"
+        },
+        "tenantId": {
+          "format": "uuid",
+          "description": "AAD tenant guid of the source resource identity - Internal Use Only.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ManagedIdentity": {
+      "description": "Azure Active Directory identity configuration for a resource.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "The identity type",
+          "enum": [
+            "None",
+            "UserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "ManagedIdentityType",
+            "modelAsString": true
+          }
+        },
+        "tenantId": {
+          "format": "uuid",
+          "description": "The Azure Active Directory tenant id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "userAssignedIdentities": {
+          "description": "The resource ids of the user assigned identities to use",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/UserIdentity"
+          }
+        },
+        "delegatedResources": {
+          "description": "Resources delegated to the database - Internal Use Only",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Delegation"
+          }
+        }
+      }
+    },
+    "ManagedIdentities": {
       "description": "Managed Identities for setup and database read/writes",
       "type": "object",
       "properties": {
