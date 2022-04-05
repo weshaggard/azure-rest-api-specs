@@ -1,4 +1,4 @@
-# azureazureplaywrightservice
+# azureplaywrightservice
 
 > see https://aka.ms/autorest
 
