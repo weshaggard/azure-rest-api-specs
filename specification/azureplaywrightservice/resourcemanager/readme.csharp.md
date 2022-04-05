@@ -11,5 +11,5 @@ csharp:
   clear-output-folder: true
   client-side-validation: false
   namespace: Microsoft.PlaywrightService
-  output-folder: $(csharp-sdks-folder)/playwrightservice/management/Microsoft.PlaywrightService/GeneratedProtocol
+  output-folder: $(csharp-sdks-folder)/azureplaywrightservice/management/Microsoft.AzurePlaywrightService/GeneratedProtocol
 ```

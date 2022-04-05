@@ -1,8 +1,8 @@
-# playwrightservice
+# azureazureplaywrightservice
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for playwrightservice.
+This is the AutoRest configuration file for azureplaywrightservice.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the playwrightservice.
+These are the global settings for the azureplaywrightservice.
 
 ```yaml
 openapi-type: arm
@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2022-04-05-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-04-05-preview'
 input-file:
-  - Microsoft.PlaywrightService/preview/2022-04-05-preview/playwrightservice.json
+  - Microsoft.AzurePlaywrightService/preview/2022-04-05-preview/azureplaywrightservice.json
 ```
 
 ---
@@ -56,7 +56,7 @@ swagger-to-sdk:
   - repo: azure-sdk-for-js
   - repo: azure-sdk-for-ruby
     after_scripts:
-      - bundle install && rake arm:regen_all_profiles['azure_mgmt_playwrightservice']
+      - bundle install && rake arm:regen_all_profiles['azure_mgmt_azureplaywrightservice']
 ```
 
 ## Go

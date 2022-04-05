@@ -8,8 +8,8 @@ python:
   azure-arm: true
   license-header: MICROSOFT_MIT_NO_VERSION
   payload-flattening-threshold: 2
-  namespace: Microsoft.PlaywrightService
-  package-name: playwrightservice
+  namespace: Microsoft.AzurePlaywrightService
+  package-name: azureplaywrightservice
   package-version: 2022-04-05-preview
   clear-output-folder: true
 ```
@@ -17,5 +17,5 @@ python:
 ```yaml $(python)
 python:
   no-namespace-folders: true
-  output-folder: $(python-sdks-folder)/azure-mgmt/playwrightservice
+  output-folder: $(python-sdks-folder)/azure-mgmt/azureplaywrightservice
 ```

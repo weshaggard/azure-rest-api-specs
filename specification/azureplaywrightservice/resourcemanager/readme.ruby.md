@@ -3,7 +3,7 @@
 These settings apply only when `--ruby` is specified on the command line.
 
 ```yaml
-package-name: azure_mgmt_playwrightservice
+package-name: azure_mgmt_azureplaywrightservice
 package-version: 2022-04-05-preview
 azure-arm: true
 ```
@@ -14,6 +14,6 @@ These settings apply only when `--tag=package-2022-04-05-preview --ruby` is spec
 Please also specify `--ruby-sdks-folder=<path to the root directory of your azure-sdk-for-ruby clone>`.
 
 ```yaml $(tag) == 'package-2022-04-05-preview' && $(ruby)
-namespace: Microsoft.PlaywrightService
-output-folder: $(ruby-sdks-folder)/playwrightservice
+namespace: Microsoft.AzurePlaywrightService
+output-folder: $(ruby-sdks-folder)/azureplaywrightservice
 ```
