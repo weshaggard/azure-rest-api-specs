@@ -42,7 +42,8 @@ input-file:
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkFabrics.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkDevices.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkRacks.json
-  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/RoutingDomains.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/IsolationDomains.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/RoutePolicies.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkDeviceSkus.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkRackSkus.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkFabricSkus.json
