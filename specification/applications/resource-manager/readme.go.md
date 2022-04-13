@@ -16,7 +16,7 @@ batch:
   - tag: package-2022-03-15-privatepreview
 ```
 
-### Tag: package-2022-01-25-privatepreview and go
+### Tag: package-2022-03-15-privatepreview and go
 
 These settings apply only when `--tag=package-2022-03-15-privatepreview --go` is specified on the command line.
 Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
