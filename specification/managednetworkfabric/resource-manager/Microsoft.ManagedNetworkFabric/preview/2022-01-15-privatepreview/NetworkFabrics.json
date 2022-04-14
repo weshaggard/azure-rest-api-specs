@@ -340,149 +340,179 @@
     "NetworkFabricProperties": {
       "type": "object",
       "properties": {
-        "networkFabricSkuId": {
+        "networkFabricSku": {
           "type": "string",
-          "description": "Network Fabric SKU ARM resource id."
+          "description": "Network Fabric SKU specifies the supported compute / aggregate racks. Once the user chooses a particular SKU, only supported racks can be added to the Network Fabric. The SKU determines whether it is a single / multi rack Network Fabric."
+        },
+        "networkFabricControllerId": {
+          "type": "string",
+          "description": "networkFabricControllerId is the ARM resource id for the NetworkFabricController the Fabric belongs to."
         },
         "racks": {
           "type": "array",
-          "description": "Rack ARM resource ids from this Network Fabric.",
+          "description": "Rack ARM resource ids from this Network Fabric. The number of racks allowed depends on the Network Fabric SKU.",
+          "readOnly": true,
           "items": {
-            "description": "Rack id model.",
-            "properties": {
-              "rackId": {
-                "type": "string",
-                "description": "Reference to the rack ARM resource."
-              }
-            }
+            "description": "Rack id ARM resource.",
+            "type": "string"
           }
         },
-        "routingDomains": {
+        "isolationDomains": {
           "type": "array",
-          "description": "Routing Domain ARM resource ids from this Network Fabric.",
+          "description": "Isolation Domain ARM resource ids from this Network Fabric. This list contains all the isolation domains associated to this Network Fabric.",
+          "readOnly": true,
           "items": {
-            "description": "Routing id model.",
-            "properties": {
-              "routingDomainId": {
-                "type": "string",
-                "description": "Reference to the RoutingDomain ARM resource."
-              }
-            }
+            "description": "Reference to the IsolationDomain ARM resource.",
+            "type": "string"
           }
         },
         "networkToNetworkInterconnect": {
           "type": "object",
           "properties": {
-            "bandwidthInGbps": {
+            "portCount": {
               "type": "integer",
-              "description": "bandwidthInGbps. Example: 100."
-            },
-            "provisionedBandwidthInGbps": {
-              "type": "integer",
-              "description": "provisionedBandwidthInGbps. Example: 100."
+              "description": "The number of ports for CE-PE uplink. Number of ports for CE & PE interconnection. Maximum allowed depends on SKU. Default value is maximum allowed as per the SKU. Note that these ports are configured with link aggregation (LAG). The port count indicates the number of consecutive ports used for CE-PE uplink."
             },
             "mtu": {
               "type": "integer",
-              "description": "mtu. Example: 9000."
+              "description": "Maximum Transmission Unit (MTU) of the packets between PE & CE. Default value is 9000."
+            },
+            "ipv4Prefix": {
+              "type": "string",
+              "description": "IPv4 Address Prefix of CE-PE interconnect links. Default value is 172.16.0.0/30. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
+            },
+            "ipv6Prefix": {
+              "type": "string",
+              "description": "IPv6 Address Prefix of CE-PE interconnect links. Default value is 3FFE:FFFF:0:CD30::a1/126. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
             },
             "provisioningState": {
               "type": "string",
-              "description": "provisioningState. Example: suceeded | failed."
+              "description": "provisioningState. Example: suceeded | failed.",
+              "$ref": "./common.json#/definitions/ProvisioningState",
+              "readOnly": true
             },
-            "networkPorts": {
-              "type": "string",
-              "description": "networkPorts. Example: 1,2,3,4,5,6."
+            "interfaces": {
+              "type": "array",
+              "description": "List of network device interfaces ARM resource ids.",
+              "items": {
+                "type": "string",
+                "description": "Network device interface ARM resource id."
+              },
+              "readOnly": true
             },
-            "lagConfig": {
+            "mpBgpConfiguration": {
               "type": "object",
+              "description": "Multi Protocol Border Gateway Protocol configuration. This BGP configuration enables exchange of routes using mp-BGP for multiple isolation domains with single peering.",
               "properties": {
-                "config": {
-                  "type": "string",
-                  "description": "config. Example: openconfig base64."
-                },
-                "provisioningState": {
-                  "type": "string",
-                  "description": "provisioningState. Example: suceeded | failed."
-                }
-              }
-            },
-            "ipv4Configuration": {
-              "type": "object",
-              "properties": {
-                "addressPrefix": {
-                  "type": "string",
-                  "description": "addressPrefix. Example: 123.0.0.0/28."
-                },
-                "provisioningState": {
-                  "type": "string",
-                  "description": "provisioningState. Example: suceeded | failed."
-                }
-              }
-            },
-            "ipv6Configuration": {
-              "type": "object",
-              "properties": {
-                "addressPrefix": {
-                  "type": "string",
-                  "description": "addressPrefix. Example: 3FFE:FFFF:0:CD30::a1/124."
-                },
-                "provisioningState": {
-                  "type": "string",
-                  "description": "provisioningState. Example: suceeded | failed."
-                }
-              }
-            },
-            "peeringConfiguration": {
-              "type": "object",
-              "properties": {
-                "vlan": {
+                "fabricASN": {
                   "type": "integer",
-                  "description": "vlan. Example: 4096."
-                },
-                "localASN": {
-                  "type": "integer",
-                  "description": "localASN. Example: 102."
+                  "description": "fabricASN. Example: 102."
                 },
                 "peerASN": {
                   "type": "integer",
                   "description": "peerASN. Example: 101."
-                },
-                "ipv4addressPrefix": {
-                  "type": "string",
-                  "description": "ipv4addressPrefix. Example: 123.0.0.0/30."
-                },
-                "ipv6addressPrefix": {
-                  "type": "string",
-                  "description": "ipv6addressPrefix. Example: 3FFE:FFFF:0:CD30::a1/124."
-                },
-                "provisioningState": {
-                  "type": "string",
-                  "description": "provisioningState. Example: suceeded | failed."
                 }
-              }
+              },
+              "required": [
+                "peerASN"
+              ]
+            }
+          }
+        },
+        "networkToNetworkInterconnectStatus": {
+          "type": "object",
+          "properties": {
+            "ipv4ProvisioningState": {
+              "type": "string",
+              "description": "ipv4ProvisioningState. Example: suceeded | failed.",
+              "readOnly": true
+            },
+            "ipv6ProvisioningState": {
+              "type": "string",
+              "description": "ipv6ProvisioningState. Example: suceeded | failed.",
+              "readOnly": true
+            },
+            "mpBgpConfigurationState": {
+              "type": "string",
+              "description": "mpBgpConfigurationState. Example: suceeded | failed.",
+              "readOnly": true
             }
           }
         },
         "terminalServerConfiguration": {
           "type": "object",
           "properties": {
-            "ipv4Address": {
+            "tsIPv4Address": {
               "type": "string",
-              "description": "ipv4Address. Example: 123.0.0.1."
+              "description": "IPv4 address configured on Terminal Server interface connected to PE interface. Default value: 172.16.0.254/31, can be updated post-deployment."
             },
-            "ipv6Address": {
+            "peIPv4Address": {
               "type": "string",
-              "description": "ipv6Address."
+              "description": "IPv4 address configured on PE interface connected to TS. Default value: 172.16.0.255/31, can be updated post-deployment."
             },
-            "userName": {
+            "username": {
               "type": "string",
-              "description": "userName."
+              "description": "Username for the terminal server connection.",
+              "x-ms-secret": true
             },
-            "passwordKVLocation": {
+            "password": {
               "type": "string",
-              "description": "passwordKVLocation."
+              "description": "Password for the terminal server connection.",
+              "x-ms-secret": true
+            }
+          },
+          "required": [
+            "username",
+            "password"
+          ]
+        },
+        "terminalServerConnectivity": {
+          "type": "string",
+          "description": "terminalServerConnectivity. Example: ipv4Reachable | notReachable.",
+          "readOnly": true
+        },
+        "managementIpConfiguration": {
+          "type": "object",
+          "properties": {
+            "ipv4Prefix": {
+              "type": "string",
+              "description": "ipv4Prefix. Example: 123.0.0.0/28."
+            },
+            "ipv6Prefix": {
+              "type": "string",
+              "description": "ipv6Prefix. Example: 3FFE:FFFF:0:CD30::a1/124."
+            },
+            "managementVpnConfiguration": {
+              "type": "object",
+              "properties": {
+                "importRouteTargets": {
+                  "type": "array",
+                  "description": "Route Targets to be applied for incoming routes into CE.",
+                  "items": {
+                    "type": "string",
+                    "description": "Import route target. Example: 65531:2001, 65532:2001."
+                  }
+                },
+                "exportRouteTargets": {
+                  "type": "array",
+                  "description": "Route Targets to be applied for outgoing routes from CE.",
+                  "items": {
+                    "type": "string",
+                    "description": "Export route target. Example: 65531, 65532."
+                  }
+                },
+                "state": {
+                  "type": "string",
+                  "description": "state. Example: enabled | disabled."
+                }
+              }
             }
           }
+        },
+        "managementVpnReachability": {
+          "type": "string",
+          "description": "Indicates whether the management network is reachable or not via ExpressRoute. Example: ipv4Reachable | ipv6Reachable | notReachable.",
+          "readOnly": true
         },
         "operationalState": {
           "description": "Gets the operational state of the resource.",
@@ -495,6 +525,13 @@
           "readOnly": true
         }
       },
+      "required": [
+        "networkFabricSku",
+        "networkFabricControllerId",
+        "terminalServerConfiguration",
+        "networkToNetworkInterconnect",
+        "managementIpConfiguration"
+      ],
       "description": "NetworkFabricProperties define the resource properties."
     },
     "NetworkFabricPatchProperties": {
