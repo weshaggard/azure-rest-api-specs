@@ -300,6 +300,7 @@
         },
         "imagePath": {
           "type": "string",
+          "x-ms-secret": true,
           "description": "location of the image the gallery image should be created from"
         },
         "osType": {
@@ -314,6 +315,36 @@
           },
           "description": "operating system type that the gallery image uses. Expected to be linux or windows"
         },
+        "cloudInitDataSource": {
+          "type": "string",
+          "description": "Datasource for the gallery image when provisioning with cloud-init (Azure or NoCloud)",
+          "enum": [
+            "NoCloud",
+            "Azure"
+          ],
+          "x-ms-enum": {
+            "name": "CloudInitDataSource",
+            "modelAsString": true
+          }
+        },
+        "hyperVGeneration": {
+          "type": "string",
+          "description": "The hypervisor generation of the Virtual Machine [V1, V2]",
+          "enum": [
+            "V1",
+            "V2"
+          ],
+          "x-ms-enum": {
+            "name": "HyperVGeneration",
+            "modelAsString": true
+          }
+        },
+        "identifier": {
+          "$ref": "#/definitions/galleryImageIdentifier"
+        },
+        "version": {
+          "$ref": "#/definitions/galleryImageVersion"
+        },
         "provisioningState": {
           "type": "string"
         },
@@ -326,6 +357,80 @@
           "description": "MOCGalleryImageStatus defines the observed state of MOCGalleryImage"
         }
       }
+    },
+    "galleryImageIdentifier": {
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "description": "The name of the gallery image definition publisher."
+        },
+        "offer": {
+          "type": "string",
+          "description": "The name of the gallery image definition offer."
+        },
+        "sku": {
+          "type": "string",
+          "description": "The name of the gallery image definition SKU."
+        }
+      },
+      "required": [
+        "publisher",
+        "offer",
+        "sku"
+      ],
+      "description": "This is the gallery image definition identifier."
+    },
+    "galleryImageVersion": {
+      "properties": {
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "This is the version of the gallery image."
+        },
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/galleryImageVersionProperties"
+        }
+      },
+      "description": "Specifies information about the gallery image version that you want to create or update."
+    },
+    "galleryImageVersionProperties": {
+      "properties": {
+        "storageProfile": {
+          "$ref": "#/definitions/galleryImageVersionStorageProfile"
+        }
+      },
+      "required": [
+        "storageProfile"
+      ],
+      "description": "Describes the properties of a gallery image version."
+    },
+    "galleryImageVersionStorageProfile": {
+      "properties": {
+        "osDiskImage": {
+          "$ref": "#/definitions/galleryOSDiskImage"
+        }
+      },
+      "description": "This is the storage profile of a Gallery Image Version."
+    },
+    "galleryOSDiskImage": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/galleryDiskImage"
+        }
+      ],
+      "description": "This is the OS disk image."
+    },
+    "galleryDiskImage": {
+      "properties": {
+        "sizeInMB": {
+          "type": "integer",
+          "format": "int64",
+          "readOnly": true,
+          "description": "This property indicates the size of the VHD to be created."
+        }
+      },
+      "description": "This is the disk image base class."
     },
     "galleryimages": {
       "type": "object",
