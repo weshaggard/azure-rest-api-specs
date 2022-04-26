@@ -36,6 +36,7 @@ These settings apply only when `--tag=package-2022-04-01-preview` is specified o
 ```yaml $(tag) == 'package-2022-04-01-preview'
 input-file:
   - Private.Devices/preview/2022-04-01-preview/deviceregistry.json
+  - Microsoft.DevicesDemo/preview/2022-04-01-preview/deviceregistry.json
 ```
 
 ---
