@@ -26,17 +26,16 @@ These are the global settings for the deviceregistry.
 
 ```yaml
 openapi-type: arm
-tag: package-2022-04-01-preview
+tag: package-2022-04-04-preview
 ```
 
-### Tag: package-2022-04-01-preview
+### Tag: package-2022-04-04-preview
 
-These settings apply only when `--tag=package-2022-04-01-preview` is specified on the command line.
+These settings apply only when `--tag=package-2022-04-04-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-04-01-preview'
+```yaml $(tag) == 'package-2022-04-04-preview'
 input-file:
-  - Private.Devices/preview/2022-04-01-preview/deviceregistry.json
-  - Microsoft.DevicesDemo/preview/2022-04-01-preview/deviceregistry.json
+  - Private.Devices/preview/2022-04-04-preview/deviceregistry.json
 ```
 
 ---
