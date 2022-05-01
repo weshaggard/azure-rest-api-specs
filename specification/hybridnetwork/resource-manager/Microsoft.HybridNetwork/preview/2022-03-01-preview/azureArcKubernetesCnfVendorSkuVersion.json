@@ -1,0 +1,148 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "HybridNetworkManagementClient",
+    "description": "The definitions in this swagger specification will be used to manage the Hybrid Network resources.",
+    "version": "2022-03-01-preview"
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow.",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {},
+  "definitions": {
+    "AzureArcKubernetesNetworkFunctionTemplate": {
+      "type": "object",
+      "description": "",
+      "properties": {
+        "networkFunctionRoleConfigurations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AzureArcKubernetesNetworkFunctionRoleConfiguration"
+          }
+        }
+      }
+    },
+    "AzureArcKubernetesNetworkFunctionRoleConfiguration": {
+      "type": "object",
+      "description": "",
+      "allOf": [
+        {
+          "$ref": "./vendorSkuVersionCommon.json#/definitions/NetworkFunctionRoleConfiguration"
+        }
+      ],
+      "properties": {
+        "artifactProfile": {
+          "description": "",
+          "$ref": "#/definitions/AzureArcKubernetesArtifactProfile"
+        },
+        "deployMappingRuleProfile": {
+          "description": "",
+          "$ref": "#/definitions/AzureArcKubernetesDeployMappingRuleProfile"
+        }
+      }
+    },
+    "AzureArcKubernetesArtifactProfile": {
+      "type": "object",
+      "description": "",
+      "allOf": [
+        {
+          "$ref": "#/definitions/HelmArtifactProfile"
+        }
+      ]
+    },
+    "HelmArtifactProfile": {
+      "type": "object",
+      "description": "Helm artifact profile.",
+      "properties": {
+        "chartRepository": {
+          "type": "string",
+          "description": "Chart repository."
+        },
+        "chartVersionRanges": {
+          "type": "array",
+          "description": "Chart version range list.",
+          "items": {
+            "description": "Chart version or chart version range.",
+            "type": "string"
+          }
+        },
+        "registryValuesPaths": {
+          "type": "array",
+          "description": "The registry values path list.",
+          "items": {
+            "description": "The registry values path.",
+            "type": "string"
+          }
+        },
+        "imagePullSecretesValuesPaths": {
+          "type": "array",
+          "description": "The image pull secrets values path list.",
+          "items": {
+            "description": "The image pull secrets values path.",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AzureArcKubernetesDeployMappingRuleProfile": {
+      "type": "object",
+      "description": "Azure arc kubernetes deploy mapping rule profile.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/HelmMappingRuleProfile"
+        }
+      ]
+    },
+    "HelmMappingRuleProfile": {
+      "type": "object",
+      "description": "Helm mapping rule profile",
+      "properties": {
+        "releaseNamespace": {
+          "description": "Helm release namespace.",
+          "type": "string"
+        },
+        "releaseName": {
+          "description": "Helm release name.",
+          "type": "string"
+        },
+        "roleEnabled": {
+          "description": "Flag to show if it the role need to be enabled",
+          "type": "boolean"
+        },
+        "chartVersion": {
+          "description": "Helm release chart version.",
+          "type": "string"
+        },
+        "values": {
+          "description": "Helm release chart values.",
+          "type": "object"
+        }
+      }
+    }
+  }
+}

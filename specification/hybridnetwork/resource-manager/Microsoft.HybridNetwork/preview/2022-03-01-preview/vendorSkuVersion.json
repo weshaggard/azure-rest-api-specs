@@ -1,0 +1,349 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "HybridNetworkManagementClient",
+    "description": "The resources in this swagger specification will be used by vendors to on-board offerings and manage network functions.",
+    "version": "2022-03-01-preview"
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow.",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.HybridNetwork/vendors/{vendorName}/vendorSkus/{skuName}/vendorSkuVersions/{versionName}": {
+      "delete": {
+        "tags": [
+          "VendorSkuVersions"
+        ],
+        "operationId": "VendorSkuVersions_Delete",
+        "description": "Deletes the specified vendor sku version. This operation can take up to 2 hours to complete. This is expected service behavior.",
+        "parameters": [
+          {
+            "name": "vendorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the vendor."
+          },
+          {
+            "name": "skuName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the sku."
+          },
+          {
+            "name": "versionName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the version."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. Request is successful."
+          },
+          "202": {
+            "description": "Accepted. Sets provisioningState to 'Deleting' until the operation is completed. Returns an operation URI that can be queried to find the current state of the operation."
+          },
+          "204": {
+            "description": "Request is successful. Resource does not exist."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete the sku of vendor resource": {
+            "$ref": "./examples/VendorSkuVersionDelete.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      },
+      "put": {
+        "tags": [
+          "VendorSkuVersions"
+        ],
+        "operationId": "VendorSkuVersions_CreateOrUpdate",
+        "description": "Creates or updates a sku version.",
+        "parameters": [
+          {
+            "name": "vendorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the vendor."
+          },
+          {
+            "name": "skuName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the sku."
+          },
+          {
+            "name": "versionName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the version."
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VendorSkuVersion"
+            },
+            "description": "Parameters supplied to the create or update sku operation."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Creation or update is successful. The operation returns the resulting vendor sku sub resource.",
+            "schema": {
+              "$ref": "#/definitions/VendorSkuVersion"
+            }
+          },
+          "201": {
+            "description": "Created. The operation returns the resulting vendor sku sub resource.",
+            "schema": {
+              "$ref": "#/definitions/VendorSkuVersion"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create or update the sku of vendor resource": {
+            "$ref": "./examples/VendorSkuVersionCreate.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "VendorSkuVersionListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VendorSkuVersion"
+          },
+          "description": "A list of vendor sku versions offered by the vendor."
+        },
+        "nextLink": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The URI to get the next set of results."
+        }
+      },
+      "description": "Response for list vendor sku version API service call."
+    },
+    "VendorSkuVersion": {
+      "description": "Vendor Sku Version definition.",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "discriminator": "networkFunctionType",
+      "required": [
+        "networkFunctionType"
+      ],
+      "properties": {
+        "provisioningState": {
+          "readOnly": true,
+          "$ref": "./common.json#/definitions/ProvisioningState",
+          "description": "The provisioning state of the vendor sku sub resource."
+        },
+        "versionState": {
+          "type": "string",
+          "description": "The Vendor Sku version state.",
+          "enum": [
+            "Unknown",
+            "Preview",
+            "Active",
+            "Depreciated"
+          ],
+          "x-ms-enum": {
+            "name": "versionState",
+            "modelAsString": true
+          }
+        },
+        "deployParameters": {
+          "type": "object",
+          "description": "The required parameters for deploying this vendor sku version as network function"
+        },
+        "networkFunctionType": {
+          "type": "string",
+          "description": "The network function type.",
+          "enum": [
+            "Unknown",
+            "VirtualNetworkFunction",
+            "ContainerizedNetworkFunction"
+          ],
+          "x-ms-enum": {
+            "name": "NetworkFunctionType",
+            "modelAsString": true
+          }
+        }
+      }
+    },
+    "ContainerizedNetworkFunctionVendorSkuVersionDefinition": {
+      "description": "Containerized network function vendor sku version definition.",
+      "x-ms-discriminator-value": "ContainerizedNetworkFunction",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VendorSkuVersion"
+        }
+      ],
+      "required": [
+        "networkFunctionTemplate"
+      ],
+      "properties": {
+        "networkFunctionTemplate": {
+          "$ref": "#/definitions/containerizedNetworkFunctionTemplate"
+        }
+      }
+    },
+    "VirtualNetworkFunctionVendorSkuVersionDefinition": {
+      "description": "Virtual network function vendor sku version definition.",
+      "x-ms-discriminator-value": "VirtualNetworkFunction",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VendorSkuVersion"
+        }
+      ],
+      "required": [
+        "networkFunctionTemplate"
+      ],
+      "properties": {
+        "networkFunctionTemplate": {
+          "$ref": "#/definitions/virtualNetworkFunctionTemplate"
+        }
+      }
+    },
+    "containerizedNetworkFunctionTemplate": {
+      "description": "Containerized network function template.",
+      "discriminator": "nfviType",
+      "required": [
+        "nfviType"
+      ],
+      "properties": {
+        "nfviType": {
+          "type": "string",
+          "description": "The network function type.",
+          "enum": [
+            "Unknown",
+            "AzureArcKubernetes"
+          ],
+          "x-ms-enum": {
+            "name": "ContainerizedNetworkFunctionNfviType",
+            "modelAsString": true
+          }
+        }
+      }
+    },
+    "AzureArcKubernetesContainerizedNetworkFunctionTemplate": {
+      "description": "Azure Arc kubernetes containerized network function template.",
+      "x-ms-discriminator-value": "AzureArcKubernetes",
+      "allOf": [
+        {
+          "$ref": "#/definitions/containerizedNetworkFunctionTemplate"
+        }
+      ],
+      "x-ms-enum": {
+        "name": "NetworkFunctionType",
+        "modelAsString": true
+      }
+    },
+    "virtualNetworkFunctionTemplate": {
+      "description": "Virtual network function template.",
+      "discriminator": "nfviType",
+      "required": [
+        "nfviType"
+      ],
+      "properties": {
+        "nfviType": {
+          "type": "string",
+          "description": "The network function type.",
+          "enum": [
+            "Unknown",
+            "AzureStackEdge",
+            "Azure"
+          ],
+          "x-ms-enum": {
+            "name": "VirtualNetworkFunctionNfviType",
+            "modelAsString": true
+          }
+        }
+      }
+    },
+    "AzureStackEdgeVirtualNetworkFunctionTemplate": {
+      "description": "Azure stack edge virtual network function template.",
+      "x-ms-discriminator-value": "AzureStackEdge",
+      "allOf": [
+        {
+          "$ref": "#/definitions/virtualNetworkFunctionTemplate"
+        }
+      ],
+      "x-ms-enum": {
+        "name": "VirtualNetworkFunctionNfviType",
+        "modelAsString": true
+      }
+    }
+  }
+}
