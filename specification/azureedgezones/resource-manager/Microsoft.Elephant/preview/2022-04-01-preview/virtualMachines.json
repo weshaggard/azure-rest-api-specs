@@ -34,6 +34,48 @@
         }
     },
     "paths": {
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Elephant/virtualMachines": {
+            "get": {
+                "tags": [
+                    "???"
+                ],
+                "operationId": "VirtualMachines_List",
+                "description": "List all virtual machines in the resource group.",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/SubscriptionIdParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/ResourceGroupNameParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/ApiVersionParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of virtual machines successful. The operation returns the resulting virtualMachines resources.",
+                        "schema": {
+                            "$ref": "#/definitions/VirtualMachineListResult"
+                        }
+                    },
+                    "default": {
+                        "description": "Default response is a failure.",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                },
+                "x-ms-examples": {
+                    "ListVirtualMachine": {
+                        "$ref": "./examples/VirtualMachineList.json"
+                    }
+                },
+                "x-ms-pageable": {
+                    "nextLinkName": "nextLink"
+                }
+            }
+        },
         "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Elephant/virtualMachines/{virtualMachineName}": {
             "delete": {
                 "tags": [
@@ -172,6 +214,56 @@
                 "x-ms-examples": {
                     "PutVirtualMachine": {
                         "$ref": "./examples/VirtualMachinePut.json"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "???"
+                ],
+                "operationId": "VirtualMachines_Update",
+                "description": "Updates the specified virtual machine.",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/SubscriptionIdParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/ResourceGroupNameParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/VirtualMachineNameParameter"
+                    },
+                    {
+                        "$ref": "#/parameters/ApiVersionParameter"
+                    },
+                    {
+                        "name": "parameters",
+                        "in": "body",
+                        "required": true,
+                        "x-ms-client-flatten": true,
+                        "schema": {
+                            "$ref": "#/definitions/VirtualMachinePropertiesUpdate"
+                        },
+                        "description": "Parameters supplied to the update virtualMachine operation."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update successful. The operation returns the resulting virtualMachine resource.",
+                        "schema": {
+                            "$ref": "#/definitions/VirtualMachine"
+                        }
+                    },
+                    "default": {
+                        "description": "Default response is a failure.",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                },
+                "x-ms-examples": {
+                    "PatchVirtualMachine": {
+                        "$ref": "./examples/VirtualMachinePatch.json"
                     }
                 }
             }
@@ -330,6 +422,41 @@
             "required": [
                 "properties"
             ]
+        },
+        "VirtualMachinePropertiesUpdate": {
+            "description": "The properties for a virtual machine update operation.",
+            "properties": {
+                "machineName": {
+                    "type": "string",
+                    "description": "Resource ID."
+                },
+                "adminUsername": {
+                    "type": "string",
+                    "description": "Admin account username."
+                },
+                "adminPassword": {
+                    "type": "string",
+                    "description": "Admin account password."
+                }
+            }
+        },
+        "VirtualMachineListResult": {
+            "properties": {
+              "value": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/VirtualMachine"
+                },
+                "readOnly": true,
+                "description": "A response message containing a list of virtual machines in the specified resource group."
+              },
+              "nextLink": {
+                "type": "string",
+                "readOnly": true,
+                "description": "The URL to get the next set of virtual machines."
+              }
+            },
+            "description": "The virtual machine list result."
         }
     },
     "parameters": {
