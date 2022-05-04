@@ -25,6 +25,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 These are the global settings for the cts.
 
 ```yaml
+title: ctsrpClient
 openapi-type: arm
 openapi-subtype: rpaas
 tag: package-2022-03-09-preview

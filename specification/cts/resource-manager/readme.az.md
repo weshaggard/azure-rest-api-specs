@@ -8,7 +8,7 @@ For new Resource Provider. It is highly recommended to onboard Azure CLI extensi
 az:
     extensions: cts
     namespace: azure.mgmt.cts
-    package-name: azure-mgmt-cts
+    package-name: azure-mgmt-cloudtransferservice
 az-output-folder: $(azure-cli-extension-folder)/src/cts
 python-sdk-output-folder: "$(az-output-folder)/azext_cts/vendored_sdks/cts"
 # add additional configuration here specific for Azure CLI
@@ -22,7 +22,7 @@ This is for command modules that already in azure cli main repo.
 az:
   extensions: cts
   namespace: azure.mgmt.cts
-  package-name: azure-mgmt-cts
+  package-name: azure-mgmt-cloudtransferservice
 az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/cts
 python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/cts"
 ``` 
