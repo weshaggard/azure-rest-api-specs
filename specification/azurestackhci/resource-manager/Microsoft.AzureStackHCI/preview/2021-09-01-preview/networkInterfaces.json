@@ -311,7 +311,8 @@
           "items": {
             "$ref": "#/definitions/ipConfiguration"
           },
-          "description": "IPConfigurations - A list of IPConfigurations of the network interface."
+          "description": "IPConfigurations - A list of IPConfigurations of the network interface.",
+          "x-ms-identifiers": []
         },
         "macAddress": {
           "type": "string",
@@ -322,7 +323,19 @@
           "description": "DNS Settings for the interface"
         },
         "provisioningState": {
-          "type": "string"
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "InProgress",
+            "Accepted",
+            "Deleting"
+          ],
+          "x-ms-enum": {
+            "name": "ProvisioningStateEnum",
+            "modelAsString": true
+          }
         },
         "resourceName": {
           "type": "string",
@@ -396,7 +409,15 @@
             },
             "privateIPAllocationMethod": {
               "type": "string",
-              "description": "PrivateIPAllocationMethod - The private IP address allocation method. Possible values include: 'Static', 'Dynamic'"
+              "description": "PrivateIPAllocationMethod - The private IP address allocation method. Possible values include: 'Static', 'Dynamic'",
+              "enum": [
+                "Dynamic",
+                "Static"
+              ],
+              "x-ms-enum": {
+                "name": "PrivateIPAllocationMethodEnum",
+                "modelAsString": true
+              }
             },
             "subnet": {
               "type": "object",
@@ -416,41 +437,13 @@
     },
     "networkinterfaces": {
       "type": "object",
+      "description": "The networkinterfaces resource definition.",
       "x-ms-azure-resource": true,
       "x-ms-client-flatten": true,
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/networkinterfacesProperties"
-        },
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Id"
-        },
-        "name": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Name"
-        },
-        "type": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Type"
-        },
-        "location": {
-          "type": "string",
-          "description": "The resource location"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
-        },
-        "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
         },
         "extendedLocation": {
           "type": "object",
@@ -466,10 +459,11 @@
           }
         }
       },
-      "required": [
-        "location"
-      ],
-      "description": "The networkinterfaces resource definition."
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ]
     },
     "networkinterfacesPatch": {
       "type": "object",

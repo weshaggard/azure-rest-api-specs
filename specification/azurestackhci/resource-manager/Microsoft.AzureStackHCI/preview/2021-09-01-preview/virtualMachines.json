@@ -1249,7 +1249,7 @@
                 "properties": {
                   "id": {
                     "type": "string",
-                    "description": "ID - Resource Id"
+                    "description": "ID - Resource Id of the network interface"
                   }
                 }
               },
@@ -1264,7 +1264,10 @@
             "adminPassword": {
               "type": "string",
               "x-ms-secret": true,
-              "description": "AdminPassword - admin password"
+              "description": "AdminPassword - admin password",
+              "x-ms-mutability": [
+                "create"
+              ] 
             },
             "adminUsername": {
               "type": "string",
@@ -1291,6 +1294,7 @@
                         "properties": {
                           "keyData": {
                             "type": "string",
+                            "x-ms-secret": true,
                             "description": "KeyData - SSH public key certificate used to authenticate with the VM through ssh. The key needs to be at least 2048-bit and in ssh-rsa format. <br><br> For creating ssh keys, see [Create SSH keys on Linux and Mac for Li      nux VMs in Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-mac-create-ssh-keys?toc=%2fazure%2fvirtual-machines%2flinux%2ftoc.json)."
                           },
                           "path": {
@@ -1299,7 +1303,8 @@
                           }
                         }
                       },
-                      "description": "PublicKeys - The list of SSH public keys used to authenticate with linux based VMs."
+                      "description": "PublicKeys - The list of SSH public keys used to authenticate with linux based VMs.",
+                      "x-ms-identifiers": []
                     }
                   },
                   "description": "SSH - contains settings related to ssh configuration"
@@ -1313,7 +1318,15 @@
             },
             "osType": {
               "type": "string",
-              "description": "OsType - string specifying whether the OS is Linux or Windows"
+              "description": "OsType - string specifying whether the OS is Linux or Windows",
+              "enum": [
+                "Linux",
+                "Windows"
+              ],
+              "x-ms-enum": {
+                "name": "OsTypeEnum",
+                "modelAsString": true
+              }
             },
             "windowsConfiguration": {
               "type": "object",
@@ -1341,10 +1354,11 @@
                           }
                         }
                       },
-                      "description": "PublicKeys - The list of SSH public keys used to authenticate with linux based VMs."
+                      "description": "PublicKeys - The list of SSH public keys used to authenticate with linux based VMs.",
+                      "x-ms-identifiers": []
                     }
                   },
-                  "description": "AdditionalUnattendContent AdditionalUnattendContent *[]AdditionalUnattendContent `json:\"additionalUnattendContent,omitempty\"` SSH"
+                  "description": "SSH Configuration"
                 },
                 "timeZone": {
                   "type": "string",
@@ -1395,7 +1409,10 @@
                   }
                 }
               },
-              "description": "adds data disks to the virtual machine"
+              "description": "adds data disks to the virtual machine",
+              "x-ms-identifiers": [
+                "name"
+              ]
             },
             "imageReference": {
               "type": "object",
@@ -1425,7 +1442,19 @@
           "description": "StorageProfile - contains information about the disks and storage information for the virtual machine"
         },
         "provisioningState": {
-          "type": "string"
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "InProgress",
+            "Accepted",
+            "Deleting"
+          ],
+          "x-ms-enum": {
+            "name": "ProvisioningStateEnum",
+            "modelAsString": true
+          }
         },
         "status": {
           "$ref": "#/definitions/virtualMachineStatus"
@@ -1504,35 +1533,6 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/virtualmachinesProperties"
         },
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Id"
-        },
-        "name": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Name"
-        },
-        "type": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Type"
-        },
-        "location": {
-          "type": "string",
-          "description": "The resource location"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
-        },
-        "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
-        },
         "extendedLocation": {
           "type": "object",
           "properties": {
@@ -1551,8 +1551,10 @@
           "description": "The identity of the resource."
         }
       },
-      "required": [
-        "location"
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
       ],
       "description": "The virtualmachines resource definition."
     },
@@ -1560,7 +1562,36 @@
       "type": "object",
       "properties": {
         "vmSize": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Default",
+            "Standard_A2_v2",
+            "Standard_A4_v2",
+            "Standard_D2s_v3",
+            "Standard_D4s_v3",
+            "Standard_D8s_v3",
+            "Standard_D16s_v3",
+            "Standard_D32s_v3",
+            "Standard_DS2_v2",
+            "Standard_DS3_v2",
+            "Standard_DS4_v2",
+            "Standard_DS5_v2",
+            "Standard_DS13_v2",
+            "Standard_K8S_v1",
+            "Standard_K8S2_v1",
+            "Standard_K8S3_v1",
+            "Standard_K8S4_v1",
+            "Standard_NK6",
+            "Standard_NK12",
+            "Standard_NV6",
+            "Standard_NV12",
+            "Standard_K8S5_v1",
+            "Custom"
+          ],
+          "x-ms-enum": {
+            "name": "VmSizeEnum",
+            "modelAsString": true
+          }
         },
         "processors": {
           "type": "integer",
@@ -1585,7 +1616,7 @@
             "properties": {
               "id": {
                 "type": "string",
-                "description": "ID - Resource Id"
+                "description": "ID - Resource ID of the network interface"
               }
             }
           },
@@ -1607,7 +1638,10 @@
               }
             }
           },
-          "description": "adds data disks to the virtual machine for the update call"
+          "description": "adds data disks to the virtual machine for the update call",
+          "x-ms-identifiers": [
+            "name"
+          ]
         }
       }
     },
