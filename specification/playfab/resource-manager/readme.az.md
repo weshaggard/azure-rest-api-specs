@@ -11,18 +11,47 @@ az:
     package-name: azure-mgmt-playfab
 az-output-folder: $(azure-cli-extension-folder)/src/playfab
 python-sdk-output-folder: "$(az-output-folder)/azext_playfab/vendored_sdks/playfab"
-# add additinal configuration here specific for Azure CLI
-# refer to the faq.md for more details
 ```
 
+```yaml $(az)
+directive:
+    - where:
+          group: playfab segment
+          hidden: true
+      set:
+          group: playfab title segment
+    - where:
+          group: playfab playeraccountpool
+      set:
+          group: playfab player-account-pool
+    - where:
+          group: playfab titledataset
+      set:
+          group: playfab title title-data-set
+    - where:
+          group: playfab titleinternaldataset
+      set:
+          group: playfab title title-internal-data-set
 
-
-This is for command modules that already in azure cli main repo. 
-``` yaml $(az) && $(target-mode) == 'core'
-az:
-  extensions: playfab
-  namespace: azure.mgmt.playfab
-  package-name: azure-mgmt-playfab
-az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/playfab
-python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/playfab"
-``` 
+cli:
+    cli-directive:
+    - where:
+        group: Titles
+        param: playerAccountPoolId
+      alias:
+        - player-account-pool-id
+        - p
+    - where:
+        group: Titles
+        op: CreateOrUpdate#Create|Update
+        param: type
+      name: assign-identity
+    - where:
+        type: Title
+        prop: settings
+      json: true
+    - where:
+        type: TitleDataSet|TitleInternalDataSet
+        prop: keyValuePairs
+      json: true
+```
