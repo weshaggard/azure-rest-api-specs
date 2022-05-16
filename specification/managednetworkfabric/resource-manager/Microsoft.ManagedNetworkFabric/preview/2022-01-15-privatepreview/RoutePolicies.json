@@ -88,12 +88,6 @@
               "$ref": "#/definitions/RoutePolicy"
             }
           },
-          "202": {
-            "description": "Accepted",
-            "schema": {
-              "$ref": "#/definitions/RoutePolicy"
-            }
-          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -104,6 +98,14 @@
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "RoutePolicies_Create_MaximumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_Create_MaximumSet_Gen.json"
+          },
+          "RoutePolicies_Create_MinimumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_Create_MinimumSet_Gen.json"
+          }
         }
       },
       "get": {
@@ -146,6 +148,14 @@
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "RoutePolicies_Get_MaximumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_Get_MaximumSet_Gen.json"
+          },
+          "RoutePolicies_Get_MinimumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_Get_MinimumSet_Gen.json"
           }
         }
       },
@@ -215,6 +225,14 @@
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
+        },
+        "x-ms-examples": {
+          "RoutePolicies_Update_MaximumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_Update_MaximumSet_Gen.json"
+          },
+          "RoutePolicies_Update_MinimumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_Update_MinimumSet_Gen.json"
+          }
         }
       },
       "delete": {
@@ -265,6 +283,14 @@
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
+        },
+        "x-ms-examples": {
+          "RoutePolicies_Delete_MaximumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_Delete_MaximumSet_Gen.json"
+          },
+          "RoutePolicies_Delete_MinimumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_Delete_MinimumSet_Gen.json"
+          }
         }
       }
     },
@@ -300,6 +326,14 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "RoutePolicies_ListByResourceGroup_MaximumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_ListByResourceGroup_MaximumSet_Gen.json"
+          },
+          "RoutePolicies_ListByResourceGroup_MinimumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_ListByResourceGroup_MinimumSet_Gen.json"
+          }
         }
       }
     },
@@ -332,6 +366,14 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "RoutePolicies_ListBySubscription_MaximumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_ListBySubscription_MaximumSet_Gen.json"
+          },
+          "RoutePolicies_ListBySubscription_MinimumSet_Gen": {
+            "$ref": "./examples/RoutePolicies_ListBySubscription_MinimumSet_Gen.json"
+          }
         }
       }
     }
@@ -339,6 +381,12 @@
   "definitions": {
     "RoutePolicyProperties": {
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/AnnotationResource",
+          "description": "Common properties for annotated type."
+        }
+      ],
       "properties": {
         "description": {
           "type": "string",
@@ -347,44 +395,102 @@
         "conditions": {
           "type": "array",
           "description": "Route Policy conditions.",
+          "x-ms-identifiers": [
+            "sequenceNumber"
+          ],
           "items": {
             "description": "Route Policy condition model.",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "./common.json#/definitions/AnnotationResource",
+                "description": "Common properties for annotated type."
+              }
+            ],
             "properties": {
               "sequenceNumber": {
                 "type": "integer",
+                "format": "int32",
                 "description": "sequenceNumber of the route policy."
               },
               "match": {
                 "type": "object",
+                "description": "Route policy match properties.",
                 "properties": {
                   "communityValues": {
                     "type": "array",
                     "description": "communityValues. Example: ['1', '2', '3:1'].",
+                    "x-ms-identifiers": [
+                      "value"
+                    ],
                     "items": {
-                      "type": "string",
-                      "description": "communityValue."
+                      "type": "object",
+                      "description": "communityValue model.",
+                      "allOf": [
+                        {
+                          "$ref": "./common.json#/definitions/AnnotationResource",
+                          "description": "Common properties for annotated type."
+                        }
+                      ],
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "description": "communityValue match value."
+                        }
+                      }
                     }
                   },
                   "rtExtendedCommunityValues": {
                     "type": "array",
                     "description": "rtExtendedCommunityValues. Example: [100, 101].",
+                    "x-ms-identifiers": [
+                      "value"
+                    ],
                     "items": {
-                      "type": "string",
-                      "description": "rtExtendedCommunityValue."
+                      "type": "object",
+                      "description": "rtExtendedCommunityValue.",
+                      "allOf": [
+                        {
+                          "$ref": "./common.json#/definitions/AnnotationResource",
+                          "description": "Common properties for annotated type."
+                        }
+                      ],
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "description": "rtExtendedCommunity value."
+                        }
+                      }
                     }
                   },
                   "prefixes": {
                     "type": "array",
                     "description": "prefixes. Example: [100, 101].",
+                    "x-ms-identifiers": [
+                      "value"
+                    ],
                     "items": {
-                      "type": "string",
-                      "description": "prefixe."
+                      "type": "object",
+                      "description": "prefixes model.",
+                      "allOf": [
+                        {
+                          "$ref": "./common.json#/definitions/AnnotationResource",
+                          "description": "Common properties for annotated type."
+                        }
+                      ],
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "description": "prefix. Example: 100."
+                        }
+                      }
                     }
                   }
                 }
               },
               "action": {
                 "type": "object",
+                "description": "Route policy action properties.",
                 "properties": {
                   "action": {
                     "type": "string",
@@ -395,26 +501,58 @@
                     "properties": {
                       "delete": {
                         "type": "object",
+                        "description": "Route policy delete manipulations.",
                         "properties": {
                           "communityValues": {
                             "type": "array",
                             "description": "communityValues. Example: ['1', '2', '3:1'].",
+                            "x-ms-identifiers": [
+                              "value"
+                            ],
                             "items": {
-                              "type": "string",
-                              "description": "communityValue."
+                              "type": "object",
+                              "description": "manipulation delete value model.",
+                              "allOf": [
+                                {
+                                  "$ref": "./common.json#/definitions/AnnotationResource",
+                                  "description": "Common properties for annotated type."
+                                }
+                              ],
+                              "properties": {
+                                "value": {
+                                  "type": "string",
+                                  "description": "manipulation delete."
+                                }
+                              }
                             }
                           }
                         }
                       },
                       "set": {
                         "type": "object",
+                        "description": "Route policy set manipulations.",
                         "properties": {
                           "communityValues": {
                             "type": "array",
                             "description": "communityValues. Example: ['1', '2', '3:1'].",
+                            "x-ms-identifiers": [
+                              "value"
+                            ],
                             "items": {
-                              "type": "string",
-                              "description": "communityValue."
+                              "type": "object",
+                              "description": "set manipulation model.",
+                              "allOf": [
+                                {
+                                  "$ref": "./common.json#/definitions/AnnotationResource",
+                                  "description": "Common properties for annotated type."
+                                }
+                              ],
+                              "properties": {
+                                "value": {
+                                  "type": "string",
+                                  "description": "set manipulation value."
+                                }
+                              }
                             }
                           }
                         }
@@ -479,7 +617,7 @@
           "description": "Resource tags"
         },
         "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v1/types.json#/definitions/systemData",
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
           "description": "The system data."
         }
       },
@@ -529,7 +667,7 @@
           "description": "Resource tags"
         },
         "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v1/types.json#/definitions/systemData",
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
           "description": "The system data."
         }
       },

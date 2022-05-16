@@ -2,7 +2,7 @@
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for openstack.
+This is the AutoRest configuration file for Managed Network Fabric.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the openstack.
+These are the global settings for the Managed Network Fabric.
 
 ```yaml
 openapi-type: arm
@@ -42,11 +42,9 @@ input-file:
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkFabrics.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkDevices.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkRacks.json
-  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/IsolationDomains.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/L2IsolationDomains.json
+  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/L3IsolationDomains.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/RoutePolicies.json
-  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkDeviceSkus.json
-  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkRackSkus.json
-  - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NetworkFabricSkus.json
   - Microsoft.ManagedNetworkFabric/preview/2022-01-15-privatepreview/NfaDevices.json
 ```
 
