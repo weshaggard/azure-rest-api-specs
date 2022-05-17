@@ -36,11 +36,11 @@
   "paths": {},
   "definitions": {
     "AzureArcKubernetesNetworkFunctionTemplate": {
-      "type": "object",
-      "description": "",
+      "description": "Azure Arc kubernetes network function template.",
       "properties": {
         "networkFunctionRoleConfigurations": {
           "type": "array",
+          "description": "Network function role configurations.",
           "items": {
             "$ref": "#/definitions/AzureArcKubernetesNetworkFunctionRoleConfiguration"
           }
@@ -48,8 +48,7 @@
       }
     },
     "AzureArcKubernetesNetworkFunctionRoleConfiguration": {
-      "type": "object",
-      "description": "",
+      "description": "Azure arc kubernetes network function role configurations.",
       "allOf": [
         {
           "$ref": "./vendorSkuVersionCommon.json#/definitions/NetworkFunctionRoleConfiguration"
@@ -57,33 +56,38 @@
       ],
       "properties": {
         "artifactProfile": {
-          "description": "",
+          "description": "Azure arc kubernetes artifact profile.",
           "$ref": "#/definitions/AzureArcKubernetesArtifactProfile"
         },
         "deployMappingRuleProfile": {
-          "description": "",
+          "description": "Deploy mapping rule profile.",
           "$ref": "#/definitions/AzureArcKubernetesDeployMappingRuleProfile"
         }
       }
     },
     "AzureArcKubernetesArtifactProfile": {
-      "type": "object",
-      "description": "",
+      "description": "Azure arc kubernetes artifact prfoile properties.",
       "allOf": [
         {
+          "$ref": "./vendorSkuVersionCommon.json#/definitions/ArtifactProfile"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Azure Arc Kubernetes Artifact profile.",
           "$ref": "#/definitions/HelmArtifactProfile"
         }
-      ]
+      }
     },
     "HelmArtifactProfile": {
-      "type": "object",
       "description": "Helm artifact profile.",
       "properties": {
-        "chartRepository": {
+        "helmPackageName": {
           "type": "string",
           "description": "Chart repository."
         },
-        "chartVersionRanges": {
+        "helmPackageVersionRanges": {
           "type": "array",
           "description": "Chart version range list.",
           "items": {
@@ -110,16 +114,15 @@
       }
     },
     "AzureArcKubernetesDeployMappingRuleProfile": {
-      "type": "object",
       "description": "Azure arc kubernetes deploy mapping rule profile.",
-      "allOf": [
-        {
+      "properties": {
+        "helmMappingRuleProfile": {
+          "description": "The helm mapping rule profile.",
           "$ref": "#/definitions/HelmMappingRuleProfile"
         }
-      ]
+      }
     },
     "HelmMappingRuleProfile": {
-      "type": "object",
       "description": "Helm mapping rule profile",
       "properties": {
         "releaseNamespace": {
@@ -134,12 +137,12 @@
           "description": "Flag to show if it the role need to be enabled",
           "type": "boolean"
         },
-        "chartVersion": {
-          "description": "Helm release chart version.",
+        "helmPackageVersion": {
+          "description": "Helm package version.",
           "type": "string"
         },
         "values": {
-          "description": "Helm release chart values.",
+          "description": "Helm release values.",
           "type": "object"
         }
       }
