@@ -6,8 +6,8 @@ Please also specify `--typescript-sdks-folder=<path to root folder of your azure
 ```yaml $(typescript)
 typescript:
   azure-arm: true
-  package-name: "azureplaywrightservice"
-  output-folder: "$(typescript-sdks-folder)/packages/azureplaywrightservice"
+  package-name: "@azure/arm-azureplaywrightservice"
+  output-folder: "$(typescript-sdks-folder)/sdk/azureplaywrightservice/arm-azureplaywrightservice"
   payload-flattening-threshold: 1
   generate-metadata: true
 ```
