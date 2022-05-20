@@ -1633,7 +1633,11 @@
       "enum": [
         "Primary",
         "Secondary",
-        "Unknown"
+        "Unknown",
+        "ASCS",
+        "ERSInactive",
+        "ERS",
+        "Standby"
       ],
       "type": "string",
       "readOnly": true,
@@ -1677,6 +1681,22 @@
         "read"
       ]
     },
+    "EnqueueReplicationServerType": {
+      "description": "Defines the type of Enqueue Replication Server.",
+      "enum": [
+        "EnqueueReplicator1",
+        "EnqueueReplicator2"
+      ],
+      "type": "string",
+      "readOnly": true,
+      "x-ms-enum": {
+        "name": "EnqueueReplicationServerType",
+        "modelAsString": true
+      },
+      "x-ms-mutability": [
+        "read"
+      ]
+    },
     "ProvisioningState": {
       "description": "Defines the provisioning states.",
       "enum": [
@@ -1716,11 +1736,7 @@
           }
         },
         "identity": {
-          "allOf": [
-            {
-              "$ref": "./commonTypes.json#/definitions/UserAssignedServiceIdentity"
-            }
-          ]
+          "$ref": "./commonTypes.json#/definitions/UserAssignedServiceIdentity"
         }
       }
     },
@@ -2253,6 +2269,14 @@
         }
       ],
       "properties": {
+        "networkConfiguration": {
+          "description": "Network configuration for the server",
+          "$ref": "#/definitions/NetworkConfiguration"
+        },
+        "databaseType": {
+          "description": "The database type.",
+          "$ref": "#/definitions/SAPDatabaseType"
+        },
         "subnetId": {
           "description": "The subnet id.",
           "type": "string"
@@ -2295,6 +2319,10 @@
       "description": "Gets or sets the database configuration.",
       "type": "object",
       "properties": {
+        "databaseType": {
+          "description": "The database type.",
+          "$ref": "#/definitions/SAPDatabaseType"
+        },
         "subnetId": {
           "description": "The subnet id.",
           "type": "string"
@@ -2363,6 +2391,10 @@
         }
       ],
       "properties": {
+        "networkConfiguration": {
+          "description": "Network configuration common to all servers",
+          "$ref": "#/definitions/NetworkConfiguration"
+        },
         "centralServer": {
           "description": "The central server configuration.",
           "$ref": "#/definitions/CentralServerConfiguration"
@@ -2594,6 +2626,10 @@
         "virtualMachineId": {
           "type": "string",
           "readOnly": true
+        },
+        "status": {
+          "$ref": "#/definitions/SAPVirtualInstanceStatus",
+          "readOnly": true
         }
       }
     },
@@ -2655,11 +2691,7 @@
         },
         "errors": {
           "description": "Defines the SAP Virtual Instance errors.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/SAPVirtualInstanceError"
-            }
-          ],
+          "$ref": "#/definitions/SAPVirtualInstanceError",
           "readOnly": true
         }
       }
@@ -2674,16 +2706,7 @@
       ],
       "properties": {
         "identity": {
-          "allOf": [
-            {
-              "$ref": "./commonTypes.json#/definitions/UserAssignedServiceIdentity"
-            }
-          ]
-        },
-        "systemData": {
-          "description": "Resource system data",
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
-          "readOnly": true
+          "$ref": "./commonTypes.json#/definitions/UserAssignedServiceIdentity"
         },
         "properties": {
           "x-ms-client-flatten": true,
@@ -2841,11 +2864,7 @@
         "errors": {
           "description": "Defines the Application Instance errors.",
           "readOnly": true,
-          "allOf": [
-            {
-              "$ref": "#/definitions/SAPVirtualInstanceError"
-            }
-          ]
+          "$ref": "#/definitions/SAPVirtualInstanceError"
         }
       }
     },
@@ -2858,11 +2877,6 @@
         }
       ],
       "properties": {
-        "systemData": {
-          "description": "Resource system data",
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
-          "readOnly": true
-        },
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SAPApplicationServerProperties"
@@ -2961,6 +2975,45 @@
         }
       }
     },
+    "EnqueueReplicationServerProperties": {
+      "description": "Defines the SAP ERS Server properties.",
+      "type": "object",
+      "properties": {
+        "ersVersion": {
+          "$ref": "#/definitions/EnqueueReplicationServerType",
+          "readOnly": true
+        },
+        "instanceNo": {
+          "type": "string",
+          "description": "The ERS server instance id.",
+          "readOnly": true
+        },
+        "hostname": {
+          "type": "string",
+          "description": "The ERS server SAP host name.",
+          "readOnly": true
+        },
+        "kernelVersion": {
+          "type": "string",
+          "description": "The ERS server SAP kernel version.",
+          "readOnly": true
+        },
+        "kernelPatch": {
+          "type": "string",
+          "description": "The ERS server SAP kernel patch.",
+          "readOnly": true
+        },
+        "ipAddress": {
+          "type": "string",
+          "description": "The ERS server SAP IP Address.",
+          "readOnly": true
+        },
+        "health": {
+          "$ref": "#/definitions/HealthState",
+          "readOnly": true
+        }
+      }
+    },
     "SAPCentralServerProperties": {
       "description": "Defines the SAP Central Server properties.",
       "type": "object",
@@ -2983,6 +3036,9 @@
         },
         "gatewayServerProperties": {
           "$ref": "#/definitions/GatewayServerProperties"
+        },
+        "enqueueReplicationServerProperties": {
+          "$ref": "#/definitions/EnqueueReplicationServerProperties"
         },
         "kernelVersion": {
           "type": "string",
@@ -3020,11 +3076,7 @@
         "errors": {
           "description": "Defines the Central Instance errors.",
           "readOnly": true,
-          "allOf": [
-            {
-              "$ref": "#/definitions/SAPVirtualInstanceError"
-            }
-          ]
+          "$ref": "#/definitions/SAPVirtualInstanceError"
         }
       }
     },
@@ -3037,11 +3089,6 @@
         }
       ],
       "properties": {
-        "systemData": {
-          "description": "Resource system data",
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
-          "readOnly": true
-        },
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SAPCentralServerProperties"
@@ -3085,10 +3132,6 @@
           "$ref": "#/definitions/SAPVirtualInstanceStatus",
           "readOnly": true
         },
-        "health": {
-          "$ref": "#/definitions/HealthState",
-          "readOnly": true
-        },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
           "readOnly": true
@@ -3096,11 +3139,7 @@
         "errors": {
           "description": "Defines the Database Instance errors.",
           "readOnly": true,
-          "allOf": [
-            {
-              "$ref": "#/definitions/SAPVirtualInstanceError"
-            }
-          ]
+          "$ref": "#/definitions/SAPVirtualInstanceError"
         }
       }
     },
@@ -3113,14 +3152,20 @@
         }
       ],
       "properties": {
-        "systemData": {
-          "description": "Resource system data",
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
-          "readOnly": true
-        },
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SAPDatabaseProperties"
+        }
+      }
+    },
+    "NetworkConfiguration": {
+      "description": "Defines the network configuration for SAP infrastructure",
+      "type": "object",
+      "properties": {
+        "isSecondaryIpEnabled": {
+          "type": "boolean",
+          "description": "Specifies whether a secondary IP address should be added to the network interface on all VMs",
+          "default": false
         }
       }
     },
@@ -3173,14 +3218,7 @@
       "required": true,
       "type": "string",
       "description": "Database Instance string modeled as parameter for auto generation to work correctly.",
-      "x-ms-parameter-location": "method",
-      "enum": [
-        "databaseServer"
-      ],
-      "x-ms-enum": {
-        "name": "databaseInstanceName",
-        "modelAsString": true
-      }
+      "x-ms-parameter-location": "method"
     },
     "CentralInstanceNameParameter": {
       "name": "centralInstanceName",
@@ -3188,14 +3226,7 @@
       "required": true,
       "type": "string",
       "description": "Central Instance name string modeled as parameter for auto generation to work correctly.",
-      "x-ms-parameter-location": "method",
-      "enum": [
-        "centralServer"
-      ],
-      "x-ms-enum": {
-        "name": "centralInstanceName",
-        "modelAsString": true
-      }
+      "x-ms-parameter-location": "method"
     }
   }
 }
