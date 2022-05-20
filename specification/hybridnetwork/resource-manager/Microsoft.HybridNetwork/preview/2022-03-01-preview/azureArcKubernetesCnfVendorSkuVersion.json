@@ -54,6 +54,33 @@
           "$ref": "./vendorSkuVersionCommon.json#/definitions/NetworkFunctionRoleConfiguration"
         }
       ],
+      "discriminator": "artifactType",
+      "required": [
+        "artifactType"
+      ],
+      "properties": {
+        "artifactType": {
+          "type": "string",
+          "description": "The artifact type.",
+          "enum": [
+            "Unknown",
+            "HelmPackage"
+          ],
+          "x-ms-enum": {
+            "name": "ArtifactType",
+            "modelAsString": true
+          }
+        }
+      }
+    },
+    "AzureArcKubernetesHelmRoleConfiguration": {
+      "description": "Azure arc kubernetes helm role configurations.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AzureArcKubernetesNetworkFunctionRoleConfiguration"
+        }
+      ],
+      "x-ms-discriminator-value": "HelmPackage",
       "properties": {
         "artifactProfile": {
           "description": "Azure arc kubernetes artifact profile.",
@@ -73,9 +100,8 @@
         }
       ],
       "properties": {
-        "properties": {
-          "x-ms-client-flatten": true,
-          "description": "Azure Arc Kubernetes Artifact profile.",
+        "helmArtifactProfile": {
+          "description": "Helm artifact profile.",
           "$ref": "#/definitions/HelmArtifactProfile"
         }
       }
@@ -85,15 +111,11 @@
       "properties": {
         "helmPackageName": {
           "type": "string",
-          "description": "Chart repository."
+          "description": "Helm package name."
         },
-        "helmPackageVersionRanges": {
-          "type": "array",
-          "description": "Chart version range list.",
-          "items": {
-            "description": "Chart version or chart version range.",
-            "type": "string"
-          }
+        "helmPackageVersionRange": {
+          "type": "string",
+          "description": "Helm package version range. Only helm package pined version and patch version range (~1.0.0) supported."
         },
         "registryValuesPaths": {
           "type": "array",
@@ -133,9 +155,18 @@
           "description": "Helm release name.",
           "type": "string"
         },
-        "roleEnabled": {
-          "description": "Flag to show if it the role need to be enabled",
-          "type": "boolean"
+        "roleEnablement": {
+          "description": "Flag to show if the role is enabled.",
+          "type": "string",
+          "enum": [
+            "Unknown",
+            "Enabled",
+            "Disabled"
+          ],
+          "x-ms-enum": {
+            "name": "RoleEnablement",
+            "modelAsString": true
+          }          
         },
         "helmPackageVersion": {
           "description": "Helm package version.",
