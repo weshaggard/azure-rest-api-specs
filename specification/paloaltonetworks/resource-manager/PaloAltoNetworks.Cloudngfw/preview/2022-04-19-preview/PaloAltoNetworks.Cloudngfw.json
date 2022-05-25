@@ -2516,68 +2516,6 @@
         "modelAsString": false
       }
     },
-    "DescribeGlobalRulestack": {
-      "type": "object",
-      "properties": {},
-      "description": "PAN Global Rulestack Describe Object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/DescribeRulestack"
-        }
-      ]
-    },
-    "DescribeLocalRulestack": {
-      "type": "object",
-      "properties": {},
-      "description": "PAN Local Rulestack Describe Object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/DescribeRulestack"
-        }
-      ]
-    },
-    "DescribeRulestack": {
-      "type": "object",
-      "properties": {
-        "rulestackId": {
-          "type": "string",
-          "description": "PAN RulestackId",
-          "readOnly": true
-        },
-        "scope": {
-          "$ref": "#/definitions/Scope",
-          "description": "subscription scope of rulestack"
-        },
-        "description": {
-          "type": "string",
-          "description": "rulestack description"
-        },
-        "minAppIdVersion": {
-          "type": "string",
-          "description": "minimum version"
-        },
-        "rulestackStatus": {
-          "$ref": "#/definitions/RulestackStatus",
-          "description": "Status of the rulestack.",
-          "readOnly": true
-        },
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "Provisioning state of the resource.",
-          "readOnly": true
-        },
-        "securityProfiles": {
-          "$ref": "#/definitions/securityProfile",
-          "description": "Security Profile"
-        },
-        "etag": {
-          "type": "string",
-          "description": "read only string representing this create or update",
-          "readOnly": true
-        }
-      },
-      "description": "PAN Rulestack Describe Object"
-    },
     "DestinationAddr": {
       "type": "object",
       "properties": {
@@ -2763,11 +2701,21 @@
       },
       "description": "The updatable properties of the FirewallResource."
     },
+    "GlobalRulestackProperties": {
+      "type": "object",
+      "properties": {},
+      "description": "PAN Global Rulestack Describe Object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/RulestackProperties"
+        }
+      ]
+    },
     "GlobalRulestackResource": {
       "type": "object",
       "properties": {
         "properties": {
-          "$ref": "#/definitions/DescribeGlobalRulestack",
+          "$ref": "#/definitions/GlobalRulestackProperties",
           "description": "The resource-specific properties for this resource.",
           "x-ms-mutability": [
             "read",
@@ -2832,6 +2780,14 @@
     "GlobalRulestackResourceUpdateProperties": {
       "type": "object",
       "properties": {
+        "rulestackName": {
+          "type": "string",
+          "description": "PAN Rulestack Name"
+        },
+        "panLocation": {
+          "type": "string",
+          "description": "PAN Location"
+        },
         "scope": {
           "$ref": "#/definitions/Scope",
           "description": "subscription scope of rulestack"
@@ -2847,15 +2803,29 @@
         "securityProfiles": {
           "$ref": "#/definitions/securityProfile",
           "description": "Security Profile"
+        },
+        "panTagInfo": {
+          "$ref": "#/definitions/PANTagInfo",
+          "description": "PAN Tag Info"
         }
       },
       "description": "The updatable properties of the GlobalRulestackResource."
+    },
+    "LocalRulestackProperties": {
+      "type": "object",
+      "properties": {},
+      "description": "PAN Local Rulestack Describe Object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/RulestackProperties"
+        }
+      ]
     },
     "LocalRulestackResource": {
       "type": "object",
       "properties": {
         "properties": {
-          "$ref": "#/definitions/DescribeLocalRulestack",
+          "$ref": "#/definitions/LocalRulestackProperties",
           "description": "The resource-specific properties for this resource.",
           "x-ms-mutability": [
             "read",
@@ -2927,6 +2897,14 @@
     "LocalRulestackResourceUpdateProperties": {
       "type": "object",
       "properties": {
+        "rulestackName": {
+          "type": "string",
+          "description": "PAN Rulestack Name"
+        },
+        "panLocation": {
+          "type": "string",
+          "description": "PAN Location"
+        },
         "scope": {
           "$ref": "#/definitions/Scope",
           "description": "subscription scope of rulestack"
@@ -2942,6 +2920,10 @@
         "securityProfiles": {
           "$ref": "#/definitions/securityProfile",
           "description": "Security Profile"
+        },
+        "panTagInfo": {
+          "$ref": "#/definitions/PANTagInfo",
+          "description": "PAN Tag Info"
         }
       },
       "description": "The updatable properties of the LocalRulestackResource."
@@ -2991,6 +2973,42 @@
         "name": "NetworkType",
         "modelAsString": false
       }
+    },
+    "PANTag": {
+      "type": "object",
+      "properties": {
+        "tagId": {
+          "type": "string",
+          "description": "tag id"
+        },
+        "tagValue": {
+          "type": "string",
+          "description": "tag value"
+        }
+      },
+      "description": "PAN Tag",
+      "required": [
+        "tagId",
+        "tagValue"
+      ]
+    },
+    "PANTagInfo": {
+      "type": "object",
+      "properties": {
+        "panTags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PANTag"
+          },
+          "x-ms-identifiers": [],
+          "x-cadl-name": "PANTag[]",
+          "description": "List of PAN Tags"
+        }
+      },
+      "description": "PAN Tag Info",
+      "required": [
+        "panTags"
+      ]
     },
     "PlanData": {
       "type": "object",
@@ -3190,6 +3208,60 @@
         "name",
         "id"
       ]
+    },
+    "RulestackProperties": {
+      "type": "object",
+      "properties": {
+        "rulestackId": {
+          "type": "string",
+          "description": "PAN RulestackId",
+          "readOnly": true
+        },
+        "rulestackName": {
+          "type": "string",
+          "description": "PAN Rulestack Name"
+        },
+        "panLocation": {
+          "type": "string",
+          "description": "PAN Location"
+        },
+        "scope": {
+          "$ref": "#/definitions/Scope",
+          "description": "subscription scope of rulestack"
+        },
+        "description": {
+          "type": "string",
+          "description": "rulestack description"
+        },
+        "minAppIdVersion": {
+          "type": "string",
+          "description": "minimum version"
+        },
+        "rulestackStatus": {
+          "$ref": "#/definitions/RulestackStatus",
+          "description": "Status of the rulestack.",
+          "readOnly": true
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisioning state of the resource.",
+          "readOnly": true
+        },
+        "securityProfiles": {
+          "$ref": "#/definitions/securityProfile",
+          "description": "Security Profile"
+        },
+        "etag": {
+          "type": "string",
+          "description": "read only string representing this create or update",
+          "readOnly": true
+        },
+        "panTagInfo": {
+          "$ref": "#/definitions/PANTagInfo",
+          "description": "PAN Tag Info"
+        }
+      },
+      "description": "PAN Rulestack Describe Object"
     },
     "RulestackStatus": {
       "type": "string",
@@ -3574,24 +3646,6 @@
         "entry"
       ]
     },
-    "profileData": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "description": "is enabled"
-        },
-        "profile": {
-          "type": "string",
-          "description": "profile name, default is recommended"
-        }
-      },
-      "description": "Profile Data Properties",
-      "required": [
-        "enable",
-        "profile"
-      ]
-    },
     "securityObject": {
       "type": "object",
       "properties": {
@@ -3646,44 +3700,49 @@
     "securityProfile": {
       "type": "object",
       "properties": {
-        "ipsVulnerabilityProfileData": {
-          "$ref": "#/definitions/profileData",
+        "ipsVulnerabilityProfile": {
+          "type": "string",
           "description": "IPs Vulnerability Profile Data"
         },
         "antiSpywareProfile": {
-          "$ref": "#/definitions/profileData",
+          "type": "string",
           "description": "Anti spyware Profile data"
         },
         "antiVirusProfile": {
-          "$ref": "#/definitions/profileData",
+          "type": "string",
           "description": "anti virus profile data"
         },
         "urlFilteringProfile": {
-          "$ref": "#/definitions/profileData",
+          "type": "string",
           "description": "URL filtering profile data"
         },
         "fileBlockingProfile": {
-          "$ref": "#/definitions/profileData",
+          "type": "string",
           "description": "File blocking profile data"
         },
-        "dnsSubscriptionProfile": {
-          "$ref": "#/definitions/profileData",
+        "dnsSubscription": {
+          "type": "boolean",
           "description": "DNS Subscription profile data"
         },
         "outboundUnTrustCertificate": {
-          "$ref": "#/definitions/profileData",
-          "description": "Egress Decryption profile data"
+          "type": "string",
+          "description": "Untrusted Egress Decryption profile data"
+        },
+        "outboundTrustCertificate": {
+          "type": "string",
+          "description": "Trusted Egress Decryption profile data"
         }
       },
       "description": "security profile",
       "required": [
-        "ipsVulnerabilityProfileData",
+        "ipsVulnerabilityProfile",
         "antiSpywareProfile",
         "antiVirusProfile",
         "urlFilteringProfile",
         "fileBlockingProfile",
-        "dnsSubscriptionProfile",
-        "outboundUnTrustCertificate"
+        "dnsSubscription",
+        "outboundUnTrustCertificate",
+        "outboundTrustCertificate"
       ]
     },
     "securityProfileList": {
