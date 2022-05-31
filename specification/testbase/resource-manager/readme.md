@@ -27,7 +27,7 @@ These are the global settings for the testbase.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2022-04-01-preview
+tag: package-2022-05-01-preview
 ```
 
 ### Tag: package-2020-12-16-preview
@@ -75,14 +75,24 @@ input-file:
   - Microsoft.TestBase/preview/2022-03-01-preview/testbase.json
 ```
 
-### Tag: package-2022-03-01-preview
+### Tag: package-2022-04-01-preview
 
 These settings apply only when `--tag=package-2022-04-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-03-01-preview'
+```yaml $(tag) == 'package-2022-04-01-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-04-01-preview/testbase.json
 ```
+
+### Tag: package-2022-05-01-preview
+
+These settings apply only when `--tag=package-2022-05-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-05-01-preview'
+input-file:
+  - Microsoft.TestBase/preview/2022-05-01-preview/testbase.json
+```
+
 ## Suppression
 
 ``` yaml
@@ -110,6 +120,7 @@ swagger-to-sdk:
   - repo: azure-resource-manager-schemas
     after_scripts:
       - node sdkauto_afterscript.js testbase/resource-manager
+  - repo: azure-powershell
 ```
 ## Suppression
 ```
