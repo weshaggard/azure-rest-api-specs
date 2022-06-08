@@ -666,6 +666,59 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.IoTFirmwareDefense/firmwareGroups/{firmwareGroupName}/firmwares/{firmwareId}/generateCveList": {
+      "post": {
+        "tags": [
+          "Firmwares"
+        ],
+        "operationId": "Firmware_GenerateCveList",
+        "description": "The operation to list all cve results for a firmware.",
+        "parameters": [
+          {
+            "name": "firmwareGroupName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of firmware group."
+          },
+          {
+            "name": "firmwareId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The id of firmware."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CveList"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Generate CVE list": {
+            "$ref": "./examples/PostGenerateCveList.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1081,6 +1134,125 @@
         "nextLink": {
           "type": "string",
           "description": "The uri to fetch the next page of asset."
+        }
+      }
+    },
+    "CveList": {
+      "type": "object",
+      "description": "List result for CVE",
+      "properties": {
+        "value": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/Cve"
+          },
+          "description": "The list of CVE results.",
+          "x-ms-identifiers": [
+            "cveId"
+          ]
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The uri to fetch the next page of asset."
+        }
+      }
+    },
+    "Cve": {
+      "type": "object",
+      "properties": {
+        "cveId": {
+          "description": "ID of CVE",
+          "type": "string",
+          "x-nullable": true
+        },
+        "component": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/CveComponent"
+          },
+          "description": "Component of CVE"
+        },
+        "severity": {
+          "description": "Severity of CVE",
+          "type": "string",
+          "x-nullable": true
+        },
+        "name": {
+          "description": "Name of CVE",
+          "type": "string",
+          "x-nullable": true
+        },
+        "cvssV2Score": {
+          "description": "Cvss V2 score of CVE",
+          "type": "string",
+          "x-nullable": true
+        },
+        "cvssV3Score": {
+          "description": "Cvss V3 score of CVE",
+          "type": "string",
+          "x-nullable": true
+        },
+        "publishDate": {
+          "description": "Publish date of CVE",
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedDate": {
+          "description": "Updated date of CVE",
+          "type": "string",
+          "format": "date-time"
+        },
+        "links": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/CveLink"
+          },
+          "description": "The list of CVE links."
+        },
+        "description": {
+          "description": "Description of CVE",
+          "type": "string",
+          "x-nullable": true
+        }
+      },
+      "description": "Known CVEs of a firmware."
+    },
+    "CveLink": {
+      "type": "object",
+      "description": "Link for CVE",
+      "properties": {
+        "href": {
+          "description": "Href of CVE link",
+          "type": "string",
+          "x-nullable": true
+        },
+        "label": {
+          "description": "Label of CVE link",
+          "type": "string",
+          "x-nullable": true
+        }
+      }
+    },
+    "CveComponent": {
+      "type": "object",
+      "description": "Component for CVE",
+      "properties": {
+        "componentId": {
+          "description": "ID of CVE component",
+          "type": "string",
+          "x-nullable": true
+        },
+        "name": {
+          "description": "Name of CVE component",
+          "type": "string",
+          "x-nullable": true
+        },
+        "version": {
+          "description": "Version of CVE component",
+          "type": "string",
+          "x-nullable": true
         }
       }
     }
