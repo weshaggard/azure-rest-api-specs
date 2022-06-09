@@ -37,7 +37,7 @@
     "/subscriptions/{subscriptionId}/providers/Microsoft.DevCenter/skus": {
       "parameters": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
         },
         {
           "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
@@ -79,7 +79,7 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools": {
       "parameters": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
         },
         {
           "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
@@ -127,7 +127,7 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}": {
       "parameters": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
         },
         {
           "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
@@ -220,6 +220,9 @@
           "Pools"
         ],
         "description": "Partially updates a machine pool",
+        "consumes": [
+          "application/merge-patch+json"
+        ],
         "operationId": "Pools_Update",
         "parameters": [
           {
@@ -244,10 +247,7 @@
             }
           },
           "202": {
-            "description": "Accepted. Operation will complete asynchronously",
-            "schema": {
-              "$ref": "#/definitions/Pool"
-            }
+            "description": "Accepted. Operation will complete asynchronously"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -296,10 +296,194 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.DevCenter/networkconnections": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}/schedules": {
       "parameters": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ProjectNameParameter"
+        },
+        {
+          "$ref": "#/parameters/PoolNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/TopParameter"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Lists schedules for a pool",
+        "operationId": "Schedules_ListByPool",
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/ScheduleListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Schedules_ListByPool": {
+            "$ref": "./examples/Schedules_ListByPool.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}/schedules/{scheduleName}": {
+      "parameters": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ProjectNameParameter"
+        },
+        {
+          "$ref": "#/parameters/PoolNameParameter"
+        },
+        {
+          "$ref": "#/parameters/ScheduleNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/TopParameter"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Gets a schedule resource.",
+        "operationId": "Schedules_Get",
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/Schedule"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Schedules_GetByPool": {
+            "$ref": "./examples/Schedules_Get.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Creates or updates a Schedule.",
+        "operationId": "Schedules_CreateOrUpdate",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Represents a scheduled task",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Schedule"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created. Operation will complete asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/Schedule"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Schedules_CreateDailyShutdownPoolSchedule": {
+            "$ref": "./examples/Schedules_CreateDailyShutdownPoolSchedule.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Partially updates a Scheduled.",
+        "consumes": [
+          "application/merge-patch+json"
+        ],
+        "operationId": "Schedules_Update",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Represents a scheduled task.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ScheduleUpdate"
+            }
+          }
+        ],
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted. Operation will complete asynchronously"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Schedules_Update": {
+            "$ref": "./examples/Schedules_Patch.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.DevCenter/networkConnections": {
+      "parameters": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
         },
         {
           "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
@@ -338,10 +522,10 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkconnections": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections": {
       "parameters": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
         },
         {
           "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
@@ -383,10 +567,10 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkconnectionss/{networkConnectionName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}": {
       "parameters": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
         },
         {
           "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
@@ -476,6 +660,9 @@
           "Network Connections"
         ],
         "description": "Partially updates Network Connections",
+        "consumes": [
+          "application/merge-patch+json"
+        ],
         "operationId": "NetworkConnections_Update",
         "parameters": [
           {
@@ -500,10 +687,7 @@
             }
           },
           "202": {
-            "description": "Accepted. Operation will complete asynchronously.",
-            "schema": {
-              "$ref": "#/definitions/NetworkConnection"
-            }
+            "description": "Accepted. Operation will complete asynchronously."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -552,10 +736,10 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkconnections/{networkConnectionName}/healthchecks": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}/healthChecks": {
       "parameters": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
         },
         {
           "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
@@ -600,7 +784,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkconnections/{networkConnectionName}/healthchecks/latest": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}/healthChecks/latest": {
       "get": {
         "tags": [
           "Network Connections"
@@ -608,7 +792,7 @@
         "description": "Gets health check status details.",
         "parameters": [
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
@@ -652,7 +836,7 @@
           "description": "Current page of results.",
           "type": "array",
           "items": {
-            "$ref": "commonDefinitions.json#/definitions/Sku"
+            "$ref": "commonDefinitions.json#/definitions/DevCenterSku"
           },
           "readOnly": true
         },
@@ -661,14 +845,17 @@
           "type": "string",
           "readOnly": true
         }
-      }
+      },
+      "required": [
+        "value"
+      ]
     },
     "Pool": {
       "description": "A pool of Virtual Machines.",
       "type": "object",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
         }
       ],
       "properties": {
@@ -676,11 +863,6 @@
           "description": "Pool properties",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/PoolProperties"
-        },
-        "systemData": {
-          "description": "Metadata pertaining to creation and last modification of the resource.",
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-          "readOnly": true
         }
       }
     },
@@ -688,10 +870,6 @@
       "description": "Properties of a Pool. These properties can be updated after the resource has been created.",
       "type": "object",
       "properties": {
-        "sku": {
-          "description": "The SKU for the virtual machine. Defines the type of virtual machines used in the pool.",
-          "$ref": "commonDefinitions.json#/definitions/Sku"
-        },
         "devBoxDefinitionName": {
           "description": "Name of a Dev Box definition in parent Project of this Pool",
           "type": "string"
@@ -699,6 +877,10 @@
         "networkConnectionName": {
           "description": "Name of a Network Connection in parent Project of this Pool",
           "type": "string"
+        },
+        "licenseType": {
+          "description": "Specifies the license type indicating the caller has already acquired licenses for the Dev Boxes that will be created.",
+          "$ref": "#/definitions/LicenseType"
         }
       }
     },
@@ -716,6 +898,22 @@
           "$ref": "commonDefinitions.json#/definitions/ProvisioningState",
           "readOnly": true
         }
+      },
+      "required": [
+        "devBoxDefinitionName",
+        "networkConnectionName",
+        "licenseType"
+      ]
+    },
+    "LicenseType": {
+      "description": "License Types",
+      "enum": [
+        "Windows_Client"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "LicenseType",
+        "modelAsString": true
       }
     },
     "PoolListResult": {
@@ -735,7 +933,10 @@
           "type": "string",
           "readOnly": true
         }
-      }
+      },
+      "required": [
+        "value"
+      ]
     },
     "PoolUpdate": {
       "description": "The pool properties for partial update. Properties not provided in the update request will not be changed.",
@@ -814,7 +1015,7 @@
       "description": "Network related settings",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
         }
       ],
       "properties": {
@@ -822,11 +1023,6 @@
           "description": "Properties of a Network Connection",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/NetworkProperties"
-        },
-        "systemData": {
-          "description": "Metadata pertaining to creation and last modification of the resource.",
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-          "readOnly": true
         }
       }
     },
@@ -852,10 +1048,6 @@
       "properties": {
         "subnetId": {
           "description": "The subnet to attach Virtual Machines to",
-          "type": "string"
-        },
-        "networkingResourceGroupId": {
-          "description": "Target resource group id for NICs to be placed. Required format: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}'",
           "type": "string"
         },
         "domainName": {
@@ -912,7 +1104,11 @@
             "create"
           ]
         }
-      }
+      },
+      "required": [
+        "subnetId",
+        "domainJoinType"
+      ]
     },
     "NetworkConnectionListResult": {
       "description": "Result of the network connection list operation.",
@@ -931,7 +1127,10 @@
           "type": "string",
           "readOnly": true
         }
-      }
+      },
+      "required": [
+        "value"
+      ]
     },
     "DomainJoinType": {
       "description": "Active Directory join type",
@@ -962,11 +1161,11 @@
       }
     },
     "HealthCheckStatusDetails": {
-      "description": "",
+      "description": "Health Check details.",
       "type": "object",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
         }
       ],
       "properties": {
@@ -974,16 +1173,11 @@
           "x-ms-client-flatten": true,
           "description": "Health check status details properties.",
           "$ref": "#/definitions/HealthCheckStatusDetailsProperties"
-        },
-        "systemData": {
-          "description": "Metadata pertaining to creation and last modification of the resource.",
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-          "readOnly": true
         }
       }
     },
     "HealthCheckStatusDetailsProperties": {
-      "description": "",
+      "description": "Health Check properties.",
       "type": "object",
       "properties": {
         "startDateTime": {
@@ -1068,6 +1262,130 @@
           "type": "string",
           "readOnly": true
         }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "Schedule": {
+      "type": "object",
+      "description": "Represents a Schedule to execute a task.",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "description": "Properties of a Schedule resource",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ScheduleProperties"
+        }
+      }
+    },
+    "ScheduleUpdate": {
+      "description": "The schedule properties for partial update. Properties not provided in the update request will not be changed.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "commonDefinitions.json#/definitions/TrackedResourceUpdate"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ScheduleUpdateProperties",
+          "description": "Properties of a schedule resource to be updated."
+        }
+      }
+    },
+    "ScheduleUpdateProperties": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Supported type this scheduled task represents.",
+          "$ref": "#/definitions/ScheduledType"
+        },
+        "frequency": {
+          "description": "The frequency of this scheduled task.",
+          "$ref": "#/definitions/ScheduledFrequency"
+        },
+        "time": {
+          "description": "The target time to trigger the action. The format is HH:MM.",
+          "type": "string"
+        },
+        "timeZone": {
+          "description": "The IANA timezone id at which the schedule should execute.",
+          "type": "string"
+        },
+        "state": {
+          "description": "Indicates whether or not this scheduled task is enabled.", 
+          "$ref": "devcenter.json#/definitions/EnableStatus"
+        }
+      }
+    },
+    "ScheduleProperties": {
+      "description": "The Schedule properties defining when and what to execute.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ScheduleUpdateProperties"
+        }
+      ],
+      "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "commonDefinitions.json#/definitions/ProvisioningState",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "type",
+        "frequency",
+        "timeZone",
+        "time"
+      ]
+    },
+    "ScheduleListResult": {
+      "description": "Result of the schedule list operation.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Current page of results.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Schedule"
+          },
+          "readOnly": true
+        },
+        "nextLink": {
+          "description": "URL to get the next set of results if there are any.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ScheduledType": {
+      "description": "The supported types for a scheduled task.",
+      "enum": [
+        "StopDevBox"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ScheduledType",
+        "modelAsString": true
+      }
+    },
+    "ScheduledFrequency": {
+      "description": "The frequency of task execution.",
+      "enum": [
+        "Daily"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ScheduledFrequency",
+        "modelAsString": true
       }
     }
   },
@@ -1086,6 +1404,17 @@
       "required": true,
       "type": "string",
       "description": "Name of the Network Connection that can be applied to a Pool.",
+      "x-ms-parameter-location": "method"
+    },
+    "ScheduleNameParameter": {
+      "name": "scheduleName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the schedule that uniquely identifies it.",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[-\\w]+$",
       "x-ms-parameter-location": "method"
     },
     "FilterParameter": {
