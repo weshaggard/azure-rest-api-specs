@@ -596,15 +596,6 @@
               "$ref": "#/definitions/CommunicationServiceKeys"
             }
           },
-          "201": {
-            "description": "Regenerate key request was accepted",
-            "headers": {
-              "Azure-AsyncOperation": {
-                "description": "URL to query for status of the operation.",
-                "type": "string"
-              }
-            }
-          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -701,12 +692,17 @@
           "description": "The properties of the service.",
           "x-ms-client-flatten": true
         },
-        "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData"
-        },
         "identity": {
           "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/SystemAssignedServiceIdentity"
         }
+      }
+    },
+    "DomainsResourceList": {
+      "description": "List of email Domain resource Ids.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Resource ID of an EmailService/Domain resource linked to this resource."
       }
     },
     "CommunicationServiceProperties": {
@@ -763,6 +759,9 @@
           "description": "The immutable resource Id of the communication service.",
           "type": "string",
           "readOnly": true
+        },
+        "linkedDomains": {
+          "$ref": "#/definitions/DomainsResourceList"
         }
       }
     },
@@ -809,7 +808,11 @@
     "CommunicationServiceUpdateProperties": {
       "description": "A class that describes the properties that can be updated for CommunicationService resource.",
       "type": "object",
-      "properties": {}
+      "properties": {
+        "linkedDomains": {
+          "$ref": "#/definitions/DomainsResourceList"
+        }
+      }
     },
     "CommunicationServiceResourceUpdate": {
       "description": "A class representing update parameters for CommunicationService resource.",
@@ -832,14 +835,11 @@
           "description": "The writeable properties to update.",
           "x-ms-client-flatten": true
         },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData"
+        },
         "identity": {
-          "description": "Managed service identity (either system assigned, or none)",
-          "type": "object",
-          "properties": {
-            "type": {
-              "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/SystemAssignedServiceIdentityType"
-            }
-          }
+          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/SystemAssignedServiceIdentity"
         }
       }
     }
@@ -849,7 +849,7 @@
       "name": "communicationServiceName",
       "in": "path",
       "description": "The name of the CommunicationService resource.",
-      "pattern": "^(?!-)[a-zA-Z0-9-]*[a-zA-Z0-9]$",
+      "pattern": "^[-\\w]+$",
       "minLength": 1,
       "maxLength": 63,
       "required": true,
