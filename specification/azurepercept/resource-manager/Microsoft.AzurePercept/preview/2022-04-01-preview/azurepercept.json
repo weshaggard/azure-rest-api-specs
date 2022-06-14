@@ -1473,6 +1473,79 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{accountName}/devices/{deviceName}/sensors/{sensorName}/fetchSensorData": {
+      "post": {
+        "tags": [
+          "POST"
+        ],
+        "summary": "Get data from the sensor in an Azure Percept device and uploads it to the associated storage container.",
+        "operationId": "SensorsAction_FetchSensorData",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "SensorsAction_FetchSensorData": {
+            "$ref": "./examples/SensorsAction_FetchSensorData.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-version"
+          },
+          {
+            "$ref": "#/parameters/subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/resourceGroupName"
+          },
+          {
+            "$ref": "#/parameters/accountName"
+          },
+          {
+            "$ref": "#/parameters/deviceName"
+          },
+          {
+            "$ref": "#/parameters/sensorName"
+          },
+          {
+            "name": "fetchConfiguration",
+            "in": "body",
+            "description": "Fetch operation parameters.",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "timeout": {
+                  "description": "Timeout in milliseconds",
+                  "default": "30000",
+                  "type": "integer",
+                  "minimum": 5000,
+                  "maximum": 600000
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The async operation response contains the information where the sensor data is stored.",
+            "schema": {
+              "$ref": "#/definitions/SensorFetchDataResponse"
+            }
+          },
+          "202": {
+            "description": "The action has been successfully accepted."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzurePercept/accounts/{accountName}/solutioninstances": {
       "get": {
         "tags": [
@@ -2402,6 +2475,51 @@
         }
       ]
     },
+    "SensorFetchDataResponse": {
+      "description": "Fetch sensor data response",
+      "type": "object",
+      "properties": {
+        "sensorResourceId": {
+          "description": "Resource id of the sensor that produced the data.",
+          "type": "string"
+        },
+        "dataRecord": {
+          "description": "Information of the stored data location.",
+          "type": "object",
+          "properties": {
+            "deviceId":{
+              "description": "The id of the device that uploaded the file.",
+              "example": "mydevice",
+              "type": "string"
+            },
+            "blobUri": {
+              "description": "The URI of the uploaded file.",
+              "example": "https://contosostorageaccount.blob.core.windows.net/device-upload-container/mydevice/myfile.txt",
+              "type": "string"
+            },
+            "blobName": {
+              "description": "The name of the uploaded file. The name is in the following format: {device ID of the device}/{name of the blob}",
+              "example": "mydevice/myfile.txt",
+              "type": "string"
+            },
+            "lastUpdatedTime": {
+              "description": "Timestamp indicating when the file was last updated.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "blobSizeInBytes": {
+              "description": "An integer that represents the size of the uploaded file in bytes.",
+              "type": "integer"
+            },
+            "enqueuedTimeUtc": {
+              "description": "Timestamp indicating when the notification was created.",
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "SensorUpdateParameters": {
       "description": "The description of a sensor inside the Azure Percept device.",
       "type": "object",
@@ -2460,7 +2578,9 @@
         "kind": {
           "description": "The sensor kind identifier.",
           "enum": [
-            "Camera"
+            "Camera",
+            "Vision.RTSP",
+            "Vision.ONVIF"
           ],
           "type": "string",
           "x-ms-enum": {
@@ -2469,7 +2589,15 @@
             "values": [
               {
                 "value": "Camera",
-                "description": "Camera sensor kind."
+                "description": "Camera sensor kind. Deprecated, use \"Vision.ONVIF\" instead."
+              },
+              {
+                "value": "Vision.RTSP",
+                "description": "IP Camera sensor kind."
+              },
+              {
+                "value": "Vision.ONVIF",
+                "description": "ONVIF Camera sensor kind."
               }
             ]
           }
@@ -2881,11 +3009,7 @@
       "type": "string"
     },
     "api-version": {
-      "name": "api-version",
-      "in": "query",
-      "description": "The version of the API.",
-      "required": true,
-      "type": "string"
+      "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
     },
     "resourceGroupName": {
       "name": "resourceGroupName",
