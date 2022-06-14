@@ -1,0 +1,737 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "AIOps for Workloads API",
+        "description": "AIOps for Workloads APIs",
+        "version": "2022-05-25-preview",
+        "contact": {
+            "email": "aioperations@microsoft.com"
+        }
+    },
+    "host": "management.azure.com",
+    "schemes": [
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "security": [
+        {
+            "azure_auth": [
+                "user_impersonation"
+            ]
+        }
+    ],
+    "securityDefinitions": {
+        "azure_auth": {
+            "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+            "flow": "implicit",
+            "type": "oauth2",
+            "scopes": {
+                "user_impersonation": "impersonate your user account"
+            },
+            "description": "Azure Active Directory OAuth2 Flow"
+        }
+    },
+    "paths": {
+        "/instance/{instanceID}/dataSource": {
+            "post": {
+                "tags": [
+                    "DataSource"
+                ],
+                "summary": "Create a new data source",
+                "operationId": "createDataSource",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "instanceID",
+                        "description": "AIOps Account unique ID",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "parameters to create a data feed",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/DataSourceDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255,
+                            "pattern": "^[A-Za-z0-9]{3,10}$"
+                        }
+                    },
+                    "default": {
+                        "description": "Client error or server error (4xx or 5xx)",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/instance/{instanceID}/dataSource/{dataSourceID}": {
+            "delete": {
+                "tags": [
+                    "DataSource"
+                ],
+                "summary": "Delete a data source",
+                "operationId": "deleteDataSource",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "instanceID",
+                        "description": "AIOps Account unique ID",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    {
+                        "in": "path",
+                        "name": "dataSourceID",
+                        "description": "Data source unique ID",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The resource is deleted successfully or does not exist."
+                    },
+                    "default": {
+                        "description": "Client error or server error (4xx or 5xx)",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/instance/{instanceId}/dataSource/{dataSourceId}/dataFeed": {
+            "post": {
+                "tags": [
+                    "DataFeed"
+                ],
+                "summary": "Create a new data feed",
+                "operationId": "createDataFeed",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "instanceId",
+                        "description": "AIOps Account unique Id",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    {
+                        "in": "path",
+                        "name": "dataSourceId",
+                        "description": "Data source unique Id",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "parameters to create a data feed",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/DataFeedDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema":{
+                            "type": "string",
+                            "maxLength": 255,
+                            "pattern": "^[A-Za-z0-9]{3,10}$"
+                        }
+                    },
+                    "default": {
+                        "description": "Client error or server error (4xx or 5xx)",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/instance/{instanceId}/dataSource/{dataSourceId}/dataFeed/{dataFeedId}": {
+            "delete": {
+                "tags": [
+                    "DataFeed"
+                ],
+                "summary": "Delete a data feed",
+                "operationId": "deleteDataFeed",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "instanceId",
+                        "description": "AIOps Account unique Id",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    {
+                        "in": "path",
+                        "name": "dataSourceId",
+                        "description": "Data source unique Id",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    {
+                        "in": "path",
+                        "name": "dataFeedId",
+                        "description": "The data feed unique id",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The resource is deleted successfully or does not exist."
+                    },
+                    "default": {
+                        "description": "Client error or server error (4xx or 5xx)",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/instance/{instanceId}/dataContract": {
+            "post": {
+                "tags": [
+                    "dataContract"
+                ],
+                "summary": "Create a new data contract",
+                "operationId": "createDataContract",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "instanceId",
+                        "description": "AIOps Account unique Id",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "parameters to create a data feed",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dataContractDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255,
+                            "pattern": "^[A-Za-z0-9]{3,10}$"
+                        }
+                    },
+                    "default": {
+                        "description": "Client error or server error (4xx or 5xx)",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorCode"
+                        }
+                    }
+                }
+            }
+        },
+        "/instance/{instanceId}/dataContract/{dataContractId}": {
+            "delete": {
+                "tags": [
+                    "DataContract"
+                ],
+                "summary": "Delete a data contract",
+                "operationId": "deleteDataContract",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "instanceId",
+                        "description": "AIOps Account unique Id",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    {
+                        "in": "path",
+                        "name": "dataContractId",
+                        "description": "Data ContractId unique id",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The resource is deleted successfully or does not exist."
+                    },
+                    "default": {
+                        "description": "Client error or server error (4xx or 5xx)",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorCode"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "ErrorCode": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "code": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[0-9]{3,10}$"
+                }
+            }
+        },
+        "DataSourceDetail": {
+            "required": [
+                "dataSourceType",
+                "isSource",
+                "isDestination",
+                "dataSourceParameter",
+                "dataSourceCredentialType",
+                "dataSourceCredentialParameters"
+            ],
+            "type": "object",
+            "properties": {
+                "dataSourceType": {
+                    "format": "int32",
+                    "default": 1,
+                    "enum": [
+                        1,
+                        2
+                    ],
+                    "type": "integer"
+                },
+                "isSource": {
+                    "type": "boolean"
+                },
+                "isDestination": {
+                    "type": "boolean"
+                },
+                "dataSourceParameter": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "pattern": "^[A-Za-z0-9]{3,10}$"
+                    }
+                },
+                "dataSourceCredentialType": {
+                    "format": "int32",
+                    "default": 1,
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "type": "integer"
+                },
+                "dataSourceCredentialParameters": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "pattern": "^[A-Za-z0-9]{3,10}$"
+                    }
+                }
+            }
+        },
+        "DataFeedDetail": {
+            "type": "object",
+            "properties": {
+                "dataFeedName": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "frequencyInSeconds": {
+                    "format": "int32",
+                    "type": "integer",
+                    "minimum": 60,
+                    "maximum": 86400
+                },
+                "isIngestionEnabled": {
+                    "type": "boolean"
+                },
+                "createRH": {
+                    "type": "boolean"
+                },
+                "dataStartFrom": {
+                    "format": "date-time",
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "dataFeedType": {
+                    "format": "int32",
+                    "default": 1,
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "type": "integer"
+                },
+                "query": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "dataFeedSchema": {
+                    "$ref": "#/definitions/dataFeedSchema"
+                },
+                "azureResourceMapping": {
+                    "$ref": "#/definitions/azureResourceMap"
+                }
+            }
+        },
+        "dataFeedSchema": {
+            "type": "object",
+            "properties": {
+                "dataset": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dataset"
+                    },
+                    "minItems":0,
+                    "maxItems":255
+                },
+                "joinKeys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/joinKey"
+                    },
+                    "minItems":0,
+                    "maxItems":255
+                }
+            }
+        },
+        "dataset": {
+            "type": "object",
+            "properties": {
+                "tableName": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+
+                },
+                "columns": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/column"
+                    },
+                    "minItems":0,
+                    "maxItems":255
+                },
+                "metrics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metric"
+                    },
+                    "minItems":0,
+                    "maxItems":255
+                },
+                "dimension": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dimension"
+                    },
+                    "minItems":0,
+                    "maxItems":255
+                },
+                "timestampColumn": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                }
+            }
+        },
+        "joinKey": {
+            "type": "object",
+            "properties": {
+                "tableName": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "columnName": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                }
+            }
+        },
+        "column": {
+            "required": [
+                "columnName"
+            ],
+            "type": "object",
+            "properties": {
+                "columnName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "columnType": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "columnDisplayName": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                }
+            }
+        },
+        "metric": {
+            "required": [
+                "metricName"
+            ],
+            "type": "object",
+            "properties": {
+                "metricName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                }
+            }
+        },
+        "dimension": {
+            "required": [
+                "dimensionName"
+            ],
+            "type": "object",
+            "properties": {
+                "dimensionName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                }
+            }
+        },
+        "dataContractDetail": {
+            "required": [
+                "configurations",
+                "outputDataFeedId"
+            ],
+            "type": "object",
+            "properties": {
+                "configurations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dataContractConfig"
+                    },
+                    "minItems":0,
+                    "maxItems":255
+                },
+                "outputDataFeedId": {
+                    "format": "uuid",
+                    "minLength": 1,
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                }
+            }
+        },
+        "dataContractConfig": {
+            "required": [
+                "inputDataFeedId",
+                "anomaly"
+            ],
+            "type": "object",
+            "properties": {
+                "inputDataFeedId": {
+                    "format": "uuid",
+                    "minLength": 1,
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                },
+                "anomaly": {
+                    "$ref": "#/definitions/anomalyRule"
+                },
+                "rootCauseAnalysis": {
+                    "$ref": "#/definitions/rcaRule"
+                }
+            }
+        },
+        "anomalyRule": {
+            "required": [
+                "name",
+                "algorithm"
+            ],
+            "type": "object",
+            "properties": {
+                "name": {
+                    "minLength": 1,
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "algorithm": {
+                    "$ref": "#/definitions/algorithm"
+                }
+            }
+        },
+        "rcaRule": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "engine": {
+                    "$ref": "#/definitions/engine"
+                }
+            }
+        },
+        "algorithm": {
+            "required": [
+                "type",
+                "parameter"
+            ],
+            "type": "object",
+            "properties": {
+                "type": {
+                    "default": "Static",
+                    "enum": [
+                        "Static"
+                    ],
+                    "type": "string"
+                },
+                "parameter": {
+                    "$ref": "#/definitions/algorithmParameter"
+                }
+            }
+        },
+        "algorithmParameter": {
+            "required": [
+                "query"
+            ],
+            "type": "object",
+            "properties": {
+                "query": {
+                    "minLength": 1,
+                    "type": "string",
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                }
+            }
+        },
+        "engine": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "default": "ResourceHealth",
+                    "enum": [
+                        "ResourceHealth"
+                    ],
+                    "type": "string"
+                },
+                "parameter": {
+                    "$ref": "#/definitions/engineParameter"
+                }
+            }
+        },
+        "engineParameter": {
+            "type": "object",
+            "properties": {
+                "rcaDataFeedId": {
+                    "format": "uuid",
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$"
+                }
+            }
+        },
+        "azureResourceMap": {
+            "type": "object",
+            "properties": {
+                "azResourceMappingTableName": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                },
+                "azResourceMappingColumnName": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "pattern": "^[A-Za-z0-9]{3,10}$"
+                }
+            }
+        }
+    }
+}
