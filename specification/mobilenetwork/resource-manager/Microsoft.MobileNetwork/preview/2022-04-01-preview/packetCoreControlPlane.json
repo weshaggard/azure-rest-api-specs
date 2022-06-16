@@ -330,13 +330,59 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/supportedPacketCoreControlPlaneVersions": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/packetCoreControlPlaneVersions/{versionName}": {
       "get": {
         "tags": [
-          "PacketCoreControlPlanes"
+          "PacketCoreControlPlaneVersion"
         ],
-        "operationId": "PacketCoreControlPlanes_SupportedVersions",
-        "description": "Get the set of packet core control plane versions that are currently supported.",
+        "operationId": "PacketCoreControlPlaneVersions_Get",
+        "description": "Gets information about the specified packet core control plane version.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "versionName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the packet core control plane version."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request successful. The operation returns the resulting packet core control plane version resource.",
+            "schema": {
+              "$ref": "#/definitions/PacketCoreControlPlaneVersion"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get packet core control plane version": {
+            "$ref": "./examples/PacketCoreControlPlaneVersionGet.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/packetCoreControlPlaneVersions": {
+      "get": {
+        "tags": [
+          "PacketCoreControlPlaneVersion"
+        ],
+        "operationId": "PacketCoreControlPlaneVersions_ListByResourceGroup",
+        "description": "Lists all supported packet core control planes versions.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
@@ -352,7 +398,7 @@
           "200": {
             "description": "Get supported packet core control plane versions successful.",
             "schema": {
-              "$ref": "#/definitions/SupportedPacketCoreControlPlaneVersionResult"
+              "$ref": "#/definitions/PacketCoreControlPlaneVersionListResult"
             }
           },
           "default": {
@@ -364,8 +410,11 @@
         },
         "x-ms-examples": {
           "Get supported packet core control plane versions": {
-            "$ref": "./examples/SupportedPacketCoreControlPlaneVersions.json"
+            "$ref": "./examples/PacketCoreControlPlaneVersionListByResourceGroup.json"
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     }
@@ -496,44 +545,51 @@
         ]
       }
     },
-    "SupportedPacketCoreControlPlaneVersionResult": {
+    "PacketCoreControlPlaneVersion": {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/PacketCoreControlPlaneVersionPropertiesFormat",
+          "description": "Packet core control plane version properties."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "required": [
+        "properties"
+      ],
+      "description": "Packet core control plane version resource."
+    },
+    "PacketCoreControlPlaneVersionPropertiesFormat": {
+      "description": "Packet core control plane version properties.",
+      "type": "object",
+      "properties": {
+        "isRecommendedVersion": {
+          "type": "boolean",
+          "description": "Indicates whether this is the recommended version to use for new packet core control plane deployments."
+        }
+      }
+    },
+    "PacketCoreControlPlaneVersionListResult": {
       "properties": {
         "value": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SupportedPacketCoreControlPlaneVersionProperties"
+            "$ref": "#/definitions/PacketCoreControlPlaneVersion"
           },
-          "description": "A list of supported packet core control plane properties."
+          "description": "A list of supported packet core control plane versions."
         },
         "nextLink": {
           "readOnly": true,
           "type": "string",
           "description": "The URL to get the next set of results."
         }
-      }
-    },
-    "SupportedPacketCoreControlPlaneVersionProperties": {
-      "type": "object",
-      "properties": {
-        "supportedVersions": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "A supported version of packet core control plane"
-          },
-          "description": "The supported packet core control plane versions."
-        },
-        "recommendedVersion": {
-          "type": "string",
-          "description": "The recommended version to use for new packet core control plane deployments."
-        }
       },
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
-        }
-      ],
-      "description": "Response for supported packet core control plane versions API call."
+      "description": "Response for packet core control plane version API service call."
     }
   }
 }
