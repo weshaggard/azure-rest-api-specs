@@ -35,7 +35,7 @@ These settings apply only when `--tag=package-2022-06-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-06-01-preview'
 input-file:
-  - Microsoft.Mission/preview/2022-06-01-preview/mission.json
+  - Microsoft.Mission/preview/2022-06-01-preview/virtualenclave.json
 ```
 
 ---
