@@ -1,0 +1,158 @@
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+@armNamespace
+@serviceTitle("Microsoft.NetworkAnaytics")
+@serviceVersion("2022-01-01-preview")
+namespace Microsoft.NetworkAnaytics;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Azure.ResourceManager;
+
+@doc("A NetworkAnayticsProviderHub resource")
+model AnalyticsStorageResources is TrackedResource < StorageProperties > {
+    @doc("Storage resource Properties")
+    @key("StorageName")
+    @segment("analyticsstorage")
+    name: string;
+}
+
+@doc("Details of the NetworkAnaytics Storage.")
+model StorageProperties {
+    // @visibility("read")
+    @doc("StorageProperties")
+    @visibility("read")
+    provisioningState ?: ProvisioningState;
+    @visibility("create")
+    managedResourceGroupConfiguration: ManagedResourceGroupConfiguration;
+    commonStorageAccountProperties: CommonStorageAccountProperties;
+    @visibility("create")
+    bronzeStorageAccountProperties: BronzeStorageAccountProperties;
+    azureDataExplorerProperties: AzureDataExplorerProperties;
+}
+
+@doc("The status of the current operation.")
+@knownValues(ProvisioningStateKV)
+model ProvisioningState is string { }
+enum ProvisioningStateKV {
+    Succeeded,
+    Failed,
+    Canceled,
+    Provisioning,
+    Updating,
+    Deleting,
+    Accepted,
+}
+
+@doc("ManagedResourceGroup related Properties")
+model ManagedResourceGroupConfiguration {
+    @doc("Name of MRG")
+    name: string;
+    @doc("MRG location")
+    location: string;
+}
+
+model CommonStorageAccountProperties {
+    @visibility("create")
+    uniqueIdentifierName: string;
+    @visibility("create")
+    systemIdentityName: string;
+    @visibility("create")
+    publicNetworkAccess: string;
+    networkacls ?: NetworkAcls;
+    @visibility("create")
+    blobServices: BlobServices;
+    privateEndPoint: PrivateEndPoint;
+}
+
+@doc("Configuration for BronzeAccount")
+model BronzeStorageAccountProperties {
+    isSftpEnabled: string;
+}
+
+@doc("ADx Properties")
+model AzureDataExplorerProperties {
+    @doc("ADx Properties")
+    @visibility("create")
+    name: string;
+    @visibility("create")
+    location: string;
+    @visibility("create")
+    virtualNetworkConfiguration: VirtualNetworkConfiguration;
+    kustoClusterPrincipalAssignments: KustoClusterPrincipalAssignments;
+}
+
+
+@doc("ADx Role assignments")
+model KustoClusterPrincipalAssignments {
+    name: string;
+    principalId: string;
+    role: string;
+    tenantId: string;
+    principalType: string;
+}
+
+model PrivateEndPoint {
+    subnetId: string;
+    privateLinkServiceId: string;
+    groupIds: string[];
+    customDnsConfigs: string;
+}
+
+
+model Location is string { }
+
+@doc("VirtualNetworkRule")
+model VirtualNetworkRule {
+    @doc("VirtualNetworkRules")
+    id: string;
+    action ?: string;
+    state ?: string;
+}
+
+@doc("IPRules")
+model IPRules {
+    @doc("IPRules")
+    value ? : string;
+    action: string;
+}
+
+@doc("ResourceAccessRules")
+model ResourceAccessRules{
+    tenantId: string;
+    resourceId: string;
+}
+
+@doc("NetworkAcls")
+model NetworkAcls {
+    bypass: string;
+    virtualNetworkRule: VirtualNetworkRule[];
+    ipRules: IPRules[];
+    resourceAccessRules: ResourceAccessRules[];
+    defaultAction: string;
+}
+
+@doc("Restore Policy")
+model RestorePolicy {
+    enabled: boolean;
+    days: int32;
+}
+
+@doc("Configuration for creating Blob Service")
+model BlobServices {
+    restorePolicy: RestorePolicy;
+}
+
+
+@doc("Virtual Network Configuration")
+model VirtualNetworkConfiguration {
+    subnetId: string;
+    enginePublicIpId: string;
+    dataManagementPublicIpId: string;
+}
+
+@armResourceOperations
+interface Storage extends ResourceOperations<AnalyticsStorageResources, StorageProperties> { }
