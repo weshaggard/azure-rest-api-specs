@@ -1201,7 +1201,7 @@
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/ProvisioningPackageFormatResponse"
+              "$ref": "#/definitions/ProvisioningPackageFormatActionResponse"
             }
           },
           "default": {
@@ -1215,6 +1215,64 @@
         "x-ms-examples": {
           "An action ProvisioningPackage over format": {
             "$ref": "./examples/formatProvisioningPackage.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureSphereGen2/catalogs/{catalogName}/startActivation": {
+      "post": {
+        "tags": [
+          "Catalogs"
+        ],
+        "operationId": "Catalogs_StartActivation",
+        "description": "Bulk activation of devices.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/Catalog.catalogName"
+          },
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StartActivationActionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ARM create operation completed successfully.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/StartActivationActionResponse"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-examples": {
+          "An action Catalog over startActivation": {
+            "$ref": "./examples/startActivationCatalog.json"
           }
         }
       }
@@ -1542,12 +1600,16 @@
         }
       ]
     },
-    "ProvisioningPackageFormatResponse": {
+    "ProvisioningPackageFormatActionResponse": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
           "description": "Provisioning package resource identifier."
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the provisioning package format."
         },
         "properties": {
           "type": "object",
@@ -1595,6 +1657,7 @@
       "description": "Values of the format provisioning package response.",
       "required": [
         "id",
+        "version",
         "properties"
       ]
     },
@@ -1687,6 +1750,24 @@
         "name": "ProvisioningState",
         "modelAsString": false
       }
+    },
+    "StartActivationActionRequest": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "URI with the location of the activation package."
+        }
+      },
+      "description": "Start bulk activation of devices request.",
+      "required": [
+        "location"
+      ]
+    },
+    "StartActivationActionResponse": {
+      "type": "object",
+      "properties": {},
+      "description": "Start bulk activation of devices response."
     }
   },
   "parameters": {
