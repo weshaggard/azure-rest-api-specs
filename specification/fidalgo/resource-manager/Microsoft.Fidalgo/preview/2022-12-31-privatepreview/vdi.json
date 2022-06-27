@@ -296,47 +296,92 @@
         }
       }
     },
-    "/providers/Microsoft.Fidalgo/schedules/{scheduleName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}/schedules": {
       "parameters": [
         {
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
         },
         {
-          "$ref": "#/parameters/ScheduleNameParameter"
+          "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ProjectNameParameter"
+        },
+        {
+          "$ref": "#/parameters/PoolNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/TopParameter"
         }
       ],
-      "put": {
+      "get": {
         "tags": [
           "Schedules"
         ],
-        "description": "Creates or updates a schedule",
-        "operationId": "Schedules_CreateOrUpdate",
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Represents a schedule",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/scheduleTask"
-            }
-          }
-        ],
+        "description": "Lists schedules for a pool",
+        "operationId": "Schedules_ListByPool",
         "responses": {
           "200": {
             "description": "OK. The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/scheduleTask"
+              "$ref": "#/definitions/ScheduleListResult"
             }
           },
-          "201": {
-            "description": "Created. Operation will complete asynchronously.",
+          "default": {
+            "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/scheduleTask"
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Schedules_ListByPool": {
+            "$ref": "./examples/Schedules_ListByPool.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}/schedules/{scheduleName}": {
+      "parameters": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/SubscriptionIdParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ResourceGroupNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/ProjectNameParameter"
+        },
+        {
+          "$ref": "#/parameters/PoolNameParameter"
+        },
+        {
+          "$ref": "#/parameters/ScheduleNameParameter"
+        },
+        {
+          "$ref": "commonDefinitions.json#/parameters/TopParameter"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Gets a schedule resource.",
+        "operationId": "Schedules_Get",
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/Schedule"
             }
           },
           "default": {
@@ -347,8 +392,87 @@
           }
         },
         "x-ms-examples": {
-          "ScheduleTask_Put": {
-            "$ref": "./examples/ScheduleTask_Put.json"
+          "Schedules_GetByPool": {
+            "$ref": "./examples/Schedules_Get.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Creates or updates a Schedule.",
+        "operationId": "Schedules_CreateOrUpdate",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Represents a scheduled task",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Schedule"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created. Operation will complete asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/Schedule"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Schedules_CreateDailyShutdownPoolSchedule": {
+            "$ref": "./examples/Schedules_CreateDailyShutdownPoolSchedule.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Partially updates a Scheduled.",
+        "operationId": "Schedules_Update",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Represents a scheduled task.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ScheduleUpdate"
+            }
+          }
+        ],
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted. Operation will complete asynchronously"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Schedules_Update": {
+            "$ref": "./examples/Schedules_Patch.json"
           }
         }
       }
@@ -1104,7 +1228,22 @@
         "networkConnectionName": {
           "description": "Name of a Network Connection in parent Project of this Pool",
           "type": "string"
+        },
+        "localAdministrator": {
+          "description": "Indicates whether owners of Dev Boxes in this pool are added as local administrators",
+          "$ref": "#/definitions/LocalAdminStatus"
         }
+      }
+    },
+    "LocalAdminStatus": {
+      "type": "string",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "x-ms-enum": {
+        "name": "LocalAdminStatus",
+        "modelAsString": true
       }
     },
     "PoolProperties": {
@@ -1156,6 +1295,132 @@
           "$ref": "#/definitions/PoolUpdateProperties",
           "description": "Properties of a pool to be updated."
         }
+      }
+    },
+    "Schedule": {
+      "type": "object",
+      "description": "Represents a Schedule to execute a task.",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/Resource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "description": "Properties of a Schedule resource",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ScheduleProperties"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "readOnly": true
+        }
+      }
+    },
+    "ScheduleUpdate": {
+      "description": "The schedule properties for partial update. Properties not provided in the update request will not be changed.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "commonDefinitions.json#/definitions/TrackedResourceUpdate"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ScheduleUpdateProperties",
+          "description": "Properties of a schedule resource to be updated."
+        }
+      }
+    },
+    "ScheduleUpdateProperties": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Supported type this scheduled task represents.",
+          "$ref": "#/definitions/ScheduledType"
+        },
+        "frequency": {
+          "description": "The frequency of this scheduled task.",
+          "$ref": "#/definitions/ScheduledFrequency"
+        },
+        "time": {
+          "description": "The target time to trigger the action. The format is HH:MM.",
+          "type": "string"
+        },
+        "timeZone": {
+          "description": "The IANA timezone id at which the schedule should execute.",
+          "type": "string"
+        },
+        "state": {
+          "description": "Indicates whether or not this scheduled task is enabled.", 
+          "$ref": "fidalgo.json#/definitions/EnableStatus"
+        }
+      }
+    },
+    "ScheduleProperties": {
+      "description": "The Schedule properties defining when and what to execute.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ScheduleUpdateProperties"
+        }
+      ],
+      "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "commonDefinitions.json#/definitions/ProvisioningState",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "type",
+        "frequency",
+        "timeZone",
+        "time"
+      ]
+    },
+    "ScheduleListResult": {
+      "description": "Result of the schedule list operation.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Current page of results.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Schedule"
+          },
+          "readOnly": true
+        },
+        "nextLink": {
+          "description": "URL to get the next set of results if there are any.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ScheduledType": {
+      "description": "The supported types for a scheduled task.",
+      "enum": [
+        "StopDevBox"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ScheduledType",
+        "modelAsString": true
+      }
+    },
+    "ScheduledFrequency": {
+      "description": "The frequency of task execution.",
+      "enum": [
+        "Daily"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ScheduledFrequency",
+        "modelAsString": true
       }
     },
     "MachineDefinitionListResult": {
@@ -1248,36 +1513,6 @@
         "sku": {
           "description": "The image sku.",
           "type": "string"
-        }
-      }
-    },
-    "scheduleTask": {
-      "type": "object",
-      "description": "schedule task",
-      "properties": {
-        "properties": {
-          "description": "Properties of Network Settings",
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/scheduleTaskProperties"
-        },
-        "systemData": {
-          "description": "Metadata pertaining to creation and last modification of the resource.",
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-          "readOnly": true
-        }
-      }
-    },
-    "scheduleTaskProperties": {
-      "type": "object",
-      "description": "schedule task properties",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "deallocate"
-        },
-        "hour": {
-          "type": "string",
-          "description": "when to start schedule"
         }
       }
     },
@@ -1680,14 +1915,6 @@
     }
   },
   "parameters": {
-    "ScheduleNameParameter": {
-      "name": "scheduleName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "Name of the schedule.",
-      "x-ms-parameter-location": "method"
-    },
     "PoolNameParameter": {
       "name": "poolName",
       "in": "path",
@@ -1710,6 +1937,17 @@
       "required": true,
       "type": "string",
       "description": "Name of the Network Settings that can be applied to a Pool.",
+      "x-ms-parameter-location": "method"
+    },
+    "ScheduleNameParameter": {
+      "name": "scheduleName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the schedule that uniquely identifies it.",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[-\\w]+$",
       "x-ms-parameter-location": "method"
     },
     "FilterParameter": {
