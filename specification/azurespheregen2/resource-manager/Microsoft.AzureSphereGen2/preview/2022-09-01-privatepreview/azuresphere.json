@@ -854,7 +854,7 @@
           "DeviceRegistrations"
         ],
         "operationId": "DeviceRegistrations_GenerateAuthToken",
-        "description": "Generates an authentication jwt token.",
+        "description": "Generates an authentication JWT token.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -1243,23 +1243,21 @@
             "name": "request",
             "in": "body",
             "required": true,
+            "description": "Request parameters to start a devices activation process.",
             "schema": {
               "$ref": "#/definitions/StartDevicesActivationActionRequest"
             }
           }
         ],
         "responses": {
-          "201": {
-            "description": "ARM create operation completed successfully.",
+          "202": {
+            "description": "Start bulk activation of devices response.",
             "headers": {
               "Retry-After": {
                 "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
                 "type": "integer",
                 "format": "int32"
               }
-            },
-            "schema": {
-              "$ref": "#/definitions/StartDevicesActivationActionResponse"
             }
           },
           "default": {
@@ -1270,6 +1268,10 @@
             "x-ms-error-response": true
           }
         },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true,
         "x-ms-examples": {
           "An action Catalog over startDevicesActivation": {
             "$ref": "./examples/startDevicesActivationCatalog.json"
@@ -1418,22 +1420,24 @@
     "CertificateProperties": {
       "type": "object",
       "properties": {
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Resource provisioning state.",
+          "readOnly": true
+        },
         "notBefore": {
           "type": "string",
           "format": "date-time",
-          "description": "Start timestamp of the certificate.",
-          "readOnly": true
+          "description": "Start timestamp of the certificate."
         },
         "notAfter": {
           "type": "string",
           "format": "date-time",
-          "description": "Expiration timestamp of the certificate.",
-          "readOnly": true
+          "description": "Expiration timestamp of the certificate."
         },
         "certificate": {
           "type": "string",
-          "description": "Base64 representation of the catalog certificate.",
-          "readOnly": true
+          "description": "Base64 representation of the catalog certificate."
         }
       },
       "description": "The properties of Certificate.",
@@ -1468,7 +1472,7 @@
       "properties": {
         "token": {
           "type": "string",
-          "description": "Base64 encoded device authentication jwt token."
+          "description": "Base64 encoded device authentication JWT token."
         }
       },
       "description": "Output values of the generate auth token response.",
@@ -1507,7 +1511,7 @@
         },
         "provisioningPackageName": {
           "type": "string",
-          "description": "Provisioning package name",
+          "description": "Provisioning package name.",
           "x-ms-mutability": [
             "read",
             "update"
@@ -1523,7 +1527,7 @@
         },
         "signedChallenge": {
           "type": "string",
-          "description": "Signed proof of posession challenge"
+          "description": "Signed proof of possession challenge."
         },
         "deviceType": {
           "type": "string",
@@ -1768,11 +1772,6 @@
       "required": [
         "packageLocation"
       ]
-    },
-    "StartDevicesActivationActionResponse": {
-      "type": "object",
-      "properties": {},
-      "description": "Start bulk activation of devices response."
     }
   },
   "parameters": {
@@ -1796,7 +1795,7 @@
       "name": "networkDeviceIdentifier",
       "in": "path",
       "required": true,
-      "description": "Network device identifier",
+      "description": "Network device identifier.",
       "type": "string",
       "x-ms-parameter-location": "method"
     },
