@@ -3,7 +3,7 @@
   "info": {
     "title": "LoadTest Client",
     "description": "LoadTest client provides access to LoadTest Resource and it's status operations.",
-    "version": "2022-04-15-preview"
+    "version": "2022-08-01-preview"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -108,6 +108,118 @@
         "x-ms-examples": {
           "Quotas_Get": {
             "$ref": "./examples/Quotas_Get.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Quotas"
+        ],
+        "description": "Put the available quota limit for a quota bucket per region per subscription.",
+        "operationId": "Quotas_Put",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/QuotaBucketNameParameter"
+          },
+          {
+            "in": "body",
+            "name": "QuotaBucketRequest",
+            "description": "Quota Bucket Request data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QuotaBucketRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/QuotaResource"
+            }
+          },
+          "default": {
+            "description": "Resource provider error response about the failure.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Quotas_Put": {
+            "$ref": "./examples/Quotas_Put.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.LoadTestService/locations/{location}/quotas/{quotaBucketName}/checkQuotaAvailability": {
+      "post": {
+        "tags": [
+          "Quotas"
+        ],
+        "description": "Check Quota Availability on quota bucket per region per subscription.",
+        "operationId": "Quotas_Post",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/QuotaBucketNameParameter"
+          },
+          {
+            "in": "body",
+            "name": "QuotaBucketRequest",
+            "description": "Quota Bucket Request data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QuotaBucketRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CheckQuotaAvailabilityResponse"
+            }
+          },
+          "default": {
+            "description": "Resource provider error response about the failure.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Quotas_Post": {
+            "$ref": "./examples/Quotas_Post.json"
           }
         }
       }
@@ -521,7 +633,7 @@
       "properties": {
         "identity": {
           "type": "object",
-          "description":"All identity configuration for Customer-managed key settings defining which identity should be used to auth to Key Vault.",
+          "description": "All identity configuration for Customer-managed key settings defining which identity should be used to auth to Key Vault.",
           "properties": {
             "type": {
               "type": "string",
@@ -561,31 +673,71 @@
       "type": "object",
       "description": "Quota Bucket details",
       "properties": {
-        "properties": {
-          "description": "Quota resource properties",
-          "$ref": "#/definitions/QuotaProperties",
-          "x-ms-client-flatten": true
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
-        }
-      ]
-    },
-    "QuotaProperties": {
-      "description": "Quota resource properties.",
-      "type": "object",
-      "properties": {
         "limit": {
           "description": "Quota Limit of the quota bucket.",
           "type": "integer",
+          "minimum": 0,
           "format": "int32"
         },
         "usage": {
           "description": "Current Usage of the quota bucket.",
           "type": "integer",
+          "minimum": 0,
           "format": "int32"
+        }
+      }
+    },
+    "CheckQuotaAvailabilityResponse": {
+      "description": "Check Quota Availability Response.",
+      "type": "object",
+      "properties": {
+        "isAvailable": {
+          "description": "true if Quota is Available, else false.",
+          "type": "boolean"
+        },
+        "availabilityStatus": {
+          "description": "availability Status of the quota bucket.",
+          "type": "string"
+        }
+      }
+    },
+    "QuotaBucketRequest": {
+      "description": "Quota Bucket Request.",
+      "type": "object",
+      "properties": {
+        "currentUsage": {
+          "description": "Current Usage of the quota bucket.",
+          "type": "integer",
+          "minimum": 0,
+          "format": "int32"
+        },
+        "currentQuota": {
+          "description": "Current Quota of the quota bucket.",
+          "type": "integer",
+          "minimum": 0,
+          "format": "int32"
+        },
+        "newQuota": {
+          "description": "New Requested Quota of the quota bucket.",
+          "type": "integer",
+          "minimum": 0,
+          "format": "int32"
+        },
+        "dimensions": {
+          "description": "Dimensions for new quota request of the quota bucket.",
+          "type": "object",
+          "properties": {
+            "subscriptionId": {
+              "description": "Subscription Id dimension for new quota request of the quota bucket.",
+              "type": "string",
+              "minLength": 1
+            },
+            "location": {
+              "description": "Location dimension for new quota request of the quota bucket.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
         }
       }
     }
