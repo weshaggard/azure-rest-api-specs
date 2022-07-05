@@ -31,6 +31,16 @@ openapi-subtype: rpaas
 tag: package-preview-2021-10
 ```
 
+### Tag: package-preview-2022-07
+
+These settings apply only when `--tag=package-preview-2022-07` is specified on the command line.
+
+```yaml $(tag) == 'package-preview-2022-07'
+input-file:
+  - Microsoft.Communication/preview/2022-07-01-preview/CommunicationServices.json
+  - Microsoft.Communication/preview/2022-07-01-preview/Domains.json
+  - Microsoft.Communication/preview/2022-07-01-preview/EmailServices.json
+```
 
 ### Tag: package-preview-2022-03-29
 
