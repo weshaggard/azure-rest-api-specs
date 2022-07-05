@@ -1,57 +1,44 @@
 {
   "swagger": "2.0",
-  "info": 
-  {
+  "info": {
     "version": "2022-06-01-preview",
     "title": "AzureStackHCI",
     "description": "Azure Stack HCI management service"
   },
   "host": "management.azure.com",
-  "schemes": 
-  [
+  "schemes": [
     "https"
   ],
-  "consumes": 
-  [
+  "consumes": [
     "application/json"
   ],
-  "produces": 
-  [
+  "produces": [
     "application/json"
   ],
-  "security": 
-  [
+  "security": [
     {
-      "azure_auth": 
-      [
+      "azure_auth": [
         "user_impersonation"
       ]
     }
   ],
-  "securityDefinitions": 
-  {
-    "azure_auth": 
-    {
+  "securityDefinitions": {
+    "azure_auth": {
       "type": "oauth2",
       "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
       "flow": "implicit",
       "description": "Azure Active Directory OAuth2 Flow",
-      "scopes": 
-      {
+      "scopes": {
         "user_impersonation": "impersonate your user account"
       }
     }
   },
-  "paths": 
-  {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/UpdateSummaries/default": 
-    {
-      "get": 
-      {
+  "paths": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updateSummaries/default": {
+      "get": {
         "operationId": "Updates_GetUpdateSummaries",
         "description": "Get all Update summaries under the HCI cluster",
-        "parameters": 
-        [
+        "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
@@ -65,64 +52,50 @@
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           }
         ],
-        "responses": 
-        {
-          "200": 
-          {
+        "responses": {
+          "200": {
             "description": "OK",
-            "schema": 
-            {
+            "schema": {
               "$ref": "#/definitions/UpdateSummaries"
             }
           },
-          "default": 
-          {
+          "default": {
             "description": "Error response describing why the operation failed.",
-            "schema": 
-            {
+            "schema": {
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "List Extensions under ArcSetting resource": 
-          {
+          "List Extensions under ArcSetting resource": {
             "$ref": "./examples/GetUpdateSummaries.json"
           }
         },
-        "x-ms-pageable": 
-        {
+        "x-ms-pageable": {
           "nextLinkName": "nextLink"
         }
       }
     }
   },
-  "definitions": 
-  {
-    "UpdateSummaries": 
-    {
+  "definitions": {
+    "UpdateSummaries": {
       "description": "Get the update summaries for the cluster",
       "type": "object",
-      "allOf": 
-      [
+      "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
         }
       ],
-      "properties": 
-      {
-        "location": 
-        {
+      "properties": {
+        "location": {
           "type": "string",
-          "x-ms-mutability": 
-          [
+          "x-ms-mutability": [
             "read",
             "create"
           ],
           "description": "The geo-location where the resource lives"
         },
-        "properties": 
-        {
+        "properties": {
           "description": "Update summaries properties",
           "type": "object",
           "$ref": "#/definitions/UpdateSummariesProperties",
@@ -130,77 +103,70 @@
         }
       }
     },
-    "UpdateSummariesProperties": 
-    {
+    "UpdateSummariesProperties": {
       "description": "Properties of Update summaries",
       "type": "object",
-      "properties":
-      {
-        "oemFamily":
-        {
-          "description": "OEM Family",
+      "properties": {
+        "oemFamily": {
+          "description": "OEM family name.",
           "type": "string",
           "x-ms-client-flatten": true
         },
-        "hardwareModel":
-        {
-          "description": "Hardware model",
+        "hardwareModel": {
+          "description": "Name of the hardware model.",
           "type": "string",
           "x-ms-client-flatten": true
         },
-        "lastChecked":
-        {
-          "description": "Update last checked",
+        "lastChecked": {
+          "description": "Last time the update service successfully checked for updates.",
           "type": "string",
+          "format": "date-time",
           "x-ms-client-flatten": true
         },
-        "packageVersions":
-        {
-          "description": "Package versions",
+        "packageVersions": {
+          "description": "Current version of each updatable component.",
           "type": "object",
-          "$ref": "#/definitions/UpdateSummariesPackageVersions",
+          "$ref": "#/definitions/PackageVersionInfo",
           "x-ms-client-flatten": true
         },
-        "currentVersion":
-        {
-          "description": "Current Update version",
+        "currentVersion": {
+          "description": "Current Solution Bundle version of the stamp.",
           "type": "string",
           "x-ms-client-flatten": true
         },
-        "currentOemVersion":
-        {
-          "description": "Current OEM version",
+        "lastUpdated": {
+          "description": "Last time an update installation completed successfully.",
           "type": "string",
+          "format": "date-time",
           "x-ms-client-flatten": true
         },
-        "lastUpdated":
-        {
-          "description": "Last updated time",
+        "state": {
+          "description": "Overall update state of the stamp.",
           "type": "string",
-          "x-ms-client-flatten": true
-        },
-        "state":
-        {
-          "description": "State of the latest Update",
-          "type": "string",
+          "enum": [
+            "Unknown",
+            "AppliedSuccessfully",
+            "UpdateAvailable",
+            "UpdateInProgress",
+            "UpdateFailed",
+            "NeedsAttention",
+            "PreparationInProgress",
+            "PreparationFailed"
+          ],
           "x-ms-client-flatten": true
         }
       }
     },
-    "UpdateSummariesPackageVersions":
-    {
-      "description": "Properties of Update summaries",
+    "PackageVersionInfo": {
+      "description": "Current version of each updatable component.",
       "type": "object",
-      "properties":
-      {
-        "packageType":
-        {
+      "properties": {
+        "packageType": {
           "description": "Package type",
           "type": "string",
           "x-ms-client-flatten": true
         },
-        "version": 
-        {
+        "version": {
           "description": "Package version",
           "type": "string",
           "x-ms-client-flatten": true
@@ -208,10 +174,8 @@
       }
     }
   },
-  "parameters": 
-  {
-    "ClusterNameParameter": 
-    {
+  "parameters": {
+    "ClusterNameParameter": {
       "name": "clusterName",
       "in": "path",
       "required": true,
