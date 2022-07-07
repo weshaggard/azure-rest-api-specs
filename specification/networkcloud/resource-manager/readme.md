@@ -30,15 +30,6 @@ openapi-subtype: providerHub
 tag: package-2022-04-29-preview
 ```
 
-### Tag: package-2021-10-21-preview
-
-These settings apply only when `--tag=package-2021-10-21-preview` is specified on the command line.
-
-```yaml $(tag) == 'package-2021-10-21-preview'
-input-file:
-  - Microsoft.NetworkCloud/preview/2021-10-21-preview/networkcloud.json
-```
-
 ### Tag: package-2022-04-29-preview
 
 These settings apply only when `--tag=package-2022-04-29-preview` is specified on the command line.
