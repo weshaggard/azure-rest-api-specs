@@ -39,15 +39,6 @@ input-file:
   - Microsoft.DeviceUpdate/preview/2022-04-01-preview/deviceupdate.json
 ```
 
-### Tag: package-2021-11-02-preview
-
-These settings apply only when `--tag=package-2021-11-02-preview` is specified on the command line.
-
-```yaml $(tag) == 'package-2021-11-02-preview'
-input-file:
-  - Microsoft.DeviceUpdate/preview/2021-11-02-preview/deviceupdate.json
-```
-
 ### Tag: package-2020-03-01-preview
 
 These settings apply only when `--tag=package-2020-03-01-preview` is specified on the command line.
