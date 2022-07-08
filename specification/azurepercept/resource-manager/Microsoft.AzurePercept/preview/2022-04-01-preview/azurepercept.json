@@ -470,7 +470,7 @@
             "description": "Device object.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Device"
+              "$ref": "#/definitions/DeviceEditableProperties"
             }
           }
         ],
@@ -1149,39 +1149,7 @@
             "description": "Fetch operation parameters.",
             "required": false,
             "schema": {
-              "type": "object",
-              "properties": {
-                "timeout": {
-                  "description": "Timeout in milliseconds",
-                  "default": "30000",
-                  "type": "integer",
-                  "minimum": 5000,
-                  "maximum": 600000
-                },
-                "operationType": {
-                  "description": "Operation type. High resolution image is captured in the blob location for FullData and Thumbnail is captured for SampleData option.",
-                  "default": "FullData",
-                  "type": "string",
-                  "enum": [
-                    "FullData",
-                    "SampleData"
-                  ],
-                  "x-ms-enum": {
-                    "name": "operationTypeOptions",
-                    "modelAsString": true,
-                    "values": [
-                      {
-                        "value": "FullData",
-                        "description": "High resolution image."
-                      },
-                      {
-                        "value": "SampleData",
-                        "description": "Thumbnail image."
-                      }
-                    ]
-                  }
-                }
-              }
+              "$ref": "#/definitions/SensorFetchDataRequest"
             }
           }
         ],
@@ -1189,7 +1157,14 @@
           "200": {
             "description": "The async operation response contains the information where the sensor data is stored.",
             "schema": {
-              "$ref": "#/definitions/SensorFetchDataResponse"
+              "allOf": [
+                {
+                  "$ref": "#/definitions/SensorFetchDataResponse"
+                },
+                {
+                  "$ref": "#/definitions/SensorGetThumbnailResponse"
+                }
+              ]              
             }
           },
           "202": {
@@ -1589,9 +1564,9 @@
           "description": "Azure Percept account SKU.",
           "$ref": "#/definitions/AccountSku"
         },
-        "logAnalyticsWorkspaceId": {
+        "applicationInsightsResourceId": {
           "type": "string",
-          "description": "The ID of the log analytics workspace resource."
+          "description": "The ID of the application insights resource."
         },
         "identity": {
           "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
@@ -1806,9 +1781,7 @@
           }
         },
         "capabilities": {
-          "description": "Component capabilities.",
-          "type": "object",
-          "additionalProperties": {}
+          "$ref": "#/definitions/Capabilities"         
         },
         "configurations": {
           "description": "Component configurations.",
@@ -1816,6 +1789,13 @@
           "additionalProperties": {}
         }
       }
+    },
+    "Capabilities": {
+      "description": "Capabilities object that is defined in the solution component by the caller or device object read from the device.",
+      "type": "object",
+      "properties": {
+        "additionalProperties": {}
+      }      
     },
     "SolutionProperties": {
       "description": "The properties of a Solution linked to the Azure Percept account.",
@@ -1911,6 +1891,10 @@
         "sourceId": {
           "description": "The device name/identifier from its source system. If the source is IoT Hub, for example, this would map to deviceId in the device twin object model.",
           "type": "string"
+        },
+        "capabilities": {
+          "readOnly": true,
+          "$ref": "#/definitions/Capabilities"         
         }
       },
       "allOf": [
@@ -1927,16 +1911,13 @@
       "description": "Editable properties of a device inside the Azure Percept account.",
       "type": "object",
       "properties": {
-        "deviceType": {
-          "description": "Optional device qualifier to help tailor device experiences to its specifics.",
+        "source": {
+          "description": "ARM Resource ID for the Azure resource containing the device.",
           "type": "string"
         },
-        "metadata": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "A list of key value pairs representing additional metadata specific to each source and device type. A maximum of 15 entries can be provided for a device. Each entry must have a key no greater than 128 characters and value no greater than 256 characters."
+        "sourceId": {
+          "description": "The device name/identifier from its source system. If the source is IoT Hub, for example, this would map to deviceId in the device twin object model.",
+          "type": "string"
         }
       }
     },
@@ -1959,7 +1940,7 @@
         }
       }
     },
-    "GetThumbnailResponse": {
+    "SensorGetThumbnailResponse": {
       "description": "GetThumbnail response",
       "type": "object",
       "properties": {
@@ -1986,6 +1967,41 @@
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
         }
       ]
+    },
+    "SensorFetchDataRequest": {
+      "type": "object",
+      "properties": {
+        "timeout": {
+          "description": "Timeout in milliseconds",
+          "default": "30000",
+          "type": "integer",
+          "minimum": 5000,
+          "maximum": 600000
+        },
+        "operationType": {
+          "description": "Operation type. High resolution image is captured in the blob location for FullData and Thumbnail is captured for SampleData option.",
+          "default": "FullData",
+          "type": "string",
+          "enum": [
+            "FullData",
+            "SampleData"
+          ],
+          "x-ms-enum": {
+            "name": "operationTypeOptions",
+            "modelAsString": true,
+            "values": [
+              {
+                "value": "FullData",
+                "description": "High resolution image."
+              },
+              {
+                "value": "SampleData",
+                "description": "Thumbnail image."
+              }
+            ]
+          }
+        }
+      }
     },
     "SensorFetchDataResponse": {
       "description": "Fetch sensor data response",
@@ -2052,19 +2068,8 @@
           "description": "The sensor location.",
           "type": "string"
         },
-        "metadata": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "A list of key value pairs representing additional metadata specific to each sensor. A maximum of 15 entries can be provided for a device. Each entry must have a key no greater than 128 characters and value no greater than 256 characters."
-        },
         "linkedDevices": {
-          "description": "The linked devices.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/LinkedDevice"
-          }
+          "$ref": "#/definitions/LinkedDevice"
         }
       }
     },
@@ -2122,11 +2127,7 @@
           }
         },
         "linkedDevices": {
-          "description": "The linked devices.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/LinkedDevice"
-          }
+          "$ref": "#/definitions/LinkedDevice"
         }
       },
       "required": [
@@ -2135,13 +2136,11 @@
       ]
     },
     "LinkedDevice": {
-      "description": "The linked device.",
-      "type": "object",
-      "properties": {
-        "deviceResourceId": {
-          "description": "The ARM resource Id for the linked device.",
-          "type": "string"
-        }
+      "description": "The linked devices.",
+      "type": "array",
+      "items": {
+        "description": "ARM resource id for the linked AzurePercept device.",
+        "type": "string"
       }
     },
     "SensorListResult": {
@@ -2290,6 +2289,12 @@
             "$ref": "#/definitions/SolutionInstanceAssociatedAccount"
           },
           "description": "The resources needed for solutionInstance deployment."
+        },
+        "enableLogs": {
+          "description": "True indicates device logs and telemetry will be captured in the ApplicationInsights resource provided during Percept Account creation, False indicates no logs will be captured.",
+          "type": "boolean",
+          "readOnly": true,
+          "default": false
         },
         "configurations": {
           "description": "Component configurations.",
@@ -2533,7 +2538,12 @@
       "type": "string"
     },
     "api-version": {
-      "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+      "name": "api-version",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "description": "The API version to use for this operation.",
+      "minLength": 1
     },
     "resourceGroupName": {
       "name": "resourceGroupName",
