@@ -70,6 +70,12 @@ directive:
     where:
       - $.definitions.UrlData.properties.uploadUrl
     reason: Secrets are OK to return in a POST response.
+  - suppress: SECRET_PROPERTY
+    from:
+      - Microsoft.IoTFirmwareDefense/preview/2021-11-10-privatepreview/firmwareGroups.json
+    where:
+      - $.definitions.UrlData.properties.uploadUrl
+    reason: Secrets are OK to return in a POST response.
 ```
 
 ## Az
