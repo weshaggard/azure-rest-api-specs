@@ -1353,6 +1353,23 @@
         "value"
       ]
     },
+    "NodeOperation": {
+      "type": "string",
+      "enum": [
+        "IsEqualTo",
+        "IsNotEqualTo",
+        "IsGreaterThan",
+        "IsGreaterThanOrEqualTo",
+        "IsLessThan",
+        "IsLessThanOrEqualTo",
+        "And",
+        "Or"
+      ],
+      "x-ms-enum": {
+        "name": "NodeOperation",
+        "modelAsString": true
+      }
+    },
     "PlayerAccountPool": {
       "type": "object",
       "properties": {
@@ -1369,6 +1386,10 @@
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
           "description": "System metadata for this resource.",
           "readOnly": true
+        },
+        "identity": {
+          "$ref": "#/definitions/Azure.ARM.ManagedSystemIdentityProperties",
+          "description": "The managed service identities assigned to this resource."
         }
       },
       "description": "A PlayerAccountPool",
@@ -1377,6 +1398,19 @@
           "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
         }
       ]
+    },
+    "PropertyType": {
+      "type": "string",
+      "enum": [
+        "NumberType",
+        "StringType",
+        "BooleanType",
+        "DateTimeType"
+      ],
+      "x-ms-enum": {
+        "name": "PropertyType",
+        "modelAsString": true
+      }
     },
     "PlayerAccountPoolListResult": {
       "type": "object",
@@ -1449,6 +1483,86 @@
         "modelAsString": true
       }
     },
+    "RuleNode": {
+      "type": "object",
+      "properties": {
+        "nodeType": {
+          "$ref": "#/definitions/RuleNodeType",
+          "description": "NodeType of Segment's Condition"
+        },
+        "collectionPath": {
+          "type": "string",
+          "description": "Collection Path of Segment's Condition"
+        },
+        "query": {
+          "$ref": "#/definitions/RuleNode",
+          "description": "Query for Segment's Condition"
+        },
+        "operation": {
+          "$ref": "#/definitions/NodeOperation",
+          "description": "Operation of Segment's Condition"
+        },
+        "left": {
+          "$ref": "#/definitions/RuleNode",
+          "description": "Left Node of Segment's Condition"
+        },
+        "right": {
+          "$ref": "#/definitions/RuleNode",
+          "description": "Right Node of Segment's Condition"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RuleNode"
+          },
+          "x-cadl-name": "Microsoft.PlayFab.RuleNode[]",
+          "description": "Children of Segment's Condition"
+        },
+        "value": {
+          "type": "string",
+          "description": "Value of Segment's Conditions"
+        },
+        "timeValue": {
+          "$ref": "#/definitions/RuleNode",
+          "description": "TimeValue of Segment's Condition"
+        },
+        "propertyPath": {
+          "type": "string",
+          "description": "Property Path of Segment's Condition"
+        },
+        "type": {
+          "$ref": "#/definitions/PropertyType",
+          "description": "Property TYpe of Segment's Condition"
+        }
+      },
+      "description": "Condition about Segment",
+      "required": [
+        "nodeType",
+        "collectionPath",
+        "query",
+        "operation",
+        "left",
+        "right",
+        "children",
+        "value",
+        "timeValue",
+        "propertyPath",
+        "type"
+      ]
+    },
+    "RuleNodeType": {
+      "type": "string",
+      "enum": [
+        "Constant",
+        "LogicalOperator",
+        "MinutesSince",
+        "PropertyAccess"
+      ],
+      "x-ms-enum": {
+        "name": "RuleNodeType",
+        "modelAsString": true
+      }
+    },
     "Segment": {
       "type": "object",
       "properties": {
@@ -1477,145 +1591,6 @@
         }
       ]
     },
-    "SegmentFilter": {
-      "type": "object",
-      "properties": {
-        "filterName": {
-          "type": "string",
-          "description": "Name of the Segment filter."
-        }
-      },
-      "description": "Details about Segment Filter",
-      "discriminator": "filterName",
-      "required": [
-        "filterName"
-      ]
-    },
-    "SegmentAllPlayersFilter": {
-      "type": "object",
-      "properties": {},
-      "description": "Details about Segment AllPlayers Filter",
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "AllPlayers"
-    },
-    "SegmentFirstLoginDateFilter": {
-      "type": "object",
-      "properties": {
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        }
-      },
-      "description": "Details about Segment FirstLoginDate Filter",
-      "required": [
-        "comparison",
-        "value"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "FirstLoginDate"
-    },
-    "SegmentFirstLoginFilter": {
-      "type": "object",
-      "properties": {
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        }
-      },
-      "description": "Details about Segment FirstLogin Filter",
-      "required": [
-        "comparison",
-        "value"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "FirstLogin"
-    },
-    "SegmentGroup": {
-      "type": "object",
-      "properties": {
-        "filters": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SegmentFilter"
-          },
-          "x-cadl-name": "Microsoft.PlayFab.SegmentFilter[]",
-          "description": "List of Filters for defining groups",
-          "x-ms-identifiers": []
-        }
-      },
-      "description": "Details about Segment Group",
-      "required": [
-        "filters"
-      ]
-    },
-    "SegmentLastLoginDateFilter": {
-      "type": "object",
-      "properties": {
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        }
-      },
-      "description": "Details about Segment LastLoginDate Filter",
-      "required": [
-        "comparison",
-        "value"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "LastLoginDate"
-    },
-    "SegmentLastLoginFilter": {
-      "type": "object",
-      "properties": {
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        }
-      },
-      "description": "Details about Segment LastLogin Filter",
-      "required": [
-        "comparison",
-        "value"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "LastLogin"
-    },
     "SegmentListResult": {
       "type": "object",
       "properties": {
@@ -1637,30 +1612,6 @@
         "value"
       ]
     },
-    "SegmentLocationFilter": {
-      "type": "object",
-      "properties": {
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        }
-      },
-      "description": "Details about Segment Location Filter",
-      "required": [
-        "comparison",
-        "value"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "Location"
-    },
     "SegmentProperties": {
       "type": "object",
       "properties": {
@@ -1669,9 +1620,9 @@
           "description": "Id of Segment object in PlayFab backend.",
           "readOnly": true
         },
-        "query": {
-          "$ref": "#/definitions/SegmentQuery",
-          "description": "Query for defining Segment."
+        "segmentCondition": {
+          "$ref": "#/definitions/RuleNode",
+          "description": "Condition for defining Segment."
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -1681,112 +1632,8 @@
       },
       "description": "Properties of Segment Resource",
       "required": [
-        "query"
+        "segmentCondition"
       ]
-    },
-    "SegmentQuery": {
-      "type": "object",
-      "properties": {
-        "groups": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SegmentGroup"
-          },
-          "x-cadl-name": "Microsoft.PlayFab.SegmentGroup[]",
-          "description": "Groups in Query for Segment definition",
-          "x-ms-identifiers": []
-        }
-      },
-      "description": "Details about Segment Query",
-      "required": [
-        "groups"
-      ]
-    },
-    "SegmentStatisticFilter": {
-      "type": "object",
-      "properties": {
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        },
-        "statisticName": {
-          "type": "string",
-          "description": "Statistic Filter name"
-        },
-        "version": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Version of Statistic to be used"
-        },
-        "useCurrentVersion": {
-          "type": "boolean",
-          "description": "Use current version of Statistic filter"
-        }
-      },
-      "description": "Details about Segment Statistics Filter",
-      "required": [
-        "comparison",
-        "value",
-        "statisticName"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "Statistic"
-    },
-    "SegmentTagFilter": {
-      "type": "object",
-      "properties": {
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        }
-      },
-      "description": "Details about Segment TagFilter",
-      "required": [
-        "comparison",
-        "value"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "Tag"
-    },
-    "SegmentUserOriginationFilter": {
-      "type": "object",
-      "properties": {
-        "comparison": {
-          "$ref": "#/definitions/Comparison",
-          "description": "Comparator used for the filter."
-        },
-        "value": {
-          "type": "string",
-          "description": "Value to be compared"
-        }
-      },
-      "description": "Details about Segment UserOrigination Filter",
-      "required": [
-        "comparison",
-        "value"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFilter"
-        }
-      ],
-      "x-ms-discriminator-value": "UserOrigination"
     },
     "Title": {
       "type": "object",
