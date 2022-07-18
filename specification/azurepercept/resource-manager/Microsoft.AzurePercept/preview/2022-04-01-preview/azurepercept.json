@@ -467,10 +467,10 @@
           {
             "name": "device",
             "in": "body",
-            "description": "Device object.",
+            "description": "Device object create or update parameters.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeviceUpdateParameters"
+              "$ref": "#/definitions/DeviceCreateUpdateParameters"
             }
           }
         ],
@@ -522,7 +522,7 @@
             "description": "Device editable properties.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeviceUpdateParameters"
+              "$ref": "#/definitions/DeviceCreateUpdateParameters"
             }
           }
         ],
@@ -1068,7 +1068,7 @@
         "operationId": "SensorsAction_ListSensorInfo",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         },
         "x-ms-examples": {
           "Sensors_ActionListSensorInfo": {
@@ -1096,7 +1096,7 @@
           "202": {
             "description": "The action has been successfully accepted."
           },
-          "201": {
+          "200": {
             "description": "The action was successfully executed.",
             "schema": {
               "$ref": "#/definitions/SensorInfo"
@@ -1120,7 +1120,7 @@
         "operationId": "SensorsAction_FetchSensorData",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         },
         "x-ms-examples": {
           "SensorsAction_FetchSensorData": {
@@ -1157,14 +1157,7 @@
           "200": {
             "description": "The async operation response contains the information where the sensor data is stored.",
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/SensorFetchDataResponse"
-                },
-                {
-                  "$ref": "#/definitions/SensorGetThumbnailResponse"
-                }
-              ]              
+              "$ref": "#/definitions/SensorFetchDataCombinedResponse"
             }
           },
           "202": {
@@ -1499,55 +1492,13 @@
           "type": "array",
           "readOnly": true,
           "items": {
-            "$ref": "#/definitions/Operation"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Operation"
           }
         },
         "nextLink": {
           "readOnly": true,
           "type": "string",
           "description": "URL to get the next set of operation list results if there are any."
-        }
-      }
-    },
-    "Operation": {
-      "description": "Azure Percept REST API operation.",
-      "type": "object",
-      "properties": {
-        "name": {
-          "readOnly": true,
-          "type": "string",
-          "description": "Operation name: {provider}/{resource}/{read | write | action | delete}."
-        },
-        "isDataAction": {
-          "description": "Indicates whether the operation is a data action. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
-          "type": "boolean",
-          "readOnly": true
-        },
-        "display": {
-          "description": "The operation supported by Azure Percept.",
-          "type": "object",
-          "properties": {
-            "provider": {
-              "readOnly": true,
-              "type": "string",
-              "description": "Service provider: Microsoft Azure Percept."
-            },
-            "resource": {
-              "readOnly": true,
-              "type": "string",
-              "description": "Resource on which the operation is performed."
-            },
-            "operation": {
-              "readOnly": true,
-              "type": "string",
-              "description": "Name of the operation."
-            },
-            "description": {
-              "readOnly": true,
-              "type": "string",
-              "description": "Description of the operation."
-            }
-          }
         }
       }
     },
@@ -1563,10 +1514,6 @@
         "sku": {
           "description": "Azure Percept account SKU.",
           "$ref": "#/definitions/AccountSku"
-        },
-        "applicationInsightsResourceId": {
-          "type": "string",
-          "description": "The ID of the application insights resource."
         },
         "identity": {
           "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
@@ -1586,6 +1533,10 @@
       "description": "Account properties",
       "type": "object",
       "properties": {
+        "applicationInsightsResourceId": {
+          "type": "string",
+          "description": "The ID of the application insights resource."
+        },
         "provisioningState": {
           "description": "Provisioning state of account resource.",
           "type": "string",
@@ -1597,6 +1548,11 @@
       "description": "The properties of an Azure Percept account to be updated.",
       "type": "object",
       "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Gets or sets the Azure Percept Account properties.",
+          "$ref": "#/definitions/AccountProperties"
+        },
         "sku": {
           "description": "Azure Percept account SKU.",
           "$ref": "#/definitions/AccountSku"
@@ -1611,10 +1567,6 @@
             "type": "string"
           },
           "description": "A list of key value pairs that describe the resource. These tags can be used in viewing and grouping this resource (across resource groups). A maximum of 15 tags can be provided for a resource. Each tag must have a key no greater than 128 characters and value no greater than 256 characters."
-        },
-        "applicationInsightsResourceId": {
-          "type": "string",
-          "description": "The ID of the application insights resource."
         }
       }
     },
@@ -1754,8 +1706,21 @@
           "type": "string",
           "description": "Description of the parameter."
         },
-        "default": {
+        "stringDefault": {
           "type": "string",
+          "description": "The default value for the parameter to be used if the solutionInstance does not specify a value."
+        },
+        "arrayDefault": {
+          "type": "array",
+          "description": "The default value for the parameter to be used if the solutionInstance does not specify a value.",
+          "items": {
+            "description": "Array item object.",
+            "type": "object"
+          },
+          "x-ms-identifiers": []
+        },
+        "objectDefault": {
+          "type": "object",
           "description": "The default value for the parameter to be used if the solutionInstance does not specify a value."
         }
       }
@@ -1786,7 +1751,9 @@
           }
         },
         "capabilities": {
-          "$ref": "#/definitions/Capabilities"         
+          "description": "User defined capabilities object for the solution component.",
+          "type": "object",
+          "additionalProperties": {}
         },
         "configurations": {
           "description": "Component configurations.",
@@ -1796,11 +1763,15 @@
       }
     },
     "Capabilities": {
-      "description": "Capabilities object that is defined in the solution component by the caller or device object read from the device.",
+      "description": "",
       "type": "object",
       "properties": {
-        "additionalProperties": {}
-      }      
+        "capabilities": {
+          "description": "key-value pair defining the capabilities needed for this component.",
+          "type": "object",
+          "additionalProperties": {}
+        }
+      }
     },
     "SolutionProperties": {
       "description": "The properties of a Solution linked to the Azure Percept account.",
@@ -1811,14 +1782,20 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/SolutionParameter"
-          }
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
         },
         "components": {
           "description": "Components associated with the Solution.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/SolutionComponent"
-          }
+          },
+          "x-ms-identifiers": [
+            "componentName"
+          ]
         },
         "routes": {
           "description": "Route definition for the solution components.",
@@ -1868,7 +1845,7 @@
         }
       ]
     },
-    "DeviceUpdateParameters": {
+    "DeviceCreateUpdateParameters": {
       "description": "The description of a device inside the Azure Percept account.",
       "type": "object",
       "x-ms-azure-resource": true,
@@ -1898,8 +1875,10 @@
           "type": "string"
         },
         "capabilities": {
+          "description": "The device capabilities pulled from the source device.",
           "readOnly": true,
-          "$ref": "#/definitions/Capabilities"         
+          "type": "object",
+          "additionalProperties": {}
         }
       },
       "allOf": [
@@ -1974,12 +1953,14 @@
       ]
     },
     "SensorFetchDataRequest": {
+      "description": "The FetchSensorData request object.",
       "type": "object",
       "properties": {
         "timeout": {
           "description": "Timeout in milliseconds",
           "default": "30000",
           "type": "integer",
+          "format": "int64",
           "minimum": 5000,
           "maximum": 600000
         },
@@ -2007,6 +1988,18 @@
           }
         }
       }
+    },
+    "SensorFetchDataCombinedResponse": {
+      "description": "Fetch sensor data combined response",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SensorFetchDataResponse"
+        },
+        {
+          "$ref": "#/definitions/SensorGetThumbnailResponse"
+        }
+      ]
     },
     "SensorFetchDataResponse": {
       "description": "Fetch sensor data response",
@@ -2042,7 +2035,8 @@
             },
             "blobSizeInBytes": {
               "description": "An integer that represents the size of the uploaded file in bytes.",
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             },
             "enqueuedTimeUtc": {
               "description": "Timestamp indicating when the notification was created.",
@@ -2105,31 +2099,7 @@
           "x-ms-secret": true
         },
         "kind": {
-          "description": "The sensor kind identifier.",
-          "enum": [
-            "Camera",
-            "Vision.RTSP",
-            "Vision.ONVIF"
-          ],
-          "type": "string",
-          "x-ms-enum": {
-            "name": "SensorKind",
-            "modelAsString": true,
-            "values": [
-              {
-                "value": "Camera",
-                "description": "Camera sensor kind. Deprecated, use \"Vision.ONVIF\" instead."
-              },
-              {
-                "value": "Vision.RTSP",
-                "description": "IP Camera sensor kind."
-              },
-              {
-                "value": "Vision.ONVIF",
-                "description": "ONVIF Camera sensor kind."
-              }
-            ]
-          }
+          "$ref": "#/definitions/SensorKind"
         },
         "linkedDevices": {
           "$ref": "#/definitions/LinkedDevice"
@@ -2139,6 +2109,33 @@
         "url",
         "kind"
       ]
+    },
+    "SensorKind": {
+      "description": "The sensor kind identifier.",
+      "enum": [
+        "Camera",
+        "Vision.RTSP",
+        "Vision.ONVIF"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "SensorKind",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "Camera",
+            "description": "Camera sensor kind. Deprecated, use \"Vision.ONVIF\" instead."
+          },
+          {
+            "value": "Vision.RTSP",
+            "description": "IP Camera sensor kind."
+          },
+          {
+            "value": "Vision.ONVIF",
+            "description": "ONVIF Camera sensor kind."
+          }
+        ]
+      }
     },
     "LinkedDevice": {
       "description": "The linked devices.",
@@ -2193,21 +2190,8 @@
         },
         "sensorType": {
           "description": "The sensor sensorType.",
-          "type": "string",
-          "readOnly": true,
-          "enum": [
-            "Camera"
-          ],
-          "x-ms-enum": {
-            "name": "sensorType",
-            "modelAsString": true,
-            "values": [
-              {
-                "value": "Camera",
-                "description": "Camera sensor type."
-              }
-            ]
-          }
+          "$ref": "#/definitions/SensorKind",
+          "readOnly": true
         },
         "properties": {
           "description": "sensor properties",
@@ -2256,6 +2240,11 @@
           "description": "Component configurations.",
           "type": "object",
           "$ref": "#/definitions/SolutionInstanceConfiguration"
+        },
+        "enableLogs": {
+          "description": "True indicates device logs and telemetry will be captured in the ApplicationInsights resource provided during Percept Account creation, False indicates no logs will be captured.",
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -2298,7 +2287,6 @@
         "enableLogs": {
           "description": "True indicates device logs and telemetry will be captured in the ApplicationInsights resource provided during Percept Account creation, False indicates no logs will be captured.",
           "type": "boolean",
-          "readOnly": true,
           "default": false
         },
         "configurations": {
@@ -2332,7 +2320,10 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/SolutionInstanceParameter"
-          }
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
         }
       }
     },
@@ -2345,11 +2336,25 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "Name of the parameter declared in the solution object."
+          "description": "Name of the parameter declared in the solution object.",
+          "maxLength": 64
         },
-        "value": {
+        "stringValue": {
           "type": "string",
-          "description": "Parameter value to be applied on this parameter."
+          "description": "Value of the parameter declared in the solution object."
+        },
+        "arrayValue": {
+          "type": "array",
+          "description": "Value of the parameter declared in the solution object.",
+          "items": {
+            "description": "Array item object.",
+            "type": "object"
+          },
+          "x-ms-identifiers": []
+        },
+        "objectValue": {
+          "type": "object",
+          "description": "Value of the parameter declared in the solution object."
         }
       }
     },
