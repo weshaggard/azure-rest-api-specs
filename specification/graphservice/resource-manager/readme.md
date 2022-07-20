@@ -27,7 +27,7 @@ These are the global settings for the graphservice.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2021-07-19
+tag: package-2022-07-19
 ```
 
 ### Tag: package-2021-04-14-preview
@@ -39,13 +39,13 @@ input-file:
   - Microsoft.Graph/preview/2021-04-14-preview/graphservice.json
 ```
 
-### Tag: package-2021-07-19
+### Tag: package-2022-07-19
 
-These settings apply only when `--tag=package-2021-07-19` is specified on the command line.
+These settings apply only when `--tag=package-2022-07-19` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-07-19'
+```yaml $(tag) == 'package-2022-07-19'
 input-file:
-  - Microsoft.Graph/stable/2021-07-19/graphservice.json
+  - Microsoft.Graph/stable/2022-07-19/graphservice.json
 ```
 
 ---
