@@ -642,6 +642,32 @@
         }
       ]
     },
+    "GameDevSessionConfig": {
+      "type": "object",
+      "properties": {
+        "expirationTime": {
+          "type": "string",
+          "description": "Expiration time for the session in milliseconds."
+        },
+        "logFileName": {
+          "type": "string",
+          "description": "Log file name"
+        }
+      },
+      "description": "Config parameters for the session."
+    },
+    "GameDevSessionDeviceDetails": {
+      "type": "object",
+      "properties": {
+        "deviceType": {
+          "type": "string"
+        }
+      },
+      "description": "Details of the device allocated to the session. ",
+      "required": [
+        "deviceType"
+      ]
+    },
     "GameDevSessionListResult": {
       "type": "object",
       "properties": {
@@ -670,54 +696,69 @@
           "type": "string",
           "description": "Id of the GameDevBuild"
         },
-        "provisioningState": {
-          "$ref": "#/definitions/GameDevSessionProvisioningState",
+        "status": {
+          "$ref": "#/definitions/GameDevSessionStatus",
           "description": "The provisioning state of the GameDevSession.",
           "readOnly": true
         },
-        "sessionTaskDetails": {
-          "$ref": "#/definitions/SessionTaskDetails"
+        "sessionId": {
+          "type": "string",
+          "description": "Id of the session",
+          "readOnly": true
+        },
+        "SessionConfig": {
+          "$ref": "#/definitions/GameDevSessionConfig"
+        },
+        "sessionStart": {
+          "type": "string",
+          "description": "Timestamp of the session start in date-time format."
+        },
+        "sessionEnd": {
+          "type": "string",
+          "description": "Timestamp of the session end in date-time format."
+        },
+        "durationInMs": {
+          "type": "string",
+          "description": "Time elapsed during the session run in milliseconds."
+        },
+        "TaskDetails": {
+          "$ref": "#/definitions/GameDevSessionTaskDetails"
+        },
+        "DeviceDetails": {
+          "$ref": "#/definitions/GameDevSessionDeviceDetails"
         }
       },
       "description": "Properties of the GameDevSession",
       "required": [
         "buildId",
-        "sessionTaskDetails"
+        "sessionId",
+        "SessionConfig",
+        "sessionStart",
+        "sessionEnd",
+        "durationInMs",
+        "TaskDetails",
+        "DeviceDetails"
       ]
     },
-    "GameDevSessionProvisioningState": {
+    "GameDevSessionStatus": {
       "type": "string",
       "description": "The status of the current operation.",
       "enum": [
-        "CREATING",
-        "CREATED",
-        "INUSE",
-        "TERMINATING",
-        "TERMINATED",
-        "FAILED"
+        "NotStarted",
+        "Initializing",
+        "Initialized",
+        "Provisioning",
+        "Provisioned",
+        "Terminating",
+        "Terminated",
+        "Failed"
       ],
       "x-ms-enum": {
-        "name": "GameDevSessionProvisioningState",
+        "name": "GameDevSessionStatus",
         "modelAsString": true
       }
     },
-    "ProvisioningState": {
-      "type": "string",
-      "enum": [
-        "NotSpecified",
-        "Accepted",
-        "Creating",
-        "Deleting",
-        "Canceled",
-        "Failed",
-        "Succeeded"
-      ],
-      "x-ms-enum": {
-        "name": "ProvisioningState",
-        "modelAsString": false
-      }
-    },
-    "SessionTaskDetails": {
+    "GameDevSessionTaskDetails": {
       "type": "object",
       "properties": {
         "provision": {
@@ -751,6 +792,22 @@
         "launch",
         "deprovision"
       ]
+    },
+    "ProvisioningState": {
+      "type": "string",
+      "enum": [
+        "NotSpecified",
+        "Accepted",
+        "Creating",
+        "Deleting",
+        "Canceled",
+        "Failed",
+        "Succeeded"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": false
+      }
     }
   },
   "parameters": {
