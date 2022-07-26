@@ -969,6 +969,150 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecommendationsService/tests": {
+      "get": {
+        "operationId": "Tests_ListByResourceGroup",
+        "description": "Returns list of Test resources.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test resources list.",
+            "schema": {
+              "$ref": "#/definitions/TestResourceList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecommendationsService/tests/{testName}": {
+      "get": {
+        "operationId": "Tests_Get",
+        "description": "Returns a Test resource for a given name.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TestNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test details.",
+            "schema": {
+              "$ref": "#/definitions/TestResource"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "Tests_CreateOrUpdate",
+        "description": "Creates or updates a Test resource.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TestNameParameter"
+          },
+          {
+            "description": "Test details.",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/TestResource"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Tests_Delete",
+        "description": "Deletes a Test resource.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/TestNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test resource deleted successfully."
+          },
+          "202": {
+            "description": "Test resource is being deleted."
+          },
+          "204": {
+            "description": "Test resource does not exist."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1438,6 +1582,42 @@
           "format": "date-time"
         }
       }
+    },
+    "TestResource": {
+      "description": "Test resource details.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
+        }
+      ],
+      "properties": {
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
+        },
+        "identity": {
+          "description": "The identity used for the resource.",
+          "$ref": "managedidentitywithdelegation.json#/definitions/ManagedServiceIdentityWithDelegation"
+        }
+      }
+    },
+    "TestResourceList": {
+      "description": "The list of Test resources.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of Test resources list.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The list of Test resources.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResource"
+          }
+        }
+      }
     }
   },
   "parameters": {
@@ -1461,6 +1641,14 @@
       "description": "The name of the ServiceEndpoint resource.",
       "type": "string",
       "name": "serviceEndpointName",
+      "in": "path",
+      "required": true,
+      "x-ms-parameter-location": "method"
+    },
+    "TestNameParameter": {
+      "description": "The name of the Test resource.",
+      "type": "string",
+      "name": "testName",
       "in": "path",
       "required": true,
       "x-ms-parameter-location": "method"
