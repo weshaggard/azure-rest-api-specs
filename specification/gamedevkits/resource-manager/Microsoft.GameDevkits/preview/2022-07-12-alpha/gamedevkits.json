@@ -496,42 +496,15 @@
         "input": {
           "type": "string"
         },
-        "arguments": {
-          "type": "string"
-        },
         "description": {
           "type": "string",
           "description": "Description of the command."
-        },
-        "commandState": {
-          "$ref": "#/definitions/CommandState"
-        },
-        "output": {
-          "type": "string",
-          "readOnly": true
         }
       },
       "description": "Details of a command.",
       "required": [
-        "input",
-        "commandState",
-        "output"
+        "input"
       ]
-    },
-    "CommandState": {
-      "type": "string",
-      "description": "The status of the current operation.",
-      "enum": [
-        "UNKNOWN",
-        "ACCEPTED",
-        "RUNNING",
-        "SUCCEEDED",
-        "FAILED"
-      ],
-      "x-ms-enum": {
-        "name": "CommandState",
-        "modelAsString": true
-      }
     },
     "GameDevAccount": {
       "type": "object",
@@ -648,10 +621,6 @@
         "expirationTime": {
           "type": "string",
           "description": "Expiration time for the session in milliseconds."
-        },
-        "logFileName": {
-          "type": "string",
-          "description": "Log file name"
         }
       },
       "description": "Config parameters for the session."
@@ -701,10 +670,14 @@
           "description": "The provisioning state of the GameDevSession.",
           "readOnly": true
         },
-        "sessionId": {
+        "name": {
           "type": "string",
-          "description": "Id of the session",
+          "description": "Name of the session",
           "readOnly": true
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/GameDevSessionProvisioningState",
+          "description": "Provisioning state of the GameDevSession. "
         },
         "sessionConfig": {
           "$ref": "#/definitions/GameDevSessionConfig"
@@ -717,34 +690,48 @@
           "type": "string",
           "description": "Timestamp of the session end in date-time format."
         },
-        "durationInMs": {
-          "type": "string",
-          "description": "Time elapsed during the session run in milliseconds."
-        },
         "taskDetails": {
           "$ref": "#/definitions/GameDevSessionTaskDetails"
         },
         "deviceDetails": {
           "$ref": "#/definitions/GameDevSessionDeviceDetails"
+        },
+        "sessionOutput": {
+          "type": "string",
+          "readOnly": true
         }
       },
       "description": "Properties of the GameDevSession",
       "required": [
         "buildId",
-        "sessionId",
+        "name",
+        "provisioningState",
         "sessionConfig",
         "sessionStart",
         "sessionEnd",
-        "durationInMs",
         "taskDetails",
-        "deviceDetails"
+        "deviceDetails",
+        "sessionOutput"
       ]
+    },
+    "GameDevSessionProvisioningState": {
+      "type": "string",
+      "description": "Provisioning state of the GameDevSession resource.",
+      "enum": [
+        "Accepted",
+        "Creating",
+        "Succeeded",
+        "Failed"
+      ],
+      "x-ms-enum": {
+        "name": "GameDevSessionProvisioningState",
+        "modelAsString": true
+      }
     },
     "GameDevSessionStatus": {
       "type": "string",
       "description": "The status of the current operation.",
       "enum": [
-        "NotStarted",
         "Initializing",
         "Initialized",
         "Provisioning",
@@ -769,7 +756,7 @@
           "x-ms-identifiers": [],
           "x-cadl-name": "Command[]"
         },
-        "launch": {
+        "sessionStart": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Command"
@@ -777,7 +764,7 @@
           "x-ms-identifiers": [],
           "x-cadl-name": "Command[]"
         },
-        "deprovision": {
+        "sessionEnd": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Command"
@@ -789,8 +776,8 @@
       "description": "Details of the tasks related to the session.",
       "required": [
         "provision",
-        "launch",
-        "deprovision"
+        "sessionStart",
+        "sessionEnd"
       ]
     },
     "ProvisioningState": {
