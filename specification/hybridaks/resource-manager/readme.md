@@ -68,6 +68,17 @@ input-file:
   - Microsoft.HybridContainerService/preview/2022-05-01-preview/storageSpaces.json
 ```
 
+### Tag: package-2022-09-01-preview
+
+These settings apply only when `--tag=package-2022-09-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-09-01-preview'
+input-file:
+  - Microsoft.HybridContainerService/preview/2022-09-01-preview/provisionedClusters.json
+  - Microsoft.HybridContainerService/preview/2022-09-01-preview/virtualNetworks.json
+  - Microsoft.HybridContainerService/preview/2022-09-01-preview/storageSpaces.json
+```
+
 ---
 
 # Code Generation
