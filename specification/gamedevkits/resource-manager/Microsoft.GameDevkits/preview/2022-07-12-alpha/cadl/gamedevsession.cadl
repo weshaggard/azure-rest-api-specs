@@ -1,0 +1,167 @@
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-azure-resource-manager";
+import "@azure-tools/cadl-autorest";
+import "@azure-tools/cadl-azure-core";
+import "@cadl-lang/openapi";
+
+import "./gamedevaccount.cadl";
+import "./util.cadl";
+
+namespace Microsoft.GameDevkits;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Azure.ResourceManager;
+using Azure.Core;
+using OpenAPI;
+using Autorest;
+
+
+@doc("CreateOrUpdate request body for GameDevSession.")
+model GameDevSessionCreateRequest {
+    buildId: string;
+    sessionConfig ?: GameDevSessionConfig;
+}
+@doc("Properties of the GameDevSession")
+model GameDevSessionProperties {
+
+    ... Resource;
+
+    @doc("Id of the GameDevBuild")
+    buildId: string;
+
+    @visibility("read")
+    sessionStatus: SessionStatus;
+
+    sessionConfig: GameDevSessionConfig;
+    @doc("Timestamp of the session start in date-time format.")
+    sessionStart: string;
+    @doc("Timestamp of the session end in date-time format.")
+    sessionEnd: string;
+    taskDetails: GameDevSessionTaskDetails;
+    deviceDetails: GameDevSessionDeviceDetails;
+    @visibility("read")
+    sessionOutput: string;
+}
+
+
+@doc("Internal status of the session.")
+@knownValues(SessionStatusKV)
+model SessionStatus is string {}
+enum SessionStatusKV {
+    Initializing,
+    Initialized,
+    InitializationFailed,
+    Provisioning,
+    Provisioned,
+    ProvisioningFailed,
+    Ready,
+    InUse,
+    Terminating,
+    Terminated,
+    Failed
+}
+
+@doc("Details of the tasks related to the session.")
+model GameDevSessionTaskDetails {
+    sessionStart: Command[];
+    sessionEnd: Command[];
+}
+
+@doc("Details of the device allocated to the session. ")
+model GameDevSessionDeviceDetails
+{
+    deviceType: string
+}
+
+@doc("Config parameters for the session.")
+model GameDevSessionConfig
+{
+    @doc("Expiration time for the session in milliseconds.")
+    expirationTime ?: string;
+}
+
+@doc("Details of a GameDevSession resource.")
+@parentResource(GameDevAccount)
+model GameDevSession is ProxyResource<GameDevSessionProperties> {
+    @doc("Name of the GameDevSession resource.")
+    @key("gameDevSessionName")
+    @segment("gameDevSessions")
+    @path
+    name: string;
+}
+
+@doc("Name of the GameDevSession Parameter.")
+model GameDevSessionNameParameter {
+  @doc("Name of the GameDevSession Parameter.")
+  @path
+  gameDevSessionName: string;
+}
+
+@doc("Details of a Command.")
+model Command {
+    @doc("Description of the command.")
+    description ?: string;
+
+    @doc("Input command.")
+    input: string;
+
+    @doc("State of the command execution.")
+    @visibility("read")
+    commandState: CommandState;
+
+}
+
+@doc("The status of the command execution.")
+@knownValues(CommandStateKV)
+model CommandState is string {}
+enum CommandStateKV {
+    NotStarted,
+    Running, 
+    Succeeded,
+    Failed
+}
+
+@doc("Session start parameters.")
+model SessionCommand
+{
+    @doc("Description for the session start task.")
+    description ?: string;
+    commands ?: Command[];
+}
+
+
+@armResourceOperations
+interface GameDevSessions extends ProxyResourceOperations<GameDevSession> {
+
+  @doc("Create or update a GameDevSession resource.")
+  @put
+  op CreateOrUpdate(
+    ...ResourceInstanceParameters<GameDevSession>,
+    @doc("GameDevSession resource body.")
+    @body
+    parameters: GameDevSessionCreateRequest
+  ): ArmResponse<GameDevSession> | ErrorResponse;
+
+  @doc("Start a GameDevSession.")
+  @segment("start")
+  @armResourceAction(GameDevSession)
+  @extension("x-ms-long-running-operation", true)
+  @asyncOperationOptions("azure-async-operation")
+  start(
+    ...ResourceInstanceParameters<GameDevSession>,
+    @body
+    parameters: SessionCommand
+  ):  LongRunningAcceptedResponse| ArmResponse<GameDevSession> | ErrorResponse;
+
+  @doc("End a GameDevSession.")
+  @segment("end")
+  @armResourceAction(GameDevSession)
+  @extension("x-ms-long-running-operation", true)
+  @asyncOperationOptions("azure-async-operation")
+  end(
+    ...ResourceInstanceParameters<GameDevSession>,
+    @body
+    parameters: SessionCommand
+  ):  LongRunningAcceptedResponse| ArmResponse<GameDevSession> | ErrorResponse;
+}

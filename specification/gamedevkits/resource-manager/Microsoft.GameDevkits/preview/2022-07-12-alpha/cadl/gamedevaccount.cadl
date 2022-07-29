@@ -1,0 +1,72 @@
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-azure-resource-manager";
+import "@azure-tools/cadl-autorest";
+import "./util.cadl";
+
+namespace Microsoft.GameDevkits;
+
+
+using Cadl.Http;
+using Cadl.Rest;
+using Azure.ResourceManager;
+
+@doc("Properties of GameDevAccount") 
+model GameDevAccountProperties {
+  ...Resource;
+}
+
+@doc("A GameDevAccount resource")
+model GameDevAccount is TrackedResource<GameDevAccountProperties> {
+  @doc("Name of the GameDevAccount resource.")
+  @key("gameDevAccountName")
+  @segment("gameDevAccounts")
+  @path
+  name: string;
+}
+
+@doc("Update model for GameDevAccount")
+model GameDevAccountUpdate is OmitProperties<OptionalProperties<UpdateableProperties<OmitProperties<GameDevAccount, "properties">>>, "Name" | "name" > {
+  properties?: ResourceUpdateModelProperties<GameDevAccount, GameDevAccountProperties>;
+}
+
+@doc("Name of the GameDevAccount Parameter.")
+model GameDevAccountNameParameter {
+  @doc("Name of the GameDevAccount Parameter.")
+  @path
+  gameDevAccountName: string;
+}
+
+@armResourceOperations(GameDevAccount)
+interface GameDevAccounts extends ResourceCollectionOperations<GameDevAccount>, ResourceRead<GameDevAccount> {
+  @doc("Create or update a GameDevAccount.")
+  @put
+  @armResourceCreateOrUpdate(GameDevAccount)
+  op CreateOrUpdate(
+    ...ResourceGroupScope<GameDevAccount>,
+    ...KeysOf<GameDevAccount>,
+    @doc("Create or update GameDevAccount parameters.")
+    @body
+    parameters: GameDevAccount
+  ): ArmResponse<GameDevAccount> | ErrorResponse;
+
+  @doc("Deletes a GameDevAccount.")
+  @delete
+  @armResourceDelete(GameDevAccount)
+  op Delete(
+    ...ResourceGroupScope<GameDevAccount>,
+    ...KeysOf<GameDevAccount>,
+  ): ArmResponse<GameDevAccount> | ErrorResponse;
+
+  @autoRoute
+  @doc("Updates a GameDevAccount")
+  @armResourceUpdate(GameDevAccount)
+  @patch
+  Update(
+    ...ResourceInstanceParameters<GameDevAccount>,
+
+    @doc("The GameDevAccount properties to be updated.")
+    @body
+    properties: GameDevAccountUpdate
+  ): ArmResponse<GameDevAccount> | ErrorResponse;
+}
+
