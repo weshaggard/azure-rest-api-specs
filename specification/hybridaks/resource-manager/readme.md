@@ -27,7 +27,7 @@ These are the global settings for the hybridaks.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2022-05-01-preview
+tag: package-2022-09-01-preview
 ```
 
 ### Tag: package-2021-08-01-preview
