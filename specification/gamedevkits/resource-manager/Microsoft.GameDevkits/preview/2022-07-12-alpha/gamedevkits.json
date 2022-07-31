@@ -395,7 +395,7 @@
           "GameDevSessions"
         ],
         "operationId": "GameDevSessions_CreateOrUpdate",
-        "description": "Create or update a GameDevSession resource.",
+        "description": "Create a GameDevSession",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -413,12 +413,12 @@
             "$ref": "#/parameters/GameDevSession.gameDevSessionName"
           },
           {
-            "name": "parameters",
+            "name": "resource",
             "in": "body",
             "required": true,
-            "description": "GameDevSession resource body.",
+            "description": "Resource create parameters.",
             "schema": {
-              "$ref": "#/definitions/GameDevSessionCreateRequest"
+              "$ref": "#/definitions/GameDevSession"
             }
           }
         ],
@@ -429,13 +429,30 @@
               "$ref": "#/definitions/GameDevSession"
             }
           },
+          "201": {
+            "description": "ARM create operation completed successfully.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/GameDevSession"
+            }
+          },
           "default": {
             "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
       },
       "delete": {
         "tags": [
@@ -760,21 +777,6 @@
       },
       "description": "Config parameters for the session."
     },
-    "GameDevSessionCreateRequest": {
-      "type": "object",
-      "properties": {
-        "buildId": {
-          "type": "string"
-        },
-        "sessionConfig": {
-          "$ref": "#/definitions/GameDevSessionConfig"
-        }
-      },
-      "description": "CreateOrUpdate request body for GameDevSession.",
-      "required": [
-        "buildId"
-      ]
-    },
     "GameDevSessionDeviceDetails": {
       "type": "object",
       "properties": {
@@ -818,28 +820,33 @@
         },
         "buildId": {
           "type": "string",
-          "description": "Id of the GameDevBuild"
+          "description": "Id of the GameDevBuild."
         },
         "sessionStatus": {
           "$ref": "#/definitions/SessionStatus",
           "readOnly": true
         },
         "sessionConfig": {
-          "$ref": "#/definitions/GameDevSessionConfig"
+          "$ref": "#/definitions/GameDevSessionConfig",
+          "description": "GameDevSession configuration params."
         },
         "sessionStart": {
           "type": "string",
-          "description": "Timestamp of the session start in date-time format."
+          "description": "Timestamp of the session start in date-time format.",
+          "readOnly": true
         },
         "sessionEnd": {
           "type": "string",
-          "description": "Timestamp of the session end in date-time format."
+          "description": "Timestamp of the session end in date-time format.",
+          "readOnly": true
         },
         "taskDetails": {
-          "$ref": "#/definitions/GameDevSessionTaskDetails"
+          "$ref": "#/definitions/GameDevSessionTaskDetails",
+          "readOnly": true
         },
         "deviceDetails": {
-          "$ref": "#/definitions/GameDevSessionDeviceDetails"
+          "$ref": "#/definitions/GameDevSessionDeviceDetails",
+          "readOnly": true
         },
         "sessionOutput": {
           "type": "string",
@@ -850,7 +857,6 @@
       "required": [
         "buildId",
         "sessionStatus",
-        "sessionConfig",
         "sessionStart",
         "sessionEnd",
         "taskDetails",
