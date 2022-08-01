@@ -226,7 +226,7 @@
           }
         },
         "x-ms-examples": {
-          "List DefaultCni networks for subscription": {
+          "List default CNI networks for subscription": {
             "$ref": "./examples/DefaultCniNetworks_ListBySubscription.json"
           }
         },
@@ -559,7 +559,7 @@
           }
         },
         "x-ms-examples": {
-          "List Trunked networks for subscription": {
+          "List trunked networks for subscription": {
             "$ref": "./examples/TrunkedNetworks_ListBySubscription.json"
           }
         },
@@ -2288,7 +2288,7 @@
           }
         },
         "x-ms-examples": {
-          "List DefaultCni networks for resource group": {
+          "List default CNI networks for resource group": {
             "$ref": "./examples/DefaultCniNetworks_ListByResourceGroup.json"
           }
         },
@@ -2331,7 +2331,7 @@
           }
         },
         "x-ms-examples": {
-          "Get DefaultCninetwork": {
+          "Get default CNI network": {
             "$ref": "./examples/DefaultCniNetworks_Get.json"
           }
         }
@@ -2389,7 +2389,7 @@
           }
         },
         "x-ms-examples": {
-          "Create or update DefaultCni network": {
+          "Create or update default CNI network": {
             "$ref": "./examples/DefaultCniNetworks_Create.json"
           }
         },
@@ -2440,7 +2440,7 @@
           }
         },
         "x-ms-examples": {
-          "Delete DefaultCni network": {
+          "Delete default CNI network": {
             "$ref": "./examples/DefaultCniNetworks_Delete.json"
           }
         },
@@ -2490,7 +2490,7 @@
           }
         },
         "x-ms-examples": {
-          "Patch DefaultCni network": {
+          "Patch default CNI network": {
             "$ref": "./examples/DefaultCniNetworks_Patch.json"
           }
         }
@@ -4318,7 +4318,7 @@
           }
         },
         "x-ms-examples": {
-          "Get Trunkednetwork": {
+          "Get Trunked network": {
             "$ref": "./examples/TrunkedNetworks_Get.json"
           }
         }
@@ -4376,7 +4376,7 @@
           }
         },
         "x-ms-examples": {
-          "Create or update Trunked network": {
+          "Create or update trunked network": {
             "$ref": "./examples/TrunkedNetworks_Create.json"
           }
         },
@@ -4427,7 +4427,7 @@
           }
         },
         "x-ms-examples": {
-          "Delete Trunked network": {
+          "Delete trunked network": {
             "$ref": "./examples/TrunkedNetworks_Delete.json"
           }
         },
@@ -4477,7 +4477,7 @@
           }
         },
         "x-ms-examples": {
-          "Patch Trunked network": {
+          "Patch trunked network": {
             "$ref": "./examples/TrunkedNetworks_Patch.json"
           }
         }
@@ -5314,7 +5314,7 @@
           "$ref": "#/definitions/BmcCredentials"
         },
         "bmcMacAddress": {
-          "description": "The MAC address of the Idrac/ILO.",
+          "description": "The MAC address of the BMC device.",
           "type": "string"
         },
         "bootMacAddress": {
@@ -5340,7 +5340,7 @@
       ],
       "properties": {
         "arguments": {
-          "description": "List of string arguments that will be passed to the script in order as separate arguments.\n+kubebuilder:validation:Optional",
+          "description": "List of string arguments that will be passed to the script in order as separate arguments.",
           "type": "array",
           "items": {
             "type": "string"
@@ -5407,6 +5407,7 @@
     },
     "BgpPeers": {
       "type": "object",
+      "title": "BgpPeer specifies the IP address and ASN(Autonomous System Number) to peer with Hybrid AKS cluster.",
       "required": [
         "peerIp",
         "asNumber"
@@ -6146,6 +6147,7 @@
     },
     "CniBgpConfiguration": {
       "type": "object",
+      "title": "The Calico BGP configuration.",
       "required": [
         "serviceExternalPrefixes",
         "serviceLoadBalancerPrefixes",
@@ -6160,7 +6162,7 @@
             "$ref": "#/definitions/BgpPeers"
           },
           "x-ms-identifiers": [
-            "PeerIp"
+            "peerIp"
           ],
           "x-ms-mutability": [
             "read",
@@ -6171,7 +6173,7 @@
           "description": "A list of prefix community advertisement properties. Each prefixCommunity specifies a prefix, and the\ncommunities that should be associated with that prefix when it is announced.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CommunityAdvertisements"
+            "$ref": "#/definitions/CommunityAdvertisement"
           },
           "x-ms-identifiers": [],
           "x-ms-mutability": [
@@ -6185,9 +6187,9 @@
           "maxLength": 80,
           "pattern": "^[a-zA-Z0-9]{0,80}$",
           "x-ms-mutability": [
-            "read",
             "create"
-          ]
+          ],
+          "x-ms-secret": true
         },
         "serviceExternalPrefixes": {
           "description": "The subnet blocks in CIDR format for Kubernetes Service External IPs to be advertised over BGP.",
@@ -6213,8 +6215,9 @@
         }
       }
     },
-    "CommunityAdvertisements": {
+    "CommunityAdvertisement": {
       "type": "object",
+      "title": "CommunityAdvertisement specifies a prefix and the communities that should be associated with that prefix.",
       "required": [
         "subnetPrefix",
         "communities"
@@ -6300,18 +6303,10 @@
       "type": "object",
       "title": "DefaultCniNetworkProperties represents properties of the Default CNI network.",
       "required": [
-        "L3IsolationDomainId",
+        "l3IsolationDomainId",
         "vlan"
       ],
       "properties": {
-        "L3IsolationDomainId": {
-          "description": "The ID of a Network Fabric L3IsolationDomain.",
-          "type": "string",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        },
         "clusterId": {
           "description": "The resource ID of the Network Cloud cluster this Default CNI network is associated with.",
           "type": "string",
@@ -6330,8 +6325,12 @@
           "readOnly": true
         },
         "interfaceName": {
-          "description": "The interface related to the L3 network.\n+kubebuilder:validation:Optional",
-          "type": "string"
+          "description": "The interface related to the L3 network.",
+          "type": "string",
+          "x-ms-mutability": [
+            "read"
+          ],
+          "readOnly": true
         },
         "ipAllocationType": {
           "description": "The type of the IP address allocation, defaulted to \"DualStack\".",
@@ -6368,8 +6367,17 @@
           ]
         },
         "l2IsolationDomainId": {
-          "description": "The ID of a Network Fabric L2IsolationDomain.\n+kubebuilder:validation:Optional",
-          "type": "string"
+          "description": "The ID of a Network Fabric L2IsolationDomain.",
+          "type": "string",
+          "readOnly": true
+        },
+        "l3IsolationDomainId": {
+          "description": "The ID of a Network Fabric L3IsolationDomain.",
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
         "provisioningState": {
           "description": "The provisioning state of the Default CNI network.",
@@ -6570,13 +6578,14 @@
     },
     "EgressEndpoint": {
       "type": "object",
+      "title": "The connection from a cloud services network to the specified endpoint for a common purpose.",
       "required": [
         "category",
         "endpoints"
       ],
       "properties": {
         "category": {
-          "description": "A descriptive category name of endpoints accessible by the AKS agent node, e.g. azure-resource-management,\napiserver, etc.",
+          "description": "A descriptive category name of endpoints accessible by the AKS agent node, e.g. azure-resource-management, API server, etc.",
           "type": "string",
           "x-ms-mutability": [
             "read",
@@ -6599,6 +6608,7 @@
     },
     "EndpointDependency": {
       "type": "object",
+      "title": "The definition of an endpoint, including the domain and details.",
       "required": [
         "domainName",
         "port"
@@ -6821,8 +6831,8 @@
       }
     },
     "L2Network": {
-      "description": "L2Network represents a network that utilizes a single isolation domain and only sets up for Layer-2 resources\ne.g., no IPAM support. The Layer-2 Network ties together the x86 VF features and the fabric network that lives within\nanother RP (e.g. NetworkFabric.IsolationDomain).",
       "type": "object",
+      "title": "L2Network represents a network that utilizes a single isolation domain set up for layer-2 resources.",
       "required": [
         "extendedLocation",
         "properties"
@@ -6897,12 +6907,21 @@
           "readOnly": true
         },
         "hybridAksPluginType": {
-          "description": "+kubebuilder:validation:Optional\n+kubebuilder:validation:Enum=HostDevice;MACVLAN;DPDK\n+kubebuilder:default=HostDevice",
+          "description": "The network plugin type for Hybrid AKS, defaults to \"HostDevice\".",
           "type": "string",
+          "default": "HostDevice",
           "enum": [
             "HostDevice",
             "MACVLAN",
             "DPDK"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HybridAksPluginType"
+          },
+          "x-ms-mutability": [
+            "read",
+            "create"
           ]
         },
         "interfaceName": {
@@ -6950,8 +6969,8 @@
       }
     },
     "L3Network": {
-      "description": "L3Network (Layer-3 Network) ties together the x86 VF features and the fabric network that lives within another\nRP (e.g. NetworkFabric.Ll3IsolationDomain). It is the resource that is leveraged by Hybrid AKS workloads and AODS\nVMs to represent network attachments and its provisioning state represents whether we’ve completed all undercloud\nsetup required for this network to be usable by both Hybrid AKS and VM attachment\n(e.g. NetworkAttachmentDefinitions created).",
       "type": "object",
+      "title": "L3Network represents a network that utilizes a single isolation domain set up for layer-3 resources.",
       "required": [
         "extendedLocation",
         "properties"
@@ -7008,18 +7027,10 @@
       "type": "object",
       "title": "L3NetworkProperties represents properties of the L3 network.",
       "required": [
-        "L3IsolationDomainId",
+        "l3IsolationDomainId",
         "vlan"
       ],
       "properties": {
-        "L3IsolationDomainId": {
-          "description": "The ID of a Network Fabric L3IsolationDomain.",
-          "type": "string",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        },
         "clusterId": {
           "description": "The resource ID of the Network Cloud cluster this L3 network is associated with.",
           "type": "string",
@@ -7041,6 +7052,10 @@
             "True",
             "False"
           ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HybridAksIpamEnabled"
+          },
           "x-ms-mutability": [
             "read",
             "create"
@@ -7097,6 +7112,14 @@
         },
         "ipv6ConnectedPrefix": {
           "description": "IpV6ConnectedPrefix is the IPV6 prefix (CIDR) assigned to this L3 network. Required when the IP allocation type\nis IPV6 or DualStack.",
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "l3IsolationDomainId": {
+          "description": "The ID of a Network Fabric L3IsolationDomain.",
           "type": "string",
           "x-ms-mutability": [
             "read",
@@ -7365,7 +7388,7 @@
           "readOnly": true
         },
         "networkAttachmentName": {
-          "description": "The associated network's interface name.\nIf specified, the network attachment name has a maximum length of 15 characters and must be unique to this VM\nIf the user doesn’t specify this value, the defaultInterfaceNames of the network resources will be used, and modified according to the notes about Interface Naming.\nFor a CloudServicesNetwork, this name will be ignored\n\n+kubebuilder:validation:MaxLength:=15\n+kubebuilder:validation:Optional",
+          "description": "The associated network's interface name.\nIf specified, the network attachment name has a maximum length of 15 characters and must be unique to this VM\nIf the user doesn’t specify this value, the defaultInterfaceNames of the network resources will be used, and modified according to the notes about Interface Naming.\nFor a CloudServicesNetwork, this name will be ignored",
           "type": "string",
           "x-ms-mutability": [
             "read",
@@ -7464,7 +7487,7 @@
           "readOnly": true
         },
         "networkAttachments": {
-          "description": "The list of network attachments to the virtual machine.\n+kubebuilder:validation:Required",
+          "description": "The list of network attachments to the virtual machine.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/NetworkAttachment"
@@ -7485,6 +7508,10 @@
             "On",
             "Off"
           ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HybridAksClusterMachinePowerState"
+          },
           "readOnly": true
         }
       }
@@ -7618,7 +7645,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/BareMetalMachineConfigurationData"
-          }
+          },
+          "x-ms-identifiers": []
         },
         "networkRackId": {
           "description": "The resource ID of the network rack that matches this rack definition.",
@@ -7643,7 +7671,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/StorageApplianceConfigurationData"
-          }
+          },
+          "x-ms-identifiers": []
         }
       }
     },
@@ -8302,8 +8331,7 @@
           "description": "The resource ID of the Network Cloud cluster this Trunked network is associated with.",
           "type": "string",
           "x-ms-mutability": [
-            "read",
-            "create"
+            "read"
           ],
           "readOnly": true
         },
@@ -8314,8 +8342,7 @@
             "type": "string"
           },
           "x-ms-mutability": [
-            "read",
-            "create"
+            "read"
           ],
           "readOnly": true
         },
@@ -8381,8 +8408,7 @@
             "type": "string"
           },
           "x-ms-mutability": [
-            "read",
-            "create"
+            "read"
           ],
           "readOnly": true
         },
@@ -8677,6 +8703,7 @@
           "items": {
             "$ref": "#/definitions/SshPublicKey"
           },
+          "x-ms-identifiers": [],
           "x-ms-mutability": [
             "read",
             "create"
