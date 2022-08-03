@@ -67,6 +67,51 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.LoadTestService/locations/{location}/quotas": {
+      "get": {
+        "tags": [
+          "Quotas"
+        ],
+        "description": "Lists all the available quota per region per subscription.",
+        "operationId": "Quotas_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/QuotaResourceList"
+            }
+          },
+          "default": {
+            "description": "Resource provider error response about the failure.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Quotas_List": {
+            "$ref": "./examples/Quotas_List.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.LoadTestService/locations/{location}/quotas/{quotaBucketName}": {
       "get": {
         "tags": [
@@ -717,6 +762,28 @@
         "modelAsString": true
       }
     },
+    "QuotaResourceList": {
+      "description": "A list of Quota Bucket details. It contains an URL link to get the next set of results.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QuotaResource"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ],
+          "description": "List of Quota Bucket details by the loadtestservice resource provider",
+          "readOnly": true
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "URL to get the next set of Quota Bucket details results (if there are any).",
+          "readOnly": true
+        }
+      }
+    },
     "QuotaResource": {
       "type": "object",
       "description": "Quota Bucket details",
@@ -753,6 +820,22 @@
     },
     "CheckQuotaAvailabilityResponse": {
       "description": "Check Quota Availability Response.",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "description": "Check Quota Availability Response properties",
+          "$ref": "#/definitions/CheckQuotaAvailabilityResponseProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
+        }
+      ]
+    },
+    "CheckQuotaAvailabilityResponseProperties": {
+      "description": "Check Quota Availability Response properties.",
       "type": "object",
       "properties": {
         "isAvailable": {
