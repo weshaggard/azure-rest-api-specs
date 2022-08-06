@@ -39,8 +39,25 @@ model WeatherForecastProperties {
   summary?: string;
 }
 
+@doc("Provisioning state")
+@knownValues(ProvisioningStateKV)
+model ProvisioningState is string {}
+enum ProvisioningStateKV {
+  Succeeded,
+  Failed,
+  Canceled,
+  Accepted,
+  Creating,
+  Updating,
+  Deleting
+}
+
 @doc("The properties of WeatherForecastResource")
 model WeatherForecastResourceProperties {
+  @doc("Provisioning state")
+  @visibility("read")
+  provisioningState?: ProvisioningState;
+
   @extension("x-ms-identifiers", ["city"])
   @doc("Collection of weather forecasts")
   weatherForecastProperties: WeatherForecastProperties[];
