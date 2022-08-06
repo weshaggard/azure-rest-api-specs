@@ -37,23 +37,6 @@ These settings apply only when `--tag=package-2022-08-01-preview` is specified o
 ```yaml $(tag) == 'package-2022-08-01-preview'
 input-file:
   - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/secretmanagementsample.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_CreateOrUpdate.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_CreateOrUpdate_MaximumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_CreateOrUpdate_MinimumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_Update.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_Update_MaximumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_Update_MinimumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_Delete.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_Delete_MaximumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_Delete_MinimumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_Get_MaximumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_Get_MinimumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_ListByResourceGroup_MaximumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_ListByResourceGroup_MinimumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_ListBySubscription_MaximumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Forecasts_ListBySubscription_MinimumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Operations_List_MaximumSet_Gen.json
-  - Microsoft.SecretManagementSampleProvider/preview/2022-08-01-preview/examples/Operations_List_MinimumSet_Gen.json
 
 ```
 
