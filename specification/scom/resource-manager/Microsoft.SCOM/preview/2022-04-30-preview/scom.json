@@ -372,6 +372,47 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Scom/resourceoperations/TemplateDeployment/validate": {
+      "post": {
+        "operationId": "validate",
+        "description": "preflight validation",
+        "tags": [
+          "validate SCOMMI Instances"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v1/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "PreflightResources",
+            "description": "SCOM Preflight Resource",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PreflightResourceList"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "401": {
+            "description": "validation failed. errorSource defaults to endUser if not set"
+          },
+          "501": {
+            "description": "Validation failed. errorSource must be userRP. Defaulted to the same if not set"
+          }
+        },
+        "x-ms-long-running-operation": false
+      }
     }
   },
   "definitions": {
@@ -748,6 +789,19 @@
           "description": "URL to get the next page if any",
           "type": "string",
           "readOnly": true
+        }
+      }
+    },
+    "PreflightResourceList": {
+      "description": "A list of SCOM monitoring instances",
+      "properties": {
+        "value": {
+          "description": "The items on the page",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/MonitoringInstance"
+          }
         }
       }
     },
