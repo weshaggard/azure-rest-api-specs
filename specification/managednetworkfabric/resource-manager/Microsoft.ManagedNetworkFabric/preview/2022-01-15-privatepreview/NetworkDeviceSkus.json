@@ -137,23 +137,52 @@
           "type": "string",
           "description": "Manufacturer of the network device."
         },
-        "operatingSystemCapabilities": {
-          "description": "Operating system capabilities.",
-          "type": "object",
-          "properties": {
-            "version": {
-              "type": "string",
-              "description": "Operating system version."
-            }
-          }
-        },
-        "firmwareCapabilities": {
-          "description": "Firmware capabilities.",
-          "type": "object",
-          "properties": {
-            "version": {
-              "type": "string",
-              "description": "Firmware version."
+        "supportedVersions": {
+          "type": "array",
+          "description": "List of network device interfaces.",
+          "x-ms-identifiers": [
+            "version"
+          ],
+          "items": {
+            "description": "Network device interface properties.",
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "string",
+                "description": "Operating system and firmware combined versions."
+              },
+              "vendorOsVersion": {
+                "type": "string",
+                "description": "Operating system version."
+              },
+              "vendorFirmwareVersion": {
+                "type": "string",
+                "description": "Firmware version."
+              },
+              "isCurrent": {
+                "type": "string",
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "x-ms-enum": {
+                  "modelAsString": true,
+                  "name": "isCurrentVersion"
+                },
+                "description": "Whether this version is in use."
+              },
+              "isTest": {
+                "type": "string",
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "x-ms-enum": {
+                  "modelAsString": true,
+                  "name": "isTestVersion"
+                },
+                "description": "Whether this version is a test version."
+              }
             }
           }
         },
@@ -194,18 +223,22 @@
           }
         },
         "supportedRoleTypes": {
-          "type": "string",
+          "type": "array",
           "description": "Available roles for the network device.",
-          "enum": [
-            "CE",
-            "ToR",
-            "NPB",
-            "TS",
-            "Management"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "networkDeviceRoleName"
+          "items": {
+            "type": "string",
+            "description": "Available role for the network device.",
+            "enum": [
+              "CE",
+              "ToR",
+              "NPB",
+              "TS",
+              "Management"
+            ],
+            "x-ms-enum": {
+              "modelAsString": true,
+              "name": "networkDeviceRoleName"
+            }
           }
         },
         "interfaces": {
@@ -218,10 +251,6 @@
             "description": "Network device interface properties.",
             "type": "object",
             "properties": {
-              "type": {
-                "type": "string",
-                "description": "Interface type. TBD."
-              },
               "identifier": {
                 "type": "string",
                 "description": "Interface identifier. Example: HundredGigE0/0."
@@ -234,13 +263,13 @@
                 "type": "array",
                 "description": "List of supported connector types.",
                 "x-ms-identifiers": [
-                  "type"
+                  "connectorType"
                 ],
                 "items": {
                   "description": "Supported connector properties.",
                   "type": "object",
                   "properties": {
-                    "type": {
+                    "connectorType": {
                       "type": "string",
                       "description": "Connector type. Example: optical."
                     },
