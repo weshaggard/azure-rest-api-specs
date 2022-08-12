@@ -1,28 +1,17 @@
 {
-  "info": {
-    "version": "2022-08-01-preview",
-    "title": "impactrp",
-    "description": "interface to report regressions in azure",
-    "x-ms-code-generation-settings": {
-      "name": "impactrpClient"
-    }
-  },
   "swagger": "2.0",
+  "info": {
+    "title": "Impact",
+    "description": "Impact provider",
+    "version": "2022-08-01-preview"
+  },
   "host": "management.azure.com",
-  "schemes": [
-    "https"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "schemes": [ "https" ],
+  "consumes": [ "application/json" ],
+  "produces": [ "application/json" ],
   "security": [
     {
-      "azure_auth": [
-        "user_impersonation"
-      ]
+      "azure_auth": [ "user_impersonation" ]
     }
   ],
   "securityDefinitions": {
@@ -30,25 +19,282 @@
       "type": "oauth2",
       "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
       "flow": "implicit",
-      "description": "Azure Active Directory OAuth2 Flow",
+      "description": "Azure Active Directory OAuth2 Flow.",
       "scopes": {
         "user_impersonation": "impersonate your user account"
       }
     }
   },
   "paths": {
-    "/providers/Microsoft.Impact/operations": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Impact/impacts": {
       "get": {
-        "tags": [
-          "Operations"
+        "description": "Returns list of impacts.",
+        "operationId": "impacts_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
         ],
-        "description": "Lists all of the available RP operations.",
-        "operationId": "get_operations",
-        "x-ms-examples": {
-          "getoperations": {
-            "$ref": "./examples/getoperations.json"
+        "responses": {
+          "200": {
+            "description": "impacts details.",
+            "schema": {
+              "$ref": "#/definitions/impactsResourceList"
+            }
           }
         },
+        "deprecated": false,
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Impact/impacts/{impactsName}": {
+      "get": {
+        "description": "Returns impacts resource for a given name.",
+        "operationId": "impacts_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "impacts details.",
+            "schema": {
+              "$ref": "#/definitions/impactsResource"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Create or update impacts resource.",
+        "operationId": "impacts_CreateAndUpdate",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          },
+          {
+            "name": "impactsResource",
+            "description": "impacts details.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/impactsResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/impactsResource"
+            }
+          },
+          "201": {
+            "description": "Long running operation."
+          }
+        }
+      },
+      "patch": {
+        "description": "Update impacts details.",
+        "operationId": "impacts_Update",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          },
+          {
+            "name": "impactsPatchResource",
+            "description": "impacts patch details.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/impactsPatchResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/impactsResource"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Impact/impacts/{impactsName}/rca/{nestedResourceName}": {
+      "get": {
+        "description": "Returns nested resources for a given impacts name",
+        "operationId": "NestedResourceType_Get",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          },
+          {
+            "$ref": "#/parameters/NestedResourceNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nested Resource Types.",
+            "schema": {
+              "$ref": "#/definitions/NestedResource"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Create or update nested resource type.",
+        "operationId": "NestedResourceType_CreateAndUpdate",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          },
+          {
+            "$ref": "#/parameters/NestedResourceNameParameter"
+          },
+          {
+            "name": "NestedResourceType",
+            "description": "Nested Resource Type details.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NestedResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/NestedResource"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update nested resource type details.",
+        "operationId": "NestedResourceType_Update",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          },
+          {
+            "$ref": "#/parameters/NestedResourceNameParameter"
+          },
+          {
+            "name": "NestedResourcePatchResource",
+            "description": "Nested resource patch details.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NestedResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/NestedResource"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Impact/impacts/{impactsName}/rca": {
+      "get": {
+        "description": "Returns nested resources for a given impacts name",
+        "operationId": "NestedResourceType_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Nested Resource Types.",
+            "schema": {
+              "$ref": "#/definitions/NestedResourceList"
+            }
+          }
+        }
+      }
+    },
+    "/providers/microsoft.Impact/operations": {
+      "get": {
+        "description": "Returns list of operations.",
+        "operationId": "Operation_List",
         "parameters": [
           {
             "$ref": "#/parameters/ApiVersionParameter"
@@ -56,327 +302,232 @@
         ],
         "responses": {
           "200": {
-            "description": "OK. The request has succeeded.",
+            "description": "Operation details.",
             "schema": {
               "$ref": "#/definitions/operationsList"
             }
-          },
-          "default": {
-            "description": "Resource Provider error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
           }
         },
+        "deprecated": false,
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         }
       }
-    },
-    "/{resourceUri}/providers/Microsoft.Impact/impacts/{impactId}": {
-
-      "get": {
-        "operationId": "Impact_Get",
-        "x-ms-examples": {
-            "Gets the tower resource": {
-                "$ref": "examples/getImpact.json"
-            }
-        },
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceUriParameter"
-          },
-            {
-              "$ref": "#/parameters/ImpactIdParameter"
-            },
-            {
-                "$ref": "#/parameters/ApiVersionParameter"
-            }
-        ],
-        "responses": {
-            "200": {
-                "description": "Retrieves the towers resource.",
-                "schema": {
-                    "$ref": "#/definitions/impactInfo"
-                }
-            },
-            "default": {
-                "description": "Error response describing why the operation failed.",
-                "schema": {
-                    "$ref": "#/definitions/ErrorResponse"
-                }
-            }
-        }
-    },
-    "put": {
-        "tags": [
-          "impact"
-        ],
-        "operationId": "Impact_putImpact",
-        "x-ms-examples": {
-          "ImpactPutImpact": {
-            "$ref": "./examples/ImpactPutImpact.json"
-          }
-        },
-        "description": "api to report regressions in azure",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ImpactIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourceUriParameter"
-          },
-          {
-            "name": "body",
-            "description": "impact Info",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/impactInfo"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "regression hass been registered in our system, Thank you !",
-            "schema": {
-              "$ref": "#/definitions/impactRes"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },          
-        "delete": {
-        "operationId": "Impact_Delete",
-        "x-ms-examples": {
-            "Deletes the tower resource": {
-                "$ref": "examples/deleteImpact.json"
-            }
-        },
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceUriParameter"
-          },
-            {
-              "$ref": "#/parameters/ImpactIdParameter"
-            },
-            {
-                "$ref": "#/parameters/ApiVersionParameter"
-            }
-        ],
-        "responses": {
-            "200": {
-                "description": "Deletes the towers resource."
-            },
-            "204": {
-                "description": "Deletes the towers resource."
-            },
-            "default": {
-                "description": "Error response describing why the operation failed.",
-                "schema": {
-                    "$ref": "#/definitions/ErrorResponse"
-                }
-            }
-        }
-    },
-    "patch": {
-        "operationId": "patch_impact",
-        "x-ms-examples": {
-            "Updates the tower resource": {
-                "$ref": "examples/patchImpact.json"
-            }
-        },
-        "parameters": [
-          {
-            "$ref": "#/parameters/ResourceUriParameter"
-          },
-            {
-              "$ref": "#/parameters/ImpactIdParameter"
-            },
-            {
-                "$ref": "#/parameters/ApiVersionParameter"
-            },
-            {
-                "name": "towers",
-                "in": "body",
-                "required": true,
-                "schema": {
-                  "$ref": "#/definitions/impactInfo"
-                }
-            }
-        ],
-        "responses": {
-            "200": {
-                "description": "Updates the towers resource.",
-                "schema": {
-                  "$ref": "#/definitions/impactInfo"
-                }
-            },
-            "default": {
-                "description": "Error response describing why the operation failed.",
-                "schema": {
-                    "$ref": "#/definitions/ErrorResponse"
-                }
-            }
-        }
-      }
     }
-   
   },
   "definitions": {
-    "impactRes": {
-      "type": "object",
-      "x-ms-azure-resource": true,
-      "description": "response object",
+    "Resource": {
+      "description": "An Azure resource.",
       "properties": {
         "id": {
+          "description": "Azure resource Id.",
           "type": "string",
-          "description": "system generted uuid",
           "readOnly": true
         },
         "name": {
-          "readOnly": true,
+          "description": "Azure resource name.",
           "type": "string",
-          "description": "system generted uuid"
+          "readOnly": true
         },
         "type": {
-          "readOnly": true,
-          "type": "string",
-          "description": "system generted uuid"
-        }
-      }
-    },
-    "ErrorResponse": {
-      "type": "object",
-      "description": "Error response.",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/ErrorDefinition",
-          "description": "The error details."
-        }
-      }
-    },
-    "ErrorDefinition": {
-      "type": "object",
-      "description": "Error definition.",
-      "properties": {
-        "code": {
-          "description": "Service specific error code which serves as the substatus for the HTTP error code.",
+          "description": "Azure resource type.",
           "type": "string",
           "readOnly": true
         },
-        "message": {
-          "description": "Description of the error.",
+        "location": {
+          "description": "Location of the resource.",
           "type": "string",
-          "readOnly": true
+          "readOnly": false
         },
-        "details": {
-          "description": "Internal error details.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ErrorDefinition"
-          },
-          "readOnly": true,
-          "x-ms-identifiers": []
+        "tags": {
+          "description": "resource tags.",
+          "type": "object",
+          "readOnly": false,
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "x-ms-azure-resource": true
+    },
+    "impactsResource": {
+      "type": "object",
+      "description": "impacts details",
+      "required": [ "properties" ],
+      "properties": {
+        "properties": {
+          "type": "object",
+          "required": [ "firstName", "lastName", "group", "likesTea" ],
+          "properties": {
+            "firstName": {
+              "type": "string",
+              "description": "impacts full name.",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "middleName": {
+              "type": "string",
+              "description": "impacts middle name.",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "lastName": {
+              "type": "string",
+              "description": "impacts last name.",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "group": {
+              "type": "string",
+              "description": "group like Finance, HR etc...",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "identificationNumber": {
+              "type": "string",
+              "readOnly": true,
+              "description": "unique id assigned at the time of user creation"
+            },
+            "likesTea": {
+              "type": "string",
+              "description": "Gets or sets the deployment mode.",
+              "enum": [ "Yes" ],
+              "x-ms-enum": {
+                "name": "likesTea",
+                "modelAsString": true
+              }
+            }
+          }
         }
       }
     },
-    "impactInfo": {
+    "impactsPatchResource": {
       "type": "object",
-      "description": "object that contains information about component details, that was subject of regression and regression time",
+      "description": "impacts patch properties",
       "properties": {
-        "startDateTime": {
-          "type": "string",
-          "description": "Time when impact started. Mandatory"
-        },
-        "endDateTime": {
-          "type": "string",
-          "x-nullable": true,
-          "description": "Time when impact ended. Optional"
-        },
-        "impactCategory": {
-          "type": "string"
-        },
-        "region": {
-          "type": "string",
-          "description": "Azure Region where impact was observed. Mandatory"
-        },
-        "callerId": {
-          "type": "string",
-          "description": " Identification of the caller. Domain data to be onboarded per caller. Mandatory"
-        },
-        "workloadContext": {
-          "type": "string",
-          "description": "Valid context defining the kind of workload for a given caller. Domaindata to be onboarded per caller. Mandatory."
-        },
-        "resourceType": {
-          "type": "string",
-          "description": " Azure resource type that was impacted. Mandatory"
-        },
-        "impactType": {
-          "type": "string",
-          "description": "Valid impact types that scopes the customer issues. This is domain data that weexpand as we onboard new clients. Mandatory"
-        },
-        "resourceUriList": {
-          "type": "array",
-          "description": "Resource uris of impacted resources separated by semi-colon. Allresources in the batch must belong to the resource-type provided as parameter to the api.Mandatory",
-          "items": {
+        "tags": {
+          "description": "resource tags.",
+          "type": "object",
+          "readOnly": false,
+          "additionalProperties": {
             "type": "string"
           }
         },
-        "correlationIdList": {
-          "type": "string",
-          "x-nullable": true,
-          "description": " List of ARM correlation ids separated by semi-colon. Optional."
-        },
-        "operationIdList": {
-          "type": "string",
-          "x-nullable": true,
-          "description": "List of operations ids separated by semi-colon. Operation Ids come fromAzure components like CRP, Disk. Optional."
-        },
-        "errorCode": {
-          "type": "string",
-          "x-nullable": true,
-          "description": "ARM error code returned by Azure. Optional"
-        },
-        "errorMessage": {
-          "type": "string",
-          "x-nullable": true,
-          "description": "ARM error message returned by Azure. Optional."
-        },
-        "impactDescription": {
-          "type": "string",
-          "x-nullable": true,
-          "description": "Free text for describing the impact. Optional"
-        },
-        "extendedProperties": {
+        "properties": {
           "type": "object",
-          "x-nullable": true,
-          "description": "Free Json describing the impact. Optional"
+          "properties": {
+            "group": {
+              "type": "string",
+              "description": "group like Finance, HR etc..."
+            }
+          }
+        }
+      }
+    },
+    "impactsResourceList": {
+      "description": "The list of impacts.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of impacts list.",
+          "type": "string"
         },
-        "toolset": {
-          "type": "string",
-          "x-nullable": true,
-          "description": " Tool used to interact with Azure. e.g. Terraform, Powershell, Portal. This is freeflowing text. Optional."
+        "value": {
+          "description": "The list of recommendations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/impactsResource"
+          }
+        }
+      }
+    },
+    "NestedResource": {
+      "type": "object",
+      "description": "Nested Resource details",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ],
+      "required": [ "properties" ],
+      "properties": {
+        "properties": {
+          "properties": {
+            "firstName": {
+              "type": "string",
+              "description": "Nested Resource full name.",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "middleName": {
+              "type": "string",
+              "description": "Nested Resource name.",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "lastName": {
+              "type": "string",
+              "description": "Nested Resource name.",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "group": {
+              "type": "string",
+              "description": "group like Finance, HR etc...",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^[A-Za-z0-9-._]+$"
+            },
+            "identificationNumber": {
+              "type": "string",
+              "readOnly": true,
+              "description": "unique id assigned at the time of user creation"
+            },
+            "likesTea": {
+              "type": "string",
+              "description": "Gets or sets the deployment mode.",
+              "enum": [ "Yes" ],
+              "x-ms-enum": {
+                "name": "likesTea",
+                "modelAsString": true
+              }
+            }
+          },
+          "required": [ "firstName", "lastName", "group", "likesTea" ],
+          "type": "object"
+        }
+      }
+    },
+    "NestedResourceList": {
+      "description": "The list of nested resources.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of nested resources list.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The list of recommendations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NestedResource"
+          }
         }
       }
     },
     "operation": {
-      "type": "object",
       "description": "Operation provided by provider",
       "properties": {
         "name": {
           "type": "string",
           "description": "Name of the operation"
-        },
-        "isDataAction": {
-          "description": "Indicates whether the operation is data action or not.",
-          "type": "boolean"
         },
         "display": {
           "type": "object",
@@ -403,7 +554,6 @@
       }
     },
     "operationsList": {
-      "type": "object",
       "description": "Lists the operations available.",
       "properties": {
         "nextLink": {
@@ -413,38 +563,12 @@
         "value": {
           "description": "Array of operations",
           "type": "array",
-          "x-ms-identifiers": [],
           "items": {
-            "description": "Operation.",
             "$ref": "#/definitions/operation"
           }
         }
       },
-      "required": [
-        "value"
-      ]
-    },
-    "rcaInfo": {
-      "type": "object",
-      "description": "object that contains information about change that caused the regression",
-      "properties": {
-        "impactStatus": {
-          "type": "string",
-          "description": "Represents status of the RCA"
-        },
-        "impactedRegions": {
-          "type": "string",
-          "description": "Represents status of the RCA"
-        },
-        "impactedEnvironment": {
-          "type": "string",
-          "description": "Represents status of the RCA"
-        },
-        "title": {
-          "type": "string",
-          "description": "Represents status of the RCA"
-        }
-      }
+      "required": [ "value" ]
     }
   },
   "parameters": {
@@ -453,23 +577,14 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The Azure subscription ID. This is a GUID-formatted string (e.g. 00000000-0000-0000-0000-000000000000)"
+      "description": "The Azure subscription ID."
     },
-    "ImpactIdParameter": {
-      "name": "impactId",
-      "in": "path",
+    "ApiVersionParameter": {
+      "name": "api-version",
+      "in": "query",
       "required": true,
       "type": "string",
-      "description": "guid id of a regression reported",
-      "x-ms-parameter-location": "client"
-    },
-    "RcaIdParameter": {
-      "name": "rcaId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "guid id of a regression reported",
-      "x-ms-parameter-location": "client"
+      "description": "Client Api Version."
     },
     "ResourceGroupNameParameter": {
       "name": "resourceGroupName",
@@ -477,46 +592,30 @@
       "required": true,
       "type": "string",
       "description": "The name of the resource group.",
-      "x-ms-parameter-location": "client"
+      "x-ms-parameter-location": "method"
     },
-    "ParentResourceProviderNamespaceParameter": {
-      "name": "parentResourceProviderNamespace",
+    "impactsNameParameter": {
+      "name": "impactsName",
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "name of the parent resource provider ex: 'Microsoft.Compute' ",
-      "x-ms-parameter-location": "client"
+      "description": "The name impacts resource.",
+      "x-ms-parameter-location": "method"
     },
-    "ParentResourceTypeParameter": {
-      "name": "parentResourceType",
+    "NestedResourceNameParameter": {
+      "name": "nestedResourceName",
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "name of the parent resource type  ex: virtualMachines",
-      "x-ms-parameter-location": "client"
+      "description": "The name of nested resource.",
+      "x-ms-parameter-location": "method"
     },
-    "ParentResourceNameParameter": {
-      "name": "parentResourceName",
+    "ExtensionResourceNameParameter": {
+      "name": "extensionResourceName",
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "name of the parent resource  ex: xyz_vm_name",
-      "x-ms-parameter-location": "client"
-    },
-    "ApiVersionParameter": {
-      "name": "api-version",
-      "in": "query",
-      "required": true,
-      "type": "string",
-      "description": "The API version to be used with the HTTP request."
-    },
-    "ResourceUriParameter": {
-      "name": "resourceUri",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The fully qualified Azure Resource manager identifier of the resource to be connected.",
-      "x-ms-skip-url-encoding": true,
+      "description": "The name of extension resource.",
       "x-ms-parameter-location": "method"
     }
   }
