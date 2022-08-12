@@ -1,0 +1,523 @@
+{
+  "info": {
+    "version": "2022-08-01",
+    "title": "impactrp",
+    "description": "interface to report regressions in azure",
+    "x-ms-code-generation-settings": {
+      "name": "impactrpClient"
+    }
+  },
+  "swagger": "2.0",
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {
+    "/providers/Microsoft.Impact/operations": {
+      "get": {
+        "tags": [
+          "Operations"
+        ],
+        "description": "Lists all of the available RP operations.",
+        "operationId": "get_operations",
+        "x-ms-examples": {
+          "getoperations": {
+            "$ref": "./examples/getoperations.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/operationsList"
+            }
+          },
+          "default": {
+            "description": "Resource Provider error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/{resourceUri}/providers/Microsoft.Impact/impacts/{impactId}": {
+
+      "get": {
+        "operationId": "Impact_Get",
+        "x-ms-examples": {
+            "Gets the tower resource": {
+                "$ref": "examples/getImpact.json"
+            }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+            {
+              "$ref": "#/parameters/ImpactIdParameter"
+            },
+            {
+                "$ref": "#/parameters/ApiVersionParameter"
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "Retrieves the towers resource.",
+                "schema": {
+                    "$ref": "#/definitions/impactInfo"
+                }
+            },
+            "default": {
+                "description": "Error response describing why the operation failed.",
+                "schema": {
+                    "$ref": "#/definitions/ErrorResponse"
+                }
+            }
+        }
+    },
+    "put": {
+        "tags": [
+          "impact"
+        ],
+        "operationId": "Impact_putImpact",
+        "x-ms-examples": {
+          "ImpactPutImpact": {
+            "$ref": "./examples/ImpactPutImpact.json"
+          }
+        },
+        "description": "api to report regressions in azure",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ImpactIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+          {
+            "name": "body",
+            "description": "impact Info",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/impactInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "regression hass been registered in our system, Thank you !",
+            "schema": {
+              "$ref": "#/definitions/impactRes"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },          
+        "delete": {
+        "operationId": "Impact_Delete",
+        "x-ms-examples": {
+            "Deletes the tower resource": {
+                "$ref": "examples/deleteImpact.json"
+            }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+            {
+              "$ref": "#/parameters/ImpactIdParameter"
+            },
+            {
+                "$ref": "#/parameters/ApiVersionParameter"
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "Deletes the towers resource."
+            },
+            "204": {
+                "description": "Deletes the towers resource."
+            },
+            "default": {
+                "description": "Error response describing why the operation failed.",
+                "schema": {
+                    "$ref": "#/definitions/ErrorResponse"
+                }
+            }
+        }
+    },
+    "patch": {
+        "operationId": "patch_impact",
+        "x-ms-examples": {
+            "Updates the tower resource": {
+                "$ref": "examples/patchImpact.json"
+            }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+            {
+              "$ref": "#/parameters/ImpactIdParameter"
+            },
+            {
+                "$ref": "#/parameters/ApiVersionParameter"
+            },
+            {
+                "name": "towers",
+                "in": "body",
+                "required": true,
+                "schema": {
+                  "$ref": "#/definitions/impactInfo"
+                }
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "Updates the towers resource.",
+                "schema": {
+                  "$ref": "#/definitions/impactInfo"
+                }
+            },
+            "default": {
+                "description": "Error response describing why the operation failed.",
+                "schema": {
+                    "$ref": "#/definitions/ErrorResponse"
+                }
+            }
+        }
+      }
+    }
+   
+  },
+  "definitions": {
+    "impactRes": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "description": "response object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "system generted uuid",
+          "readOnly": true
+        },
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "system generted uuid"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "system generted uuid"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "description": "Error response.",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/ErrorDefinition",
+          "description": "The error details."
+        }
+      }
+    },
+    "ErrorDefinition": {
+      "type": "object",
+      "description": "Error definition.",
+      "properties": {
+        "code": {
+          "description": "Service specific error code which serves as the substatus for the HTTP error code.",
+          "type": "string",
+          "readOnly": true
+        },
+        "message": {
+          "description": "Description of the error.",
+          "type": "string",
+          "readOnly": true
+        },
+        "details": {
+          "description": "Internal error details.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorDefinition"
+          },
+          "readOnly": true,
+          "x-ms-identifiers": []
+        }
+      }
+    },
+    "impactInfo": {
+      "type": "object",
+      "description": "object that contains information about component details, that was subject of regression and regression time",
+      "properties": {
+        "startDateTime": {
+          "type": "string",
+          "description": "Time when impact started. Mandatory"
+        },
+        "endDateTime": {
+          "type": "string",
+          "x-nullable": true,
+          "description": "Time when impact ended. Optional"
+        },
+        "impactCategory": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "description": "Azure Region where impact was observed. Mandatory"
+        },
+        "callerId": {
+          "type": "string",
+          "description": " Identification of the caller. Domain data to be onboarded per caller. Mandatory"
+        },
+        "workloadContext": {
+          "type": "string",
+          "description": "Valid context defining the kind of workload for a given caller. Domaindata to be onboarded per caller. Mandatory."
+        },
+        "resourceType": {
+          "type": "string",
+          "description": " Azure resource type that was impacted. Mandatory"
+        },
+        "impactType": {
+          "type": "string",
+          "description": "Valid impact types that scopes the customer issues. This is domain data that weexpand as we onboard new clients. Mandatory"
+        },
+        "resourceUriList": {
+          "type": "array",
+          "description": "Resource uris of impacted resources separated by semi-colon. Allresources in the batch must belong to the resource-type provided as parameter to the api.Mandatory",
+          "items": {
+            "type": "string"
+          }
+        },
+        "correlationIdList": {
+          "type": "string",
+          "x-nullable": true,
+          "description": " List of ARM correlation ids separated by semi-colon. Optional."
+        },
+        "operationIdList": {
+          "type": "string",
+          "x-nullable": true,
+          "description": "List of operations ids separated by semi-colon. Operation Ids come fromAzure components like CRP, Disk. Optional."
+        },
+        "errorCode": {
+          "type": "string",
+          "x-nullable": true,
+          "description": "ARM error code returned by Azure. Optional"
+        },
+        "errorMessage": {
+          "type": "string",
+          "x-nullable": true,
+          "description": "ARM error message returned by Azure. Optional."
+        },
+        "impactDescription": {
+          "type": "string",
+          "x-nullable": true,
+          "description": "Free text for describing the impact. Optional"
+        },
+        "extendedProperties": {
+          "type": "object",
+          "x-nullable": true,
+          "description": "Free Json describing the impact. Optional"
+        },
+        "toolset": {
+          "type": "string",
+          "x-nullable": true,
+          "description": " Tool used to interact with Azure. e.g. Terraform, Powershell, Portal. This is freeflowing text. Optional."
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "description": "Operation provided by provider",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the operation"
+        },
+        "isDataAction": {
+          "description": "Indicates whether the operation is data action or not.",
+          "type": "boolean"
+        },
+        "display": {
+          "type": "object",
+          "description": "Properties of the operation",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "description": "Provider name"
+            },
+            "resource": {
+              "type": "string",
+              "description": "Resource name"
+            },
+            "operation": {
+              "type": "string",
+              "description": "Operation name"
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of the operation"
+            }
+          }
+        }
+      }
+    },
+    "operationsList": {
+      "type": "object",
+      "description": "Lists the operations available.",
+      "properties": {
+        "nextLink": {
+          "description": "Url to follow for getting next page of operations.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Array of operations",
+          "type": "array",
+          "x-ms-identifiers": [],
+          "items": {
+            "description": "Operation.",
+            "$ref": "#/definitions/operation"
+          }
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "rcaInfo": {
+      "type": "object",
+      "description": "object that contains information about change that caused the regression",
+      "properties": {
+        "impactStatus": {
+          "type": "string",
+          "description": "Represents status of the RCA"
+        },
+        "impactedRegions": {
+          "type": "string",
+          "description": "Represents status of the RCA"
+        },
+        "impactedEnvironment": {
+          "type": "string",
+          "description": "Represents status of the RCA"
+        },
+        "title": {
+          "type": "string",
+          "description": "Represents status of the RCA"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "SubscriptionIdParameter": {
+      "name": "subscriptionId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The Azure subscription ID. This is a GUID-formatted string (e.g. 00000000-0000-0000-0000-000000000000)"
+    },
+    "ImpactIdParameter": {
+      "name": "impactId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "guid id of a regression reported",
+      "x-ms-parameter-location": "client"
+    },
+    "RcaIdParameter": {
+      "name": "rcaId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "guid id of a regression reported",
+      "x-ms-parameter-location": "client"
+    },
+    "ResourceGroupNameParameter": {
+      "name": "resourceGroupName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of the resource group.",
+      "x-ms-parameter-location": "client"
+    },
+    "ParentResourceProviderNamespaceParameter": {
+      "name": "parentResourceProviderNamespace",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "name of the parent resource provider ex: 'Microsoft.Compute' ",
+      "x-ms-parameter-location": "client"
+    },
+    "ParentResourceTypeParameter": {
+      "name": "parentResourceType",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "name of the parent resource type  ex: virtualMachines",
+      "x-ms-parameter-location": "client"
+    },
+    "ParentResourceNameParameter": {
+      "name": "parentResourceName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "name of the parent resource  ex: xyz_vm_name",
+      "x-ms-parameter-location": "client"
+    },
+    "ApiVersionParameter": {
+      "name": "api-version",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "description": "The API version to be used with the HTTP request."
+    },
+    "ResourceUriParameter": {
+      "name": "resourceUri",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The fully qualified Azure Resource manager identifier of the resource to be connected.",
+      "x-ms-skip-url-encoding": true,
+      "x-ms-parameter-location": "method"
+    }
+  }
+}
