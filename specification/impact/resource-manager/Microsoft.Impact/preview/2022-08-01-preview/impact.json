@@ -153,7 +153,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Impact/impacts/{impactsName}/rca/{nestedResourceName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Impact/impacts/{impactsName}/rca/{rcaName}": {
       "get": {
         "description": "Returns nested resources for a given impacts name",
         "operationId": "NestedResourceType_Get",
@@ -171,7 +171,7 @@
             "$ref": "#/parameters/impactsNameParameter"
           },
           {
-            "$ref": "#/parameters/NestedResourceNameParameter"
+            "$ref": "#/parameters/RcaNameParameter"
           }
         ],
         "responses": {
@@ -200,7 +200,7 @@
             "$ref": "#/parameters/impactsNameParameter"
           },
           {
-            "$ref": "#/parameters/NestedResourceNameParameter"
+            "$ref": "#/parameters/RcaNameParameter"
           },
           {
             "name": "NestedResourceType",
@@ -238,7 +238,7 @@
             "$ref": "#/parameters/impactsNameParameter"
           },
           {
-            "$ref": "#/parameters/NestedResourceNameParameter"
+            "$ref": "#/parameters/RcaNameParameter"
           },
           {
             "name": "NestedResourcePatchResource",
@@ -326,49 +326,80 @@
       "properties": {
         "properties": {
           "type": "object",
-          "required": [ "firstName", "lastName", "group", "likesTea" ],
           "properties": {
-            "firstName": {
+            "startDateTime": {
               "type": "string",
-              "description": "impacts full name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
+              "description": "Time when impact started. Mandatory"
             },
-            "middleName": {
+            "endDateTime": {
               "type": "string",
-              "description": "impacts middle name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
+              "x-nullable": true,
+              "description": "Time when impact ended. Optional"
             },
-            "lastName": {
-              "type": "string",
-              "description": "impacts last name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
+            "impactCategory": {
+              "type": "string"
             },
-            "group": {
+            "region": {
               "type": "string",
-              "description": "group like Finance, HR etc...",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
+              "description": "Azure Region where impact was observed. Mandatory"
             },
-            "identificationNumber": {
+            "callerId": {
               "type": "string",
-              "readOnly": true,
-              "description": "unique id assigned at the time of user creation"
+              "description": " Identification of the caller. Domain data to be onboarded per caller. Mandatory"
             },
-            "likesTea": {
+            "workloadContext": {
               "type": "string",
-              "description": "Gets or sets the deployment mode.",
-              "enum": [ "Yes" ],
-              "x-ms-enum": {
-                "name": "likesTea",
-                "modelAsString": true
+              "description": "Valid context defining the kind of workload for a given caller. Domaindata to be onboarded per caller. Mandatory."
+            },
+            "resourceType": {
+              "type": "string",
+              "description": " Azure resource type that was impacted. Mandatory"
+            },
+            "impactType": {
+              "type": "string",
+              "description": "Valid impact types that scopes the customer issues. This is domain data that weexpand as we onboard new clients. Mandatory"
+            },
+            "resourceUriList": {
+              "type": "array",
+              "description": "Resource uris of impacted resources separated by semi-colon. Allresources in the batch must belong to the resource-type provided as parameter to the api.Mandatory",
+              "items": {
+                "type": "string"
               }
+            },
+            "correlationIdList": {
+              "type": "string",
+              "x-nullable": true,
+              "description": " List of ARM correlation ids separated by semi-colon. Optional."
+            },
+            "operationIdList": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "List of operations ids separated by semi-colon. Operation Ids come fromAzure components like CRP, Disk. Optional."
+            },
+            "errorCode": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "ARM error code returned by Azure. Optional"
+            },
+            "errorMessage": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "ARM error message returned by Azure. Optional."
+            },
+            "impactDescription": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "Free text for describing the impact. Optional"
+            },
+            "extendedProperties": {
+              "type": "object",
+              "x-nullable": true,
+              "description": "Free Json describing the impact. Optional"
+            },
+            "toolset": {
+              "type": "string",
+              "x-nullable": true,
+              "description": " Tool used to interact with Azure. e.g. Terraform, Powershell, Portal. This is freeflowing text. Optional."
             }
           }
         }
@@ -417,11 +448,6 @@
     "NestedResource": {
       "type": "object",
       "description": "Nested Resource details",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Resource"
-        }
-      ],
       "required": [ "properties" ],
       "properties": {
         "properties": {
@@ -439,37 +465,9 @@
               "minLength": 1,
               "maxLength": 10,
               "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "lastName": {
-              "type": "string",
-              "description": "Nested Resource name.",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "group": {
-              "type": "string",
-              "description": "group like Finance, HR etc...",
-              "minLength": 1,
-              "maxLength": 10,
-              "pattern": "^[A-Za-z0-9-._]+$"
-            },
-            "identificationNumber": {
-              "type": "string",
-              "readOnly": true,
-              "description": "unique id assigned at the time of user creation"
-            },
-            "likesTea": {
-              "type": "string",
-              "description": "Gets or sets the deployment mode.",
-              "enum": [ "Yes" ],
-              "x-ms-enum": {
-                "name": "likesTea",
-                "modelAsString": true
-              }
             }
           },
-          "required": [ "firstName", "lastName", "group", "likesTea" ],
+          "required": [ "firstName"],
           "type": "object"
         }
       }
@@ -571,8 +569,8 @@
       "description": "The name impacts resource.",
       "x-ms-parameter-location": "method"
     },
-    "NestedResourceNameParameter": {
-      "name": "nestedResourceName",
+    "RcaNameParameter": {
+      "name": "rcaName",
       "in": "path",
       "required": true,
       "type": "string",
