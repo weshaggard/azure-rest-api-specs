@@ -1,0 +1,215 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Impact",
+    "description": "Impact provider",
+    "version": "2022-08-12-preview"
+  },
+  "host": "management.azure.com",
+  "schemes": [ "https" ],
+  "consumes": [ "application/json" ],
+  "produces": [ "application/json" ],
+  "security": [
+    {
+      "azure_auth": [ "user_impersonation" ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow.",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Impact/impacts/{impactsName}": {
+      "get": {
+        "description": "Returns impacts resource for a given name.",
+        "operationId": "impacts_Get",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "impacts details.",
+            "schema": {
+              "$ref": "#/definitions/impactsResource"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Create or update impacts resource.",
+        "operationId": "impacts_CreateAndUpdate",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/impactsNameParameter"
+          },
+          {
+            "name": "impactsResource",
+            "description": "impacts details.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/impactsResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/impactsResource"
+            }
+          },
+          "201": {
+            "description": "Long running operation."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "impactsResource": {
+      "type": "object",
+      "description": "impacts details",
+      "required": ["startDateTime"],
+        "properties": {
+            "startDateTime": {
+              "type": "string",
+              "description": "Time when impact started. Mandatory"
+            },
+            "endDateTime": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "Time when impact ended. Optional"
+            },
+            "impactCategory": {
+              "type": "string"
+            },
+            "region": {
+              "type": "string",
+              "description": "Azure Region where impact was observed. Mandatory"
+            },
+            "callerId": {
+              "type": "string",
+              "description": " Identification of the caller. Domain data to be onboarded per caller. Mandatory"
+            },
+            "workloadContext": {
+              "type": "string",
+              "description": "Valid context defining the kind of workload for a given caller. Domaindata to be onboarded per caller. Mandatory."
+            },
+            "resourceType": {
+              "type": "string",
+              "description": " Azure resource type that was impacted. Mandatory"
+            },
+            "impactType": {
+              "type": "string",
+              "description": "Valid impact types that scopes the customer issues. This is domain data that weexpand as we onboard new clients. Mandatory"
+            },
+            "resourceUriList": {
+              "type": "array",
+              "description": "Resource uris of impacted resources separated by semi-colon. Allresources in the batch must belong to the resource-type provided as parameter to the api.Mandatory",
+              "items": {
+                "type": "string"
+              }
+            },
+            "correlationIdList": {
+              "type": "string",
+              "x-nullable": true,
+              "description": " List of ARM correlation ids separated by semi-colon. Optional."
+            },
+            "operationIdList": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "List of operations ids separated by semi-colon. Operation Ids come fromAzure components like CRP, Disk. Optional."
+            },
+            "errorCode": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "ARM error code returned by Azure. Optional"
+            },
+            "errorMessage": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "ARM error message returned by Azure. Optional."
+            },
+            "impactDescription": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "Free text for describing the impact. Optional"
+            },
+            "extendedProperties": {
+              "type": "object",
+              "x-nullable": true,
+              "description": "Free Json describing the impact. Optional"
+            },
+            "toolset": {
+              "type": "string",
+              "x-nullable": true,
+              "description": " Tool used to interact with Azure. e.g. Terraform, Powershell, Portal. This is freeflowing text. Optional."
+            }
+        }
+      },
+
+    "impactsResourceList": {
+      "description": "The list of impacts.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of impacts list.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The list of recommendations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/impactsResource"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "impactsNameParameter": {
+      "name": "impactsName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name impacts resource.",
+      "x-ms-parameter-location": "method"
+    },
+    "ExtensionResourceNameParameter": {
+      "name": "extensionResourceName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of extension resource.",
+      "x-ms-parameter-location": "method"
+    }
+  }
+}
