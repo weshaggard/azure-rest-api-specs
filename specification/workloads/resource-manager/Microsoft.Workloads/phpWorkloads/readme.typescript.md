@@ -11,4 +11,9 @@ typescript:
   payload-flattening-threshold: 1
   clear-output-folder: true
   generate-metadata: true
+directive:
+  - where-operation: PhpWorkloads_CreateOrUpdate
+    transform: delete $["x-ms-long-running-operation-options"]
+  - where-operation: WordpressInstances_CreateOrUpdate
+    transform: delete $["x-ms-long-running-operation-options"]
 ```

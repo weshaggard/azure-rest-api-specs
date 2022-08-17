@@ -5,14 +5,14 @@ These settings apply only when `--go` is specified on the command line.
 ``` yaml $(go) && !$(track2)
 go:
   license-header: MICROSOFT_MIT_NO_VERSION
-  namespace: monitors
+  namespace: workloads
   clear-output-folder: true
 ```
 
 ```yaml $(go) && $(track2)
 azure-arm: true
 license-header: MICROSOFT_MIT_NO_VERSION
-module-name: sdk/resourcemanager/workloads/sapvirtualinstance/armmonitors
+module-name: sdk/resourcemanager/workloads/armmonitors
 module: github.com/Azure/azure-sdk-for-go/$(module-name)
 output-folder: $(go-sdk-folder)/$(module-name)
 ```
@@ -21,24 +21,14 @@ output-folder: $(go-sdk-folder)/$(module-name)
 
 ``` yaml $(go) && $(multiapi)
 batch:
-  - tag: package-2021-12-01-preview
-  - tag: package-preview-2022-07
+  - tag: package-preview-2022-10
 ```
 
-### Tag: package-preview-2022-07 and go
+### Tag: package-preview-2022-10 and go
 
-These settings apply only when `--tag=package-preview-2022-07 --go` is specified on the command line.
+These settings apply only when `--tag=package-preview-2022-10 --go` is specified on the command line.
 Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
-``` yaml $(tag) == 'package-preview-2022-07' && $(go)
-output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2022-07-01-preview/$(namespace)
-```
-
-### Tag: package-2021-12-01-preview and go
-
-These settings apply only when `--tag=package-2021-12-01-preview --go` is specified on the command line.
-Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
-
-``` yaml $(tag) == 'package-2021-12-01-preview' && $(go)
-output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2021-12-01-preview/$(namespace)
+``` yaml $(tag) == 'package-preview-2022-10' && $(go)
+output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2022-10-01-preview/armmonitors
 ```
