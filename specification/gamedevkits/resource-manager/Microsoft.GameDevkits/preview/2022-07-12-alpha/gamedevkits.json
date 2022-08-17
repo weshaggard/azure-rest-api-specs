@@ -535,7 +535,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SessionCommand"
+              "$ref": "#/definitions/Command"
             }
           }
         ],
@@ -596,7 +596,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SessionCommand"
+              "$ref": "#/definitions/Command"
             }
           }
         ],
@@ -646,13 +646,31 @@
           "$ref": "#/definitions/CommandState",
           "description": "State of the command execution.",
           "readOnly": true
+        },
+        "timeoutInSeconds": {
+          "$ref": "#/definitions/UnsignedInt",
+          "description": "Command execution timeout in seconds."
+        },
+        "output": {
+          "$ref": "#/definitions/CommandOutput",
+          "readOnly": true
         }
       },
       "description": "Details of a Command.",
       "required": [
         "input",
-        "commandState"
+        "commandState",
+        "output"
       ]
+    },
+    "CommandOutput": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      },
+      "description": "Command output."
     },
     "CommandState": {
       "type": "string",
@@ -767,16 +785,6 @@
         }
       ]
     },
-    "GameDevSessionConfig": {
-      "type": "object",
-      "properties": {
-        "expirationTime": {
-          "type": "string",
-          "description": "Expiration time for the session in milliseconds."
-        }
-      },
-      "description": "Config parameters for the session."
-    },
     "GameDevSessionDeviceDetails": {
       "type": "object",
       "properties": {
@@ -826,10 +834,6 @@
           "$ref": "#/definitions/SessionStatus",
           "readOnly": true
         },
-        "sessionConfig": {
-          "$ref": "#/definitions/GameDevSessionConfig",
-          "description": "GameDevSession configuration params."
-        },
         "sessionStart": {
           "type": "string",
           "description": "Timestamp of the session start in date-time format.",
@@ -861,21 +865,11 @@
     "GameDevSessionTaskDetails": {
       "type": "object",
       "properties": {
-        "sessionStart": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Command"
-          },
-          "x-ms-identifiers": [],
-          "x-cadl-name": "Command[]"
+        "startCommands": {
+          "$ref": "#/definitions/Command"
         },
-        "sessionEnd": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Command"
-          },
-          "x-ms-identifiers": [],
-          "x-cadl-name": "Command[]"
+        "endCommands": {
+          "$ref": "#/definitions/Command"
         }
       },
       "description": "Details of the tasks related to the session."
@@ -896,34 +890,12 @@
         "modelAsString": false
       }
     },
-    "SessionCommand": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "type": "string",
-          "description": "Description for the session start task."
-        },
-        "commands": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Command"
-          },
-          "x-ms-identifiers": [],
-          "x-cadl-name": "Command[]"
-        }
-      },
-      "description": "Session start parameters."
-    },
     "SessionStatus": {
       "type": "string",
       "description": "Internal status of the session.",
       "enum": [
         "Initializing",
-        "Initialized",
-        "InitializationFailed",
         "Provisioning",
-        "Provisioned",
-        "ProvisioningFailed",
         "Ready",
         "InUse",
         "Terminating",
@@ -934,6 +906,10 @@
         "name": "SessionStatus",
         "modelAsString": true
       }
+    },
+    "UnsignedInt": {
+      "type": "integer",
+      "format": "int32"
     }
   },
   "parameters": {
