@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2022-06-01-preview",
+    "version": "2022-08-01-preview",
     "title": "AzureStackHCI",
     "description": "Azure Stack HCI management service"
   },
@@ -36,7 +36,7 @@
   "paths": {
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updateSummaries/default": {
       "get": {
-        "operationId": "Updates_GetUpdateSummaries",
+        "operationId": "UpdateSummaries_Get",
         "description": "Get all Update summaries under the HCI cluster",
         "parameters": [
           {
@@ -67,12 +67,9 @@
           }
         },
         "x-ms-examples": {
-          "List Extensions under ArcSetting resource": {
+          "Get Update summaries under cluster resource": {
             "$ref": "./examples/GetUpdateSummaries.json"
           }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
         }
       }
     }
@@ -107,6 +104,22 @@
       "description": "Properties of Update summaries",
       "type": "object",
       "properties": {
+        "provisioningState": {
+          "description": "Provisioning state of the UpdateSummaries proxy resource.",
+          "type": "string",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Accepted",
+            "Provisioning"
+          ],
+          "x-ms-enum": {
+            "name": "ProvisioningState",
+            "modelAsString": true
+          },
+          "readOnly": true
+        },
         "oemFamily": {
           "description": "OEM family name.",
           "type": "string",
@@ -125,9 +138,12 @@
         },
         "packageVersions": {
           "description": "Current version of each updatable component.",
-          "type": "object",
-          "$ref": "#/definitions/PackageVersionInfo",
-          "x-ms-client-flatten": true
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PackageVersionInfo"
+          },
+          "x-ms-client-flatten": true,
+          "x-ms-identifiers": []
         },
         "currentVersion": {
           "description": "Current Solution Bundle version of the stamp.",
@@ -153,7 +169,11 @@
             "PreparationInProgress",
             "PreparationFailed"
           ],
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "x-ms-enum": {
+            "name": "updateSummariesPropertiesState",
+            "modelAsString": true
+          }
         }
       }
     },

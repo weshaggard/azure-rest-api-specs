@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2022-06-01-preview",
+    "version": "2022-08-01-preview",
     "title": "AzureStackHCI",
     "description": "Azure Stack HCI management service"
   },
@@ -36,7 +36,7 @@
   "paths": {
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updates/{updateName}/updateRuns": {
       "get": {
-        "operationId": "Updates_ListUpdateRuns",
+        "operationId": "UpdateRuns_List",
         "description": "List all Update runs for a specified update",
         "parameters": [
           {
@@ -70,7 +70,7 @@
           }
         },
         "x-ms-examples": {
-          "List Extensions under ArcSetting resource": {
+          "List Update runs under cluster resource": {
             "$ref": "./examples/ListUpdateRuns.json"
           }
         },
@@ -81,7 +81,7 @@
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updates/{updateName}/updateRuns/{updateRunName}": {
       "get": {
-        "operationId": "Updates_GetUpdateRuns",
+        "operationId": "UpdateRuns_Get",
         "description": "List all Update runs for a specified update",
         "parameters": [
           {
@@ -118,12 +118,9 @@
           }
         },
         "x-ms-examples": {
-          "List Extensions under ArcSetting resource": {
+          "Get Update runs under cluster resource": {
             "$ref": "./examples/GetUpdateRuns.json"
           }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
         }
       }
     }
@@ -175,6 +172,22 @@
       "description": "Properties of an Update run",
       "type": "object",
       "properties": {
+        "provisioningState": {
+          "description": "Provisioning state of the UpdateRuns proxy resource.",
+          "type": "string",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Accepted",
+            "Provisioning"
+          ],
+          "x-ms-enum": {
+            "name": "ProvisioningState",
+            "modelAsString": true
+          },
+          "readOnly": true
+        },
         "timeStarted": {
           "description": "Timestamp of the update run was started.",
           "type": "string",
@@ -201,7 +214,11 @@
             "InProgress",
             "Failed"
           ],
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "x-ms-enum": {
+            "name": "updateRunPropertiesState",
+            "modelAsString": true
+          }
         },
         "progress": {
           "description": "Progress representation of the update run steps.",
@@ -257,7 +274,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Step"
-          }
+          },
+          "x-ms-identifiers": []
         }
       }
     }

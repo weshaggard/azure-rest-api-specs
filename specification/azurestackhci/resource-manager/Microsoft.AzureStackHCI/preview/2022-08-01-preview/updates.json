@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2022-06-01-preview",
+    "version": "2022-08-01-preview",
     "title": "AzureStackHCI",
     "description": "Azure Stack HCI management service"
   },
@@ -34,50 +34,9 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updates/{updateName}/apply": {
-      "post": {
-        "operationId": "Updates_PostUpdates",
-        "description": "Post Updates",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ClusterNameParameter"
-          },
-          {
-            "$ref": "#/parameters/UpdateNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "ACCEPTED",
-            "schema": {
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "List available updates": {
-            "$ref": "./examples/PostUpdates.json"
-          }
-        }
-      }
-    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updates": {
       "get": {
-        "operationId": "Updates_ListUpdates",
+        "operationId": "Updates_List",
         "description": "List all Updates",
         "parameters": [
           {
@@ -115,8 +74,49 @@
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updates/{updateName}": {
+      "put": {
+        "operationId": "Updates_Put",
+        "description": "Put Updates",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          },
+          {
+            "$ref": "#/parameters/UpdateNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "CREATED"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Apply updates": {
+            "$ref": "./examples/PutUpdates.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      },
       "get": {
-        "operationId": "Updates_GetUpdates",
+        "operationId": "Updates_Get",
         "description": "Get specified Update",
         "parameters": [
           {
@@ -221,6 +221,22 @@
       "description": "Details of a singular Update in HCI Cluster",
       "type": "object",
       "properties": {
+        "provisioningState": {
+          "description": "Provisioning state of the Updates proxy resource.",
+          "type": "string",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Accepted",
+            "Provisioning"
+          ],
+          "x-ms-enum": {
+            "name": "ProvisioningState",
+            "modelAsString": true
+          },
+          "readOnly": true
+        },
         "installedDate": {
           "description": "Date that the update was installed.",
           "type": "string",
@@ -255,14 +271,19 @@
             "ScanInProgress",
             "ScanFailed"
           ],
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "x-ms-enum": {
+            "name": "state",
+            "modelAsString": true
+          }
         },
         "prerequisites": {
           "description": "If update State is HasPrerequisite, this property contains an array of objects describing prerequisite updates before installing this update. Otherwise, it is empty.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/UpdatePrerequisite"
-          }
+          },
+          "x-ms-identifiers": []
         },
         "packagePath": {
           "description": "Path where the update package is available.",
@@ -302,7 +323,11 @@
             "Online",
             "Notify"
           ],
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "x-ms-enum": {
+            "name": "availabilityType",
+            "modelAsString": true
+          }
         },
         "packageType": {
           "description": "Customer-visible type of the update.",
