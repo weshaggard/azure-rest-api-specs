@@ -36,9 +36,19 @@ These settings apply only when `--tag=package-preview-2022-08` is specified on t
 
 ```yaml $(tag) == 'package-preview-2022-08'
 input-file:
+  - Microsoft.Impact/preview/2022-08-18-preview/impact.json
+  - Microsoft.Impact/preview/2022-08-18-preview/operations.json
+```
+### Tag: package-preview-2022-08
+
+These settings apply only when `--tag=package-preview-2022-08` is specified on the command line.
+
+``` yaml $(tag) == 'package-preview-2022-08'
+input-file:
   - Microsoft.Impact/preview/2022-08-16-preview/impact.json
   - Microsoft.Impact/preview/2022-08-16-preview/operations.json
 ```
+
 ### Tag: package-preview-2022-08
 
 These settings apply only when `--tag=package-preview-2022-08` is specified on the command line.
