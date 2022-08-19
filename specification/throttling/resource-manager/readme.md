@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2022-06-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-06-01-preview'
 input-file:
-  - Microsoft.Throttling/stable/2022-06-01-preview/throttling.json
+  - Microsoft.Throttling/preview/2022-06-01-preview/throttling.json
 ```
 
 ---
