@@ -185,6 +185,126 @@
 					}
 				}
 			}
+		},
+		"/{resourceUri}/providers/Microsoft.Impact/impacts/{impactsName}/rootcauseanalysis": {
+			"get": {
+				"tags": [
+					"GET"
+				],
+				"summary": "List all Azure rca for a given impact in a subscription.",
+				"operationId": "rca_ListByimpactResource",
+				"parameters": [
+					{
+						"$ref": "#/parameters/ResourceUriParameter"
+					},
+					{
+						"$ref": "#/parameters/impactsNameParameter"
+					},
+					{
+						"$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "This is a synchronous operation. The body contains a JSON-serialized array of the metadata from all the Azure Impacts in the subscription",
+						"schema": {
+							"$ref": "#/definitions/RcaListResult"
+						}
+					},
+					"default": {
+						"description": "Error response describing why the operation failed.",
+						"schema": {
+							"$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"x-ms-pageable": {
+					"nextLinkName": "nextLink"
+				}
+			}
+		},
+		"/{resourceUri}/providers/Microsoft.Impact/impacts/{impactsName}/rootcauseanalysis/{rcaName}": {
+			"get": {
+				"tags": [
+					"GET"
+				],
+				"summary": "Get Azure Rca metadata.",
+				"operationId": "rca_GetByImpactRcaReource",
+				"parameters": [
+					{
+						"$ref": "#/parameters/ResourceUriParameter"
+					},
+					{
+						"$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+					},
+					{
+						"$ref": "#/parameters/impactsNameParameter"
+					},
+					{
+						"$ref": "#/parameters/rcaNameParameter"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The body contains the account metadata",
+						"schema": {
+							"$ref": "#/definitions/rca"
+						}
+					},
+					"default": {
+						"description": "Error response describing why the operation failed.",
+						"schema": {
+							"$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+						}
+					}
+				}
+			},
+			"put": {
+				"operationId": "rca_CreateAndUpdateByImpactResource",
+				"description": "Create or update rca resource.",
+				"parameters": [
+					{
+						"$ref": "#/parameters/ResourceUriParameter"
+					},
+					{
+						"$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+					},
+					{
+						"$ref": "#/parameters/impactsNameParameter"
+					},
+					{
+						"$ref": "#/parameters/rcaNameParameter"
+					},
+					{
+						"name": "impact",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/rca"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful.",
+						"schema": {
+							"$ref": "#/definitions/rca"
+						}
+					},
+					"201": {
+						"description": "Successful.",
+						"schema": {
+							"$ref": "#/definitions/rca"
+						}
+					},
+					"default": {
+						"description": "Error response describing why the operation failed.",
+						"schema": {
+							"$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+						}
+					}
+				}
+			}
 		}
 	},
 	"definitions": {
@@ -204,6 +324,32 @@
 				"properties": {
 					"description": "The properties of the impact.",
 					"$ref": "#/definitions/ImpactProperties",
+					"x-ms-client-flatten": true
+				},
+				"systemData": {
+					"x-nullable": true,
+					"readOnly": true,
+					"$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+					"description": "The system data."
+				}
+			}
+		},
+		"rca": {
+			"type": "object",
+			"description": "details of rca for an impact",
+			"allOf": [
+				{
+					"$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
+					"description": "The resource model definition for an Azure Resource Manager proxy resource."
+				}
+			],      
+			"required": [
+				"properties"
+			],
+			"properties": {
+				"properties": {
+					"description": "The properties of the rca for an impact",
+					"$ref": "#/definitions/RcaProperties",
 					"x-ms-client-flatten": true
 				},
 				"systemData": {
@@ -294,6 +440,24 @@
 				}
 			}
 		},
+		"RcaProperties": {
+			"type": "object",
+			"description": "impacts details",
+			"properties": {
+				"type": {
+					"type": "string",
+					"description": "type of the impact"
+				},
+				"status": {
+					"type": "string",
+					"description": "status of the impact"
+				},
+				"description": {
+					"type": "string",
+					"description": "description of the impact"
+				}
+			}
+		},
 		"ImpactListResult": {
 			"type": "object",
 			"properties": {
@@ -311,6 +475,24 @@
 				}
 			},
 			"description": "Response for list impacts API service call."
+		},
+		"RcaListResult": {
+			"type": "object",
+			"properties": {
+				"value": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/rca"
+					},
+					"description": "A list of rca for a given impact"
+				},
+				"nextLink": {
+					"type": "string",
+					"readOnly": true,
+					"description": "The URL to get the next set of results."
+				}
+			},
+			"description": "Response for list rca API service call."
 		}
 	},
 	"parameters": {
@@ -320,6 +502,14 @@
 			"required": true,
 			"type": "string",
 			"description": "The name impacts resource.",
+			"x-ms-parameter-location": "method"
+		},
+		"rcaNameParameter": {
+			"name": "rcaName",
+			"in": "path",
+			"required": true,
+			"type": "string",
+			"description": "The name rca resource.",
 			"x-ms-parameter-location": "method"
 		},
 		"ResourceUriParameter": {
