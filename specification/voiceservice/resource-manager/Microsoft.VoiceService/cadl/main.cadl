@@ -1,0 +1,43 @@
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+@armNamespace
+@serviceTitle("Microsoft.VoiceService")
+@serviceVersion("2022-08-22-preview")
+namespace Microsoft.VoiceService;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Azure.ResourceManager;
+
+@doc("A TeamsCalling resource")
+model TeamsCalling is TrackedResource<TeamsCallingProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("TeamsCallingName")
+  @segment("TeamsCallings")
+  @doc("Some documentation")
+  @visibility("Read")
+  @path("todopath")
+  name: string;
+}
+
+@doc("The status of the current TeamsCalling resource.")
+@knownValues(TeamsCallingStatus)
+model Status is string {}
+enum TeamsCallingStatus {
+  New,
+  Acknowledged,
+  Created,
+}
+
+@doc("Details of the TeamsCalling resource.")
+model TeamsCallingProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  status?: Status;
+}
+
+@armResourceOperations
+interface TeamsCallings extends ResourceOperations<TeamsCalling, TeamsCallingProperties> {}
