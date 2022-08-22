@@ -363,80 +363,103 @@
 		"ImpactProperties": {
 			"type": "object",
 			"description": "impacts details",
+			"required": ["startDateTime","impactCategory","region","workloadContext","impactType"],
 			"properties": {
 				"startDateTime": {
 					"type": "string",
-					"description": "Time when impact started. Mandatory"
+					"description": "Time when impact started"
 				},
 				"endDateTime": {
 					"type": "string",
 					"x-nullable": true,
-					"description": "Time when impact ended. Optional"
+					"description": "Time when impact ended."
 				},
 				"impactCategory": {
-					"type": "string"
+					"type": "string",
+					"enum": [ "Reliability", "Performance"],
+					"description": "Type of the impact observed."
 				},
 				"region": {
 					"type": "string",
-					"description": "Azure Region where impact was observed. Mandatory"
+					"description": "Azure Region where impact was observed.",
+					"x-nullable": true
 				},
 				"callerId": {
 					"type": "string",
-					"description": " Identification of the caller. Domain data to be onboarded per caller. Mandatory"
+					"description": " Identification of the caller. Domain data to be onboarded per caller."
 				},
 				"workloadContext": {
 					"type": "string",
-					"description": "Valid context defining the kind of workload for a given caller. Domaindata to be onboarded per caller. Mandatory."
-				},
-				"resourceType": {
-					"type": "string",
-					"description": " Azure resource type that was impacted. Mandatory"
+					"description": "Valid context defining the kind of workload for a given caller. Domaindata to be onboarded per caller."
 				},
 				"impactType": {
 					"type": "string",
-					"description": "Valid impact types that scopes the customer issues. This is domain data that weexpand as we onboard new clients. Mandatory"
-				},
-				"resourceUriList": {
-					"type": "array",
-					"description": "Resource uris of impacted resources separated by semi-colon. Allresources in the batch must belong to the resource-type provided as parameter to the api.Mandatory",
-					"items": {
-						"type": "string"
-					}
+					"description": "Valid impact types that scopes the customer issues. This is domain data that weexpand as we onboard new clients.",
+					"pattern": "[a-zA-Z]+/[a-zA-Z]+/[a-zA-Z]+"
 				},
 				"correlationIdList": {
 					"type": "string",
 					"x-nullable": true,
-					"description": " List of ARM correlation ids separated by semi-colon. Optional."
+					"description": "List of ARM correlation ids separated by semi-colon. "
 				},
 				"operationIdList": {
 					"type": "string",
 					"x-nullable": true,
-					"description": "List of operations ids separated by semi-colon. Operation Ids come fromAzure components like CRP, Disk. Optional."
+					"description": "List of operations ids separated by semi-colon. Operation Ids come fromAzure components like CRP, Disk. "
 				},
 				"errorCode": {
 					"type": "string",
 					"x-nullable": true,
-					"description": "ARM error code returned by Azure. Optional"
+					"description": "ARM error code returned by Azure."
 				},
 				"errorMessage": {
 					"type": "string",
 					"x-nullable": true,
-					"description": "ARM error message returned by Azure. Optional."
+					"description": "ARM error message returned by Azure. "
 				},
 				"impactDescription": {
 					"type": "string",
 					"x-nullable": true,
-					"description": "Free text for describing the impact. Optional"
+					"description": "Free text for describing the impact. "
+				},
+				"ImpactValueExpected": {
+					"type": "string",
+					"x-nullable": true,
+					"description": "threshold for performance impact that is observed"
+				},
+				"ImpactValueActualDouble": {
+					"type": "string",
+					"x-nullable": true,
+					"description": "Actual value of the performace impact, like disk operations, or latency"
 				},
 				"extendedProperties": {
 					"type": "object",
 					"x-nullable": true,
-					"description": "Free Json describing the impact. Optional"
+					"description": "Free stringified Json describing the impact. "
 				},
 				"toolset": {
 					"type": "string",
 					"x-nullable": true,
-					"description": " Tool used to interact with Azure. e.g. Terraform, Powershell, Portal. This is freeflowing text. Optional."
+					"description": " Tool used to interact with Azure. e.g. Terraform, Powershell, Portal. This is freeflowing text. "
+				}
+			}
+		},
+		"RcaProperties": {
+			"type": "object",
+			"description": "impacts details",
+			"required": ["type","status","description"],
+			"properties": {
+				"type": {
+					"type": "string",
+					"description": "type of the impact"
+				},
+				"status": {
+					"type": "string",
+					"description": "status of the impact"
+				},
+				"description": {
+					"type": "string",
+					"description": "description of the impact"
 				}
 			}
 		},
