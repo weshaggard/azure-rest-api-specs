@@ -886,7 +886,7 @@
             "in": "body",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/Command"
+              "$ref": "#/definitions/GameDevSessionCommand"
             }
           }
         ],
@@ -940,7 +940,7 @@
             "in": "body",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/Command"
+              "$ref": "#/definitions/GameDevSessionCommand"
             }
           }
         ],
@@ -994,37 +994,6 @@
         "input"
       ]
     },
-    "Command": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "type": "string",
-          "description": "Description of the command."
-        },
-        "input": {
-          "type": "string",
-          "description": "Input command."
-        },
-        "commandState": {
-          "$ref": "#/definitions/CommandState",
-          "description": "State of the command execution.",
-          "readOnly": true
-        },
-        "timeoutInSeconds": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Command execution timeout in seconds."
-        },
-        "output": {
-          "$ref": "#/definitions/CommandOutput",
-          "readOnly": true
-        }
-      },
-      "description": "Details of a Command.",
-      "required": [
-        "input"
-      ]
-    },
     "CommandOutput": {
       "type": "object",
       "properties": {
@@ -1048,7 +1017,7 @@
         "modelAsString": true
       }
     },
-    "DeviceDetail": {
+    "DeviceDetails": {
       "type": "object",
       "properties": {
         "deviceType": {
@@ -1188,7 +1157,7 @@
           "description": "XBOX|PC OS version."
         },
         "taskDetails": {
-          "$ref": "#/definitions/TaskDetail",
+          "$ref": "#/definitions/TaskDetails_BaseCommand",
           "description": "Task details for Provisioning|Running a session."
         }
       },
@@ -1235,7 +1204,7 @@
           "description": "Build configuration."
         },
         "deviceDetails": {
-          "$ref": "#/definitions/DeviceDetail"
+          "$ref": "#/definitions/DeviceDetails"
         }
       },
       "description": "Properties of GameDevBuild.",
@@ -1345,16 +1314,39 @@
         }
       ]
     },
-    "GameDevSessionDeviceDetails": {
+    "GameDevSessionCommand": {
       "type": "object",
       "properties": {
-        "deviceType": {
-          "type": "string"
+        "description": {
+          "type": "string",
+          "description": "Description of command."
+        },
+        "input": {
+          "type": "string",
+          "description": "Location of script."
+        },
+        "timeoutInSeconds": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Command exexution timeout in seconds."
+        },
+        "isBackground": {
+          "type": "boolean",
+          "description": "Execute command in background."
+        },
+        "commandState": {
+          "$ref": "#/definitions/CommandState",
+          "description": "State of the command execution.",
+          "readOnly": true
+        },
+        "output": {
+          "$ref": "#/definitions/CommandOutput",
+          "readOnly": true
         }
       },
-      "description": "Details of the device allocated to the session. ",
+      "description": "Details of a Command.",
       "required": [
-        "deviceType"
+        "input"
       ]
     },
     "GameDevSessionListResult": {
@@ -1417,10 +1409,10 @@
           "readOnly": true
         },
         "taskDetails": {
-          "$ref": "#/definitions/GameDevSessionTaskDetails"
+          "$ref": "#/definitions/TaskDetails_GameDevSessionCommand"
         },
         "deviceDetails": {
-          "$ref": "#/definitions/GameDevSessionDeviceDetails",
+          "$ref": "#/definitions/DeviceDetails",
           "readOnly": true
         },
         "sessionOutput": {
@@ -1432,18 +1424,6 @@
       "required": [
         "buildId"
       ]
-    },
-    "GameDevSessionTaskDetails": {
-      "type": "object",
-      "properties": {
-        "startCommand": {
-          "$ref": "#/definitions/Command"
-        },
-        "endCommand": {
-          "$ref": "#/definitions/Command"
-        }
-      },
-      "description": "Details of the tasks related to the session."
     },
     "ProvisioningState": {
       "type": "string",
@@ -1479,7 +1459,7 @@
         "modelAsString": true
       }
     },
-    "TaskDetail": {
+    "TaskDetails_BaseCommand": {
       "type": "object",
       "properties": {
         "startCommand": {
@@ -1488,6 +1468,20 @@
         },
         "endCommand": {
           "$ref": "#/definitions/BaseCommand",
+          "description": "Commands to run at session end."
+        }
+      },
+      "description": "Task details to be used by the session."
+    },
+    "TaskDetails_GameDevSessionCommand": {
+      "type": "object",
+      "properties": {
+        "startCommand": {
+          "$ref": "#/definitions/GameDevSessionCommand",
+          "description": "Commands to run at session start."
+        },
+        "endCommand": {
+          "$ref": "#/definitions/GameDevSessionCommand",
           "description": "Commands to run at session end."
         }
       },
