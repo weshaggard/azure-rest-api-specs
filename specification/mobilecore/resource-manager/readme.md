@@ -27,7 +27,7 @@ These are the global settings for the mobileCore.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2021-06-15-preview
+tag: package-2021-06-15-preview, package-2022-09-15-privatepreview
 ```
 
 ### Tag: package-2021-06-15-preview
@@ -52,6 +52,16 @@ input-file:
   - Microsoft.MobileCore/preview/2021-06-15-preview/sNssaIdentifier.json
   - Microsoft.MobileCore/preview/2021-06-15-preview/servingArea.json
 ```
+
+### Tag: package-2022-09-15-privatepreview
+
+These settings apply only when `--tag=package-2022-09-15-privatepreview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-09-15-privatepreview'
+input-file:
+  - Microsoft.MobileCore/preview/2022-09-15-privatepreview/mobilepacketcore.json
+```
+
 
 # Code Generation
 

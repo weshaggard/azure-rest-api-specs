@@ -1,0 +1,1017 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "CommonDefinitionsAndParameters",
+    "description": "The resources in this swagger specification will be used to manage the virtual network functions deployed using mobile core",
+    "version": "2022-09-15-privatepreview"
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow.",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {},
+  "definitions": {
+    "ProvisioningState": {
+      "type": "string",
+      "readOnly": true,
+      "description": "The current provisioning state.",
+      "enum": [
+        "Unknown",
+        "Succeeded",
+        "Accepted",
+        "Deleting",
+        "Failed",
+        "Canceled",
+        "Deleted"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
+    },
+    "BaseProperties": {
+      "type": "object",
+      "properties": {
+        "provisioningState": {
+          "type": "string",
+          "items": {
+            "$ref": "#/definitions/ProvisioningState"
+          }
+        },
+        "skuName": {
+          "type": "string"
+        },
+        "skuType": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "AMF",
+            "SMF",
+            "UPF",
+            "NRF",
+            "NSSF"
+          ],
+          "x-ms-enum": {
+            "name": "SkuType",
+            "modelAsString": true
+          }
+        },
+        "vendorName": {
+          "type": "integer"
+        },
+        "cmBaseConfigFromPool": {
+          "type": "boolean"
+        },
+        "lcmClusterRef": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cmBaseConfigRef": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cmFeatureConfigRefList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cmNssConfigRefList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nssRefList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "skuName",
+        "vendorName",
+        "cmBaseConfigFromPool",
+        "lcmClusterRef"
+      ]
+    },
+    "TagsObject": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags."
+        }
+      },
+      "description": "Tags object for patch operations."
+    },
+    "TaiConfig": {
+      "properties": {
+        "tai": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tai"
+          }
+        },
+        "plmnId": {
+          "type": "object",
+          "$ref": "#/definitions/PlmnId"
+        },
+        "taiList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaiList"
+          }
+        }
+      },
+      "required": [
+        "plmnId"
+      ]
+    },
+    "TaiRangeConfig": {
+      "type": "object",
+      "properties": {
+        "taiRange": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaiRange"
+          }
+        },
+        "tacRange": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "string"
+            },
+            "end": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ]
+        },
+        "taiRangeList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaiRangeList"
+          }
+        }
+      },
+      "required": [
+        "tacRange"
+      ]
+    },
+    "DnsAgent": {
+      "properties": {
+        "default-view": {
+          "type": "object",
+          "$ref": "#/definitions/DefaultView"
+        }
+      }
+    },
+    "NrfAgent": {
+      "properties": {
+        "nrf-redundancy-mode": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "multi-active",
+            "primary-secondary"
+          ],
+          "x-ms-enum": {
+            "name": "NrfRedundancyMode",
+            "modelAsString": true
+          }
+        },
+        "nrf-profile": {
+          "type": "string",
+          "items": {
+            "$ref": "#/definitions/NrfProfile"
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "static-nf-profile": {
+          "type": "string",
+          "items": {
+            "$ref": "#/definitions/StaticNfProfile"
+          },
+          "minItems": 0,
+          "maxItems": 20
+        }
+      }
+    },
+    "ChfAgent": {
+      "properties": {
+        "chf-profile": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChfProfile"
+          },
+          "minItems": 0,
+          "maxItems": 512
+        },
+        "charging-profile": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChargingProfile"
+          },
+          "minItems": 0,
+          "maxItems": 512
+        },
+        "chf-replay-profile": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChfReplayProfile"
+          },
+          "minItems": 0,
+          "maxItems": 512
+        },
+        "profile-analyzer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProfileAnalyzer"
+          }
+        },
+        "chf-server-profile": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChfServerProfile"
+          }
+        }
+      }
+    },
+    "ChfServerProfile": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "admin-state": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "Down",
+            "Up"
+          ],
+          "x-ms-enum": {
+            "name": "AdminState",
+            "modelAsString": true
+          }
+        },
+        "fqdn": {
+          "type": "string"
+        },
+        "ipv4-address": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "fqdn"
+      ]
+    },
+    "ProfileAnalyzer": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "charging-profile": {
+          "type": "string"
+        },
+        "profile-key": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "dnn-id": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "name"
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ChfReplayProfile": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "partition-count": {
+          "type": "integer"
+        },
+        "replication-factor": {
+          "type": "integer"
+        },
+        "retention-period": {
+          "type": "integer"
+        },
+        "retention-size": {
+          "type": "integer"
+        },
+        "replay-window-size": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "partition-count"
+      ]
+    },
+    "ChargingProfile": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "partial-record-method": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "Individual",
+            "default"
+          ],
+          "x-ms-enum": {
+            "name": "PartialRecordMethod",
+            "modelAsString": true
+          }
+        },
+        "cdr-output-type": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "chf-record",
+            "pgw-record"
+          ],
+          "x-ms-enum": {
+            "name": "CdrOutputType",
+            "modelAsString": true
+          }
+        },
+        "associated-chf-profile": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ChfProfile": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "primary-chf-server-profile": {
+          "type": "string"
+        },
+        "secondary-chf-server-profile": {
+          "type": "string"
+        },
+        "http-request-timeout": {
+          "type": "string"
+        },
+        "replay-profile": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "primary-chf-server-profile"
+      ]
+    },
+    "StaticNfProfile": {
+      "properties": {
+        "nf-instance-id": {
+          "type": "string"
+        },
+        "nf-type": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "amf",
+            "smf",
+            "udm",
+            "ausf",
+            "upf",
+            "pcf",
+            "nssf",
+            "smsf",
+            "bsf",
+            "chf",
+            "af",
+            "udr",
+            "lmf",
+            "gmlc",
+            "nef"
+          ],
+          "x-ms-enum": {
+            "name": "NfType",
+            "modelAsString": true
+          }
+        },
+        "fqdn": {
+          "type": "string"
+        },
+        "ipv4-address": {
+          "type": "string"
+        },
+        "ipv6-address": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "string"
+        },
+        "load": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string"
+        },
+        "locality": {
+          "type": "string"
+        },
+        "default-profile": {
+          "type": "string",
+          "enum": [
+            true,
+            false
+          ],
+          "x-ms-enum": {
+            "name": "DefaultProfile",
+            "modelAsString": true
+          }
+        },
+        "nrf-instance-id": {
+          "type": "string"
+        },
+        "nf-service": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "nf-instance-id",
+        "capacity",
+        "load",
+        "priority",
+        "nrf-instance-id"
+      ]
+    },
+    "NrfProfile": {
+      "properties": {
+        "nrf-instance-id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "primary",
+            "secondary"
+          ],
+          "x-ms-enum": {
+            "name": "Role",
+            "modelAsString": true
+          }
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "heartbeat-interval": {
+          "type": "integer"
+        },
+        "subscription-validity-timer": {
+          "type": "integer"
+        },
+        "plmn-info": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "plmn-id": {
+                "type": "string"
+              }
+            }
+          },
+          "minItems": 1,
+          "maxItems": 16,
+          "required": [
+            "plmn-id"
+          ]
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "service-type": {
+                "type": "string",
+                "readOnly": true,
+                "enum": [
+                  "nnrf-nfm",
+                  "nnrf-disc",
+                  "nnrf-accesstoken"
+                ],
+                "x-ms-enum": {
+                  "name": "ServiceType",
+                  "modelAsString": true
+                }
+              },
+              "dscp-marking": {
+                "type": "string"
+              },
+              "service-heartbeat-uri": {
+                "type": "object",
+                "$ref": "#/definitions/ServiceHeartbeatUrl"
+              }
+            }
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "oauth2": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "enabled",
+            "disabled"
+          ],
+          "x-ms-enum": {
+            "name": "OAauth2",
+            "modelAsString": true
+          }
+        },
+        "nrf-oauth-support": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "enabled",
+            "disabled"
+          ],
+          "x-ms-enum": {
+            "name": "NrfOauthSupport",
+            "modelAsString": true
+          }
+        },
+        "oauth-profile": {
+          "type": "object",
+          "properties": {
+            "algorithm": {
+              "type": "string",
+              "readOnly": true,
+              "enum": [
+                "HS256",
+                "RS256"
+              ],
+              "x-ms-enum": {
+                "name": "Algorithm",
+                "modelAsString": true
+              }
+            },
+            "secret-key": {
+              "type": "string"
+            },
+            "public-key": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "algorithm"
+          ]
+        }
+      },
+      "required": [
+        "nrf-instance-id"
+      ]
+    },
+    "ServiceHeartbeatUrl": {
+      "properties": {
+        "http-verb": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "GET",
+            "PATCH",
+            "POST",
+            "PUT"
+          ],
+          "x-ms-enum": {
+            "name": "HttpVerb",
+            "modelAsString": true
+          }
+        },
+        "api-version": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "v1",
+            "v2"
+          ],
+          "x-ms-enum": {
+            "name": "ApiVersion",
+            "modelAsString": true
+          }
+        },
+        "api-specific-path": {
+          "type": "string"
+        },
+        "service-heartbeat-interval": {
+          "type": "integer"
+        },
+        "recovery-count": {
+          "type": "integer"
+        },
+        "failover-count": {
+          "type": "integer"
+        },
+        "version": {
+          "type": "object",
+          "$ref": "#/definitions/Version"
+        },
+        "fqdn": {
+          "type": "string"
+        },
+        "ipv4-address": {
+          "type": "string"
+        },
+        "ipv6-address": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version"
+      ]
+    },
+    "Version": {
+      "properties": {
+        "api-version-uri": {
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "v1",
+            "v2"
+          ],
+          "x-ms-enum": {
+            "name": "ApiVersionUri",
+            "modelAsString": true
+          }
+        },
+        "api-full-version": {
+          "type": "string"
+        },
+        "expiry": {
+          "type": "string"
+        }
+      }
+    },
+    "DefaultView": {
+      "properties": {
+        "dns-general": {
+          "type": "object",
+          "properties": {
+            "min-cache-ttl": {
+              "type": "integer"
+            },
+            "max-cache-ttl": {
+              "type": "integer"
+            },
+            "min-ncache-ttl": {
+              "type": "integer"
+            },
+            "max-ncache-ttl": {
+              "type": "integer"
+            },
+            "max-cache-size": {
+              "type": "integer"
+            },
+            "resolver-retry-interval": {
+              "type": "integer"
+            },
+            "resolver-nonbackoff-tries": {
+              "type": "integer"
+            },
+            "resolver-query-timeout": {
+              "type": "integer"
+            },
+            "dscp-marking": {
+              "type": "string"
+            },
+            "tcp-only": {
+              "type": "boolean"
+            },
+            "edns-udp-size": {
+              "type": "integer"
+            },
+            "stale-answer-enable": {
+              "type": "boolean"
+            },
+            "max-stale-ttl": {
+              "type": "integer"
+            },
+            "stale-answer-ttl": {
+              "type": "integer"
+            }
+          }
+        },
+        "dns-record": {
+          "type": "object",
+          "properties": {
+            "a-record": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NodeConfig"
+              },
+              "minItems": 0,
+              "maxItems": 4000
+            },
+            "aaaa-record": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NodeConfig"
+              },
+              "minItems": 0,
+              "maxItems": 4000
+            },
+            "naptr-record": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NaptrRecord"
+              },
+              "minItems": 0,
+              "maxItems": 8000
+            },
+            "replacement": {
+              "type": "string"
+            },
+            "order": {
+              "type": "string"
+            },
+            "flags": {
+              "type": "string",
+              "readOnly": true,
+              "enum": [
+                "none",
+                "A"
+              ],
+              "x-ms-enum": {
+                "name": "Flags",
+                "modelAsString": true
+              }
+            },
+            "status": {
+              "type": "string",
+              "readOnly": true,
+              "enum": [
+                "enable",
+                "disable"
+              ],
+              "x-ms-enum": {
+                "name": "Status",
+                "modelAsString": true
+              }
+            }
+          },
+          "required": [
+            "replacement",
+            "flags",
+            "status"
+          ]
+        },
+        "dns-server": {
+          "type": "object",
+          "$ref": "#/definitions/DnsServer",
+          "minItems": 0,
+          "maxItems": 10
+        },
+        "dns-server-monitoring": {
+          "type": "object",
+          "properties": {
+            "interval": {
+              "type": "string"
+            },
+            "timeout": {
+              "type": "string"
+            },
+            "retry": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "DnsServer": {
+      "properties": {
+        "server-name": {
+          "type": "string"
+        },
+        "server-ip-address": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "server-name",
+        "server-ip-address"
+      ]
+    },
+    "NaptrRecord": {
+      "properties": {
+        "domain-name": {
+          "type": "string"
+        },
+        "services": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain-name",
+        "services"
+      ]
+    },
+    "NodeConfig": {
+      "properties": {
+        "node-name": {
+          "type": "string"
+        },
+        "node-ip-address": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "node-name",
+        "node-ip-address"
+      ]
+    },
+    "Tai": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "tac": {
+          "type": "string"
+        }
+      }
+    },
+    "PlmnId": {
+      "type": "object",
+      "properties": {
+        "mcc": {
+          "type": "string"
+        },
+        "mnc": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "mcc",
+        "mnc"
+      ]
+    },
+    "TaiList": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "taiRange": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "TaiRange": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "plmnId": {
+          "type": "object",
+          "$ref": "#/definitions/PlmnId"
+        }
+      }
+    },
+    "TaiRangeList": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "taiRange": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Dnai": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Data-Network-Access-Identifier name. This name must be unique."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "DnaiList": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Data-Network-Access-Identifier name. This name must be unique."
+        },
+        "dnai": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Data Network Access Identifier List name."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "parameters": {
+    "MPCName": {
+      "name": "mpcName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Mobile Packetcore name"
+    },
+    "NetworkBaseConfigName": {
+      "name": "nName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Network base config name"
+    },
+    "ZoneBaseConfigName": {
+      "name": "zName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Zone base config name"
+    },
+    "ClusterBaseConfigName": {
+      "name": "cName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Cluster base config name"
+    },
+    "NetworkFunctionBaseConfigName": {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Network base config name"
+    }
+  }
+}
