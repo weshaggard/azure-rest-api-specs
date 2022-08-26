@@ -1,0 +1,41 @@
+// Definitions for the TeamsCallingResource
+
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-autorest";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+namespace Microsoft.VoiceService;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Azure.ResourceManager;
+
+@doc("A TeamsCalling resource")
+model TeamsCallingResource is TrackedResource<TeamsCallingProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("teamsCallingName")
+  @segment("teamsCallings")
+  @doc("The name of the TeamsCalling resource")
+  @visibility("Read")
+  @path
+  name: string;
+}
+
+@doc("The status of the current TeamsCalling resource.")
+enum TeamsCallingStatus {
+  New,
+  Acknowledged,
+  Created,
+}
+
+@doc("Details of the TeamsCalling resource.")
+model TeamsCallingProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  status?: TeamsCallingStatus;
+}
+
+@armResourceOperations
+interface TeamsCallings extends ResourceOperations<TeamsCallingResource, TeamsCallingProperties> {}
