@@ -34,30 +34,91 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceLinker/devConnectors": {
-      "get": {
-        "deprecated": false,
-        "description": "Returns list of devConnector which connects to the resource.",
-        "operationId": "DevConnector_List",
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceLinker/locations/{location}/dryrun": {
+      "post": {
+        "tags": [
+          "Connector"
+        ],
+        "operationId": "Connector_Dryrun",
+        "description": "create a dryrun job to do necessary check before actual creation",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "x-ms-examples": {
-          "DevConnectorList": {
-            "$ref": "./examples/DevConnectorList.json"
+          "ConnectorDryrun": {
+            "$ref": "./examples/ConnectorDryrun.json"
           }
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "parameters",
+            "description": "dryrun parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DryrunResource"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "devConnector details.",
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/DryrunResource"
+            }
+          },
+          "202": {
+            "description": "Accepted - Returns this status until the asynchronous operation has completed."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceLinker/locations/{location}/connectors": {
+      "get": {
+        "deprecated": false,
+        "description": "Returns list of connector which connects to the resource, which supports to config the target service during the resource provision.",
+        "operationId": "Connector_List",
+        "x-ms-examples": {
+          "ConnectorList": {
+            "$ref": "./examples/ConnectorList.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Connector details.",
             "schema": {
               "$ref": "#/definitions/ResourceList"
             }
@@ -65,7 +126,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -74,32 +135,35 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceLinker/devConnectors/{resourceName}": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceLinker/locations/{location}/connectors/{connectorName}": {
       "get": {
-        "description": "Returns devConnector resource for a given name.",
-        "operationId": "devConnector_Get",
+        "description": "Returns Connector resource for a given name.",
+        "operationId": "Connector_Get",
         "x-ms-examples": {
-          "devConnector": {
-            "$ref": "./examples/DevConnectors.json"
+          "Connector": {
+            "$ref": "./examples/Connectors.json"
           }
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/ConnectorNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "devConnector details.",
+            "description": "Connector details.",
             "schema": {
               "$ref": "#/definitions/LinkerResource"
             }
@@ -107,39 +171,42 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       },
       "put": {
-        "description": "Create or update devConnector resource.",
-        "operationId": "devConnector_CreateOrUpdate",
+        "description": "Create or update Connector resource.",
+        "operationId": "Connector_CreateOrUpdate",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
-          "PutdevConnector": {
-            "$ref": "./examples/PutDevConnector.json"
+          "PutConnector": {
+            "$ref": "./examples/PutConnector.json"
           }
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/ConnectorNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "name": "parameters",
-            "description": "devConnector details.",
+            "description": "Connector details.",
             "in": "body",
             "required": true,
             "schema": {
@@ -163,46 +230,49 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       },
       "delete": {
         "tags": [
-          "devConnector"
+          "Connector"
         ],
-        "operationId": "devConnector_Delete",
+        "operationId": "Connector_Delete",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         },
-        "description": "Delete a devConnector.",
+        "description": "Delete a Connector.",
         "x-ms-examples": {
-          "DeletedevConnector": {
-            "$ref": "./examples/DeleteDevConnector.json"
+          "DeleteConnector": {
+            "$ref": "./examples/DeleteConnector.json"
           }
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/ConnectorNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK. The devConnector is deleted."
+            "description": "OK. The Connector is deleted."
           },
           "204": {
-            "description": "Deleted. The devConnector is not found."
+            "description": "Deleted. The Connector is not found."
           },
           "202": {
             "description": "Long running operation."
@@ -210,57 +280,60 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       },
       "patch": {
         "tags": [
-          "devConnector"
+          "Connector"
         ],
-        "operationId": "devConnector_Update",
-        "description": "Operation to update an existing devConnector.",
+        "operationId": "Connector_Update",
+        "description": "Operation to update an existing Connector.",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
         },
         "x-ms-examples": {
-          "PatchdevConnector": {
-            "$ref": "./examples/PatchDevConnector.json"
+          "PatchConnector": {
+            "$ref": "./examples/PatchConnector.json"
           }
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/ConnectorNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "name": "parameters",
-            "description": "devConnector details.",
+            "description": "Connector details.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/LinkerResource"
+              "$ref": "#/definitions/LinkerPatch"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success. The response describes a devConnector.",
+            "description": "Success. The response describes a Connector.",
             "schema": {
               "$ref": "#/definitions/LinkerResource"
             }
           },
-          "201": {
+          "202": {
             "description": "Long running operation.",
             "schema": {
               "$ref": "#/definitions/LinkerResource"
@@ -269,40 +342,43 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Servicelinker/devConnector/{resourceName}/validateHealthy": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceLinker/locations/{location}/connectors/{connectorName}/validate": {
       "post": {
         "tags": [
-          "devConnector"
+          "Connector"
         ],
-        "operationId": "devConnector_Validate",
-        "description": "Validate a devConnector.",
+        "operationId": "Connector_Validate",
+        "description": "Validate a Connector.",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         },
         "x-ms-examples": {
-          "ValidatedevConnectoruccess": {
-            "$ref": "./examples/ValidateLinkerSuccess.json"
+          "ValidateConnectorSuccess": {
+            "$ref": "./examples/ValidateConnectorSuccess.json"
           }
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/ConnectorNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -318,19 +394,19 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceLinker/devConnector/{resourceName}/generateConfigurations": {
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceLinker/locations/{location}/connectors/{connectorName}/generateConfigurations": {
       "post": {
         "tags": [
-          "devConnector"
+          "Connector"
         ],
-        "operationId": "devConnector_GenerateConfigurations",
-        "description": "Generate configurations for a devConnector.",
+        "operationId": "Connector_GenerateConfigurations",
+        "description": "Generate configurations for a Connector.",
         "x-ms-examples": {
           "GenerateConfiguration": {
             "$ref": "./examples/GenerateConfigurations.json"
@@ -338,24 +414,27 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/ConnectorNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "name": "parameters",
             "description": "Connection Info, including format, secret store, etc",
             "in": "body",
-            "required": true,
+            "required": false,
             "schema": {
-              "$ref": "#/definitions/ConnectionInfo"
+              "$ref": "#/definitions/ConfigurationInfo"
             }
           }
         ],
@@ -369,7 +448,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -378,7 +457,7 @@
     "/{resourceUri}/providers/Microsoft.ServiceLinker/linkers": {
       "get": {
         "deprecated": false,
-        "description": "Returns list of Linkers which connects to the resource.",
+        "description": "Returns list of Linkers which connects to the resource. which supports to config both application and target service during the resource provision.",
         "operationId": "Linker_List",
         "x-ms-examples": {
           "LinkerList": {
@@ -390,7 +469,7 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -403,7 +482,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -412,7 +491,7 @@
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ServiceLinker/Linkers/{resourceName}": {
+    "/{resourceUri}/providers/Microsoft.ServiceLinker/linkers/{linkerName}": {
       "get": {
         "description": "Returns Linker resource for a given name.",
         "operationId": "Linker_Get",
@@ -426,10 +505,10 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/LinkerNameParameter"
           }
         ],
         "responses": {
@@ -442,7 +521,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -464,10 +543,10 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/LinkerNameParameter"
           },
           {
             "name": "parameters",
@@ -495,7 +574,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -520,10 +599,10 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/LinkerNameParameter"
           }
         ],
         "responses": {
@@ -539,7 +618,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -564,10 +643,10 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/LinkerNameParameter"
           },
           {
             "name": "parameters",
@@ -595,13 +674,13 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ServiceLinker/Linkers/{resourceName}/validateHealthy": {
+    "/{resourceUri}/providers/Microsoft.ServiceLinker/linkers/{linkerName}/validateLinker": {
       "post": {
         "tags": [
           "Linkers"
@@ -610,7 +689,7 @@
         "description": "Validate a Linker.",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         },
         "x-ms-examples": {
           "ValidateLinkerSuccess": {
@@ -622,10 +701,10 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/LinkerNameParameter"
           }
         ],
         "responses": {
@@ -641,13 +720,13 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ServiceLinker/Linkers/{resourceName}/listConfigurations": {
+    "/{resourceUri}/providers/Microsoft.ServiceLinker/linkers/{linkerName}/listConfigurations": {
       "post": {
         "tags": [
           "Linkers"
@@ -664,10 +743,10 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "$ref": "#/parameters/LinkerNameParameter"
           }
         ],
         "responses": {
@@ -680,22 +759,61 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.ServiceLinker/Linkers/{resourceName}/generateConfigurations": {
-      "post": {
+    "/{resourceUri}/providers/Microsoft.ServiceLinker/dryruns": {
+      "get": {
         "tags": [
-          "Linkers"
+          "Dryrun"
         ],
-        "operationId": "Linker_GenerateConfigurations",
-        "description": "Generate configurations for a Linker.",
+        "operationId": "Dryrun_List",
+        "description": "list dryrun jobs",
         "x-ms-examples": {
-          "GenerateConfiguration": {
-            "$ref": "./examples/GenerateConfigurations.json"
+          "ListDryrun": {
+            "$ref": "./examples/ListDryrun.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/DryrunList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/{resourceUri}/providers/Microsoft.ServiceLinker/dryruns/{dryrunName}": {
+      "get": {
+        "tags": [
+          "Dryrun"
+        ],
+        "operationId": "Dryrun_Get",
+        "description": "get a dryrun job",
+        "x-ms-examples": {
+          "GetDryrun": {
+            "$ref": "./examples/GetDryrun.json"
           }
         },
         "parameters": [
@@ -706,15 +824,181 @@
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceNameParameter"
+            "name": "dryrunName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of dryrun.",
+            "x-ms-parameter-location": "method"
           }
         ],
         "responses": {
           "200": {
             "description": "OK. The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/ConfigurationResult"
+              "$ref": "#/definitions/DryrunResource"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Dryrun"
+        ],
+        "operationId": "Dryrun_Create",
+        "description": "create a dryrun job to do necessary check before actual creation",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "PutDryrun": {
+            "$ref": "./examples/PutDryrun.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "dryrunName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of dryrun.",
+            "x-ms-parameter-location": "method"
+          },
+          {
+            "name": "parameters",
+            "description": "dryrun resource.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DryrunResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/DryrunResource"
+            }
+          },
+          "201": {
+            "description": "Long running operation",
+            "schema": {
+              "$ref": "#/definitions/DryrunResource"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Dryrun"
+        ],
+        "operationId": "Dryrun_Update",
+        "description": "add a dryrun job to do necessary check before actual creation",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "PatchDryrun": {
+            "$ref": "./examples/PatchDryrun.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "dryrunName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of dryrun.",
+            "x-ms-parameter-location": "method"
+          },
+          {
+            "name": "parameters",
+            "description": "dryrun resource.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DryrunResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/DryrunResource"
+            }
+          },
+          "202": {
+            "description": "Accepted - Returns this status until the asynchronous operation has completed."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Dryrun"
+        ],
+        "operationId": "Dryrun_Delete",
+        "description": "delete a dryrun job",
+        "x-ms-examples": {
+          "DeleteDryrun": {
+            "$ref": "./examples/DeleteDryrun.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "dryrunName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of dryrun.",
+            "x-ms-parameter-location": "method"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The job is deleted."
+          },
+          "204": {
+            "description": "Deleted. The job is not found."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -739,20 +1023,20 @@
         },
         "parameters": [
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
           "200": {
             "description": "OK. The request has succeeded.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/OperationListResult"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -902,15 +1186,27 @@
         }
       }
     },
-    "CleanupMode": {
-      "description": "The cleanup mode to indicate whether clean up operation when resource is deleted or updated",
+    "DeleteOrUpdateBehavior": {
+      "description": "The cleanup behavior to indicate whether clean up operation when resource is deleted or updated",
       "type": "string",
       "enum": [
-        "Disable",
-        "Forcely"
+        "Default",
+        "ForcedCleanup"
       ],
       "x-ms-enum": {
-        "name": "CleanupMode",
+        "name": "DeleteOrUpdateBehavior",
+        "modelAsString": true
+      }
+    },
+    "IsActive": {
+      "description": "This is to indicate whether enable/disable the operation, default behavior is enable",
+      "type": "string",
+      "enum": [
+        "Default",
+        "False"
+      ],
+      "x-ms-enum": {
+        "name": "IsActive",
         "modelAsString": true
       }
     },
@@ -923,8 +1219,7 @@
         "servicePrincipalSecret",
         "servicePrincipalCertificate",
         "secret",
-        "accessKey",
-        "userAccount"
+        "accessKey"
       ],
       "x-ms-enum": {
         "name": "AuthType",
@@ -979,7 +1274,7 @@
     "KeyVaultSecretReferenceSecretInfo": {
       "x-ms-discriminator-value": "keyVaultSecretReference",
       "type": "object",
-      "description": "The secret info when type is keyVaultSecretReference. It's for scenario that user provides a secret stored in user's keyvault and source is Azure Kubernetes. The key Vault's resource id is Linkered to secretStore.keyVaultId.",
+      "description": "The secret info when type is keyVaultSecretReference. It's for scenario that user provides a secret stored in user's keyvault and source is Azure Kubernetes. The key Vault's resource id is linked to secretStore.keyVaultId.",
       "allOf": [
         {
           "$ref": "#/definitions/SecretInfoBase"
@@ -1013,7 +1308,7 @@
         }
       }
     },
-    "AuthenticationBase": {
+    "AuthInfoBase": {
       "description": "The authentication info",
       "discriminator": "authType",
       "type": "object",
@@ -1021,14 +1316,20 @@
         "authType": {
           "description": "The authentication type.",
           "$ref": "#/definitions/AuthType"
-        },
-        "cleanupMode": {
-          "description": "Indidate whether to clean up previous operation when Linker is updating or deleting",
-          "$ref": "#/definitions/CleanupMode"
         }
       },
       "required": [
         "authType"
+      ]
+    },
+    "AccessKeyInfoBase": {
+      "description": "The access key directly from target resource properties, which target service is Azure Resource, such as Microsoft.Storage",
+      "x-ms-discriminator-value": "accessKey",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuthInfoBase"
+        }
       ]
     },
     "SecretAuthInfo": {
@@ -1037,7 +1338,7 @@
       "description": "The authentication info when authType is secret",
       "allOf": [
         {
-          "$ref": "#/definitions/AuthenticationBase"
+          "$ref": "#/definitions/AuthInfoBase"
         }
       ],
       "properties": {
@@ -1059,7 +1360,7 @@
       "description": "The authentication info when authType is userAssignedIdentity",
       "allOf": [
         {
-          "$ref": "#/definitions/AuthenticationBase"
+          "$ref": "#/definitions/AuthInfoBase"
         }
       ],
       "properties": {
@@ -1070,6 +1371,17 @@
         "subscriptionId": {
           "description": "Subscription id for userAssignedIdentity.",
           "type": "string"
+        },
+        "deleteOrUpdateBehavior": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/DeleteOrUpdateBehavior"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional, this value specifies the Azure role to be assigned"
         }
       }
     },
@@ -1079,9 +1391,22 @@
       "description": "The authentication info when authType is systemAssignedIdentity",
       "allOf": [
         {
-          "$ref": "#/definitions/AuthenticationBase"
+          "$ref": "#/definitions/AuthInfoBase"
         }
-      ]
+      ],
+      "properties": {
+        "deleteOrUpdateBehavior": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/DeleteOrUpdateBehavior"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional, this value specifies the Azure role to be assigned"
+        }
+      }
     },
     "ServicePrincipalSecretAuthInfo": {
       "x-ms-discriminator-value": "servicePrincipalSecret",
@@ -1089,7 +1414,7 @@
       "description": "The authentication info when authType is servicePrincipal secret",
       "allOf": [
         {
-          "$ref": "#/definitions/AuthenticationBase"
+          "$ref": "#/definitions/AuthInfoBase"
         }
       ],
       "properties": {
@@ -1105,6 +1430,17 @@
           "description": "Secret for servicePrincipal auth.",
           "type": "string",
           "x-ms-secret": true
+        },
+        "deleteOrUpdateBehavior": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/DeleteOrUpdateBehavior"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional, this value specifies the Azure roles to be assigned. Automatically "
         }
       },
       "required": [
@@ -1119,7 +1455,7 @@
       "description": "The authentication info when authType is servicePrincipal certificate",
       "allOf": [
         {
-          "$ref": "#/definitions/AuthenticationBase"
+          "$ref": "#/definitions/AuthInfoBase"
         }
       ],
       "properties": {
@@ -1135,6 +1471,17 @@
           "description": "ServicePrincipal certificate for servicePrincipal auth.",
           "type": "string",
           "x-ms-secret": true
+        },
+        "deleteOrUpdateBehavior": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/DeleteOrUpdateBehavior"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional, this value specifies the Azure roles to be assigned. Automatically "
         }
       },
       "required": [
@@ -1148,7 +1495,7 @@
       "description": "Linker of source and target resource",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource",
           "description": "The resource model definition for an Azure Resource Manager proxy resource."
         }
       ],
@@ -1164,7 +1511,7 @@
         "systemData": {
           "x-nullable": true,
           "readOnly": true,
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
           "description": "The system data."
         }
       }
@@ -1185,7 +1532,7 @@
       "description": "The list of Linker.",
       "type": "object",
       "properties": {
-        "nextLinker": {
+        "nextLink": {
           "x-nullable": true,
           "description": "The Linker used to get the next page of Linker list.",
           "type": "string"
@@ -1207,24 +1554,60 @@
           "$ref": "#/definitions/TargetServiceBase",
           "description": "The target service properties"
         },
-        "authentication": {
+        "authInfo": {
           "description": "The authentication type.",
-          "$ref": "#/definitions/AuthenticationBase"
+          "$ref": "#/definitions/AuthInfoBase"
+        },
+        "clientType": {
+          "description": "The application client type",
+          "type": "string",
+          "enum": [
+            "none",
+            "dotnet",
+            "java",
+            "python",
+            "go",
+            "php",
+            "ruby",
+            "django",
+            "nodejs",
+            "springBoot",
+            "kafka-springBoot"
+          ],
+          "x-ms-enum": {
+            "name": "clientType",
+            "modelAsString": true
+          }
         },
         "provisioningState": {
           "readOnly": true,
           "type": "string",
           "description": "The provisioning state. "
         },
-        "network": {
+        "vNetSolution": {
+          "x-nullable": true,
+          "description": "The VNet solution.",
+          "$ref": "#/definitions/VNetSolution"
+        },
+        "secretStore": {
+          "x-nullable": true,
+          "description": "An option to store secret value in secure place",
+          "$ref": "#/definitions/SecretStore"
+        },
+        "scope": {
+          "x-nullable": true,
+          "type": "string",
+          "description": "connection scope in source service."
+        },
+        "publicNetworkSolution": {
           "x-nullable": true,
           "description": "The network solution.",
-          "$ref": "#/definitions/NetworkBase"
+          "$ref": "#/definitions/PublicNetworkSolution"
         },
-        "connectionInfo": {
+        "configurationInfo": {
           "x-nullable": true,
           "description": "The connection information consumed by applications, including secrets, connection strings.",
-          "$ref": "#/definitions/ConnectionInfo"
+          "$ref": "#/definitions/ConfigurationInfo"
         }
       }
     },
@@ -1285,9 +1668,9 @@
       "description": "The validation result for a Linker.",
       "type": "object",
       "properties": {
-        "LinkerName": {
+        "linkerName": {
           "x-nullable": true,
-          "description": "The Linker name.",
+          "description": "The linker name.",
           "type": "string"
         },
         "isConnectionAvailable": {
@@ -1373,128 +1756,98 @@
         }
       }
     },
-    "NetworkBase": {
+    "VNetSolution": {
       "type": "object",
-      "discriminator": "type",
-      "description": "The network solution for Linker",
+      "description": "The VNet solution for linker",
       "properties": {
         "type": {
           "x-nullable": true,
-          "description": "Type of network solution.",
+          "description": "Type of VNet solution.",
           "type": "string",
           "enum": [
-            "firewall",
             "serviceEndpoint",
             "privateLink"
           ],
           "x-ms-enum": {
-            "name": "networkType",
+            "name": "vNetSolutionType",
             "modelAsString": true
           }
         },
-        "cleanupMode": {
-          "description": "Indidate whether to clean up previous operation when Linker is updating or deleting",
-          "$ref": "#/definitions/CleanupMode"
+        "deleteOrUpdateBehavior": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/DeleteOrUpdateBehavior"
         }
-      },
-      "required": [
-        "type"
-      ]
+      }
     },
-    "Firewall": {
-      "x-ms-discriminator-value": "firewall",
+    "PublicNetworkSolution": {
+      "type": "object",
+      "description": "The public network solution, include firewall rule",
+      "properties": {
+        "deleteOrUpdateBehavior": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/DeleteOrUpdateBehavior"
+        },
+        "isActive": {
+          "description": "Optional, the default behavior is auto detected whether to config firewall according the target service situation. False if intended to opt-out any public network setting",
+          "$ref": "#/definitions/IsActive"
+        },
+        "firewallRules": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/FirewallRules"
+        }
+      }
+    },
+    "FirewallRules": {
       "type": "object",
       "description": "The network when type is firewall",
-      "allOf": [
-        {
-          "$ref": "#/definitions/NetworkBase"
-        }
-      ],
       "properties": {
-        "IPRanges": {
+        "ipRanges": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "description": "This value specifies the set of IP addresses or IP address ranges in CIDR form to be included as the allowed list of client IPs for a given database account."
         },
-        "IncludeCallerIP": {
-          "type": "boolean",
-          "description": "Whether include the caller IP to firewall allow list when provision the resource."
-         }
-      }
-    },
-    "ServiceEndpoint": {
-      "x-ms-discriminator-value": "serviceEndpoint",
-      "type": "object",
-      "description": "The network when type is serviceEndpoint",
-      "allOf": [
-        {
-          "$ref": "#/definitions/NetworkBase"
-        }
-      ]
-    },
-    "PrivateLink": {
-      "x-ms-discriminator-value": "privateLink",
-      "type": "object",
-      "description": "The network when type is privateLink",
-      "allOf": [
-        {
-          "$ref": "#/definitions/NetworkBase"
-        }
-      ]
-    },
-    "ConnectionInfo": {
-      "type": "object",
-      "description": "The connection information for Linker",
-      "properties": {
-        "format": {
-          "description": "The application client type",
+        "bypass": {
           "type": "string",
+          "description": "This is to specified the firewall allowance rule other than IP ranges.",
           "enum": [
-            "none",
-            "dotnet",
-            "java",
-            "python",
-            "go",
-            "php",
-            "ruby",
-            "django",
-            "nodejs",
-            "springBoot"
+            "None",
+            "CallerClientIP",
+            "AzureServices"
           ],
           "x-ms-enum": {
-            "name": "clientType",
+            "name": "bypass",
             "modelAsString": true
           }
+        }
+      }
+    },
+    "ConfigurationInfo": {
+      "type": "object",
+      "description": "The configuration information, used to generate configurations or save to applications",
+      "properties": {
+        "deleteOrUpdateBehavior": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/DeleteOrUpdateBehavior"
         },
-        "cleanupMode": {
-          "description": "Indidate whether to clean up previous operation when Linker is updating or deleting",
-          "$ref": "#/definitions/CleanupMode"
+        "isActive": {
+          "description": "Optional, the default behavior is to generate configurations and applied to the application if it's specified. 'False' if intended to opt-out any configuration setting",
+          "$ref": "#/definitions/IsActive"
         },
         "customizedKeys": {
-          "description": "A dictionary of customized key names.",
+          "description": "Optional. A dictionary of default key name and customized key name mapping. If not specified, default key name will be used for generate configurations",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
-        "additionalSettings": {
-          "description": "A dictionary of addtional settings.",
+        "additionalConfigurations": {
+          "description": "A dictionary of additional configurations to be added. Service will auto generate a set of basic configurations and this property is to full fill more customized configurations",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
-        },
-        "secretStore": {
-          "x-nullable": true,
-          "description": "An option to store secret value in secure place",
-          "$ref": "#/definitions/SecretStore"
-        },
-        "scope": {
-          "x-nullable": true,
-          "type": "string",
-          "description": "connection scope in source service."
         }
       }
     },
@@ -1508,11 +1861,227 @@
           "description": "The key vault id to store secret"
         }
       }
+    },
+    "DryrunList": {
+      "description": "The list of dryrun.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "x-nullable": true,
+          "description": "The link used to get the next page of dryrun list.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The list of dryrun.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DryrunResource"
+          }
+        }
+      }
+    },
+    "DryrunResource": {
+      "type": "object",
+      "description": "a dryrun job resource",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
+          "description": "The resource model definition for an Azure Resource Manager proxy resource."
+        }
+      ],
+      "properties": {
+        "properties": {
+          "description": "The properties of the linker.",
+          "$ref": "#/definitions/DryrunProperties",
+          "x-ms-client-flatten": true
+        },
+        "systemData": {
+          "readOnly": true,
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
+          "description": "The system data."
+        }
+      }
+    },
+    "DryrunProperties": {
+      "description": "The properties of the dryrun job",
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "description": "The parameters of the dryrun",
+          "$ref": "#/definitions/DryrunParameters"
+        },
+        "results": {
+          "readOnly": true,
+          "description": "the result of the dryrun",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DryrunResult"
+          },
+          "x-ms-identifiers": []
+        },
+        "previews": {
+          "readOnly": true,
+          "description": "the preview of the operations for creation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DryrunPreview"
+          },
+          "x-ms-identifiers": []
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The provisioning state. "
+        }
+      }
+    },
+    "DryrunActionName": {
+      "description": "The name of action for you dryrun job.",
+      "type": "string",
+      "enum": [
+        "createOrUpdate"
+      ],
+      "x-ms-enum": {
+        "name": "DryrunActionName",
+        "modelAsString": true
+      }
+    },
+    "DryrunParameters": {
+      "description": "The parameters of the dryrun",
+      "discriminator": "actionName",
+      "type": "object",
+      "properties": {
+        "actionName": {
+          "$ref": "#/definitions/DryrunActionName"
+        }
+      },
+      "required": [
+        "actionName"
+      ]
+    },
+    "CreateOrUpdateDryrunParameters": {
+      "x-ms-discriminator-value": "createOrUpdate",
+      "type": "object",
+      "description": "The dryrun parameters for creation or update a linker",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DryrunParameters"
+        },
+        {
+          "$ref": "#/definitions/LinkerProperties"
+        }
+      ]
+    },
+    "DryrunResultType": {
+      "description": "The type of dryrun result.",
+      "type": "string",
+      "enum": [
+        "basicError",
+        "permissionsMissing"
+      ],
+      "x-ms-enum": {
+        "name": "DryrunResultType",
+        "modelAsString": true
+      }
+    },
+    "DryrunResult": {
+      "description": "A result of dryrun",
+      "discriminator": "type",
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/DryrunResultType"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "BasicErrorDryrunResult": {
+      "x-ms-discriminator-value": "basicError",
+      "description": "The represent of basic error",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DryrunResult"
+        }
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "The error code."
+        },
+        "message": {
+          "type": "string",
+          "description": "The error message."
+        }
+      }
+    },
+    "PermissionsMissingDryrunResult": {
+      "x-ms-discriminator-value": "permissionsMissing",
+      "description": "The represent of missing permissions",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DryrunResult"
+        }
+      ],
+      "properties": {
+        "scope": {
+          "description": "The permission scope",
+          "type": "string"
+        },
+        "permissions": {
+          "description": "The permission list",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recommendedRole": {
+          "description": "The recommended role to resolve permissions missing",
+          "type": "string"
+        }
+      }
+    },
+    "DryrunPreview": {
+      "description": "The preview of the operations for creation",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The operation name",
+          "type": "string"
+        },
+        "operationType": {
+          "description": "The operation type",
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of the operation",
+          "type": "string"
+        },
+        "action": {
+          "description": "The action defined by RBAC, refer https://docs.microsoft.com/azure/role-based-access-control/role-definitions#actions-format",
+          "type": "string"
+        },
+        "scope": {
+          "description": "The scope of the operation, refer https://docs.microsoft.com/azure/role-based-access-control/scope-overview",
+          "type": "string"
+        }
+      }
     }
   },
   "parameters": {
-    "ResourceNameParameter": {
-      "name": "resourceName",
+    "LinkerNameParameter": {
+      "name": "linkerName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name Linker resource.",
+      "x-ms-parameter-location": "method"
+    },
+    "ConnectorNameParameter": {
+      "name": "connectorName",
       "in": "path",
       "required": true,
       "type": "string",
@@ -1526,22 +2095,6 @@
       "type": "string",
       "description": "The fully qualified Azure Resource manager identifier of the resource to be connected.",
       "x-ms-skip-url-encoding": true,
-      "x-ms-parameter-location": "method"
-    },
-    "SubscriptionIdParameter": {
-      "name": "subscriptionId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The Azure subscription ID.",
-      "x-ms-parameter-location": "client"
-    },
-    "ResourceGroupNameParameter": {
-      "name": "resourceGroupName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The name of the resource group.",
       "x-ms-parameter-location": "method"
     }
   }
