@@ -612,7 +612,7 @@
           "GlobalRulestack"
         ],
         "operationId": "GlobalRulestack_GetAppId",
-        "description": "Describe AppId",
+        "description": "GetAppId",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -627,10 +627,17 @@
             "type": "string"
           },
           {
-            "name": "appId",
+            "name": "skip",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
+          },
+          {
+            "name": "top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
@@ -759,12 +766,6 @@
             "type": "string"
           },
           {
-            "name": "appPrefix",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "skip",
             "in": "query",
             "required": false,
@@ -782,7 +783,11 @@
           "200": {
             "description": "The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/ListAppIdResponse"
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "x-cadl-name": "string[]"
             }
           },
           "default": {
@@ -1717,7 +1722,7 @@
           "LocalRulestacks"
         ],
         "operationId": "LocalRulestacks_GetAppId",
-        "description": "Describe AppId",
+        "description": "GetAppId",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -1726,16 +1731,23 @@
             "$ref": "#/parameters/LocalRulestackResource.localRulestackName"
           },
           {
-            "name": "appIdVersion",
+            "name": "apiIdVersion",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "appId",
+            "name": "skip",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
+          },
+          {
+            "name": "top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
@@ -2173,7 +2185,7 @@
           "200": {
             "description": "The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/RulesResponse"
+              "$ref": "#/definitions/Rule"
             }
           },
           "default": {
@@ -2965,13 +2977,7 @@
             "$ref": "#/parameters/LocalRulestackResource.localRulestackName"
           },
           {
-            "name": "appIdVersion",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "appPrefix",
+            "name": "apiIdVersion",
             "in": "query",
             "required": false,
             "type": "string"
@@ -2994,7 +3000,11 @@
           "200": {
             "description": "The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/ListAppIdResponse"
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "x-cadl-name": "string[]"
             }
           },
           "default": {
@@ -3754,19 +3764,7 @@
           "type": "string"
         }
       },
-      "description": "App Characteristics",
-      "required": [
-        "evasive",
-        "usedByMalware",
-        "excessiveBandwidth",
-        "capableFileTransfer",
-        "hasKnownVulnerability",
-        "tunnelOtherApplications",
-        "proneToMisuse",
-        "widelyUsed",
-        "SaaS",
-        "denyAction"
-      ]
+      "description": "App Characteristics"
     },
     "AppIdEntry": {
       "type": "object",
@@ -3818,15 +3816,7 @@
       },
       "description": "App Id Description",
       "required": [
-        "appName",
-        "description",
-        "appProperties",
-        "appCharacteristics",
-        "appOptions",
-        "standardPorts",
-        "dependsOn",
-        "implicitlyUses",
-        "metadata"
+        "appName"
       ]
     },
     "AppOptions": {
@@ -3836,10 +3826,7 @@
           "type": "boolean"
         }
       },
-      "description": "App Options",
-      "required": [
-        "ALG"
-      ]
+      "description": "App Options"
     },
     "AppProperties": {
       "type": "object",
@@ -3858,13 +3845,7 @@
           "format": "int32"
         }
       },
-      "description": "App Properties",
-      "required": [
-        "category",
-        "subCategory",
-        "technology",
-        "risk"
-      ]
+      "description": "App Properties"
     },
     "ApplicationInsights": {
       "type": "object",
@@ -4812,26 +4793,6 @@
         }
       },
       "description": "IP Address Space"
-    },
-    "ListAppIdResponse": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-cadl-name": "string[]",
-          "description": "List of AppIds"
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "next Link"
-        }
-      },
-      "required": [
-        "value"
-      ]
     },
     "ListFirewallsResponse": {
       "type": "object",
@@ -5839,26 +5800,6 @@
       "required": [
         "ruleName",
         "priority"
-      ]
-    },
-    "RulesResponse": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Rule"
-          },
-          "x-ms-identifiers": [],
-          "x-cadl-name": "Rule[]"
-        },
-        "nextLink": {
-          "type": "string"
-        }
-      },
-      "description": "Paginated Rules response",
-      "required": [
-        "value"
       ]
     },
     "RulesTypeEnum": {
