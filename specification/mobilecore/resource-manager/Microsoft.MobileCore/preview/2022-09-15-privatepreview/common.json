@@ -53,21 +53,14 @@
         "modelAsString": true
       }
     },
-    "BaseProperties": {
+    "NfAbstract": {
       "type": "object",
       "properties": {
-        "provisioningState": {
-          "type": "string",
-          "items": {
-            "$ref": "#/definitions/ProvisioningState"
-          }
-        },
         "skuName": {
           "type": "string"
         },
         "skuType": {
           "type": "string",
-          "readOnly": true,
           "enum": [
             "AMF",
             "SMF",
@@ -81,36 +74,42 @@
           }
         },
         "vendorName": {
-          "type": "integer"
+          "type": "string"
         },
-        "cmBaseConfigFromPool": {
-          "type": "boolean"
+        "siteRef": {
+          "type": "string"
         },
-        "lcmClusterRef": {
+        "featureConfigRefList": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "cmBaseConfigRef": {
+        "nfInstanceId": {
+          "type": "string",
+          "format": "uuid",
+          "readOnly": true
+        },
+        "nfType": {
+          "type": "string",
+          "readOnly": true
+        },
+        "nfInstanceName": {
+          "type": "string"
+        },
+        "fqdn": {
+          "$ref": "#/definitions/Fqdn"
+        },
+        "interPlmnFqdn": {
+          "$ref": "#/definitions/Fqdn"
+        },
+        "ipv4Addresses": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "cmFeatureConfigRefList": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "cmNssConfigRefList": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "nssRefList": {
+        "ipv6Addresses": {
           "type": "array",
           "items": {
             "type": "string"
@@ -120,9 +119,16 @@
       "required": [
         "skuName",
         "vendorName",
-        "cmBaseConfigFromPool",
-        "lcmClusterRef"
+        "siteRef"
       ]
+    },
+    "Fqdn": {
+      "type": "object",
+      "properties": {
+        "fqdn": {
+          "type": "string"
+        }
+      }
     },
     "TagsObject": {
       "type": "object",
@@ -199,15 +205,14 @@
       "properties": {
         "default-view": {
           "type": "object",
-          "$ref": "#/definitions/DefaultView"
+          "$ref": "#/definitions/DnsConfig"
         }
       }
     },
-    "NrfAgent": {
+    "NrfConfig": {
       "properties": {
         "nrf-redundancy-mode": {
           "type": "string",
-          "readOnly": true,
           "enum": [
             "multi-active",
             "primary-secondary"
@@ -224,18 +229,10 @@
           },
           "minItems": 0,
           "maxItems": 20
-        },
-        "static-nf-profile": {
-          "type": "string",
-          "items": {
-            "$ref": "#/definitions/StaticNfProfile"
-          },
-          "minItems": 0,
-          "maxItems": 20
         }
       }
     },
-    "ChfAgent": {
+    "ChfConfig": {
       "properties": {
         "chf-profile": {
           "type": "array",
@@ -282,7 +279,6 @@
         },
         "admin-state": {
           "type": "string",
-          "readOnly": true,
           "enum": [
             "Down",
             "Up"
@@ -341,15 +337,6 @@
         "partition-count": {
           "type": "integer"
         },
-        "replication-factor": {
-          "type": "integer"
-        },
-        "retention-period": {
-          "type": "integer"
-        },
-        "retention-size": {
-          "type": "integer"
-        },
         "replay-window-size": {
           "type": "integer"
         }
@@ -366,7 +353,6 @@
         },
         "partial-record-method": {
           "type": "string",
-          "readOnly": true,
           "enum": [
             "Individual",
             "default"
@@ -378,7 +364,6 @@
         },
         "cdr-output-type": {
           "type": "string",
-          "readOnly": true,
           "enum": [
             "chf-record",
             "pgw-record"
@@ -516,9 +501,6 @@
         "priority": {
           "type": "integer"
         },
-        "heartbeat-interval": {
-          "type": "integer"
-        },
         "subscription-validity-timer": {
           "type": "integer"
         },
@@ -623,20 +605,6 @@
     },
     "ServiceHeartbeatUrl": {
       "properties": {
-        "http-verb": {
-          "type": "string",
-          "readOnly": true,
-          "enum": [
-            "GET",
-            "PATCH",
-            "POST",
-            "PUT"
-          ],
-          "x-ms-enum": {
-            "name": "HttpVerb",
-            "modelAsString": true
-          }
-        },
         "api-version": {
           "type": "string",
           "readOnly": true,
@@ -649,22 +617,6 @@
             "modelAsString": true
           }
         },
-        "api-specific-path": {
-          "type": "string"
-        },
-        "service-heartbeat-interval": {
-          "type": "integer"
-        },
-        "recovery-count": {
-          "type": "integer"
-        },
-        "failover-count": {
-          "type": "integer"
-        },
-        "version": {
-          "type": "object",
-          "$ref": "#/definitions/Version"
-        },
         "fqdn": {
           "type": "string"
         },
@@ -673,14 +625,8 @@
         },
         "ipv6-address": {
           "type": "string"
-        },
-        "port": {
-          "type": "integer"
         }
-      },
-      "required": [
-        "version"
-      ]
+      }
     },
     "Version": {
       "properties": {
@@ -704,67 +650,12 @@
         }
       }
     },
-    "DefaultView": {
+    "DnsConfig": {
       "properties": {
-        "dns-general": {
-          "type": "object",
-          "properties": {
-            "min-cache-ttl": {
-              "type": "integer"
-            },
-            "max-cache-ttl": {
-              "type": "integer"
-            },
-            "min-ncache-ttl": {
-              "type": "integer"
-            },
-            "max-ncache-ttl": {
-              "type": "integer"
-            },
-            "max-cache-size": {
-              "type": "integer"
-            },
-            "resolver-retry-interval": {
-              "type": "integer"
-            },
-            "resolver-nonbackoff-tries": {
-              "type": "integer"
-            },
-            "resolver-query-timeout": {
-              "type": "integer"
-            },
-            "dscp-marking": {
-              "type": "string"
-            },
-            "tcp-only": {
-              "type": "boolean"
-            },
-            "edns-udp-size": {
-              "type": "integer"
-            },
-            "stale-answer-enable": {
-              "type": "boolean"
-            },
-            "max-stale-ttl": {
-              "type": "integer"
-            },
-            "stale-answer-ttl": {
-              "type": "integer"
-            }
-          }
-        },
         "dns-record": {
           "type": "object",
           "properties": {
             "a-record": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/NodeConfig"
-              },
-              "minItems": 0,
-              "maxItems": 4000
-            },
-            "aaaa-record": {
               "type": "array",
               "items": {
                 "$ref": "#/definitions/NodeConfig"
@@ -782,39 +673,10 @@
             },
             "replacement": {
               "type": "string"
-            },
-            "order": {
-              "type": "string"
-            },
-            "flags": {
-              "type": "string",
-              "readOnly": true,
-              "enum": [
-                "none",
-                "A"
-              ],
-              "x-ms-enum": {
-                "name": "Flags",
-                "modelAsString": true
-              }
-            },
-            "status": {
-              "type": "string",
-              "readOnly": true,
-              "enum": [
-                "enable",
-                "disable"
-              ],
-              "x-ms-enum": {
-                "name": "Status",
-                "modelAsString": true
-              }
             }
           },
           "required": [
-            "replacement",
-            "flags",
-            "status"
+            "replacement"
           ]
         },
         "dns-server": {
@@ -822,20 +684,6 @@
           "$ref": "#/definitions/DnsServer",
           "minItems": 0,
           "maxItems": 10
-        },
-        "dns-server-monitoring": {
-          "type": "object",
-          "properties": {
-            "interval": {
-              "type": "string"
-            },
-            "timeout": {
-              "type": "string"
-            },
-            "retry": {
-              "type": "string"
-            }
-          }
         }
       }
     },
@@ -985,33 +833,19 @@
       "type": "string",
       "description": "Mobile Packetcore name"
     },
-    "NetworkBaseConfigName": {
-      "name": "nName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "Network base config name"
-    },
-    "ZoneBaseConfigName": {
-      "name": "zName",
+    "AreaName": {
+      "name": "aName",
       "in": "path",
       "required": true,
       "type": "string",
       "description": "Zone base config name"
     },
-    "ClusterBaseConfigName": {
-      "name": "cName",
+    "SiteName": {
+      "name": "sName",
       "in": "path",
       "required": true,
       "type": "string",
       "description": "Cluster base config name"
-    },
-    "NetworkFunctionBaseConfigName": {
-      "name": "name",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "Network base config name"
     }
   }
 }

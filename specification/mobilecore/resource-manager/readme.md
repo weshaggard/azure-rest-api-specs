@@ -60,6 +60,9 @@ These settings apply only when `--tag=package-2022-09-15-privatepreview` is spec
 ```yaml $(tag) == 'package-2022-09-15-privatepreview'
 input-file:
   - Microsoft.MobileCore/preview/2022-09-15-privatepreview/mobilepacketcore.json
+  - Microsoft.MobileCore/preview/2022-09-15-privatepreview/area.json
+  - Microsoft.MobileCore/preview/2022-09-15-privatepreview/site.json
+  - Microsoft.MobileCore/preview/2022-09-15-privatepreview/smffunction.json
 ```
 
 
