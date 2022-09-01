@@ -201,17 +201,9 @@
         "tacRange"
       ]
     },
-    "DnsAgent": {
-      "properties": {
-        "default-view": {
-          "type": "object",
-          "$ref": "#/definitions/DnsConfig"
-        }
-      }
-    },
     "NrfConfig": {
       "properties": {
-        "nrf-redundancy-mode": {
+        "nrfRedundancyMode": {
           "type": "string",
           "enum": [
             "multi-active",
@@ -222,8 +214,8 @@
             "modelAsString": true
           }
         },
-        "nrf-profile": {
-          "type": "string",
+        "nrfProfile": {
+          "type": "array",
           "items": {
             "$ref": "#/definitions/NrfProfile"
           },
@@ -234,7 +226,7 @@
     },
     "ChfConfig": {
       "properties": {
-        "chf-profile": {
+        "chfProfile": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ChfProfile"
@@ -242,7 +234,7 @@
           "minItems": 0,
           "maxItems": 512
         },
-        "charging-profile": {
+        "chargingProfile": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ChargingProfile"
@@ -250,7 +242,7 @@
           "minItems": 0,
           "maxItems": 512
         },
-        "chf-replay-profile": {
+        "chfReplayProfile": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ChfReplayProfile"
@@ -258,17 +250,21 @@
           "minItems": 0,
           "maxItems": 512
         },
-        "profile-analyzer": {
+        "profileAnalyzer": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ProfileAnalyzer"
-          }
+          },
+          "minItems": 0,
+          "maxItems": 4096
         },
-        "chf-server-profile": {
+        "chfServerProfile": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ChfServerProfile"
-          }
+          },
+          "minItems": 0,
+          "maxItems": 512
         }
       }
     },
@@ -277,7 +273,7 @@
         "name": {
           "type": "string"
         },
-        "admin-state": {
+        "adminState": {
           "type": "string",
           "enum": [
             "Down",
@@ -291,7 +287,7 @@
         "fqdn": {
           "type": "string"
         },
-        "ipv4-address": {
+        "ipv4Address": {
           "type": "string"
         }
       },
@@ -305,17 +301,17 @@
         "name": {
           "type": "string"
         },
-        "charging-profile": {
+        "chargingProfile": {
           "type": "string"
         },
-        "profile-key": {
+        "profileKey": {
           "type": "array",
           "items": {
             "properties": {
               "name": {
                 "type": "string"
               },
-              "dnn-id": {
+              "dnnId": {
                 "type": "string"
               }
             }
@@ -334,16 +330,16 @@
         "name": {
           "type": "string"
         },
-        "partition-count": {
+        "partitionCount": {
           "type": "integer"
         },
-        "replay-window-size": {
+        "replayWindowSize": {
           "type": "integer"
         }
       },
       "required": [
         "name",
-        "partition-count"
+        "partitionCount"
       ]
     },
     "ChargingProfile": {
@@ -351,7 +347,7 @@
         "name": {
           "type": "string"
         },
-        "partial-record-method": {
+        "partialRecordMethod": {
           "type": "string",
           "enum": [
             "Individual",
@@ -362,7 +358,7 @@
             "modelAsString": true
           }
         },
-        "cdr-output-type": {
+        "cdrOutputType": {
           "type": "string",
           "enum": [
             "chf-record",
@@ -373,7 +369,7 @@
             "modelAsString": true
           }
         },
-        "associated-chf-profile": {
+        "associatedChfProfile": {
           "type": "string"
         }
       },
@@ -386,104 +382,27 @@
         "name": {
           "type": "string"
         },
-        "primary-chf-server-profile": {
+        "primaryChfServerProfile": {
           "type": "string"
         },
-        "secondary-chf-server-profile": {
+        "secondaryChfServerProfile": {
           "type": "string"
         },
-        "http-request-timeout": {
+        "httpRequestTimeout": {
           "type": "string"
         },
-        "replay-profile": {
+        "replayProfile": {
           "type": "string"
         }
       },
       "required": [
         "name",
-        "primary-chf-server-profile"
-      ]
-    },
-    "StaticNfProfile": {
-      "properties": {
-        "nf-instance-id": {
-          "type": "string"
-        },
-        "nf-type": {
-          "type": "string",
-          "readOnly": true,
-          "enum": [
-            "amf",
-            "smf",
-            "udm",
-            "ausf",
-            "upf",
-            "pcf",
-            "nssf",
-            "smsf",
-            "bsf",
-            "chf",
-            "af",
-            "udr",
-            "lmf",
-            "gmlc",
-            "nef"
-          ],
-          "x-ms-enum": {
-            "name": "NfType",
-            "modelAsString": true
-          }
-        },
-        "fqdn": {
-          "type": "string"
-        },
-        "ipv4-address": {
-          "type": "string"
-        },
-        "ipv6-address": {
-          "type": "string"
-        },
-        "capacity": {
-          "type": "string"
-        },
-        "load": {
-          "type": "string"
-        },
-        "priority": {
-          "type": "string"
-        },
-        "locality": {
-          "type": "string"
-        },
-        "default-profile": {
-          "type": "string",
-          "enum": [
-            true,
-            false
-          ],
-          "x-ms-enum": {
-            "name": "DefaultProfile",
-            "modelAsString": true
-          }
-        },
-        "nrf-instance-id": {
-          "type": "string"
-        },
-        "nf-service": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "nf-instance-id",
-        "capacity",
-        "load",
-        "priority",
-        "nrf-instance-id"
+        "primaryChfServerProfile"
       ]
     },
     "NrfProfile": {
       "properties": {
-        "nrf-instance-id": {
+        "nrfInstanceId": {
           "type": "string"
         },
         "role": {
@@ -501,14 +420,14 @@
         "priority": {
           "type": "integer"
         },
-        "subscription-validity-timer": {
+        "subscriptionValidityTimer": {
           "type": "integer"
         },
-        "plmn-info": {
+        "plmnInfo": {
           "type": "array",
           "items": {
             "properties": {
-              "plmn-id": {
+              "plmnId": {
                 "type": "string"
               }
             }
@@ -516,14 +435,14 @@
           "minItems": 1,
           "maxItems": 16,
           "required": [
-            "plmn-id"
+            "plmnId"
           ]
         },
         "services": {
           "type": "array",
           "items": {
             "properties": {
-              "service-type": {
+              "serviceType": {
                 "type": "string",
                 "readOnly": true,
                 "enum": [
@@ -536,10 +455,7 @@
                   "modelAsString": true
                 }
               },
-              "dscp-marking": {
-                "type": "string"
-              },
-              "service-heartbeat-uri": {
+              "serviceHeartbeatUri": {
                 "type": "object",
                 "$ref": "#/definitions/ServiceHeartbeatUrl"
               }
@@ -547,65 +463,15 @@
           },
           "minItems": 1,
           "maxItems": 3
-        },
-        "oauth2": {
-          "type": "string",
-          "readOnly": true,
-          "enum": [
-            "enabled",
-            "disabled"
-          ],
-          "x-ms-enum": {
-            "name": "OAauth2",
-            "modelAsString": true
-          }
-        },
-        "nrf-oauth-support": {
-          "type": "string",
-          "readOnly": true,
-          "enum": [
-            "enabled",
-            "disabled"
-          ],
-          "x-ms-enum": {
-            "name": "NrfOauthSupport",
-            "modelAsString": true
-          }
-        },
-        "oauth-profile": {
-          "type": "object",
-          "properties": {
-            "algorithm": {
-              "type": "string",
-              "readOnly": true,
-              "enum": [
-                "HS256",
-                "RS256"
-              ],
-              "x-ms-enum": {
-                "name": "Algorithm",
-                "modelAsString": true
-              }
-            },
-            "secret-key": {
-              "type": "string"
-            },
-            "public-key": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "algorithm"
-          ]
         }
       },
       "required": [
-        "nrf-instance-id"
+        "nrfInstanceId"
       ]
     },
     "ServiceHeartbeatUrl": {
       "properties": {
-        "api-version": {
+        "apiVersion": {
           "type": "string",
           "readOnly": true,
           "enum": [
@@ -618,19 +484,19 @@
           }
         },
         "fqdn": {
+          "$ref": "#/definitions/Fqdn"
+        },
+        "ipv4Address": {
           "type": "string"
         },
-        "ipv4-address": {
-          "type": "string"
-        },
-        "ipv6-address": {
+        "ipv6Address": {
           "type": "string"
         }
       }
     },
     "Version": {
       "properties": {
-        "api-version-uri": {
+        "apiVersionUri": {
           "type": "string",
           "readOnly": true,
           "enum": [
@@ -642,7 +508,7 @@
             "modelAsString": true
           }
         },
-        "api-full-version": {
+        "apiFullVersion": {
           "type": "string"
         },
         "expiry": {
@@ -652,10 +518,10 @@
     },
     "DnsConfig": {
       "properties": {
-        "dns-record": {
+        "dnsRecord": {
           "type": "object",
           "properties": {
-            "a-record": {
+            "aRecord": {
               "type": "array",
               "items": {
                 "$ref": "#/definitions/NodeConfig"
@@ -663,7 +529,7 @@
               "minItems": 0,
               "maxItems": 4000
             },
-            "naptr-record": {
+            "naptrRecord": {
               "type": "array",
               "items": {
                 "$ref": "#/definitions/NaptrRecord"
@@ -679,7 +545,7 @@
             "replacement"
           ]
         },
-        "dns-server": {
+        "dnsServer": {
           "type": "object",
           "$ref": "#/definitions/DnsServer",
           "minItems": 0,
@@ -689,21 +555,21 @@
     },
     "DnsServer": {
       "properties": {
-        "server-name": {
+        "serverName": {
           "type": "string"
         },
-        "server-ip-address": {
+        "serverIpAddress": {
           "type": "string"
         }
       },
       "required": [
-        "server-name",
-        "server-ip-address"
+        "serverName",
+        "serverIpAddress"
       ]
     },
     "NaptrRecord": {
       "properties": {
-        "domain-name": {
+        "domainName": {
           "type": "string"
         },
         "services": {
@@ -711,22 +577,22 @@
         }
       },
       "required": [
-        "domain-name",
+        "domainName",
         "services"
       ]
     },
     "NodeConfig": {
       "properties": {
-        "node-name": {
+        "nodeName": {
           "type": "string"
         },
-        "node-ip-address": {
+        "nodeIpAddress": {
           "type": "string"
         }
       },
       "required": [
-        "node-name",
-        "node-ip-address"
+        "nodeName",
+        "nodeIpAddress"
       ]
     },
     "Tai": {
@@ -779,6 +645,21 @@
         "plmnId": {
           "type": "object",
           "$ref": "#/definitions/PlmnId"
+        },
+        "tacRange": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "string"
+            },
+            "end": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ]
         }
       }
     },
