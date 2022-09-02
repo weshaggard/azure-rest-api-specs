@@ -337,7 +337,7 @@
           }
         },
         "x-ms-examples": {
-          "GetUpgradeProfileforProvisionedCluster": {
+          "GetUpgradeProfileForProvisionedCluster": {
             "$ref": "./examples/ProvisionedClustersGetUpgradeProfile.json"
           }
         }
@@ -787,16 +787,7 @@
             "description": "OK"
           },
           "202": {
-            "description": "Accepted",
-            "headers": {
-              "Azure-AsyncOperation": {
-                "description": "URL to query for status of the operation.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
-            }
+            "description": "Accepted"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -806,6 +797,9 @@
           }
         },
         "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
         "x-ms-examples": {
           "UpgradeClusterNodeImageVersion": {
             "$ref": "./examples/ProvisionedClustersUpgradeNodeImageVersionForEntireCluster.json"
@@ -2196,13 +2190,10 @@
           "items": {
             "$ref": "#/definitions/ProvisionedClusterPoolUpgradeProfileProperties"
           },
+          "x-ms-identifiers": [],
           "description": "List of orchestrator types and versions available for upgrade."
         }
       },
-      "required": [
-        "kubernetesVersion",
-        "osType"
-      ],
       "description": "The list of available upgrade versions."
     },
     "ProvisionedClusterPoolUpgradeProfileProperties": {
@@ -2224,6 +2215,10 @@
     "ProvisionedClusterUpgradeProfileProperties": {
       "type": "object",
       "properties": {
+        "provisioningState": {
+          "type": "string",
+          "readOnly": true
+        },
         "controlPlaneProfile": {
           "$ref": "#/definitions/ProvisionedClusterPoolUpgradeProfile",
           "description": "The list of available upgrade versions for the control plane."
@@ -2233,6 +2228,7 @@
           "items": {
             "$ref": "#/definitions/ProvisionedClusterPoolUpgradeProfile"
           },
+          "x-ms-identifiers": [],
           "description": "The list of available upgrade versions for agent pools."
         }
       },
@@ -2244,22 +2240,13 @@
     },
     "ProvisionedClusterUpgradeProfile": {
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
+          "description": "The resource model definition for an Azure Resource Manager proxy resource. It will have everything other than required location and tags."
+        }
+      ],
       "properties": {
-        "id": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The ID of the upgrade profile."
-        },
-        "name": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The name of the upgrade profile."
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The type of the upgrade profile."
-        },
         "properties": {
           "$ref": "#/definitions/ProvisionedClusterUpgradeProfileProperties",
           "description": "The properties of the upgrade profile.",
