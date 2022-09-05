@@ -6,61 +6,7 @@
     "version": "2022-07-01-preview"
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.KXInsights.RP/KXInsights/{resourceName}/ResourceCreationValidate": {
-      "post": {
-        "tags": [
-          "KXInsightsOperations"
-        ],
-        "summary": "Validates the resource creation request.",
-        "operationId": "KXInsightsCreate_Validate",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "subscriptionId",
-            "description": "Azure subscriptionId.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "resourceGroupName",
-            "description": "Resource group name.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "resourceName",
-            "description": "Name of the resource.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Request Body.",
-            "schema": {
-              "$ref": "#/definitions/KXInsightsResource"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the result of the validaiton, error will only be present in response in the case of failed validation.",
-            "schema": {
-              "$ref": "#/definitions/ResourceValidationResponse"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.KXInsights.RP/KXInsights/{resourceName}/ResourceCreationBegin": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.KXInsights/KXInsights/{resourceName}": {
       "put": {
         "tags": [
           "KXInsightsOperations"
@@ -100,43 +46,83 @@
             "name": "body",
             "description": "Request Body.",
             "schema": {
-              "$ref": "#/definitions/KXInsightsResource"
+              "$ref": "#/definitions/KXInsightsResourceRequest"
             }
           }
         ],
         "responses": {
-          "201": {
-            "description": "Returns 201 to indicate successful creation of the request to be fullfilled asyncronously.",
+          "200": {
+            "description": "Returns 200 to indicate successful creation of the request.",
             "schema": {
-              "$ref": "#/definitions/KXInsightsResource"
+              "$ref": "#/definitions/KXInsightsResourceResponse"
             }
           },
           "400": {
             "description": "Returns 400 to indicate badly formed request."
           }
-        },
-        "x-ms-long-running-operation": true
+        }
+      },
+      "delete": {
+        "tags": [
+          "KXInsightsOperations"
+        ],
+        "summary": "Deletes the KXInsightsResource resource.",
+        "operationId": "KXInsightsDelete_Begin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "description": "The ID of the target subscription.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "resourceGroupName",
+            "description": "The name of the resource group. The name is case insensitive.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "resourceName",
+            "description": "The name of the KX Insights resource.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     }
   },
   "definitions": {
-    "KXInsightsResource": {
+    "KXInsightsResourceRequest": {
       "required": [
-        "id",
-        "name",
-        "properties",
-        "type"
+        "properties"
       ],
       "type": "object",
       "properties": {
+        "properties": {
+          "$ref": "#/definitions/KXInsightsResourceRequestProperties"
+        },
         "id": {
-          "type": "string"
+          "type": "string",
+          "readOnly": true
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "readOnly": true
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "readOnly": true
         },
         "location": {
           "type": "string"
@@ -146,44 +132,76 @@
           "additionalProperties": {
             "type": "string"
           }
-        },
-        "properties": {
-          "$ref": "#/definitions/KXInsightsResourceProperties"
         }
       }
     },
-    "KXInsightsResourceProperties": {
+    "KXInsightsResourceRequestProperties": {
       "required": [
         "keyCloakPassword"
       ],
       "type": "object",
       "properties": {
         "keyCloakPassword": {
+          "minLength": 1,
           "type": "string",
           "x-ms-secret": true
         }
       }
     },
-    "RPError": {
+    "KXInsightsResourceResponse": {
+      "required": [
+        "properties"
+      ],
       "type": "object",
       "properties": {
-        "code": {
+        "properties": {
+          "$ref": "#/definitions/KXInsightsResourceResponseProperties"
+        },
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true
+        },
+        "location": {
           "type": "string"
         },
-        "message": {
-          "type": "string"
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },
-    "ResourceValidationResponse": {
+    "KXInsightsResourceResponseProperties": {
       "type": "object",
       "properties": {
-        "status": {
-          "type": "string"
-        },
-        "error": {
-          "$ref": "#/definitions/RPError"
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState"
         }
+      }
+    },
+    "ProvisioningState": {
+      "enum": [
+        "Creating",
+        "Updating",
+        "Deleting",
+        "Succeeded",
+        "Failed",
+        "Canceled"
+      ],
+      "type": "string",
+      "readOnly": true,
+      "x-ms-enum": {
+        "modelAsString": true,
+        "name": "ProvisioningState"
       }
     }
   }
