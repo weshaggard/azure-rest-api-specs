@@ -27,7 +27,16 @@ These are the global settings for the securitydevops.
 ``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2021-10-01-preview
+tag: package-2022-09-01-preview
+```
+
+### Tag: package-2022-09-01-preview
+
+These settings apply only when `--tag=package-2022-09-01-preview` is specified on the command line.
+
+``` yaml $(tag) == 'package-2022-09-01-preview'
+input-file:
+  - Microsoft.SecurityDevOps/preview/2022-09-01-preview/securitydevops.json
 ```
 
 ### Tag: package-2021-10-01-preview
@@ -38,7 +47,6 @@ These settings apply only when `--tag=package-2021-10-01-preview` is specified o
 input-file:
   - Microsoft.SecurityDevOps/preview/2021-10-01-preview/securitydevops.json
 ```
-
 ---
 
 # Code Generation
@@ -82,8 +90,16 @@ See configuration in [readme.csharp.md](./readme.csharp.md)
 
 ``` yaml
 directive:
-  - suppress: EnumInsteadOfBoolean
-    where: $.definitions.OperationDetail.properties.isDataAction
+  - suppress: TrackedResourceListByImmediateParent
+    where: $.definitions
     from: securitydevops.json
-    reason: isDataAction is a boolean
+    reason: We do not have tracked resource
+  - suppress: EnumInsteadOfBoolean
+    where: $.definitions.Operation.properties.isDataAction
+    from: types.json
+    reason: This is not related to my code and is part of common code
+  - suppress: EnumInsteadOfBoolean
+    where: $.definitions.Operation.properties.isDataAction
+    from: types.json
+    reason: 'Not my code, it is a part of common code'
 ```
