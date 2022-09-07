@@ -64,6 +64,7 @@ input-file:
   - Microsoft.MobileCore/preview/2022-09-15-privatepreview/site.json
   - Microsoft.MobileCore/preview/2022-09-15-privatepreview/smffunction.json
   - Microsoft.MobileCore/preview/2022-09-15-privatepreview/amffunction.json
+  - Microsoft.MobileCore/preview/2022-09-15-privatepreview/upffunction.json
 ```
 
 
