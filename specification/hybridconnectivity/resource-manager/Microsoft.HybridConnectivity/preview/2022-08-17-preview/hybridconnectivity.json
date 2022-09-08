@@ -500,13 +500,13 @@
         "deprecated": false
       }
     },
-    "/{resourceUri}/providers/Microsoft.HybridConnectivity/endpoints/{endpointName}/createCustomLocation": {
-      "post": {
+    "/providers/Microsoft.HybridConnectivity/customLocations/{customLocationName}": {
+      "put": {
         "tags": [
-          "Endpoints"
+          "CustomLocations"
         ],
-        "description": "Fetches the managed proxy details ",
-        "operationId": "Endpoints_CreateCustomLocation",
+        "description": "Creates customlocation",
+        "operationId": "CustomLocations_CreateCustomLocation",
         "produces": [
           "application/json"
         ],
@@ -520,26 +520,116 @@
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "#/parameters/ResourceUriParameter"
+            "$ref": "#/parameters/CustomLocationNameParameter"
           },
           {
-            "$ref": "#/parameters/EndpointNameParameter"
-          },
-          {
-            "name": "CustomLocationRequest",
+            "name": "SolutionRequest",
             "in": "body",
             "required": true,
             "schema": {
               "$ref": "#/definitions/CustomLocationRequest"
             },
-            "description": "Object of type CustomLocationRequest"
+            "description": "Object of type SolutionRequest"
           }
         ],
         "responses": {
           "200": {
-            "description": "Custom location",
+            "description": "Custom location response",
             "schema": {
               "$ref": "#/definitions/CustomLocationResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "get": {
+        "tags": [
+          "customLocations"
+        ],
+        "description": "Gets the custom location to the resource.",
+        "operationId": "CustomLocations_Get",
+        "produces": [
+          "application/json"
+        ],
+        "x-ms-examples": {
+          "HybridConnectivityEndpointsGetDefault": {
+            "$ref": "./examples/EndpointsGetDefault.json"
+          },
+          "HybridConnectivityEndpointsGetCustom": {
+            "$ref": "./examples/EndpointsGetCustom.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/CustomLocationNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CustomLocation details",
+            "schema": {
+              "$ref": "#/definitions/CustomLocationResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/providers/Microsoft.HybridConnectivity/customLocations/{customLocationName}/providers/Microsoft.HybridConnectivity/solutions/{solutionName}": {
+      "put": {
+        "tags": [
+          "Solutions"
+        ],
+        "description": "Creates solution",
+        "operationId": "CustomLocations_Createsolution",
+        "produces": [
+          "application/json"
+        ],
+        "x-ms-examples": {
+          "HybridConnectivityEndpointsPostListManagedProxyDetails": {
+            "$ref": "./examples/EndpointsPostCreateCustomLocation.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/CustomLocationNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SolutionNameParameter"
+          },
+          {
+            "name": "SolutionRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SolutionRequest"
+            },
+            "description": "Object of type SolutionRequest"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom location response",
+            "schema": {
+              "$ref": "#/definitions/SolutionResponse"
             }
           },
           "default": {
@@ -680,6 +770,130 @@
         }
       }
     },
+    "CustomLocationProperties": {
+      "type": "object",
+      "description": "Custom location properties",
+      "properties":{
+        "provisioningState": {
+          "type": "string",
+          "description": "The provisioning state."
+        },
+        "namespace": {
+          "type": "string",
+          "description": "The namespace."
+        },
+        "hostResourceId": {
+          "type": "string",
+          "description": "The host resourceid."
+        },
+        "hostType": {
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        },
+        "awsCloudProfile":{
+          "$ref": "#/definitions/AwsCloudProfileProperties",
+          "x-ms-client-flatten": true
+        },
+        "gcpCloudProfile": {
+          "$ref": "#/definitions/GcpCloudProfileProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "AwsCloudProfileProperties": {
+      "type": "object",
+      "description": "aws cloud profile",
+      "properties":{
+        "accountId":{
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        },
+        "exclusionAccounts": {
+          "type": "array",
+          "items":{
+            "type": "string"
+          }
+        }
+      }
+    },
+    "GcpCloudProfileProperties":{
+      "type": "object",
+      "description": "Gcp cloud profile",
+      "properties":{
+        "singleProject":{
+          "$ref": "#/definitions/SingleProjectProperties",
+          "x-ms-client-flatten": true
+        },
+        "organisationProject":{
+          "$ref": "#/definitions/OrganisationProjectProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "SingleProjectProperties": {
+      "type": "object",
+      "description": "Gcp cloud profile",
+      "properties":{
+        "projectId": {
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        },
+        "projectNumber":{
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        }
+      }
+    },
+    "OrganisationProjectProperties":{
+      "type": "object",
+      "description": "Gcp cloud profile",
+      "properties":{
+        "organisationId": {
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        },
+        "excludeFolderIds":{
+          "type": "array",
+          "items":{
+            "type": "string"
+          }
+        }
+      }
+    },
+    "SolutionSettingsProperties":{
+      "type": "object",
+      "description": "Gcp cloud profile",
+      "properties":{
+        "filterExpressions":{
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FilterExpressionsProperties"
+          }
+        },
+        "enableAutoOnboarding":{
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        }
+      }
+    },
+    "FilterExpressionsProperties":{
+      "type": "object",
+      "description": "Gcp cloud profile",
+      "properties": {
+        "key":{
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        },
+        "operator":{
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        },
+        "values":{
+          "type": "string",
+          "description": "The host type either Aws/Gcp."
+        }
+      }
+    },
     "EndpointResource": {
       "description": "The endpoint for the target resource.",
       "type": "object",
@@ -800,34 +1014,83 @@
         }
       }
     },
+    "SolutionResponse":{
+      "type": "object",
+      "description": "CustomLocationResponse",
+      "properties":{
+        "script":{
+          "type": "string",
+          "description": "The short lived proxy name."
+        }
+      }
+    },
     "CustomLocationResponse": {
       "type": "object",
       "description": "CustomLocationResponse",
-      "required": [
-        "name"
-      ],
       "properties": {
+        "location": {
+          "type": "string",
+          "description": "The name of the location."
+        },
+        "id": {
+          "type": "string",
+          "description": "The name of the id."
+        },
         "name": {
           "type": "string",
-          "description": "The short lived proxy name."
+          "description": "The name of the object."
+        },
+        "type": {
+          "type": "string",
+          "description": "The name of the resource type."
+        },
+        "properties": {
+          "description": "The custom location properties.",
+          "$ref": "#/definitions/CustomLocationProperties",
+          "x-ms-client-flatten": true
         }
       }
     },
     "CustomLocationRequest": {
       "type": "object",
       "description": "Represent Custom location Request object.",
-      "required": [
-        "name",
-        "accountId"
-      ],
       "properties": {
+        "location": {
+          "type": "string",
+          "description": "The name of the location."
+        },
+        "id": {
+          "type": "string",
+          "description": "The name of the id."
+        },
         "name": {
           "type": "string",
           "description": "The name of the object."
         },
-        "accountId": {
+        "type": {
           "type": "string",
-          "description": "The name of the object."
+          "description": "The name of the resource type."
+        },
+        "properties": {
+          "description": "The custom location properties.",
+          "$ref": "#/definitions/CustomLocationProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "SolutionRequest":{
+      "type": "object",
+      "description": "Represent Custom location Request object.",
+      "properties": {
+        "solutionType":{
+          "type": "string",
+          "description": "The name of the resource type."
+        },
+        "solutionSettings":{
+          "type": "object",
+          "description": "solution settings",
+          "$ref": "#/definitions/SolutionSettingsProperties",
+          "x-ms-client-flatten": true
         }
       }
     }
@@ -861,6 +1124,24 @@
       "minimum": 600,
       "maximum": 10800,
       "description": "The is how long the endpoint access token is valid (in seconds).",
+      "x-ms-parameter-location": "method"
+    },
+    "CustomLocationNameParameter": {
+      "name": "customLocationName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The custom location name.",
+      "x-ms-skip-url-encoding": true,
+      "x-ms-parameter-location": "method"
+    },
+    "SolutionNameParameter": {
+      "name": "solutionName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The solution name.",
+      "x-ms-skip-url-encoding": true,
       "x-ms-parameter-location": "method"
     }
   }
