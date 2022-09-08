@@ -227,6 +227,10 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PlayFab/playerAccountPools/{playerAccountPoolName}": {
       "put": {
         "operationId": "PlayerAccountPools_CreateOrUpdate",
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true,
         "description": "Create or update a Player Account Pool.",
         "parameters": [
           {
@@ -254,6 +258,12 @@
         "responses": {
           "200": {
             "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PlayerAccountPool"
+            }
+          },
+          "201": {
+            "description": "ARM create operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/PlayerAccountPool"
             }
@@ -633,7 +643,7 @@
         "tags": [
           "Idps"
         ]
-      }    
+      }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PlayFab/titles": {
       "get": {
@@ -1931,6 +1941,20 @@
         "value"
       ]
     },
+    "ManagedResourceGroupConfiguration": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "ManagedRG name"
+        },
+        "location": {
+          "type": "string",
+          "description": "ManagedRG location"
+        }
+      },
+      "description": "ManagedRG model."
+    },
     "MinutesSinceRuleNode": {
       "type": "object",
       "properties": {
@@ -2029,6 +2053,10 @@
           "type": "string",
           "description": "Id of publisher object in PlayFab backend associated to the PlayerAccountPool resource.",
           "readOnly": true
+        },
+        "managedResourceGroupConfiguration": {
+          "$ref": "#/definitions/ManagedResourceGroupConfiguration",
+          "description": "ManagedRG config of PlayerAccountPool"
         },
         "sampleSecret": {
           "type": "string",
@@ -2567,7 +2595,7 @@
         }
       },
       "description": "Properties of Idp Resource"
-    }  
+    }
   },
   "parameters": {
     "AutomationRuleNameParameter": {
