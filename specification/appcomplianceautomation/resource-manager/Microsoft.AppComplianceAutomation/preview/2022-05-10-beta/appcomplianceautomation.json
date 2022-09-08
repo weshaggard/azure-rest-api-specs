@@ -845,6 +845,19 @@
         "modelAsString": true
       }
     },
+    "ControlFamilyStatus": {
+      "description": "Indicates the control family status.",
+      "enum": [
+        "Healthy",
+        "Unhealthy"
+      ],
+      "readOnly": true,
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ControlFamilyStatus",
+        "modelAsString": true
+      }
+    },
     "ControlStatus": {
       "description": "Indicates the control status.",
       "enum": [
@@ -884,6 +897,34 @@
       "type": "string",
       "x-ms-enum": {
         "name": "ControlType",
+        "modelAsString": true
+      }
+    },
+    "ControlFamilyType": {
+      "description": "Indicates the control family type.",
+      "enum": [
+        "FullyAutomated",
+        "PartiallyAutomated",
+        "Manual"
+      ],
+      "readOnly": true,
+      "type": "string",
+      "x-ms-enum": {
+        "name": "FamilyType",
+        "modelAsString": true
+      }
+    },
+    "CategoryType": {
+      "description": "Indicates the compliance category type.",
+      "enum": [
+        "FullyAutomated",
+        "PartiallyAutomated",
+        "Manual"
+      ],
+      "readOnly": true,
+      "type": "string",
+      "x-ms-enum": {
+        "name": "CategoryType",
         "modelAsString": true
       }
     },
@@ -1028,6 +1069,39 @@
         }
       }
     },
+    "ControlFamily": {
+      "type": "object",
+      "description": "A class represent the control family.",
+      "properties": {
+        "familyName": {
+          "description": "The name of the control family. e.g. \"Malware Protection - Anti-Virus\"",
+          "type": "string",
+          "readOnly": true
+        },
+        "familyType": {
+          "description": "The control family type ",
+          "$ref": "#/definitions/ControlFamilyType",
+          "readOnly": true
+        },
+        "familyStatus": {
+          "readOnly": true,
+          "description": "Control family status.",
+          "$ref": "#/definitions/ControlFamilyStatus"
+        },
+        "controls": {
+          "readOnly": true,
+          "type": "array",
+          "description": "List of controls.",
+          "items": {
+            "description": "Single control content.",
+            "$ref": "#/definitions/Control"
+          },
+          "x-ms-identifiers": [
+            "controlId"
+          ]
+        }
+      }
+    },
     "Category": {
       "type": "object",
       "description": "A class represent the compliance category.",
@@ -1037,18 +1111,23 @@
           "type": "string",
           "readOnly": true
         },
+        "categoryType": {
+          "description": "The category type ",
+          "$ref": "#/definitions/CategoryType",
+          "readOnly": true
+        },
         "categoryStatus": {
           "readOnly": true,
           "description": "Category status.",
           "$ref": "#/definitions/CategoryStatus"
         },
-        "controls": {
+        "controlFamilies": {
           "readOnly": true,
           "type": "array",
-          "description": "List of controls.",
+          "description": "List of control families.",
           "items": {
-            "description": "Single control content.",
-            "$ref": "#/definitions/Control"
+            "description": "Single control family content.",
+            "$ref": "#/definitions/ControlFamily"
           },
           "x-ms-identifiers": [
             "controlId"
