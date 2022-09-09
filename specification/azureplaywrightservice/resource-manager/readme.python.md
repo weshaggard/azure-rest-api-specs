@@ -9,7 +9,7 @@ python:
   license-header: MICROSOFT_MIT_NO_VERSION
   package-name: azure-mgmt-playwrightservice
   namespace: azure.mgmt.playwrightservice
-  package-version: 2022-08-29-preview
+  package-version: 2022-09-01-preview
   clear-output-folder: true
 ```
 
