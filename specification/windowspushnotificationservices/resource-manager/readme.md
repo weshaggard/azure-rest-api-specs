@@ -20,7 +20,7 @@ To see additional help and options, run:
 
 ### Basic Information
 
-These are the global settings for the hybridnetwork.
+These are the global settings for the WindowsPushNotificationServices.
 
 ``` yaml
 openapi-type: arm
@@ -34,7 +34,7 @@ These settings apply only when `--tag=package-2022-08-18-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-08-18-preview'
 input-file:
-    - Microsoft.WindowsPushNotificationServices\preview\2022-08-18-preview\openapi.json
+    - Microsoft.WindowsPushNotificationServices/preview/2022-08-18-preview/openapi.json
 ```
 
 ---
