@@ -1066,7 +1066,7 @@
               "antiSpyware",
               "antiVirus",
               "ipsVulnerability",
-              "URLFiltering",
+              "urlFiltering",
               "fileBlocking",
               "dnsSubscription"
             ],
@@ -2686,7 +2686,7 @@
           }
         ],
         "responses": {
-          "202": {
+          "200": {
             "description": "Azure operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/LocalRulestackResource"
@@ -2699,10 +2699,6 @@
             }
           }
         },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true,
         "x-ms-examples": {
           "LocalRulestacks_Update_MaximumSet_Gen": {
             "$ref": "./examples/LocalRulestacks_Update_MaximumSet_Gen.json"
@@ -2836,7 +2832,7 @@
           }
         ],
         "responses": {
-          "202": {
+          "200": {
             "description": "Azure operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/CertificateObjectLocalRulestackResource"
@@ -2849,10 +2845,6 @@
             }
           }
         },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true,
         "x-ms-examples": {
           "CertificateObjectLocalRulestack_Get_MaximumSet_Gen": {
             "$ref": "./examples/CertificateObjectLocalRulestack_Get_MaximumSet_Gen.json"
@@ -3631,7 +3623,7 @@
               "antiSpyware",
               "antiVirus",
               "ipsVulnerability",
-              "URLFiltering",
+              "urlFiltering",
               "fileBlocking",
               "dnsSubscription"
             ],
@@ -4463,17 +4455,13 @@
     "CertificateObject": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "certificate object name"
-        },
         "certificateSignerResourceId": {
           "type": "string",
-          "description": "Resource Id of certificate signer"
+          "description": "Resource Id of certificate signer, to be populated only when certificateSelfSigned is false"
         },
         "certificateSelfSigned": {
           "$ref": "#/definitions/BooleanEnum",
-          "description": "Is certificate self signed"
+          "description": "use certificate self signed"
         },
         "auditComment": {
           "type": "string",
@@ -4495,8 +4483,7 @@
       },
       "description": "certificate used for inbound and outbound decryption",
       "required": [
-        "name",
-        "certificateSignerResourceId"
+        "certificateSelfSigned"
       ]
     },
     "CertificateObjectGlobalRulestackResource": {
@@ -4860,7 +4847,9 @@
       "required": [
         "networkProfile",
         "dnsSettings",
-        "frontEndSettings"
+        "frontEndSettings",
+        "planData",
+        "marketplaceDetails"
       ]
     },
     "FirewallResource": {
@@ -5221,6 +5210,10 @@
           "type": "string",
           "description": "PanEtag info"
         },
+        "panLocation": {
+          "type": "string",
+          "description": "Rulestack Location, Required for GlobalRulestacks, Not for LocalRulestacks"
+        },
         "scope": {
           "$ref": "#/definitions/ScopeType",
           "description": "Rulestack Type"
@@ -5446,6 +5439,10 @@
           "type": "string",
           "description": "PanEtag info"
         },
+        "panLocation": {
+          "type": "string",
+          "description": "Rulestack Location, Required for GlobalRulestacks, Not for LocalRulestacks"
+        },
         "scope": {
           "$ref": "#/definitions/ScopeType",
           "description": "Rulestack Type"
@@ -5558,11 +5555,8 @@
       "properties": {
         "marketplaceSubscriptionId": {
           "type": "string",
-          "description": "Marketplace Subscription Id"
-        },
-        "planId": {
-          "type": "string",
-          "description": "Plan Id"
+          "description": "Marketplace Subscription Id",
+          "readOnly": true
         },
         "offerId": {
           "type": "string",
@@ -5573,7 +5567,11 @@
           "description": "Publisher Id"
         }
       },
-      "description": "MarketplaceDetails of PAN Firewall resource"
+      "description": "MarketplaceDetails of PAN Firewall resource",
+      "required": [
+        "offerId",
+        "publisherId"
+      ]
     },
     "MediumString": {
       "type": "string",
@@ -5702,7 +5700,11 @@
           "readOnly": true
         }
       },
-      "description": "Billing plan information."
+      "description": "Billing plan information.",
+      "required": [
+        "billingCycle",
+        "planId"
+      ]
     },
     "PostRulesResource": {
       "type": "object",
@@ -6211,6 +6213,10 @@
           "type": "string",
           "description": "PanEtag info"
         },
+        "panLocation": {
+          "type": "string",
+          "description": "Rulestack Location, Required for GlobalRulestacks, Not for LocalRulestacks"
+        },
         "scope": {
           "$ref": "#/definitions/ScopeType",
           "description": "Rulestack Type"
@@ -6261,7 +6267,7 @@
         "antiSpyware",
         "antiVirus",
         "ipsVulnerability",
-        "URLFiltering",
+        "urlFiltering",
         "fileBlocking",
         "dnsSubscription"
       ],
