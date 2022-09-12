@@ -1,5 +1,6 @@
 // Definitions for the TeamsCallingResource
 
+import "@cadl-lang/openapi";
 import "@cadl-lang/rest";
 import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-autorest";
@@ -103,28 +104,33 @@ enum Connectivity {
   Maps
 }
 
+@doc("The service region configuration needed for Teams Callings.")
+model ServiceRegionProperties {
+	@doc("The name of the region in which the resources needed for Teams Calling will be deployed.")
+	name: string;
+	@doc("IP address to use to contact the operator network from this region")
+	operatorAddresses: string[];
+	@doc("IP address to use to contact the ESRPs from this region")
+	esrpAddresses?: string[];
+}
+
 @doc("Details of the GlobalTeamsCallingDeployment resource.")
 model GlobalTeamsCallingDeploymentProperties is ResourceProperties {
   @doc("The current status of the deployment.")
   @visibility("read") status?: Status;
 
   @doc("The regions in which to deploy the resources needed for Teams Calling")
-  serviceLocations: string[];
+  @OpenAPI.extension("x-ms-identifiers", ["name"])
+  serviceLocations: ServiceRegionProperties[];
 
   @doc("How to connect back to the operator network, e.g. MAPS")
   connectivity: Connectivity;
-
-  @doc("IP address to use to contact the operator network")
-  operatorNetworkAddress: string[];
 
   @doc("Voice codecs to support")
   codecs: TeamsCodecs[];
   
   @doc("How to handle 911 calls")
   e911Type: E911Type;
-
-  @doc("IP address to use to contact the ESRPs")
-  esrpAddresses?: string[];
 }
 
 @armResourceOperations
