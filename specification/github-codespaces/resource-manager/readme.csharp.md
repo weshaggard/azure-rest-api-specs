@@ -11,5 +11,5 @@ csharp:
   clear-output-folder: true
   client-side-validation: false
   namespace: GitHub.Codespaces
-  output-folder: $(csharp-sdks-folder)/codespaces/management/GitHub.Codespaces/GeneratedProtocol
+  output-folder: $(csharp-sdks-folder)/github-codespaces/management/GitHub.Codespaces/GeneratedProtocol
 ```

@@ -15,5 +15,5 @@ Please also specify `--ruby-sdks-folder=<path to the root directory of your azur
 
 ```yaml $(tag) == 'package-2022-05-10' && $(ruby)
 namespace: GitHub.Codespaces
-output-folder: $(ruby-sdks-folder)/codespaces
+output-folder: $(ruby-sdks-folder)/github-codespaces
 ```

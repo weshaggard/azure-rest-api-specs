@@ -9,7 +9,7 @@ python:
   license-header: MICROSOFT_MIT_NO_VERSION
   payload-flattening-threshold: 2
   namespace: GitHub.Codespaces
-  package-name: codespaces
+  package-name: github-codespaces
   package-version: 2022-05-10
   clear-output-folder: true
 ```
@@ -17,5 +17,5 @@ python:
 ```yaml $(python)
 python:
   no-namespace-folders: true
-  output-folder: $(python-sdks-folder)/azure-mgmt/codespaces
+  output-folder: $(python-sdks-folder)/azure-mgmt/github-codespaces
 ```
