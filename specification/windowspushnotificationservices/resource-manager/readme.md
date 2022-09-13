@@ -25,16 +25,16 @@ These are the global settings for the WindowsPushNotificationServices.
 ``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2022-08-18-preview
+tag: package-2022-09-12-preview
 ```
 
-### Tag: package-2022-08-18-preview
+### Tag: package-2022-09-12-preview
 
-These settings apply only when `--tag=package-2022-08-18-preview` is specified on the command line.
+These settings apply only when `--tag=package-2022-09-12-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-08-18-preview'
+```yaml $(tag) == 'package-2022-09-12-preview'
 input-file:
-    - Microsoft.WindowsPushNotificationServices/preview/2022-08-18-preview/openapi.json
+    - Microsoft.WindowsPushNotificationServices/preview/2022-09-12-preview/openapi.json
 ```
 
 ---
