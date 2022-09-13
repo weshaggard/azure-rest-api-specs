@@ -361,32 +361,6 @@
 					"description": "The properties of the impact.",
 					"$ref": "#/definitions/ImpactProperties",
 					"x-ms-client-flatten": true
-				},
-				"systemData": {
-					"x-nullable": true,
-					"readOnly": true,
-					"$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-					"description": "The system data."
-				}
-			}
-		},
-		"ImpactPatch": {
-			"type": "object",
-			"description": "details of regresion",
-			"allOf": [
-				{
-					"$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
-					"description": "The resource model definition for an Azure Resource Manager proxy resource."
-				}
-			],
-			"required": [
-				"properties"
-			],
-			"properties": {
-				"properties": {
-					"description": "list of RCA's for an Impact",
-					"$ref": "#/definitions/RcaPropertiesList",
-					"x-ms-client-flatten": true
 				}
 			}
 		},
@@ -407,12 +381,6 @@
 					"description": "The properties of the impact.",
 					"$ref": "#/definitions/ImpactPropertiesForGet",
 					"x-ms-client-flatten": true
-				},
-				"systemData": {
-					"x-nullable": true,
-					"readOnly": true,
-					"$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-					"description": "The system data."
 				}
 			}
 		},
@@ -431,14 +399,8 @@
 			"properties": {
 				"properties": {
 					"description": "The properties of the rca for an impact",
-					"$ref": "#/definitions/RcaProperties",
+					"$ref": "#/definitions/attributionDetails",
 					"x-ms-client-flatten": true
-				},
-				"systemData": {
-					"x-nullable": true,
-					"readOnly": true,
-					"$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-					"description": "The system data."
 				}
 			}
 		},
@@ -446,23 +408,29 @@
 			"type": "object",
 			"description": "impacts details",
 			"required": [
-				"startDateTime",
-				"workloadContext"
+				"startDateTimeUtc",
+				"workload"
 			],
 			"properties": {
-				"startDateTime": {
+				"startDateTimeUtc": {
 					"type": "string",
 					"format": "date-time",
 					"description": "Time when impact started"
 				},
-				"endDateTime": {
+				"endDateTimeUtc": {
 					"type": "string",
 					"description": "Time when impact ended.",
 					"format": "date-time"
 				},
-				"workloadContext": {
+				"workload": {
+					"type": "object",
+					"$ref":"#/definitions/workloadObj",
+					"description": "details of workload"
+				},
+				"impactCategory": {
 					"type": "string",
-					"description": "Valid context defining the kind of workload for a given caller."
+					"description": "The category of the impact",
+					"pattern": "([A-Za-z]+.)+[A-Za-z]+"
 				},
 				"impactedResourceUri": {
 					"type": "string",
@@ -477,12 +445,53 @@
 					"description": "List of ARM correlation ids "
 				},
 				"impactDescription": {
-					"type": "string",
+					"type": "string",					
 					"description": "Free text for describing the impact. "
 				},
 				"additionalProperties": {
 					"type": "object",
+					"$ref":"#/definitions/additionalPropertiesObj",
 					"description": "Free Json describing the impact. "
+				},
+				"performance": {
+					"type": "array",
+					
+					"items": {
+						"type": "object",
+						"description": "attributions details",
+						"$ref":"#/definitions/performanceObj"
+					},
+					"description": "Details about impacted performance metrics. Applicable for performance impacts."
+				},
+				"connectivity": {
+					"type": "object",
+					"$ref":"#/definitions/connectivityObj",
+					"description": "Details about the connectivity issue. Applicable only for connectivity type of impacts."
+				},
+				"impactGroupId":{
+					"type": "string",
+						"format": "uuid",
+						"description": "Used to correlate multiple impacts together"
+				}
+			}
+		},
+		"ImpactPropertiesForGet": {
+			"type": "object",
+			"description": "impacts details wirh RCA array",
+			"allOf": [
+				{
+					"$ref": "#/definitions/ImpactProperties"
+				}
+			]
+		},
+		"workloadObj": {
+			"type": "object",
+			"description": "attribution details",
+			"properties": {
+				"context": {
+					"type": "string",
+					"format": "date-time",
+					"description": "workload name"
 				},
 				"toolset": {
 					"type": "string",
@@ -498,63 +507,120 @@
 					],
 					"description": " Tool used to interact with Azure. "
 				}
+				
 			}
 		},
-		"ImpactPropertiesForGet": {
+		"performanceObj": {
 			"type": "object",
-			"description": "impacts details wirh RCA array",
-			"allOf": [
-				{
-					"$ref": "#/definitions/ImpactProperties"
+			"description": "Details about impacted performance metrics. Applicable for performance impacts.",
+			"properties": {
+				"metricName": {
+					"type": "string",
+					"description": "The name of the impacted metric"
+				},
+				"expected": {
+					"type": "number",					
+					"description": "The expected value for the metric "
+				},
+				"actual": {
+					"type": "number",					
+					"description": "The actual value for the metric"
 				}
-			]
+				
+			}
 		},
-		"reliabilityImpactDetails": {
+		"connectivityObj": {
 			"type": "object",
-			"description": "reliability impact details of an impact like error code and error message",
-			"required": [
-				"errorCode"
-			],
+			"description": "attribution details",
+
+			"properties": {
+
+				"protocol": {
+					"type": "string",
+					"enum": [
+						"TCP",
+						"UDP"],
+					"description": "The protocol used for the connection. Allowed values are TCP & UDP "
+				},
+				"port": {
+					"type": "number",					
+					"description": "The port number for the connection. Allowed values are 0-65536 "
+				},
+				
+				"direction": {
+					"type": "string",
+					"enum": [
+						"INBOUND",
+						"OUTBOUND"],
+					"description": "The direction of the connectio"
+				},
+				"source": {
+					"type": "string",
+					"description": "The source of the connection"
+				},
+				"destination": {
+					"type": "string",
+					"description": "The destination of the connection"
+				}
+				
+			}
+		},
+		"additionalPropertiesObj": {
+			"type": "object",
+			"description": "Details about impacted performance metrics. Applicable for performance impacts.",
 			"properties": {
 				"errorCode": {
 					"type": "string",
-					"description": "error code observed for the reliability impact arm or other azure services"
+					"description": "Error code associated with the impact"
 				},
 				"errorMessage": {
-					"type": "string",
-					"description": "error message observed for the reliability impact"
-				}
+					"type": "number",					
+					"description": "Error message associated with the impact"
+				}			
 			}
 		},
-		"performanceImpactDetails": {
+		"attributionDetails": {
 			"type": "object",
-			"description": "performance impact details of an impact like iops or latency details",
+			"description": "attribution details for a impact or group impact",
 			"properties": {
-				"expectedValue": {
-					"type": "number",
-					"description": "expected value of the performace metric like a threshold value"
+				"impactDetails": {
+					"type": "object",
+					"$ref":"#/definitions/rcaImpactDetails",
+					"description": "details of impact associated with the RCA"
 				},
-				"actualValue": {
-					"type": "number",
-					"description": "Actual value for the performance metric  observed"
+				"attributions": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"description": "attributions details",
+						"$ref":"#/definitions/attributionsObj"
+					},
+					"description": "List of attributions for a impact "
 				}
 			}
 		},
-		"RcaProperties": {
+		"attributionsObj": {
 			"type": "object",
-			"description": "rca details",
+			"description": "attribution details",
 			"required": [
 				"rcaUniqueId",
 				"processingStatus",
-				"rootCauseAttributionTime"
+				"rootCauseAttributionTime",
+				"resourceUri"
 			],
 			"properties": {
 
 				"rcaUniqueId": {
 					"type": "string",
 					"format": "uuid",
-					"description": "impactId"
+					"description": "guid of the rca"
 				},
+				"resourceUri": {
+					"type": "string",					
+					"pattern":"(\/[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+)+",
+					"description": "Azure resource uri "
+				},
+				
 				"rootCauseAttributionTime": {
 					"type": "string",
 					"format": "date-time",
@@ -566,30 +632,63 @@
 						"ACTIVE",
 						"RESOLVED"
 					],
-					"description": "status of the impact"
+					"description": "status of the RCA"
 				},
 				"rootCauseAttributionCategory": {
 					"type": "string",
-					"description": "Short Summary of the RCA"
-				},
+					"description": "The category of the RCA",
+					"enum": [
+						"KNOWN_ISSUE",
+						"NO_ISSUE_DETECTED",
+						"ROLLOUT_ISSUE",
+						"RCA_IN_PROGRESS",
+						"OTHER_ISSUE"
+					]
+				}
+				
+			}
+		},
+		"rcaImpactDetails": {
+			"type": "object",
+			"description": "impact details",
+			"required": [
+				"impactUniqueId",
+				"reportedTimeUtc",
+				"startDateTimeUtc",
+				"impactCategory"
+			],
+			"properties": {
 				"impactUniqueId": {
 					"type": "string",
 					"format": "uuid",
-					"description": "impact unique of rca"
+					"description": "guid of the impact"
+				},
+				"reportedTimeUtc": {
+					"type": "string",
+					"format": "date-time",
+					"description": "The time the impact was reported"
+				},				
+				"startDateTimeUtc": {
+					"type": "string",
+					"format": "date-time",
+					"description": "The start time of the impact"
+				},
+				"endDateTimeUtc": {
+					"type": "string",
+					"format": "date-time",
+					"description": "The end time of the impact"
+				},
+				"impactCategory": {
+					"type": "string",
+					"description": "The category of the impact",
+					"pattern": "([A-Za-z]+.)+[A-Za-z]+"
+				},
+				"impactGroupId": {
+					"type": "string",
+					"format": "uuid",
+					"description": "guid of the group impact id "
 				}
-			}
-		},
-		"RcaPropertiesList": {
-			"type": "object",
-			"description": "impacts details",
-			"properties": {
-				"rootCauseAnalysis": {
-					"type": "array",
-					"description": "list of rca details",
-					"items": {
-						"$ref": "#/definitions/RcaProperties"
-					}
-				}
+				
 			}
 		},
 		"ImpactListResult": {
