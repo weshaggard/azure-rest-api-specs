@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Foundational ARM Client",
-    "description": "API specification for PlannedQuota resource.",
+    "description": "PlannedQuota Provider",
     "version": "2022-08-22-privatepreview"
   },
   "host": "management.azure.com",
@@ -34,9 +34,50 @@
     }
   },
   "paths": {
+    "/providers/Microsoft.AzureCIS/operations": {
+      "get": {
+        "tags": [
+          "Operations"
+        ],
+        "description": "Lists all of the available PlannedQuota provider operations.",
+        "operationId": "Operations_List",
+        "x-ms-examples": {
+          "List operations": {
+            "$ref": "./examples/PlannedQuotaOperationList.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OperationListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.AzureCIS/plannedQuotas": {
       "get": {
-        "description": "List all PlannedQuota info of the subscription.",
+        "description": "List all PlannedQuota info in the subscription.",
+        "x-ms-examples": {
+          "List PlannedQuotas in a subscription": {
+            "$ref": "./examples/GetAllPlannedQuota.json"
+          }
+        },
         "operationId": "PlannedQuota_ListSubscriptionLevel",
         "parameters": [
           {
@@ -48,7 +89,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List all PlannedQuota of the specified subscription.",
+            "description": "List all PlannedQuota in the specified subscription.",
             "schema": {
               "$ref": "#/definitions/PlannedQuotaModelArray"
             }
@@ -60,16 +101,19 @@
             }
           }
         },
-        "x-ms-examples": {
-          "List PlannedQuotas in a subscription": {
-            "$ref": "./examples/GetAllPlannedQuota.json"
-          }
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureCIS/plannedQuotas": {
       "get": {
-        "description": "List PlannedQuota of the resource group.",
+        "description": "List all PlannedQuota in the resource group.",
+        "x-ms-examples": {
+          "List all PlannedQuotas in a resource group": {
+            "$ref": "./examples/GetPlannedQuotaInResourceGroup.json"
+          }
+        },
         "operationId": "PlannedQuota_ListResourceGroupLevel",
         "parameters": [
           {
@@ -84,7 +128,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List PlannedQuota of the resource group.",
+            "description": "List PlannedQuota in the resource group.",
             "schema": {
               "$ref": "#/definitions/PlannedQuotaModelArray"
             }
@@ -96,16 +140,19 @@
             }
           }
         },
-        "x-ms-examples": {
-          "List all PlannedQuotas in a resource group": {
-            "$ref": "./examples/GetPlannedQuotaInResourceGroup.json"
-          }
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureCIS/plannedQuotas/{resourceName}": {
       "put": {
         "description": "Create or update PlannedQuota for resource group.",
+        "x-ms-examples": {
+          "Create or update PlannedQuota": {
+            "$ref": "./examples/CreatePlannedQuota.json"
+          }
+        },
         "operationId": "PlannedQuota_CreateUpdate",
         "parameters": [
           {
@@ -150,14 +197,18 @@
             }
           }
         },
-        "x-ms-examples": {
-          "Create or update PlannedQuota": {
-            "$ref": "./examples/CreatePlannedQuota.json"
-          }
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         }
       },
       "patch": {
         "description": "Patch PlannedQuota for the resource group.",
+        "x-ms-examples": {
+          "Patch PlannedQuota": {
+            "$ref": "./examples/PatchPlannedQuota.json"
+          }
+        },
         "operationId": "plannedQuota_Patch",
         "parameters": [
           {
@@ -204,15 +255,15 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-examples": {
-          "Patch PlannedQuota": {
-            "$ref": "./examples/PatchPlannedQuota.json"
-          }
         }
       },
       "get": {
         "description": "Returns PlannedQuota info.",
+        "x-ms-examples": {
+          "Get PlannedQuota": {
+            "$ref": "./examples/GetPlannedQuota.json"
+          }
+        },
         "operationId": "plannedQuota_Get",
         "parameters": [
           {
@@ -241,15 +292,15 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-examples": {
-          "Get PlannedQuota": {
-            "$ref": "./examples/GetPlannedQuota.json"
-          }
         }
       },
       "delete": {
         "description": "Delete PlannedQuota",
+        "x-ms-examples": {
+          "Delete PlannedQuota": {
+            "$ref": "./examples/DeletePlannedQuota.json"
+          }
+        },
         "operationId": "plannedQuota_Delete",
         "parameters": [
           {
@@ -287,23 +338,18 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-examples": {
-          "Delete PlannedQuota": {
-            "$ref": "./examples/DeletePlannedQuota.json"
-          }
         }
       }
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.AzureCIS/plannedQuotas/{resourceName}": {
       "put": {
-        "description": "Create or update plannedQuota (subscription only)",
+        "description": "Create or update PlannedQuota (subscription only)",
         "x-ms-examples": {
           "Create or update plannedQuota": {
             "$ref": "./examples/CreatePlannedQuotaSubOnly.json"
           }
         },
-        "operationId": "plannedQuota_SubOnly_CreateUpdate",
+        "operationId": "PlannedQuota_SubOnlyCreateUpdate",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -343,6 +389,10 @@
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         }
       },
       "patch": {
@@ -352,7 +402,7 @@
             "$ref": "./examples/PatchPlannedQuotaSubOnly.json"
           }
         },
-        "operationId": "plannedQuota_SubOnly_Patch",
+        "operationId": "PlannedQuota_SubOnlyPatch",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -369,7 +419,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "#/definitions/PlannedQuotaModel"
             }
           }
         ],
@@ -401,7 +451,7 @@
             "$ref": "./examples/GetPlannedQuotaSubOnly.json"
           }
         },
-        "operationId": "plannedQuota_SubOnly_Get",
+        "operationId": "PlannedQuota_SubOnlyGet",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -435,7 +485,7 @@
             "$ref": "./examples/DeletePlannedQuotaSubOnly.json"
           }
         },
-        "operationId": "plannedQuota_SubOnly_Delete",
+        "operationId": "PlannedQuota_SubOnlyDelete",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
@@ -468,82 +518,30 @@
     }
   },
   "definitions": {
-    "ProvisioningState": {
-      "description": "Provisioning status of the resource.",
-      "enum": [
-        "Failed",
-        "Succeeded",
-        "Canceled",
-        "Accepted"
-      ],
-      "readOnly": true,
-      "type": "string",
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "ProvisioningState"
-      }
-    },
-    "PropertyBinding": {
+    "PlannedQuotaModelArray": {
       "type": "object",
       "properties": {
-        "PlaceHolder": {
-          "description": "Property binding placeholder.",
-          "type": "string"
-        },
-        "ResourceName": {
-          "description": "Name of the property.",
-          "type": "string"
-        }
-      }
-    },
-    "PlannedQuotaResource": {
-      "type": "object",
-      "description": "Resource of PlannedQuota.",
-      "properties": {
-        "ContactEmail": {
-          "description": "Contact email for manual approval.",
-          "type": "string"
-        },
-        "Name": {
-          "description": "Name of the resource template.",
-          "type": "string"
-        },
-        "PlanVersion": {
-          "description": "Plan version",
-          "type": "number"
-        },
-        "ServiceTreeId": {
-          "description": "Service tree id.",
-          "type": "string"
-        },
-        "Stage": {
-          "description": "Stage name.",
-          "type": "string"
-        },
-        "SubscriptionNameInPlan": {
-          "description": "Subscription Name in plan.",
-          "type": "string"
-        },
-        "Properties": {
-          "description": "Property bindings.",
+        "value": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PropertyBinding"
-          }
+            "$ref": "#/definitions/PlannedQuotaModel"
+          },
+          "description": "An array of PlannedQuota resource payloads."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URL to use for getting the next set of results."
         }
-      }
+      },
+      "description": "List of payloads of PlannedQuota resource information."
     },
     "PlannedQuotaModel": {
       "type": "object",
-      "description": "PlannedQuota Resource payload.",
+      "description": "Response payload of PlannedQuota resource.",
       "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "The provisioning state of the PlannedQuota resource."
-        },
         "properties": {
           "$ref": "#/definitions/PlannedQuotaResource",
-          "description": "The payload represents PlannedQuota resource."
+          "description": "Details of PlannedQuota resource."
         }
       },
       "allOf": [
@@ -552,21 +550,258 @@
         }
       ]
     },
-    "PlannedQuotaModelArray": {
+    "PlannedQuotaResource": {
+      "type": "object",
+      "description": "Resource of PlannedQuota.",
+      "properties": {
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The provisioning State of the resource."
+        },
+        "contactEmail": {
+          "description": "Contact email for manual approval.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the resource template.",
+          "type": "string"
+        },
+        "planVersion": {
+          "description": "Plan version",
+          "type": "number"
+        },
+        "serviceTreeId": {
+          "description": "Service tree id.",
+          "type": "string"
+        },
+        "stage": {
+          "description": "Stage name.",
+          "type": "string"
+        },
+        "subscriptionNameInPlan": {
+          "description": "Subscription Name in plan.",
+          "type": "string"
+        },
+        "propertyBindings": {
+          "type": "array",
+          "description": "A list of PropertyBinding payload.",
+          "items": {
+            "$ref": "#/definitions/PropertyBinding"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
+    "PropertyBinding": {
+      "type": "object",
+      "description": "Property binding information for the content.",
+      "properties": {
+        "placeHolder": {
+          "description": "Property binding placeholder.",
+          "type": "string"
+        },
+        "resourceName": {
+          "description": "Resource name of the property.",
+          "type": "string"
+        }
+      }
+    },
+    "ProvisioningState": {
+      "description": "Provisioning status of the resource.",
+      "readOnly": true,
+      "enum": [
+        "Failed",
+        "Succeeded",
+        "Canceled",
+        "Accepted"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
+    },
+    "OperationListResult": {
+      "type": "object",
+      "description": "Available operations of the service.",
       "properties": {
         "value": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PlannedQuotaModel"
+            "$ref": "#/definitions/Operation"
           },
-          "description": "An array holds PlannedQuota resource info payloads."
+          "description": "List of operations supported by the Resource Provider.",
+          "x-ms-identifiers": []
         },
         "nextLink": {
           "type": "string",
-          "description": "The URL to use for getting the next set of results."
+          "description": "URL to get the next set of operation list results if there are any."
         }
-      },
-      "description": "An array holds PlannedQuota resource info payloads."
+      }
+    },
+    "Operation": {
+      "description": "Operation detail payload",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the operation",
+          "type": "string"
+        },
+        "isDataAction": {
+          "description": "Indicates whether the operation is a data action",
+          "type": "boolean"
+        },
+        "actionType": {
+          "description": "Indicates the action type.",
+          "type": "string"
+        },
+        "display": {
+          "$ref": "#/definitions/OperationDisplay",
+          "description": "Display of the operation"
+        },
+        "origin": {
+          "description": "Origin of the operation",
+          "type": "string"
+        },
+        "properties": {
+          "$ref": "#/definitions/OperationProperties",
+          "description": "Properties of the operation",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "OperationDisplay": {
+      "description": "Operation display payload",
+      "type": "object",
+      "properties": {
+        "provider": {
+          "description": "Resource provider of the operation",
+          "type": "string"
+        },
+        "resource": {
+          "description": "Resource of the operation",
+          "type": "string"
+        },
+        "operation": {
+          "description": "Localized friendly name for the operation",
+          "type": "string"
+        },
+        "description": {
+          "description": "Localized friendly description for the operation",
+          "type": "string"
+        }
+      }
+    },
+    "OperationProperties": {
+      "description": "Additional details about an operation.",
+      "type": "object",
+      "x-ms-client-flatten": true,
+      "properties": {
+        "serviceSpecification": {
+          "description": "Details about a service operation.",
+          "$ref": "#/definitions/OperationServiceSpecification"
+        }
+      }
+    },
+    "OperationServiceSpecification": {
+      "description": "Details about a service operation.",
+      "type": "object",
+      "properties": {
+        "logSpecifications": {
+          "description": "Details about operations related to logs.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationLogSpecification"
+          },
+          "x-ms-identifiers": []
+        },
+        "metricSpecifications": {
+          "description": "Details about operations related to metrics.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationMetricSpecification"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
+    "OperationLogSpecification": {
+      "description": "Details about an operation related to logs.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the log category.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Localized display name.",
+          "type": "string"
+        },
+        "blobDuration": {
+          "description": "Blobs created in the customer storage account, per hour.",
+          "type": "string"
+        }
+      }
+    },
+    "OperationMetricSpecification": {
+      "description": "Details about an operation related to metrics.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the metric.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Localized display name of the metric.",
+          "type": "string"
+        },
+        "displayDescription": {
+          "description": "The description of the metric.",
+          "type": "string"
+        },
+        "unit": {
+          "description": "The unit that the metric is measured in.",
+          "type": "string"
+        },
+        "aggregationType": {
+          "description": "The type of metric aggregation.",
+          "type": "string"
+        },
+        "enableRegionalMdmAccount": {
+          "description": "Whether or not the service is using regional MDM accounts.",
+          "type": "string"
+        },
+        "sourceMdmAccount": {
+          "description": "The name of the MDM account.",
+          "type": "string"
+        },
+        "sourceMdmNamespace": {
+          "description": "The name of the MDM namespace.",
+          "type": "string"
+        },
+        "availabilities": {
+          "description": "Defines how often data for metrics becomes available.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationMetricAvailability"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
+    "OperationMetricAvailability": {
+      "description": "Defines how often data for a metric becomes available.",
+      "type": "object",
+      "properties": {
+        "timeGrain": {
+          "description": "The granularity for the metric.",
+          "type": "string"
+        },
+        "blobDuration": {
+          "description": "Blob created in the customer storage account, per hour.",
+          "type": "string"
+        }
+      }
     }
   },
   "parameters": {
@@ -575,7 +810,7 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The name of resource",
+      "description": "The name of resource.",
       "x-ms-parameter-location": "method"
     }
   }

@@ -21,4 +21,5 @@ input-file:
   - examples/DeletePlannedQuotaSubOnly.json
   - examples/GetPlannedQuotaSubOnly.json
   - examples/PatchPlannedQuotaSubOnly.json
+  - examples/PlannedQuotaOperationList.json
 ```
