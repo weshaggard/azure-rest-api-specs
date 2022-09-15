@@ -107,12 +107,6 @@
             "description": "Request successful. The operation returns the resulting packet core control plane resource.",
             "schema": {
               "$ref": "#/definitions/PacketCoreControlPlane"
-            },
-            "headers": {
-              "x-ms-packet-core-version-warning": {
-                "description": "Warning information about the packet core version currently set.",
-                "type": "string"
-              }
             }
           },
           "default": {
@@ -162,24 +156,12 @@
             "description": "Update successful. The operation returns the resulting packet core control plane resource.",
             "schema": {
               "$ref": "#/definitions/PacketCoreControlPlane"
-            },
-            "headers": {
-              "x-ms-packet-core-version-warning": {
-                "description": "Warning information about the packet core version currently set.",
-                "type": "string"
-              }
             }
           },
           "201": {
             "description": "Create successful. The operation returns the resulting packet core control plane resource.",
             "schema": {
               "$ref": "#/definitions/PacketCoreControlPlane"
-            },
-            "headers": {
-              "x-ms-packet-core-version-warning": {
-                "description": "Warning information about the packet core version currently set.",
-                "type": "string"
-              }
             }
           },
           "default": {
@@ -379,7 +361,7 @@
         "description": "Lists all supported packet core control planes versions.",
         "parameters": [
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -392,7 +374,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -415,6 +397,10 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/PacketCoreControlPlanePropertiesFormat",
           "description": "Packet core control plane Properties."
+        },
+        "identity": {
+          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/ManagedServiceIdentity",
+          "description": "The identity used to retrieve the ingress certificate from Azure key vault."
         },
         "systemData": {
           "x-ms-client-flatten": true,
@@ -461,11 +447,24 @@
         "controlPlaneAccessInterface": {
           "$ref": "./common.json#/definitions/InterfaceProperties",
           "description": "The control plane interface on the access network. For 5G networks, this is the N2 interface. For 4G networks, this is the S1-MME interface."
+        },
+        "sku": {
+          "$ref": "./common.json#/definitions/BillingSku",
+          "description": "The SKU defining the throughput and SIM allowances for this packet core control plane deployment."
+        },
+        "localDiagnosticsAccess": {
+          "$ref": "#/definitions/LocalDiagnosticsAccessConfiguration",
+          "description": "The kubernetes ingress configuration to control access to packet core diagnostics over local APIs."
+        },
+        "interopSettings": {
+          "type": "object",
+          "description": "Settings to allow interoperability with third party components e.g. RANs and UEs."
         }
       },
       "required": [
         "mobileNetwork",
-        "controlPlaneAccessInterface"
+        "controlPlaneAccessInterface",
+        "sku"
       ]
     },
     "PacketCoreControlPlaneListResult": {
@@ -533,22 +532,123 @@
         ]
       }
     },
+    "LocalDiagnosticsAccessConfiguration": {
+      "description": "The kubernetes ingress configuration to control access to packet core diagnostics over local APIs.",
+      "type": "object",
+      "properties": {
+        "httpsServerCertificate": {
+          "$ref": "#/definitions/KeyVaultCertificate",
+          "description": "The HTTPS server TLS certificate used to secure local access to diagnostics."
+        }
+      }
+    },
+    "KeyVaultCertificate": {
+      "description": "An Azure key vault certificate.",
+      "type": "object",
+      "properties": {
+        "certificateUrl": {
+          "type": "string",
+          "description": "The certificate URL, unversioned. For example: https://contosovault.vault.azure.net/certificates/ingress."
+        }
+      }
+    },
     "PacketCoreControlPlaneVersion": {
+      "description": "Packet core control plane version resource.",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/PacketCoreControlPlaneVersionPropertiesFormat",
+          "description": "Packet core control plane version properties."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "required": [
+        "properties"
+      ]
+    },
+    "PacketCoreControlPlaneVersionPropertiesFormat": {
       "description": "Packet core control plane version properties.",
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "The packet core control plane version name."
-
+        "provisioningState": {
+          "readOnly": true,
+          "$ref": "./common.json#/definitions/ProvisioningState",
+          "description": "The provisioning state of the packet core control plane version resource."
         },
-        "isRecommendedVersion": {
-          "type": "boolean",
-          "description": "Indicates whether this is the recommended version to use for new packet core control plane deployments."
+        "versionState": {
+          "type": "string",
+          "description": "The state of this packet core control plane version.",
+          "enum": [
+            "Unknown",
+            "Preview",
+            "Validating",
+            "ValidationFailed",
+            "Active",
+            "Deprecated"
+          ],
+          "x-ms-enum": {
+            "name": "versionState",
+            "modelAsString": true,
+            "values": [
+              {
+                "value": "Unknown",
+                "description": "The state of this version is unknown."
+              },
+              {
+                "value": "Preview",
+                "description": "This version is a preview and is not suitable for production use."
+              },
+              {
+                "value": "Validating",
+                "description": "This version is currently being validated."
+              },
+              {
+                "value": "ValidationFailed",
+                "description": "This version failed validation."
+              },
+              {
+                "value": "Active",
+                "description": "This version is active and suitable for production use."
+              },
+              {
+                "value": "Deprecated",
+                "description": "This version is deprecated and is no longer supported."
+              }
+            ]
+          }
+        },
+        "recommendedVersion": {
+          "type": "string",
+          "description": "Indicates whether this is the recommended version to use for new packet core control plane deployments.",
+          "enum": [
+            "Recommended",
+            "NotRecommended"
+          ],
+          "x-ms-enum": {
+            "name": "recommendedVersion",
+            "modelAsString": true,
+            "values": [
+              {
+                "value": "Recommended",
+                "description": "This is the recommended version to use for new packet core control plane deployments."
+              },
+              {
+                "value": "NotRecommended",
+                "description": "This is not the recommended version to use for new packet core control plane deployments."
+              }
+            ]
+          }
         }
       }
     },
     "PacketCoreControlPlaneVersionListResult": {
+      "description": "Response for packet core control plane version API service call.",
+      "type": "object",
       "properties": {
         "value": {
           "type": "array",
@@ -562,8 +662,7 @@
           "type": "string",
           "description": "The URL to get the next set of results."
         }
-      },
-      "description": "Response for packet core control plane version API service call."
+      }
     }
   }
 }
