@@ -1,4 +1,4 @@
-// Definitions for the TeamsCallingResource
+// Definitions for the VoiceBridge resource and child resources
 
 import "@cadl-lang/openapi";
 import "@cadl-lang/rest";
@@ -14,7 +14,7 @@ using Cadl.Rest;
 using Azure.ResourceManager;
 
 @doc("A TestLine resource")
-@parentResource(GlobalTeamsCallingDeployment)
+@parentResource(VoiceBridge)
 model TestLine is TrackedResource<TestLineProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("testLineName")
@@ -45,7 +45,7 @@ model TestLineProperties is ResourceProperties {
 interface TestLines extends ResourceOperations<TestLine, TestLineProperties> {}
 
 @doc("A Contact resource")
-@parentResource(GlobalTeamsCallingDeployment)
+@parentResource(VoiceBridge)
 model Contact is TrackedResource<ContactProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("contactName")
@@ -75,25 +75,25 @@ model ContactProperties is ResourceProperties {
 @armResourceOperations
 interface Contacts extends ResourceOperations<Contact, ContactProperties> {}
 
-@doc("A GlobalTeamsCallingDeployment resource")
-model GlobalTeamsCallingDeployment is TrackedResource<GlobalTeamsCallingDeploymentProperties> {
+@doc("A VoiceBridge resource")
+model VoiceBridge is TrackedResource<VoiceBridgeProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("globalTeamsCallingDeploymentName")
-  @segment("globalTeamsCallingDeployments")
+  @key("voiceBridgeName")
+  @segment("voiceBridges")
   @doc("Unique identifier for this deployment")
   @visibility("Read")
   @path
   name: string;
 }
 
-@doc("The status of the current GlobalTeamsCallingDeployment resource.")
+@doc("The status of the current VoiceBridge resource.")
 enum Status {
   New,
   ChangePending,
   Complete,
 }
 
-@doc("The status of the current GlobalTeamsCallingDeployment resource.")
+@doc("The status of the current VoiceBridge resource.")
 enum E911Type {
   None,
   Esrp,
@@ -127,8 +127,8 @@ model ServiceRegionProperties {
 	esrpAddresses?: string[];
 }
 
-@doc("Details of the GlobalTeamsCallingDeployment resource.")
-model GlobalTeamsCallingDeploymentProperties is ResourceProperties {
+@doc("Details of the VoiceBridge resource.")
+model VoiceBridgeProperties is ResourceProperties {
   @doc("The current status of the deployment.")
   @visibility("read") status?: Status;
 
@@ -151,4 +151,4 @@ model GlobalTeamsCallingDeploymentProperties is ResourceProperties {
 }
 
 @armResourceOperations
-interface GlobalTeamsCallingDeployments extends ResourceOperations<GlobalTeamsCallingDeployment, GlobalTeamsCallingDeploymentProperties> {}
+interface VoiceBridges extends ResourceOperations<VoiceBridge, VoiceBridgeProperties> {}
