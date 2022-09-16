@@ -29,6 +29,39 @@ openapi-type: arm
 openapi-subtype: rpaas
 tag: package-2021-05-01
 ```
+### Tag: package-2022-09-01-preview
+
+These settings apply only when `--tag=package-2022-09-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-09-01-preview'
+input-file:
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/common.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/networkFunction.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/publisher.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/networkFunctionDefinition.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/proxyPublisher.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/operation.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/configurationGroupSchema.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/networkServiceDesign.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/site.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/siteNetworkService.json
+  - Microsoft.HybridNetwork/preview/2022-09-01-preview/configurationGroupValues.json
+```
+
+### Tag: package-2021-05-01
+
+These settings apply only when `--tag=package-2021-05-01` is specified on the command line.
+
+```yaml $(tag) == 'package-2021-05-01'
+input-file:
+  - Microsoft.HybridNetwork/stable/2021-05-01/common.json
+  - Microsoft.HybridNetwork/stable/2021-05-01/networkFunction.json
+  - Microsoft.HybridNetwork/stable/2021-05-01/device.json
+  - Microsoft.HybridNetwork/stable/2021-05-01/operation.json
+  - Microsoft.HybridNetwork/stable/2021-05-01/vendor.json
+  - Microsoft.HybridNetwork/stable/2021-05-01/networkFunctionVendor.json
+  - Microsoft.HybridNetwork/stable/2021-05-01/vendorNetworkFunction.json
+```
 
 ### Tag: package-2020-01-01-preview
 
