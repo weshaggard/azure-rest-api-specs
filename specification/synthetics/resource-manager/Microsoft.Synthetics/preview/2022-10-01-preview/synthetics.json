@@ -6,11 +6,20 @@
     "description": "The Synthetics Management Client"
   },
   "host": "management.azure.com",
-  "schemes": ["https"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
-  "security": [{
-      "azure_auth": ["user_impersonation"]
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
     }
   ],
   "securityDefinitions": {
@@ -37,7 +46,8 @@
           }
         },
         "description": "Lists available operations for the Microsoft.Synthetics provider",
-        "parameters": [{
+        "parameters": [
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
@@ -72,24 +82,22 @@
           }
         },
         "description": "Creates a new Synthetics Workspace with the specified parameters.",
-        "parameters": [{
+        "parameters": [
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          }, {
+          },
+          {
             "$ref": "#/parameters/WorkspaceNameParameter"
           }
         ],
         "responses": {
-          "200": {
-            "description": "The operation was successful. The response contains the Synthetics workspace entity.",
-            "schema": {
-              "$ref": "#/definitions/WorkspaceResource"
-            }
-          },
-          "202": {
+          "201": {
             "description": "The operation will be completed asynchronously.",
             "headers": {
               "Location": {
@@ -112,7 +120,7 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
+          "final-state-via": "azure-async-operation"
         }
       },
       "patch": {
@@ -126,15 +134,20 @@
           }
         },
         "description": "Updates the properties of an existing Synthetics workspace.",
-        "parameters": [{
+        "parameters": [
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          }, {
+          },
+          {
             "$ref": "#/parameters/WorkspaceNameParameter"
-          }, {
+          },
+          {
             "name": "parameters",
             "in": "body",
             "required": true,
@@ -170,13 +183,17 @@
           }
         },
         "description": "Deletes the specified Synthetics workspace.",
-        "parameters": [{
+        "parameters": [
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          }, {
+          },
+          {
             "$ref": "#/parameters/WorkspaceNameParameter"
           }
         ],
@@ -224,13 +241,17 @@
           }
         },
         "description": "Gets information about the specified Synthetics workspace.",
-        "parameters": [{
+        "parameters": [
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          }, {
+          },
+          {
             "$ref": "#/parameters/WorkspaceNameParameter"
           }
         ],
@@ -262,9 +283,11 @@
           }
         },
         "description": "Gets information about the Synthetics workspaces associated with the subscription.",
-        "parameters": [{
+        "parameters": [
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           }
         ],
@@ -299,11 +322,14 @@
           }
         },
         "description": "Gets information about the Synthetics workspaces associated with the specified resource group.",
-        "parameters": [{
+        "parameters": [
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }, {
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           }
         ],
@@ -340,9 +366,14 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/WorkspaceResourceProperties",
           "description": "The properties associated with the workspace."
+        },
+        "identity": {
+          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/ManagedServiceIdentity",
+          "description": "The identity of the resource."
         }
       },
-      "allOf": [{
+      "allOf": [
+        {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
         }
       ],
@@ -352,31 +383,80 @@
     "WorkspaceResourceProperties": {
       "type": "object",
       "properties": {
+        "workspaceId": {
+          "description": "The unique, immutable id of this resource.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of this resource.",
+          "type": "string"
+        },
+        "friendlyName": {
+          "description": "The friendly name for this synthetics workspace. This name in mutable.",
+          "type": "string"
+        },
+        "keyVault": {
+          "description": "ARM identifier of the key vault associated with this workspace. This cannot be changed on creation.",
+          "type": "string"
+        },
+        "applicationInsights": {
+          "description": "ARM identifier of the application insights associated with this workspace. This cannot be changed on creation.",
+          "type": "string"
+        },
+        "storageAccount": {
+          "description": "ARM identifier of the storage account associated with this workspace. This cannot be changed on creation.",
+          "type": "string"
+        },
+        "regionalEndpoint": {
+          "description": "The url that this workspace should use for Synthetics service."
+        },
+        "primaryUserAssignedIdentity": {
+          "description": "The user assigned identity resource id that represents the synthetics workspace identity.",
+          "type": "string"
+        },
+        "tenantId": {
+          "description": "The tenant id associated with this workspace.",
+          "type": "string",
+          "readOnly": true
+        },
         "provisioningState": {
           "type": "string",
           "readOnly": true,
           "x-nullable": false,
           "description": "The provisioned state of the resource",
-          "enum": ["Invalid", "Creating", "Deleting", "Succeeded", "Failed", "Cancelled"],
+          "enum": [
+            "Invalid",
+            "Creating",
+            "Deleting",
+            "Succeeded",
+            "Failed",
+            "Cancelled"
+          ],
           "x-ms-enum": {
             "name": "ProvisioningState",
             "modelAsString": false,
-            "values": [{
+            "values": [
+              {
                 "value": "Invalid",
                 "description": "The workspace is in an invalid state."
-              }, {
+              },
+              {
                 "value": "Creating",
                 "description": "The workspace is being created."
-              }, {
+              },
+              {
                 "value": "Deleting",
                 "description": "The workspace is being deleted."
-              }, {
+              },
+              {
                 "value": "Succeeded",
                 "description": "The workspace has been created and is ready for use."
-              }, {
+              },
+              {
                 "value": "Failed",
                 "description": "The last operation for the workspace has failed."
-              }, {
+              },
+              {
                 "value": "Cancelled",
                 "description": "The last operation for the workspace is cancelled."
               }
@@ -395,9 +475,36 @@
             "type": "string"
           },
           "description": "The user-specified tags associated with the resource."
+        },
+        "properties": {
+          "$ref": "#/definitions/WorkspaceResourcePropertiesUpdates",
+          "description": "The properties that the synthetics workspace will be updated with.",
+          "x-ms-client-flatten": true
+        },
+        "identity": {
+          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/ManagedServiceIdentity",
+          "description": "The identity of the resource."
         }
       },
       "description": "Parameters for updating a Synthetics workspace."
+    },
+    "WorkspaceResourcePropertiesUpdates": {
+      "type": "object",
+      "description": "The parameters for updating the properties of a Synthetics Workspace.",
+      "properties": {
+        "description": {
+          "description": "The description of this workspace.",
+          "type": "string"
+        },
+        "friendlyName": {
+          "description": "The friendly name for this workspace.",
+          "type": "string"
+        },
+        "primaryUserAssignedIdentity": {
+          "description": "The user assigned identity resource id that represents the workspace identity.",
+          "type": "string"
+        }
+      }
     },
     "WorkspaceResourceListResult": {
       "type": "object",

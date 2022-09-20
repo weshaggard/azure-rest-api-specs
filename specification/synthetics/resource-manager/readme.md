@@ -26,16 +26,17 @@ These are the global settings for the synthetics.
 
 ```yaml
 openapi-type: arm
-tag: package-2022-03-30-preview
+openapi-subtype: rpaas
+tag: package-2022-10-01
 ```
 
-### Tag: package-2022-03-30-preview
+### Tag: package-2022-10-01
 
-These settings apply only when `--tag=package-2022-03-30-preview` is specified on the command line.
+These settings apply only when `--tag=package-2022-10-01` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-03-30-preview'
+```yaml $(tag) == 'package-2022-10-01'
 input-file:
-  - Microsoft.Synthetics/preview/2022-03-30-preview/synthetics.json
+  - Microsoft.Synthetics/preview/2022-10-01-preview/synthetics.json
 ```
 
 ---
@@ -49,12 +50,15 @@ This is not used by Autorest itself.
 
 ```yaml $(swagger-to-sdk)
 swagger-to-sdk:
+  - repo: azure-sdk-for-net-track2
   - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go-track2
   - repo: azure-sdk-for-js
+  - repo: azure-sdk-for-java
   - repo: azure-resource-manager-schemas
   - repo: azure-cli-extensions
+  - repo: azure-powershell
 ```
 ## Az
 
