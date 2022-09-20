@@ -43,10 +43,10 @@ namespace Microsoft.Impact.Service.Models
                 target.ImpactUniqueId = source.ImpactUniqueId;
             if (serialization.IsSerializedProperty(nameof(source.ReportedTimeUtc)))
                 target.ReportedTimeUtc = source.ReportedTimeUtc;
-            if (serialization.IsSerializedProperty(nameof(source.StartDateTimeUtc)))
-                target.StartDateTimeUtc = source.StartDateTimeUtc;
-            if (serialization.IsSerializedProperty(nameof(source.EndDateTimeUtc)))
-                target.EndDateTimeUtc = source.EndDateTimeUtc;
+            if (serialization.IsSerializedProperty(nameof(source.StartDateTime)))
+                target.StartDateTime = source.StartDateTime;
+            if (serialization.IsSerializedProperty(nameof(source.EndDateTime)))
+                target.EndDateTime = source.EndDateTime;
             if (serialization.IsSerializedProperty(nameof(source.ImpactCategory)))
                 target.ImpactCategory = source.ImpactCategory;
             if (serialization.IsSerializedProperty(nameof(source.ImpactGroupId)))
@@ -79,8 +79,8 @@ namespace Microsoft.Impact.Service.Models
             OnBeginCopyForPut(source, target);
             target.ImpactUniqueId = source.ImpactUniqueId;
             target.ReportedTimeUtc = source.ReportedTimeUtc;
-            target.StartDateTimeUtc = source.StartDateTimeUtc;
-            target.EndDateTimeUtc = source.EndDateTimeUtc;
+            target.StartDateTime = source.StartDateTime;
+            target.EndDateTime = source.EndDateTime;
             target.ImpactCategory = source.ImpactCategory;
             target.ImpactGroupId = source.ImpactGroupId;
             OnEndCopyForPut(source, target);

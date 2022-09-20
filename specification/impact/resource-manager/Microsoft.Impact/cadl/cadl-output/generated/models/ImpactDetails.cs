@@ -51,14 +51,16 @@ namespace Microsoft.Impact.Service.Models
         /// <summary>
         /// The start time of the impact
         /// </summary>
-        [JsonProperty("startDateTimeUtc")]
-        public DateTimeOffset StartDateTimeUtc { get; set; }
+        [JsonProperty("startDateTime")]
+        public DateTimeOffset StartDateTime { get; set; }
+
 
         /// <summary>
         /// The end time of the impact
         /// </summary>
-        [JsonProperty("endDateTimeUtc")]
-        public DateTimeOffset EndDateTimeUtc { get; set; }
+        [JsonProperty("endDateTime")]
+        public DateTimeOffset EndDateTime { get; set; }
+
 
         /// <summary>
         /// The category of the impact
