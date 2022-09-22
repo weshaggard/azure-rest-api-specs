@@ -34,7 +34,7 @@ These settings apply only when `--tag=package-2022-09-12-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-09-12-preview'
 input-file:
-    - Microsoft.WindowsPushNotificationServices/preview/2022-09-12-preview/openapi.json
+    - Microsoft.WindowsPushNotificationServices/preview/2022-09-12-preview/windowspushnotificationservice.json
 ```
 
 ---
