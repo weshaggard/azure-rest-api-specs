@@ -1,0 +1,60 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/openapi";
+import "@azure-tools/cadl-autorest";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+import "@azure-tools/cadl-providerhub";
+
+@armNamespace
+@serviceTitle("EncryptedTransportClient")
+@serviceVersion("2022-06-17-preview")
+@doc("Encrypted Transport management API.")
+namespace Microsoft.EncryptedTransport;
+
+using Cadl.Rest;
+using Cadl.Http;
+using Azure.ResourceManager;
+
+@doc("EncryptedTransportResource resource properties")
+model EncryptedTransportResourceProperties {
+  @doc("The Encrypted Transport's display name")
+  displayName: string;
+  @doc("The Encrypted Transport region's display name")
+  regionDisplayName: string;
+  @doc("The type location")
+  regionType: string;
+  @doc("The category of the location")
+  regionCategory: string;
+  @doc("The geography group of the location")
+  geographyGroup: string;
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+}
+
+@doc("A EncryptedTransport")
+model EncryptedTransportResource is TrackedResource<EncryptedTransportResourceProperties> {
+  @key("EncryptedTransportName")
+  @segment("EncryptedTransport")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @path
+  @doc("Name of EncryptedTransport")
+  name: string;
+}
+
+@knownValues(ProvisioningStateKV)
+@doc("Provisioning Sate")
+model ProvisioningState is string {}
+enum ProvisioningStateKV {
+  Succeeded,
+  Failed,
+  Canceled,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted
+}
+
+@armResourceOperations
+interface EncryptedTransport extends ResourceOperations<EncryptedTransportResource,EncryptedTransportResourceProperties> {}
+
