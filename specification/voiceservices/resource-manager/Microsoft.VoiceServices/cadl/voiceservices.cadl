@@ -30,3 +30,28 @@ model ResourceProperties {
 	@knownValues(ProvisioningState)
 	provisioningState?: string;
 }
+
+// A helper template for defining empty properties for resource PATCH operations
+// In a future release this won't be necessary.
+// See https://github.com/Azure/azure-rest-api-specs-pr/pull/8707#discussion_r971363996 for context
+@doc("The type used for update operations of the {name}.", TResource)
+@friendlyName("{name}Update", TResource)
+model ResourceUpdateModelNoProperties<TResource>
+  is OptionalProperties<UpdateableProperties<OmitProperties<TResource, "Name" | "name">>>;
+
+
+@doc("Template for resources with no updateable properties")
+@armResourceOperations
+interface ResourceUpdateNoProperties<TResource, TResourceProperties> extends ResourceUpdate<TResource, TResourceProperties> {
+  @autoRoute
+  @doc("Update a {name}", TResource)
+  @armResourceUpdate(TResource)
+  @patch
+  update(
+    ...ResourceInstanceParameters<TResource>,
+
+    @doc("The resource properties to be updated.")
+    @body
+    properties: ResourceUpdateModelNoProperties<TResource>
+  ): ArmResponse<TResource> | ErrorResponse;
+}
