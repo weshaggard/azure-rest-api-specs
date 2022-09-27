@@ -26,7 +26,7 @@ These are the global settings for the devcenter.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: v2022-09-01-preview
+tag: v2022-10-12-preview
 eol: crlf
 ```
 
@@ -58,6 +58,16 @@ These settings apply only when `--tag=2022-09-01-preview` is specified on the co
 input-file:
   - Microsoft.DevCenter/preview/2022-09-01-preview/devcenter.json
   - Microsoft.DevCenter/preview/2022-09-01-preview/vdi.json
+```
+
+### Tag: v2022-10-12-preview
+
+These settings apply only when `--tag=2022-10-12-preview` is specified on the command line.
+
+```yaml $(tag) == 'v2022-10-12-preview'
+input-file:
+  - Microsoft.DevCenter/preview/2022-10-12-preview/devcenter.json
+  - Microsoft.DevCenter/preview/2022-10-12-preview/vdi.json
 ```
 
 ---
