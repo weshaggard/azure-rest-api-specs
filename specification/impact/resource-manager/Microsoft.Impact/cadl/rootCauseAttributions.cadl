@@ -1,0 +1,109 @@
+// Definitions for the TeamsCallingResource
+
+import "@cadl-lang/openapi";
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-autorest";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+namespace Microsoft.Impact;
+
+using Cadl.Http;
+using Cadl.Rest;
+using OpenAPI;
+using Azure.ResourceManager;
+
+
+@doc("A Contact resource")
+@parentResource(Workloadimpacts)
+model RootCauseAttributions is ProxyResource<RootCauseAttributionsProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,40}$")
+  @key("rootCauseAttributionsName")
+  @segment("rootCauseAttributions")
+  @doc("Some documentation")
+  @visibility("Read")
+  @path
+  name: string;
+}
+
+@doc("Details of the Contact resource.")
+model RootCauseAttributionsProperties is ResourceProperties {
+
+  @doc("impact details")
+  impactDetails: ImpactDetails;
+
+  @doc("attribution details")
+  @extension("x-ms-identifiers", [])
+  attributions: Attributions[];
+}
+
+@doc("details of impact associated with this attribution")
+model ImpactDetails{
+
+  @doc("The unique id of the impact")
+  @pattern("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+  impactUniqueId: string;
+
+	@doc("The time the impact was reported")
+  reportedTimeUtc:zonedDateTime;
+
+  @doc("The start time of the impact")
+
+  startDateTime:zonedDateTime;
+
+  @doc("The end time of the impact")
+  endDateTime1?: zonedDateTime;
+
+  @doc("The category of the impact")
+  @pattern("([A-Za-z]+.)+[A-Za-z]+")
+  impactCategory: string;
+
+  @doc("Group id used to correlate multiple impacts")
+  impactGroupId?: string;
+
+
+
+}
+
+@doc("attribution details")
+model Attributions{
+  @doc("Unique Id to identify the RCA in RCA engines")
+  @pattern("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+  rcaUniqueId : string;
+
+
+  @doc("Unique Id to identify the RCA in RCA engines")
+  resourceUri: string;
+
+  @doc("time at which attribution was generated")
+  rootCauseAttributionTime? : zonedDateTime ;
+
+  @doc("attribution category")
+  rootCauseAttributionCategory:RootCauseAttributionCategory;
+
+  @doc("status of rca")
+  processingStatus:processingStatus;
+
+  @doc("Short Summary of the RCA. This will be a customer ready content derived from the category.")
+  summary?: string;
+}
+
+@doc("list of protocols")
+enum RootCauseAttributionCategory {
+  KNOWN_ISSUE,
+NO_ISSUE_DETECTED,
+ROLLOUT_ISSUE,
+RCA_IN_PROGRESS,
+OTHER_ISSUE
+
+}
+
+@doc("list of protocols")
+enum processingStatus {
+  ACTIVE, RESOLVED
+}
+
+@armResourceOperations
+interface RootCauseAttribution extends ResourceOperations<RootCauseAttributions, RootCauseAttributionsProperties> {}
+
