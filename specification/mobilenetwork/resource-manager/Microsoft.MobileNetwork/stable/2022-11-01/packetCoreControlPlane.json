@@ -532,9 +532,14 @@
           "$ref": "./common.json#/definitions/ProvisioningState",
           "description": "The provisioning state of the packet core control plane resource."
         },
-        "mobileNetwork": {
-          "$ref": "./common.json#/definitions/MobileNetworkResourceId",
-          "description": "Mobile network in which this packet core control plane is deployed."
+        "sites": {
+          "type": "array",
+          "items": {
+            "$ref": "./common.json#/definitions/SiteResourceId"
+          },
+          "uniqueItems": true,
+          "minItems": 1,
+          "description": "Site(s) under which this packet core control plane is deployed."
         },
         "platform": {
           "$ref": "#/definitions/PlatformConfiguration",
@@ -571,7 +576,7 @@
         }
       },
       "required": [
-        "mobileNetwork",
+        "sites",
         "controlPlaneAccessInterface",
         "sku"
       ]
@@ -604,7 +609,7 @@
         },
         "azureStackEdgeDevice": {
           "$ref": "./common.json#/definitions/AzureStackEdgeDeviceResourceId",
-          "description": "The Azure Stack Edge device where where the packet core is deployed. If the device is part of a fault tolerant pair, either device in the pair can be specified."
+          "description": "The Azure Stack Edge device where the packet core is deployed. If the device is part of a fault tolerant pair, either device in the pair can be specified."
         },
         "azureStackEdgeDevices": {
           "readOnly": true,
@@ -612,7 +617,7 @@
           "items": {
             "$ref": "./common.json#/definitions/AzureStackEdgeDeviceResourceId"
           },
-          "description": "The Azure Stack Edge devices where where the packet core is deployed. If the packet core is deployed across multiple devices, all devices will appear in this list."
+          "description": "The Azure Stack Edge devices where the packet core is deployed. If the packet core is deployed across multiple devices, all devices will appear in this list."
         },
         "connectedCluster": {
           "$ref": "./common.json#/definitions/ConnectedClusterResourceId",
@@ -660,6 +665,7 @@
             "Password",
             "AAD"
           ],
+          "default": "Password",
           "x-ms-enum": {
             "name": "AuthenticationType",
             "modelAsString": true,
@@ -670,29 +676,16 @@
               },
               {
                 "value": "AAD",
-                "description": "Use AAD based SSO to authenticate the user (this requires internet access). If this option is chosen, you must also set \"aadConfiguration\"."
+                "description": "Use AAD based SSO to authenticate the user (this requires internet access)."
               }
             ]
           }
-        },
-        "aadConfiguration": {
-          "description": "Configuration for AAD based authentication of users who access local diagnostics APIs.",
-          "type": "object",
-          "properties": {
-            "domain": {
-              "description": "The domain where the local diagnostics APIs are hosted. AAD based SSO will only be allowed for accessing this domain.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "domain"
-          ]
         },
         "httpsServerCertificate": {
           "$ref": "#/definitions/KeyVaultCertificate",
           "description": "The HTTPS server TLS certificate used to secure local access to diagnostics."
         },
-        "certificateProvisioning": {
+        "httpsServerCertificateProvisioning": {
           "readOnly": true,
           "$ref": "#/definitions/CertificateProvisioning",
           "description": "The provisioning state of the certificate used to secure local access to diagnostics"
@@ -728,11 +721,11 @@
             "values": [
               {
                 "value": "NotProvisioned",
-                "description": "The certificate has not been provisioned"
+                "description": "The certificate has not been provisioned."
               },
               {
                 "value": "Provisioned",
-                "description": "The certificate has been provisioned"
+                "description": "The certificate has been provisioned."
               },
               {
                 "value": "Failed",
@@ -744,7 +737,7 @@
         "reason": {
           "readOnly": true,
           "type": "string",
-          "description": "Reason for certificate provisioning failure"
+          "description": "Reason for certificate provisioning failure."
         }
       }
     },
