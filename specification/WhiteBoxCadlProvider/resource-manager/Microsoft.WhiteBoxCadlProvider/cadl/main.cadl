@@ -1,0 +1,56 @@
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+@armNamespace
+@serviceTitle("Microsoft.WhiteBoxCadlProvider")
+@serviceVersion("2021-08-01-preview")
+namespace Microsoft.WhiteBoxCadlProvider;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Azure.ResourceManager;
+
+@doc("A WhiteBoxCadlProviderProviderHub resource")
+model WhiteBoxResource is TrackedResource<WhiteBoxResourceProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("WhiteBoxResourceName")
+  @segment("WhiteBoxResources")
+  @doc("Name.")
+  @path
+  @visibility("read")
+  name: string;
+}
+
+@doc("The status of the current operation.")
+@knownValues(ProvisioningStateKV)
+model ProvisioningState is string {}
+enum ProvisioningStateKV {
+  Succeeded,
+  Failed,
+  Canceled,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted,
+}
+
+@doc("Details of the WhiteBoxCadlProvider WhiteBoxResource.")
+model WhiteBoxResourceProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+
+  @doc("The sql server instance name.")
+  @visibility("write")
+  sqlServerName:string;
+
+  @doc("The app service instance name.")
+  @visibility("write")
+  appServiceName:string;
+
+}
+
+@armResourceOperations
+interface WhiteBoxResources extends ResourceOperations<WhiteBoxResource, WhiteBoxResourceProperties> {}
