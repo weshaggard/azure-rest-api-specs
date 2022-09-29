@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: GitHub.Codespaces
-  output-folder: $(csharp-sdks-folder)/github-codespaces/management/GitHub.Codespaces/GeneratedProtocol
+  namespace: GitHub.Network
+  output-folder: $(csharp-sdks-folder)/github-network/management/GitHub.Network/GeneratedProtocol
 ```

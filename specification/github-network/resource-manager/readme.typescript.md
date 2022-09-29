@@ -6,8 +6,8 @@ Please also specify `--typescript-sdks-folder=<path to root folder of your azure
 ```yaml $(typescript)
 typescript:
   azure-arm: true
-  package-name: "github.codespaces"
-  output-folder: "$(typescript-sdks-folder)/packages/github-codespaces"
+  package-name: "GitHub.Network"
+  output-folder: "$(typescript-sdks-folder)/packages/github-network"
   payload-flattening-threshold: 1
   generate-metadata: true
 ```
