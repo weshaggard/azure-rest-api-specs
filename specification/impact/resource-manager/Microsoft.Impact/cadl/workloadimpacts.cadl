@@ -17,8 +17,8 @@ using Azure.ResourceManager;
 @doc("A Workloadimpacts resource")
 model Workloadimpacts is ProxyResource<WorkloadimpactsProperties> {
   @pattern("^[a-zA-Z0-9-]{3,40}$")
-  @key("workloadimpactsName")
-  @segment("workloadimpacts")
+  @key("workloadimpactName")
+  @segment("workloadimpact")
   @doc("Some documentation")
   @visibility("Read")
   @path
@@ -66,25 +66,10 @@ model Workload {
 }
 
 @doc("list of Impact Categories")
-enum CommonImpactCategory {
+enum ImpactCategoryEnum {
   "ControlPlane",
   "ControlPlane-Deployment",
-  "ControlPlane-Deployment-Create",
-  "ControlPlane-Deployment-Update",
-  "ControlPlane-Deployment-Delete",
-  "DataPlane",
-  "DataPlane-Availability"
-}
-
-@doc("list of Impact Categories for compute resources")
-enum Compute_ImpactCategory {
-  "DataPlane-Availability-Network",
-  "DataPlane-Availability-CPU"
-}
-
-enum ImpactCategoryEnum {
-  ...CommonImpactCategory,
-  ...Compute_ImpactCategory
+  "DataPlane"
 }
 
 @doc("Details of the workloadimpact resource.")
@@ -106,10 +91,7 @@ model WorkloadimpactsProperties is ResourceProperties {
   reportedTimeUtc? :zonedDateTime;
 
   @doc("The categorization of the impact")
-  impactCategory: string;
-
-  @doc("The categorization of the impact")
-  impactCategory1?: ImpactCategoryEnum;
+  impactCategory: ImpactCategoryEnum;
 
   @doc("A detailed description of the impact")
   impactDescription?: string;
