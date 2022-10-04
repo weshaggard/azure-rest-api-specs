@@ -214,6 +214,20 @@
       "description": "Reference to an Azure Arc custom location resource.",
       "x-ms-azure-resource": true
     },
+    "AsyncOperationId": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^/[pP][rR][oO][vV][iI][dD][eE][rR][sS]/[^/?#]+/[lL][oO][cC][aA][tT][iI][oO][nN][sS]/[^/?#]+/[oO][pP][eE][rR][aA][tT][iI][oO][nN][sS][tT][aA][tT][uU][sS][eE][sS]/[^/?#]+$",
+          "description": "Azure Async Operation ID."
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "description": "Reference to an Azure Async Operation ID."
+    },
     "ProvisioningState": {
       "type": "string",
       "readOnly": true,
@@ -251,6 +265,54 @@
           },
           {
             "value": "Deleted"
+          }
+        ]
+      }
+    },
+    "SiteProvisioning": {
+      "type": "object",
+      "readOnly": true,
+      "description": "The provisioning of a resource e.g. SIM/SIM policy on a site.",
+      "properties": {
+        "site": {
+          "description": "Site reference.",
+          "$ref": "./common.json#/definitions/SiteResourceId"
+        },
+        "state": {
+          "description": "The state of the resource on this site.",
+          "$ref": "./common.json#/definitions/SiteProvisioningState"
+        }
+      }
+    },
+    "SiteProvisioningState": {
+      "type": "string",
+      "readOnly": true,
+      "description": "The provisioning state of a resource e.g. SIM/SIM policy on a site.",
+      "enum": [
+        "NotApplicable",
+        "Updating",
+        "Provisioned",
+        "Failed"
+      ],
+      "x-ms-enum": {
+        "name": "SiteProvisioningState",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "NotApplicable",
+            "description": "The resource should not be provisioned on this site."
+          },
+          {
+            "value": "Updating",
+            "description": "The resource is being updated on this site."
+          },
+          {
+            "value": "Provisioned",
+            "description": "The resource is provisioned on this site."
+          },
+          {
+            "value": "Failed",
+            "description": "The resource failed to be provisioned on this site."
           }
         ]
       }
@@ -415,16 +477,6 @@
       "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
       "maxLength": 64,
       "description": "The name of the packet core data plane.",
-      "x-ms-parameter-location": "method"
-    },
-    "RadioAccessNetworkNameParameter": {
-      "name": "radioAccessNetworkName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
-      "maxLength": 64,
-      "description": "The name of the RAN.",
       "x-ms-parameter-location": "method"
     },
     "ServiceNameParameter": {

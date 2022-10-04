@@ -364,13 +364,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/packetCoreControlPlanes/{packetCoreControlPlaneName}/reset": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/packetCoreControlPlanes/{packetCoreControlPlaneName}/reinstall": {
       "post": {
         "tags": [
-          "PacketCoreControlPlaneReset"
+          "PacketCoreControlPlaneReinstall"
         ],
-        "operationId": "PacketCoreControlPlane_Reset",
-        "description": "Resets the specified packet core control plane. This action will remove any transaction state from the packet core to return it to a known state. This action may cause a service outage.",
+        "operationId": "PacketCoreControlPlane_Reinstall",
+        "description": "Reinstall the specified packet core control plane. This action will remove any transaction state from the packet core to return it to a known state. This action will cause a service outage.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -387,7 +387,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Packet core reset succeeded.",
+            "description": "Packet core reinstall succeeded.",
             "schema": {
               "$ref": "#/definitions/PacketCoreControlPlane"
             }
@@ -406,8 +406,8 @@
           }
         },
         "x-ms-examples": {
-          "Reset packet core control plane": {
-            "$ref": "./examples/PacketCoreControlPlaneReset.json"
+          "Reinstall packet core control plane": {
+            "$ref": "./examples/PacketCoreControlPlaneReinstall.json"
           }
         },
         "x-ms-long-running-operation": true,
@@ -505,12 +505,6 @@
         "identity": {
           "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/ManagedServiceIdentity",
           "description": "The identity used to retrieve the ingress certificate from Azure key vault."
-        },
-        "systemData": {
-          "x-ms-client-flatten": true,
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
-          "readOnly": true,
-          "description": "Metadata pertaining to creation and last modification of the resource."
         }
       },
       "allOf": [
@@ -532,6 +526,15 @@
           "$ref": "./common.json#/definitions/ProvisioningState",
           "description": "The provisioning state of the packet core control plane resource."
         },
+        "installation": {
+          "readOnly": true,
+          "$ref": "#/definitions/Installation",
+          "description": "The installation state of the packet core control plane resource."
+        },
+        "mobileNetwork": {
+          "$ref": "./common.json#/definitions/MobileNetworkResourceId",
+          "description": "DEPRECATED: use sites instead."
+        },
         "sites": {
           "type": "array",
           "items": {
@@ -539,7 +542,7 @@
           },
           "uniqueItems": true,
           "minItems": 1,
-          "description": "Site(s) under which this packet core control plane is deployed."
+          "description": "Site(s) under which this packet core control plane is deployed. The sites must be in the same location as the packet core control plane."
         },
         "platform": {
           "$ref": "#/definitions/PlatformConfiguration",
@@ -556,7 +559,7 @@
         "rollbackVersion": {
           "type": "string",
           "readOnly": true,
-          "description": "The previous version of the packet core software that was deployed. Used when performing the rollback action"
+          "description": "The previous version of the packet core software that was deployed. Used when performing the rollback action."
         },
         "controlPlaneAccessInterface": {
           "$ref": "./common.json#/definitions/InterfaceProperties",
@@ -576,7 +579,7 @@
         }
       },
       "required": [
-        "sites",
+        "platform",
         "controlPlaneAccessInterface",
         "sku"
       ]
@@ -598,6 +601,77 @@
         }
       },
       "description": "Response for packet core control planes API service call."
+    },
+    "Installation": {
+      "description": "The installation state of the packet core.",
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "Installation state",
+          "$ref": "#/definitions/InstallationState"
+        },
+        "operation": {
+          "description": "A reference to a currently in progress installation operation",
+          "$ref": "./common.json#/definitions/AsyncOperationId"
+        }
+      }
+    },
+    "InstallationState": {
+      "type": "string",
+      "description": "The installation state of the packet core.",
+      "enum": [
+        "Uninstalled",
+        "Installing",
+        "Installed",
+        "Updating",
+        "Upgrading",
+        "Uninstalling",
+        "Reinstalling",
+        "RollingBack",
+        "Failed"
+      ],
+      "x-ms-enum": {
+        "name": "InstallationState",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "Uninstalled",
+            "description": "The packet core is uninstalled."
+          },
+          {
+            "value": "Installing",
+            "description": "The packet core is installing."
+          },
+          {
+            "value": "Installed",
+            "description": "The packet core is installed."
+          },
+          {
+            "value": "Updating",
+            "description": "The packet core is updating its configuration."
+          },
+          {
+            "value": "Upgrading",
+            "description": "The packet core is upgrading its version."
+          },
+          {
+            "value": "Uninstalling",
+            "description": "The packet core is uninstalling."
+          },
+          {
+            "value": "Reinstalling",
+            "description": "The packet core is reinstalling."
+          },
+          {
+            "value": "RollingBack",
+            "description": "The packet core is rolling back to its previous version."
+          },
+          {
+            "value": "Failed",
+            "description": "The packet core is in failed state."
+          }
+        ]
+      }
     },
     "PlatformConfiguration": {
       "description": "The platform where the packet core is deployed.",
@@ -773,10 +847,7 @@
           "type": "string",
           "description": "The state of this packet core control plane version.",
           "enum": [
-            "Unknown",
             "Preview",
-            "Validating",
-            "ValidationFailed",
             "Active",
             "Deprecated"
           ],
@@ -785,20 +856,8 @@
             "modelAsString": true,
             "values": [
               {
-                "value": "Unknown",
-                "description": "The state of this version is unknown."
-              },
-              {
                 "value": "Preview",
                 "description": "This version is a preview and is not suitable for production use."
-              },
-              {
-                "value": "Validating",
-                "description": "This version is currently being validated."
-              },
-              {
-                "value": "ValidationFailed",
-                "description": "This version failed validation."
               },
               {
                 "value": "Active",
@@ -811,27 +870,12 @@
             ]
           }
         },
-        "recommendedVersion": {
-          "type": "string",
-          "description": "Indicates whether this is the recommended version to use for new packet core control plane deployments.",
-          "enum": [
-            "Recommended",
-            "NotRecommended"
-          ],
-          "x-ms-enum": {
-            "name": "recommendedVersion",
-            "modelAsString": true,
-            "values": [
-              {
-                "value": "Recommended",
-                "description": "This is the recommended version to use for new packet core control plane deployments."
-              },
-              {
-                "value": "NotRecommended",
-                "description": "This is not the recommended version to use for new packet core control plane deployments."
-              }
-            ]
-          }
+        "supportedPlatforms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlatformType"
+          },
+          "description": "A list of platforms that this version is supported on."
         }
       }
     },

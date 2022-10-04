@@ -196,7 +196,7 @@
         "tags": [
           "SIMs"
         ],
-        "operationId": "Sims_ListBySimGroup",
+        "operationId": "Sims_ListByGroup",
         "description": "Gets all the SIMs in a SIM group.",
         "parameters": [
           {
@@ -236,13 +236,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/simGroups/{simGroupName}/createSims": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/simGroups/{simGroupName}/uploadSims": {
       "post": {
         "tags": [
           "SIMs"
         ],
-        "operationId": "Sim_BulkCreate",
-        "description": "Bulk create SIMs in a SIM group.",
+        "operationId": "Sim_BulkUpload",
+        "description": "Bulk upload SIMs to a SIM group.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -261,9 +261,9 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SimCreateList"
+              "$ref": "#/definitions/SimUploadList"
             },
-            "description": "Parameters supplied to the bulk SIM create operation."
+            "description": "Parameters supplied to the bulk SIM upload operation."
           }
         ],
         "responses": {
@@ -287,8 +287,8 @@
           }
         },
         "x-ms-examples": {
-          "Bulk create SIMs in a SIM group": {
-            "$ref": "./examples/SimBulkCreate.json"
+          "Bulk upload SIMs in a SIM group": {
+            "$ref": "./examples/SimBulkUpload.json"
           }
         },
         "x-ms-long-running-operation": true,
@@ -358,13 +358,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/simGroups/{simGroupName}/vendorCreateSims": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/simGroups/{simGroupName}/uploadEncryptedSims": {
       "post": {
         "tags": [
           "SIMs"
         ],
-        "operationId": "Sim_VendorCreateSims",
-        "description": "Create SIMs from a SIM vendor in a SIM group.",
+        "operationId": "Sim_BulkUploadEncrypted",
+        "description": "Bulk upload SIMs in encrypted form to a SIM group. The authenticationKey and operatorKeyCode properties must be encrypted.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -383,17 +383,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/VendorCreateSims"
+              "$ref": "#/definitions/EncryptedSimUploadList"
             },
-            "description": "Parameters supplied to the vendor SIMs create operation."
+            "description": "Parameters supplied to the encrypted SIMs upload operation."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful."
+            "description": "Successful.",
+            "schema": {
+              "$ref": "#/definitions/SimListResult"
+            }
           },
           "202": {
-            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation.",
+            "schema": {
+              "$ref": "#/definitions/SimListResult"
+            }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -403,13 +409,16 @@
           }
         },
         "x-ms-examples": {
-          "Bulk create SIMs in a SIM group": {
-            "$ref": "./examples/SimVendorCreateSims.json"
+          "Bulk upload encrypted SIMs to a SIM group": {
+            "$ref": "./examples/SimBulkUploadEncrypted.json"
           }
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     }
@@ -422,12 +431,6 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SimPropertiesFormat",
           "description": "SIM Properties."
-        },
-        "systemData": {
-          "x-ms-client-flatten": true,
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
-          "readOnly": true,
-          "description": "Metadata pertaining to creation and last modification of the resource."
         }
       },
       "allOf": [
@@ -459,34 +462,29 @@
       ],
       "description": "SIM name and properties."
     },
+    "SimNameAndEncryptedProperties": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the SIM."
+        },
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/EncryptedSimPropertiesFormat",
+          "description": "Encrypted SIM Properties."
+        }
+      },
+      "required": [
+        "name",
+        "properties"
+      ],
+      "description": "SIM name and encrypted properties."
+    },
     "SimPropertiesFormat": {
       "type": "object",
       "description": "SIM properties.",
       "properties": {
-        "provisioningState": {
-          "readOnly": true,
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "description": "The provisioning state of the SIM resource."
-        },
-        "simState": {
-          "readOnly": true,
-          "$ref": "./common.json#/definitions/SimState",
-          "description": "The state of the SIM resource."
-        },
-        "internationalMobileSubscriberIdentity": {
-          "type": "string",
-          "pattern": "^[0-9]{5,15}$",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ],
-          "description": "The international mobile subscriber identity (IMSI) for the SIM."
-        },
-        "integratedCircuitCardIdentifier": {
-          "type": "string",
-          "pattern": "^89[0-9]{17,18}$",
-          "description": "The integrated circuit card ID (ICCID) for the SIM."
-        },
         "authenticationKey": {
           "type": "string",
           "pattern": "^[0-9a-fA-F]{32}$",
@@ -506,6 +504,82 @@
             "update"
           ],
           "description": "The Opc value for the SIM."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommonSimPropertiesFormat"
+        }
+      ]
+    },
+    "EncryptedSimPropertiesFormat": {
+      "type": "object",
+      "description": "Encrypted SIM properties.",
+      "properties": {
+        "encryptedAuthenticationKey": {
+          "type": "string",
+          "x-ms-secret": true,
+          "x-ms-mutability": [
+            "create",
+            "update"
+          ],
+          "description": "The encrypted Ki value for the SIM."
+        },
+        "encryptedOperatorKeyCode": {
+          "type": "string",
+          "x-ms-secret": true,
+          "x-ms-mutability": [
+            "create",
+            "update"
+          ],
+          "description": "The encrypted Opc value for the SIM."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommonSimPropertiesFormat"
+        }
+      ]
+    },
+    "CommonSimPropertiesFormat": {
+      "type": "object",
+      "description": "Common SIM properties.",
+      "properties": {
+        "provisioningState": {
+          "readOnly": true,
+          "$ref": "./common.json#/definitions/ProvisioningState",
+          "description": "The provisioning state of the SIM resource."
+        },
+        "simState": {
+          "readOnly": true,
+          "$ref": "./common.json#/definitions/SimState",
+          "description": "The state of the SIM resource."
+        },
+        "siteProvisioning": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "./common.json#/definitions/SiteProvisioning"
+          },
+          "uniqueItems": true,
+          "description": "A list of sites and the provisioning state of this SIM on that site.",
+          "x-ms-identifiers": [
+            "site"
+          ]
+        },
+        "internationalMobileSubscriberIdentity": {
+          "type": "string",
+          "pattern": "^[0-9]{5,15}$",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ],
+          "description": "The international mobile subscriber identity (IMSI) for the SIM."
+        },
+        "integratedCircuitCardIdentifier": {
+          "type": "string",
+          "pattern": "^89[0-9]{17,18}$",
+          "description": "The integrated circuit card ID (ICCID) for the SIM."
         },
         "deviceType": {
           "type": "string",
@@ -513,7 +587,7 @@
         },
         "simPolicy": {
           "$ref": "./common.json#/definitions/SimPolicyResourceId",
-          "description": "The SIM policy used by this SIM."
+          "description": "The SIM policy used by this SIM. The SIM policy must be in the same location as the SIM."
         },
         "staticIpConfiguration": {
           "type": "array",
@@ -539,11 +613,11 @@
       "properties": {
         "attachedDataNetwork": {
           "$ref": "./common.json#/definitions/AttachedDataNetworkResourceId",
-          "description": "The attached data network on which the static IP address will be used. The combination of attached data network and slice defines the network scope of the IP address."
+          "description": "The attached data network on which the static IP address will be used. The combination of attached data network and slice defines the network scope of the IP address. The attached data network must be in the same location as the SIM."
         },
         "slice": {
           "$ref": "./common.json#/definitions/SliceResourceId",
-          "description": "The network slice on which the static IP address will be used. The combination of attached data network and slice defines the network scope of the IP address."
+          "description": "The network slice on which the static IP address will be used. The combination of attached data network and slice defines the network scope of the IP address. The slice must be in the same location as the SIM."
         },
         "staticIp": {
           "type": "object",
@@ -575,16 +649,16 @@
       },
       "description": "Response for list SIMs API service call."
     },
-    "SimCreateList": {
+    "SimUploadList": {
       "type": "object",
-      "description": "The SIMs to create.",
+      "description": "The SIMs to upload.",
       "properties": {
         "sims": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/SimNameAndProperties"
           },
-          "description": "A list of SIMs to create.",
+          "description": "A list of SIMs to upload.",
           "x-ms-identifiers": []
         }
       },
@@ -608,21 +682,24 @@
         "sims"
       ]
     },
-    "VendorCreateSims": {
+    "EncryptedSimUploadList": {
       "type": "object",
-      "description": "Vendor SIMs to create.",
+      "description": "The SIMs to upload. The authenticationKey and operatorKeyCode properties must be provided in encrypted form.",
       "properties": {
-        "vendorName": {
+        "keyIdentifier": {
           "type": "string",
-          "description": "The name of the SIM vendor who these SIMs were issued by."
+          "description": "An identifier for the key used to encrypt the SIMs being uploaded."
         },
         "sims": {
-          "type": "string",
-          "description": "A file, encrypted using the SIM vendor's key, containing the SIMs to create."
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SimNameAndEncryptedProperties"
+          },
+          "description": "A list of SIMs to upload, with encrypted properties.",
+          "x-ms-identifiers": []
         }
       },
       "required": [
-        "vendorName",
         "sims"
       ]
     }

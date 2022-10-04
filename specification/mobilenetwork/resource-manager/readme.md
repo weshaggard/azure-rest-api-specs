@@ -44,7 +44,6 @@ input-file:
   - Microsoft.MobileNetwork/stable/2022-11-01/operation.json
   - Microsoft.MobileNetwork/stable/2022-11-01/packetCoreControlPlane.json
   - Microsoft.MobileNetwork/stable/2022-11-01/packetCoreDataPlane.json
-  - Microsoft.MobileNetwork/stable/2022-11-01/radioAccessNetwork.json
   - Microsoft.MobileNetwork/stable/2022-11-01/service.json
   - Microsoft.MobileNetwork/stable/2022-11-01/sim.json
   - Microsoft.MobileNetwork/stable/2022-11-01/simGroup.json

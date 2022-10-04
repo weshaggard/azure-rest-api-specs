@@ -133,7 +133,7 @@
           "PacketCoreDataPlane"
         ],
         "operationId": "PacketCoreDataPlanes_CreateOrUpdate",
-        "description": "Creates or updates a packet core data plane.",
+        "description": "Creates or updates a packet core data plane. Must be created in the same location as its parent packet core control plane.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -297,12 +297,6 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/PacketCoreDataPlanePropertiesFormat",
           "description": "Packet core data plane Properties."
-        },
-        "systemData": {
-          "x-ms-client-flatten": true,
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
-          "readOnly": true,
-          "description": "Metadata pertaining to creation and last modification of the resource."
         }
       },
       "allOf": [
@@ -313,7 +307,7 @@
       "required": [
         "properties"
       ],
-      "description": "Packet core data plane resource."
+      "description": "Packet core data plane resource. Must be created in the same location as its parent packet core control plane."
     },
     "PacketCoreDataPlanePropertiesFormat": {
       "description": "Packet core data plane properties.",
@@ -327,6 +321,14 @@
         "userPlaneAccessInterface": {
           "$ref": "./common.json#/definitions/InterfaceProperties",
           "description": "The user plane interface on the access network. For 5G networks, this is the N3 interface. For 4G networks, this is the S1-U interface."
+        },
+        "mtu": {
+          "description": "The MTU (in bytes) signalled to the UE and set on the user plane data link(s). The MTU set on the user plane access link is calculated to be 60 bytes greater than this value to allow for encapsulation.",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1280,
+          "maximum": 1930,
+          "default": 1500
         }
       },
       "required": [

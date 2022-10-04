@@ -133,7 +133,7 @@
           "SIMPolicy"
         ],
         "operationId": "SimPolicies_CreateOrUpdate",
-        "description": "Creates or updates a SIM policy.",
+        "description": "Creates or updates a SIM policy. Must be created in the same location as its parent mobile network.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -297,12 +297,6 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SimPolicyPropertiesFormat",
           "description": "SIM policy Properties."
-        },
-        "systemData": {
-          "x-ms-client-flatten": true,
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
-          "readOnly": true,
-          "description": "Metadata pertaining to creation and last modification of the resource."
         }
       },
       "allOf": [
@@ -316,19 +310,32 @@
       "description": "SIM policy resource."
     },
     "SimPolicyPropertiesFormat": {
-      "description": "SIM policy properties.",
+      "description": "SIM policy properties. Must be created in the same location as its parent mobile network.",
       "type": "object",
       "properties": {
         "provisioningState": {
+          "readOnly": true,
           "description": "The provisioning state of the SIM policy resource.",
           "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "siteProvisioning": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "./common.json#/definitions/SiteProvisioning"
+          },
+          "uniqueItems": true,
+          "description": "A list of sites and the provisioning state of this SIM policy on that site.",
+          "x-ms-identifiers": [
+            "site"
+          ]
         },
         "ueAmbr": {
           "description": "Aggregate maximum bit rate across all non-GBR QoS flows of all PDU sessions of a given UE. See 3GPP TS23.501 section 5.7.2.6 for a full description of the UE-AMBR.",
           "$ref": "./ts29571.json#/definitions/Ambr"
         },
         "defaultSlice": {
-          "description": "The default slice to use if the UE does not explicitly specify it. This slice must exist in the `sliceConfigurations` map.",
+          "description": "The default slice to use if the UE does not explicitly specify it. This slice must exist in the `sliceConfigurations` map. The slice must be in the same location as the SIM policy.",
           "$ref": "./common.json#/definitions/SliceResourceId"
         },
         "rfspIndex": {
@@ -336,7 +343,7 @@
           "$ref": "./ts29571.json#/definitions/RfspIndex"
         },
         "registrationTimer": {
-          "description": "Interval for the UE periodic registration update procedure (5G) or UE tracking area update procedure (4G), in seconds.",
+          "description": "Interval for the UE periodic registration update procedure, in seconds.",
           "type": "integer",
           "format": "int32",
           "minimum": 30,
@@ -366,11 +373,11 @@
       "type": "object",
       "properties": {
         "slice": {
-          "description": "A reference to the slice that these settings apply to",
+          "description": "A reference to the slice that these settings apply to. The slice must be in the same location as the SIM policy.",
           "$ref": "./common.json#/definitions/SliceResourceId"
         },
         "defaultDataNetwork": {
-          "description": "The default data network to use if the UE does not explicitly specify it. Configuration for this object must exist in the `dataNetworkConfigurations` map.",
+          "description": "The default data network to use if the UE does not explicitly specify it. Configuration for this object must exist in the `dataNetworkConfigurations` map. The data network must be in the same location as the SIM policy.",
           "$ref": "./common.json#/definitions/DataNetworkResourceId"
         },
         "dataNetworkConfigurations": {
@@ -397,7 +404,7 @@
       "type": "object",
       "properties": {
         "dataNetwork": {
-          "description": "A reference to the data network that these settings apply to",
+          "description": "A reference to the data network that these settings apply to. The data network must be in the same location as the SIM policy.",
           "$ref": "./common.json#/definitions/DataNetworkResourceId"
         },
         "sessionAmbr": {
@@ -438,7 +445,7 @@
           "maxItems": 1
         },
         "allowedServices": {
-          "description": "List of services that can be used as part of this SIM policy. The list must not contain duplicate items and must contain at least one item.",
+          "description": "List of services that can be used as part of this SIM policy. The list must not contain duplicate items and must contain at least one item. The services must be in the same location as the SIM policy.",
           "type": "array",
           "items": {
             "$ref": "./common.json#/definitions/ServiceResourceId"
@@ -447,7 +454,7 @@
           "uniqueItems": true
         },
         "maximumNumberOfBufferedPackets": {
-          "description": "The maximum number of packets to buffer for downstream communication. See 3GPP TS29.272 section 7.3.188 for a full description. This maximum is not guaranteed as there is a global limit on buffered packets across all PDU sessions.",
+          "description": "The maximum number of downlink packets to buffer at the user plane, for High Latency Communication - Extended Buffering. See 3GPP TS29.272 section 7.3.188 for a full description. This maximum is not guaranteed as there is a global limit on buffered packets across all PDU sessions.",
           "type": "integer",
           "format": "int32",
           "minimum": 0,
