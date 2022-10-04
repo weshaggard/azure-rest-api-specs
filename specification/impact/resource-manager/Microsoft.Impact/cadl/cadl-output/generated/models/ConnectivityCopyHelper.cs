@@ -43,8 +43,6 @@ namespace Microsoft.Impact.Service.Models
                 target.Protocol = source.Protocol;
             if (serialization.IsSerializedProperty(nameof(source.Port)))
                 target.Port = source.Port;
-            if (serialization.IsSerializedProperty(nameof(source.Direction)))
-                target.Direction = source.Direction;
             if (serialization.IsSerializedProperty(nameof(source.Source)))
                 target.Source = source.Source;
             if (serialization.IsSerializedProperty(nameof(source.Destination)))
@@ -77,7 +75,6 @@ namespace Microsoft.Impact.Service.Models
             OnBeginCopyForPut(source, target);
             target.Protocol = source.Protocol;
             target.Port = source.Port;
-            target.Direction = source.Direction;
             target.Source = source.Source;
             target.Destination = source.Destination;
             OnEndCopyForPut(source, target);

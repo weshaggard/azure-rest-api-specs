@@ -11,7 +11,7 @@ using Microsoft.Cadl.ProviderHub.Controller;
 namespace Microsoft.Impact.Service.Models
 {
     /// <summary>
-    /// customer worload details
+    /// customer workload details
     /// </summary>
     public partial class Workload : ISerializationTracker
     {

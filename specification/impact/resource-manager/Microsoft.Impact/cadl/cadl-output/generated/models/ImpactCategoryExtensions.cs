@@ -14,17 +14,17 @@ namespace Microsoft.Impact.Service.Models
     /// <summary>
     /// Extensions for easy PUT and PATCH copying of a resource
     /// </summary>
-    public static class RootCauseAttributionsUpdatePropertiesExtensions
+    public static class ImpactCategoryExtensions
     {
         /// <summary>
-        /// Copy the properties of this RootCauseAttributionsUpdateProperties to another RootCauseAttributionsUpdateProperties
+        /// Copy the properties of this ImpactCategory to another ImpactCategory
         /// </summary>
-        /// <param name="source">The source RootCauseAttributionsUpdateProperties</param>
-        /// <param name="target">The target RootCauseAttributionsUpdateProperties</param>
+        /// <param name="source">The source ImpactCategory</param>
+        /// <param name="target">The target ImpactCategory</param>
         /// <param name="copySettings">The kind of copy you would like to perform (using PUT or PATCH semantics)</param>
-        public static void CopyTo(this RootCauseAttributionsUpdateProperties source, RootCauseAttributionsUpdateProperties target, CopySettings copySettings = CopySettings.UsePutSemantics)
+        public static void CopyTo(this ImpactCategory source, ImpactCategory target, CopySettings copySettings = CopySettings.UsePutSemantics)
         {
-            var helper = new RootCauseAttributionsUpdatePropertiesCopyHelper();
+            var helper = new ImpactCategoryCopyHelper();
             switch (copySettings)
             {
                 case CopySettings.UsePatchSemantics:

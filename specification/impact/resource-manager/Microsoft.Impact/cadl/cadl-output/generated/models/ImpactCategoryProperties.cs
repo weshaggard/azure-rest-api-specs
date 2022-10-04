@@ -11,9 +11,9 @@ using Microsoft.Cadl.ProviderHub.Controller;
 namespace Microsoft.Impact.Service.Models
 {
     /// <summary>
-    /// The updatable properties of the RootCauseAttributions.
+    /// Details of the workloadimpact resource.
     /// </summary>
-    public partial class RootCauseAttributionsUpdateProperties : ISerializationTracker
+    public partial class ImpactCategoryProperties : ISerializationTracker
     {
 
         /// <summary>
@@ -27,25 +27,31 @@ namespace Microsoft.Impact.Service.Models
         partial void OnAfterInitialize();
 
         /// <summary>
-        /// Initializes a new instance of the RootCauseAttributionsUpdateProperties class.
+        /// Initializes a new instance of the ImpactCategoryProperties class.
         /// </summary>
-        public RootCauseAttributionsUpdateProperties()
+        public ImpactCategoryProperties()
         {
             OnBeforeInitialize();
             OnAfterInitialize();
         }
 
         /// <summary>
-        /// impact details
+        /// Resource provisioning state.
         /// </summary>
-        [JsonProperty("impactDetails")]
-        public ImpactDetails ImpactDetails { get; set; }
+        [JsonProperty("provisioningState")]
+        public string ProvisioningState { get; set; }
 
         /// <summary>
-        /// attribution details
+        /// Azure resource types to which the impact category is applicable
         /// </summary>
-        [JsonProperty("attributions")]
-        public Attributions[] Attributions { get; set; }
+        [JsonProperty("allowedResourceTypes")]
+        public string[] AllowedResourceTypes { get; set; }
+
+        /// <summary>
+        /// the parent category
+        /// </summary>
+        [JsonProperty("parentCategoryId")]
+        public string ParentCategoryId { get; set; }
 
 
         /// <summary>

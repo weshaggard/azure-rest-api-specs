@@ -7,7 +7,7 @@ namespace Microsoft.Impact.Service.Models
 {
     public struct Toolset
     {
-        public static readonly Toolset TERRAFORM = "TERRAFORM", PUPPET = "PUPPET", CHEF = "CHEF", SDK = "SDK", ANSILE = "ANSILE", ARM = "ARM", PORTAL = "PORTAL", SHELL = "SHELL", OTHER = "OTHER"; 
+        public static readonly Toolset TERRAFORM = "TERRAFORM", PUPPET = "PUPPET", CHEF = "CHEF", SDK = "SDK", ANSIBLE = "ANSIBLE", ARM = "ARM", PORTAL = "PORTAL", SHELL = "SHELL", OTHER = "OTHER"; 
 
         private readonly string _value;
 

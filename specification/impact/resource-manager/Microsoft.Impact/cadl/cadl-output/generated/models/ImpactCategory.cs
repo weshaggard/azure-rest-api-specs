@@ -11,9 +11,9 @@ using Microsoft.Cadl.ProviderHub.Controller;
 namespace Microsoft.Impact.Service.Models
 {
     /// <summary>
-    /// The type used for update operations of the Workloadimpacts.
+    /// A Workloadimpacts resource
     /// </summary>
-    public partial class WorkloadimpactsUpdate : ISerializationTracker
+    public partial class ImpactCategory : ProxyResource
     {
 
         /// <summary>
@@ -27,22 +27,21 @@ namespace Microsoft.Impact.Service.Models
         partial void OnAfterInitialize();
 
         /// <summary>
-        /// Initializes a new instance of the WorkloadimpactsUpdate class.
+        /// Initializes a new instance of the ImpactCategory class.
         /// </summary>
-        public WorkloadimpactsUpdate()
+        public ImpactCategory()
         {
             OnBeforeInitialize();
             OnAfterInitialize();
         }
 
-        [JsonProperty("properties")]
-        public WorkloadimpactsUpdateProperties Properties { get; set; }
-
-
         /// <summary>
-        /// Tracks deserialization of the resource.
+        /// The resource-specific properties for this resource.
         /// </summary>
-        [JsonIgnore]
-        public ResourceSerializationInfo SerializationInfo { get; set; } = new DefaultSerializationInfo();
+        [JsonProperty("properties")]
+        public ImpactCategoryProperties Properties { get; set; }
+
+
+
     }
 }

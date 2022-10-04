@@ -124,6 +124,87 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Impact/workloadimpact": {
+      "get": {
+        "tags": [
+          "Workloadimpact"
+        ],
+        "operationId": "Workloadimpact_ListBySubscription",
+        "description": "List Workloadimpacts resources by subscription ID",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/WorkloadimpactsListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "ListWorkloadimpactResourceSub": {
+            "$ref": "./examples/Workloadimpact_ListBySubscription.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/impactCategories": {
+      "get": {
+        "tags": [
+          "ImpactCategories"
+        ],
+        "operationId": "ImpactCategories_ListByResourceGroup",
+        "description": "List ImpactCategory resources by resource group",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/ImpactCategoryListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "GetImpactCategories": {
+            "$ref": "./examples/ImpactCategories_ListByResourceGroup.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/impactCategories/{impactCategoryName}": {
       "get": {
         "tags": [
@@ -166,13 +247,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/workloadimpact/{workloadimpactName}": {
-      "put": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/workloadimpact": {
+      "get": {
         "tags": [
           "Workloadimpact"
         ],
-        "operationId": "Workloadimpact_CreateOrUpdate",
-        "description": "Create a Workloadimpacts",
+        "operationId": "Workloadimpact_ListByResourceGroup",
+        "description": "List Workloadimpacts resources by resource group",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -182,38 +263,13 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/Workloadimpacts.workloadimpactName"
-          },
-          {
-            "name": "resource",
-            "in": "body",
-            "required": true,
-            "description": "Resource create parameters.",
-            "schema": {
-              "$ref": "#/definitions/Workloadimpacts"
-            }
           }
         ],
         "responses": {
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/Workloadimpacts"
-            }
-          },
-          "201": {
-            "description": "ARM create operation completed successfully.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/Workloadimpacts"
+              "$ref": "#/definitions/WorkloadimpactsListResult"
             }
           },
           "default": {
@@ -223,16 +279,17 @@
             }
           }
         },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
         "x-ms-examples": {
-          "CreateWorkloadimpactResource": {
-            "$ref": "./examples/Workloadimpact_CreateOrUpdate.json"
+          "ListWorkloadimpactResource": {
+            "$ref": "./examples/Workloadimpact_ListByResourceGroup.json"
           }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
-      },
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/workloadimpact/{workloadimpactName}": {
       "get": {
         "tags": [
           "Workloadimpact"
@@ -356,10 +413,6 @@
           "format": "int32",
           "description": "The port number for the connection"
         },
-        "direction": {
-          "$ref": "#/definitions/Direction",
-          "description": "The direction of the connection"
-        },
         "source": {
           "$ref": "#/definitions/SourceOrDest",
           "description": "The source of the connection"
@@ -370,18 +423,6 @@
         }
       },
       "description": "Details about the connectivity issue. Applicable only for connectivity type of impacts."
-    },
-    "Direction": {
-      "type": "string",
-      "description": "direction of communication",
-      "enum": [
-        "INBOUND",
-        "OUTBOUND"
-      ],
-      "x-ms-enum": {
-        "name": "Direction",
-        "modelAsString": false
-      }
     },
     "ImpactCategory": {
       "type": "object",
@@ -402,19 +443,6 @@
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
         }
       ]
-    },
-    "ImpactCategoryEnum": {
-      "type": "string",
-      "description": "list of Impact Categories",
-      "enum": [
-        "ControlPlane",
-        "ControlPlane-Deployment",
-        "DataPlane"
-      ],
-      "x-ms-enum": {
-        "name": "ImpactCategoryEnum",
-        "modelAsString": false
-      }
     },
     "ImpactCategoryListResult": {
       "type": "object",
@@ -463,19 +491,14 @@
           "x-cadl-name": "string[]",
           "description": "Azure resource types to which the impact category is applicable"
         },
-        "parentCategory": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-cadl-name": "string[]",
+        "parentCategoryId": {
+          "type": "string",
           "description": "the parent category"
         }
       },
       "description": "Details of the workloadimpact resource.",
       "required": [
-        "allowedResourceTypes",
-        "parentCategory"
+        "allowedResourceTypes"
       ]
     },
     "Performance": {
@@ -539,7 +562,7 @@
         "PUPPET",
         "CHEF",
         "SDK",
-        "ANSILE",
+        "ANSIBLE",
         "ARM",
         "PORTAL",
         "SHELL",
@@ -562,7 +585,7 @@
           "description": "Tool used to interact with Azure. SDK, AzPortal, etc.., Other"
         }
       },
-      "description": "customer worload details",
+      "description": "customer workload details",
       "required": [
         "context"
       ]
@@ -585,6 +608,28 @@
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
         }
+      ]
+    },
+    "WorkloadimpactsListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Workloadimpacts"
+          },
+          "x-cadl-name": "Workloadimpacts[]",
+          "description": "The Workloadimpacts items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The link to the next page of items",
+          "x-cadl-name": "Rest.ResourceLocation<Workloadimpacts>"
+        }
+      },
+      "description": "The response of a Workloadimpacts list operation.",
+      "required": [
+        "value"
       ]
     },
     "WorkloadimpactsProperties": {
@@ -627,7 +672,7 @@
           "readOnly": true
         },
         "impactCategory": {
-          "$ref": "#/definitions/ImpactCategoryEnum",
+          "type": "string",
           "description": "The categorization of the impact"
         },
         "impactDescription": {
@@ -671,6 +716,14 @@
         "impactGroupId": {
           "type": "string",
           "description": "Used to correlate multiple impacts together"
+        },
+        "reportedSource": {
+          "$ref": "#/definitions/reportedSourceEnum",
+          "description": "system that is reporting"
+        },
+        "confidence": {
+          "$ref": "#/definitions/confidenceEnum",
+          "description": "degree of confidence reporter has on the impact being a platform issue"
         }
       },
       "description": "Details of the workloadimpact resource.",
@@ -681,6 +734,33 @@
         "additionalProperties",
         "workload"
       ]
+    },
+    "confidenceEnum": {
+      "type": "string",
+      "description": "degree of confidence reporter has on the impact being a platform issue.",
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "x-ms-enum": {
+        "name": "confidenceEnum",
+        "modelAsString": false
+      }
+    },
+    "reportedSourceEnum": {
+      "type": "string",
+      "description": "system that is reporting",
+      "enum": [
+        "OTHER",
+        "MANUAL",
+        "AUTOMATED",
+        "AZURE_MONITOR"
+      ],
+      "x-ms-enum": {
+        "name": "reportedSourceEnum",
+        "modelAsString": false
+      }
     }
   },
   "parameters": {

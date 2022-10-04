@@ -36,16 +36,22 @@ namespace Microsoft.Impact.Service.Models
         }
 
         /// <summary>
-        /// Details of the workloadimpact
+        /// Resource provisioning state.
         /// </summary>
-        [JsonProperty("startDateTimeUtc")]
-        public DateTimeOffset StartDateTimeUtc { get; set; }
+        [JsonProperty("provisioningState")]
+        public string ProvisioningState { get; set; }
+
+        /// <summary>
+        /// time impact was observed in UTC
+        /// </summary>
+        [JsonProperty("startDateTime")]
+        public DateTimeOffset StartDateTime { get; set; }
 
         /// <summary>
         /// Time the impact has ended in UTC
         /// </summary>
-        [JsonProperty("endDateTimeUtc")]
-        public DateTimeOffset EndDateTimeUtc { get; set; }
+        [JsonProperty("endDateTime")]
+        public DateTimeOffset EndDateTime { get; set; }
 
         /// <summary>
         /// unique id of the impact (uuid)
@@ -61,9 +67,8 @@ namespace Microsoft.Impact.Service.Models
         public DateTimeOffset ReportedTimeUtc { get; set; }
 
         /// <summary>
-        /// The categorization of the impact. This will be resource type specific. Up to 3 levels of category hierarchy will be supported with dot delemeter i.e. <category1>.<category2>.<category3>
+        /// The categorization of the impact
         /// </summary>
-        [Pattern(@"([A-Za-z]+.)+[A-Za-z]+")]
         [JsonProperty("impactCategory")]
         public string ImpactCategory { get; set; }
 
@@ -114,6 +119,18 @@ namespace Microsoft.Impact.Service.Models
         /// </summary>
         [JsonProperty("impactGroupId")]
         public string ImpactGroupId { get; set; }
+
+        /// <summary>
+        /// system that is reporting
+        /// </summary>
+        [JsonProperty("reportedSource")]
+        public ReportedSourceEnum ReportedSource { get; set; }
+
+        /// <summary>
+        /// degree of confidence reporter has on the impact being a platform issue
+        /// </summary>
+        [JsonProperty("confidence")]
+        public ConfidenceEnum Confidence { get; set; }
 
 
         /// <summary>

@@ -48,12 +48,6 @@ namespace Microsoft.Impact.Service.Models
         public int Port { get; set; }
 
         /// <summary>
-        /// The direction of the connection
-        /// </summary>
-        [JsonProperty("direction")]
-        public Direction Direction { get; set; }
-
-        /// <summary>
         /// The source of the connection
         /// </summary>
         [JsonProperty("source")]

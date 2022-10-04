@@ -41,8 +41,6 @@ model Connectivity {
 	protocol?: Protocol;
 	@doc("The port number for the connection")
 	port?: int32;
-  @doc("The direction of the connection")
-	direction?: Direction;
 	@doc("The source of the connection")
 	source?: SourceOrDest;
   @doc("The destination of the connection")
@@ -57,7 +55,7 @@ model AdditionalProperties {
 	errorMessage?: string;
 }
 
-@doc("customer worload details")
+@doc("customer workload details")
 model Workload {
 	@doc("Information about the customer’s workload.")
 	context: string;
@@ -91,7 +89,7 @@ model WorkloadimpactsProperties is ResourceProperties {
   reportedTimeUtc? :zonedDateTime;
 
   @doc("The categorization of the impact")
-  impactCategory: ImpactCategoryEnum;
+  impactCategory: string;
 
   @doc("A detailed description of the impact")
   impactDescription?: string;
@@ -118,6 +116,12 @@ model WorkloadimpactsProperties is ResourceProperties {
 
   @doc("Used to correlate multiple impacts together")
   impactGroupId?: string;
+
+  @doc("system that is reporting")
+  reportedSource?: reportedSourceEnum;
+
+  @doc("degree of confidence reporter has on the impact being a platform issue")
+  confidence?: confidenceEnum;
   
 }
 
@@ -127,11 +131,20 @@ enum Toolset {
 						PUPPET,
 						CHEF,
             SDK,
-						ANSILE,
+						ANSIBLE,
 						ARM,
 						PORTAL,
 						SHELL,
 						OTHER
+}
+@doc("system that is reporting")
+enum reportedSourceEnum {
+  OTHER , MANUAL, AUTOMATED, AZURE_MONITOR
+}
+
+@doc("degree of confidence reporter has on the impact being a platform issue.")
+enum confidenceEnum {
+  LOW, MEDIUM, HIGH
 }
 
 @doc("list of protocols")
@@ -157,5 +170,7 @@ model SourceOrDest {
 }
 
 @armResourceOperations
-@extension("x-ms-example", ["Workloadimpact_CreateOrUpdate"])
-interface Workloadimpact extends ResourceCreate<Workloadimpacts>, ResourceRead<Workloadimpacts>, ResourceDelete<Workloadimpacts> {}
+@extension("x-ms-example", ["Workloadimpact_CreateOrUp"])
+interface Workloadimpact extends  ResourceRead<Workloadimpacts>, ResourceDelete<Workloadimpacts> ,  ResourceListBySubscription<Workloadimpacts>, ResourceListByParent<Workloadimpacts> {
+}
+

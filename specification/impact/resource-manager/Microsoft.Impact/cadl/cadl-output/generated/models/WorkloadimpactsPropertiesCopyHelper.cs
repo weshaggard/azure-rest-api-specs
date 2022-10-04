@@ -39,10 +39,12 @@ namespace Microsoft.Impact.Service.Models
         {
             var serialization = source.SerializationInfo;
             OnBeginCopyForPatch(source, target);
-            if (serialization.IsSerializedProperty(nameof(source.StartDateTimeUtc)))
-                target.StartDateTimeUtc = source.StartDateTimeUtc;
-            if (serialization.IsSerializedProperty(nameof(source.EndDateTimeUtc)))
-                target.EndDateTimeUtc = source.EndDateTimeUtc;
+            if (serialization.IsSerializedProperty(nameof(source.ProvisioningState)))
+                target.ProvisioningState = source.ProvisioningState;
+            if (serialization.IsSerializedProperty(nameof(source.StartDateTime)))
+                target.StartDateTime = source.StartDateTime;
+            if (serialization.IsSerializedProperty(nameof(source.EndDateTime)))
+                target.EndDateTime = source.EndDateTime;
             if (serialization.IsSerializedProperty(nameof(source.ImpactUniqueId)))
                 target.ImpactUniqueId = source.ImpactUniqueId;
             if (serialization.IsSerializedProperty(nameof(source.ReportedTimeUtc)))
@@ -65,6 +67,10 @@ namespace Microsoft.Impact.Service.Models
                 target.Workload = source.Workload;
             if (serialization.IsSerializedProperty(nameof(source.ImpactGroupId)))
                 target.ImpactGroupId = source.ImpactGroupId;
+            if (serialization.IsSerializedProperty(nameof(source.ReportedSource)))
+                target.ReportedSource = source.ReportedSource;
+            if (serialization.IsSerializedProperty(nameof(source.Confidence)))
+                target.Confidence = source.Confidence;
             OnEndCopyForPatch(source, target);
         }
 
@@ -91,8 +97,9 @@ namespace Microsoft.Impact.Service.Models
         {
             var serialization = source.SerializationInfo;
             OnBeginCopyForPut(source, target);
-            target.StartDateTimeUtc = source.StartDateTimeUtc;
-            target.EndDateTimeUtc = source.EndDateTimeUtc;
+            target.ProvisioningState = source.ProvisioningState;
+            target.StartDateTime = source.StartDateTime;
+            target.EndDateTime = source.EndDateTime;
             target.ImpactUniqueId = source.ImpactUniqueId;
             target.ReportedTimeUtc = source.ReportedTimeUtc;
             target.ImpactCategory = source.ImpactCategory;
@@ -104,6 +111,8 @@ namespace Microsoft.Impact.Service.Models
             target.Performance = source.Performance;
             target.Workload = source.Workload;
             target.ImpactGroupId = source.ImpactGroupId;
+            target.ReportedSource = source.ReportedSource;
+            target.Confidence = source.Confidence;
             OnEndCopyForPut(source, target);
         }
     }
