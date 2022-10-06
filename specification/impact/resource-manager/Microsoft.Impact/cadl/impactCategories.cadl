@@ -1,0 +1,119 @@
+// Definitions for the TeamsCallingResource
+
+import "@cadl-lang/openapi";
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-autorest";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+namespace Microsoft.Impact;
+
+using Cadl.Http;
+using Cadl.Rest;
+using OpenAPI;
+using Azure.ResourceManager;
+
+@doc("ImpactCategory resource")
+model ImpactCategory is ProxyResource<ImpactCategoryProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,40}$")
+  @key("impactCategoryName")
+  @segment("impactCategories")
+  @doc("Name of the impact category")
+  @visibility("Read")
+  @path
+  name: string;
+  
+}
+
+
+@doc("Details of the workloadimpact resource.")
+model ImpactCategoryProperties  is ResourceProperties{
+  @doc("List of sub categories applicable for this category")
+  @extension("x-ms-identifiers",["name"])
+  subCategories: SubCategories[];
+
+  @doc("Unique id of the category (uuid)")
+  @pattern("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+  categoryId: string;
+
+
+  @doc("Description of the category")
+  description : string;
+  
+  @doc("These fields are required when you are reporting under this category")
+  @extension("x-ms-identifiers",[])
+  requiredImpactFields?:RequiredImpactFields[];
+
+}
+
+@doc("Fields of sub category")
+model SubCategories{
+  @doc("Name of the category")
+  name: string;
+  @doc("Description of the category")
+	description : string;
+  @doc("List of sub categories applicable for this category")
+  @extension("x-ms-identifiers",["name"])
+	subCategories?: SubCategories[];
+  @doc("Unique id of the category (uuid)")
+  @pattern("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+  categoryId: string;
+  @doc("These fields are required when you are reporting under this category")
+  @extension("x-ms-identifiers",[])
+  requiredImpactFields?:RequiredImpactFields[]
+}
+
+@doc("Fields of required impact fields")
+model RequiredImpactFields{
+  @doc("Name of the field")
+  fieldName: string;
+  @doc("Applicable values for the field")
+  allowedValues? : string[];
+}
+
+@doc("ResourceType parameter type")
+model ResourceTypeParameter {
+  @query
+  @minLength(1)
+  @doc("Filter by resource type")
+  "resourceType": string;
+}
+
+@doc("CategoryName parameter type")
+model CategoryNameParameter {
+  @query
+  @minLength(1)
+  @doc("Filter by category name ")
+  "categoryName"?: string;
+}
+
+@doc("ImpactCategory tenant scope model")
+model ImpactCategorytenantScope{
+  ...CommonTenantScope<ImpactCategory>;
+  ...CategoryNameParameter;
+  ...ResourceTypeParameter;
+
+}
+
+@doc("ImpactCategory subscription scope model")
+model ImpactCategorySubsriptionScope{
+  ...SubscriptionScope<ImpactCategory>;
+  ...CategoryNameParameter;
+  ...ResourceTypeParameter;
+
+}
+
+@armResourceOperations
+interface ImpactCategories extends  ResourceRead<ImpactCategory> , ResourceListByParent<ImpactCategory> {
+
+  @autoRoute
+  @doc("List {name} resources by subscription ID", ImpactCategory)
+  @list(ImpactCategory)
+  @segmentOf(ImpactCategory)
+  @armResourceList(ImpactCategory)
+  @get
+  listBySubscription(...ImpactCategorySubsriptionScope): ArmResponse<ResourceListResult<ImpactCategory>> | ErrorResponse;
+}
+
+
