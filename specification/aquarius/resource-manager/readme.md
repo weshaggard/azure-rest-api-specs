@@ -38,6 +38,15 @@ These settings apply only when `--tag=package-preview-2022-01` is specified on t
 input-file:
   - Microsoft.GraphDB/preview/2022-01-26-preview/aquarius.json
 ```
+### Tag: package-2021-10-01-privatepreview
+
+These settings apply only when `--tag=package-2021-10-01-privatepreview` is specified on the command line.
+
+``` yaml $(tag) == 'package-2021-10-01-privatepreview'
+input-file:
+  - Private.GraphDB/preview/2021-10-01-privatepreview/aquarius.json
+```
+
 ### Tag: package-2022-01-26
 
 These settings apply only when `--tag=package-2022-01-26` is specified on the command line.
