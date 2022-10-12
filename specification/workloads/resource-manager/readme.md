@@ -44,6 +44,21 @@ input-file:
   - Microsoft.Workloads/preview/2022-11-01-preview/phpWorkloads.json
   - Microsoft.Workloads/preview/2022-11-01-preview/skus.json
 ```
+### Tag: package-preview-2022-10-15-preview
+
+These settings apply only when `--tag=package-preview-2022-10-15-preview` is specified on the command line.
+
+``` yaml $(tag) == 'package-preview-2022-10-15-preview'
+input-file:
+  - Microsoft.Workloads/preview/2022-10-15-preview/SAPVirtualInstance.json
+  - Microsoft.Workloads/preview/2022-10-15-preview/commonTypes.json
+  - Microsoft.Workloads/preview/2022-10-15-preview/monitors.json
+  - Microsoft.Workloads/preview/2022-10-15-preview/operations.json
+  - Microsoft.Workloads/preview/2022-10-15-preview/phpWorkloads.json
+  - Microsoft.Workloads/preview/2022-10-15-preview/skus.json
+  - Microsoft.Workloads/preview/2022-10-15-preview/insights.json
+```
+
 ### Tag: package-2021-12-01-preview
 
 These settings apply only when `--tag=package-2021-12-01-preview` is specified on the command line.
