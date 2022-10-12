@@ -345,6 +345,67 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/flows/{flowName}/link": {
+      "post": {
+        "description": "Links the specified flow.",
+        "x-ms-examples": {
+          "Links the specified flow": {
+            "$ref": "examples/linkFlow.json"
+          }
+        },
+        "operationId": "Flows_Link",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/connectionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/flowNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "flow",
+            "description": "Flow body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/resourceBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Links a flow.",
+            "schema": {
+              "$ref": "#/definitions/flow"
+            }
+          },
+          "202": {
+            "description": "Links a flow.",
+            "schema": {
+              "$ref": "#/definitions/flow"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/flows": {
       "get": {
         "description": "Gets flows in a connection.",
@@ -586,7 +647,7 @@
       "post": {
         "description": "Links the connection to its pending connection.",
         "x-ms-examples": {
-          "Enables the specified flow": {
+          "Links the specified connection": {
             "$ref": "examples/linkConnection.json"
           }
         },
@@ -603,6 +664,15 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "connection",
+            "description": "Connection body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/resourceBody"
+            }
           }
         ],
         "responses": {
@@ -628,6 +698,48 @@
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/generatePendingFlows": {
+      "post": {
+        "description": "Lists all pending flows for a connection.",
+        "x-ms-examples": {
+          "Generates a list of pending connections": {
+            "$ref": "examples/generatePendingFlows.json"
+          }
+        },
+        "operationId": "Connections_GeneratePendingFlows",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/connectionNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listed all connections under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/flowsListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
@@ -929,7 +1041,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/connectionBody"
+              "$ref": "#/definitions/resourceBody"
             }
           }
         ],
@@ -937,13 +1049,13 @@
           "200": {
             "description": "Approves a connection.",
             "schema": {
-              "$ref": "#/definitions/pipeline"
+              "$ref": "#/definitions/connection"
             }
           },
           "202": {
             "description": "Approves a connection.",
             "schema": {
-              "$ref": "#/definitions/pipeline"
+              "$ref": "#/definitions/connection"
             }
           },
           "default": {
@@ -987,7 +1099,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/connectionBody"
+              "$ref": "#/definitions/resourceBody"
             }
           }
         ],
@@ -995,13 +1107,13 @@
           "200": {
             "description": "Rejects a connection.",
             "schema": {
-              "$ref": "#/definitions/pipeline"
+              "$ref": "#/definitions/connection"
             }
           },
           "202": {
             "description": "Rejects a connection.",
             "schema": {
-              "$ref": "#/definitions/pipeline"
+              "$ref": "#/definitions/connection"
             }
           },
           "default": {
@@ -1014,6 +1126,48 @@
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/pipelines/{pipelineName}/generatePendingConnections": {
+      "post": {
+        "description": "Lists all pending connections for a pipeline.",
+        "x-ms-examples": {
+          "Generates a list of pending connections": {
+            "$ref": "examples/generatePendingConnections.json"
+          }
+        },
+        "operationId": "Pipelines_GeneratePendingConnections",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/pipelineNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listed all connections under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/connectionsListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
@@ -1324,7 +1478,13 @@
             "name": "linkStatus",
             "modelAsString": true
           },
-          "description": "Link status of the current connection"
+          "description": "Link status of the current connection",
+          "readOnly": true
+        },
+        "linkedConnectionId": {
+          "type": "string",
+          "description": "Resource ID of the linked connection",
+          "readOnly": true
         },
         "connectionTypes": {
           "description": "Types of connection being requested",
@@ -1640,22 +1800,22 @@
       },
       "description": "The pipelines list result."
     },
-    "connectionBody": {
+    "resourceBody": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
-          "description": "ID of the connection to approve or reject."
+          "description": "ID of the resource."
         },
         "statusReason": {
           "type": "string",
-          "description": "Reason for approval or rejection."
+          "description": "Reason for resource operation."
         }
       },
       "required": [
         "id"
       ],
-      "description": "The connection to approve or reject."
+      "description": "The resource to reference."
     }
   },
   "parameters": {
