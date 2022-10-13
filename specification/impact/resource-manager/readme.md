@@ -26,7 +26,7 @@ These are the global settings for the impact.
 
 ```yaml
 openapi-type: arm
-openapi-subtype: rpaas
+openapi-subtype: providerHub
 tag: package-2022-11-01-preview
 ```
 
@@ -52,7 +52,17 @@ This is not used by Autorest itself.
 swagger-to-sdk:
    - repo: azure-sdk-for-js
 ```
+## Az
 
+See configuration in [readme.az.md](./readme.az.md)
+
+## Go
+
+See configuration in [readme.go.md](./readme.go.md)
+
+## Python
+
+See configuration in [readme.python.md](./readme.python.md)
 
 ## TypeScript
 

@@ -27,13 +27,13 @@ model ImpactCategory is ProxyResource<ImpactCategoryProperties> {
 }
 
 
-@doc("Details of the workloadimpact resource.")
+@doc("Impact category properties.")
 model ImpactCategoryProperties  is ResourceProperties{
-  @doc("List of sub categories applicable for this category")
+  @doc("List of subcategories applicable for this category")
   @extension("x-ms-identifiers",["name"])
-  subCategories: SubCategories[];
+  subcategories: Subcategories[];
 
-  @doc("Unique id of the category (uuid)")
+  @doc("Unique ID of the category (UUID)")
   @pattern("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
   categoryId: string;
 
@@ -47,32 +47,32 @@ model ImpactCategoryProperties  is ResourceProperties{
 
 }
 
-@doc("Fields of sub category")
-model SubCategories{
+@doc("Subcategory properties")
+model Subcategories{
   @doc("Name of the category")
   name: string;
   @doc("Description of the category")
 	description : string;
-  @doc("List of sub categories applicable for this category")
+  @doc("List of subcategories applicable for the category")
   @extension("x-ms-identifiers",["name"])
-	subCategories?: SubCategories[];
-  @doc("Unique id of the category (uuid)")
+	subcategories?: Subcategories[];
+  @doc("Unique ID of the category (UUID)")
   @pattern("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
   categoryId: string;
-  @doc("These fields are required when you are reporting under this category")
+  @doc("Required fields for the category")
   @extension("x-ms-identifiers",[])
   requiredImpactFields?:RequiredImpactFields[]
 }
 
-@doc("Fields of required impact fields")
+@doc("Required impact fields")
 model RequiredImpactFields{
   @doc("Name of the field")
   fieldName: string;
-  @doc("Applicable values for the field")
+  @doc("Allowed values values for the field")
   allowedValues? : string[];
 }
 
-@doc("ResourceType parameter type")
+@doc("ResourceType parameter for filtering")
 model ResourceTypeParameter {
   @query
   @minLength(1)
@@ -88,24 +88,17 @@ model CategoryNameParameter {
   "categoryName"?: string;
 }
 
-@doc("ImpactCategory tenant scope model")
-model ImpactCategorytenantScope{
-  ...CommonTenantScope<ImpactCategory>;
-  ...CategoryNameParameter;
-  ...ResourceTypeParameter;
 
-}
-
-@doc("ImpactCategory subscription scope model")
-model ImpactCategorySubsriptionScope{
-  ...SubscriptionScope<ImpactCategory>;
+@doc("Impact category subscription scope with query parameters")
+model ImpactCategorySubscriptionScopeWithQueryParameters{
+  ...SubscriptionScope<ImpactCategory>; 
   ...CategoryNameParameter;
   ...ResourceTypeParameter;
 
 }
 
 @armResourceOperations
-interface ImpactCategories extends  ResourceRead<ImpactCategory> , ResourceListByParent<ImpactCategory> {
+interface ImpactCategories extends  ResourceRead<ImpactCategory>, ResourceListByParent<ImpactCategory>  {
 
   @autoRoute
   @doc("List {name} resources by subscription ID", ImpactCategory)
@@ -113,7 +106,7 @@ interface ImpactCategories extends  ResourceRead<ImpactCategory> , ResourceListB
   @segmentOf(ImpactCategory)
   @armResourceList(ImpactCategory)
   @get
-  listBySubscription(...ImpactCategorySubsriptionScope): ArmResponse<ResourceListResult<ImpactCategory>> | ErrorResponse;
+  listBySubscription(...ImpactCategorySubscriptionScopeWithQueryParameters): ArmResponse<ResourceListResult<ImpactCategory>> | ErrorResponse;
 }
 
 
