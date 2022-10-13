@@ -44,26 +44,24 @@ model EncryptedTransportResourceProperties {
   @doc("The geography group of the location")
   geographyGroup: string;
 
+  @doc("End User Devices assigned to an Encrypted Transport")
+  endUserDevices?: EndUserDevice[];
+
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
 }
 
-@armResourceOperations
-interface EncryptedTransport extends ResourceOperations<EncryptedTransportResource,EncryptedTransportResourceProperties> {}
+@doc("An End User Device object belonging to an Encrypted Transport.")
+model EndUserDevice {
+  // lowercase, uppercase letters, and numbers only, min 3, max 9 characters
+  @doc("The Device ID.")
+  @pattern("^[a-zA-Z0-9]{3,9}$")
+  id: string;
 
-@doc("An address resource belonging to a user resource.")
-@parentResource(EncryptedTransportResource)
-model EndUserDeviceResource is TrackedResource<EndUserDeviceResourceProperties> {
   @doc("End User Device name")
   @pattern("^[a-zA-Z0-9]{3,24}$")
-  @key("endUserDevice")
-  @segment("endUserDevices")
-  @path
   name: string;
-}
-@doc("The properties of EndUserDeviceResource")
-model EndUserDeviceResourceProperties {
 
   // Standard MAC address format
   // 00:00:00:00:00:00
@@ -98,22 +96,15 @@ model EndUserDeviceResourceProperties {
   @pattern("^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$")
   ipv6Address: string;
 
-  // lowercase, uppercase letters, and numbers only, min 3, max 9 characters
-  @doc("The Device ID.")
-  @pattern("^[a-zA-Z0-9]{3,9}$")
-  deviceId: string;
-
   // Uppercase letters and numbers only, min 3, max 9 characters
   @doc("The Owner ID.")
   @pattern("^[A-Z0-9]{3,9}$")
   ownerId: string;
 
-  @doc("The status of the last operation.")
-  provisioningState?: ProvisioningState;
 }
 
 @armResourceOperations
-interface EndUserDevices extends ResourceOperations<EndUserDeviceResource, EndUserDeviceResourceProperties> {}
+interface EncryptedTransport extends ResourceOperations<EncryptedTransportResource,EncryptedTransportResourceProperties> {}
 
 @knownValues(ProvisioningStateKV)
 @doc("Provisioning State")
