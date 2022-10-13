@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "2022-08-31-privatepreview",
-    "title": "M365SubscriptionsClient",
-    "description": "M365 subscriptions client provides lifecycle management features to M365 subscriptions."
+    "title": "M365ResourcesClient",
+    "description": "M365 resources client provides lifecycle management features to M365 resources."
   },
   "host": "management.azure.com",
   "schemes": [
@@ -16,24 +16,24 @@
     "application/json"
   ],
   "paths": {
-    "/{scope}/providers/Microsoft.M365/subscriptions": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.M365/m365Resources": {
       "get": {
         "tags": [
-          "Subscriptions"
+          "M365Resources"
         ],
-        "operationId": "Subscriptions_List",
-        "description": "Lists the M365 subscriptions. The operation is supported for billing accounts with agreement type Microsoft Customer Agreement.",
+        "operationId": "M365Resources_ListBySubscription",
+        "description": "Lists the M365 resources under the subscription.",
         "externalDocs": {
           "url": "https://docs.microsoft.com/en-us/rest/api/m365/"
         },
         "x-ms-examples": {
-          "ListSubscriptions": {
-            "$ref": "./examples/ListSubscriptions.json"
+          "ListM365ResourcesBySubscription": {
+            "$ref": "./examples/M365Resource_List_BySubscription.json"
           }
         },
         "parameters": [
           {
-            "$ref": "#/parameters/scopeParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -43,7 +43,7 @@
           "200": {
             "description": "OK. The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/ListSubscriptionsResult"
+              "$ref": "#/definitions/ListM365ResourcesResult"
             }
           },
           "default": {
@@ -58,27 +58,27 @@
         }
       }
     },
-    "/{scope}/providers/Microsoft.M365/subscriptions/{subscriptionName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.M365/m365Resources": {
       "get": {
         "tags": [
-          "Subscriptions"
+          "M365Resources"
         ],
-        "operationId": "Subscriptions_Get",
-        "description": "Gets a M365 subscription by its ID. The operation is supported for billing accounts with agreement type Microsoft Customer Agreement.",
+        "operationId": "M365Resources_ListByResourceGroup",
+        "description": "Lists the M365 resources under the resource group.",
         "externalDocs": {
           "url": "https://docs.microsoft.com/en-us/rest/api/m365/"
         },
         "x-ms-examples": {
-          "Subscription": {
-            "$ref": "./examples/Subscription.json"
+          "ListM365ResourcesByResourceGroup": {
+            "$ref": "./examples/M365Resource_List_ByResourceGroup.json"
           }
         },
         "parameters": [
           {
-            "$ref": "#/parameters/scopeParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/subscriptionNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -88,7 +88,108 @@
           "200": {
             "description": "OK. The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/Subscription"
+              "$ref": "#/definitions/ListM365ResourcesResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.M365/m365Resources/{m365ResourceName}": {
+      "get": {
+        "tags": [
+          "M365Resources"
+        ],
+        "operationId": "M365Resources_Get",
+        "description": "Gets a M365 resource by its ID. The operation is supported for billing accounts with agreement type Microsoft Customer Agreement.",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/en-us/rest/api/m365/"
+        },
+        "x-ms-examples": {
+          "GetM365Resource": {
+            "$ref": "./examples/M365Resource_Get.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/m365ResourceNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/M365Resource"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "M365Resources"
+        ],
+        "operationId": "M365Resources_Create",
+        "description": "Creates or updates a M365 resource.",
+        "x-ms-examples": {
+          "CreateM365Resource": {
+            "$ref": "./examples/M365Resource_Put.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/m365ResourceNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/M365ResourceCreationRequest"
+            },
+            "description": "Request parameters that are provided to the create M365 resource operation."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created. The resource has been created.",
+            "schema": {
+              "$ref": "#/definitions/M365Resource"
             }
           },
           "default": {
@@ -101,25 +202,28 @@
       },
       "patch": {
         "tags": [
-          "Subscriptions"
+          "M365Resources"
         ],
-        "operationId": "Subscriptions_Update",
-        "description": "Updates the properties of a M365 subscription. The operation is supported only for billing accounts with agreement type Microsoft Customer Agreement.",
+        "operationId": "M365Resources_Update",
+        "description": "Updates the properties of a M365 resource.",
         "x-ms-examples": {
-          "UpdateSubscriptionProperty": {
-            "$ref": "./examples/UpdateSubscription.json"
+          "UpdateM365ResourceProperty": {
+            "$ref": "./examples/M365Resource_Patch.json"
           }
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
+          "final-state-via": "azure-async-operation"
         },
         "parameters": [
           {
-            "$ref": "#/parameters/scopeParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/subscriptionNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/m365ResourceNameParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -129,20 +233,20 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Subscription"
+              "$ref": "#/definitions/M365ResourceUpdateRequest"
             },
-            "description": "Request parameters that are provided to the update M365 subscription operation."
+            "description": "Request parameters that are provided to the update M365 resource operation."
           }
         ],
         "responses": {
           "200": {
             "description": "OK. The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/Subscription"
+              "$ref": "#/definitions/M365Resource"
             }
           },
           "202": {
-            "description": "Accepted",
+            "description": "Accepted. Method completes asynchronously",
             "headers": {
               "Location": {
                 "description": "Location URI to poll for result",
@@ -154,9 +258,6 @@
                 "format": "int64"
               }
             }
-          },
-          "204": {
-            "description": "Billing subscription not found."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -168,42 +269,39 @@
       },
       "delete": {
         "tags": [
-          "Subscriptions"
+          "M365Resources"
         ],
-        "operationId": "Subscriptions_Delete",
-        "description": "Cancels a M365 subscription. The operation is supported only for billing accounts with agreement type Microsoft Customer Agreement.",
+        "operationId": "M365Resources_Delete",
+        "description": "Cancels a M365 resource.",
+        "x-ms-examples": {
+          "DeleteM365Resource": {
+            "$ref": "./examples/M365Resource_Delete.json"
+          }
+        },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
         },
-        "x-ms-examples": {
-          "DeleteSubscription": {
-            "$ref": "./examples/DeleteSubscription.json"
-          }
-        },
-        "externalDocs": {
-          "url": "https://docs.microsoft.com/en-us/rest/api/m365/"
-        },
         "parameters": [
           {
-            "$ref": "#/parameters/scopeParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/subscriptionNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/m365ResourceNameParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK. The request has succeeded.",
-            "schema": {
-              "$ref": "#/definitions/Subscription"
-            }
+          "204": {
+            "description": "No Content. The resource is canceled."
           },
           "202": {
-            "description": "Accepted",
+            "description": "Accepted. Method completes asynchronously",
             "headers": {
               "Location": {
                 "description": "Location URI to poll for result",
@@ -215,9 +313,6 @@
                 "format": "int64"
               }
             }
-          },
-          "204": {
-            "description": "Billing subscription not found."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -230,16 +325,16 @@
     }
   },
   "definitions": {
-    "ListSubscriptionsResult": {
-      "description": "The list of M365 subscriptions.",
+    "ListM365ResourcesResult": {
+      "description": "The list of M365 resources.",
       "type": "object",
       "properties": {
         "value": {
-          "description": "The list of M365 subscriptions.",
+          "description": "The list of M365 resources.",
           "type": "array",
           "readOnly": true,
           "items": {
-            "$ref": "#/definitions/Subscription"
+            "$ref": "#/definitions/M365Resource"
           }
         },
         "nextLink": {
@@ -249,8 +344,8 @@
         }
       }
     },
-    "Subscription": {
-      "description": "A M365 subscription.",
+    "M365Resource": {
+      "description": "A M365 resource.",
       "type": "object",
       "allOf": [
         {
@@ -260,17 +355,28 @@
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/SubscriptionProperties",
-          "title": "M365 subscription properties"
+          "$ref": "#/definitions/M365ResourceProperties",
+          "title": "M365 resource properties"
         }
       }
     },
-    "SubscriptionProperties": {
-      "description": "The billing properties of a M365 subscription.",
+    "M365ResourceUpdateRequest": {
+      "description": "The request properties of the M365Resource that can be updated.",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "description": "A M365Resource property.",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/M365ResourceProperties"
+        }
+      }
+    },
+    "M365ResourceProperties": {
+      "description": "The billing properties of a M365 resource.",
       "type": "object",
       "properties": {
         "autoRenew": {
-          "description": "Indicates whether auto renewal is turned on or off for a subscription.",
+          "description": "Indicates whether auto renewal is turned on or off for a resource.",
           "type": "string",
           "enum": [
             "Off",
@@ -283,36 +389,36 @@
           }
         },
         "billingAccountId": {
-          "description": "The ID of the billing account to which the subscription is billed.",
+          "description": "The ID of the billing account to which the resource is billed.",
           "type": "string",
           "readOnly": true
         },
         "billingAccountDisplayName": {
-          "description": "The name of the billing account to which the subscription is billed.",
+          "description": "The name of the billing account to which the resource is billed.",
           "type": "string",
           "readOnly": true
         },
         "billingProfileId": {
-          "description": "The ID of the billing profile to which the subscription is billed.",
+          "description": "The ID of the billing profile to which the resource is billed.",
           "type": "string",
           "readOnly": true
         },
         "billingProfileDisplayName": {
-          "description": "The name of the billing profile to which the subscription is billed.",
+          "description": "The name of the billing profile to which the resource is billed.",
           "type": "string",
           "readOnly": true
         },
         "billingFrequency": {
-          "description": "The billing frequency in ISO8601 format of product in the subscription. Example: P1M, P3M, P1Y",
+          "description": "The billing frequency in ISO8601 format of product in the resource. Example: P1M, P3M, P1Y",
           "type": "string",
           "readOnly": true
         },
         "systemOverrides": {
-          "description": "System imposed policies that regulate behavior of the subscription.",
+          "description": "System imposed policies that regulate behavior of the resource.",
           "type": "object",
           "properties": {
             "cancellation": {
-              "description": "The policy override for the subscription indicates whether the self-serve cancellation or seat reduction is allowed.",
+              "description": "The policy override for the resource indicates whether the self-serve cancellation or seat reduction is allowed.",
               "type": "string",
               "x-nullable": true,
               "readOnly": true,
@@ -334,38 +440,37 @@
           }
         },
         "displayName": {
-          "description": "The name of the subscription.",
+          "description": "The name of the resource.",
           "type": "string",
           "readOnly": true
         },
         "invoiceSectionId": {
-          "description": "The ID of the invoice section to which the subscription is billed.",
+          "description": "The ID of the invoice section to which the resource is billed.",
           "type": "string",
           "readOnly": true
         },
         "invoiceSectionDisplayName": {
-          "description": "The name of the invoice section to which the subscription is billed.",
+          "description": "The name of the invoice section to which the resource is billed.",
           "type": "string",
           "readOnly": true
         },
         "nextBillingCycleDetails": {
-          "description": "Next billing cycle details of the subscription.",
-          "type": "object",
+          "description": "Next billing cycle details of the resource.",
           "readOnly": true,
           "$ref": "#/definitions/NextBillingCycleDetails"
         },
         "productCategory": {
-          "description": "Category of the subscription. Possible values include: Consumption, SaaS, AzureSupport, AzureReservationOrder, AzureSavingsPlan, Hardware, M365",
+          "description": "Category of the resource. Possible values include: Consumption, SaaS, AzureSupport, AzureReservationOrder, AzureSavingsPlan, Hardware, M365",
           "type": "string",
           "readOnly": true
         },
         "productType": {
-          "description": "Type of the product for which the subscription is purchased",
+          "description": "Type of the product for which the resource is purchased",
           "type": "string",
           "readOnly": true
         },
         "productTypeId": {
-          "description": "Id of the product for which the subscription is purchased",
+          "description": "Id of the product for which the resource is purchased",
           "type": "string",
           "readOnly": true
         },
@@ -376,22 +481,22 @@
           "readOnly": true
         },
         "quantity": {
-          "description": "The number of licenses purchased for the subscription",
+          "description": "The number of licenses purchased for the resource",
           "type": "integer",
           "format": "int64"
         },
         "skuDescription": {
-          "description": "The SKU description of the product for which the subscription is purchased.",
+          "description": "The SKU description of the product for which the resource is purchased.",
           "type": "string",
           "readOnly": true
         },
         "skuId": {
-          "description": "The SKU ID of the product for which the subscription is purchased.",
+          "description": "The SKU ID of the product for which the resource is purchased.",
           "type": "string",
           "readOnly": true
         },
         "status": {
-          "description": "The status of the subscription.",
+          "description": "The status of the resource.",
           "type": "string",
           "enum": [
             "Unknown",
@@ -407,12 +512,12 @@
           ],
           "readOnly": true,
           "x-ms-enum": {
-            "name": "SubscriptionStatus",
+            "name": "M365ResourceStatus",
             "modelAsString": true
           }
         },
         "suspensionReasons": {
-          "description": "The suspension reason for a subscription.",
+          "description": "The suspension reason for a resource.",
           "type": "array",
           "readOnly": true,
           "items": {
@@ -420,7 +525,7 @@
           }
         },
         "termDuration": {
-          "description": "The duration for which you can use the subscription. Example P1Y and P1M",
+          "description": "The duration for which you can use the resource. Example P1Y and P1M",
           "type": "string",
           "readOnly": true
         },
@@ -439,33 +544,73 @@
       }
     },
     "NextBillingCycleDetails": {
-      "description": "Billing cycle details of the subscription.",
+      "description": "Billing cycle details of the resource.",
       "type": "object",
       "properties": {
         "billingFrequency": {
-          "description": "Billing frequency of the product under the subscription.",
+          "description": "Billing frequency of the product under the resource.",
           "type": "string",
           "readOnly": true
+        }
+      }
+    },
+    "M365ResourceCreationRequest": {
+      "description": "The request parameters for creating a new M365 resource.",
+      "type": "object",
+      "required": [
+        "productTypeId",
+        "quantity",
+        "skuId",
+        "termDuration"
+      ],
+      "properties": {
+        "autoRenew": {
+          "description": "Indicates whether auto renewal is turned on or off for a resource.",
+          "type": "string",
+          "enum": [
+            "Off",
+            "On"
+          ],
+          "x-ms-enum": {
+            "name": "AutoRenew",
+            "modelAsString": true
+          }
+        },
+        "billingFrequency": {
+          "description": "The billing frequency in ISO8601 format of product in the resource. Example: P1M, P3M, P1Y",
+          "type": "string"
+        },
+        "productTypeId": {
+          "description": "Id of the product for which the resource is purchased",
+          "type": "string"
+        },
+        "quantity": {
+          "description": "The number of licenses purchased for the resource",
+          "type": "integer",
+          "format": "int64"
+        },
+        "skuId": {
+          "description": "The SKU ID of the product for which the resource is purchased.",
+          "type": "string"
+        },
+        "termDuration": {
+          "description": "The duration for which you can use the resource. Example P1Y and P1M",
+          "type": "string"
         }
       }
     }
   },
   "parameters": {
-    "scopeParameter": {
-      "name": "scope",
+    "m365ResourceNameParameter": {
+      "name": "m365ResourceName",
       "in": "path",
-      "description": "The scope associated with M365 subscription. This includes 'providers/Microsoft.Billing/billingAccounts/{billingAccountId}' for Billing Account scope, 'providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}' for BillingProfile scope, 'providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}/invoiceSections/{invoiceSectionId}' for InvoiceSection scope, 'providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}/customers/{customerId}' for Customer scope",
+      "description": "The name that uniquely identifies a M365 resource.",
       "required": true,
       "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "subscriptionNameParameter": {
-      "name": "subscriptionName",
-      "in": "path",
-      "description": "The ID that uniquely identifies a subscription.",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method"
+      "x-ms-parameter-location": "method",
+      "pattern": "^[-_0-9a-zA-Z]{1,50}$",
+      "minLength": 1,
+      "maxLength": 50
     }
   },
   "security": [

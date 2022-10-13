@@ -26,6 +26,7 @@ These are the global settings for the m365.
 
 ```yaml
 openapi-type: arm
+openapi-subtype: rpaas
 tag: package-2022-08-31-privatepreview
 ```
 
@@ -34,6 +35,13 @@ tag: package-2022-08-31-privatepreview
 These settings apply only when `--tag=package-2022-08-31-privatepreview` is specified on the command line.
 
 ```yaml $(tag) == 'package-2022-08-31-privatepreview'
+title: M365ResourcesClient
+description: M365 Resource Client
 input-file:
-  - Microsoft.M365/preview/2022-08-31-privatepreview/m365.json
+- Microsoft.M365/preview/2022-08-31-privatepreview/m365.json
+- Microsoft.M365/preview/2022-08-31-privatepreview/m365Operations.json
+directive:
+  - suppress: R4031
+    from: Microsoft.M365/preview/2022-08-31-privatepreview/m365.json
+    reason: provisioningState is not required for Proxy Resources.
 ```
