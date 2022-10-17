@@ -16,61 +16,43 @@ using Azure.ResourceManager;
 
 @doc("ImpactCategory resource")
 model ImpactCategory is ProxyResource<ImpactCategoryProperties> {
-  @pattern("^[a-zA-Z0-9-]{3,40}$")
+  @pattern("^[a-zA-Z0-9-.]$")
   @key("impactCategoryName")
   @segment("impactCategories")
   @doc("Name of the impact category")
   @visibility("Read")
   @path
-  name: string;
-  
+  name: string;  
 }
 
 
 @doc("Impact category properties.")
 model ImpactCategoryProperties  is ResourceProperties{
-  @doc("List of subcategories applicable for this category")
-  @extension("x-ms-identifiers",["name"])
-  subcategories: Subcategories[];
 
-  @doc("Unique ID of the category (UUID)")
+  @doc("Unique ID of the category")
   @pattern("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
   categoryId: string;
 
-
-  @doc("Description of the category")
-  description : string;
-  
-  @doc("These fields are required when you are reporting under this category")
-  @extension("x-ms-identifiers",[])
-  requiredImpactFields?:RequiredImpactFields[];
-
-}
-
-@doc("Subcategory properties")
-model Subcategories{
-  @doc("Name of the category")
-  name: string;
-  @doc("Description of the category")
-	description : string;
-  @doc("List of subcategories applicable for the category")
-  @extension("x-ms-identifiers",["name"])
-	subcategories?: Subcategories[];
-  @doc("Unique ID of the category (UUID)")
+  @doc("Unique ID of the parent category")
   @pattern("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
-  categoryId: string;
-  @doc("Required fields for the category")
+  parentCategoryId?: string;
+
+  @doc("Description of the category")
+  description? : string;
+
+  @doc("The workloadImpact properties which are required when reporting with the impact category")
   @extension("x-ms-identifiers",[])
-  requiredImpactFields?:RequiredImpactFields[]
+  requiredImpactProperties?:RequiredImpactProperties[];
 }
 
-@doc("Required impact fields")
-model RequiredImpactFields{
-  @doc("Name of the field")
-  fieldName: string;
-  @doc("Allowed values values for the field")
-  allowedValues? : string[];
+@doc("Required impact properties")
+model RequiredImpactProperties{
+@doc("Name of the property")
+name: string;
+@doc("Allowed values values for the property")
+allowedValues? : string[];
 }
+
 
 @doc("ResourceType parameter for filtering")
 model ResourceTypeParameter {
@@ -98,7 +80,7 @@ model ImpactCategorySubscriptionScopeWithQueryParameters{
 }
 
 @armResourceOperations
-interface ImpactCategories extends  ResourceRead<ImpactCategory>, ResourceListByParent<ImpactCategory>  {
+interface ImpactCategories extends ResourceListBySubscription<ImpactCategory>  {
 
   @autoRoute
   @doc("List {name} resources by subscription ID", ImpactCategory)

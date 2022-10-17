@@ -124,7 +124,7 @@
           "nextLinkName": "nextLink"
         },
         "x-ms-examples": {
-          "Get ImpactCategories list by subscription": {
+          "Get ImpactCategories list": {
             "$ref": "./examples/ImpactCategories_ListBySubscription.json"
           }
         }
@@ -165,90 +165,6 @@
         "x-ms-examples": {
           "List WorkloadImpact resources by subscription": {
             "$ref": "./examples/WorkloadImpact_ListBySubscription.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/impactCategories": {
-      "get": {
-        "tags": [
-          "ImpactCategories"
-        ],
-        "operationId": "ImpactCategories_ListByResourceGroup",
-        "description": "List ImpactCategory resources by resource group",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/ImpactCategoryListResult"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "Get ImpactCategories list by Resource Group": {
-            "$ref": "./examples/ImpactCategories_ListByResourceGroup.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/impactCategories/{impactCategoryName}": {
-      "get": {
-        "tags": [
-          "ImpactCategories"
-        ],
-        "operationId": "ImpactCategories_Get",
-        "description": "Get a ImpactCategory",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/ImpactCategory.impactCategoryName"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/ImpactCategory"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "get categories by name": {
-            "$ref": "./examples/ImpactCategories_Get.json"
           }
         }
       }
@@ -358,6 +274,9 @@
           },
           "performance related impact": {
             "$ref": "./examples/performanceImpact.json"
+          },
+          "Create Workloadimpact Resource by name": {
+            "$ref": "./examples/WorkloadImpact_CreateOrUpdate.json"
           }
         },
         "x-ms-long-running-operation-options": {
@@ -601,41 +520,33 @@
           },
           "readOnly": true
         },
-        "subcategories": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Subcategories"
-          },
-          "x-ms-identifiers": [
-            "name"
-          ],
-          "x-cadl-name": "Subcategories[]",
-          "description": "List of subcategories applicable for this category"
-        },
         "categoryId": {
           "type": "string",
-          "description": "Unique ID of the category (UUID)",
+          "description": "Unique ID of the category",
+          "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+        },
+        "parentCategoryId": {
+          "type": "string",
+          "description": "Unique ID of the parent category",
           "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
         },
         "description": {
           "type": "string",
           "description": "Description of the category"
         },
-        "requiredImpactFields": {
+        "requiredImpactProperties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/RequiredImpactFields"
+            "$ref": "#/definitions/RequiredImpactProperties"
           },
           "x-ms-identifiers": [],
-          "x-cadl-name": "RequiredImpactFields[]",
-          "description": "These fields are required when you are reporting under this category"
+          "x-cadl-name": "RequiredImpactProperties[]",
+          "description": "The workloadImpact properties which are required when reporting with the impact category"
         }
       },
       "description": "Impact category properties.",
       "required": [
-        "subcategories",
-        "categoryId",
-        "description"
+        "categoryId"
       ]
     },
     "Performance": {
@@ -690,12 +601,12 @@
         "modelAsString": false
       }
     },
-    "RequiredImpactFields": {
+    "RequiredImpactProperties": {
       "type": "object",
       "properties": {
-        "fieldName": {
+        "name": {
           "type": "string",
-          "description": "Name of the field"
+          "description": "Name of the property"
         },
         "allowedValues": {
           "type": "array",
@@ -703,12 +614,12 @@
             "type": "string"
           },
           "x-cadl-name": "string[]",
-          "description": "Allowed values values for the field"
+          "description": "Allowed values values for the property"
         }
       },
-      "description": "Required impact fields",
+      "description": "Required impact properties",
       "required": [
-        "fieldName"
+        "name"
       ]
     },
     "SourceOrDestination": {
@@ -730,50 +641,6 @@
         }
       },
       "description": "Resource details"
-    },
-    "Subcategories": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the category"
-        },
-        "description": {
-          "type": "string",
-          "description": "Description of the category"
-        },
-        "subcategories": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Subcategories"
-          },
-          "x-ms-identifiers": [
-            "name"
-          ],
-          "x-cadl-name": "Subcategories[]",
-          "description": "List of subcategories applicable for the category"
-        },
-        "categoryId": {
-          "type": "string",
-          "description": "Unique ID of the category (UUID)",
-          "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
-        },
-        "requiredImpactFields": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RequiredImpactFields"
-          },
-          "x-ms-identifiers": [],
-          "x-cadl-name": "RequiredImpactFields[]",
-          "description": "Required fields for the category"
-        }
-      },
-      "description": "Subcategory properties",
-      "required": [
-        "name",
-        "description",
-        "categoryId"
-      ]
     },
     "Toolset": {
       "type": "string",
@@ -959,15 +826,6 @@
       "required": false,
       "description": "Filter by category name ",
       "minLength": 1,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "ImpactCategory.impactCategoryName": {
-      "name": "impactCategoryName",
-      "in": "path",
-      "required": true,
-      "description": "Name of the impact category",
-      "pattern": "^[a-zA-Z0-9-]{3,40}$",
       "type": "string",
       "x-ms-parameter-location": "method"
     },
