@@ -1,0 +1,51 @@
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+import "./provisioningstate.cadl";
+
+@doc("Payload for uploading new measurements from a cleanroom device to a device profile.")
+model NewDeviceMeasurementPayload {
+  @doc("Challenge received from the Initiate request.")
+  challenge: string;
+
+  @doc("Service context received from the Initiate request.")
+  serviceContext: string;
+
+  @doc("Name of the device.")
+  deviceName: string;
+
+  @doc("List of attestations.")
+  attestations: AttestationProperties[];
+}
+
+@doc("Attestation properties.")
+model AttestationProperties {
+  @doc("Type of attestation to perform.")
+  attestationType: AttestationType;
+
+  @doc("JWT token received from MAA.")
+  attestationData: string;
+}
+
+@doc("Response received from Initiate.")
+model InitiateRequestResponse {
+  @doc("Challenge received from the Initiate request.")
+  challenge: string;
+
+  @doc("Service context received from the Initiate request.")
+  serviceContext: string;
+
+  @doc("List of attestations the service requires from the device.")
+  requiredAttestations: AttestationType[];
+
+  @doc("Endpoint for devices to call MAA APIs.")
+  maaUrl: string;
+}
+
+@doc("Currently supported attestation types.")
+@knownValues(AttestationTypeValues)
+model AttestationType is string {}
+enum AttestationTypeValues {
+  Boot
+}

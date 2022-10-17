@@ -1,0 +1,37 @@
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+import "./provisioningstate.cadl";
+
+@doc("SIM Hub properties.")
+model SIMHubProperties {
+  @doc("The status of the last operation.")
+  @visibility("read")
+  provisioningState?: ProvisioningState;
+
+  @doc("Resources that are connected to the account.")
+  resourceConnections?: ResourceConnectionProperties[]
+}
+
+@doc("Resource Connection properties.")
+model ResourceConnectionProperties {
+  @doc("Name of the connected azure resource.")
+  name: string;
+
+  @doc("Connection string used to connect to the resource, if needed.")
+  @secret
+  connectionString?: string;
+
+  @doc("Subscription Id where the resource lives.")
+  subscriptionId: string;
+
+  @doc("Resource group where the resource lives.")
+  resourceGroup: string;
+
+  @doc("Type of resource. E.g. 'Microsoft.SystemIntegrityMonitoring/Accounts'")
+  type: string;
+
+  @doc("Location where the resource is provisioned at.")
+  location: string;
+}
