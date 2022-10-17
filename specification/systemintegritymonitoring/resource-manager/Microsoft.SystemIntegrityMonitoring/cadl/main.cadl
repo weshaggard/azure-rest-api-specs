@@ -1,0 +1,70 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/openapi";
+import "@cadl-lang/versioning";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+import "./simHub.cadl";
+import "./deviceprofile.cadl";
+import "./attestation.cadl";
+
+@armProviderNamespace
+@serviceTitle("Microsoft.SystemIntegrityMonitoring")
+@serviceVersion("2022-08-01-preview")
+@versionedDependency(Azure.Core.Versions.v1_0_Preview_1)
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+namespace Microsoft.SystemIntegrityMonitoring;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.Core;
+using Azure.ResourceManager;
+
+@doc("A SystemIntegrityMonitoring Hub.")
+model SIMHubResource is TrackedResource<SIMHubProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("simHubName")
+  @segment("simHubs")
+  @doc("Name of the resource")
+  @visibility("read")
+  @path
+  name: string;
+}
+
+@doc("A device profile that holds measurement sets uploaded by a cleanroom device. Scoped under a SIM Hub.")
+@parentResource(SIMHubResource)
+model DeviceProfileResource is TrackedResource<DeviceProfileProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("deviceProfileName")
+  @segment("deviceProfiles")
+  @doc("Name of the resource")
+  @visibility("read")
+  @path
+  name: string;
+}
+
+@armResourceOperations
+interface SIMHubs extends ResourceOperations<SIMHubResource, SIMHubProperties> {}
+
+@armResourceOperations
+interface DeviceProfiles extends ResourceOperations<DeviceProfileResource, DeviceProfileProperties> {
+  @post
+  @segment("uploadMeasurementVersion")
+  @doc("Upload a new device measurement version")
+  op UploadMeasurementVersion(
+	...ResourceInstanceParameters<DeviceProfileResource>,
+
+	@body
+  @doc("Device measurement information taken from a 'clean room' device.")
+	newDeviceMeasurementPayload: NewDeviceMeasurementPayload
+  ): ArmResponse<DeviceProfileResource> | ErrorResponse;
+
+  @post
+  @segment("initiate")
+  @doc("Initiates operations that require challenge and service context values.")
+  op Initiate(
+	...ResourceInstanceParameters<DeviceProfileResource>,
+  ): ArmResponse<InitiateRequestResponse> | ErrorResponse;
+}
