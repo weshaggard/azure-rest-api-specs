@@ -58,52 +58,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.M365/m365Resources": {
-      "get": {
-        "tags": [
-          "M365Resources"
-        ],
-        "operationId": "M365Resources_ListByResourceGroup",
-        "description": "Lists the M365 resources under the resource group.",
-        "externalDocs": {
-          "url": "https://docs.microsoft.com/en-us/rest/api/m365/"
-        },
-        "x-ms-examples": {
-          "ListM365ResourcesByResourceGroup": {
-            "$ref": "./examples/M365Resource_List_ByResourceGroup.json"
-          }
-        },
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK. The request has succeeded.",
-            "schema": {
-              "$ref": "#/definitions/ListM365ResourcesResult"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.M365/m365Resources/{m365ResourceName}": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.M365/m365Resources/{m365ResourceName}": {
       "get": {
         "tags": [
           "M365Resources"
@@ -121,9 +76,6 @@
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/m365ResourceNameParameter"
@@ -167,9 +119,6 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
             "$ref": "#/parameters/m365ResourceNameParameter"
           },
           {
@@ -180,12 +129,18 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/M365ResourceCreationRequest"
+              "$ref": "#/definitions/M365Resource"
             },
             "description": "Request parameters that are provided to the create M365 resource operation."
           }
         ],
         "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/M365Resource"
+            }
+          },
           "201": {
             "description": "Created. The resource has been created.",
             "schema": {
@@ -220,9 +175,6 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
             "$ref": "#/parameters/m365ResourceNameParameter"
           },
           {
@@ -233,7 +185,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/M365ResourceUpdateRequest"
+              "$ref": "#/definitions/M365Resource"
             },
             "description": "Request parameters that are provided to the update M365 resource operation."
           }
@@ -287,9 +239,6 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
             "$ref": "#/parameters/m365ResourceNameParameter"
           },
           {
@@ -297,8 +246,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content. The resource is canceled."
+          "200": {
+            "description": "OK. The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/M365Resource"
+            }
           },
           "202": {
             "description": "Accepted. Method completes asynchronously",
@@ -313,6 +265,9 @@
                 "format": "int64"
               }
             }
+          },
+          "204": {
+            "description": "No Content. The resource does not exist."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -360,17 +315,6 @@
         }
       }
     },
-    "M365ResourceUpdateRequest": {
-      "description": "The request properties of the M365Resource that can be updated.",
-      "type": "object",
-      "properties": {
-        "properties": {
-          "description": "A M365Resource property.",
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/M365ResourceProperties"
-        }
-      }
-    },
     "M365ResourceProperties": {
       "description": "The billing properties of a M365 resource.",
       "type": "object",
@@ -382,7 +326,6 @@
             "Off",
             "On"
           ],
-          "readOnly": true,
           "x-ms-enum": {
             "name": "AutoRenew",
             "modelAsString": true
@@ -410,8 +353,7 @@
         },
         "billingFrequency": {
           "description": "The billing frequency in ISO8601 format of product in the resource. Example: P1M, P3M, P1Y",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "systemOverrides": {
           "description": "System imposed policies that regulate behavior of the resource.",
@@ -471,8 +413,23 @@
         },
         "productTypeId": {
           "description": "Id of the product for which the resource is purchased",
+          "type": "string"
+        },
+        "provisioningState": {
+          "readOnly": true,
           "type": "string",
-          "readOnly": true
+          "description": "Gets the status of the M365Resource at the time the operation was called.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Accepted",
+            "Updating"
+          ],
+          "x-ms-enum": {
+            "name": "ProvisioningState",
+            "modelAsString": true
+          }
         },
         "purchaseDate": {
           "type": "string",
@@ -492,8 +449,7 @@
         },
         "skuId": {
           "description": "The SKU ID of the product for which the resource is purchased.",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "status": {
           "description": "The status of the resource.",
@@ -526,8 +482,7 @@
         },
         "termDuration": {
           "description": "The duration for which you can use the resource. Example P1Y and P1M",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "termStartDate": {
           "type": "string",
@@ -551,51 +506,6 @@
           "description": "Billing frequency of the product under the resource.",
           "type": "string",
           "readOnly": true
-        }
-      }
-    },
-    "M365ResourceCreationRequest": {
-      "description": "The request parameters for creating a new M365 resource.",
-      "type": "object",
-      "required": [
-        "productTypeId",
-        "quantity",
-        "skuId",
-        "termDuration"
-      ],
-      "properties": {
-        "autoRenew": {
-          "description": "Indicates whether auto renewal is turned on or off for a resource.",
-          "type": "string",
-          "enum": [
-            "Off",
-            "On"
-          ],
-          "x-ms-enum": {
-            "name": "AutoRenew",
-            "modelAsString": true
-          }
-        },
-        "billingFrequency": {
-          "description": "The billing frequency in ISO8601 format of product in the resource. Example: P1M, P3M, P1Y",
-          "type": "string"
-        },
-        "productTypeId": {
-          "description": "Id of the product for which the resource is purchased",
-          "type": "string"
-        },
-        "quantity": {
-          "description": "The number of licenses purchased for the resource",
-          "type": "integer",
-          "format": "int64"
-        },
-        "skuId": {
-          "description": "The SKU ID of the product for which the resource is purchased.",
-          "type": "string"
-        },
-        "termDuration": {
-          "description": "The duration for which you can use the resource. Example P1Y and P1M",
-          "type": "string"
         }
       }
     }

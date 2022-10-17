@@ -40,8 +40,4 @@ description: M365 Resource Client
 input-file:
 - Microsoft.M365/preview/2022-08-31-privatepreview/m365.json
 - Microsoft.M365/preview/2022-08-31-privatepreview/m365Operations.json
-directive:
-  - suppress: R4031
-    from: Microsoft.M365/preview/2022-08-31-privatepreview/m365.json
-    reason: provisioningState is not required for Proxy Resources.
 ```
