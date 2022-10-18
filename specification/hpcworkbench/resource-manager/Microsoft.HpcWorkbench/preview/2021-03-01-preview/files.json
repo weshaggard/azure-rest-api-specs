@@ -102,6 +102,150 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.HpcWorkbench/instances/{instanceName}/chambers/{chamberName}/files/{fileName}/manage": {
+      "post": {
+        "tags": [
+          "fileName_manage"
+        ],
+        "summary": "Manage file.",
+        "operationId": "file_manage",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "in": "path",
+            "name": "resourceGroup",
+            "description": "the resource group.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "instanceName",
+            "description": "the instance name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "chamberName",
+            "description": "the chamber name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "fileName",
+            "description": "the file name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Manage download file parameters.",
+            "schema": {
+              "$ref": "#/definitions/FilesManageParameters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "./hpcworkbench.json#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-examples": {
+          "Files Data Inbound Sync": {
+            "$ref": "./examples/FilesManage.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.HpcWorkbench/instances/{instanceName}/chambers/{chamberName}/files/{fileName}/downloadRequest": {
+      "post": {
+        "tags": [
+          "files_downloadRequest"
+        ],
+        "summary": "Operation to download file requests",
+        "operationId": "files_downloadRequest",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "in": "path",
+            "name": "resourceGroup",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "instanceName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "chamberName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "fileName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "the file download request parameters.",
+            "schema": {
+              "$ref": "#/definitions/FilesDownloadRequestParameters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "",
+            "schema": {
+              "$ref": "./hpcworkbench.json#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-examples": {
+          "Files downloadRequest": {
+            "$ref": "./examples/FilesDownloadRequest.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.HpcWorkbench/instances/{instanceName}/chambers/{chamberName}/files": {
       "get": {
         "tags": [
@@ -209,6 +353,16 @@
         "filePath": {
           "type": "string",
           "description": "The Linux File System path for the HPC Workbench chamber data pipeline file."
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The size of the file.",
+          "example": 1073741824
+        },
+        "checksum": {
+          "type": "string",
+          "description": "The MD5 hash of the file."
         }
       },
       "description": "File properties."
@@ -228,6 +382,50 @@
         }
       ],
       "description": "File resource"
+    },
+    "FilesManageParameters": {
+      "description": "Manage files in an HPC Workbench chamber data pipeline.",
+      "type": "object",
+      "properties": {
+        "dataPipeline": {
+          "description": "Inbound or outbound of the HPC Workbench chamber Data pipeline.",
+          "type": "string",
+          "enum": [
+            "Inbound",
+            "Outbound"
+          ],
+          "x-ms-enum": {
+            "name": "dataPipeline",
+            "modelAsString": true
+          }
+        },
+        "action": {
+          "description": "Specifies the file management action.",
+          "type": "string",
+          "enum": [
+            "Delete",
+            "Archive"
+          ],
+          "x-ms-enum": {
+            "name": "action",
+            "modelAsString": true
+          }
+        },
+        "force": {
+          "description": "Specifies whether to force delete. Works if action==Delete",
+          "type": "boolean"
+        }
+      }
+    },
+    "FilesDownloadRequestParameters": {
+      "description": "Request to download files from an HPC Workbench chamber data pipeline.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Specifies the reason for the download request.",
+          "type": "string"
+        }
+      }
     }
   }
 }
