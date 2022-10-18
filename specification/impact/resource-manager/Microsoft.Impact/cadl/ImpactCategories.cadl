@@ -1,11 +1,10 @@
-// Definitions for the TeamsCallingResource
-
 import "@cadl-lang/openapi";
 import "@cadl-lang/rest";
 import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-autorest";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
+import "./subscriptionResource.cadl";
 
 namespace Microsoft.Impact;
 
@@ -16,7 +15,7 @@ using Azure.ResourceManager;
 
 @doc("ImpactCategory resource")
 model ImpactCategory is ProxyResource<ImpactCategoryProperties> {
-  @pattern("^[a-zA-Z0-9-.]$")
+  @pattern("^.*$")
   @key("impactCategoryName")
   @segment("impactCategories")
   @doc("Name of the impact category")
@@ -59,7 +58,7 @@ model ResourceTypeParameter {
   @query
   @minLength(1)
   @doc("Filter by resource type")
-  "resourceType": string;
+  resourceType: string;
 }
 
 @doc("CategoryName parameter type")
@@ -67,7 +66,7 @@ model CategoryNameParameter {
   @query
   @minLength(1)
   @doc("Filter by category name ")
-  "categoryName"?: string;
+  categoryName?: string;
 }
 
 
@@ -79,8 +78,9 @@ model ImpactCategorySubscriptionScopeWithQueryParameters{
 
 }
 
+#suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-interface-uses-templates" "Using subscription scope building blocks"
 @armResourceOperations
-interface ImpactCategories extends ResourceListBySubscription<ImpactCategory>  {
+interface ImpactCategories extends SubscriptionResourceRead<ImpactCategory>  {
 
   @autoRoute
   @doc("List {name} resources by subscription ID", ImpactCategory)
@@ -90,5 +90,3 @@ interface ImpactCategories extends ResourceListBySubscription<ImpactCategory>  {
   @get
   listBySubscription(...ImpactCategorySubscriptionScopeWithQueryParameters): ArmResponse<ResourceListResult<ImpactCategory>> | ErrorResponse;
 }
-
-

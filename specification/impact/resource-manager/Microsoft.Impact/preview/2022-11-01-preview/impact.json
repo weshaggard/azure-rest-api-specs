@@ -39,10 +39,10 @@
   },
   "tags": [
     {
-      "name": "ImpactCategories"
+      "name": "WorkloadImpacts"
     },
     {
-      "name": "WorkloadImpacts"
+      "name": "ImpactCategories"
     },
     {
       "name": "Operations"
@@ -124,8 +124,47 @@
           "nextLinkName": "nextLink"
         },
         "x-ms-examples": {
-          "Get ImpactCategories list": {
+          "Get ImpactCategories list by subscription": {
             "$ref": "./examples/ImpactCategories_ListBySubscription.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Impact/impactCategories/{impactCategoryName}": {
+      "get": {
+        "tags": [
+          "ImpactCategories"
+        ],
+        "operationId": "ImpactCategories_Get",
+        "description": "Get a ImpactCategory",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ImpactCategory.impactCategoryName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/ImpactCategory"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get WorkloadImpact Resource by name": {
+            "$ref": "./examples/ImpactCategories_Get.json"
           }
         }
       }
@@ -169,49 +208,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/workloadImpacts": {
-      "get": {
-        "tags": [
-          "WorkloadImpacts"
-        ],
-        "operationId": "WorkloadImpacts_ListByResourceGroup",
-        "description": "List WorkloadImpact resources by resource group",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/WorkloadImpactListResult"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "List WorkloadImpact Resource by Resource Group": {
-            "$ref": "./examples/WorkloadImpact_ListByResourceGroup.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Impact/workloadImpacts/{workloadImpactName}": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Impact/workloadImpacts/{workloadImpactName}": {
       "put": {
         "tags": [
           "WorkloadImpacts"
@@ -224,9 +221,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkloadImpact.workloadImpactName"
@@ -274,9 +268,6 @@
           },
           "performance related impact": {
             "$ref": "./examples/performanceImpact.json"
-          },
-          "Create Workloadimpact Resource by name": {
-            "$ref": "./examples/WorkloadImpact_CreateOrUpdate.json"
           }
         },
         "x-ms-long-running-operation-options": {
@@ -296,9 +287,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkloadImpact.workloadImpactName"
@@ -336,9 +324,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "#/parameters/WorkloadImpact.workloadImpactName"
@@ -404,7 +389,7 @@
       ],
       "x-ms-enum": {
         "name": "AddressFamily",
-        "modelAsString": false
+        "modelAsString": true
       }
     },
     "ConfidenceLevel": {
@@ -417,7 +402,7 @@
       ],
       "x-ms-enum": {
         "name": "ConfidenceLevel",
-        "modelAsString": false
+        "modelAsString": true
       }
     },
     "Connectivity": {
@@ -443,7 +428,7 @@
       },
       "description": "Details about the connectivity issue. Applicable only for connectivity type of impacts."
     },
-    "IPaddress": {
+    "IPAddress": {
       "type": "object",
       "properties": {
         "type": {
@@ -507,17 +492,8 @@
       "type": "object",
       "properties": {
         "provisioningState": {
-          "type": "string",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "Resource provisioning state.",
-          "enum": [
-            "Succeeded",
-            "Failed",
-            "Canceled"
-          ],
-          "x-ms-enum": {
-            "name": "string",
-            "modelAsString": true
-          },
           "readOnly": true
         },
         "categoryId": {
@@ -584,7 +560,20 @@
       ],
       "x-ms-enum": {
         "name": "Protocol",
-        "modelAsString": false
+        "modelAsString": true
+      }
+    },
+    "ProvisioningState": {
+      "type": "string",
+      "description": "Provisioning state of the resource.",
+      "enum": [
+        "Succeeded",
+        "Failed",
+        "Canceled"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
       }
     },
     "ReportingSource": {
@@ -598,7 +587,7 @@
       ],
       "x-ms-enum": {
         "name": "ReportingSource",
-        "modelAsString": false
+        "modelAsString": true
       }
     },
     "RequiredImpactProperties": {
@@ -627,16 +616,16 @@
       "properties": {
         "uri": {
           "type": "string",
-          "description": "URI of the target, use this if it is not a azure resource ",
+          "description": "URI of the target, use this if it is not an azure resource ",
           "pattern": "https?:\\/\\/(?:www\\.)?([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)*(\\/[\\/\\d\\w\\.-]*)*(?:[\\?])*(.+)*"
         },
         "azureResourceId": {
           "type": "string",
-          "description": "Azure resource uri example /subscription/{subscription}/resourceGroup/{rg}/Microsoft.compute/virtualMachine/{vmName}",
+          "description": "Azure resource id, example /subscription/{subscription}/resourceGroup/{rg}/Microsoft.compute/virtualMachine/{vmName}",
           "pattern": "(\\/[0-9a-zA-Z]+)*"
         },
         "ipAddress": {
-          "$ref": "#/definitions/IPaddress",
+          "$ref": "#/definitions/IPAddress",
           "description": "IP address of server/host"
         }
       },
@@ -658,7 +647,7 @@
       ],
       "x-ms-enum": {
         "name": "Toolset",
-        "modelAsString": false
+        "modelAsString": true
       }
     },
     "Workload": {
@@ -679,7 +668,7 @@
       "type": "object",
       "properties": {
         "properties": {
-          "$ref": "#/definitions/WorkloadImpactsProperties",
+          "$ref": "#/definitions/WorkloadImpactProperties",
           "description": "The resource-specific properties for this resource.",
           "x-ms-mutability": [
             "read",
@@ -717,21 +706,12 @@
         "value"
       ]
     },
-    "WorkloadImpactsProperties": {
+    "WorkloadImpactProperties": {
       "type": "object",
       "properties": {
         "provisioningState": {
-          "type": "string",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "Resource provisioning state.",
-          "enum": [
-            "Succeeded",
-            "Failed",
-            "Canceled"
-          ],
-          "x-ms-enum": {
-            "name": "string",
-            "modelAsString": true
-          },
           "readOnly": true
         },
         "startDateTime": {
@@ -826,6 +806,15 @@
       "required": false,
       "description": "Filter by category name ",
       "minLength": 1,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ImpactCategory.impactCategoryName": {
+      "name": "impactCategoryName",
+      "in": "path",
+      "required": true,
+      "description": "Name of the impact category",
+      "pattern": "^.*$",
       "type": "string",
       "x-ms-parameter-location": "method"
     },

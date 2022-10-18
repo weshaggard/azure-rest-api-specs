@@ -6,6 +6,7 @@ import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-autorest";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
+import "./subscriptionResource.cadl";
 
 namespace Microsoft.Impact;
 
@@ -15,7 +16,7 @@ using OpenAPI;
 using Azure.ResourceManager;
 
 @doc("Workload Impact properties")
-model WorkloadImpact is ProxyResource<WorkloadImpactsProperties> {
+model WorkloadImpact is ProxyResource<WorkloadImpactProperties> {
   @pattern("^[a-zA-Z0-9-]{3,40}$")
   @key("workloadImpactName")
   @segment("workloadImpacts")
@@ -47,11 +48,11 @@ model Connectivity {
   destination?: SourceOrDestination;
 }
 
-@doc("Additional fields related to impact")
+@doc("Additional fields related to impact, applicable fields per resource type are list under /impactCategories API")
 model AdditionalProperties {
-  @doc("Error code associated with the impact.")
+  @doc("ARM Error code associated with the impact.")
 	errorCode?: string;
-	@doc("Error Message associated with the impact")
+	@doc("ARM Error Message associated with the impact")
 	errorMessage?: string;
 }
 
@@ -65,7 +66,7 @@ model Workload {
 
 
 @doc("Workload impact properties")
-model WorkloadImpactsProperties is ResourceProperties{
+model WorkloadImpactProperties is ResourceProperties{
 
   @doc("Time at which impact was observed ")
   startDateTime: zonedDateTime;
@@ -95,7 +96,7 @@ model WorkloadImpactsProperties is ResourceProperties{
   @doc("Azure resource id of the impacted resource")
   impactedResourceId: string;
 
-  @doc("Additional fields related to impact")
+  @doc("Additional fields related to impact, applicable fields per resource type are list under /impactCategories API")
   additionalProperties?: AdditionalProperties;
 
   @doc("Details about the connectivity issue. Applicable only for connectivity type of impacts.")
@@ -104,7 +105,7 @@ model WorkloadImpactsProperties is ResourceProperties{
   @doc("Details about performance issue. Applicable for performance impacts.")
   @extension("x-ms-identifiers", [])
   performance?: Performance[];
-  
+
   @doc("Information about the impacted workload")
   workload?: Workload;
 
@@ -116,11 +117,11 @@ model WorkloadImpactsProperties is ResourceProperties{
 
   @doc("Degree of confidence on the impact being a platform issue")
   confidenceLevel?: ConfidenceLevel;
-  
+
 }
 
 @doc("List of azure interfaces.")
-enum Toolset {
+enum ToolsetValues {
   Terraform,
   Puppet,
   Chef,
@@ -131,23 +132,32 @@ enum Toolset {
   Shell,
   Other
 }
+@knownValues(ToolsetValues)
+model Toolset is string;
+
+
 @doc("System that is reporting the impact")
-enum ReportingSource {
+enum ReportingSourceValues {
   Other ,
   Manual,
   Automated,
   Azure_Monitor
 }
+@knownValues(ReportingSourceValues)
+model ReportingSource is string;
 
 @doc("Degree of confidence on the impact being a platform issue.")
-enum ConfidenceLevel {
+enum ConfidenceLevelValues {
   Low,
   Medium,
   High
 }
+@knownValues(ConfidenceLevelValues)
+model ConfidenceLevel is string;
+
 
 @doc("List of protocols")
-enum Protocol {
+enum ProtocolValues {
   TCP,
   UDP,
   HTTP,
@@ -157,23 +167,26 @@ enum Protocol {
   SSH,
   Other
 }
+@knownValues(ProtocolValues)
+model Protocol is string;
+
 
 @doc("Resource details")
 model SourceOrDestination {
-  @doc("URI of the target, use this if it is not a azure resource ")
+  @doc("URI of the target, use this if it is not an azure resource ")
   @pattern("https?:\\/\\/(?:www\\.)?([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)*(\\/[\\/\\d\\w\\.-]*)*(?:[\\?])*(.+)*")
   uri?: string;
 
-  @doc("Azure resource uri example /subscription/{subscription}/resourceGroup/{rg}/Microsoft.compute/virtualMachine/{vmName}")
+  @doc("Azure resource id, example /subscription/{subscription}/resourceGroup/{rg}/Microsoft.compute/virtualMachine/{vmName}")
   @pattern("(\\/[0-9a-zA-Z]+)*")
   azureResourceId?: string,
 
   @doc("IP address of server/host")
-  ipAddress?: IPaddress,
+  ipAddress?: IPAddress,
 }
 
 @doc("IP address details")
-model IPaddress {
+model IPAddress {
   @doc("IP address family")
   type?: AddressFamily,
 
@@ -183,16 +196,17 @@ model IPaddress {
 }
 
 @doc("IP address family")
-enum AddressFamily {
+enum AddressFamilyValues {
  IPv4,
  IPv6
 }
 
-
+@knownValues(AddressFamilyValues)
+model AddressFamily is string;
 
 
 @armResourceOperations
-interface WorkloadImpacts extends  ResourceCreate<WorkloadImpact>,ResourceRead<WorkloadImpact> , ResourceDelete<WorkloadImpact>,
-ResourceListBySubscription<WorkloadImpact>, ResourceListByParent<WorkloadImpact> {
-}
+interface WorkloadImpacts extends  SubscriptionResourceCreate<WorkloadImpact>, SubscriptionResourceRead<WorkloadImpact> , SubscriptionResourceDelete<WorkloadImpact>,
+ResourceListBySubscription<WorkloadImpact> {
 
+}
