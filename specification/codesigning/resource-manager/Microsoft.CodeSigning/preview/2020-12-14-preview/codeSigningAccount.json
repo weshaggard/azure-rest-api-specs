@@ -586,6 +586,12 @@
             "schema": {
               "$ref": "#/definitions/CheckNameAvailabilityResult"
             }
+          },
+          "default": {
+            "description": "Resource Provider error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
           }
         },
         "x-ms-examples": {
@@ -775,11 +781,6 @@
           "type": "string",
           "description": "Used as CN in the subject name of the certificate"
         },
-        "authority": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Certificate authority of the certificate"
-        },
         "organization": {
           "type": "string",
           "description": "Used as O in the subject name of the certificate"
@@ -856,6 +857,22 @@
       "description": "Properties of the certificate profile",
       "type": "object",
       "properties": {
+        "streetAddress": {
+          "type": "string",
+          "readOnly": true
+        },
+        "country": {
+          "type": "string",
+          "readOnly": true
+        },
+        "state": {
+          "type": "string",
+          "readOnly": true
+        },
+        "city": {
+          "type": "string",
+          "readOnly": true
+        },
         "certificates": {
           "readOnly": true,
           "type": "array",
@@ -907,30 +924,21 @@
       }
     },
     "CheckNameAvailability": {
+      "description": "The parameters used to check the availability of the code signing account name.",
+      "type": "object",
       "properties": {
         "name": {
           "type": "string",
           "description": "Code signing account name."
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "Microsoft.CodeSigning/codeSigningAccounts"
-          ],
-          "x-ms-enum": {
-            "name": "Type",
-            "modelAsString": false
-          },
-          "description": "The type of resource, Microsoft.CodeSigning/codeSigningAccounts"
         }
       },
       "required": [
-        "name",
-        "type"
-      ],
-      "description": "The parameters used to check the availability of the code signing account name."
+        "name"
+      ]
     },
     "CheckNameAvailabilityResult": {
+      "description": "The CheckNameAvailability operation response.",
+      "type": "object",
       "properties": {
         "nameAvailable": {
           "readOnly": true,
@@ -940,7 +948,7 @@
         "reason": {
           "readOnly": true,
           "type": "string",
-          "description": "The reason that a code signing account name could not be used. The Reason element is only returned if NameAvailable is false.",
+          "description": "The reason that a code signing account name could not be used. The Reason element is only returned if nameAvailable is false.",
           "enum": [
             "AccountNameInvalid",
             "AlreadyExists"
@@ -955,8 +963,7 @@
           "type": "string",
           "description": "An error message explaining the Reason value in more detail."
         }
-      },
-      "description": "The CheckNameAvailability operation response."
+      }
     },
     "OperationList": {
       "description": "The paginated list of code signing API operations.",
@@ -1035,6 +1042,6 @@
       "type": "string",
       "pattern": "^(?=.{5,100}$)[^0-9][A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$",
       "x-ms-parameter-location": "method"
-    }   
+    }
   }
 }
