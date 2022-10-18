@@ -42,7 +42,7 @@ model TestLineProperties is ResourceProperties {
 }
 
 @armResourceOperations
-interface TestLines extends ResourceRead<TestLine>, ResourceCreate<TestLine>, ResourceDelete<TestLine>, ResourceListBySubscription<TestLine>, ResourceListByParent<TestLine>, ResourceUpdateNoProperties<TestLine, TestLineProperties> {}
+interface TestLines extends ResourceRead<TestLine>, ResourceCreate<TestLine>, ResourceDelete<TestLine>, ResourceListByParent<TestLine>, ResourceUpdateNoProperties<TestLine> {}
 
 @doc("A Contact resource")
 @parentResource(VoiceBridge)
@@ -73,7 +73,7 @@ model ContactProperties is ResourceProperties {
 }
 
 @armResourceOperations
-interface Contacts extends ResourceRead<Contact>, ResourceCreate<Contact>, ResourceDelete<Contact>, ResourceListBySubscription<Contact>, ResourceListByParent<Contact>, ResourceUpdateNoProperties<Contact, ContactProperties> {}
+interface Contacts extends ResourceRead<Contact>, ResourceCreate<Contact>, ResourceDelete<Contact>, ResourceListByParent<Contact>, ResourceUpdateNoProperties<Contact> {}
 
 @doc("A VoiceBridge resource")
 model VoiceBridge is TrackedResource<VoiceBridgeProperties> {
@@ -88,9 +88,7 @@ model VoiceBridge is TrackedResource<VoiceBridgeProperties> {
 
 @doc("The status of the current VoiceBridge resource.")
 enum Status {
-  @doc("The resource has been created, but the VoiceBridge service is not yet up and running.")
-  New,
-  @doc("The resource has been updated, but the VoiceBridge service has not yet been updated to reflect the changes.")
+  @doc("The resource has been created or updated, but the VoiceBridge service has not yet been updated to reflect the changes.")
   ChangePending,
   @doc("The VoiceBridge service is up and running with the parameters specified in the resource.")
   Complete,
@@ -148,6 +146,19 @@ model PrimaryRegionProperties {
 	esrpAddresses?: string[];
 }
 
+@doc("Available platform types.")
+@knownValues(VoicePlatformValues)
+model VoicePlatform is string {}
+enum VoicePlatformValues {
+	OperatorConnect,
+	TeamsPhoneMobile
+}
+
+// Currently empty, with presence indicating that this feature should be enabled.
+// This is expected to include more properties in future, hence being an object.
+@doc("Details of API bridge functionality.")
+model ApiBridgeProperties {}
+
 @doc("Details of the VoiceBridge resource.")
 model VoiceBridgeProperties is ResourceProperties {
   @doc("The current status of the deployment.")
@@ -169,7 +180,17 @@ model VoiceBridgeProperties is ResourceProperties {
   @doc("How to handle 911 calls")
   @visibility("read", "write", "create")
   e911Type: E911Type;
+
+  @doc("What platforms to support")
+  @visibility("read", "write", "create")
+  // Can be set once we get a cald release with this decorator
+  // @minItems(1)
+  platforms: VoicePlatform[];
+
+  @doc("Details of API bridge functionality, if required")
+  @visibility("read", "write", "create")
+  apiBridge?: ApiBridgeProperties;
 }
 
 @armResourceOperations
-interface VoiceBridges extends ResourceRead<VoiceBridge>, ResourceCreate<VoiceBridge>, ResourceDelete<VoiceBridge>, ResourceListBySubscription<VoiceBridge>, ResourceListByParent<VoiceBridge>, ResourceUpdateNoProperties<VoiceBridge, VoiceBridgeProperties> {}
+interface VoiceBridges extends ResourceRead<VoiceBridge>, ResourceCreate<VoiceBridge>, ResourceDelete<VoiceBridge>, ResourceListBySubscription<VoiceBridge>, ResourceListByParent<VoiceBridge>, ResourceUpdateNoProperties<VoiceBridge> {}
