@@ -25,6 +25,7 @@ model EncryptedTransportResource is TrackedResource<EncryptedTransportResourcePr
   @path
   @segment("encryptedTransport")
   name: string;
+
 }
 
 @doc("EncryptedTransportResource resource properties")
@@ -45,24 +46,27 @@ model EncryptedTransportResourceProperties {
   geographyGroup: string;
 
   @doc("End User Devices assigned to an Encrypted Transport")
-  endUserDevices?: EndUserDevice[];
+  @segment("endUserDevices")
+  endUserDevices?: EndUserDeviceResource[];
 
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
 }
 
-@doc("An End User Device object belonging to an Encrypted Transport.")
-model EndUserDevice {
-  // lowercase, uppercase letters, and numbers only, min 3, max 9 characters
-  @doc("The Device ID.")
-  @pattern("^[a-zA-Z0-9]{3,9}$")
-  id: string;
-
-  @doc("End User Device name")
+@doc("An address resource belonging to a user resource.")
+@parentResource(EncryptedTransportResource)
+model EndUserDeviceResource is ProxyResource<EndUserDeviceProperties> {
+  @doc("EndUserDevice name")
   @pattern("^[a-zA-Z0-9]{3,24}$")
+  @key("endUserDeviceName")
+  @segment("endUserDevices")
+  @path
   name: string;
+}
 
+@doc("An End User Device object belonging to an Encrypted Transport.")
+model EndUserDeviceProperties {
   // Standard MAC address format
   // 00:00:00:00:00:00
   // lowercase, uppercase letters, 6 groups of 2 hex digits, separated by colons
@@ -101,10 +105,17 @@ model EndUserDevice {
   @pattern("^[A-Z0-9]{3,9}$")
   ownerId: string;
 
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+
 }
 
 @armResourceOperations
 interface EncryptedTransport extends ResourceOperations<EncryptedTransportResource,EncryptedTransportResourceProperties> {}
+
+@armResourceOperations
+interface EndUserDevices extends ProxyResourceOperations<EndUserDeviceResource> {}
 
 @knownValues(ProvisioningStateKV)
 @doc("Provisioning State")
