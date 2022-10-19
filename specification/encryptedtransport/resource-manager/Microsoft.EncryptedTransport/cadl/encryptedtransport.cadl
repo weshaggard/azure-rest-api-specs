@@ -105,9 +105,6 @@ model EndUserDeviceProperties {
   @pattern("^[A-Z0-9]{3,9}$")
   ownerId: string;
 
-  @doc("EndUserDevice location")
-  location: ResourceLocation<EndUserDeviceResource>;
-
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
@@ -118,14 +115,7 @@ model EndUserDeviceProperties {
 interface EncryptedTransport extends ResourceOperations<EncryptedTransportResource,EncryptedTransportResourceProperties> {}
 
 @armResourceOperations
-interface EndUserDevices extends ProxyResourceOperations<EndUserDeviceResource> {
-  @armResourceUpdate(EndUserDeviceResource)
-  @patch
-  @doc("Update a EndUserDeviceResource.")
-  op Update(
-    ...ResourceInstanceParameters<EndUserDeviceResource>
-  ): ArmResponse<EndUserDeviceProperties> | ErrorResponse;
-}
+interface EndUserDevices extends ResourceOperations<EndUserDeviceResource, EndUserDeviceProperties> {}
 
 @knownValues(ProvisioningStateKV)
 @doc("Provisioning State")
