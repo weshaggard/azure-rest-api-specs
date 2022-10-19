@@ -131,7 +131,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.EncryptedTransport/encryptedTransport/{encryptedTransportName}/endUserDevices": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.EncryptedTransport/endUserDevices": {
       "get": {
         "tags": [
           "EndUserDevices"
@@ -144,9 +144,6 @@
           },
           {
             "$ref": "./common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/EncryptedTransportResource.encryptedTransportName"
           }
         ],
         "responses": {
@@ -444,13 +441,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EncryptedTransport/encryptedTransport/{encryptedTransportName}/endUserDevices": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EncryptedTransport/endUserDevices": {
       "get": {
         "tags": [
           "EndUserDevices"
         ],
-        "operationId": "EndUserDevices_ListByEncryptedTransportResource",
-        "description": "List EndUserDeviceResource resources by EncryptedTransportResource",
+        "operationId": "EndUserDevices_ListByResourceGroup",
+        "description": "List EndUserDeviceResource resources by resource group",
         "parameters": [
           {
             "$ref": "./common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -460,9 +457,6 @@
           },
           {
             "$ref": "./common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/EncryptedTransportResource.encryptedTransportName"
           }
         ],
         "responses": {
@@ -483,16 +477,16 @@
           "nextLinkName": "nextLink"
         },
         "x-ms-examples": {
-          "EndUserDevices_ListByEncryptedTransportResource_MaximumSet_Gen": {
-            "$ref": "./examples/EndUserDevices_ListByEncryptedTransportResource_MaximumSet_Gen.json"
+          "EndUserDevices_ListByResourceGroup_MaximumSet_Gen": {
+            "$ref": "./examples/EndUserDevices_ListByResourceGroup_MaximumSet_Gen.json"
           },
-          "EndUserDevices_ListByEncryptedTransportResource_MinimumSet_Gen": {
-            "$ref": "./examples/EndUserDevices_ListByEncryptedTransportResource_MinimumSet_Gen.json"
+          "EndUserDevices_ListByResourceGroup_MinimumSet_Gen": {
+            "$ref": "./examples/EndUserDevices_ListByResourceGroup_MinimumSet_Gen.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EncryptedTransport/encryptedTransport/{encryptedTransportName}/endUserDevices/{endUserDeviceName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EncryptedTransport/endUserDevices/{endUserDeviceName}": {
       "get": {
         "tags": [
           "EndUserDevices"
@@ -508,9 +502,6 @@
           },
           {
             "$ref": "./common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/EncryptedTransportResource.encryptedTransportName"
           },
           {
             "$ref": "#/parameters/EndUserDeviceResource.endUserDeviceName"
@@ -554,9 +545,6 @@
           },
           {
             "$ref": "./common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/EncryptedTransportResource.encryptedTransportName"
           },
           {
             "$ref": "#/parameters/EndUserDeviceResource.endUserDeviceName"
@@ -628,9 +616,6 @@
             "$ref": "./common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/EncryptedTransportResource.encryptedTransportName"
-          },
-          {
             "$ref": "#/parameters/EndUserDeviceResource.endUserDeviceName"
           },
           {
@@ -681,9 +666,6 @@
           },
           {
             "$ref": "./common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/EncryptedTransportResource.encryptedTransportName"
           },
           {
             "$ref": "#/parameters/EndUserDeviceResource.endUserDeviceName"
@@ -868,7 +850,49 @@
       },
       "description": "The updatable properties of the EncryptedTransportResource."
     },
-    "EndUserDeviceProperties": {
+    "EndUserDeviceResource": {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/EndUserDeviceResourceProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
+          "x-ms-client-flatten": true
+        }
+      },
+      "description": "An address resource belonging to a user resource.",
+      "allOf": [
+        {
+          "$ref": "./common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "EndUserDeviceResourceListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EndUserDeviceResource"
+          },
+          "x-cadl-name": "EndUserDeviceResource[]",
+          "description": "The EndUserDeviceResource items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The link to the next page of items",
+          "x-cadl-name": "Rest.ResourceLocation<EndUserDeviceResource>"
+        }
+      },
+      "description": "The response of a EndUserDeviceResource list operation.",
+      "required": [
+        "value"
+      ]
+    },
+    "EndUserDeviceResourceProperties": {
       "type": "object",
       "properties": {
         "macAddress": {
@@ -905,51 +929,17 @@
         "ownerId"
       ]
     },
-    "EndUserDeviceResource": {
-      "type": "object",
-      "properties": {
-        "properties": {
-          "$ref": "#/definitions/EndUserDeviceProperties",
-          "description": "The resource-specific properties for this resource.",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ],
-          "x-ms-client-flatten": true
-        }
-      },
-      "description": "An address resource belonging to a user resource.",
-      "allOf": [
-        {
-          "$ref": "./common-types/resource-management/v3/types.json#/definitions/ProxyResource"
-        }
-      ]
-    },
-    "EndUserDeviceResourceListResult": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EndUserDeviceResource"
-          },
-          "x-cadl-name": "EndUserDeviceResource[]",
-          "description": "The EndUserDeviceResource items on this page"
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "The link to the next page of items",
-          "x-cadl-name": "Rest.ResourceLocation<EndUserDeviceResource>"
-        }
-      },
-      "description": "The response of a EndUserDeviceResource list operation.",
-      "required": [
-        "value"
-      ]
-    },
     "EndUserDeviceResourceUpdate": {
       "type": "object",
       "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-cadl-name": "Record<string>",
+          "description": "Resource tags."
+        },
         "properties": {
           "$ref": "#/definitions/EndUserDeviceResourceUpdateProperties"
         }
