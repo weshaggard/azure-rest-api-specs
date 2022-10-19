@@ -1526,18 +1526,6 @@
         "modelAsString": true
       }
     },
-    "IsActive": {
-      "description": "This is to indicate whether enable/disable the operation, default behavior is enable",
-      "type": "string",
-      "enum": [
-        "Default",
-        "False"
-      ],
-      "x-ms-enum": {
-        "name": "IsActive",
-        "modelAsString": true
-      }
-    },
     "ClientType": {
       "description": "The application client type",
       "type": "string",
@@ -1568,7 +1556,8 @@
         "servicePrincipalSecret",
         "servicePrincipalCertificate",
         "secret",
-        "accessKey"
+        "accessKey",
+		    "userAccount"
       ],
       "x-ms-enum": {
         "name": "AuthType",
@@ -1667,9 +1656,6 @@
           "$ref": "#/definitions/AuthType"
         }
       },
-      "additionalProperties": {
-        "type": "string"
-      },
       "required": [
         "authType"
       ]
@@ -1683,6 +1669,17 @@
           "$ref": "#/definitions/AuthInfoBase"
         }
       ]
+    },
+    "DatabaseAadAuthInfo": {
+      "description": "The extra auth info required by Database AAD authentication.",
+      "type": "object",
+      "properties": {
+        "userName": {
+          "x-nullable": true,
+          "description": "Username created in the database which is mapped to a user in AAD.",
+          "type": "string"
+        }
+      }
     },
     "SecretAuthInfo": {
       "x-ms-discriminator-value": "secret",
@@ -1713,6 +1710,9 @@
       "allOf": [
         {
           "$ref": "#/definitions/AuthInfoBase"
+        },
+        {
+          "$ref": "#/definitions/DatabaseAadAuthInfo"
         }
       ],
       "properties": {
@@ -1744,6 +1744,9 @@
       "allOf": [
         {
           "$ref": "#/definitions/AuthInfoBase"
+        },
+        {
+          "$ref": "#/definitions/DatabaseAadAuthInfo"
         }
       ],
       "properties": {
@@ -1767,6 +1770,9 @@
       "allOf": [
         {
           "$ref": "#/definitions/AuthInfoBase"
+        },
+        {
+          "$ref": "#/definitions/DatabaseAadAuthInfo"
         }
       ],
       "properties": {
@@ -1840,6 +1846,36 @@
         "clientId",
         "principalId",
         "certificate"
+      ]
+    },
+	"UserAccountAuthInfo": {
+      "x-ms-discriminator-value": "userAccount",
+      "type": "object",
+      "description": "The authentication info when authType is user account",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuthInfoBase"
+        }
+      ],
+      "properties": {
+        "principalId": {
+          "description": "Principal Id for user account.",
+          "type": "string"
+        },
+        "deleteOrUpdateBehavior": {
+          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "$ref": "#/definitions/DeleteOrUpdateBehavior"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional, this value specifies the Azure roles to be assigned. Automatically "
+        }
+      },
+      "required": [
+        "principalId"
       ]
     },
     "LinkerResource": {
@@ -1961,52 +1997,13 @@
         }
       }
     },
-    "ConfigurationNames": {
-      "type": "object",
-      "description": "The configuration names which will be set based on specific target resource, client type, auth type.",
-      "properties": {
-        "targetService": {
-          "type": "string",
-          "description": "The target service provider name and resource name."
-        },
-        "clientTypes": {
-          "type": "array",
-          "description": "The client types for configuration names.",
-          "items": {
-            "$ref": "#/definitions/ClientType",
-            "description": "The client type."
-          }
-        },
-        "authTypes": {
-          "type": "array",
-          "description": "The auth types.",
-          "items": {
-            "$ref": "#/definitions/AuthType",
-            "description": "The auth type."
-          }
-        },
-        "names": {
-          "type": "array",
-          "description": "The configuration names to be set in compute service environment.",
-          "items": {
-            "type": "string",
-            "description": "The configuration names for each auth type."
-          }
-        }
-      }
-    },
     "ConfigurationNameResult": {
       "description": "Configuration Name list which will be set based on different target resource, client type, auth type.",
       "type": "object",
       "properties": {
         "value": {
-          "description": "Collection of Configurations for each target service.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ConfigurationNames"
-          },
-          "x-ms-identifiers": [
-          ]
+          "description": "Get a json string containing configuration names which will be set to source service.",
+          "type": "string"
         }
       }
     },
@@ -2165,25 +2162,25 @@
     },
     "PublicNetworkSolution": {
       "type": "object",
-      "description": "The public network solution, include firewall rule",
+      "description": "Indicates public network solution, include firewall rules",
       "properties": {
         "deleteOrUpdateBehavior": {
-          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "description": "Indicates whether to clean up previous operation(such as firewall rules) when Linker is updating or deleting",
           "$ref": "#/definitions/DeleteOrUpdateBehavior"
         },
-        "isActive": {
-          "description": "Optional, the default behavior is auto detected whether to config firewall according the target service situation. False if intended to opt-out any public network setting",
-          "$ref": "#/definitions/IsActive"
+        "action": {
+          "description": "Optional. Indicates public network solution. If enable, enable public network access of target service with best try. Default is enable. If optOut, opt out public network access configuration.",
+          "$ref": "#/definitions/ActionType"
         },
         "firewallRules": {
-          "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
+          "description": "Describe firewall rules of target service to make sure source application could connect to the target.",
           "$ref": "#/definitions/FirewallRules"
         }
       }
     },
     "FirewallRules": {
       "type": "object",
-      "description": "The network when type is firewall",
+      "description": "Target service's firewall rules. to allow connections from source service.",
       "properties": {
         "ipRanges": {
           "type": "array",
@@ -2192,18 +2189,14 @@
           },
           "description": "This value specifies the set of IP addresses or IP address ranges in CIDR form to be included as the allowed list of client IPs for a given database account."
         },
-        "bypass": {
-          "type": "string",
-          "description": "This is to specified the firewall allowance rule other than IP ranges.",
-          "enum": [
-            "None",
-            "CallerClientIP",
-            "AzureServices"
-          ],
-          "x-ms-enum": {
-            "name": "bypass",
-            "modelAsString": true
-          }
+        "azureServices": {
+          "description": "Allow Azure services to access the target service if true.",
+          "$ref": "#/definitions/AllowType"
+
+        },
+        "callerClientIP": {
+          "description": "Allow caller client IP to access the target service if true. the property is used when connecting local application to target service.",
+          "$ref": "#/definitions/AllowType"
         }
       }
     },
@@ -2215,9 +2208,9 @@
           "description": "Indicates whether to clean up previous operation when Linker is updating or deleting",
           "$ref": "#/definitions/DeleteOrUpdateBehavior"
         },
-        "isActive": {
-          "description": "Optional, the default behavior is to generate configurations and applied to the application if it's specified. 'False' if intended to opt-out any configuration setting",
-          "$ref": "#/definitions/IsActive"
+        "action": {
+          "description": "Optional, indicate whether to apply configurations on source application. If enable, generate configurations and applied to the source application. Default is enable. If optOut, no configuration change will be made on source.",
+          "$ref": "#/definitions/ActionType"
         },
         "customizedKeys": {
           "description": "Optional. A dictionary of default key name and customized key name mapping. If not specified, default key name will be used for generate configurations",
@@ -2467,6 +2460,30 @@
           "description": "The scope of the operation, refer https://docs.microsoft.com/azure/role-based-access-control/scope-overview",
           "type": "string"
         }
+      }
+    },
+    "ActionType": {
+      "description": "Indicates how to apply the connector operations, such as opt out network configuration, opt in configuration.",
+      "type": "string",
+      "enum": [
+        "enable",
+        "optOut"
+      ],
+      "x-ms-enum": {
+        "name": "actionType",
+        "modelAsString": true
+      }
+    },
+    "AllowType": {
+      "description": "Whether to allow firewall rules.",
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "x-ms-enum": {
+        "name": "allowType",
+        "modelAsString": true
       }
     }
   },
