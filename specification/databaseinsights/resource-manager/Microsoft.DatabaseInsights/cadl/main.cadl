@@ -1,0 +1,102 @@
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+@armNamespace
+@serviceTitle("Microsoft.DatabaseInsights")
+@serviceVersion("2023-03-01-preview")
+namespace Microsoft.DatabaseInsights;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Azure.ResourceManager;
+using OpenAPI;
+
+@doc("A DatabaseInsightsProviderHub resource")
+model DatabaseMonitoringAgent is TrackedResource<DatabaseMonitoringAgentProperties> {
+  @doc("Database Monitoring Agent name")
+  @key("DatabaseMonitoringAgentName")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @path
+  @segment("databaseMonitoringAgents")
+  name: string;
+}
+
+@doc("The status of the current operation.")
+@knownValues(ProvisioningStateKV)
+model ProvisioningState is string {}
+enum ProvisioningStateKV {
+  Succeeded,
+  Failed,
+  Canceled,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted,
+}
+
+@doc("rp specific properties of the resource DatabaseMonitoring Agent")
+model DatabaseMonitoringAgentProperties {
+  @doc("Principal Id of the identity assigned to DBMA that has access to monitoring targets (database instances), Key Vault secrets (if used to store database authentication credentials), and an Azure Data Explorer database used as the monitoring data store")
+  identity?: string;
+
+  @doc("An array of monitoring targets (database instances) to monitor")
+  @extension("x-ms-identifiers", [])
+  monitoringTargets?: MonitoringTarget[];
+ 
+  @doc("A data store for collected monitoring data")
+  datastore?: Datastore;
+  
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+}
+
+@doc("Monitoring target object")
+model MonitoringTarget {
+  @doc("Monitoring target type")
+  targetType?: TargetType;
+
+  @doc("For monitoring targets in Azure, ARM ResourceId of the target")
+  armResourceId?: string;
+
+  @doc("ARM ResourceId of the Key Vault instance storing database authentication secrets")
+  akvResourceId?: string;
+  
+  @doc("The path to the Key Vault secret storing the login name (aka user name, aka account name) for authentication to a monitoring target")
+  akvTargetUser?: string;
+
+  @doc("The path to the Key Vault secret storing the password for authentication to a monitoring target")
+  akvTargetPassword?: string;
+
+  @doc("The server name to use when connecting to a monitoring target. Used when server name cannot be derived from the ARM resource referenced as the target.")
+  overrideServerName?: string;
+
+  @doc("Monitoring target state")
+  @knownValues(MonitoringTargetState)
+  state?: string;
+}
+
+@doc("Properties of the monitoring data store object")
+model Datastore {
+  @doc("ARM ResourceId of an Azure Data Explorer database")
+  adxDatabaseId: string;
+}
+
+@doc("Enabled/disabled state of a monitoring target")
+enum MonitoringTargetState {
+  Enabled,
+  Diabled
+}
+
+@doc("Types of monitoring targets")
+enum TargetType {
+  SqlDatabase,
+  SqlElasticPool,
+  SqlManagedInstance,
+  SqlServer
+}
+
+@armResourceOperations
+interface DatabaseMonitoringAgents extends ResourceOperations<DatabaseMonitoringAgent, DatabaseMonitoringAgentProperties> {}
