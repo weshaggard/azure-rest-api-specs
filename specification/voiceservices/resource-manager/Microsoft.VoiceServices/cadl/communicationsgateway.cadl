@@ -1,4 +1,4 @@
-// Definitions for the VoiceBridge resource and child resources
+// Definitions for the CommunicationsGateway resource and child resources
 
 import "@cadl-lang/openapi";
 import "@cadl-lang/rest";
@@ -14,7 +14,7 @@ using Cadl.Rest;
 using Azure.ResourceManager;
 
 @doc("A TestLine resource")
-@parentResource(VoiceBridge)
+@parentResource(CommunicationsGateway)
 model TestLine is TrackedResource<TestLineProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("testLineName")
@@ -45,7 +45,7 @@ model TestLineProperties is ResourceProperties {
 interface TestLines extends ResourceRead<TestLine>, ResourceCreate<TestLine>, ResourceDelete<TestLine>, ResourceListByParent<TestLine>, ResourceUpdateNoProperties<TestLine> {}
 
 @doc("A Contact resource")
-@parentResource(VoiceBridge)
+@parentResource(CommunicationsGateway)
 model Contact is TrackedResource<ContactProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("contactName")
@@ -75,22 +75,22 @@ model ContactProperties is ResourceProperties {
 @armResourceOperations
 interface Contacts extends ResourceRead<Contact>, ResourceCreate<Contact>, ResourceDelete<Contact>, ResourceListByParent<Contact>, ResourceUpdateNoProperties<Contact> {}
 
-@doc("A VoiceBridge resource")
-model VoiceBridge is TrackedResource<VoiceBridgeProperties> {
+@doc("A CommunicationsGateway resource")
+model CommunicationsGateway is TrackedResource<CommunicationsGatewayProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("voiceBridgeName")
-  @segment("voiceBridges")
+  @key("communicationsGatewayName")
+  @segment("communicationsGateways")
   @doc("Unique identifier for this deployment")
   @visibility("Read")
   @path
   name: string;
 }
 
-@doc("The status of the current VoiceBridge resource.")
+@doc("The status of the current CommunicationsGateway resource.")
 enum Status {
-  @doc("The resource has been created or updated, but the VoiceBridge service has not yet been updated to reflect the changes.")
+  @doc("The resource has been created or updated, but the CommunicationsGateway service has not yet been updated to reflect the changes.")
   ChangePending,
-  @doc("The VoiceBridge service is up and running with the parameters specified in the resource.")
+  @doc("The CommunicationsGateway service is up and running with the parameters specified in the resource.")
   Complete,
 }
 
@@ -147,9 +147,9 @@ model PrimaryRegionProperties {
 }
 
 @doc("Available platform types.")
-@knownValues(VoicePlatformValues)
-model VoicePlatform is string {}
-enum VoicePlatformValues {
+@knownValues(CommunicationsPlatformValues)
+model CommunicationsPlatform is string {}
+enum CommunicationsPlatformValues {
 	OperatorConnect,
 	TeamsPhoneMobile
 }
@@ -159,8 +159,8 @@ enum VoicePlatformValues {
 @doc("Details of API bridge functionality.")
 model ApiBridgeProperties {}
 
-@doc("Details of the VoiceBridge resource.")
-model VoiceBridgeProperties is ResourceProperties {
+@doc("Details of the CommunicationsGateway resource.")
+model CommunicationsGatewayProperties is ResourceProperties {
   @doc("The current status of the deployment.")
   @visibility("read") status?: Status;
 
@@ -185,7 +185,7 @@ model VoiceBridgeProperties is ResourceProperties {
   @visibility("read", "write", "create")
   // Can be set once we get a cald release with this decorator
   // @minItems(1)
-  platforms: VoicePlatform[];
+  platforms: CommunicationsPlatform[];
 
   @doc("Details of API bridge functionality, if required")
   @visibility("read", "write", "create")
@@ -193,4 +193,4 @@ model VoiceBridgeProperties is ResourceProperties {
 }
 
 @armResourceOperations
-interface VoiceBridges extends ResourceRead<VoiceBridge>, ResourceCreate<VoiceBridge>, ResourceDelete<VoiceBridge>, ResourceListBySubscription<VoiceBridge>, ResourceListByParent<VoiceBridge>, ResourceUpdateNoProperties<VoiceBridge> {}
+interface CommunicationsGateways extends ResourceRead<CommunicationsGateway>, ResourceCreate<CommunicationsGateway>, ResourceDelete<CommunicationsGateway>, ResourceListBySubscription<CommunicationsGateway>, ResourceListByParent<CommunicationsGateway>, ResourceUpdateNoProperties<CommunicationsGateway> {}

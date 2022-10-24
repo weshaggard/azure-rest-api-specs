@@ -27,16 +27,16 @@ These are the global settings for the voiceservices.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2022-09-09-preview
+tag: package-2022-12-01-preview
 ```
 
-### Tag: package-2022-09-09-preview
+### Tag: package-2022-12-01-preview
 
-These settings apply only when `--tag=package-2022-09-09-preview` is specified on the command line.
+These settings apply only when `--tag=package-2022-12-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-09-09-preview'
+```yaml $(tag) == 'package-2022-12-01-preview'
 input-file:
-  - Microsoft.VoiceServices/preview/2022-09-09-preview/openapi.json
+  - Microsoft.VoiceServices/preview/2022-12-01-preview/openapi.json
 ```
 
 ---
@@ -54,6 +54,7 @@ swagger-to-sdk:
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
+  - repo: azure-sdk-for-net
   - repo: azure-resource-manager-schemas
   - repo: azure-cli-extensions
   - repo: azure-powershell

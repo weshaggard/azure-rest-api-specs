@@ -6,13 +6,13 @@ Please also specify `--python-sdks-folder=<path to the root directory of your az
 ``` yaml $(python)
 azure-arm: true
 license-header: MICROSOFT_MIT_NO_VERSION
-package-name: azure-mgmt-voiceservice
-namespace: azure.mgmt.voiceservice
+package-name: azure-mgmt-voiceservices
+namespace: azure.mgmt.voiceservices
 package-version: 1.0.0b1
 clear-output-folder: true
 ```
 
 ``` yaml $(python)
 no-namespace-folders: true
-output-folder: $(python-sdks-folder)/voiceservice/azure-mgmt-voiceservice/azure/mgmt/voiceservice
+output-folder: $(python-sdks-folder)/voiceservice/azure-mgmt-voiceservices/azure/mgmt/voiceservices
 ```

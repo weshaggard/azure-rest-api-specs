@@ -6,11 +6,11 @@ For new Resource Provider. It is highly recommended to onboard Azure CLI extensi
 
 ``` yaml $(az) && $(target-mode) != 'core'
 az:
-    extensions: voiceservice
-    namespace: azure.mgmt.voiceservice
-    package-name: azure-mgmt-voiceservice
-az-output-folder: $(azure-cli-extension-folder)/src/voiceservice
-python-sdk-output-folder: "$(az-output-folder)/azext_voiceservice/vendored_sdks/voiceservice"
+    extensions: voiceservices
+    namespace: azure.mgmt.voiceservices
+    package-name: azure-mgmt-voiceservices
+az-output-folder: $(azure-cli-extension-folder)/src/voiceservices
+python-sdk-output-folder: "$(az-output-folder)/azext_voiceservices/vendored_sdks/voiceservices"
 # add additional configuration here specific for Azure CLI
 # refer to the faq.md for more details
 ```
@@ -20,9 +20,9 @@ python-sdk-output-folder: "$(az-output-folder)/azext_voiceservice/vendored_sdks/
 This is for command modules that already in azure cli main repo. 
 ``` yaml $(az) && $(target-mode) == 'core'
 az:
-  extensions: voiceservice
-  namespace: azure.mgmt.voiceservice
-  package-name: azure-mgmt-voiceservice
-az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/voiceservice
-python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/voiceservice"
+  extensions: voiceservices
+  namespace: azure.mgmt.voiceservices
+  package-name: azure-mgmt-voiceservices
+az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/voiceservices
+python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/voiceservices"
 ``` 

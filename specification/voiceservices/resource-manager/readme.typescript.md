@@ -6,8 +6,8 @@ Please also specify `--typescript-sdks-folder=<path to root folder of your azure
 ``` yaml $(typescript)
 typescript:
   azure-arm: true
-  package-name: "@azure/arm-voiceservice"
-  output-folder: "$(typescript-sdks-folder)/sdk/voiceservice/arm-voiceservice"
+  package-name: "@azure/arm-voiceservices"
+  output-folder: "$(typescript-sdks-folder)/sdk/voiceservices/arm-voiceservices"
   payload-flattening-threshold: 1
   clear-output-folder: true
   generate-metadata: true
