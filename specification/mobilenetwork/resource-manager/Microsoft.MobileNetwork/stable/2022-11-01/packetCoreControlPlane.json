@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "MobileNetworkManagementClient",
-    "description": "The resources in this swagger specification will be used to manage packet core control plane resources",
+    "description": "The resources in this API specification will be used to manage packet core control plane resources",
     "version": "2022-11-01"
   },
   "host": "management.azure.com",
@@ -318,7 +318,7 @@
           "PacketCoreControlPlaneRollback"
         ],
         "operationId": "PacketCoreControlPlane_Rollback",
-        "description": "Rollback the specified packet core control plane to the previous version. This action rolls back the packet core to \"rollbackVersion\". Multiple consecutive rollbacks are not possible. This action may cause a service outage.",
+        "description": "Roll back the specified packet core control plane to the previous version, \"rollbackVersion\". Multiple consecutive rollbacks are not possible. This action may cause a service outage.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -335,16 +335,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Packet core rollback succeeded.",
-            "schema": {
-              "$ref": "#/definitions/PacketCoreControlPlane"
-            }
+            "description": "Packet core rollback succeeded."
           },
           "202": {
-            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation.",
-            "schema": {
-              "$ref": "#/definitions/PacketCoreControlPlane"
-            }
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -387,16 +381,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Packet core reinstall succeeded.",
-            "schema": {
-              "$ref": "#/definitions/PacketCoreControlPlane"
-            }
+            "description": "Packet core reinstall succeeded."
           },
           "202": {
-            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation.",
-            "schema": {
-              "$ref": "#/definitions/PacketCoreControlPlane"
-            }
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -408,6 +396,61 @@
         "x-ms-examples": {
           "Reinstall packet core control plane": {
             "$ref": "./examples/PacketCoreControlPlaneReinstall.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/packetCoreControlPlanes/{packetCoreControlPlaneName}/collectDiagnosticsPackage": {
+      "post": {
+        "tags": [
+          "PacketCoreControlPlaneCollectDiagnosticsPackage"
+        ],
+        "operationId": "PacketCoreControlPlane_CollectDiagnosticsPackage",
+        "description": "Collect a diagnostics package for the specified packet core control plane. This action will upload the diagnostics to a storage account.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/PacketCoreControlPlaneNameParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PacketCoreControlPlaneCollectDiagnosticsPackage"
+            },
+            "description": "Parameters supplied to the packet core control plane collect diagnostics package operation."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packet core diagnostics package collection succeeded."
+          },
+          "202": {
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Collect diagnostics package from packet core control plane": {
+            "$ref": "./examples/PacketCoreControlPlaneCollectDiagnosticsPackage.json"
           }
         },
         "x-ms-long-running-operation": true,
@@ -531,10 +574,6 @@
           "$ref": "#/definitions/Installation",
           "description": "The installation state of the packet core control plane resource."
         },
-        "mobileNetwork": {
-          "$ref": "./common.json#/definitions/MobileNetworkResourceId",
-          "description": "DEPRECATED: use sites instead."
-        },
         "sites": {
           "type": "array",
           "items": {
@@ -542,7 +581,7 @@
           },
           "uniqueItems": true,
           "minItems": 1,
-          "description": "Site(s) under which this packet core control plane is deployed. The sites must be in the same location as the packet core control plane."
+          "description": "Site(s) under which this packet core control plane should be deployed. The sites must be in the same location as the packet core control plane."
         },
         "platform": {
           "$ref": "#/definitions/PlatformConfiguration",
@@ -569,6 +608,14 @@
           "$ref": "./common.json#/definitions/BillingSku",
           "description": "The SKU defining the throughput and SIM allowances for this packet core control plane deployment."
         },
+        "ueMtu": {
+          "description": "The MTU (in bytes) signaled to the UE. The same MTU is set on the user plane data links for all data networks. The MTU set on the user plane access link is calculated to be 60 bytes greater than this value to allow for GTP encapsulation.",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1280,
+          "maximum": 1930,
+          "default": 1440
+        },
         "localDiagnosticsAccess": {
           "$ref": "#/definitions/LocalDiagnosticsAccessConfiguration",
           "description": "The kubernetes ingress configuration to control access to packet core diagnostics over local APIs."
@@ -579,9 +626,11 @@
         }
       },
       "required": [
+        "sites",
         "platform",
         "controlPlaneAccessInterface",
-        "sku"
+        "sku",
+        "localDiagnosticsAccess"
       ]
     },
     "PacketCoreControlPlaneListResult": {
@@ -611,7 +660,7 @@
           "$ref": "#/definitions/InstallationState"
         },
         "operation": {
-          "description": "A reference to a currently in progress installation operation",
+          "description": "A reference to an in-progress installation operation",
           "$ref": "./common.json#/definitions/AsyncOperationId"
         }
       }
@@ -652,7 +701,7 @@
           },
           {
             "value": "Upgrading",
-            "description": "The packet core is upgrading its version."
+            "description": "The packet core is upgrading to a different software version."
           },
           {
             "value": "Uninstalling",
@@ -693,6 +742,10 @@
           },
           "description": "The Azure Stack Edge devices where the packet core is deployed. If the packet core is deployed across multiple devices, all devices will appear in this list."
         },
+        "azureStackHciCluster": {
+          "$ref": "./common.json#/definitions/AzureStackHCIClusterResourceId",
+          "description": "The Azure Stack HCI cluster where the packet core is deployed."
+        },
         "connectedCluster": {
           "$ref": "./common.json#/definitions/ConnectedClusterResourceId",
           "description": "Azure Arc connected cluster where the packet core is deployed."
@@ -719,11 +772,11 @@
         "values": [
           {
             "value": "AKS-HCI",
-            "description": "If this option is chosen, you must set one of \"azureStackEdgeDevice\", \"connectedCluster\" or \"customLocation\". If multiple are set then \"customLocation\" will take precedence over \"connectedCluster\" which takes precedence over \"azureStackEdgeDevice\"."
+            "description": "If this option is chosen, you must set one of \"azureStackEdgeDevice\", \"connectedCluster\" or \"customLocation\". If multiple are set, they must be consistent with each other."
           },
           {
             "value": "3P-AZURE-STACK-HCI",
-            "description": "If this option is chosen, you must set one of \"connectedCluster\" or \"customLocation\". If multiple are set then \"customLocation\" will take precedence over \"connectedCluster\"."
+            "description": "If this option is chosen, you must set one of \"azureStackHciCluster\", \"connectedCluster\" or \"customLocation\". If multiple are set, they must be consistent with each other."
           }
         ]
       }
@@ -736,45 +789,50 @@
           "type": "string",
           "description": "How to authenticate users who access local diagnostics APIs.",
           "enum": [
-            "Password",
-            "AAD"
+            "AAD",
+            "Password"
           ],
-          "default": "Password",
           "x-ms-enum": {
             "name": "AuthenticationType",
             "modelAsString": true,
             "values": [
               {
-                "value": "Password",
-                "description": "Use locally stored passwords to authenticate the user."
+                "value": "AAD",
+                "description": "Use AAD SSO to authenticate the user (this requires internet access)."
               },
               {
-                "value": "AAD",
-                "description": "Use AAD based SSO to authenticate the user (this requires internet access)."
+                "value": "Password",
+                "description": "Use locally stored passwords to authenticate the user."
               }
             ]
           }
         },
         "httpsServerCertificate": {
-          "$ref": "#/definitions/KeyVaultCertificate",
+          "$ref": "#/definitions/HttpsServerCertificate",
           "description": "The HTTPS server TLS certificate used to secure local access to diagnostics."
-        },
-        "httpsServerCertificateProvisioning": {
-          "readOnly": true,
-          "$ref": "#/definitions/CertificateProvisioning",
-          "description": "The provisioning state of the certificate used to secure local access to diagnostics"
         }
-      }
+      },
+      "required": [
+        "authenticationType"
+      ]
     },
-    "KeyVaultCertificate": {
-      "description": "An Azure key vault certificate.",
+    "HttpsServerCertificate": {
+      "description": "HTTPS server certificate configuration.",
       "type": "object",
       "properties": {
         "certificateUrl": {
           "type": "string",
           "description": "The certificate URL, unversioned. For example: https://contosovault.vault.azure.net/certificates/ingress."
+        },
+        "provisioning": {
+          "readOnly": true,
+          "$ref": "#/definitions/CertificateProvisioning",
+          "description": "The provisioning state of the certificate."
         }
-      }
+      },
+      "required": [
+        "certificateUrl"
+      ]
     },
     "CertificateProvisioning": {
       "description": "Certificate provisioning state",
@@ -783,7 +841,7 @@
         "state": {
           "readOnly": true,
           "type": "string",
-          "description": "The certificate's current provisioning state",
+          "description": "The certificate's provisioning state",
           "enum": [
             "NotProvisioned",
             "Provisioned",
@@ -815,6 +873,19 @@
         }
       }
     },
+    "PacketCoreControlPlaneCollectDiagnosticsPackage": {
+      "description": "Packet core control plane collect diagnostics package options",
+      "type": "object",
+      "properties": {
+        "storageAccountBlobUrl": {
+          "type": "string",
+          "description": "The Storage Account Blob URL to upload the diagnostics package to."
+        }
+      },
+      "required": [
+        "storageAccountBlobUrl"
+      ]
+    },
     "PacketCoreControlPlaneVersion": {
       "description": "Packet core control plane version resource.",
       "type": "object",
@@ -843,40 +914,132 @@
           "$ref": "./common.json#/definitions/ProvisioningState",
           "description": "The provisioning state of the packet core control plane version resource."
         },
-        "versionState": {
-          "type": "string",
-          "description": "The state of this packet core control plane version.",
-          "enum": [
-            "Preview",
-            "Active",
-            "Deprecated"
-          ],
-          "x-ms-enum": {
-            "name": "versionState",
-            "modelAsString": true,
-            "values": [
-              {
-                "value": "Preview",
-                "description": "This version is a preview and is not suitable for production use."
-              },
-              {
-                "value": "Active",
-                "description": "This version is active and suitable for production use."
-              },
-              {
-                "value": "Deprecated",
-                "description": "This version is deprecated and is no longer supported."
-              }
-            ]
-          }
-        },
-        "supportedPlatforms": {
+        "platforms": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PlatformType"
+            "$ref": "#/definitions/Platform"
           },
-          "description": "A list of platforms that this version is supported on."
+          "description": "Platform specific packet core control plane version properties.",
+          "x-ms-identifiers": [
+            "platformType"
+          ]
         }
+      }
+    },
+    "Platform": {
+      "description": "Platform specific packet core control plane version properties.",
+      "type": "object",
+      "properties": {
+        "platformType": {
+          "$ref": "#/definitions/PlatformType",
+          "description": "The platform type where this version can be deployed."
+        },
+        "versionState": {
+          "$ref": "#/definitions/VersionState",
+          "description": "The state of this packet core control plane version on this platform."
+        },
+        "minimumPlatformSoftwareVersion": {
+          "type": "string",
+          "description": "The minimum software version of the platform where this packet core version can be deployed."
+        },
+        "maximumPlatformSoftwareVersion": {
+          "type": "string",
+          "description": "The maximum software version of the platform where this packet core version can be deployed."
+        },
+        "recommendedVersion": {
+          "$ref": "#/definitions/RecommendedVersion",
+          "description": "Indicates whether this is the recommended version for this platform."
+        },
+        "obsoleteVersion": {
+          "$ref": "#/definitions/ObsoleteVersion",
+          "description": "Indicates whether this version is obsoleted for this platform."
+        }
+      }
+    },
+    "VersionState": {
+      "type": "string",
+      "description": "The state of this packet core control plane version.",
+      "enum": [
+        "Unknown",
+        "Preview",
+        "Validating",
+        "ValidationFailed",
+        "Active",
+        "Deprecated"
+      ],
+      "x-ms-enum": {
+        "name": "versionState",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "Unknown",
+            "description": "The state of this version is unknown."
+          },
+          {
+            "value": "Preview",
+            "description": "This version is a preview and is not suitable for production use."
+          },
+          {
+            "value": "Validating",
+            "description": "This version is currently being validated."
+          },
+          {
+            "value": "ValidationFailed",
+            "description": "This version failed validation."
+          },
+          {
+            "value": "Active",
+            "description": "This version is active and suitable for production use."
+          },
+          {
+            "value": "Deprecated",
+            "description": "This version is deprecated and is no longer supported."
+          }
+        ]
+      }
+    },
+    "RecommendedVersion": {
+      "type": "string",
+      "description": "Indicates whether this is the recommended version to use for new packet core control plane deployments.",
+      "enum": [
+        "Recommended",
+        "NotRecommended"
+      ],
+      "x-ms-enum": {
+        "name": "recommendedVersion",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "Recommended",
+            "description": "This is the recommended version to use for new packet core control plane deployments."
+          },
+          {
+            "value": "NotRecommended",
+            "description": "This is not the recommended version to use for new packet core control plane deployments."
+          }
+        ]
+      }
+    },
+    "ObsoleteVersion": {
+      "type": "string",
+      "description": "Indicates whether this version is obsolete.",
+      "enum": [
+        "Obsolete",
+        "NotObsolete"
+      ],
+      "x-ms-enum": {
+        "name": "obsoleteVersion",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "Obsolete",
+            "description": "This version is obsolete for use in new packet core control plane deployments."
+          },
+          {
+            "value": "NotObsolete",
+            "description": "This version is not obsolete for use in new packet core control plane deployments."
+          }
+        ]
       }
     },
     "PacketCoreControlPlaneVersionListResult": {

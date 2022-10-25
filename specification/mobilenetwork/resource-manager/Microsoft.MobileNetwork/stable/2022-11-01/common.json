@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "MobileNetworkManagementClient",
-    "description": "The resources in this swagger specification will be used to manage the virtual network functions deployed using mobile network",
+    "description": "The resources in this API specification will be used to manage the virtual network functions deployed using mobile network",
     "version": "2022-11-01"
   },
   "host": "management.azure.com",
@@ -114,7 +114,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^/[sS][uU][bB][sS][cC][rR][iI][pP][tT][iI][oO][nN][sS]/[^/?#]+/[rR][eE][sS][oO][uU][rR][cC][eE][gG][rR][oO][uU][pP][sS]/[^/?#]+/[pP][rR][oO][vV][iI][dD][eE][rR][sS]/[mM][iI][cC][rR][oO][sS][oO][fF][tT]\\.[mM][oO][bB][iI][lL][eE][nN][eE][tT][wW][oO][rR][kK]/[mM][oO][bB][iI][lL][eE][nN][eE][tT][wW][oO][rR][kK][sS]/[^/?#]+/[sS][iI][mM][gG][rR][oO][uU][pP][sS]/[^/?#]+$",
+          "pattern": "^/[sS][uU][bB][sS][cC][rR][iI][pP][tT][iI][oO][nN][sS]/[^/?#]+/[rR][eE][sS][oO][uU][rR][cC][eE][gG][rR][oO][uU][pP][sS]/[^/?#]+/[pP][rR][oO][vV][iI][dD][eE][rR][sS]/[mM][iI][cC][rR][oO][sS][oO][fF][tT]\\.[mM][oO][bB][iI][lL][eE][nN][eE][tT][wW][oO][rR][kK]/[sS][iI][mM][gG][rR][oO][uU][pP][sS]/[^/?#]+$",
           "description": "SIM group resource ID."
         }
       },
@@ -181,7 +181,22 @@
       "required": [
         "id"
       ],
-      "description": "Reference to an Azure Arc custom location resource.",
+      "description": "Reference to an Azure Stack Edge device resource.",
+      "x-ms-azure-resource": true
+    },
+    "AzureStackHCIClusterResourceId": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^/[sS][uU][bB][sS][cC][rR][iI][pP][tT][iI][oO][nN][sS]/[^/?#]+/[rR][eE][sS][oO][uU][rR][cC][eE][gG][rR][oO][uU][pP][sS]/[^/?#]+/[pP][rR][oO][vV][iI][dD][eE][rR][sS]/[mM][iI][cC][rR][oO][sS][oO][fF][tT]\\.[aA][zZ][uU][rR][eE][sS][tT][aA][cC][kK][hH][cC][iI]/[cC][lL][uU][sS][tT][eE][rR][sS]/[^/?#]+$",
+          "description": "Azure Stack HCI cluster resource ID."
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "description": "Reference to an Azure Stack HCI cluster resource.",
       "x-ms-azure-resource": true
     },
     "ConnectedClusterResourceId": {
@@ -272,16 +287,9 @@
     "SiteProvisioning": {
       "type": "object",
       "readOnly": true,
-      "description": "The provisioning of a resource e.g. SIM/SIM policy on a site.",
-      "properties": {
-        "site": {
-          "description": "Site reference.",
-          "$ref": "./common.json#/definitions/SiteResourceId"
-        },
-        "state": {
-          "description": "The state of the resource on this site.",
-          "$ref": "./common.json#/definitions/SiteProvisioningState"
-        }
+      "description": "The provisioning state of a resource e.g. SIM/SIM policy on a site. The dictionary keys will ARM resource IDs in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/mobileNetworks/{mobileNetworkName}/sites/{siteName}. The dictionary values will be from the \"SiteProvisioningState\" enum.",
+      "additionalProperties": {
+        "$ref": "#/definitions/SiteProvisioningState"
       }
     },
     "SiteProvisioningState": {
@@ -290,7 +298,9 @@
       "description": "The provisioning state of a resource e.g. SIM/SIM policy on a site.",
       "enum": [
         "NotApplicable",
+        "Adding",
         "Updating",
+        "Deleting",
         "Provisioned",
         "Failed"
       ],
@@ -303,8 +313,16 @@
             "description": "The resource should not be provisioned on this site."
           },
           {
+            "value": "Adding",
+            "description": "The resource is being added to this site."
+          },
+          {
             "value": "Updating",
             "description": "The resource is being updated on this site."
+          },
+          {
+            "value": "Deleting",
+            "description": "The resource is being deleted from this site."
           },
           {
             "value": "Provisioned",

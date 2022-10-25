@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "MobileNetworkManagementClient",
-    "description": "The resources in this swagger specification will be used to manage mobile network resources",
+    "description": "The resources in this API specification will be used to manage mobile network resources",
     "version": "2022-11-01"
   },
   "host": "management.azure.com",
@@ -268,16 +268,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/SimListResult"
-            }
+            "description": "Successful."
           },
           "202": {
-            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation.",
-            "schema": {
-              "$ref": "#/definitions/SimListResult"
-            }
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -294,9 +288,6 @@
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
         }
       }
     },
@@ -364,7 +355,7 @@
           "SIMs"
         ],
         "operationId": "Sim_BulkUploadEncrypted",
-        "description": "Bulk upload SIMs in encrypted form to a SIM group. The authenticationKey and operatorKeyCode properties must be encrypted.",
+        "description": "Bulk upload SIMs in encrypted form to a SIM group. The SIM credentials must be encrypted.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -390,16 +381,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful.",
-            "schema": {
-              "$ref": "#/definitions/SimListResult"
-            }
+            "description": "Successful."
           },
           "202": {
-            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation.",
-            "schema": {
-              "$ref": "#/definitions/SimListResult"
-            }
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -416,9 +401,6 @@
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
         }
       }
     }
@@ -516,23 +498,11 @@
       "type": "object",
       "description": "Encrypted SIM properties.",
       "properties": {
-        "encryptedAuthenticationKey": {
+        "encryptedCredentials": {
           "type": "string",
+          "pattern": "^[0-9a-fA-F]+$",
           "x-ms-secret": true,
-          "x-ms-mutability": [
-            "create",
-            "update"
-          ],
-          "description": "The encrypted Ki value for the SIM."
-        },
-        "encryptedOperatorKeyCode": {
-          "type": "string",
-          "x-ms-secret": true,
-          "x-ms-mutability": [
-            "create",
-            "update"
-          ],
-          "description": "The encrypted Opc value for the SIM."
+          "description": "The encrypted SIM credentials."
         }
       },
       "allOf": [
@@ -555,17 +525,10 @@
           "$ref": "./common.json#/definitions/SimState",
           "description": "The state of the SIM resource."
         },
-        "siteProvisioning": {
+        "siteProvisioningState": {
           "readOnly": true,
-          "type": "array",
-          "items": {
-            "$ref": "./common.json#/definitions/SiteProvisioning"
-          },
-          "uniqueItems": true,
-          "description": "A list of sites and the provisioning state of this SIM on that site.",
-          "x-ms-identifiers": [
-            "site"
-          ]
+          "$ref": "./common.json#/definitions/SiteProvisioning",
+          "description": "A dictionary of sites to the provisioning state of this SIM on that site."
         },
         "internationalMobileSubscriberIdentity": {
           "type": "string",
@@ -601,6 +564,16 @@
             "attachedDataNetwork",
             "slice"
           ]
+        },
+        "vendorName": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The name of the SIM vendor who provided this SIM, if any."
+        },
+        "vendorKeyFingerprint": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The public key fingerprint of the SIM vendor who provided this SIM, if any."
         }
       },
       "required": [
@@ -658,8 +631,11 @@
           "items": {
             "$ref": "#/definitions/SimNameAndProperties"
           },
+          "minItems": 1,
           "description": "A list of SIMs to upload.",
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "name"
+          ]
         }
       },
       "required": [
@@ -675,6 +651,7 @@
           "items": {
             "type": "string"
           },
+          "minItems": 1,
           "description": "A list of SIM resource names to delete."
         }
       },
@@ -684,22 +661,53 @@
     },
     "EncryptedSimUploadList": {
       "type": "object",
-      "description": "The SIMs to upload. The authenticationKey and operatorKeyCode properties must be provided in encrypted form.",
+      "description": "The SIMs to upload. The SIM credentials must be encrypted.",
       "properties": {
-        "keyIdentifier": {
+        "version": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "description": "The upload file format version."
+        },
+        "azureKeyIdentifier": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "description": "An identifier for the Azure SIM onboarding public key used for encrypted upload."
+        },
+        "vendorKeyFingerprint": {
           "type": "string",
-          "description": "An identifier for the key used to encrypt the SIMs being uploaded."
+          "pattern": "^[0-9a-fA-F]+$",
+          "description": "The fingerprint of the SIM vendor public key. The private counterpart is used for signing the encrypted transport key."
+        },
+        "encryptedTransportKey": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]+$",
+          "description": "The transport key used for encrypting SIM credentials, encrypted using the SIM onboarding public key."
+        },
+        "signedTransportKey": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]+$",
+          "description": "The encrypted transport key, signed using the SIM vendor private key."
         },
         "sims": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/SimNameAndEncryptedProperties"
           },
+          "minItems": 1,
           "description": "A list of SIMs to upload, with encrypted properties.",
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "name"
+          ]
         }
       },
       "required": [
+        "version",
+        "azureKeyIdentifier",
+        "vendorKeyFingerprint",
+        "encryptedTransportKey",
+        "signedTransportKey",
         "sims"
       ]
     }
