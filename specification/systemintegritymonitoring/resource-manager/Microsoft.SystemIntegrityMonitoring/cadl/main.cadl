@@ -1,5 +1,5 @@
 import "@cadl-lang/rest";
-import "@cadl-lang/openapi";
+import "@cadl-lang/openapi3";
 import "@cadl-lang/versioning";
 import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-azure-core";
@@ -53,11 +53,10 @@ interface DeviceProfiles extends ResourceOperations<DeviceProfileResource, Devic
   @post
   @segment("uploadMeasurementVersion")
   @doc("Upload a new device measurement version")
-  op UploadMeasurementVersion(
+  op UploadNewMeasurementSetVersion(
 	...ResourceInstanceParameters<DeviceProfileResource>,
 
 	@body
-  @doc("Device measurement information taken from a 'clean room' device.")
 	newDeviceMeasurementPayload: NewDeviceMeasurementPayload
   ): ArmResponse<DeviceProfileResource> | ErrorResponse;
 
@@ -67,4 +66,24 @@ interface DeviceProfiles extends ResourceOperations<DeviceProfileResource, Devic
   op Initiate(
 	...ResourceInstanceParameters<DeviceProfileResource>,
   ): ArmResponse<InitiateRequestResponse> | ErrorResponse;
+
+  @post
+  @segment("applyForResources")
+  @doc("Applies measurement set version to specified azure resource connections.")
+  op ApplyForResources(
+	...ResourceInstanceParameters<DeviceProfileResource>,
+
+	@body
+	applyForResourcePayload: ApplyForResourcePayload
+  ): ArmResponse<DeviceProfileResource> | ErrorResponse;
+
+  @post
+  @segment("removeForResources")
+  @doc("Removes measurement set version currently applied to specified azure resource connections.")
+  op RemoveForResources(
+	...ResourceInstanceParameters<DeviceProfileResource>,
+
+	@body
+	removeForResourcePayload: RemoveForResourcePayload
+  ): ArmResponse<DeviceProfileResource> | ErrorResponse;
 }

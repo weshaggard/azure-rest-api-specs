@@ -3,14 +3,33 @@ import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
 import "./provisioningstate.cadl";
+import "./resourceconnection.cadl";
+
+@doc("Payload for applying measurement set versions to specified supported azure resources.")
+model ApplyForResourcePayload {
+  @doc("Measurement Set versions to be applied.")
+  versions: string[];
+
+  @doc("Supported azure resources to apply measurement set versions to.")
+  resourceToApply: ResourceConnectionProperties[];
+}
+
+@doc("Payload for removing measurement set versions applied to specified supported azure resources.")
+model RemoveForResourcePayload {
+  @doc("Measurement Set versions to be removed.")
+  versions: string[];
+
+  @doc("Supported azure resources to remove measurement set versions from.")
+  resourceToRemove: ResourceConnectionProperties[];
+}
 
 @doc("Payload for uploading new measurements from a cleanroom device to a device profile.")
 model NewDeviceMeasurementPayload {
   @doc("Challenge received from the Initiate request.")
-  challenge: string;
+  challenge: ServiceChallenge;
 
   @doc("Service context received from the Initiate request.")
-  serviceContext: string;
+  serviceContext: ServiceContext;
 
   @doc("Name of the device.")
   deviceName: string;
@@ -31,16 +50,16 @@ model AttestationProperties {
 @doc("Response received from Initiate.")
 model InitiateRequestResponse {
   @doc("Challenge received from the Initiate request.")
-  challenge: string;
+  challenge: ServiceChallenge;
 
   @doc("Service context received from the Initiate request.")
-  serviceContext: string;
+  serviceContext: ServiceContext;
 
   @doc("List of attestations the service requires from the device.")
   requiredAttestations: AttestationType[];
 
   @doc("Endpoint for devices to call MAA APIs.")
-  maaUrl: string;
+  maaUrl: Url;
 }
 
 @doc("Currently supported attestation types.")
@@ -49,3 +68,11 @@ model AttestationType is string {}
 enum AttestationTypeValues {
   Boot
 }
+
+model ServiceChallenge is string;
+
+model ServiceContext is string;
+
+model DeviceId is string;
+
+model Url is string;

@@ -726,6 +726,62 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SystemIntegrityMonitoring/simHubs/{simHubName}/deviceProfiles/{deviceProfileName}/applyForResources": {
+      "post": {
+        "tags": [
+          "DeviceProfiles"
+        ],
+        "operationId": "DeviceProfiles_ApplyForResources",
+        "description": "Applies measurement set version to specified azure resource connections.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SIMHubResource.simHubName"
+          },
+          {
+            "$ref": "#/parameters/DeviceProfileResource.deviceProfileName"
+          },
+          {
+            "name": "applyForResourcePayload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ApplyForResourcePayload"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/DeviceProfileResource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "DeviceProfiles_ApplyForResources_MaximumSet_Gen": {
+            "$ref": "./examples/DeviceProfiles_ApplyForResources_MaximumSet_Gen.json"
+          },
+          "DeviceProfiles_ApplyForResources_MinimumSet_Gen": {
+            "$ref": "./examples/DeviceProfiles_ApplyForResources_MinimumSet_Gen.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SystemIntegrityMonitoring/simHubs/{simHubName}/deviceProfiles/{deviceProfileName}/initiate": {
       "post": {
         "tags": [
@@ -774,12 +830,68 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SystemIntegrityMonitoring/simHubs/{simHubName}/deviceProfiles/{deviceProfileName}/removeForResources": {
+      "post": {
+        "tags": [
+          "DeviceProfiles"
+        ],
+        "operationId": "DeviceProfiles_RemoveForResources",
+        "description": "Removes measurement set version currently applied to specified azure resource connections.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SIMHubResource.simHubName"
+          },
+          {
+            "$ref": "#/parameters/DeviceProfileResource.deviceProfileName"
+          },
+          {
+            "name": "removeForResourcePayload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RemoveForResourcePayload"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/DeviceProfileResource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "DeviceProfiles_RemoveForResources_MaximumSet_Gen": {
+            "$ref": "./examples/DeviceProfiles_RemoveForResources_MaximumSet_Gen.json"
+          },
+          "DeviceProfiles_RemoveForResources_MinimumSet_Gen": {
+            "$ref": "./examples/DeviceProfiles_RemoveForResources_MinimumSet_Gen.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SystemIntegrityMonitoring/simHubs/{simHubName}/deviceProfiles/{deviceProfileName}/uploadMeasurementVersion": {
       "post": {
         "tags": [
           "DeviceProfiles"
         ],
-        "operationId": "DeviceProfiles_UploadMeasurementVersion",
+        "operationId": "DeviceProfiles_UploadNewMeasurementSetVersion",
         "description": "Upload a new device measurement version",
         "parameters": [
           {
@@ -801,7 +913,6 @@
             "name": "newDeviceMeasurementPayload",
             "in": "body",
             "required": true,
-            "description": "Device measurement information taken from a 'clean room' device.",
             "schema": {
               "$ref": "#/definitions/NewDeviceMeasurementPayload"
             }
@@ -822,17 +933,44 @@
           }
         },
         "x-ms-examples": {
-          "DeviceProfiles_UploadMeasurementVersion_MaximumSet_Gen": {
-            "$ref": "./examples/DeviceProfiles_UploadMeasurementVersion_MaximumSet_Gen.json"
+          "DeviceProfiles_UploadNewMeasurementSetVersion_MaximumSet_Gen": {
+            "$ref": "./examples/DeviceProfiles_UploadNewMeasurementSetVersion_MaximumSet_Gen.json"
           },
-          "DeviceProfiles_UploadMeasurementVersion_MinimumSet_Gen": {
-            "$ref": "./examples/DeviceProfiles_UploadMeasurementVersion_MinimumSet_Gen.json"
+          "DeviceProfiles_UploadNewMeasurementSetVersion_MinimumSet_Gen": {
+            "$ref": "./examples/DeviceProfiles_UploadNewMeasurementSetVersion_MinimumSet_Gen.json"
           }
         }
       }
     }
   },
   "definitions": {
+    "ApplyForResourcePayload": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-cadl-name": "string[]",
+          "description": "Measurement Set versions to be applied."
+        },
+        "resourceToApply": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceConnectionProperties"
+          },
+          "x-ms-identifiers": [],
+          "x-cadl-name": "ResourceConnectionProperties[]",
+          "description": "Supported azure resources to apply measurement set versions to."
+        }
+      },
+      "description": "Payload for applying measurement set versions to specified supported azure resources.",
+      "required": [
+        "versions",
+        "resourceToApply"
+      ]
+    },
     "AttestationProperties": {
       "type": "object",
       "properties": {
@@ -877,13 +1015,11 @@
           },
           "x-ms-identifiers": [],
           "x-cadl-name": "MeasurementSetProperties[]",
-          "description": "List of every measurement version that was created for the given IoT device profile."
+          "description": "List of every measurement version that was created for the given IoT device profile.",
+          "readOnly": true
         }
       },
-      "description": "SIM Device Profile properties.",
-      "required": [
-        "measurementSets"
-      ]
+      "description": "SIM Device Profile properties."
     },
     "DeviceProfileResource": {
       "type": "object",
@@ -946,28 +1082,18 @@
     },
     "DeviceProfileResourceUpdateProperties": {
       "type": "object",
-      "properties": {
-        "measurementSets": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MeasurementSetProperties"
-          },
-          "x-ms-identifiers": [],
-          "x-cadl-name": "MeasurementSetProperties[]",
-          "description": "List of every measurement version that was created for the given IoT device profile."
-        }
-      },
+      "properties": {},
       "description": "The updatable properties of the DeviceProfileResource."
     },
     "InitiateRequestResponse": {
       "type": "object",
       "properties": {
         "challenge": {
-          "type": "string",
+          "$ref": "#/definitions/ServiceChallenge",
           "description": "Challenge received from the Initiate request."
         },
         "serviceContext": {
-          "type": "string",
+          "$ref": "#/definitions/ServiceContext",
           "description": "Service context received from the Initiate request."
         },
         "requiredAttestations": {
@@ -979,7 +1105,7 @@
           "description": "List of attestations the service requires from the device."
         },
         "maaUrl": {
-          "type": "string",
+          "$ref": "#/definitions/Url",
           "description": "Endpoint for devices to call MAA APIs."
         }
       },
@@ -1005,8 +1131,7 @@
             "type": "string"
           },
           "x-cadl-name": "Record<string>",
-          "description": "The values that this measurement set holds. Used for field devices to attest against.",
-          "readOnly": true
+          "description": "The values that this measurement set holds. Used for field devices to attest against."
         },
         "scopes": {
           "type": "array",
@@ -1020,15 +1145,17 @@
       },
       "description": "Definition for a set of measurements that were taken from a clean room device. Once approved, field devices can use it to match their measurements against and get attested if the matching succeeds.",
       "required": [
+        "version",
+        "values",
         "scopes"
       ]
     },
     "MeasurementSetScope": {
       "type": "object",
       "properties": {
-        "resourceId": {
-          "type": "string",
-          "description": "Resource Id of the scope. Expected to match any linked resources under SIM Hub."
+        "resource": {
+          "$ref": "#/definitions/ResourceConnectionProperties",
+          "description": "Resource of the scope. Expected to match any linked resources under SIM Hub."
         },
         "state": {
           "$ref": "#/definitions/MeasurementSetState",
@@ -1037,7 +1164,7 @@
       },
       "description": "Scope where a measurement set applies to.",
       "required": [
-        "resourceId",
+        "resource",
         "state"
       ]
     },
@@ -1057,11 +1184,11 @@
       "type": "object",
       "properties": {
         "challenge": {
-          "type": "string",
+          "$ref": "#/definitions/ServiceChallenge",
           "description": "Challenge received from the Initiate request."
         },
         "serviceContext": {
-          "type": "string",
+          "$ref": "#/definitions/ServiceContext",
           "description": "Service context received from the Initiate request."
         },
         "deviceName": {
@@ -1102,6 +1229,33 @@
         "name": "ProvisioningState",
         "modelAsString": true
       }
+    },
+    "RemoveForResourcePayload": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-cadl-name": "string[]",
+          "description": "Measurement Set versions to be removed."
+        },
+        "resourceToRemove": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceConnectionProperties"
+          },
+          "x-ms-identifiers": [],
+          "x-cadl-name": "ResourceConnectionProperties[]",
+          "description": "Supported azure resources to remove measurement set versions from."
+        }
+      },
+      "description": "Payload for removing measurement set versions applied to specified supported azure resources.",
+      "required": [
+        "versions",
+        "resourceToRemove"
+      ]
     },
     "ResourceConnectionProperties": {
       "type": "object",
@@ -1235,6 +1389,15 @@
         }
       },
       "description": "The updatable properties of the SIMHubResource."
+    },
+    "ServiceChallenge": {
+      "type": "string"
+    },
+    "ServiceContext": {
+      "type": "string"
+    },
+    "Url": {
+      "type": "string"
     }
   },
   "parameters": {

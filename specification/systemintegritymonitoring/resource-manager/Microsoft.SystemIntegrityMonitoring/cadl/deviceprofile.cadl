@@ -3,6 +3,7 @@ import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
 import "./provisioningstate.cadl";
+import "./resourceconnection.cadl";
 
 @doc("The current state of the profile.")
 @knownValues(MeasurementSetStateValues)
@@ -19,18 +20,18 @@ model DeviceProfileProperties {
   provisioningState?: ProvisioningState;
 
   @doc("List of every measurement version that was created for the given IoT device profile.")
-  measurementSets: MeasurementSetProperties[];
+  @visibility("read")
+  measurementSets?: MeasurementSetProperties[];
 }
 
 @doc("Definition for a set of measurements that were taken from a clean room device. Once approved, field devices can use it to match their measurements against and get attested if the matching succeeds.")
 model MeasurementSetProperties {
   @doc("The version of this measurement.")
   @visibility("read")
-  version?: string;
+  version: string;
 
   @doc("The values that this measurement set holds. Used for field devices to attest against.")
-  @visibility("read")
-  values?: Record<string>;
+  values: Record<string>;
 
   @doc("The scopes where this measurement set should be applied on.")
   scopes: MeasurementSetScope[];
@@ -38,8 +39,8 @@ model MeasurementSetProperties {
 
 @doc("Scope where a measurement set applies to.")
 model MeasurementSetScope {
-  @doc("Resource Id of the scope. Expected to match any linked resources under SIM Hub.")
-  resourceId: string;
+  @doc("Resource of the scope. Expected to match any linked resources under SIM Hub.")
+  resource: ResourceConnectionProperties;
 
   @doc("The current state of the measurement in the specific scope.")
   state: MeasurementSetState;
