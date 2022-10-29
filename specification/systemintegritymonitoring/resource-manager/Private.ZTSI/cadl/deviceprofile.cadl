@@ -5,10 +5,10 @@ import "@azure-tools/cadl-azure-resource-manager";
 import "./provisioningstate.cadl";
 import "./resourceconnection.cadl";
 
-@doc("The current state of the profile.")
-@knownValues(MeasurementSetStateValues)
-model MeasurementSetState is string {}
-enum MeasurementSetStateValues {
+@doc("The current state of the measurement profile.")
+@knownValues(MeasurementProfileStateValues)
+model MeasurementProfileState is string {}
+enum MeasurementProfileStateValues {
   Staged,
   Approved
 }
@@ -21,27 +21,27 @@ model DeviceProfileProperties {
 
   @doc("List of every measurement version that was created for the given IoT device profile.")
   @visibility("read")
-  measurementSets?: MeasurementSetProperties[];
+  measurementProfileVersions?: MeasurementProfileProperties[];
 }
 
 @doc("Definition for a set of measurements that were taken from a clean room device. Once approved, field devices can use it to match their measurements against and get attested if the matching succeeds.")
-model MeasurementSetProperties {
+model MeasurementProfileProperties {
   @doc("The version of this measurement.")
   @visibility("read")
   version: string;
 
-  @doc("The values that this measurement set holds. Used for field devices to attest against.")
+  @doc("The values that this measurement profile holds. Used for field devices to attest against.")
   values: Record<string>;
 
-  @doc("The scopes where this measurement set should be applied on.")
-  scopes: MeasurementSetScope[];
+  @doc("The scopes where this measurement profile should be applied on.")
+  scopes: MeasurementProfileResourceConnection[];
 }
 
-@doc("Scope where a measurement set applies to.")
-model MeasurementSetScope {
+@doc("Scope where a measurement profile applies to.")
+model MeasurementProfileResourceConnection {
   @doc("Resource of the scope. Expected to match any linked resources under SIM Hub.")
   resource: ResourceConnectionProperties;
 
   @doc("The current state of the measurement in the specific scope.")
-  state: MeasurementSetState;
+  state: MeasurementProfileState;
 }

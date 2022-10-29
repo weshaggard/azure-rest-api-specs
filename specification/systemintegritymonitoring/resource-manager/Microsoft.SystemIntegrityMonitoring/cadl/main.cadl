@@ -33,7 +33,7 @@ model SIMHubResource is TrackedResource<SIMHubProperties> {
   name: string;
 }
 
-@doc("A device profile that holds measurement sets uploaded by a cleanroom device. Scoped under a SIM Hub.")
+@doc("A device profile that holds measurement profiles uploaded by a cleanroom device. Scoped under a SIM Hub.")
 @parentResource(SIMHubResource)
 model DeviceProfileResource is TrackedResource<DeviceProfileProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
@@ -51,13 +51,13 @@ interface SIMHubs extends ResourceOperations<SIMHubResource, SIMHubProperties> {
 @armResourceOperations
 interface DeviceProfiles extends ResourceOperations<DeviceProfileResource, DeviceProfileProperties> {
   @post
-  @segment("uploadMeasurementVersion")
-  @doc("Upload a new device measurement version")
-  op UploadNewMeasurementSetVersion(
+  @segment("uploadMeasurementProfile")
+  @doc("Upload a new device measurement profile version")
+  op UploadNewMeasurementProfileVersion(
 	...ResourceInstanceParameters<DeviceProfileResource>,
 
 	@body
-	newDeviceMeasurementPayload: NewDeviceMeasurementPayload
+	newMeasurementProfilePayload: NewMeasurementProfilePayload
   ): ArmResponse<DeviceProfileResource> | ErrorResponse;
 
   @post
@@ -68,22 +68,22 @@ interface DeviceProfiles extends ResourceOperations<DeviceProfileResource, Devic
   ): ArmResponse<InitiateRequestResponse> | ErrorResponse;
 
   @post
-  @segment("applyForResources")
-  @doc("Applies measurement set version to specified azure resource connections.")
-  op ApplyForResources(
+  @segment("applyForResourceConnections")
+  @doc("Applies measurement profile version to specified azure resource connections.")
+  op ApplyForResourceConnections(
 	...ResourceInstanceParameters<DeviceProfileResource>,
 
 	@body
-	applyForResourcePayload: ApplyForResourcePayload
+	applyForResourceConnectionsPayload: ApplyForResourceConnectionsPayload
   ): ArmResponse<DeviceProfileResource> | ErrorResponse;
 
   @post
-  @segment("removeForResources")
-  @doc("Removes measurement set version currently applied to specified azure resource connections.")
-  op RemoveForResources(
+  @segment("removeForResourceConnections")
+  @doc("Removes measurement profile version currently applied to specified azure resource connections.")
+  op RemoveForResourceConnections(
 	...ResourceInstanceParameters<DeviceProfileResource>,
 
 	@body
-	removeForResourcePayload: RemoveForResourcePayload
+	removeForResourceConnectionsPayload: RemoveForResourceConnectionsPayload
   ): ArmResponse<DeviceProfileResource> | ErrorResponse;
 }
