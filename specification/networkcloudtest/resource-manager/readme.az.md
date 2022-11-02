@@ -6,11 +6,11 @@ For new Resource Provider. It is highly recommended to onboard Azure CLI extensi
 
 ``` yaml $(az) && $(target-mode) != 'core'
 az:
-    extensions: networkcloudtest
-    namespace: azure.mgmt.NetworkCloudTest
-    package-name: azure-mgmt-NetworkCloudTest
-az-output-folder: $(azure-cli-extension-folder)/src/NetworkCloudTest
-python-sdk-output-folder: "$(az-output-folder)/azext_NetworkCloudTest/vendored_sdks/NetworkCloudTest"
+    extensions: networkcloud
+    namespace: azure.mgmt.NetworkCloud
+    package-name: azure-mgmt-NetworkCloud
+az-output-folder: $(azure-cli-extension-folder)/src/NetworkCloud
+python-sdk-output-folder: "$(az-output-folder)/azext_NetworkCloud/vendored_sdks/NetworkCloud"
 # add additional configuration here specific for Azure CLI
 # refer to the faq.md for more details
 ```
@@ -20,9 +20,9 @@ python-sdk-output-folder: "$(az-output-folder)/azext_NetworkCloudTest/vendored_s
 This is for command modules that already in azure cli main repo. 
 ``` yaml $(az) && $(target-mode) == 'core'
 az:
-  extensions: networkcloudtest
-  namespace: azure.mgmt.NetworkCloudTest
-  package-name: azure-mgmt-NetworkCloudTest
-az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/NetworkCloudTest
-python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/NetworkCloudTest"
+  extensions: networkcloud
+  namespace: azure.mgmt.NetworkCloud
+  package-name: azure-mgmt-NetworkCloud
+az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/NetworkCloud
+python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/NetworkCloud"
 ``` 

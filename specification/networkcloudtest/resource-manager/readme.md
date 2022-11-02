@@ -2,7 +2,7 @@
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for NetworkCloudTest.
+This is the AutoRest configuration file for NetworkCloud.
 
 ## Getting Started
 
@@ -22,21 +22,43 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for NetworkCloudTest.
+These are the global settings for NetworkCloud.
 
 ```yaml
 openapi-type: arm
 openapi-subtype: providerHub
-tag: package-2021-10-21-preview
+tag: package-2022-09-30-preview
 ```
 
-### Tag: package-2021-10-21-preview
+### Tag: package-2022-04-29-preview
 
-These settings apply only when `--tag=package-2021-10-21-preview` is specified on the command line.
+These settings apply only when `--tag=package-2022-04-29-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-10-21-preview'
+```yaml $(tag) == 'package-2022-04-29-preview'
 input-file:
-  - Microsoft.NetworkCloudTest/preview/2021-10-21-preview/networkcloud.json
+  - Microsoft.NetworkCloudTest/preview/2022-04-29-preview/networkcloud.json
+```
+
+---
+
+### Tag: package-2022-07-30-preview
+
+These settings apply only when `--tag=package-2022-07-30-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-07-30-preview'
+input-file:
+  - Microsoft.NetworkCloudTest/preview/2022-07-30-preview/networkcloud.json
+```
+
+---
+
+### Tag: package-2022-09-30-preview
+
+These settings apply only when `--tag=package-2022-09-30-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-09-30-preview'
+input-file:
+  - Microsoft.NetworkCloudTest/preview/2022-09-30-preview/networkcloud.json
 ```
 
 ---
@@ -52,9 +74,8 @@ This is not used by Autorest itself.
 swagger-to-sdk:
   - repo: azure-sdk-for-net
   - repo: azure-sdk-for-python-track2
-  - repo: azure-sdk-for-python
   - repo: azure-sdk-for-java
-  - repo: azure-sdk-for-go
+  - repo: azure-sdk-for-go-track2
   - repo: azure-sdk-for-js
   - repo: azure-resource-manager-schemas
   - repo: azure-cli-extensions
