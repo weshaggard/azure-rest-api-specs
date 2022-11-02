@@ -22,6 +22,19 @@ model KXInsightsResource is TrackedResource<KXInsightsProperties> {
   name: string;
 }
 
+@doc("Provisioning State")
+@knownValues(ProvisioningStateKV)
+model ProvisioningState is string {}
+
+enum ProvisioningStateKV {
+  Succeeded,
+  Failed,
+  Canceled,
+  Provisioning,
+  Deleting,
+  Accepted,
+}
+
 @secret
 model PasswordString is string {}
 
@@ -31,14 +44,11 @@ model KXInsightsProperties {
   @doc("The password to use for KeyCloak")
   @pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*]).{12,320}$")
   keyCloakPassword: PasswordString;
+
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
 }
 
 @armResourceOperations
-interface KXInsights extends ResourceOperations<KXInsightsResource, KXInsightsProperties> {
-  @post
-  @doc("Get the health of the cluster")
-  @segment("healthcheck")
-  op HealthCheck(
-    ...ResourceInstanceParameters<KXInsightsResource>
-  ): ArmResponse<string> | ErrorResponse;
-}
+interface KXInsights extends ResourceOperations<KXInsightsResource, KXInsightsProperties> {}
