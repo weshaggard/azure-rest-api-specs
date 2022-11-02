@@ -706,7 +706,7 @@
             "description": "Input parameters for adding email addresses to a suppression list.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SuppressionListUpdateRequest"
+              "$ref": "#/definitions/SuppressionListAddRequest"
             }
           },
           {
@@ -741,10 +741,10 @@
         ],
         "x-ms-examples": {
           "Add suppressed email addresses": {
-            "$ref": "./examples/domains/addOrRemoveSuppressedEmailAddresses.json"
+            "$ref": "./examples/domains/addSuppressedEmailAddresses.json"
           },
           "Add suppressed email addresses by valid sender user name": {
-            "$ref": "./examples/domains/addOrRemoveSuppressedEmailAddressesByUsername.json"
+            "$ref": "./examples/domains/addSuppressedEmailAddressesByUsername.json"
           }
         }
       }
@@ -764,7 +764,7 @@
             "description": "Input parameters for removing email addresses from a suppression list.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SuppressionListUpdateRequest"
+              "$ref": "#/definitions/SuppressionListRemoveRequest"
             }
           },
           {
@@ -799,10 +799,10 @@
         ],
         "x-ms-examples": {
           "Remove suppressed email addresses": {
-            "$ref": "./examples/domains/addOrRemoveSuppressedEmailAddresses.json"
+            "$ref": "./examples/domains/removeSuppressedEmailAddresses.json"
           },
           "Remove suppressed email addresses by valid sender user name": {
-            "$ref": "./examples/domains/addOrRemoveSuppressedEmailAddressesByUsername.json"
+            "$ref": "./examples/domains/removeSuppressedEmailAddressesByUsername.json"
           }
         }
       }
@@ -1083,14 +1083,14 @@
       "description": "Object that includes an array of suppressed email addresses and a possible link for next set.",
       "type": "object",
       "required": [
-        "value"
+        "suppressedEmailAddresses"
       ],
       "properties": {
-        "value": {
+        "suppressedEmailAddresses": {
           "description": "List of suppressed email addresses.",
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/SuppressionListRecordDto"
           }
         },
         "nextLink": {
@@ -1117,24 +1117,106 @@
         }
       }
     },
-    "SuppressionListUpdateRequest": {
-      "description": "Object that describes the request parameter to add or remove suppressed emails.",
+    "SuppressionListAddRequest": {
+      "description": "Object that describes what address will be added to the suppression list.",
       "type": "object",
       "required": [
-        "emailAddresses"
+        "addressInfoList"
       ],
       "properties": {
         "validSenderUsername": {
           "description": "Optional parameter to operate on suppression list associated with a valid sender user name. When this parameter is not present, by default the domain level suppression list will be operated on.",
           "type": "string"
         },
-        "emailAddresses": {
-          "description": "List of email addresses",
+        "addressInfoList": {
+          "description": "List of objects for each address to add to the suppression list",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/SuppressionListAddressInfo"
+          }
+        }
+      }
+    },
+    "SuppressionListRemoveRequest": {
+      "description": "Object that describes what address will be removed from the suppression list.",
+      "type": "object",
+      "required": [
+        "addresses"
+      ],
+      "properties": {
+        "validSenderUsername": {
+          "description": "Optional parameter to operate on suppression list associated with a valid sender user name. When this parameter is not present, by default the domain level suppression list will be operated on.",
+          "type": "string"
+        },
+        "addresses": {
+          "description": "List of email addresses to remove.",
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "SuppressionListAddressInfo": {
+      "description": "Object that describes new email recipient being added to a suppression list.",
+      "type": "object",
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "email": {
+          "description": "Email address of the recipeint.",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "The first name of the email recipient.",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "The last name of the email recipient.",
+          "type": "string"
+        },
+        "notes": {
+          "description": "An optional property to provide contextual notes or a description for an address.",
+          "type": "string"
+        }
+      }
+    }, 
+    "SuppressionListRecordDto": {
+      "description": "A object that represents a SuppressionList record.",
+      "type": "object",
+      "required": [
+        "email",
+        "listId"
+      ],
+      "properties": {
+        "email": {
+          "description": "Email address of the recipeint.",
+          "type": "string"
+        },
+        "listId": {
+          "description": "The list id which this address is unsubscribed from (maps to the mail from field in the portal).",
+          "type": "string",
+          "readOnly": true
+        },
+        "firstName": {
+          "description": "The first name of the email recipient.",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "The last name of the email recipient.",
+          "type": "string"
+        },
+        "notes": {
+          "description": "An optional property to provide contextual notes or a description for an address.",
+          "type": "string"
+        },
+        "lastUpdated": {
+          "description": "The date the address was last updated in a suppression list.",
+          "type": "string",
+          "readOnly": true
         }
       }
     }
