@@ -993,6 +993,12 @@
               "$ref": "#/definitions/AzureDevOpsRepo"
             }
           },
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/AzureDevOpsRepo"
+            }
+          },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
@@ -1371,7 +1377,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/GitHubRepoV2ListResponse"
+              "$ref": "#/definitions/GitHubRepoListResponse"
             }
           },
           "default": {
@@ -1535,7 +1541,7 @@
         "tags": [
           "default"
         ],
-        "summary": "Create or update a monitored GitHub repository.",
+        "summary": "Create or update a monitored GitHub owner.",
         "operationId": "GitHubOwner_CreateOrUpdate",
         "consumes": [
           "application/json"
@@ -1562,7 +1568,7 @@
           {
             "in": "body",
             "name": "gitHubOwner",
-            "description": "Github org.",
+            "description": "Github owner.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitHubOwner"
@@ -1630,7 +1636,7 @@
           {
             "in": "body",
             "name": "gitHubOwner",
-            "description": "Github org.",
+            "description": "Github owner.",
             "schema": {
               "$ref": "#/definitions/GitHubOwner"
             }
@@ -2069,8 +2075,9 @@
       "type": "object",
       "properties": {
         "code": {
-          "description": "Gets or sets one-time OAuth code to exchange for refresh and access tokens.\r\nOnly used during PUT operations. The secret is cleared during GET.\r\nIn general, RPaaS does not return any property marked as a secret.",
+          "description": "Gets or sets one-time OAuth code to exchange for refresh and access tokens.\r\n\r\nOnly used during PUT operations. The secret is cleared during GET.\r\nIn general, RPaaS does not return any property marked as a secret.",
           "type": "string",
+          "example": "00000000000000000000.",
           "x-ms-secret": true
         }
       }
@@ -2241,6 +2248,7 @@
       }
     },
     "AzureDevOpsOrgProperties": {
+      "description": "AzureDevOps Org properties.",
       "type": "object",
       "properties": {
         "provisioningState": {
@@ -2304,10 +2312,15 @@
       }
     },
     "AzureDevOpsProjectProperties": {
+      "description": "AzureDevOps Project properties.",
       "type": "object",
       "properties": {
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState"
+        },
+        "orgName": {
+          "description": "Gets or sets AzureDevOps org Name.",
+          "type": "string"
         },
         "projectId": {
           "description": "Gets or sets AzureDevOps Project Id.",
@@ -2350,10 +2363,21 @@
       }
     },
     "AzureDevOpsRepoProperties": {
+      "description": "AzureDevOps Repo properties.",
       "type": "object",
       "properties": {
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState"
+        },
+        "orgName": {
+          "description": "Gets or sets AzureDevOps org Name.",
+          "type": "string",
+          "readOnly": true
+        },
+        "projectName": {
+          "description": "Gets or sets AzureDevOps project Name.",
+          "type": "string",
+          "readOnly": true
         },
         "repoId": {
           "description": "Gets or sets Azure DevOps repo id.",
@@ -2414,7 +2438,7 @@
           "$ref": "#/definitions/ProvisioningState"
         },
         "code": {
-          "description": "Gets or sets one-time OAuth code to exchange for refresh and access tokens.\r\nOnly used during PUT operations. The secret is cleared during GET.\r\nIn general, RPaaS does not return any property marked as a secret.",
+          "description": "Gets or sets one-time OAuth code to exchange for refresh and access tokens.\r\n\r\nOnly used during PUT operations. The secret is cleared during GET.\r\nIn general, RPaaS does not return any property marked as a secret.",
           "type": "string",
           "example": "00000000000000000000.",
           "x-ms-secret": true
@@ -2470,6 +2494,7 @@
       }
     },
     "GitHubOwner": {
+      "description": "GitHub repo owner Proxy Resource.",
       "type": "object",
       "allOf": [
         {
@@ -2500,6 +2525,7 @@
       }
     },
     "GitHubOwnerProperties": {
+      "description": "GitHub Repo Owner properties.",
       "type": "object",
       "properties": {
         "provisioningState": {
@@ -2512,6 +2538,7 @@
       }
     },
     "GitHubRepo": {
+      "description": "GitHub repo Proxy Resource.",
       "type": "object",
       "allOf": [
         {
@@ -2520,7 +2547,7 @@
       ],
       "properties": {
         "properties": {
-          "$ref": "#/definitions/GitHubReposProperties"
+          "$ref": "#/definitions/GitHubRepoProperties"
         }
       }
     },
@@ -2541,7 +2568,8 @@
         }
       }
     },
-    "GitHubRepoPropertiesV2": {
+    "GitHubRepoProperties": {
+      "description": "GitHub Repo properties.",
       "type": "object",
       "properties": {
         "provisioningState": {
@@ -2555,35 +2583,9 @@
         "repoUrl": {
           "description": "Gets or sets gitHub repo url.",
           "type": "string"
-        }
-      }
-    },
-    "GitHubRepoV2": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "$ref": "#/definitions/GitHubRepoPropertiesV2"
-        }
-      }
-    },
-    "GitHubRepoV2ListResponse": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "description": "Gets or sets list of resources.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/GitHubRepoV2"
-          },
-          "x-ms-identifiers": []
         },
-        "nextLink": {
-          "description": "Gets or sets next link to scroll over the results.",
+        "ownerName": {
+          "description": "Gets or sets GitHub Owner Name.",
           "type": "string"
         }
       }
@@ -2698,7 +2700,7 @@
     "GitHubOwnerName": {
       "in": "path",
       "name": "gitHubOwnerName",
-      "description": "Name of the GitHub Repo Owner.",
+      "description": "Name of the GitHub Owner.",
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method"
