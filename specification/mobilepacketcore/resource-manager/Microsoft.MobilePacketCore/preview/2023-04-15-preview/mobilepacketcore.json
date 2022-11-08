@@ -271,6 +271,48 @@
     }
   },
   "definitions": {
+    "epcInterworkingProfile": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "./common.json#/definitions/enableDisable"
+        }
+      }
+    },
+    "emergencyServicesProfile": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "./common.json#/definitions/enableDisable"
+        },
+        "emergencyUserOption": {
+          "type": "string",
+          "enum": [
+            "validUesOnly",
+            "authenticatedUesOnly",
+            "supiRequiredUes",
+            "allUes"
+          ],
+          "x-ms-enum": {
+            "name": "emergencyUserOption",
+            "modelAsString": true
+          }
+        },
+        "skipAuthentication": {
+          "$ref": "./common.json#/definitions/enableDisable"
+        },
+        "ueAmbrUplink": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4000000000
+        },
+        "ueAmbrDownlink": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4000000000
+        }
+      }
+    },
     "pfcpProfile": {
       "type": "object",
       "properties": {
@@ -366,39 +408,39 @@
               "eventType": {
                 "type": "array",
                 "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string",
-                            "enum": [
-                                "establishment",
-                                "normal-release",
-                                "abnormal-release",
-                                "modification"
-                            ],
-                            "x-ms-enum": {
-                                "name": "eventType",
-                                "modelAsString": true
-                            }
-                        },
-                        "outcomeType": {
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "success",
-                                    "failure",
-                                    "reject"
-                                ],
-                                "x-ms-enum": {
-                                    "name": "outcomeType",
-                                    "modelAsString": true
-                                }
-                            }
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "enum": [
+                        "establishment",
+                        "normalRelease",
+                        "abnormalRelease",
+                        "modification"
+                      ],
+                      "x-ms-enum": {
+                        "name": "eventType",
+                        "modelAsString": true
+                      }
+                    },
+                    "outcomeType": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "success",
+                          "failure",
+                          "reject"
+                        ],
+                        "x-ms-enum": {
+                          "name": "outcomeType",
+                          "modelAsString": true
                         }
+                      }
                     }
+                  }
                 }
-            }
+              }
             }
           }
         },
@@ -419,6 +461,40 @@
             },
             "rttEdr": {
               "$ref": "./common.json#/definitions/enableDisable"
+            },
+            "eventType": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "enum": [
+                      "establishment",
+                      "release",
+                      "modification"
+                    ],
+                    "x-ms-enum": {
+                      "name": "eventType",
+                      "modelAsString": true
+                    }
+                  },
+                  "outcomeType": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "success",
+                        "failure"
+                      ],
+                      "x-ms-enum": {
+                        "name": "outcomeType",
+                        "modelAsString": true
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -487,9 +563,9 @@
                   }
                 },
                 "required": [
-                    "targetType",
-                    "targetValue",
-                    "sessionId"
+                  "targetType",
+                  "targetValue",
+                  "sessionId"
                 ]
               }
             }
@@ -499,7 +575,7 @@
           "type": "object",
           "properties": {
             "smDefaultProbability": {
-                "$ref": "./common.json#/definitions/traceProbability"
+              "$ref": "./common.json#/definitions/traceProbability"
             },
             "sessions": {
               "type": "array",
@@ -801,6 +877,69 @@
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 5000
+                },
+                "rtoMin": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5000
+                },
+                "rtoMax": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60000
+                },
+                "pathMaxRetrans": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 29
+                },
+                "associationInitMaxTransmit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10
+                },
+                "associationMaxRetrans": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 20
+                },
+                "noDelay": {
+                  "type": "boolean"
+                },
+                "maxOutStream": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 64
+                },
+                "maxInStream": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 120
+                },
+                "hbInterval": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5000
+                },
+                "rxBufferSize": {
+                  "type": "integer",
+                  "minimum": 25000,
+                  "maximum": 2097152
+                },
+                "txBufferSize": {
+                  "type": "integer",
+                  "minimum": 16000,
+                  "maximum": 5509000
+                },
+                "sackDelay": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 500
+                },
+                "sackFrequency": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
                 }
               }
             }
@@ -861,16 +1000,16 @@
           "items": {
             "type": "string",
             "enum": [
-                "service5G",
-                "service4G",
-                "service3G",
-                "service2G",
-                "serviceSessionManagement",
-                "serviceMobilityManagement"
+              "service5G",
+              "service4G",
+              "service3G",
+              "service2G",
+              "serviceSessionManagement",
+              "serviceMobilityManagement"
             ],
             "x-ms-enum": {
-                "name": "supportedServiceType",
-                "modelAsString": true
+              "name": "supportedServiceType",
+              "modelAsString": true
             }
           },
           "description": "A list of supported services.  If not specified, all apply"
@@ -880,6 +1019,12 @@
         },
         "shortNetworkName": {
           "type": "string"
+        },
+        "emergencyServicesProfile": {
+          "$ref": "#/definitions/emergencyServicesProfile"
+        },
+        "epcInterworkingProfile": {
+          "$ref": "#/definitions/epcInterworkingProfile"
         },
         "pfcpProfile": {
           "$ref": "#/definitions/pfcpProfile"
