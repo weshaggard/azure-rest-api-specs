@@ -448,7 +448,7 @@
         "deprecated": false
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.HybridConnectivity/SolutionTypes": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.HybridConnectivity/locations/{location}/solutionTypes": {
       "get": {
         "tags": [
           "SolutionTypes"
@@ -469,6 +469,9 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/LocationParameter"
           }
         ],
         "responses": {
@@ -491,53 +494,7 @@
         "deprecated": false
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridConnectivity/SolutionTypes": {
-      "get": {
-        "tags": [
-          "SolutionTypes"
-        ],
-        "description": "Gets the list of available solution types in specified subscription and resource group.",
-        "operationId": "SolutionTypes_ListByResourceGroup",
-        "produces": [
-          "application/json"
-        ],
-        "x-ms-examples": {
-          "HybridConnectivitySolutionTypesListByResourceGroup": {
-            "$ref": "./examples/SolutionTypesListByResourceGroup.json"
-          }
-        },
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of solution types available",
-            "schema": {
-              "$ref": "#/definitions/SolutionTypesResponse"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "deprecated": false
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridConnectivity/SolutionTypes/{solutionType}": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.HybridConnectivity/locations/{location}/solutionTypes/{solutionType}": {
       "get": {
         "tags": [
           "SolutionTypes"
@@ -560,7 +517,7 @@
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ResourceGroupNameParameter"
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/LocationParameter"
           },
           {
             "$ref": "#/parameters/SolutionTypeParameter"
@@ -589,7 +546,7 @@
           "SolutionConfigurations"
         ],
         "description": "Creates solution configurations",
-        "operationId": "SolutionConfigurations_Createsolution",
+        "operationId": "SolutionConfigurations_CreateOrUpdate",
         "produces": [
           "application/json"
         ],
@@ -766,102 +723,104 @@
       }
     },
     "/{resourceUri}/providers/Microsoft.HybridConnectivity/solutionConfigurations/{solutionName}/inventory/{inventoryId}": {
-			"get": {
-				"tags": [
-					"Inventory"
-				],
-				"description": "Retrieve the inventory identified by inventory id.",
-				"operationId": "Inventory_Get",
-				"produces": [
-					"application/json"
-				],
-				"x-ms-examples": {
-					"Get inventory": {
-						"$ref": "./examples/InventoryGet.json"
-					}
-				},
-				"parameters": [{
-						"$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-					},
-					{
-						"$ref": "#/parameters/ResourceUriParameter"
-					},
-					{
-						"$ref": "#/parameters/SolutionNameParameter"
-					},
-					{
-						"$ref": "#/parameters/InventoryIdParameter"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Inventory details",
-						"schema": {
-							"$ref": "#/definitions/Inventory"
-						}
-					},
-					"default": {
-						"description": "Error response describing why the operation failed.",
-						"schema": {
-							"$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-						}
-					}
-				},
-				"deprecated": false
-			}
-		},
-		"/{resourceUri}/providers/Microsoft.HybridConnectivity/solutionConfigurations/{solutionName}/inventory": {
-			"get": {
-				"tags": [
-					"Inventory"
-				],
-				"description": "Retrieve a list of inventory by solution name.",
-				"operationId": "Inventory_ListBySolution",
-				"produces": [
-					"application/json"
-				],
-				"x-ms-examples": {
-					"List inventory by solution name": {
-						"$ref": "./examples/InventoryList.json"
-					}
-				},
-				"parameters": [{
-						"$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
-					},
-					{
-						"$ref": "#/parameters/ResourceUriParameter"
-					},
-					{
-						"$ref": "#/parameters/SolutionNameParameter"
-					},
-					{
-						"name": "$filter",
-						"in": "query",
-						"required": false,
-						"type": "string",
-						"description": "The filter to apply on the operation."
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "List inventory details by solution name",
-						"schema": {
-							"$ref": "#/definitions/InventoryListResult"
-						}
-					},
-					"default": {
-						"description": "Error response describing why the operation failed.",
-						"schema": {
-							"$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
-						}
-					}
-				},
-				"x-ms-pageable": {
-					"nextLinkName": "nextLink"
-				},
-				"deprecated": false
-			}
-		}
+      "get": {
+        "tags": [
+          "Inventory"
+        ],
+        "description": "Retrieve the inventory identified by inventory id.",
+        "operationId": "Inventory_Get",
+        "produces": [
+          "application/json"
+        ],
+        "x-ms-examples": {
+          "Get inventory": {
+            "$ref": "./examples/InventoryGet.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+          {
+            "$ref": "#/parameters/SolutionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/InventoryIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inventory details",
+            "schema": {
+              "$ref": "#/definitions/Inventory"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/{resourceUri}/providers/Microsoft.HybridConnectivity/solutionConfigurations/{solutionName}/inventory": {
+      "get": {
+        "tags": [
+          "Inventory"
+        ],
+        "description": "Retrieve a list of inventory by solution name.",
+        "operationId": "Inventory_ListBySolution",
+        "produces": [
+          "application/json"
+        ],
+        "x-ms-examples": {
+          "List inventory by solution name": {
+            "$ref": "./examples/InventoryList.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceUriParameter"
+          },
+          {
+            "$ref": "#/parameters/SolutionNameParameter"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "The filter to apply on the operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List inventory details by solution name",
+            "schema": {
+              "$ref": "#/definitions/InventoryListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "deprecated": false
+      }
+    }
   },
   "definitions": {
     "RelayNamespaceAccessProperties": {
@@ -986,16 +945,17 @@
         },
         "provisioningState": {
           "type": "string",
-          "readOnly": true
+          "readOnly": true,
+          "description": "The resource provisioning state."
         }
       }
     },
-    "SolutionSettingsProperties":{
+    "SolutionSettingsProperties": {
       "type": "object",
       "description": "Properties for solution settings",
-      "properties":{
-        "enableAutoOnboarding":{
-          "type": "string",
+      "properties": {
+        "enableAutoOnboarding": {
+          "type": "boolean",
           "description": "The flag to enable auto onboard."
         }
       }
@@ -1074,64 +1034,69 @@
         }
       }
     },
-    "SolutionConfigurationsResponse":{
+    "SolutionConfigurationsResponse": {
       "type": "object",
       "description": "Response object of Solution Configurations",
-      "properties":{
-        "id":{
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "properties": {
+        "id": {
           "type": "string",
           "description": "The Arm id of the resource."
-        },
-        "solutionName":{
-          "type": "string",
-          "description": "The name of the solution."
-        },
-        "solutionType":{
-          "type": "string",
-          "description": "The type of the solution"
         },
         "properties": {
           "type": "object",
           "description": "The solution configuration properties",
-          "$ref":"#/definitions/SolutionConfigurationsProperties",
+          "$ref": "#/definitions/SolutionConfigurationsProperties",
           "x-ms-client-flatten": true
         }
       }
     },
-    "SolutionConfigurationsRequest":{
+    "SolutionConfigurationsRequest": {
       "type": "object",
       "description": "Represent Solution configurations Request object.",
       "properties": {
-        "solutionType":{
+        "solutionType": {
           "type": "string",
           "description": "The type of solution."
         },
         "properties": {
           "type": "object",
           "description": "The solution configuration properties",
-          "$ref":"#/definitions/SolutionConfigurationsProperties",
+          "$ref": "#/definitions/SolutionConfigurationsProperties",
           "x-ms-client-flatten": true
         }
       }
     },
-    "SolutionConfigurationsProperties":{
+    "SolutionConfigurationsProperties": {
       "type": "object",
       "description": "The properties of Solution COnfigurations",
       "required": [
         "solutionSettings"
       ],
-      "properties":{
+      "properties": {
+        "solutionName": {
+          "type": "string",
+          "description": "The name of the solution."
+        },
+        "solutionType": {
+          "type": "string",
+          "description": "The type of the solution"
+        },
         "solutionSettings": {
           "type": "object",
           "description": "solution settings",
           "$ref": "#/definitions/SolutionSettingsProperties",
           "x-ms-client-flatten": true
         },
-        "status":{
-          "type":"string",
+        "status": {
+          "type": "string",
           "description": "The status of solution configurations"
         },
-        "statusDetails":{
+        "statusDetails": {
           "type": "string",
           "description": "The detailed message of status details"
         },
@@ -1162,23 +1127,27 @@
         }
       }
     },
-    "SolutionTypeProperties":{
+    "SolutionTypeProperties": {
       "type": "object",
       "description": "The properties of each solution",
-      "properties":{
-        "solutionType":{
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The Arm id of the resource."
+        },
+        "solutionType": {
           "type": "string",
           "description": "The name of the solution type."
         },
-        "description":{
+        "description": {
           "type": "string",
           "description": "Short description of solution type"
         },
-        "awsIAMConfigurationTemplateUri":{
+        "awsIamConfigurationTemplateUri": {
           "type": "string",
           "description": "The link to aws cloud formation template."
         },
-        "gcpProjectConfigurationTemplateUri":{
+        "gcpProjectConfigurationTemplateUri": {
           "type": "string",
           "description": "The link to gcp script."
         },
@@ -1192,89 +1161,89 @@
       }
     },
     "Inventory": {
-			"type": "object",
-			"description": "Definition of inventory.",
-			"properties": {
-				"id": {
-					"type": "string",
-					"description": "Gets or sets the id of the resource."
-				},
-				"properties": {
-					"$ref": "#/definitions/InventoryProperties",
-					"x-ms-client-flatten": true,
-					"description": "Gets or sets the id of the inventory."
-				}
-			}
-		},
-		"InventoryProperties": {
-			"type": "object",
-			"description": "Definition of inventory.",
-			"properties": {
-				"inventoryId": {
-					"type": "string",
-					"description": "Gets or sets the id of the inventory."
-				},
-				"cloudNativeType": {
-					"type": "string",
-					"description": "Gets or sets the cloud native resource type."
-				},
-				"cloudNativeResourceName": {
-					"type": "string",
-					"description": "Gets or sets the cloud native resource name."
-				},
-				"azureResourceId": {
-					"type": "string",
-					"description": "Gets or sets the mapped azure resource id."
-				},
-				"creationTime": {
-					"type": "string",
-					"format": "date-time",
-					"x-nullable": false,
-					"description": "Gets or sets the creation time of the job."
-				},
-				"status": {
-					"type": "string",
-					"description": "Gets or sets the status of the inventory.",
-					"enum": [
-						"New",
-						"InProgress",
-						"Completed",
-						"Failed"
-					],
-					"x-ms-enum": {
-						"name": "inventoryStatus",
-						"modelAsString": true
-					}
-				},
-				"statusDetails": {
-					"type": "string",
-					"description": "Gets or sets the status details."
-				},
-				"lastStatusModifiedTime": {
-					"type": "string",
-					"format": "date-time",
-					"x-nullable": true,
-					"description": "Gets or sets the last status modified time of the job."
-				}
-			}
-		},
-		"InventoryListResult": {
-			"type": "object",
-			"description": "The response model for the list of inventory operation.",
-			"properties": {
-				"value": {
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/Inventory"
-					},
-					"description": "A list of inventory."
-				},
-				"nextLink": {
-					"type": "string",
-					"description": "Gets or sets the next link."
-				}
-			}
-		}
+      "type": "object",
+      "description": "Definition of inventory.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Gets or sets the id of the resource."
+        },
+        "properties": {
+          "$ref": "#/definitions/InventoryProperties",
+          "x-ms-client-flatten": true,
+          "description": "Gets or sets the id of the inventory."
+        }
+      }
+    },
+    "InventoryProperties": {
+      "type": "object",
+      "description": "Definition of inventory.",
+      "properties": {
+        "inventoryId": {
+          "type": "string",
+          "description": "Gets or sets the id of the inventory."
+        },
+        "cloudNativeType": {
+          "type": "string",
+          "description": "Gets or sets the cloud native resource type."
+        },
+        "cloudNativeResourceName": {
+          "type": "string",
+          "description": "Gets or sets the cloud native resource name."
+        },
+        "azureResourceId": {
+          "type": "string",
+          "description": "Gets or sets the mapped azure resource id."
+        },
+        "creationTime": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": false,
+          "description": "Gets or sets the creation time of the job."
+        },
+        "status": {
+          "type": "string",
+          "description": "Gets or sets the status of the inventory.",
+          "enum": [
+            "New",
+            "InProgress",
+            "Completed",
+            "Failed"
+          ],
+          "x-ms-enum": {
+            "name": "inventoryStatus",
+            "modelAsString": true
+          }
+        },
+        "statusDetails": {
+          "type": "string",
+          "description": "Gets or sets the status details."
+        },
+        "lastStatusModifiedTime": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true,
+          "description": "Gets or sets the last status modified time of the job."
+        }
+      }
+    },
+    "InventoryListResult": {
+      "type": "object",
+      "description": "The response model for the list of inventory operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Inventory"
+          },
+          "description": "A list of inventory."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Gets or sets the next link."
+        }
+      }
+    }
   },
   "parameters": {
     "ResourceUriParameter": {
@@ -1326,13 +1295,13 @@
       "x-ms-parameter-location": "method"
     },
     "InventoryIdParameter": {
-			"name": "inventoryId",
-			"in": "path",
-			"required": true,
-			"type": "string",
-			"description": "The inventory id.",
-			"x-ms-skip-url-encoding": true,
-			"x-ms-parameter-location": "method"
-		}
+      "name": "inventoryId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The inventory id.",
+      "x-ms-skip-url-encoding": true,
+      "x-ms-parameter-location": "method"
+    }
   }
 }

@@ -45,7 +45,16 @@ These settings apply only when `--tag=package-2022-05-01-preview` is specified o
 ```yaml $(tag) == 'package-2022-05-01-preview'
 input-file:
   - Microsoft.HybridConnectivity/preview/2022-05-01-preview/hybridconnectivity.json
+```
 
+### Tag: package-2023-03-01-privatepreview
+
+These settings apply only when `--tag=package-2023-03-01-privatepreview` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-03-01-privatepreview'
+input-file:
+  - Microsoft.HybridConnectivity/preview/2022-05-01-preview/hybridconnectivity.json
+```
 ---
 
 # Code Generation
