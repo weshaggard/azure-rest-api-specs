@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2020-12-16-preview` is specified o
 
 ```yaml $(tag) == 'package-2020-12-16-preview'
 input-file:
-  - Microsoft.TestBase/preview/2020-12-16-preview/testbase.json
+  - Microsoft.TestBaseGremenik/preview/2020-12-16-preview/testbase.json
 ```
 
 ### Tag: package-2021-09-01-preview
@@ -45,7 +45,7 @@ These settings apply only when `--tag=package-2021-09-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2021-09-01-preview'
 input-file:
-  - Microsoft.TestBase/preview/2021-09-01-preview/testbase.json
+  - Microsoft.TestBaseGremenik/preview/2021-09-01-preview/testbase.json
 ```
 
 ### Tag: package-2021-09-01
@@ -54,7 +54,7 @@ These settings apply only when `--tag=package-2021-09-01` is specified on the co
 
 ```yaml $(tag) == 'package-2021-09-01'
 input-file:
-  - Microsoft.TestBase/stable/2021-09-01/testbase.json
+  - Microsoft.TestBaseGremenik/stable/2021-09-01/testbase.json
 ```
 
 ### Tag: package-2021-12-01
@@ -63,7 +63,7 @@ These settings apply only when `--tag=package-2021-12-01` is specified on the co
 
 ```yaml $(tag) == 'package-2021-12-01'
 input-file:
-  - Microsoft.TestBase/stable/2021-12-01/testbase.json
+  - Microsoft.TestBaseGremenik/stable/2021-12-01/testbase.json
 ```
 
 ### Tag: package-2022-03-01-preview
@@ -72,7 +72,7 @@ These settings apply only when `--tag=package-2022-03-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-03-01-preview'
 input-file:
-  - Microsoft.TestBase/preview/2022-03-01-preview/testbase.json
+  - Microsoft.TestBaseGremenik/preview/2022-03-01-preview/testbase.json
 ```
 
 ### Tag: package-2022-04-01-preview
@@ -81,7 +81,7 @@ These settings apply only when `--tag=package-2022-04-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-04-01-preview'
 input-file:
-  - Microsoft.TestBase/preview/2022-04-01-preview/testbase.json
+  - Microsoft.TestBaseGremenik/preview/2022-04-01-preview/testbase.json
 ```
 
 ### Tag: package-2022-05-01-preview
@@ -90,7 +90,7 @@ These settings apply only when `--tag=package-2022-05-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-05-01-preview'
 input-file:
-  - Microsoft.TestBase/preview/2022-05-01-preview/testbase.json
+  - Microsoft.TestBaseGremenik/preview/2022-05-01-preview/testbase.json
 ```
 
 ### Tag: package-2022-08-01-preview
@@ -99,7 +99,7 @@ These settings apply only when `--tag=package-2022-08-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-08-01-preview'
 input-file:
-  - Microsoft.TestBase/preview/2022-08-01-preview/testbase.json
+  - Microsoft.TestBaseGremenik/preview/2022-08-01-preview/testbase.json
 ```
 
 ### Tag: package-2022-08-15-preview
@@ -108,7 +108,7 @@ These settings apply only when `--tag=package-2022-08-15-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-08-15-preview'
 input-file:
-  - Microsoft.TestBase/preview/2022-08-15-preview/testbase.json
+  - Microsoft.TestBaseGremenik/preview/2022-08-15-preview/testbase.json
 ```
 
 ## Suppression
