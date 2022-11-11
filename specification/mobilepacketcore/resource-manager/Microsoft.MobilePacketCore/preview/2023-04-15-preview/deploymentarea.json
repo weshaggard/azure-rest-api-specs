@@ -463,83 +463,146 @@
             "nrf": {
               "type": "object",
               "properties": {
-                "redundancyMode": {
-                  "type": "string",
-                  "enum": [
-                    "multiActive",
-                    "primarySecondary"
-                  ],
-                  "x-ms-enum": {
-                    "name": "redundancyMode",
-                    "modelAsString": true
-                  },
-                  "description": "NRF Redundancy Mode"
-                },
-                "profile": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "role": {
-                        "type": "string",
-                        "enum": [
-                          "primary",
-                          "secondary"
-                        ],
-                        "x-ms-enum": {
-                          "name": "role",
-                          "modelAsString": true
-                        },
-                        "description": "Remote NRF Role"
-                      },
-                      "priority": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 20
-                      },
-                      "subscriptionValidityTimer": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 31680
-                      },
-                      "services": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "type": "string",
-                              "enum": [
-                                "nfm",
-                                "discovery",
-                                "accesstoken"
-                              ],
-                              "x-ms-enum": {
-                                "name": "role",
-                                "modelAsString": true
-                              },
-                              "description": "Remote NRF Service"
-                            },
-                            "dscpMarking": {
-                              "$ref": "./common.json#/definitions/dscp"
-                            },
-                            "ipv4Address": {
-                              "$ref": "./common.json#/definitions/ipv4Address"
-                            },
-                            "port": {
-                              "type": "integer"
-                            }
+                "discovery": {
+                  "type": "object",
+                  "properties": {
+                    "fqdn": {
+                      "$ref": "./common.json#/definitions/Fqdn"
+                    },
+                    "ipaddress": {
+                      "$ref": "./common.json#/definitions/ipAddress"
+                    },
+                    "port": {
+                      "type": "integer"
+                    },
+                    "heartbeatUrl": {
+                      "type": "object",
+                      "properties": {
+                        "verb": {
+                          "type": "string",
+                          "enum": [
+                            "get",
+                            "patch",
+                            "post",
+                            "put"
+                          ],
+                          "x-ms-enum": {
+                            "name": "httpVerb",
+                            "modelAsString": true
                           }
+                        },
+                        "path": {
+                          "type": "string",
+                          "description": "API specific resource URI part. The specific resource must be compatible to the service-type of this service"
                         }
-                      }
+                      },
+                      "description": "URI of the API to be used in the service heartbeat message. This is only applicable when the redundancy mode is set to 'primarySecondary'"
                     }
                   }
+                },
+                "management": {
+                  "type": "object",
+                  "properties": {
+                    "fqdn": {
+                      "$ref": "./common.json#/definitions/Fqdn"
+                    },
+                    "ipaddress": {
+                      "$ref": "./common.json#/definitions/ipAddress"
+                    },
+                    "port": {
+                      "type": "integer"
+                    },
+                    "serviceHeartbeatUrl": {
+                      "type": "object",
+                      "properties": {
+                        "verb": {
+                          "type": "string",
+                          "enum": [
+                            "get",
+                            "patch",
+                            "post",
+                            "put"
+                          ],
+                          "x-ms-enum": {
+                            "name": "httpVerb",
+                            "modelAsString": true
+                          }
+                        },
+                        "path": {
+                          "type": "string",
+                          "description": "API specific resource URI part. The specific resource must be compatible to the service-type of this service."
+                        }
+                      },
+                      "description": "URI of the API to be used in the service heartbeat message. This is only applicable when the redundancy mode is set to 'primarySecondary'"
+                    }
+                  }
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "primary",
+                    "secondary"
+                  ],
+                  "x-ms-enum": {
+                    "name": "role",
+                    "modelAsString": true
+                  },
+                  "description": "Remote NRF Role"
+                },
+                "priority": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20,
+                  "description": "Priority of the secondary NRF. Lower value is the higher priority"
                 }
               }
             },
             "edrServer": {
               "type": "object",
               "properties": {}
+            },
+            "redundancyProfile": {
+              "type": "object",
+              "properties": {
+                "nrf": {
+                  "type": "object",
+                  "properties": {
+                    "redundancyMode": {
+                      "type": "string",
+                      "enum": [
+                        "multiActive",
+                        "primarySecondary"
+                      ],
+                      "x-ms-enum": {
+                        "name": "redundancyMode",
+                        "modelAsString": true
+                      },
+                      "description": "NRF Redundancy Mode"
+                    },
+                    "failoverErrorCode": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 400,
+                        "maximum": 599,
+                        "description": "HTTP error codes (4xx to 5xx) to consider for detecting NRF failure and trigger failover, a max 30 error codes can be configured. Default: '429','460','500','501','502','503','504','508'"
+                      }
+                    },
+                    "serviceHeartbeatInterval": {
+                      "type": "integer",
+                      "minimum": 30,
+                      "maximum": 120,
+                      "description": "Service heartbeat message per service interval in seconds; If it is configured for service 'nnrf-nfm' then NRF level failover is indicated.  Must be less than the NRF heartbeat interval"
+                    },
+                    "recoveryCount": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 3,
+                      "description": "Number of monitoring failure responses received from the primary NRF before failover to secondary NRF"
+                    }
+                  }
+                }
+              }
             }
           }
         }
