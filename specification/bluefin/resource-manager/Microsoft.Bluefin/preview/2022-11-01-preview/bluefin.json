@@ -334,46 +334,14 @@
     }
   },
   "definitions": {
-    "Resource": {
-      "description": "The common properties of an ARM resource.",
+    "WorkspaceProperties": {
+      "type": "object",
       "properties": {
-        "id": {
-          "readOnly": true,
+        "demoResourceLocation": {
           "type": "string",
-          "description": "The ARM resource identifier."
-        },
-        "name": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The ARM resource name.",
-          "pattern": "^(?![0-9]+$)(?!-)[a-zA-Z0-9-]{2,99}[a-zA-Z0-9]$",
-          "x-comment": "pattern must match #/parameters/WorkspaceNameParameter"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The resource type."
-        },
-        "location": {
-          "type": "string",
-          "description": "The resource location.",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "The resource tags."
+          "default": "centralus"
         }
-      },
-      "x-ms-azure-resource": true,
-      "required": [
-        "location"
-      ]
+      }
     },
     "WorkspaceListResult": {
       "description": "A list of Bluefin workspaces with a next link.",
@@ -406,82 +374,55 @@
       }
     },
     "Workspace": {
+      "x-ms-azure-resource": true,
       "description": "The Bluefin workspace.",
       "type": "object",
       "properties": {
-        "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData",
-           "readOnly" : true,
-           "description": "The resource system level properties.",
-           "title": "Workspace system data"
-        },
         "properties": {
-          "description": "The common properties of an Bluefin workspace.",
-          "x-ms-client-flatten": true,
           "$ref": "#/definitions/WorkspaceProperties"
         },
-        "sku": {
-          "description": "A valid instance SKU.",
-          "$ref": "#/definitions/WorkspaceSkuInfo"
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/Resource"
-        }
-      ],
-      "required": [
-        "sku"
-      ]
-    },
-    "WorkspaceProperties": {
-      "description": "The properties of an Bluefin workspace.",
-      "type": "object",
-      "properties": {
-        "workspaceId": {
-          "description": "The ID of the workspace.",
+        "id": {
           "type": "string",
-          "readOnly": true
+          "readOnly": true,
+          "description": "Resource Id"
         },
-        "state": {
-          "description": "The current state of the workspace.",
-          "$ref": "#/definitions/WorkspaceState"
-        }
-      }
-    },
-    "WorkspaceState": {
-      "description": "The current state of the workspace.",
-      "type": "string",
-      "enum": [
-        "created",
-        "suspended"
-      ],
-      "x-ms-enum": {
-        "name": "WorkspaceState",
-        "modelAsString": true
-      },
-      "readOnly": true
-    },
-    "WorkspaceSkuInfo": {
-      "description": "Information about the SKU of the Bluefin workspace.",
-      "type": "object",
-      "properties": {
         "name": {
-          "description": "The name of the SKU.",
-          "enum": [
-            "B1",
-            "S1",
-            "E1"
-          ],
           "type": "string",
-          "x-ms-enum": {
-            "name": "WorkspaceSku",
-            "modelAsString": true
+          "readOnly": true,
+          "description": "Resource Name"
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Type"
+        },
+        "location": {
+          "type": "string",
+          "description": "The resource location"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags"
+        },
+        "extendedLocation": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "The extended location type."
+            },
+            "name": {
+              "type": "string",
+              "description": "The extended location name."
+            }
           }
         }
       },
       "required": [
-        "name"
+        "location"
       ]
     },
     "Operation": {
