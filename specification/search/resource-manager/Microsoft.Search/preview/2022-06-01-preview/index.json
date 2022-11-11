@@ -342,48 +342,68 @@
     }
   },
   "definitions": {
-    "AutoCapacity": {
-      "type": "object",
-      "properties": {
-        "minCores": {
-          "type": "integer",
-          "format": "int32",
-          "minimum": 0,
-          "description": "The minimum number of vCores that the index will consume."
-        },
-        "maxCores": {
-          "type": "integer",
-          "format": "int32",
-          "minimum": 0,
-          "description": "The maximimum number of vCores that the index can consume."
-        }
-      },
-      "description": "When the capacity type is set to 'Auto', the capacity will autoscale between the minimum and maximum number of vCores based on the usage of your index.",
-      "required": [
-        "minCores",
-        "maxCores"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/Capacity"
-        }
-      ],
-      "x-ms-discriminator-value": "Auto"
-    },
     "Capacity": {
       "type": "object",
       "properties": {
-        "type": {
-          "type": "string",
-          "description": "Discriminator property for Capacity."
+        "minvCores": {
+          "type": "number",
+          "enum": [
+            0.2,
+            0.5,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "x-cadl-name": "0.2 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16",
+          "description": "The minimum number of vCores that the index will consume. Represented with discrete values: 0.2, 0.5. 1, 2, 3, … to 16."
         },
-        "pause": {
+        "maxvCores": {
+          "type": "number",
+          "enum": [
+            0.2,
+            0.5,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "x-cadl-name": "0.2 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16",
+          "description": "The maximum number of vCores that the index can consume. Represented with discrete values: 0.2, 0.5. 1, 2, 3, … to 16."
+        },
+        "autoPause": {
           "$ref": "#/definitions/Pause"
         }
       },
-      "discriminator": "type",
+      "description": "The capacity will autoscale between the minimum and maximum number of vCores based on the usage of your index.",
       "required": [
-        "type"
+        "minvCores",
+        "maxvCores",
+        "autoPause"
       ]
     },
     "DelayPause": {
@@ -504,26 +524,16 @@
       },
       "description": "The updatable properties of the Index."
     },
-    "ManualCapacity": {
+    "NonePause": {
       "type": "object",
-      "properties": {
-        "cores": {
-          "type": "integer",
-          "format": "int32",
-          "minimum": 0,
-          "description": "The fixed number of vCores that the index will consume."
-        }
-      },
-      "description": "When the capacity type is set to 'Manual', a fixed number of vCores will be provisioned. The number of vCores can be changed at any time to manually scale your index up or down.",
-      "required": [
-        "cores"
-      ],
+      "properties": {},
+      "description": "When the pause strategy is set to 'None', the index will remain always active.",
       "allOf": [
         {
-          "$ref": "#/definitions/Capacity"
+          "$ref": "#/definitions/Pause"
         }
       ],
-      "x-ms-discriminator-value": "Manual"
+      "x-ms-discriminator-value": "None"
     },
     "Pause": {
       "type": "object",
