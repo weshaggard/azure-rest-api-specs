@@ -33,6 +33,13 @@ model NewRelicMonitorResource is TrackedResource<MonitorProperties> {
   @doc("Name of the Monitors resource")
   @path
   name: string;
+  
+  @doc("Is Liftr org")
+  isALiftrCreatedOrg?: string;
+
+  @doc("Is Liftr account")
+  isALiftrCreatedAccount?: string;
+
   ...ManagedServiceIdentity;
   
 }
@@ -58,8 +65,56 @@ interface Monitors extends ResourceOperations<NewRelicMonitorResource,MonitorPro
   @doc("List the compute resources currently being monitored by the NewRelic resource.")
   @segment("hosts")
   op Hosts(
-    ...ResourceInstanceParameters<NewRelicMonitorResource>
+    ...ResourceInstanceParameters<NewRelicMonitorResource>,
+    ...HostsGetParameter
   ): ArmResponse<VMHostsListResponse> | ErrorResponse;
+
+  @post
+  @doc("List the app service resources currently being monitored by the NewRelic resource.")
+  @segment("appServices")
+  op AppServices(
+    ...ResourceInstanceParameters<NewRelicMonitorResource>,
+    ...AppServicesGetParameter
+  ): ArmResponse<AppServicesListResponse> | ErrorResponse;
+
+  @post
+  @doc("List all the exisitng organizations")
+  @segment("organizations")
+  op Organizations(
+    ...ResourceInstanceParameters<NewRelicMonitorResource>,
+    ...OrganizationsRequestParameter
+  ): ArmResponse<OrganizationsListResponse> | ErrorResponse;
+
+  @post
+  @doc("List all the exisitng accounts")
+  @segment("accounts")
+  op Accounts(
+    ...ResourceInstanceParameters<NewRelicMonitorResource>,
+    ...AccountsRequestParameter
+  ): ArmResponse<AccountsListResponse> | ErrorResponse;
+
+  @post
+  @doc("Get plan data")
+  @segment("planData")
+  op PlanData(
+    ...ResourceInstanceParameters<NewRelicMonitorResource>,
+    ...PlanDataRequestParameter
+  ): ArmResponse<PlanDataResponse> | ErrorResponse;
+  
+  @post
+  @doc("Get metrics tags")
+  @segment("metrics")
+  op Metrics(
+    ...ResourceInstanceParameters<NewRelicMonitorResource>,
+  ): ArmResponse<MetricRules> | ErrorResponse;
+
+  @post
+  @doc("Get metrics tags")
+  @segment("metricsStatus")
+  op MetricsStatus(
+    ...ResourceInstanceParameters<NewRelicMonitorResource>,
+    ...MetricsStatusRequestParameter
+  ): ArmResponse<MetricsStatus> | ErrorResponse;
 }
 
 @doc("A tag rule belonging to NewRelic account")
@@ -99,10 +154,10 @@ model MonitorProperties {
   newRelicAccountProperties?: NewRelicAccountProperties;
   
   @doc("User Info")
-  userInfo: UserInfo;
+  userInfo?: UserInfo;
   
   @doc("Plan details")
-  planData: PlanData;
+  planData?: PlanData;
 
   @visibility("read")
   @doc("Liftr resource category")
@@ -176,7 +231,7 @@ model PlanData{
   billingCycle?: string;
 
   @doc("plan id as published by NewRelic")
-  planDetails: string;
+  planDetails?: string;
 
   @doc("date when plan was applied")
   effectiveDate?: zonedDateTime;
@@ -194,7 +249,7 @@ model UserInfo{
   lastName?: string;
 
   @doc("User Email")
-  emailAddress: email;
+  emailAddress?: email;
 
   @maxLength(40)
   @doc("Contact phone number")
@@ -306,12 +361,21 @@ model LogRules {
 
 @doc("Set of rules for sending metrics for the Monitor resource.")
 model MetricRules {
+  @doc("Flag specifying if metrics should be sent for the Monitor resource.")
+  sendMetrices?: SendMetricsStatus;
+
   @doc("List of filtering tags to be used for capturing metrics.")
   filteringTags?: FilteringTag[];
 }
 
 @doc("Indicates whether AAD logs are being sent.")
 enum SendAadLogsStatusValues {
+  "Enabled",
+  "Disabled"
+}
+
+@doc("Indicates whether metrics are being sent.")
+enum SendMetricsStatus {
   "Enabled",
   "Disabled"
 }
@@ -344,13 +408,13 @@ model SendActivityLogsStatus is string {
 model FilteringTag{
 
   @doc("The name (also known as the key) of the tag.")
-  name: string;
+  name?: string;
 
   @doc("The value of the tag.")
-  value: string;
+  value?: string;
 
   @doc("Valid actions for a filtering tag. Exclusion takes priority over inclusion.")
-  action: TagAction;
+  action?: TagAction;
 }
 
 @doc("Valid actions for a filtering tag. Exclusion takes priority over inclusion.")
@@ -407,13 +471,88 @@ model MonitoredResourceListResponse extends Azure.Core.Page<MonitoredResource> {
 @doc("Response of payload to be passed while installing VM agent.")
 model VMExtensionPayload {
   @doc("Ingestion key of the account")
-  ingestionKey: string;
+  ingestionKey?: string;
+}
 
-  @doc("Id of the account created")
+@doc("Host Get Parameter specification.")
+model HostsGetParameter {
+  @doc("The details of the Hosts get request.")
+  @body
+  request: HostsGetRequest;
+}
+
+@doc("Request of a Hosts get Operation.")
+model HostsGetRequest {
+  @doc("VM resource IDs")
+  vmIds?: string[]; 
+}
+
+@doc("App services Get Parameter specification.")
+model AppServicesGetParameter {
+  @doc("The details of the app services get request.")
+  @body
+  request: AppServicesGetRequest;
+}
+
+@doc("Request of a app services get Operation.")
+model AppServicesGetRequest {
+  @doc("Azure resource IDs")
+  azureResourceIds?: string[]; 
+}
+
+@doc("App services Get Parameter specification.")
+model OrganizationsRequestParameter {
+  @doc("The details of the get all organizations request.")
+  @body
+  request: OrganizationsRequest;
+}
+
+@doc("Request of get all organizations Operation.")
+model OrganizationsRequest {
+  @doc("User Email")
+  userEmail?: email;
+}
+
+@doc("Accounts Get Parameter specification.")
+model AccountsRequestParameter {
+  @doc("The details of the get all accounts request.")
+  @body
+  request: AccountsRequest;
+}
+
+@doc("Request of get all accounts Operation.")
+model AccountsRequest {
+  @doc("User Email")
+  userEmail?: email;
+}
+
+@doc("Get plan data parameter specification.")
+model PlanDataRequestParameter {
+  @doc("The details of the get plan data request.")
+  @body
+  request: PlanDataRequest;
+}
+
+@doc("Request of get plan data Operation.")
+model PlanDataRequest {
+  @doc("account id")
   accountId?: string;
-  
-  @doc("Region of the account created")
-  region?: string;
+
+  @doc("organization id")
+  organizationId?: string;
+}
+
+@doc("Get Metrics Status Parameter specification.")
+model MetricsStatusRequestParameter {
+  @doc("The details of the get metrics status request.")
+  @body
+  request: MetricsStatus;
+}
+
+@doc("Request of get metrics status Operation.")
+model MetricsStatus {
+  @doc("Azure resource IDs")
+  azureResourceIds?: string[]; 
 }
 
 @doc("Response of a list VM Host Operation.")
@@ -422,31 +561,67 @@ model VMHostsListResponse extends Azure.Core.Page<VMInfo> {}
 @doc("Details of VM Resource having NewRelic OneAgent installed")
 model VMInfo {
   @doc("Azure VM resource ID")
-  resourceId?: string;
+  vmId?: string;
 
   @doc("Version of the NewRelic agent installed on the VM.")
-  version?: string;
+  agentVersion?: string;
   
-  @doc("The monitoring mode of OneAgent")
-  monitoringType?: MonitoringType;
+  @doc("Status of the NewRelic agent installed on the VM.")
+  agentStatus?: string;
+}
+
+@doc("Response of a list app services Operation.")
+model AppServicesListResponse extends Azure.Core.Page<AppServiceInfo> {}
+
+@doc("Details of VM Resource having NewRelic OneAgent installed")
+model AppServiceInfo {
+  @doc("Azure App service resource ID")
+  azureResourceId?: string;
+
+  @doc("Version of the NewRelic agent installed on the App service.")
+  agentVersion?: string;
   
-  @doc("Update settings of OneAgent.")
-  autoUpdateSetting?: AutoUpdateSetting;
-  
-  @doc("The current update status of OneAgent.")
-  updateStatus?: UpdateStatus;
-  
-  @doc("The availability state of OneAgent.")
-  availabilityState?: AvailabilityState;
-  
-  @doc("Tells whether log modules are enabled or not")
-  logModule?: LogModule;
-  
-  @doc("The name of the host group")
-  hostGroup?: string;
-  
-  @doc("The name of the host")
-  hostName?: string; 
+  @doc("Status of the NewRelic agent installed on the App service.")
+  agentStatus?: string;
+}
+
+@doc("Response of get all organizations Operation.")
+model OrganizationsListResponse extends Azure.Core.Page<OrganizationResponse> {}
+
+@doc("Details of Organizations")
+model OrganizationResponse {
+  @doc("organization id")
+  organizationId?: string;
+
+  @doc("Billing from azure")
+  isBilledThroughAzure?: string;
+}
+
+@doc("Response of get all accounts Operation.")
+model AccountsListResponse extends Azure.Core.Page<AccountResponse> {}
+
+@doc("Details of VM Resource having NewRelic OneAgent installed")
+model AccountResponse {
+  @doc("organization id")
+  organizationId?: string;
+
+  @doc("account id")
+  accountId?: string;
+
+  @doc("region")
+  region?: string;
+}
+
+@doc("Details of VM Resource having NewRelic OneAgent installed")
+model PlanDataResponse {
+   @doc("Plan details")
+  planData?: PlanData;
+
+  @doc("Is Liftr org")
+  isALiftrCreatedOrg?: string;
+
+  @doc("Is Liftr account")
+  isALiftrCreatedAccount?: string;
 }
 
 @doc("The monitoring mode of OneAgent")
@@ -457,57 +632,4 @@ enum MonitoringTypeValues {
 
 @knownValues(MonitoringTypeValues)
 model MonitoringType is string {
-}
-
-@doc("Update settings of OneAgent.")
-enum AutoUpdateSettingValues {
-  "ENABLED",
-  "DISABLED"
-}
-
-@knownValues(AutoUpdateSettingValues)
-model AutoUpdateSetting is string {
-}
-
-@doc("The current update status of OneAgent.")
-enum UpdateStatusValues {
-  "INCOMPATIBLE",
-  "OUTDATED",
-  "SCHEDULED",
-  "SUPPRESSED",
-  "UNKNOWN",
-  "UP2DATE",
-  "UPDATE_IN_PROGRESS",
-  "UPDATE_PENDING",
-  "UPDATE_PROBLEM"
-}
-
-@knownValues(UpdateStatusValues)
-model UpdateStatus is string {
-}
-
-@doc("The availability state of OneAgent.")
-enum AvailabilityStateValues {
-  "CRASHED",
-  "LOST",
-  "MONITORED",
-  "PRE_MONITORED",
-  "SHUTDOWN",
-  "UNEXPECTED_SHUTDOWN",
-  "UNKNOWN",
-  "UNMONITORED"
-}
-
-@knownValues(AvailabilityStateValues)
-model AvailabilityState is string {
-}
-
-@doc("Tells whether log modules are enabled or not")
-enum LogModuleValues {
-  "ENABLED",
-  "DISABLED"
-}
-
-@knownValues(LogModuleValues)
-model LogModule is string {
 }
