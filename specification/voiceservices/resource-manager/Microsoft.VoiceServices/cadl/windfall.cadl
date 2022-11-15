@@ -1,0 +1,49 @@
+// Definitions for the WindfallDeployment resource
+
+import "@cadl-lang/openapi";
+import "@cadl-lang/rest";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-autorest";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+namespace Microsoft.VoiceServices;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.ResourceManager;
+
+@doc("A WindfallDeployment resource")
+model WindfallDeployment is TrackedResource<WindfallDeploymentProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("windfallDeploymentName")
+  @segment("windfallDeployments")
+  @doc("Unique identifier for this Windfall deployment")
+  @visibility("Read")
+  @path
+  name: string;
+}
+
+@doc("Details of single SIP trunk.")
+model WindfallSipTrunk {
+  @doc("Domain name of the peer connecting to Windfall over this SIP trunk. This must match the common name of the TLS certificate presented by the peer.")
+  @visibility("read", "write", "create")
+  remoteDomain: string;
+
+  @doc("IPv4 address ranges allowed to send requests to Windfall over this trunk")
+  @visibility("read", "write", "create")
+  remoteAddresses: string[];
+}
+
+@doc("Details of the WindfallDeployment resource.")
+model WindfallDeploymentProperties is ResourceProperties {
+  @doc("The set of SIP trunks to be configured on this deployment")
+  @OpenAPI.extension("x-ms-identifiers", ["remoteDomain"])
+  @visibility("read", "write", "create")
+  sipTrunks: WindfallSipTrunk[];
+}
+
+@added(Versions.v2022_12_31_preview)
+@armResourceOperations
+interface WindfallDeployments extends ResourceRead<WindfallDeployment>, ResourceCreate<WindfallDeployment>, ResourceDelete<WindfallDeployment>, ResourceListBySubscription<WindfallDeployment>, ResourceListByParent<WindfallDeployment>, ResourceUpdateNoProperties<WindfallDeployment> {}
