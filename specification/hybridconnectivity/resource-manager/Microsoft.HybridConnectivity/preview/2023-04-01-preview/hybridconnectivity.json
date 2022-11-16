@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "Hybrid Connectivity Management API",
-    "description": "REST API for Hybrid Connectivity",
-    "version": "2023-03-01-privatepreview"
+    "description": "REST API for Hybrid Connectivity used for connectivity of on premises resources",
+    "version": "2023-04-01-preview"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -79,7 +79,7 @@
         "tags": [
           "Endpoints"
         ],
-        "description": "List of endpoints to the target resource.",
+        "description": "Retrieve the list of endpoints.",
         "operationId": "Endpoints_List",
         "produces": [
           "application/json"
@@ -122,7 +122,7 @@
         "tags": [
           "Endpoints"
         ],
-        "description": "Gets the endpoint to the resource.",
+        "description": "Retrieve the endpoint resource associated with given endpoint name.",
         "operationId": "Endpoints_Get",
         "produces": [
           "application/json"
@@ -453,14 +453,14 @@
         "tags": [
           "SolutionTypes"
         ],
-        "description": "Gets the list of available solution types in subscription.",
-        "operationId": "SolutionTypes_ListBySubscription",
+        "description": "Retrieve the list of available solution types.",
+        "operationId": "SolutionTypes_List",
         "produces": [
           "application/json"
         ],
         "x-ms-examples": {
           "HybridConnectivitySolutionTypesListBySubscription": {
-            "$ref": "./examples/SolutionTypesListBySubscription.json"
+            "$ref": "./examples/SolutionTypesList.json"
           }
         },
         "parameters": [
@@ -499,7 +499,7 @@
         "tags": [
           "SolutionTypes"
         ],
-        "description": "Gets the available solution types.",
+        "description": "Retrieve the solution type by provided solution type.",
         "operationId": "SolutionTypes_Get",
         "produces": [
           "application/json"
@@ -545,7 +545,7 @@
         "tags": [
           "SolutionConfiguration"
         ],
-        "description": "List of solution configuration resources.",
+        "description": "Retrieve the List of solution configuration resources.",
         "operationId": "SolutionConfiguration_List",
         "produces": [
           "application/json"
@@ -588,7 +588,7 @@
         "tags": [
           "SolutionConfiguration"
         ],
-        "description": "Creates solution configuration",
+        "description": "Creates solution configuration with provided solution name",
         "operationId": "SolutionConfiguration_CreateOrUpdate",
         "produces": [
           "application/json"
@@ -638,7 +638,7 @@
         "tags": [
           "SolutionConfiguration"
         ],
-        "description": "Gets the solution configuration to the resource.",
+        "description": "Retrieve the solution configuration identified by solution name.",
         "operationId": "SolutionConfiguration_Get",
         "produces": [
           "application/json"
@@ -679,7 +679,7 @@
         "tags": [
           "SolutionConfiguration"
         ],
-        "description": "Update the solution configuration.",
+        "description": "Updates the solution configuration for solution name.",
         "operationId": "SolutionConfiguration_Update",
         "produces": [
           "application/json"
@@ -728,7 +728,7 @@
         "tags": [
           "SolutionConfiguration"
         ],
-        "description": "Deletes the solution configuration.",
+        "description": "Deletes the solution configuration with provided solution name.",
         "operationId": "SolutionConfiguration_Delete",
         "produces": [
           "application/json"
@@ -771,7 +771,7 @@
           "Inventory"
         ],
         "description": "Retrieve the inventory identified by inventory id.",
-        "operationId": "Inventory_Get",
+        "operationId": "Inventory_GetBySolution",
         "produces": [
           "application/json"
         ],
@@ -989,7 +989,16 @@
         "provisioningState": {
           "type": "string",
           "readOnly": true,
-          "description": "The resource provisioning state."
+          "description": "The resource provisioning state.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled"
+          ],
+          "x-ms-enum": {
+            "name": "type",
+            "modelAsString": true
+          }
         }
       }
     },
@@ -1127,7 +1136,16 @@
         "provisioningState": {
           "type": "string",
           "readOnly": true,
-          "description": "The resource provisioning state."
+          "description": "The resource provisioning state.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled"
+          ],
+          "x-ms-enum": {
+            "name": "type",
+            "modelAsString": true
+          }
         },
         "solutionName": {
           "type": "string",
@@ -1146,17 +1164,22 @@
         "status": {
           "type": "string",
           "readOnly": true,
-          "description": "The status of solution configurations"
+          "description": "The status of solution configurations",
+          "enum": [
+            "New",
+            "InProgress",
+            "Completed",
+            "Failed"
+          ],
+          "x-ms-enum": {
+            "name": "inventoryStatus",
+            "modelAsString": true
+          }
         },
         "statusDetails": {
           "type": "string",
           "readOnly": true,
           "description": "The detailed message of status details"
-        },
-        "creationTime": {
-          "type": "string",
-          "readOnly": true,
-          "description": "The creation time of solution configuration"
         },
         "lastExecutionTime": {
           "type": "string",
@@ -1234,13 +1257,27 @@
         "provisioningState": {
           "type": "string",
           "readOnly": true,
-          "description": "The resource provisioning state."
+          "description": "The resource provisioning state.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled"
+          ],
+          "x-ms-enum": {
+            "name": "type",
+            "modelAsString": true
+          }
         }
       }
     },
     "Inventory": {
       "type": "object",
       "description": "Definition of inventory.",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource"
+        }
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -1293,6 +1330,20 @@
         "statusDetails": {
           "type": "string",
           "description": "Gets or sets the status details."
+        },
+        "provisioningState": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The resource provisioning state.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled"
+          ],
+          "x-ms-enum": {
+            "name": "type",
+            "modelAsString": true
+          }
         }
       }
     },
