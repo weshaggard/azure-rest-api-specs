@@ -1,0 +1,93 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/versioning";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.ResourceManager;
+
+@armProviderNamespace("Microsoft.Syntex")
+@service({
+  title: "Microsoft.Syntex",
+  version: "2022-11-16-preview",
+})
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+namespace Microsoft.Syntex;
+
+interface Operations extends Azure.ResourceManager.Operations {}
+
+@doc("An Account is a SyntexProviderHub resource")
+model Account is TrackedResource<AccountProperties> {
+  @visibility("read")
+  @key("accountName")
+  @segment("accounts")
+  @doc("Account name")
+  @path
+  name: string;
+}
+
+enum WorkloadStateValues {
+  SharePoint,
+  EXO,
+}
+
+enum OwnerTypeValues {
+	App,
+	Tenant
+}
+
+@doc("The workload issuing the operation")
+@knownValues(WorkloadStateValues)
+model Workload is string;
+
+@doc("The OwnerType issuing the operation")
+@knownValues(OwnerTypeValues)
+model OwnerType is string;
+
+@doc("The status of the current operation.")
+@knownValues(ProvisioningStateKV)
+model ProvisioningState is string;
+
+@Azure.Core.lroStatus
+enum ProvisioningStateKV {
+  ...ResourceProvisioningStateKV,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted,
+}
+
+@doc("Details of the Syntex Account.")
+model AccountProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+
+  @visibility("read")
+  @doc("The workload providing the service.")
+  workload: Workload;
+
+  @visibility("read")
+  @doc("The Owner type.")
+  ownerType: OwnerType;
+
+  @visibility("read")
+  @doc("The OwnerId")
+  ownerId: string; 
+
+  @visibility("read")
+  @doc("The scenario")
+  scenario: string;
+}
+
+interface ResourceInstanceOperationsWithoutRead<TResource extends object, TProperties>
+  extends
+    ResourceCreate<TResource>,
+    ResourceUpdate<TResource, TProperties>,
+    ResourceDelete<TResource> {}
+
+@armResourceOperations
+interface Accounts extends ResourceInstanceOperationsWithoutRead<Account, AccountProperties>{}
