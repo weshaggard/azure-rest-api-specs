@@ -8,8 +8,8 @@ python:
   azure-arm: true
   license-header: MICROSOFT_MIT_NO_VERSION
   payload-flattening-threshold: 2
-  namespace: Microsoft.LoadTestService
-  package-name: loadtestservice
+  package-name: azure-mgmt-loadtesting
+  namespace: azure.mgmt.loadtesting
   package-version: 2022-12-01
   clear-output-folder: true
 ```
@@ -17,5 +17,5 @@ python:
 ```yaml $(python)
 python:
   no-namespace-folders: true
-  output-folder: $(python-sdks-folder)/azure-mgmt/loadtestservice
+  output-folder: $(python-sdks-folder)/loadtestservice/azure-mgmt-loadtesting/azure/mgmt/loadtesting
 ```
