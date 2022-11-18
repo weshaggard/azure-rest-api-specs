@@ -1070,7 +1070,7 @@
         },
         "specification": {
           "description": "Gets or sets the specification of the microservice to be deployed.",
-          "$ref": "#/definitions/ServiceSpecification"
+          "$ref": "#/definitions/MicroServiceSpecification"
         },
         "provisioningState": {
           "description": "Gets or sets the provisioning state.",
@@ -1079,17 +1079,12 @@
         }
       }
     },
-    "ServiceSpecification": {
-      "description": "Defines the service specification.",
+    "MicroServiceSpecification": {
+      "description": "Defines the micro service specification.",
       "type": "object",
       "properties": {
-        "name": {
-          "description": "Gets or sets the deployment name of the service.",
-          "type": "string"
-        },
-        "networkAddress": {
-          "description": "Gets or sets the IP address to be used for the service endpoint.",
-          "type": "string"
+        "sandboxConfiguration": {
+          "$ref": "#/definitions/SandboxConfiguration"
         },
         "networkAddressType": {
           "description": "Gets or sets the type of IP address to be used for the service endpoint.",
@@ -1103,33 +1098,13 @@
             "name": "networkAddressType"
           }
         },
-        "ports": {
-          "description": "Gets or sets the collection of ports to be exposed on the container instance.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NetworkPort"
-          },
-          "x-ms-identifiers": []
+        "networkAddress": {
+          "description": "Gets or sets the IP address to be used for the service endpoint.",
+          "type": "string"
         },
-        "osType": {
-          "description": "Gets or sets the Operating System type of the service.",
-          "type": "string",
-          "enum": [
-            "Windows",
-            "Linux"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "osType"
-          }
-        },
-        "initContainers": {
-          "description": "Gets or sets the set of init containers for an instance of the service.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ContainerSpecification"
-          },
-          "x-ms-identifiers": []
+        "port": {
+          "description": "Gets or sets the port to be used for the service endpoint.",
+          "$ref": "#/definitions/NetworkPort"
         },
         "applicationContainers": {
           "description": "Gets or sets the set of application containers that make up one instance of the service.",
@@ -1151,6 +1126,37 @@
           "description": "Gets or sets the number of instances of the service to be brought up.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "SandboxConfiguration": {
+      "description": "Configuration details for the sandbox infrastructure preventing data exfiltration from the micro service.",
+      "type": "object",
+      "properties": {
+        "scenario": {
+          "description": "Gets or sets the scenario for which the sandbox is to be configured.",
+          "type": "string",
+          "enum": [
+            "None",
+            "SahamatiLending",
+            "Generic"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "scenario"
+          }
+        },
+        "scenarioVersion": {
+          "description": "Gets or sets the version of the scenario for which the sandbox is to be configured.",
+          "type": "string"
+        },
+        "policyUrl": {
+          "description": "Gets or sets the URL of the policy to be applied for preventing data exfiltration from the micro service.",
+          "type": "string"
+        },
+        "policyDataJson": {
+          "description": "Gets or sets any additional data required for applying the policy (JSON serialized).",
+          "type": "string"
         }
       }
     },
