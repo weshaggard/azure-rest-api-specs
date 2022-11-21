@@ -5,15 +5,20 @@ import "@azure-tools/cadl-azure-resource-manager";
 import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-providerhub-controller";
 
-@armNamespace
-@serviceTitle("Microsoft.DatabaseInsights")
-@serviceVersion("2023-03-01-preview")
+@service({
+  title: "Microsoft.DatabaseInsights",
+  version: "2023-03-01-preview",
+})
+@Versioning.versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+@armProviderNamespace
 namespace Microsoft.DatabaseInsights;
 
 using Cadl.Http;
 using Cadl.Rest;
 using Azure.ResourceManager;
 using OpenAPI;
+
+interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("A DatabaseInsightsProviderHub resource")
 model DatabaseMonitoringAgent is TrackedResource<DatabaseMonitoringAgentProperties> {
@@ -40,13 +45,20 @@ model DatabaseMonitoringAgentProperties {
 model Datastore {
   @doc("ARM ResourceId of an Azure Data Explorer database")
   adxDatabaseResourceId: string;
+  @doc("URI of an Azure Data Explorer Cluster")
+  adxClusterUri: string;
 }
 
 @armResourceOperations
-interface DatabaseMonitoringAgents extends ResourceOperations<DatabaseMonitoringAgent, DatabaseMonitoringAgentProperties> {}
+interface DatabaseMonitoringAgents extends ResourceOperations<DatabaseMonitoringAgent, DatabaseMonitoringAgentProperties> {
+  @doc("Action to start monitoring all monitoring targets in a given Database Monitoring Agent")
+  @action 
+  @post
+  startAgent(...ResourceInstanceParameters<DatabaseMonitoringAgent>): ArmResponse<DatabaseMonitoringAgent> | ErrorResponse;
+}
 
 @parentResource(DatabaseMonitoringAgent)
-model MonitoringTarget is TrackedResource<MonitoringTargetProperties> {
+model MonitoringTarget is ProxyResource<MonitoringTargetProperties> {
   @doc("Monitoring target resource name")
   @key("monitoringTargetName")
   @segment("monitoringTargets")
@@ -147,4 +159,4 @@ enum MonitoringTargetCollectionStatus {
 }
 
 @armResourceOperations
-interface MonitoringTargets extends ResourceOperations<MonitoringTarget, MonitoringTargetProperties> {}
+interface MonitoringTargets extends ProxyResourceOperations<MonitoringTarget> {}
