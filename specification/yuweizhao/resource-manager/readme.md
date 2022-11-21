@@ -27,9 +27,7 @@ These are the global settings for the testbase.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2020-12-16-preview
-tag: package-2021-09-01
-tag: package-2021-12-16-preview
+tag: package-2022-10-15-preview
 ```
 
 ### Tag: package-2020-12-16-preview
@@ -38,26 +36,107 @@ These settings apply only when `--tag=package-2020-12-16-preview` is specified o
 
 ```yaml $(tag) == 'package-2020-12-16-preview'
 input-file:
-  - microsoft.yuweizhaotestbase/preview/2020-12-16-preview/testbase.json
+  - Microsoft.Yuweizhao/preview/2020-12-16-preview/testbase.json
 ```
 
-### Tag: package-2021-12-16-preview
+### Tag: package-2021-09-01-preview
 
-These settings apply only when `--tag=package-2021-12-16-preview` is specified on the command line.
+These settings apply only when `--tag=package-2021-09-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-12-16-preview'
+```yaml $(tag) == 'package-2021-09-01-preview'
 input-file:
-  - microsoft.yuweizhaotestbase/preview/2021-12-16-preview/testbase.json
+  - Microsoft.Yuweizhao/preview/2021-09-01-preview/testbase.json
+```
+
+### Tag: package-2021-09-01
+
+These settings apply only when `--tag=package-2021-09-01` is specified on the command line.
+
+```yaml $(tag) == 'package-2021-09-01'
+input-file:
+  - Microsoft.Yuweizhao/stable/2021-09-01/testbase.json
+```
+
+### Tag: package-2021-12-01
+
+These settings apply only when `--tag=package-2021-12-01` is specified on the command line.
+
+```yaml $(tag) == 'package-2021-12-01'
+input-file:
+  - Microsoft.Yuweizhao/stable/2021-12-01/testbase.json
+```
+
+### Tag: package-2022-03-01-preview
+
+These settings apply only when `--tag=package-2022-03-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-03-01-preview'
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-03-01-preview/testbase.json
+```
+
+### Tag: package-2022-04-01-preview
+
+These settings apply only when `--tag=package-2022-04-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-04-01-preview'
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-04-01-preview/testbase.json
+```
+
+### Tag: package-2022-05-01-preview
+
+These settings apply only when `--tag=package-2022-05-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-05-01-preview'
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-05-01-preview/testbase.json
+```
+
+### Tag: package-2022-08-01-preview
+
+These settings apply only when `--tag=package-2022-08-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-08-01-preview'
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-08-01-preview/testbase.json
+```
+
+### Tag: package-2022-08-15-preview
+
+These settings apply only when `--tag=package-2022-08-15-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-08-15-preview'
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-08-15-preview/testbase.json
+```
+
+### Tag: package-2022-09-15-preview
+
+These settings apply only when `--tag=package-2022-09-15-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-09-15-preview'
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-09-15-preview/testbase.json
+```
+
+### Tag: package-2022-10-15-preview
+
+These settings apply only when `--tag=package-2022-10-15-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-10-15-preview'
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-10-15-preview/testbase.json
+  - Microsoft.Yuweizhao/preview/2022-10-15-preview/draftpackage.json
 ```
 
 ## Suppression
 
 ``` yaml
 directive:
-  - suppress: R4031
-    from: testbase.json
-    reason: Proxy resource
-
+- suppress: R4031
+  from: testbase.json
+  reason: provisioningState is not required for Proxy Resources.
 ```
 
 ---
@@ -71,13 +150,24 @@ This is not used by Autorest itself.
 
 ```yaml $(swagger-to-sdk)
 swagger-to-sdk:
-  - repo: azure-sdk-for-python
+  - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
   - repo: azure-resource-manager-schemas
     after_scripts:
       - node sdkauto_afterscript.js testbase/resource-manager
+  - repo: azure-powershell
+```
+## Suppression
+```
+directive:
+  - suppress: SECRET_PROPERTY
+    from:
+      - testbase.json
+    where:
+      - $.definitions.DownloadURLResponse.properties.downloadUrl
+    reason: Secrets are OK to return in a POST response according to ARM.
 ```
 
 ## Go

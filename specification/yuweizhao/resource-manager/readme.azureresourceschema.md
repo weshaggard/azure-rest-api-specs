@@ -7,8 +7,16 @@ These settings apply only when `--azureresourceschema` is specified on the comma
 ``` yaml $(azureresourceschema) && $(multiapi)
 batch:
   - tag: schema-testbase-2020-12-16-preview
-  - tag: schema-testbase-2021-12-16-preview
+  - tag: schema-testbase-2021-09-01-preview
+  - tag: schema-testbase-2021-09-01
+  - tag: schema-testbase-2021-12-01
+  - tag: schema-testbase-2022-03-01-preview
   - tag: schema-testbase-2022-04-01-preview
+  - tag: schema-testbase-2022-05-01-preview
+  - tag: schema-testbase-2022-08-01-preview
+  - tag: schema-testbase-2022-08-15-preview
+  - tag: schema-testbase-2022-09-15-preview
+  - tag: schema-testbase-2022-10-15-preview
 ```
 
 Please also specify `--azureresourceschema-folder=<path to the root directory of your azure-resource-manager-schemas clone>`.
@@ -20,25 +28,97 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - microsoft.yuweizhaotestbase/preview/2020-12-16-preview/testbase.json
+  - Microsoft.Yuweizhao/preview/2020-12-16-preview/testbase.json
 ```
 
-### Tag: schema-testbase-2021-12-16-preview and azureresourceschema
+### Tag: schema-testbase-2021-09-01-preview and azureresourceschema
 
-``` yaml $(tag) == 'schema-testbase-2021-12-16-preview' && $(azureresourceschema)
+``` yaml $(tag) == 'schema-testbase-2021-09-01-preview' && $(azureresourceschema)
 output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - microsoft.yuweizhaotestbase/preview/2021-12-16-preview/testbase.json
+  - Microsoft.Yuweizhao/preview/2021-09-01-preview/testbase.json
+```
+
+### Tag: schema-testbase-2021-09-01 and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2021-09-01' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.Yuweizhao/stable/2021-09-01/testbase.json
+```
+
+### Tag: schema-testbase-2021-12-01 and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2021-12-01' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.Yuweizhao/stable/2021-12-01/testbase.json
+```
+
+### Tag: schema-testbase-2022-03-01-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2022-03-01-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-03-01-preview/testbase.json
 ```
 
 ### Tag: schema-testbase-2022-04-01-preview and azureresourceschema
 
 ``` yaml $(tag) == 'schema-testbase-2022-04-01-preview' && $(azureresourceschema)
 output-folder: $(azureresourceschema-folder)/schemas
-
 # all the input files in this apiVersion
 input-file:
-  - microsoft.yuweizhao/preview/2022-04-01-preview/testbase.json
+  - Microsoft.Yuweizhao/preview/2022-04-01-preview/testbase.json
+```
+
+### Tag: schema-testbase-2022-05-01-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2022-05-01-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-05-01-preview/testbase.json
+```
+
+### Tag: schema-testbase-2022-08-01-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2022-08-01-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-08-01-preview/testbase.json
+```
+
+### Tag: schema-testbase-2022-08-15-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2022-08-15-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-08-15-preview/testbase.json
+```
+
+### Tag: schema-testbase-2022-09-15-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2022-09-15-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-09-15-preview/testbase.json
+```
+
+### Tag: schema-testbase-2022-10-15-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2022-10-15-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.Yuweizhao/preview/2022-10-15-preview/testbase.json
+  - Microsoft.Yuweizhao/preview/2022-10-15-preview/draftpackage.json
 ```
