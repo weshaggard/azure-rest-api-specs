@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "SubscriberAnalyzer",
-    "description": "The definitions in this swagger specification will be used for MobilePacketCore subscriberAnalyzer.",
+    "description": "The definitions in this swagger specification will be used for Mobile Packet Core Subscriber Analyzer resource.",
     "version": "2023-04-15-preview"
   },
   "host": "management.azure.com",
@@ -40,6 +40,7 @@
           "SubscriberAnalyzers"
         ],
         "operationId": "SubscriberAnalyzer_CreateOrUpdate",
+        "description": "Creates or updates a Mobile Packet Core subscriber analyzer",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -58,7 +59,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of the subscriberAnalyzer object."
+            "description": "The name of the subscriber analyzer object."
           },
           {
             "name": "parameters",
@@ -90,7 +91,7 @@
           }
         },
         "x-ms-examples": {
-          "Create SubscriberAnalyzer": {
+          "Create Subscriber Analyzer": {
             "$ref": "./examples/SubscriberAnalyzerCreate.json"
           }
         },
@@ -103,7 +104,8 @@
         "tags": [
           "SubscriberAnalyzers"
         ],
-        "operationId": "SubscriberAnalyzer_Retrieve",
+        "operationId": "SubscriberAnalyzer_Get",
+        "description": "Get information about the specified Mobile Packet Core subscriber analyzer",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -122,7 +124,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of the subscriberAnalyzer object."
+            "description": "The name of the subscriber analyzer object."
           }
         ],
         "responses": {
@@ -140,7 +142,7 @@
           }
         },
         "x-ms-examples": {
-          "Get SubscriberAnalyzer": {
+          "Get Subscriber Analyzer": {
             "$ref": "./examples/SubscriberAnalyzerGet.json"
           }
         }
@@ -150,6 +152,7 @@
           "SubscriberAnalyzers"
         ],
         "operationId": "SubscriberAnalyzer_Delete",
+        "description": "Deletes the specified Mobile Packet Core subscriber analyzer.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -168,7 +171,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of the subscriberAnalyzer object."
+            "description": "The name of the subscriber analyzer object."
           }
         ],
         "responses": {
@@ -189,7 +192,7 @@
           }
         },
         "x-ms-examples": {
-          "Delete SubscriberAnalyzer": {
+          "Delete Subscriber Analyzer": {
             "$ref": "./examples/SubscriberAnalyzerDelete.json"
           }
         },
@@ -203,7 +206,7 @@
           "SubscriberAnalyzers"
         ],
         "operationId": "SubscriberAnalyzer_UpdateTags",
-        "description": "Update MobilePacketCore subscriberAnalyzer tags.",
+        "description": "Update Mobile Packet Core subscriber analyzer tags.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -222,7 +225,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "The name of the subscriberAnalyzer object."
+            "description": "The name of the subscriber analyzer object."
           },
           {
             "name": "parameters",
@@ -249,7 +252,7 @@
           }
         },
         "x-ms-examples": {
-          "Update SubscriberAnalyzer Tags": {
+          "Update Subscriber Analyzer Tags": {
             "$ref": "./examples/SubscriberAnalyzerUpdateTags.json"
           }
         }
@@ -260,8 +263,8 @@
         "tags": [
           "SubscriberAnalyzers"
         ],
-        "operationId": "SubscriberAnalyzer_Retrieve_All",
-        "description": "Lists all the component resources in a network function.",
+        "operationId": "SubscriberAnalyzer_ListByResourceGroup",
+        "description": "Lists all the subscriber analyzers in a resource group.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -291,7 +294,7 @@
           }
         },
         "x-ms-examples": {
-          "List components in network function": {
+          "List Subscriber Analyzers by resource group": {
             "$ref": "./examples/SubscriberAnalyzerListByResourceGroup.json"
           }
         },
@@ -302,6 +305,66 @@
     }
   },
   "definitions": {
+    "ResultCodeAction": {
+      "type": "string",
+      "enum": [
+        "continue",
+        "terminate"
+      ],
+      "x-ms-enum": {
+        "name": "defaultAction",
+        "modelAsString": true
+      }
+    },
+    "ChargingResultCodeActionTemplate": {
+      "type": "object",
+      "properties": {
+        "defaultAction": {
+          "$ref": "#/definitions/ResultCodeAction"
+        },
+        "statusCodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "statusCode": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              },
+              "applicationError": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "applicationErrorCode": {
+                      "type": "string",
+                      "enum": [
+                        "chargingFailed",
+                        "chargingNotApplicable",
+                        "userUnknown",
+                        "endUserRequestDenied",
+                        "endUserRequestRejected"
+                      ],
+                      "x-ms-enum": {
+                        "name": "applicationError",
+                        "modelAsString": true
+                      }
+                    },
+                    "action": {
+                      "$ref": "#/definitions/ResultCodeAction"
+                    }
+                  }
+                }
+              },
+              "defaultAction": {
+                "$ref": "#/definitions/ResultCodeAction"
+              }
+            }
+          }
+        }
+      }
+    },
     "matchCriteriaTypeRange": {
       "enum": [
         "presence",
@@ -430,9 +493,9 @@
           "enum": [
             "geran",
             "utran",
-            "eutran-nb",
-            "eutran-wb",
-            "ng-ran",
+            "eutranNb",
+            "eutranWb",
+            "ngRan",
             "wlan",
             "virtual"
           ],
@@ -739,6 +802,12 @@
                       }
                     }
                   }
+                },
+                "initialMsgResultCodeActions": {
+                  "$ref": "#/definitions/ChargingResultCodeActionTemplate"
+                },
+                "updateMsgResultCodeActions": {
+                  "$ref": "#/definitions/ChargingResultCodeActionTemplate"
                 }
               },
               "description": "Class Charging Profile.  Only valid filter types are dnn, imsiRange, imeiRange, msisdnRange, rat, pduType, or chargingCharacteristics"
@@ -910,11 +979,16 @@
                     "$ref": "#/definitions/SessionRule"
                   }
                 },
-                "pcfResponseCodeTemplate": {
+                "pcfResponseCodes": {
                   "type": "array",
                   "items": {
-                    "type": "integer",
-                    "description": "HTTP Response Codes.  If PCF response matches the response code the session is continued using the default policy profile"
+                    "type": "object",
+                    "properties": {
+                      "responseCode": {
+                        "type": "integer",
+                        "description": "HTTP Response Codes.  If PCF response matches the response code the session is continued using the default policy profile"
+                      }
+                    }
                   }
                 },
                 "defaultSubscriberPolicyProfile": {
@@ -1595,7 +1669,7 @@
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SubscriberAnalyzerPropertiesFormat",
-          "description": "Mobile network subscriberAnalyzer properties."
+          "description": "Mobile Packet Core Subscriber Analyzer properties."
         },
         "systemData": {
           "x-ms-client-flatten": true,
