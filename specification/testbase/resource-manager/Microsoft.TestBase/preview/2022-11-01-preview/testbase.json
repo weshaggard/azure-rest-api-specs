@@ -2075,9 +2075,6 @@
           },
           "CPURegressionAnalysisResultsList": {
             "$ref": "./examples/CPURegressionAnalysisResultsList.json"
-          },
-          "PowerAutomateExecutionAnalysisResultList": {
-            "$ref": "./examples/PowerAutomateExecutionAnalysisResultsList.json"
           }
         }
       }
@@ -2141,9 +2138,6 @@
           },
           "CPURegressionAnalysisResultGet": {
             "$ref": "./examples/CPURegressionAnalysisResultGet.json"
-          },
-          "PowerAutomateExecutionAnalysisResultGet": {
-            "$ref": "./examples/PowerAutomateExecutionAnalysisResultGet.json"
           }
         }
       }
@@ -4035,10 +4029,6 @@
           "type": "boolean",
           "description": "Specifies whether to install first party applications before running the command."
         },
-        "testToolType": {
-          "$ref": "#/definitions/TestToolType",
-          "description": "Test tool type for this command."
-        },
         "preUpgrade": {
           "type": "boolean",
           "description": "Specifies whether the command is assigned to be executed before in-place upgrade."
@@ -4739,8 +4729,7 @@
             "MemoryUtilization",
             "CPURegression",
             "MemoryRegression",
-            "TestAnalysis",
-            "PowerAutomateExecution"
+            "TestAnalysis"
           ],
           "type": "string",
           "x-ms-enum": {
@@ -5131,108 +5120,6 @@
         "guidance": {
           "type": "string",
           "description": "Guidance that shows what the customer needs to do for this failure."
-        }
-      }
-    },
-    "PowerAutomateExecutionResultSingletonResourceProperties": {
-      "description": "The properties of Power Automate Execution Result.",
-      "type": "object",
-      "x-ms-discriminator-value": "PowerAutomateExecution",
-      "properties": {
-        "powerAutomateExecutionResults": {
-          "description": "The result array data.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PowerAutomateExecutionResult"
-          }
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/AnalysisResultSingletonResourceProperties"
-        }
-      ]
-    },
-    "PowerAutomateExecutionResult": {
-      "description": "The details for a single instance of an action execution result for a flow.",
-      "type": "object",
-      "properties": {
-        "scriptName": {
-          "type": "string",
-          "description": "Name of script."
-        },
-        "id": {
-          "type": "string",
-          "description": "Id of the flow"
-        },
-        "functionName": {
-          "type": "string",
-          "description": "The name of the function containing the action."
-        },
-        "startTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The start time of execution."
-        },
-        "endTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The end time of execution."
-        },
-        "index": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The index, starting at 1, of the action within the current function."
-        },
-        "insideErrorHandling": {
-          "type": "boolean",
-          "description": "Whether this action executed only as a result of user-defined error handling."
-        },
-        "localizedModuleName": {
-          "type": "string",
-          "description": "The name of the module as used by the system, ignoring localization."
-        },
-        "name": {
-          "type": "string",
-          "description": "The user-facing localized name of the executed action."
-        },
-        "status": {
-          "type": "string",
-          "description": "The action result status. Should be modeled with an existing Flow*Status enum. Cancelled if the run was stopped manually during action execution. TimedOut if the action has a timeout that was reached. Faulted if an internal error which is due to a code defect was hit."
-        },
-        "systemActionName": {
-          "type": "string",
-          "description": "The name of the action as used by the system, ignoring localization."
-        },
-        "systemModuleName": {
-          "type": "string",
-          "description": "The name of the module containing the action as used by the system, ignoring localization."
-        },
-        "workFlowId": {
-          "type": "string",
-          "description": "Id of the function in Power Automate Flow"
-        },
-        "error": {
-          "$ref": "#/definitions/PowerAutomateResultErrorDetails",
-          "description": "Error details, which are present only if there is an error associated with the action result."
-        }
-      }
-    },
-    "PowerAutomateResultErrorDetails": {
-      "description": "Error details, which are present only if there is an error associated with the action result.",
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string",
-          "description": "The error code."
-        },
-        "correlationId": {
-          "type": "string",
-          "description": "The correlation id."
-        },
-        "message": {
-          "type": "string",
-          "description": "The error description."
         }
       }
     },
@@ -5785,18 +5672,6 @@
         "endTimeStamp"
       ]
     },
-    "TestToolType": {
-      "type": "string",
-      "description": "Test Tool Type.",
-      "enum": [
-        "PowerShell",
-        "PowerAutomate"
-      ],
-      "x-ms-enum": {
-        "name": "testToolType",
-        "modelAsString": true
-      }
-    },
     "AvailableInplaceUpgradeOSListResult": {
       "description": "A list of available In-place Upgrade OSs.",
       "type": "object",
@@ -6047,8 +5922,7 @@
         "CPUUtilization",
         "MemoryRegression",
         "CPURegression",
-        "TestAnalysis",
-        "PowerAutomateExecution"
+        "TestAnalysis"
       ],
       "x-ms-enum": {
         "name": "analysisResultType",
@@ -6069,8 +5943,7 @@
         "cpuUtilization",
         "memoryRegression",
         "cpuRegression",
-        "testAnalysis",
-        "powerAutomateExecution"
+        "testAnalysis"
       ],
       "x-ms-enum": {
         "name": "analysisResultName",
@@ -6109,14 +5982,6 @@
       "type": "string",
       "x-ms-parameter-location": "method",
       "description": "The resource name of the Test Base Customer event."
-    },
-    "TestToolNameParameter": {
-      "name": "testToolName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method",
-      "description": "The resource name of the Test Base Account TestTool."
     },
     "AvailableInplaceUpgradeOSResouceNameParamaeter": {
       "name": "availableInplaceUpgradeOSResourceNameParameter",
