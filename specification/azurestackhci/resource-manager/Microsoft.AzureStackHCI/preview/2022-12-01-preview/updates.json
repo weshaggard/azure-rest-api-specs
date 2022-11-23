@@ -123,6 +123,53 @@
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updates/{updateName}": {
+      "delete": {
+        "operationId": "Updates_Delete",
+        "description": "Delete specified Update",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          },
+          {
+            "$ref": "#/parameters/UpdateNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "ACCEPTED"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "Delete an Update": {
+            "$ref": "./examples/DeleteUpdates.json"
+          }
+        }
+      },
       "put": {
         "operationId": "Updates_Put",
         "description": "Put specified Update",
@@ -348,7 +395,9 @@
           "items": {
             "$ref": "#/definitions/UpdatePrerequisite"
           },
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "packageName"
+          ]
         },
         "componentVersions": {
           "description": "An array of component versions for a Solution Bundle update, and an empty array otherwise.  ",
@@ -357,22 +406,21 @@
             "$ref": "#/definitions/PackageVersionInfo"
           },
           "x-ms-client-flatten": true,
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "version"
+          ]
         },
         "rebootRequired": {
           "type": "object",
-          "items": {
-            "$ref": "#/definitions/RebootRequirement"
-          },
+          "$ref": "#/definitions/RebootRequirement",
           "x-ms-client-flatten": true
         },
         "healthState": {
           "description": "Overall health state for update-specific health checks.",
           "type": "object",
-          "items": {
-            "$ref": "#/definitions/HealthState"
-          },
-          "x-ms-client-flatten": true
+          "$ref": "#/definitions/HealthState",
+          "x-ms-client-flatten": true,
+          "readOnly": true
         },
         "healthCheckResult": {
           "description": "An array of PrecheckResult objects.",
@@ -380,13 +428,15 @@
           "items": {
             "$ref": "#/definitions/PrecheckResult"
           },
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "readOnly": true
         },
         "healthCheckDate": {
           "description": "Last time the package-specific checks were run.",
           "type": "string",
           "format": "date-time",
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "readOnly": true
         },
         "packagePath": {
           "description": "Path where the update package is available.",
@@ -486,7 +536,8 @@
           "format": "date-time",
           "x-ms-client-flatten": true
         }
-      }
+      },
+      "readOnly": true
     },
     "RebootRequirement": {
       "type": "string",
@@ -498,8 +549,7 @@
       "x-ms-enum": {
         "name": "RebootRequirement",
         "modelAsString": true
-      },
-      "readOnly": true
+      }
     },
     "HealthState": {
       "type": "string",
@@ -537,11 +587,30 @@
         "status": {
           "description": "The status of the check running (i.e. Failed, Succeeded, In Progress). This answers whether the check ran, and passed or failed.",
           "type": "string",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "InProgress"
+          ],
+          "x-ms-enum": {
+            "name": "status",
+            "modelAsString": true
+          },
           "x-ms-client-flatten": true
         },
         "severity": {
           "description": "Severity of the result (Critical, Warning, Informational, Hidden). This answers how important the result is. Critical is the only update-blocking severity.",
           "type": "string",
+          "enum": [
+            "Critical",
+            "Warning",
+            "Informational",
+            "Hidden"
+          ],
+          "x-ms-enum": {
+            "name": "severity",
+            "modelAsString": true
+          },
           "x-ms-client-flatten": true
         },
         "description": {

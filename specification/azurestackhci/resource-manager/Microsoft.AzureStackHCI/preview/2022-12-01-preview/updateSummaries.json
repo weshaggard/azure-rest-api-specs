@@ -77,6 +77,50 @@
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/updateSummaries/default": {
+      "delete": {
+        "operationId": "UpdateSummaries_Delete",
+        "description": "Delete Update Summaries",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ClusterNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "ACCEPTED"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "Delete an Update": {
+            "$ref": "./examples/DeleteUpdateSummaries.json"
+          }
+        }
+      },
       "put": {
         "operationId": "UpdateSummaries_Put",
         "description": "Put Update summaries under the HCI cluster",
@@ -240,7 +284,9 @@
             "$ref": "#/definitions/PackageVersionInfo"
           },
           "x-ms-client-flatten": true,
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "version"
+          ]
         },
         "currentVersion": {
           "description": "Current Solution Bundle version of the stamp.",
@@ -262,10 +308,9 @@
         "healthState": {
           "description": "Overall health state for update-specific health checks.",
           "type": "object",
-          "items": {
-            "$ref": "#/definitions/HealthState"
-          },
-          "x-ms-client-flatten": true
+          "$ref": "#/definitions/HealthState",
+          "x-ms-client-flatten": true,
+          "readOnly": true
         },
         "healthCheckResult": {
           "description": "An array of pre-check result objects.",
@@ -273,13 +318,15 @@
           "items": {
             "$ref": "#/definitions/PrecheckResult"
           },
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "readOnly": true
         },
         "healthCheckDate": {
           "description": "Last time the package-specific checks were run.",
           "type": "string",
           "format": "date-time",
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "readOnly": true
         },
         "state": {
           "description": "Overall update state of the stamp.",
@@ -322,7 +369,8 @@
           "format": "date-time",
           "x-ms-client-flatten": true
         }
-      }
+      },
+      "readOnly": true
     },
     "HealthState": {
       "type": "string",
@@ -337,8 +385,7 @@
       "x-ms-enum": {
         "name": "HealthState",
         "modelAsString": true
-      },
-      "readOnly": true
+      }
     },
     "PrecheckResult": {
       "properties": {
