@@ -26,7 +26,7 @@ These are the global settings for the hybridconnectivity.
 
 ```yaml
 openapi-type: arm
-tag: package-2021-07-08-privatepreview
+tag: package-2023-03-15
 ```
 
 ### Tag: package-2021-07-08-privatepreview
@@ -55,6 +55,16 @@ These settings apply only when `--tag=package-2023-03-01-privatepreview` is spec
 input-file:
   - Microsoft.HybridConnectivity/preview/2022-05-01-preview/hybridconnectivity.json
 ```
+
+### Tag: package-2023-03-15
+
+These settings apply only when `--tag=package-2023-03-15` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-03-15'
+input-file:
+  - Microsoft.HybridConnectivity/stable/2023-03-15/hybridconnectivity.json
+```
+---
 ---
 
 # Code Generation
