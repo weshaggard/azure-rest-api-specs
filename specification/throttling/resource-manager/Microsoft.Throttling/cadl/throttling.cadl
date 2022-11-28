@@ -20,6 +20,7 @@ using Cadl.Versioning;
 using Autorest;
 using Azure.Core;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Internal;
 using OpenAPI;
 
 interface Operations extends Azure.ResourceManager.Operations {}
@@ -83,13 +84,16 @@ model CertificateProperties {
 model AzureActiveDirectoryProperties {
   @doc("List of permitted user-assigned managed identities")
   @minItems(1)
-  userAssignedIdentities: ResourceIdentifier[]
+  userAssignedIdentities: UserAssignedManagedIdentityReference[]
 }
 
-// TODO: use the built-in once shipped, see https://github.com/Azure/cadl-azure/issues/1810
 @doc("User-assigned managed identity ARM resource id")
-// @format("arm-id") // TODO: add back, see task #16186919
-model ResourceIdentifier is string {}
+model UserAssignedManagedIdentityReference
+  is ResourceIdentifier<[
+    {
+      type: "Microsoft.ManagedIdentity/userAssignedIdentities";
+    }
+  ]>;
 
 @doc("Throttling category")
 @parentResource(Account)
