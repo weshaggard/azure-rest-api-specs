@@ -50,6 +50,16 @@ input-file:
   - Microsoft.TestBaseBin/preview/2021-12-16-preview/testbase.json
 ```
 
+### Tag: package-2022-12-15-preview
+
+These settings apply only when `--tag=package-2022-12-15-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-12-15-preview'
+input-file:
+  - Microsoft.TestBaseBin/preview/2022-12-15-preview/testbase.json
+  - Microsoft.TestBaseBin/preview/2022-12-15-preview/draftpackage.json
+```
+
 ## Suppression
 
 ``` yaml

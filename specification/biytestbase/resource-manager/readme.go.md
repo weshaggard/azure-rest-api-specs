@@ -24,3 +24,13 @@ Please also specify `--go-sdk-folder=<path to the root directory of your azure-s
 ```yaml $(tag) == 'package-2020-12-16-preview' && $(go)
 output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2020-12-16-preview/$(namespace)
 ```
+
+### Tag: package-2022-12-15-preview and go
+
+These settings apply only when `--tag=package-2022-12-15-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2022-12-15-preview' && $(go)
+input-file:
+  - Microsoft.TestBaseBin/preview/2022-12-15-preview/testbase.json
+  - Microsoft.TestBaseBin/preview/2022-12-15-preview/draftpackage.json
+```
