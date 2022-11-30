@@ -303,6 +303,26 @@
     }
   },
   "definitions": {
+    "prefixLengthIpv4": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 32
+    },
+    "prefixLengthIpv6": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 128
+    },
+    "prefixGeLeRangeIpv4": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 32
+    },
+    "prefixGeLeRangeIpv6": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 128
+    },
     "bgpParams": {
       "type": "object",
       "properties": {
@@ -454,7 +474,150 @@
     },
     "policy": {
       "type": "object",
-      "properties": {}
+      "properties": {
+        "prefixList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "line": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "number": {
+                      "type": "integer"
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "deny",
+                        "permit"
+                      ],
+                      "x-ms-enum": {
+                        "name": "action",
+                        "modelAsString": true
+                      }
+                    },
+                    "address": {
+                      "$ref": "./common.json#/definitions/ipAddress"
+                    },
+                    "prefixLength": {
+                      "$ref": "#/definitions/prefixLengthIpv4"
+                    },
+                    "le": {
+                      "$ref": "#/definitions/prefixGeLeRangeIpv4"
+                    },
+                    "ge": {
+                      "$ref": "#/definitions/prefixGeLeRangeIpv4"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "prefixListIpv6": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "line": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "number": {
+                      "type": "integer"
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "deny",
+                        "permit"
+                      ],
+                      "x-ms-enum": {
+                        "name": "action",
+                        "modelAsString": true
+                      }
+                    },
+                    "address": {
+                      "$ref": "./common.json#/definitions/ipAddress"
+                    },
+                    "prefixLength": {
+                      "$ref": "#/definitions/prefixLengthIpv6"
+                    },
+                    "le": {
+                      "$ref": "#/definitions/prefixGeLeRangeIpv6"
+                    },
+                    "ge": {
+                      "$ref": "#/definitions/prefixGeLeRangeIpv6"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "routeMap": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "deny",
+                  "permit"
+                ],
+                "x-ms-enum": {
+                  "name": "action",
+                  "modelAsString": true
+                }
+              },
+              "number": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 65535
+              },
+              "matchTable": {
+                "type": "object",
+                "properties": {
+                  "matchIpPrefixList": {
+                    "type": "string"
+                  },
+                  "matchIpv6PrefixList": {
+                    "type": "string"
+                  }
+                }
+              },
+              "setTable": {
+                "type": "object",
+                "properties": {
+                  "setIpNextHop": {
+                    "$ref": "./common.json#/definitions/ipAddress"
+                  },
+                  "setIpv6NextHop": {
+                    "$ref": "./common.json#/definitions/ipAddress"
+                  },
+                  "setVpnNextHop": {
+                    "$ref": "./common.json#/definitions/ipAddress"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "RoutingPropertiesFormat": {
       "type": "object",
