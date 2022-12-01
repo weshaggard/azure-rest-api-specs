@@ -28,11 +28,13 @@ model WindfallDeployment is TrackedResource<WindfallDeploymentProperties> {
 @doc("Details of single SIP trunk.")
 model WindfallSipTrunk {
   @doc("Domain name of the peer connecting to Windfall over this SIP trunk. This must match the common name of the TLS certificate presented by the peer.")
-  @visibility("read", "write", "create")
+  @visibility("read", "update", "create")
   remoteDomain: string;
 
   @doc("IPv4 address ranges allowed to send requests to Windfall over this trunk")
-  @visibility("read", "write", "create")
+  @visibility("read", "update", "create")
+  @minItems(1)
+  @maxItems(1)
   remoteAddresses: string[];
 }
 
@@ -40,10 +42,18 @@ model WindfallSipTrunk {
 model WindfallDeploymentProperties is ResourceProperties {
   @doc("The set of SIP trunks to be configured on this deployment")
   @OpenAPI.extension("x-ms-identifiers", ["remoteDomain"])
-  @visibility("read", "write", "create")
+  @visibility("read", "update", "create")
+  @minItems(1)
+  @maxItems(1)
   sipTrunks: WindfallSipTrunk[];
 }
 
 @added(Versions.v2022_12_31_preview)
 @armResourceOperations
-interface WindfallDeployments extends ResourceRead<WindfallDeployment>, ResourceCreate<WindfallDeployment>, ResourceDelete<WindfallDeployment>, ResourceListBySubscription<WindfallDeployment>, ResourceListByParent<WindfallDeployment>, ResourceUpdateNoProperties<WindfallDeployment> {}
+interface WindfallDeployments
+  extends ResourceRead<WindfallDeployment>,
+    ResourceCreate<WindfallDeployment>,
+    ResourceDelete<WindfallDeployment>,
+    ResourceListBySubscription<WindfallDeployment>,
+    ResourceListByParent<WindfallDeployment>,
+    ResourceUpdateNoProperties<WindfallDeployment> {}

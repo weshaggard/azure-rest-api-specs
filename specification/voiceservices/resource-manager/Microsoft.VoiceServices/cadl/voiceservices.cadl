@@ -11,32 +11,48 @@ using Cadl.Versioning;
 using Azure.ResourceManager;
 
 @armProviderNamespace("Microsoft.VoiceServices")
-@serviceTitle("Microsoft.VoiceServices")
+@service({
+  title: "Microsoft.VoiceServices",
+})
 @versioned(Versions)
-@versionedDependency([
-    [Versions.v2022_12_01_preview, Azure.ResourceManager.Versions.v1_0_Preview_1],
-    [Versions.v2022_12_31_preview, Azure.ResourceManager.Versions.v1_0_Preview_1]
-])
+@versionedDependency(
+  [
+    [
+      Versions.v2022_12_01_preview,
+      Azure.ResourceManager.Versions.v1_0_Preview_1
+    ],
+    [
+      Versions.v2022_12_31_preview,
+      Azure.ResourceManager.Versions.v1_0_Preview_1
+    ]
+  ]
+)
 namespace Microsoft.VoiceServices;
 
-enum Versions {v2022_12_01_preview: "2022-12-01-preview", v2022_12_31_preview: "2022-12-31-preview"}
+enum Versions {
+  v2022_12_01_preview: "2022-12-01-preview",
+  v2022_12_31_preview: "2022-12-31-preview",
+}
 
+interface Operations extends Azure.ResourceManager.Operations {}
 
 // Various tooling enforces (or at least suggests) that all models should have a provisioning State field, as this means something special to ARM.
 
 @doc("Provisioning state of the resource.")
 enum ProvisioningStateEnum {
-  Succeeded, Failed, Canceled
+  Succeeded,
+  Failed,
+  Canceled,
 }
 
 @knownValues(ProvisioningStateEnum)
-model ProvisioningState  is string;
+model ProvisioningState is string;
 
 @doc("General resource properties.")
 model ResourceProperties {
-	@doc("Resource provisioning state.")
-	@visibility("read")
-	provisioningState?: ProvisioningState;
+  @doc("Resource provisioning state.")
+  @visibility("read")
+  provisioningState?: ProvisioningState;
 }
 
 // A helper template for defining empty properties for resource PATCH operations
@@ -44,14 +60,17 @@ model ResourceProperties {
 // See https://github.com/Azure/azure-rest-api-specs-pr/pull/8707#discussion_r971363996 for context
 @doc("The type used for update operations of the {name}.", TResource)
 @friendlyName("{name}Update", TResource)
-model ResourceUpdateModelNoProperties<TResource>
-  is OptionalProperties<UpdateableProperties<OmitProperties<TResource, "Name" | "name">>>;
+model ResourceUpdateModelNoProperties<TResource extends object>
+  is OptionalProperties<UpdateableProperties<OmitProperties<
+    TResource,
+    "Name" | "name"
+  >>>;
 
 #suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-interface-requires-decorator" "Interface template does not require this."
 #suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-interface-uses-templates" "This is an official operations template."
 @doc("Template for resources with no updateable properties")
 @armResourceOperations
-interface ResourceUpdateNoProperties<TResource> {
+interface ResourceUpdateNoProperties<TResource extends object> {
   @autoRoute
   @doc("Update a {name}", TResource)
   @armResourceUpdate(TResource)
