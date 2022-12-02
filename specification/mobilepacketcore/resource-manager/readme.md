@@ -37,7 +37,35 @@ These settings apply only when `--tag=package-2023-04-15-preview` is specified o
 ```yaml $(tag) == 'package-2023-04-15-preview'
 input-file:
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/common.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/routing.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/servicearea.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/trackingarea.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/amfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/amfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/cluster.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/deploymentarea.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/dnn.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/dpi.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/mmedeployment.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/mobilepacketcore.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/networkslice.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/nfvi.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/nrfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/nrfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/nssfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/nssfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/packetdetectionrule.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/packetflowdescription.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/pccrule.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/pccrulebase.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/plmn.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/saegwcpdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/saegwupdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/smfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/smfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/subscriberanalyzer.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/upfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/upfprofile.json
 ```
 
 
