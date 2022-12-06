@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Microsoft.VoiceServices",
-    "version": "2022-12-31-preview",
+    "version": "2022-12-02-preview",
     "x-cadl-generated": [
       {
         "emitter": "@azure-tools/cadl-autorest"
@@ -49,9 +49,6 @@
     },
     {
       "name": "CommunicationsGateways"
-    },
-    {
-      "name": "WindfallDeployments"
     }
   ],
   "paths": {
@@ -130,26 +127,39 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.VoiceServices/windfallDeployments": {
-      "get": {
-        "tags": [
-          "WindfallDeployments"
-        ],
-        "operationId": "WindfallDeployments_ListBySubscription",
-        "description": "List WindfallDeployment resources by subscription ID",
+    "/subscriptions/{subscriptionId}/providers/Microsoft.VoiceServices/locations/{location}/checkNameAvailability": {
+      "post": {
+        "operationId": "NameAvailability_CheckLocal",
+        "description": "Check whether the resource name is available in the given region.",
         "parameters": [
+          {
+            "name": "location",
+            "in": "path",
+            "required": true,
+            "description": "The location in which uniqueness will be verified.",
+            "type": "string"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+            "name": "checkNameAvailability",
+            "in": "body",
+            "required": true,
+            "description": "The check availability request body.",
+            "schema": {
+              "$ref": "#/definitions/CheckNameAvailabilityRequest"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "ARM operation completed successfully.",
+            "description": "The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/WindfallDeploymentListResult"
+              "$ref": "#/definitions/CheckNameAvailabilityResponse"
             }
           },
           "default": {
@@ -159,12 +169,9 @@
             }
           }
         },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
         "x-ms-examples": {
-          "ListWindfallDeploymentResourceSub": {
-            "$ref": "./examples/WindfallDeployments_ListBySubscription.json"
+          "CheckNameAvailability": {
+            "$ref": "./examples/NameAvailability_CheckLocal.json"
           }
         }
       }
@@ -1067,279 +1074,6 @@
           }
         }
       }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.VoiceServices/windfallDeployments": {
-      "get": {
-        "tags": [
-          "WindfallDeployments"
-        ],
-        "operationId": "WindfallDeployments_ListByResourceGroup",
-        "description": "List WindfallDeployment resources by resource group",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/WindfallDeploymentListResult"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "ListWindfallDeploymentResource": {
-            "$ref": "./examples/WindfallDeployments_ListByResourceGroup.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.VoiceServices/windfallDeployments/{windfallDeploymentName}": {
-      "get": {
-        "tags": [
-          "WindfallDeployments"
-        ],
-        "operationId": "WindfallDeployments_Get",
-        "description": "Get a WindfallDeployment",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "name": "windfallDeploymentName",
-            "in": "path",
-            "required": true,
-            "description": "Unique identifier for this Windfall deployment",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/WindfallDeployment"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "GetWindfallDeploymentResource": {
-            "$ref": "./examples/WindfallDeployments_Get.json"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "WindfallDeployments"
-        ],
-        "operationId": "WindfallDeployments_CreateOrUpdate",
-        "description": "Create a WindfallDeployment",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "name": "windfallDeploymentName",
-            "in": "path",
-            "required": true,
-            "description": "Unique identifier for this Windfall deployment",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$",
-            "type": "string"
-          },
-          {
-            "name": "resource",
-            "in": "body",
-            "required": true,
-            "description": "Resource create parameters.",
-            "schema": {
-              "$ref": "#/definitions/WindfallDeployment"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/WindfallDeployment"
-            }
-          },
-          "201": {
-            "description": "ARM create operation completed successfully.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/WindfallDeployment"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "CreateWindfallDeploymentResource": {
-            "$ref": "./examples/WindfallDeployments_CreateOrUpdate.json"
-          }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
-      },
-      "delete": {
-        "tags": [
-          "WindfallDeployments"
-        ],
-        "operationId": "WindfallDeployments_Delete",
-        "description": "Delete a WindfallDeployment",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "name": "windfallDeploymentName",
-            "in": "path",
-            "required": true,
-            "description": "Unique identifier for this Windfall deployment",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Resource deleted successfully."
-          },
-          "202": {
-            "description": "Resource deletion accepted.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          "204": {
-            "description": "Resource deleted successfully."
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "DeleteWindfallDeploymentResource": {
-            "$ref": "./examples/WindfallDeployments_Delete.json"
-          }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
-      },
-      "patch": {
-        "tags": [
-          "WindfallDeployments"
-        ],
-        "operationId": "WindfallDeployments_Update",
-        "description": "Update a WindfallDeployment",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "name": "windfallDeploymentName",
-            "in": "path",
-            "required": true,
-            "description": "Unique identifier for this Windfall deployment",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$",
-            "type": "string"
-          },
-          {
-            "name": "properties",
-            "in": "body",
-            "required": true,
-            "description": "The resource properties to be updated.",
-            "schema": {
-              "$ref": "#/definitions/WindfallDeploymentUpdate"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/WindfallDeployment"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "UpdateWindfallDeploymentResource": {
-            "$ref": "./examples/WindfallDeployments_Update.json"
-          }
-        }
-      }
     }
   },
   "definitions": {
@@ -1347,6 +1081,50 @@
       "type": "object",
       "properties": {},
       "description": "Details of API bridge functionality."
+    },
+    "CheckNameAvailabilityReason": {
+      "type": "string",
+      "description": "Possible reasons for a name not being available.",
+      "enum": [
+        "Invalid",
+        "AlreadyExists"
+      ],
+      "x-ms-enum": {
+        "name": "CheckNameAvailabilityReason",
+        "modelAsString": true
+      }
+    },
+    "CheckNameAvailabilityRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the resource for which availability needs to be checked."
+        },
+        "type": {
+          "type": "string",
+          "description": "The resource type."
+        }
+      },
+      "description": "The check availability request body."
+    },
+    "CheckNameAvailabilityResponse": {
+      "type": "object",
+      "properties": {
+        "nameAvailable": {
+          "type": "boolean",
+          "description": "Indicates if the resource name is available."
+        },
+        "reason": {
+          "$ref": "#/definitions/CheckNameAvailabilityReason",
+          "description": "The reason why the given name is not available."
+        },
+        "message": {
+          "type": "string",
+          "description": "Detailed reason why the given name is not available."
+        }
+      },
+      "description": "The check availability result."
     },
     "CommunicationsGateway": {
       "type": "object",
@@ -1877,129 +1655,6 @@
         }
       },
       "description": "The type used for update operations of the TestLine."
-    },
-    "WindfallDeployment": {
-      "type": "object",
-      "properties": {
-        "properties": {
-          "$ref": "#/definitions/WindfallDeploymentProperties",
-          "description": "The resource-specific properties for this resource.",
-          "x-ms-client-flatten": true,
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        }
-      },
-      "description": "A WindfallDeployment resource",
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
-        }
-      ]
-    },
-    "WindfallDeploymentListResult": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/WindfallDeployment"
-          },
-          "x-cadl-name": "WindfallDeployment[]",
-          "description": "The WindfallDeployment items on this page"
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "The link to the next page of items",
-          "format": "uri",
-          "x-cadl-name": "Rest.ResourceLocation<WindfallDeployment>"
-        }
-      },
-      "description": "The response of a WindfallDeployment list operation.",
-      "required": [
-        "value"
-      ]
-    },
-    "WindfallDeploymentProperties": {
-      "type": "object",
-      "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "Resource provisioning state.",
-          "readOnly": true
-        },
-        "sipTrunks": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/WindfallSipTrunk"
-          },
-          "x-ms-identifiers": [
-            "remoteDomain"
-          ],
-          "x-cadl-name": "WindfallSipTrunk[]",
-          "description": "The set of SIP trunks to be configured on this deployment",
-          "minItems": 1,
-          "maxItems": 1,
-          "x-ms-mutability": [
-            "read",
-            "update",
-            "create"
-          ]
-        }
-      },
-      "description": "Details of the WindfallDeployment resource.",
-      "required": [
-        "sipTrunks"
-      ]
-    },
-    "WindfallDeploymentUpdate": {
-      "type": "object",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-cadl-name": "Record<string>",
-          "description": "Resource tags."
-        }
-      },
-      "description": "The type used for update operations of the WindfallDeployment."
-    },
-    "WindfallSipTrunk": {
-      "type": "object",
-      "properties": {
-        "remoteDomain": {
-          "type": "string",
-          "description": "Domain name of the peer connecting to Windfall over this SIP trunk. This must match the common name of the TLS certificate presented by the peer.",
-          "x-ms-mutability": [
-            "read",
-            "update",
-            "create"
-          ]
-        },
-        "remoteAddresses": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-cadl-name": "string[]",
-          "description": "IPv4 address ranges allowed to send requests to Windfall over this trunk",
-          "minItems": 1,
-          "maxItems": 1,
-          "x-ms-mutability": [
-            "read",
-            "update",
-            "create"
-          ]
-        }
-      },
-      "description": "Details of single SIP trunk.",
-      "required": [
-        "remoteDomain",
-        "remoteAddresses"
-      ]
     }
   },
   "parameters": {}

@@ -22,6 +22,10 @@ using Azure.ResourceManager;
       Azure.ResourceManager.Versions.v1_0_Preview_1
     ],
     [
+      Versions.v2022_12_02_preview,
+      Azure.ResourceManager.Versions.v1_0_Preview_1
+    ],
+    [
       Versions.v2022_12_31_preview,
       Azure.ResourceManager.Versions.v1_0_Preview_1
     ]
@@ -31,6 +35,7 @@ namespace Microsoft.VoiceServices;
 
 enum Versions {
   v2022_12_01_preview: "2022-12-01-preview",
+  v2022_12_02_preview: "2022-12-02-preview",
   v2022_12_31_preview: "2022-12-31-preview",
 }
 
@@ -82,4 +87,42 @@ interface ResourceUpdateNoProperties<TResource extends object> {
     @body
     properties: ResourceUpdateModelNoProperties<TResource>
   ): ArmResponse<TResource> | ErrorResponse;
+}
+
+// These models should be provided by the common CADL infra, but currently they are not. See GitHub PR:
+// https://github.com/Azure/cadl-azure/pull/2311
+// For now, these definitions are reimplementations of the common types from:
+// https://github.com/Azure/azure-rest-api-specs-pr/blob/66dc2c9a0243bc217a938583a53da052498ac39f/specification/common-types/resource-management/v3/types.json
+
+// Ideally all of these would be marked as @added(Versions.v2022_12_02_preview) but they can't be because of
+// https://github.com/microsoft/cadl/issues/1332
+
+@doc("The check availability request body.")
+model CheckNameAvailabilityRequest {
+  @doc("The name of the resource for which availability needs to be checked.")
+  name?: string;
+
+  @doc("The resource type.")
+  type?: string;
+}
+
+@doc("Possible reasons for a name not being available.")
+enum CheckNameAvailabilityReasonValues {
+  "Invalid",
+  "AlreadyExists",
+}
+
+@knownValues(CheckNameAvailabilityReasonValues)
+model CheckNameAvailabilityReason is string;
+
+@doc("The check availability result.")
+model CheckNameAvailabilityResponse {
+  @doc("Indicates if the resource name is available.")
+  nameAvailable?: boolean;
+
+  @doc("The reason why the given name is not available.")
+  reason?: CheckNameAvailabilityReason;
+
+  @doc("Detailed reason why the given name is not available.")
+  message?: string;
 }
