@@ -299,6 +299,85 @@
     }
   },
   "definitions": {
+    "matchCriteriaTypeWithContainsAll": {
+      "enum": [
+        "contains",
+        "equals",
+        "containsAll"
+      ],
+      "x-ms-enum": {
+        "name": "matchCriteriaTypeWithContainsAll",
+        "modelAsString": true
+      }
+    },
+    "matchCriteriaTypeWithOnlyContains": {
+      "enum": [
+        "contains"
+      ],
+      "x-ms-enum": {
+        "name": "matchCriteriaTypeWithOnlyContains",
+        "modelAsString": true
+      }
+    },
+    "FilterTypeNssai": {
+      "type": "object",
+      "properties": {
+        "matchCriteria": {
+          "$ref": "#/definitions/matchCriteriaTypeWithContainsAll"
+        },
+        "value": {
+          "$ref": "./common.json#/definitions/Snssai"
+        }
+      }
+    },
+    "FilterTypeTaiList": {
+      "type": "object",
+      "properties": {
+        "matchCriteria": {
+          "$ref": "#/definitions/matchCriteriaTypeWithOnlyContains"
+        },
+        "tais": {
+          "type": "array",
+          "items": {
+            "$ref": "./common.json#/definitions/Tai"
+          }
+        }
+      }
+    },
+    "RegistrationAndUecuPolicy": {
+      "type": "object",
+      "properties": {
+        "policyAction": {
+          "enum": [
+            "matchSubscribedWithRequestedNssai",
+            "useLocalConfigNssaiAsAllowed"
+          ],
+          "x-ms-enum": {
+            "name": "registrationAndUecuPolicy",
+            "modelAsString": true
+          }
+        },
+        "allowedNssaiMaxSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "amfRerouteType": {
+          "enum": [
+            "rerouteNotAllowed",
+            "useAmfSetId",
+            "useAmfIdList"
+          ],
+          "x-ms-enum": {
+            "name": "amfRerouteType",
+            "modelAsString": true
+          }
+        },
+        "includeNsiInformation": {
+          "type": "boolean"
+        }
+      }
+    },
     "NssfProfilePropertiesFormat": {
       "type": "object",
       "properties": {
@@ -306,6 +385,39 @@
           "readOnly": true,
           "$ref": "./common.json#/definitions/ProvisioningState",
           "description": "The provisioning state of the SMF profile resource."
+        },
+        "analyzer": {
+          "type": "object",
+          "properties": {
+            "filterSets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "currentTaiList": {
+                    "$ref": "#/definitions/FilterTypeTaiList"
+                  },
+                  "subscribedNssai": {
+                    "$ref": "#/definitions/FilterTypeNssai"
+                  },
+                  "requestedNssai": {
+                    "$ref": "#/definitions/FilterTypeNssai"
+                  }
+                }
+              }
+            },
+            "registrationAndUecuPolicy": {
+              "$ref": "#/definitions/RegistrationAndUecuPolicy"
+            },
+            "pduEstablishmentPolicy": {
+              "type": "object",
+              "properties": {
+                "includeNsi": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       },
       "description": "The MobilePacketCore NssfProfile resource definition."
