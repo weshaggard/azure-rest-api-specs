@@ -1,0 +1,508 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Sustainability",
+    "version": "2023-04-01-preview",
+    "description": "Sustainability carbon emission report Resource Provider query API.",
+    "x-cadl-generated": [
+      {
+        "emitter": "@azure-tools/cadl-autorest"
+      }
+    ]
+  },
+  "schemes": [
+    "https"
+  ],
+  "host": "management.azure.com",
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "description": "Azure Active Directory OAuth2 Flow.",
+      "flow": "implicit",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Operations"
+    }
+  ],
+  "paths": {
+    "/providers/Microsoft.Sustainability/operations": {
+      "get": {
+        "tags": [
+          "Operations"
+        ],
+        "operationId": "Operations_List",
+        "description": "List the operations for the provider",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Operations_List": {
+            "$ref": "./examples/listOperations.json"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.Sustainability/queryCarbonEmissionReport": {
+      "post": {
+        "operationId": "SustainabilityService_QueryCarbonEmissionReport",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "queryParameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QueryFilter"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/PagedCarbonEmissionData"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "SustainabilityService_QueryCarbonEmissionReport": {
+            "$ref": "./examples/queryCarbonEmissionReport.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CarbonEmissionData": {
+      "type": "object",
+      "properties": {
+        "dataType": {
+          "type": "string",
+          "description": "query result data type name"
+        },
+        "totalCarbonEmission": {
+          "description": "item carbon emission in given query parameter"
+        },
+        "totalCarbonEmission12MonthAgo": {
+          "description": "item carbon emission in last year with same query parameter"
+        },
+        "changeRatio": {
+          "description": "change ration between totalCarbonEmission and totalCarbonEmission12MonthAgo"
+        }
+      },
+      "description": "query result data",
+      "discriminator": "dataType",
+      "required": [
+        "dataType",
+        "totalCarbonEmission",
+        "totalCarbonEmission12MonthAgo",
+        "changeRatio"
+      ]
+    },
+    "CarbonEmissionItemDetailReportData": {
+      "type": "object",
+      "properties": {
+        "itemName": {
+          "type": "string",
+          "description": "item name"
+        },
+        "groupName": {
+          "type": "string",
+          "description": "item group name"
+        },
+        "categoryType": {
+          "$ref": "#/definitions/CategoryTypeEnum",
+          "description": "item category"
+        }
+      },
+      "description": "return data for pagination report",
+      "required": [
+        "itemName",
+        "groupName",
+        "categoryType"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/CarbonEmissionData"
+        }
+      ],
+      "x-ms-discriminator-value": "ItemDetailData"
+    },
+    "CarbonEmissionItemMonthlySummaryReportData": {
+      "type": "object",
+      "properties": {
+        "itemName": {
+          "type": "string",
+          "description": "item name"
+        },
+        "categoryType": {
+          "$ref": "#/definitions/CategoryTypeEnum",
+          "description": "item category"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "month date"
+        }
+      },
+      "description": "Item monthly summary data, used for Top X Item Monthly summary report ",
+      "required": [
+        "itemName",
+        "categoryType",
+        "date"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/CarbonEmissionData"
+        }
+      ],
+      "x-ms-discriminator-value": "ItemMonthlySummaryData"
+    },
+    "CarbonEmissionItemSummaryReportData": {
+      "type": "object",
+      "properties": {
+        "itemName": {
+          "type": "string",
+          "description": "item name"
+        },
+        "categoryType": {
+          "$ref": "#/definitions/CategoryTypeEnum",
+          "description": "item category"
+        }
+      },
+      "description": "Item Summary data, used for Top X Item summary report",
+      "required": [
+        "itemName",
+        "categoryType"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/CarbonEmissionData"
+        }
+      ],
+      "x-ms-discriminator-value": "ItemSummaryData"
+    },
+    "CarbonEmissionMonthlySummaryReportData": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "monthly date string"
+        }
+      },
+      "description": "return data for monthly summary report",
+      "required": [
+        "date"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/CarbonEmissionData"
+        }
+      ],
+      "x-ms-discriminator-value": "MonthlySummaryData"
+    },
+    "CarbonEmissionOverallSummaryReportData": {
+      "type": "object",
+      "properties": {
+        "lastRefreshDate": {
+          "type": "string",
+          "format": "date",
+          "description": "last refreshed data date"
+        }
+      },
+      "description": "return data for overall summary report",
+      "required": [
+        "lastRefreshDate"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/CarbonEmissionData"
+        }
+      ],
+      "x-ms-discriminator-value": "OverallSummaryData"
+    },
+    "CarbonScopeEnum": {
+      "type": "string",
+      "enum": [
+        "Scope1",
+        "Scope2",
+        "Scope3"
+      ],
+      "x-ms-enum": {
+        "name": "CarbonScopeEnum",
+        "modelAsString": true
+      }
+    },
+    "CategoryTypeEnum": {
+      "type": "string",
+      "enum": [
+        "Subscription",
+        "ResourceGroup",
+        "Location",
+        "MeterCategory",
+        "Resource"
+      ],
+      "x-ms-enum": {
+        "name": "CategoryTypeEnum",
+        "modelAsString": true
+      }
+    },
+    "DateRange": {
+      "type": "object",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "date range start date parameter, format is yyyy-MM-dd"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "end date of date range parameter, format is yyyy-MM-dd"
+        }
+      },
+      "description": "Query parameter for Sustainability data date range",
+      "required": [
+        "startDate",
+        "endDate"
+      ]
+    },
+    "LatestRefreshDataDate": {
+      "type": "object",
+      "properties": {
+        "refreshDate": {
+          "type": "string",
+          "format": "date",
+          "description": "latest refreshed data date"
+        }
+      },
+      "description": "Carbon Emission data is refreshed by monthly, this data will tell when it's refreshed",
+      "required": [
+        "refreshDate"
+      ]
+    },
+    "MonthlySummaryReportQueryFilter": {
+      "type": "object",
+      "properties": {},
+      "description": "Monthly Summary report query parameters",
+      "allOf": [
+        {
+          "$ref": "#/definitions/QueryFilter"
+        }
+      ],
+      "x-ms-discriminator-value": "MonthlySummaryReport"
+    },
+    "OverallSummaryReportQueryFilter": {
+      "type": "object",
+      "properties": {},
+      "description": "Overall summary report query parameters",
+      "allOf": [
+        {
+          "$ref": "#/definitions/QueryFilter"
+        }
+      ],
+      "x-ms-discriminator-value": "OverallSummaryReport"
+    },
+    "PagedCarbonEmissionData": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CarbonEmissionData"
+          },
+          "x-ms-identifiers": [],
+          "x-cadl-name": "CarbonEmissionData[]",
+          "description": "The CarbonEmissionData items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items",
+          "x-cadl-name": "Rest.ResourceLocation"
+        }
+      },
+      "description": "Paged collection of CarbonEmissionData items",
+      "required": [
+        "value"
+      ]
+    },
+    "PaginationItemsQueryFilter": {
+      "type": "object",
+      "properties": {
+        "categoryType": {
+          "$ref": "#/definitions/CategoryTypeEnum",
+          "description": "Item Category type"
+        },
+        "orderBy": {
+          "type": "string",
+          "description": "order by column name"
+        },
+        "groupCategory": {
+          "type": "string",
+          "description": "group category name, it's optional"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32",
+          "description": "page item size"
+        }
+      },
+      "description": "post query parameter for paginated detail carbon emission page",
+      "required": [
+        "categoryType",
+        "orderBy",
+        "groupCategory",
+        "pageSize"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/QueryFilter"
+        }
+      ],
+      "x-ms-discriminator-value": "ItemPaginationDataReport"
+    },
+    "QueryFilter": {
+      "type": "object",
+      "properties": {
+        "reportType": {
+          "type": "string",
+          "description": "report type"
+        },
+        "dateRange": {
+          "$ref": "#/definitions/DateRange",
+          "description": "the start date and end date of carbon emission data"
+        },
+        "subscriptionList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-cadl-name": "string[]",
+          "description": "subscriptionId list that customer select"
+        },
+        "carbonScopeList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CarbonScopeEnum"
+          },
+          "x-cadl-name": "CarbonScopeEnum[]",
+          "description": "carbon emission scope that customer specified"
+        }
+      },
+      "description": "post query filter parameter specified by customers on UI",
+      "discriminator": "reportType",
+      "required": [
+        "reportType",
+        "dateRange",
+        "subscriptionList",
+        "carbonScopeList"
+      ]
+    },
+    "TopXItemMonthlySummaryReportQueryFilter": {
+      "type": "object",
+      "properties": {
+        "categoryType": {
+          "$ref": "#/definitions/CategoryTypeEnum",
+          "description": "Item Category type"
+        },
+        "topX": {
+          "type": "integer",
+          "format": "int32",
+          "description": "top x, x is less than 100",
+          "minimum": 5,
+          "maximum": 100
+        }
+      },
+      "description": "Top X item monthly summary report query parameters",
+      "required": [
+        "categoryType",
+        "topX"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/QueryFilter"
+        }
+      ],
+      "x-ms-discriminator-value": "TopXItemMonthlySummaryReport"
+    },
+    "TopXItemSummaryReportQueryFilter": {
+      "type": "object",
+      "properties": {
+        "categoryType": {
+          "$ref": "#/definitions/CategoryTypeEnum",
+          "description": "Item Category type"
+        },
+        "topX": {
+          "type": "integer",
+          "format": "int32",
+          "description": "top x, x is less than 100",
+          "minimum": 5,
+          "maximum": 100
+        }
+      },
+      "description": "Post query parameter for top x item carbon emission for specified category type",
+      "required": [
+        "categoryType",
+        "topX"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/QueryFilter"
+        }
+      ],
+      "x-ms-discriminator-value": "TopXItemSummaryReport"
+    }
+  },
+  "parameters": {}
+}

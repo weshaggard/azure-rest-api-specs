@@ -1,0 +1,216 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/versioning";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+import "@azure-tools/cadl-providerhub";
+
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.Core;
+using Azure.ResourceManager;
+
+@armProviderNamespace
+@service({
+  title: "Sustainability",
+  version: "2023-04-01-preview",
+})
+@doc("Sustainability carbon emission report Resource Provider query API.")
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+namespace Microsoft.Sustainability;
+
+
+interface Operations extends Azure.ResourceManager.Operations {}
+
+
+@doc("Query parameter for Sustainability data date range")
+model DateRange {
+  @doc("date range start date parameter, format is yyyy-MM-dd")
+  startDate: plainDate;
+  
+  @doc("end date of date range parameter, format is yyyy-MM-dd")
+  endDate: plainDate;
+}
+
+enum CategoryTypeEnum {
+  Subscription,
+  ResourceGroup,
+  Location,
+  MeterCategory,
+  Resource
+}
+
+enum CarbonScopeEnum {
+  Scope1,
+  Scope2,
+  Scope3
+}
+
+@doc("post query filter parameter specified by customers on UI")
+@discriminator("reportType")
+model QueryFilter {
+  @doc("report type")
+  reportType:string;
+
+  @doc("the start date and end date of carbon emission data")
+  dateRange: DateRange;
+
+  @doc("subscriptionId list that customer select")
+  subscriptionList: string[];
+
+  @doc("carbon emission scope that customer specified")
+  carbonScopeList:CarbonScopeEnum[];
+}
+
+@doc("Overall summary report query parameters")
+model OverallSummaryReportQueryFilter extends QueryFilter {
+  @doc("overall summary report type name")
+  reportType:"OverallSummaryReport";
+}
+
+@doc("Monthly Summary report query parameters")
+model MonthlySummaryReportQueryFilter extends QueryFilter {
+  @doc("monthly summary report type name")
+  reportType:"MonthlySummaryReport";
+}
+
+@doc("Post query parameter for top x item carbon emission for specified category type")
+model TopXItemSummaryReportQueryFilter extends QueryFilter {
+  @doc("report type")
+  reportType: "TopXItemSummaryReport";
+
+  @doc("Item Category type")
+  categoryType: CategoryTypeEnum;
+
+  @doc("top x, x is less than 100")
+  @maxValue(100)
+  @minValue(5)
+  topX:int32;
+}
+
+@doc("Top X item monthly summary report query parameters")
+model TopXItemMonthlySummaryReportQueryFilter extends QueryFilter {
+  @doc("top x item monthly summary report type name")
+  reportType: "TopXItemMonthlySummaryReport";
+
+  @doc("Item Category type")
+  categoryType: CategoryTypeEnum;
+
+  @doc("top x, x is less than 100")
+  @maxValue(100)
+  @minValue(5)
+  topX:int32;
+}
+
+@doc("post query parameter for paginated detail carbon emission page")
+model PaginationItemsQueryFilter extends QueryFilter{
+  @doc("item pagination data report type name")
+  reportType: "ItemPaginationDataReport";
+
+  @doc("Item Category type")
+  categoryType: CategoryTypeEnum;
+
+  @doc("order by column name")
+  orderBy: string;
+
+  @doc("group category name, it's optional")
+  groupCategory: string;
+
+  @doc("page item size")
+  pageSize: int32;
+}
+
+@discriminator("dataType")
+@doc("query result data")
+model CarbonEmissionData{
+  @doc("query result data type name")
+  dataType: string;
+
+  @doc("item carbon emission in given query parameter")
+  totalCarbonEmission: float;
+
+  @doc("item carbon emission in last year with same query parameter")
+  totalCarbonEmission12MonthAgo: float;
+
+  @doc("change ration between totalCarbonEmission and totalCarbonEmission12MonthAgo")
+  changeRatio: float;
+
+}
+
+@doc("return data for overall summary report")
+model CarbonEmissionOverallSummaryReportData extends CarbonEmissionData {
+  @doc("overall summary data")
+  dataType: "OverallSummaryData";
+
+  @doc("last refreshed data date")
+  lastRefreshDate: plainDate;
+}
+
+@doc("return data for monthly summary report")
+model CarbonEmissionMonthlySummaryReportData extends CarbonEmissionData {
+  @doc("monthly summary data")
+  dataType: "MonthlySummaryData";
+
+  @doc("monthly date string")
+  date: plainDate;
+}
+
+@doc("Item Summary data, used for Top X Item summary report")
+model CarbonEmissionItemSummaryReportData extends CarbonEmissionData {
+  @doc("item summary data")
+  dataType: "ItemSummaryData";
+
+  @doc("item name")
+  itemName: string;
+
+  @doc("item category")
+  categoryType: CategoryTypeEnum;
+}
+
+@doc("Item monthly summary data, used for Top X Item Monthly summary report ")
+model CarbonEmissionItemMonthlySummaryReportData extends CarbonEmissionData {
+  @doc("item Monthly summary data")
+  dataType: "ItemMonthlySummaryData";
+
+  @doc("item name")
+  itemName: string;
+
+  @doc("item category")
+  categoryType: CategoryTypeEnum;
+
+  @doc("month date")
+  date: plainDate;
+}
+
+@doc("return data for pagination report")
+model CarbonEmissionItemDetailReportData extends CarbonEmissionData {
+  @doc("item detail data type")
+  dataType: "ItemDetailData";
+
+  @doc("item name")
+  itemName: string;
+
+  @doc("item group name")
+  groupName: string;
+
+  @doc("item category")
+  categoryType: CategoryTypeEnum;
+}
+
+
+@doc("Carbon Emission data is refreshed by monthly, this data will tell when it's refreshed")
+model LatestRefreshDataDate {
+  @doc("latest refreshed data date")
+  refreshDate: plainDate;
+}
+
+
+interface SustainabilityService {
+
+  @post @route("/providers/Microsoft.Sustainability/queryCarbonEmissionReport") 
+  queryCarbonEmissionReport(...ApiVersionParameter, 
+                                @body queryParameters:QueryFilter): Page<CarbonEmissionData>| ErrorResponse;
+
+}
+
