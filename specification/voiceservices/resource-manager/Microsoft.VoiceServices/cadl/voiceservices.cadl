@@ -44,14 +44,9 @@ interface Operations extends Azure.ResourceManager.Operations {}
 // Various tooling enforces (or at least suggests) that all models should have a provisioning State field, as this means something special to ARM.
 
 @doc("Provisioning state of the resource.")
-enum ProvisioningStateEnum {
-  Succeeded,
-  Failed,
-  Canceled,
+enum ProvisioningState {
+    ...ResourceProvisioningState
 }
-
-@knownValues(ProvisioningStateEnum)
-model ProvisioningState is string;
 
 @doc("General resource properties.")
 model ResourceProperties {
@@ -75,7 +70,7 @@ model ResourceUpdateModelNoProperties<TResource extends object>
 #suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-interface-uses-templates" "This is an official operations template."
 @doc("Template for resources with no updateable properties")
 @armResourceOperations
-interface ResourceUpdateNoProperties<TResource extends object> {
+interface ResourceUpdateNoProperties<TResource extends Foundations.ArmResource> {
   @autoRoute
   @doc("Update a {name}", TResource)
   @armResourceUpdate(TResource)
@@ -107,13 +102,10 @@ model CheckNameAvailabilityRequest {
 }
 
 @doc("Possible reasons for a name not being available.")
-enum CheckNameAvailabilityReasonValues {
+enum CheckNameAvailabilityReason {
   "Invalid",
   "AlreadyExists",
 }
-
-@knownValues(CheckNameAvailabilityReasonValues)
-model CheckNameAvailabilityReason is string;
 
 @doc("The check availability result.")
 model CheckNameAvailabilityResponse {
