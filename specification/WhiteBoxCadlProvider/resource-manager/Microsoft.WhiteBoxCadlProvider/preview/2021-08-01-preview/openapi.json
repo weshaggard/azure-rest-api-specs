@@ -29,9 +29,9 @@
   "securityDefinitions": {
     "azure_auth": {
       "type": "oauth2",
-      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
-      "flow": "implicit",
       "description": "Azure Active Directory OAuth2 Flow.",
+      "flow": "implicit",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
       "scopes": {
         "user_impersonation": "impersonate your user account"
       }
@@ -40,44 +40,10 @@
   "tags": [
     {
       "name": "WhiteBoxResources"
-    },
-    {
-      "name": "Operations"
     }
   ],
   "paths": {
-    "/providers/Microsoft.WhiteBoxCadlProvider/operations": {
-      "get": {
-        "tags": [
-          "Operations"
-        ],
-        "operationId": "Operations_List",
-        "description": "List the operations for the provider",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.WhiteBoxCadlProvider/WhiteBoxResources": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.WhiteBoxCadlProvider/whiteBoxResources": {
       "get": {
         "tags": [
           "WhiteBoxResources"
@@ -100,7 +66,7 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
@@ -111,7 +77,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.WhiteBoxCadlProvider/WhiteBoxResources": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.WhiteBoxCadlProvider/whiteBoxResources": {
       "get": {
         "tags": [
           "WhiteBoxResources"
@@ -137,7 +103,7 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
@@ -148,7 +114,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.WhiteBoxCadlProvider/WhiteBoxResources/{WhiteBoxResourceName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.WhiteBoxCadlProvider/whiteBoxResources/{whiteBoxResourceName}": {
       "get": {
         "tags": [
           "WhiteBoxResources"
@@ -166,7 +132,12 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/WhiteBoxResource.WhiteBoxResourceName"
+            "name": "whiteBoxResourceName",
+            "in": "path",
+            "required": true,
+            "description": "Name.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
           }
         ],
         "responses": {
@@ -177,7 +148,7 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
@@ -193,7 +164,7 @@
         "tags": [
           "WhiteBoxResources"
         ],
-        "operationId": "WhiteBoxResources_CreateOrUpdate",
+        "operationId": "WhiteBoxResources_CreateOrUodate",
         "description": "Create a WhiteBoxResource",
         "parameters": [
           {
@@ -206,7 +177,12 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/WhiteBoxResource.WhiteBoxResourceName"
+            "name": "whiteBoxResourceName",
+            "in": "path",
+            "required": true,
+            "description": "Name.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
           },
           {
             "name": "resource",
@@ -239,15 +215,10 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
-          }
-        },
-        "x-ms-examples": {
-          "CreateWhiteBoxResource": {
-            "$ref": "./examples/WhiteBoxResources_CreateOrUpdate.json"
           }
         },
         "x-ms-long-running-operation-options": {
@@ -272,7 +243,12 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/WhiteBoxResource.WhiteBoxResourceName"
+            "name": "whiteBoxResourceName",
+            "in": "path",
+            "required": true,
+            "description": "Name.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
           },
           {
             "name": "properties",
@@ -291,13 +267,27 @@
               "$ref": "#/definitions/WhiteBoxResource"
             }
           },
+          "202": {
+            "description": "Resource update request accepted.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
       },
       "delete": {
         "tags": [
@@ -316,37 +306,28 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/WhiteBoxResource.WhiteBoxResourceName"
+            "name": "whiteBoxResourceName",
+            "in": "path",
+            "required": true,
+            "description": "Name.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Resource deleted successfully."
           },
-          "202": {
-            "description": "Resource deletion accepted.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
           "204": {
             "description": "Resource deleted successfully."
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
+        }
       }
     }
   },
@@ -488,7 +469,10 @@
         },
         "adminPassword": {
           "type": "string",
-          "description": "Power Plaform Admininstrator Password."
+          "description": "Power Plaform Admininstrator Password.",
+          "x-ms-mutability": [
+            "create"
+          ]
         },
         "accessPolicyUserId": {
           "type": "string",
@@ -607,7 +591,10 @@
       "properties": {
         "administratorLoginPassword": {
           "type": "string",
-          "description": "The administrator password of the SQL logical server."
+          "description": "The administrator password of the SQL logical server.",
+          "x-ms-mutability": [
+            "create"
+          ]
         },
         "id": {
           "type": "string",
@@ -693,17 +680,14 @@
         "properties": {
           "$ref": "#/definitions/WhiteBoxResourceProperties",
           "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
           "x-ms-mutability": [
             "read",
             "create"
-          ],
-          "x-ms-client-flatten": true
+          ]
         }
       },
       "description": "A WhiteBoxCadlProviderProviderHub resource",
-      "required": [
-        "properties"
-      ],
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
@@ -723,7 +707,9 @@
         },
         "nextLink": {
           "type": "string",
-          "description": "The link to the next page of items"
+          "format": "uri",
+          "description": "The link to the next page of items",
+          "x-cadl-name": "Rest.ResourceLocation"
         }
       },
       "description": "The response of a WhiteBoxResource list operation.",
@@ -746,6 +732,7 @@
           "default": 1,
           "x-ms-mutability": [
             "read",
+            "update",
             "create"
           ]
         },
@@ -754,6 +741,7 @@
           "description": "Customer Hosted SKU",
           "x-ms-mutability": [
             "read",
+            "update",
             "create"
           ]
         },
@@ -857,10 +845,12 @@
           "additionalProperties": {
             "type": "string"
           },
+          "x-cadl-name": "Record<string>",
           "description": "Resource tags."
         },
         "properties": {
-          "$ref": "#/definitions/WhiteBoxResourceUpdateProperties"
+          "$ref": "#/definitions/WhiteBoxResourceUpdateProperties",
+          "x-ms-client-flatten": true
         }
       },
       "description": "The type used for update operations of the WhiteBoxResource."
@@ -875,6 +865,7 @@
           "default": 1,
           "x-ms-mutability": [
             "read",
+            "update",
             "create"
           ]
         },
@@ -883,6 +874,7 @@
           "description": "Customer Hosted SKU",
           "x-ms-mutability": [
             "read",
+            "update",
             "create"
           ]
         }
@@ -890,15 +882,5 @@
       "description": "The updatable properties of the WhiteBoxResource."
     }
   },
-  "parameters": {
-    "WhiteBoxResource.WhiteBoxResourceName": {
-      "name": "WhiteBoxResourceName",
-      "in": "path",
-      "required": true,
-      "description": "Name.",
-      "pattern": "^[a-zA-Z0-9-]{3,24}$",
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    }
-  }
+  "parameters": {}
 }
