@@ -37,8 +37,7 @@ These settings apply only when `--tag=package-2021-03-01-preview` is specified o
 ```yaml $(tag) == 'package-2021-03-01-preview'
 input-file:
   - Private.ModSimWorkbench/preview/2021-03-01-preview/privatemodsimworkbench.json
-  - Private.ModSimWorkbench/preview/2021-03-01-preview/consortium.json
-  - Private.ModSimWorkbench/preview/2021-03-01-preview/accessprofiles.json
+  - Private.ModSimWorkbench/preview/2021-03-01-preview/connector.json
   - Private.ModSimWorkbench/preview/2021-03-01-preview/chambers.json
   - Private.ModSimWorkbench/preview/2021-03-01-preview/workload.json
   - Private.ModSimWorkbench/preview/2021-03-01-preview/files.json
