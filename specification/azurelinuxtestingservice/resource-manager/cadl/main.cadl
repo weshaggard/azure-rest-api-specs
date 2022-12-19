@@ -1,0 +1,89 @@
+// Necessary libraries to build an Azure Service
+import "@cadl-lang/rest";
+import "@cadl-lang/openapi";
+import "@cadl-lang/versioning";
+import "@azure-tools/cadl-autorest";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+import "./job_template.cadl";
+
+// Include models, operations, and decorators
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.ResourceManager;
+using Azure.Core;
+
+/*
+Requirements for defining an ARM Service:
+- Define the service namespace & decorate with
+  - serviceTitle
+  - serviceVersion
+  - armProviderNamespace
+*/
+@armProviderNamespace
+@service({
+    title: "Azure Linux Testing Service",
+    version: "2022-12-08-privatepreview"
+
+})
+// (In Cadl.Http) The host of the service.
+@server("https://alts.endpoint", "Azure Linux Testing Service")  
+@doc("This is the Azure Linux Validation Service")
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+namespace Microsoft.AzureLinuxTestingService; 
+
+
+// Common elements:
+@doc("General resource properties.")
+model ResourceProperties {
+	@doc("Resource provisioning state.")
+	@visibility("read")
+  @lroStatus
+	provisioningState?: ResourceProvisioningState;
+}
+
+/*
+// Extend the provisioning state
+@lroStatus
+enum ProvisioningState {
+  ...ResourceProvisioningState,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted,
+}
+*/
+interface Operations extends Azure.ResourceManager.Operations {}
+
+
+// @route("/jobs")
+// @armResourceOperations
+// interface JobOperations extends ResourceOperations<Job, JobResourcePorperties> {
+//     list(@query skip: int32, @query top: int32): Job[];
+//     read(@path id: string): Job;
+//     @put
+//     create(...Job): {
+//         @statusCode statusCode: 200;
+//         @body job: Job;
+//     } | {
+//         @statusCode statusCode: 404;
+//     };
+//     @put
+//     cancel(@path id: string): {};
+// }
+
+// model JobResourcePorperties {
+//     templateInstance: JobTemplate;
+// }
+
+// model Job is TrackedResource<JobResourcePorperties> {
+//     @key("jobName")
+//     @segment("jobs")
+//     name: string;
+
+//     @path
+//     @segment("jobs")
+//     id: string;
+// }
