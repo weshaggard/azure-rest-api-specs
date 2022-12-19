@@ -7,13 +7,127 @@
   },
   "host": "management.azure.com",
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.redoak/redoakPlatformServices/{resourceName}": {
+    "/providers/Microsoft.redoak/operations": {
+      "get": {
+        "tags": [
+          "Operations"
+        ],
+        "description": "Lists the available operations of Microsoft.redoak resource provider.",
+        "operationId": "Operations_List",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Operations_List": {
+            "$ref": "./examples/Operations_List.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.redoak/redoakServices": {
+      "get": {
+        "tags": [
+          "UserRPRedoakResource"
+        ],
+        "operationId": "RedoakServices_ListBySubscription",
+        "description": "Lists a collection of Redoak resources under the given Azure Subscription ID.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RedoakServiceList"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "RedOak_ListBySubscription": {
+            "$ref": "./examples/RedOak_ListBySubscription.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.redoak/RedoakServices": {
+      "get": {
+        "tags": [
+          "UserRPRedoakResource"
+        ],
+        "operationId": "RedoakServices_ListByResourceGroup",
+        "description": "List KdbInsightsEnterpriseResource resources by resource group",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RedoakServiceList"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Redoak_ListByResourceGroup": {
+            "$ref": "./examples/Redoak_ListByResourceGroup.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.redoak/RedoakServices/{resourceName}": {
       "get": {
         "tags": [
           "UserRPRedoakResource"
         ],
         "description": "Returns Redoak resource for a given name.",
-        "operationId": "RedoakPlatformServices_Get",
+        "operationId": "RedoakServices_Get",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -32,7 +146,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/RedoakPlatformService"
+              "$ref": "#/definitions/RedoakService"
             }
           },
           "default": {
@@ -43,8 +157,8 @@
           }
         },
         "x-ms-examples": {
-          "RedOak_Get_MaximumSet_Gen": {
-            "$ref": "./examples/RedOak_Get_MaximumSet_Gen.json"
+          "RedOak_Get": {
+            "$ref": "./examples/RedOak_Get.json"
           }
         }
       },
@@ -53,7 +167,7 @@
           "UserRPRedoakResource"
         ],
         "description": "Method that gets called if subscribed for ResourceCreationBegin trigger.",
-        "operationId": "RedoakPlatformServices_Create",
+        "operationId": "RedoakServices_Create",
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
@@ -74,7 +188,7 @@
             "description": "Request body.",
             "schema": {
               "description": "Request body.",
-              "$ref": "#/definitions/RedoakPlatformService"
+              "$ref": "#/definitions/RedoakService"
             }
           }
         ],
@@ -82,13 +196,13 @@
           "200": {
             "description": "The Redoak resource created.",
             "schema": {
-              "$ref": "#/definitions/RedoakPlatformService"
+              "$ref": "#/definitions/RedoakService"
             }
           },
           "201": {
             "description": "The Redoak resource will be created asynchronously",
             "schema": {
-              "$ref": "#/definitions/RedoakPlatformService"
+              "$ref": "#/definitions/RedoakService"
             }
           },
           "default": {
@@ -99,13 +213,13 @@
           }
         },
         "x-ms-examples": {
-          "RedOak_Create_MaximumSet_Gen": {
-            "$ref": "./examples/RedOak_Create_MaximumSet_Gen.json"
+          "RedOak_Create": {
+            "$ref": "./examples/RedOak_Create.json"
           }
         }
       },
       "patch": {
-        "operationId": "RedoakPlatformServices_Update",
+        "operationId": "RedoakServices_Update",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -131,7 +245,7 @@
           "200": {
             "description": "Updates the Redoak resource.",
             "schema": {
-              "$ref": "#/definitions/RedoakPlatformService"
+              "$ref": "#/definitions/RedoakService"
             }
           },
           "default": {
@@ -142,14 +256,14 @@
           }
         },
         "x-ms-examples": {
-          "RedOak_Update_MaximumSet_Gen": {
-            "$ref": "./examples/RedOak_Update_MaximumSet_Gen.json"
+          "RedOak_Update": {
+            "$ref": "./examples/RedOak_Update.json"
           }
         }
       },
       "delete": {
         "description": "Deletes Redoak resource",
-        "operationId": "RedoakPlatformServices_Delete",
+        "operationId": "RedoakServices_Delete",
         "x-ms-long-running-operation": true,
         "parameters": [
           {
@@ -183,17 +297,41 @@
           }
         },
         "x-ms-examples": {
-          "RedOak_Delete_MaximumSet_Gen": {
-            "$ref": "./examples/RedOak_Delete_MaximumSet_Gen.json"
-          },
-          "RedOak_Delete_MinimumSet_Gen": {
-            "$ref": "./examples/RedOak_Delete_MinimumSet_Gen.json"
+          "RedOak_Delete": {
+            "$ref": "./examples/RedOak_Delete.json"
           }
         }
       }
     }
   },
   "definitions": {
+    "DataPartitionNames": {
+      "type": "object",
+      "description": "The list of Energy services resource's Data Partition Names.",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "RedoakServiceList": {
+      "description": "The list of Redoak resources.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of Redoak resources list.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The list of Redoak resources.",
+          "type": "array",
+          "x-ms-identifiers": [],
+          "items": {
+            "$ref": "#/definitions/RedoakService"
+          }
+        }
+      }
+    },
     "RedoakResourceUpdate": {
       "description": "The resource model definition used for updating a tracked ARM resource.",
       "type": "object",
@@ -207,13 +345,9 @@
         }
       }
     },
-    "RedoakPlatformServiceProperties": {
+    "RedoakServiceProperties": {
       "type": "object",
       "properties": {
-        "dnsName": {
-          "type": "string",
-          "readOnly": true
-        },
         "provisioningState": {
           "enum": [
             "Unknown",
@@ -225,19 +359,30 @@
             "Updating"
           ],
           "type": "string",
-          "readOnly": true,
           "x-ms-enum": {
             "name": "ProvisioningState",
             "modelAsString": true
           }
         },
-        "authAppId": {
-          "type": "string",
-          "readOnly": false
+        "applicationId": {
+          "type": "string"
+        },
+        "virtualNetworkName": {
+          "type": "string"
+        },
+        "virtualNetworkExisting": {
+          "type": "string"
+        },
+        "dataPartitionNames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataPartitionNames"
+          },
+          "x-ms-identifiers": []
         }
       }
     },
-    "RedoakPlatformService": {
+    "RedoakService": {
       "required": [
         "location"
       ],
@@ -249,7 +394,7 @@
       ],
       "properties": {
         "properties": {
-          "$ref": "#/definitions/RedoakPlatformServiceProperties"
+          "$ref": "#/definitions/RedoakServiceProperties"
         },
         "tags": {
           "description": "Resource tags.",
@@ -261,10 +406,6 @@
         "location": {
           "description": "Geo-location where the resource lives.",
           "type": "string"
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The type of identity used for the resource."
         }
       }
     }
