@@ -26,16 +26,17 @@ These are the global settings for the databaseinsights.
 
 ```yaml
 openapi-type: arm
-tag: package-2022-08-15-privatepreview
+openapi-subtype: rpaas
+tag: package-2023-03-01-preview
 ```
 
-### Tag: package-2022-08-15-privatepreview
+### Tag: package-2023-03-01-preview
 
-These settings apply only when `--tag=package-2022-08-15-privatepreview` is specified on the command line.
+These settings apply only when `--tag=package-2023-03-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-08-15-privatepreview'
+```yaml $(tag) == 'package-2023-03-01-preview'
 input-file:
-  - Microsoft.DatabaseInsights/preview/2022-08-15-privatepreview/DatabaseMonitoringAgents.json
+  - Microsoft.DatabaseInsights/preview/2023-03-01-preview/DatabaseMonitoringAgents.json
 ```
 
 ---
