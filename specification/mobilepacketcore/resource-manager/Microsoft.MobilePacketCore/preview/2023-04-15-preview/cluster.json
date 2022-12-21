@@ -307,6 +307,18 @@
           "$ref": "./common.json#/definitions/ReferencedResource",
           "description": "The reference to the custom location."
         },
+        "clusterUsage": {
+          "type": "string",
+          "enum": [
+            "paas",
+            "networkFunctions"
+          ],
+          "x-ms-enum": {
+            "name": "clusterUsage",
+            "modelAsString": true
+          },
+          "description": "Whether cluster is used for PaaS components or for hosting network functions"
+        },
         "storage": {
           "type": "object",
           "properties": {
@@ -318,7 +330,47 @@
             }
           }
         },
-        "ipPools": {
+        "managementIpPools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ipStart": {
+                "$ref": "./common.json#/definitions/ipAddress"
+              },
+              "ipEnd": {
+                "$ref": "./common.json#/definitions/ipAddress"
+              },
+              "aksPoolParameters": {
+                "type": "object",
+                "properties": {
+                  "subnetName": {
+                    "type": "string",
+                    "description": "Subnet to which this IP pool applies"
+                  },
+                  "subnetUsage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "oam",
+                        "lawfulIntercept",
+                        "gn",
+                        "n4"
+                      ],
+                      "x-ms-enum": {
+                        "name": "aksSubnetUsage",
+                        "modelAsString": true
+                      },
+                      "description": "Usage of the AKS subnet.  If not specified, applies to all"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "userDataIpPools": {
           "type": "array",
           "items": {
             "type": "object",
@@ -339,39 +391,11 @@
                 },
                 "description": "Usage of IP pool"
               },
-              "ipPrefix": {
+              "ipStart": {
                 "$ref": "./common.json#/definitions/ipAddress"
               },
-              "prefixLen": {
-                "type": "integer",
-                "maximum": 128
-              },
-              "aksPoolParameters": {
-                "type": "object",
-                "properties": {
-                  "subnetName": {
-                    "type": "string",
-                    "description": "Subnet to which this IP pool applies"
-                  },
-                  "subnetUsage": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "all",
-                        "oam",
-                        "lawfulIntercept",
-                        "gn",
-                        "n4"
-                      ],
-                      "x-ms-enum": {
-                        "name": "aksSubnetUsage",
-                        "modelAsString": true
-                      },
-                      "description": "Usage of the AKS subnet.  If not specified, applies to all"
-                    }
-                  }
-                }
+              "ipEnd": {
+                "$ref": "./common.json#/definitions/ipAddress"
               }
             }
           }
@@ -402,6 +426,33 @@
         "safeDeploymentGroup": {
           "type": "string",
           "description": "Safe deployment grouping.  NFs deployed on clusters/NFVIs with the same safe deployment grouping value are managed together"
+        },
+        "ipAddressAllocations": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "type": "object",
+            "properties": {
+              "usage": {
+                "type": "string",
+                "description": "For what this IP range is used"
+              },
+              "startIp": {
+                "$ref": "./common.json#/definitions/ipAddress"
+              },
+              "endIp": {
+                "$ref": "./common.json#/definitions/ipAddress"
+              },
+              "aksDetails": {
+                "type": "object",
+                "properties": {
+                  "subnetName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
