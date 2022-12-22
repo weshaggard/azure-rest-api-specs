@@ -13,11 +13,24 @@ using Autorest;
 using OpenAPI;
 
 @armProviderNamespace()
-@serviceTitle("Microsoft.NetworkAnalytics")
-@serviceVersion("2022-11-15-preview")
-@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+@service({ title: "Microsoft.NetworkAnalytics"})
+@versioned(Microsoft.NetworkAnalytics.Versions)
+@versionedDependency(
+  [
+    [Microsoft.NetworkAnalytics.Versions.v2022_11_15_preview, Azure.ResourceManager.Versions.v1_0_Preview_1],
+    [Microsoft.NetworkAnalytics.Versions.v2023_04_30, Azure.ResourceManager.Versions.v1_0_Preview_1]
+  ]
+)
 namespace Microsoft.NetworkAnalytics;
 
+// note: this interface is required by ARM cadl-validation rule @azure-tools/cadl-azure-resource-manager/missing-operations-endpoint.
+// We may run into issues naming our operation resource the same interface name.
+interface Operations extends Azure.ResourceManager.Operations {}
+
+enum Versions {
+  v2022_11_15_preview: "2022-11-15-preview",
+  v2023_04_30: "2023-04-30"
+}
 
 @doc("A NetworkAnalyticsProviderHub resource")
 model DataLakeHouseResources is TrackedResource < StorageProperties > {
@@ -48,9 +61,7 @@ model StorageProperties {
 }
 
 @doc("The status of the current operation.")
-@knownValues(ProvisioningStateKV)
-model ProvisioningState is string { }
-enum ProvisioningStateKV {
+enum ProvisioningState {
     Succeeded,
     Failed,
     Canceled,
@@ -101,16 +112,15 @@ enum KustoRoleType {
   AllDatabasesAdmin,
   AllDatabasesViewer
 }
-@knownValues(KustoRoleType)
-model KustoRole is string {}
 
 enum PrincipalTypeValues {
     App,
     Group,
     User,
 }
+
 @knownValues(PrincipalTypeValues)
-model PrincipalType is string {}
+scalar PrincipalType extends string
 
 @doc("ADx Role assignments")
 model KustoClusterPrincipalAssignments {
@@ -118,7 +128,7 @@ model KustoClusterPrincipalAssignments {
     @doc("system Identity Name")
     systemIdentityName?: string;
     @doc("Kusto roles")
-    role: KustoRole;
+    role: KustoRoleType;
     @doc("Principal type.")
     principalType: PrincipalType;
 }
@@ -136,7 +146,7 @@ model PrivateEndPoint {
 }
 
 @doc("Resource Location")
-model Location is string { }
+scalar Location extends string
 
 @doc("Virtual Network Rule")
 model VirtualNetworkRule {
@@ -149,7 +159,7 @@ model VirtualNetworkRule {
 }
 
 @doc("IP rule with specific IP or IP range in CIDR format.")
-model IPRules {
+model IpRules {
     @doc("IP Rules Value")
     value ? : string;
     @doc("The action of virtual network rule.")
@@ -170,30 +180,26 @@ enum BypassType {
    Metrics,
    AzureServices
 }
-@knownValues(BypassType)
-model Bypass is string {}
 
 enum DefaultActionType {
   Allow,
   Deny
 }
-@knownValues(DefaultActionType)
-model DefaultAction is string {}
 
 @doc("Network rule set")
 model NetworkAcls {
     @doc("Specifies whether traffic is bypassed for Logging/Metrics/AzureServices")
-    bypass: Bypass;
+    bypass: BypassType;
     @doc("Virtual Network Rule")
     virtualNetworkRule: VirtualNetworkRule[];
     @doc("IP rule with specific IP or IP range in CIDR format.")
     @extension("x-ms-identifiers", [])
-    ipRules: IPRules[];
+    ipRules: IpRules[];
     @doc("Resource Access Rules.")
      @extension("x-ms-identifiers", [])
     resourceAccessRules: ResourceAccessRules[];
     @doc("Default Action")
-    defaultAction: DefaultAction;
+    defaultActionType: DefaultActionType;
 }
 
 @doc("Restore Policy")
@@ -222,3 +228,56 @@ model VirtualNetworkConfiguration {
 
 @armResourceOperations
 interface Storage extends ResourceOperations<DataLakeHouseResources, StorageProperties> { }
+
+// Enable versioing of Model types once this is fixed https://github.com/Azure/cadl-azure/issues/2368
+//@added(Microsoft.NetworkAnalytics.Versions.v2023_04_30)
+@doc("A MetricsIngestionEndpoint Resource")
+@singleton
+model MetricsIngestionEndpointResources is ExtensionResource < MetricsIngestionEndpointProperties > {
+  @doc("Metrics Ingestion Endpoint Resource Properties")
+  @segment("metricsIngestionEndpoints")
+  @key
+  @path
+  name: string;
+}
+
+// Enable versioing of Model types once this is fixed https://github.com/Azure/cadl-azure/issues/2368
+//@added(Microsoft.NetworkAnalytics.Versions.v2023_04_30)
+@doc("The resource-specific properties of a Metrics Ingestion Endpoint resource")
+model MetricsIngestionEndpointProperties {
+  @doc("Name of the EMIG region where the compute should be deployed")
+  emigRegionName: string;
+
+  @doc("Name of the Geneva account to which the metrics should be sent for this resource")
+  genevaAccountName: string;
+
+  @doc("URL of the Geneva stamp hosting that account")
+  genevaStampUrl: string;
+
+  @doc("Name of the namespace within the Geneva account")
+  genevaNamespace: string;
+
+  @visibility("read")
+  @doc("Event Hub URL to which the metrics should be sent for this resource")
+  eventHubUrl?: string;
+
+  @visibility("read")
+  @doc("Event Hub name to which the metrics should be sent for this resource")
+  eventHubName?: string;
+
+  @visibility("read")
+  @doc("Key Vault URL where the connection string exists for authentication")
+  keyVaultUrl?: string;
+
+  @doc("The status of the last operation.")
+  @visibility("read")
+  provisioningState?: ProvisioningState;
+}
+
+@added(Microsoft.NetworkAnalytics.Versions.v2023_04_30)
+@armResourceOperations(MetricsIngestionEndpointProperties)
+  interface MetricsIngestionEndpoints
+    extends ExtensionResourceCreate <MetricsIngestionEndpointResources>,
+      ExtensionResourceRead <MetricsIngestionEndpointResources>,
+      ExtensionResourceUpdate<MetricsIngestionEndpointResources, MetricsIngestionEndpointProperties>,
+      ExtensionResourceDelete<MetricsIngestionEndpointResources> {}
