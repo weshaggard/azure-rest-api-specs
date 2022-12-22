@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2022-03-09-preview",
+    "version": "2022-12-13-preview",
     "title": "ctsrp",
     "description": "Cloud transfer service resource provider"
   },
@@ -34,7 +34,7 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/flows/{flowName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/flows/{flowName}": {
       "get": {
         "description": "Gets flow resource.",
         "x-ms-examples": {
@@ -49,6 +49,9 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/connectionNameParameter"
           },
           {
             "$ref": "#/parameters/flowNameParameter"
@@ -86,6 +89,9 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/connectionNameParameter"
           },
           {
             "$ref": "#/parameters/flowNameParameter"
@@ -144,6 +150,9 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
+            "$ref": "#/parameters/connectionNameParameter"
+          },
+          {
             "$ref": "#/parameters/flowNameParameter"
           },
           {
@@ -155,7 +164,13 @@
             "description": "Deleted the flows resource."
           },
           "202": {
-            "description": "Accepted delete the flows resource."
+            "description": "Accepted delete the flows resource.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            }
           },
           "204": {
             "description": "Deleted the flows resource."
@@ -169,7 +184,7 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         }
       },
       "patch": {
@@ -186,6 +201,9 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/connectionNameParameter"
           },
           {
             "$ref": "#/parameters/flowNameParameter"
@@ -212,6 +230,12 @@
           },
           "202": {
             "description": "Accepted update to the flows resource.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/flow"
             }
@@ -225,11 +249,11 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/flows/{flowName}/enable": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/flows/{flowName}/enable": {
       "post": {
         "description": "Enables the specified flow.",
         "x-ms-examples": {
@@ -246,6 +270,9 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
+            "$ref": "#/parameters/connectionNameParameter"
+          },
+          {
             "$ref": "#/parameters/flowNameParameter"
           },
           {
@@ -261,6 +288,12 @@
           },
           "202": {
             "description": "Enables a flow.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/flow"
             }
@@ -274,11 +307,11 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/flows/{flowName}/disable": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/flows/{flowName}/disable": {
       "post": {
         "description": "Disables the specified flow",
         "x-ms-examples": {
@@ -295,6 +328,9 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
+            "$ref": "#/parameters/connectionNameParameter"
+          },
+          {
             "$ref": "#/parameters/flowNameParameter"
           },
           {
@@ -310,6 +346,12 @@
           },
           "202": {
             "description": "Disables a flow.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/flow"
             }
@@ -323,19 +365,19 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/flows": {
-      "get": {
-        "description": "Gets flows in a resource group.",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/flows/{flowName}/link": {
+      "post": {
+        "description": "Links the specified flow.",
         "x-ms-examples": {
-          "Gets flows in a resource group": {
-            "$ref": "examples/listFlowsByResourceGroup.json"
+          "Links the specified flow": {
+            "$ref": "examples/linkFlow.json"
           }
         },
-        "operationId": "Flows_ListByResourceGroup",
+        "operationId": "Flows_Link",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -344,14 +386,41 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
+            "$ref": "#/parameters/connectionNameParameter"
+          },
+          {
+            "$ref": "#/parameters/flowNameParameter"
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "flow",
+            "description": "Flow body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/resourceBody"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Listed all flows under the resource group.",
+            "description": "Links a flow.",
             "schema": {
-              "$ref": "#/definitions/flowsListResult"
+              "$ref": "#/definitions/flow"
+            }
+          },
+          "202": {
+            "description": "Links a flow.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/flow"
             }
           },
           "default": {
@@ -361,31 +430,38 @@
             }
           }
         },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Cts/flows": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/flows": {
       "get": {
-        "description": "Gets flows in a subscription",
+        "description": "Gets flows in a connection.",
         "x-ms-examples": {
-          "Gets flows in a subscription": {
-            "$ref": "examples/listFlowsBySubscription.json"
+          "Gets flows in a connection": {
+            "$ref": "examples/listFlowsByConnection.json"
           }
         },
-        "operationId": "Flows_ListBySubscription",
+        "operationId": "Flows_ListByConnection",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/connectionNameParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Listed all flows under the subscription.",
+            "description": "Listed all flows under the resource group.",
             "schema": {
               "$ref": "#/definitions/flowsListResult"
             }
@@ -523,7 +599,13 @@
             "description": "Deleted the connections resource."
           },
           "202": {
-            "description": "Accepted delete the connections resource."
+            "description": "Accepted delete the connections resource.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            }
           },
           "204": {
             "description": "Deleted the connections resource."
@@ -537,7 +619,7 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         }
       },
       "patch": {
@@ -580,6 +662,12 @@
           },
           "202": {
             "description": "Accepted update to the connections resource.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/connection"
             }
@@ -593,7 +681,113 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/link": {
+      "post": {
+        "description": "Links the connection to its pending connection.",
+        "x-ms-examples": {
+          "Links the specified connection": {
+            "$ref": "examples/linkConnection.json"
+          }
+        },
+        "operationId": "Connections_Link",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/connectionNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "connection",
+            "description": "Connection body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/resourceBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Links a connection.",
+            "schema": {
+              "$ref": "#/definitions/connection"
+            }
+          },
+          "202": {
+            "description": "Links a connection.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/connection"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/connections/{connectionName}/generatePendingFlows": {
+      "post": {
+        "description": "Lists all pending flows for a connection.",
+        "x-ms-examples": {
+          "Generates a list of pending flows": {
+            "$ref": "examples/generatePendingFlows.json"
+          }
+        },
+        "operationId": "GeneratePendingFlows_List",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/connectionNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listed all connections under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/pendingFlowsListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
@@ -793,7 +987,13 @@
             "description": "Deleted the pipelines resource."
           },
           "202": {
-            "description": "Accepted delete of the pipelines resource."
+            "description": "Accepted delete of the pipelines resource.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            }
           },
           "204": {
             "description": "Deleted the pipelines resource."
@@ -807,7 +1007,7 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         }
       },
       "patch": {
@@ -850,6 +1050,12 @@
           },
           "202": {
             "description": "Accepted update to the pipelines resource.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/pipeline"
             }
@@ -863,7 +1069,7 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         }
       }
     },
@@ -895,7 +1101,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/connectionBody"
+              "$ref": "#/definitions/resourceBody"
             }
           }
         ],
@@ -903,13 +1109,19 @@
           "200": {
             "description": "Approves a connection.",
             "schema": {
-              "$ref": "#/definitions/pipeline"
+              "$ref": "#/definitions/connection"
             }
           },
           "202": {
             "description": "Approves a connection.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
             "schema": {
-              "$ref": "#/definitions/pipeline"
+              "$ref": "#/definitions/connection"
             }
           },
           "default": {
@@ -921,7 +1133,7 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         }
       }
     },
@@ -953,7 +1165,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/connectionBody"
+              "$ref": "#/definitions/resourceBody"
             }
           }
         ],
@@ -961,13 +1173,19 @@
           "200": {
             "description": "Rejects a connection.",
             "schema": {
-              "$ref": "#/definitions/pipeline"
+              "$ref": "#/definitions/connection"
             }
           },
           "202": {
             "description": "Rejects a connection.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
             "schema": {
-              "$ref": "#/definitions/pipeline"
+              "$ref": "#/definitions/connection"
             }
           },
           "default": {
@@ -979,7 +1197,49 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Cts/pipelines/{pipelineName}/generatePendingConnections": {
+      "post": {
+        "description": "Lists all pending connections for a pipeline.",
+        "x-ms-examples": {
+          "Generates a list of pending connections": {
+            "$ref": "examples/generatePendingConnections.json"
+          }
+        },
+        "operationId": "GeneratePendingConnections_List",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/pipelineNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listed all connections under the resource group.",
+            "schema": {
+              "$ref": "#/definitions/pendingConnectionsListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
@@ -1070,6 +1330,11 @@
           }
         },
         "description": "Lists all of the available Microsoft.Cts REST API operations.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Listed all of the available operations.",
@@ -1105,7 +1370,11 @@
         },
         "location": {
           "type": "string",
-          "description": "Location of the connection"
+          "description": "Location of the connection",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "subscriptionName": {
           "type": "string",
@@ -1119,140 +1388,36 @@
     "flowProperties": {
       "type": "object",
       "properties": {
-        "acceptableUsePolicyForm": {
-          "type": "string",
-          "description": "Link to signed Acceptable Use Policy (AUP) form"
-        },
-        "averageDailyData": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Daily estimate on data size (GB)"
-        },
         "connection": {
           "$ref": "#/definitions/selectedResource",
           "description": "The connection associated with this flow"
         },
-        "dataflowGuid": {
+        "flowId": {
           "type": "string",
           "description": "Dataflow GUID associated with this flow",
           "readOnly": true
-        },
-        "storageLocation": {
-          "enum": [
-            "CloudVault",
-            "Other"
-          ],
-          "type": "string",
-          "x-ms-enum": {
-            "name": "storageLocation",
-            "modelAsString": true
-          },
-          "description": "Data currently stored in CloudVault?"
-        },
-        "dataTypes": {
-          "type": "array",
-          "items": {
-            "enum": [
-              "OfficialBuilds",
-              "VHDs",
-              "OfficeDocuments",
-              "Scripts",
-              "JSON",
-              "Database",
-              "Other"
-            ],
-            "type": "string",
-            "x-ms-enum": {
-              "name": "dataTypes",
-              "modelAsString": true
-            }
-          },
-          "description": "List of data types that this Dataflow will service"
-        },
-        "dataUse": {
-          "type": "string",
-          "description": "How will the data be used on the high side?"
-        },
-        "destination": {
-          "type": "string",
-          "description": "What is the destination of this data? (beyond the high-side Storage Account?)"
-        },
-        "email": {
-          "type": "string",
-          "description": "Microsoft corporate e-mail address"
-        },
-        "incidentNumber": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ICM (Incident Management) number in high side where onboarding details are entered"
-        },
-        "accessForManualTransfers": {
-          "enum": [
-            "JIT",
-            "None"
-          ],
-          "type": "string",
-          "x-ms-enum": {
-            "name": "accessForManualTransfers",
-            "modelAsString": true
-          },
-          "description": "Please confirm JIT will be used for manual transfers, whether that be access to the source Storage Container or any service which interacts with the Storage Account"
         },
         "keyVaultUri": {
           "type": "string",
           "description": "AME, PME, or TORUS only! AKV Chain Containing SAS Token"
         },
-        "usage": {
+        "linkStatus": {
           "enum": [
-            "Manual",
-            "Automatic"
+            "Linked",
+            "Unlinked"
           ],
           "type": "string",
           "x-ms-enum": {
-            "name": "usage",
+            "name": "linkStatusFlow",
             "modelAsString": true
           },
-          "description": "Does your service have manual upload through the Teleport pipeline"
+          "description": "Link status of the current flow",
+          "readOnly": true
         },
-        "manualUsersStatus": {
-          "enum": [
-            "Tented",
-            "Standard"
-          ],
+        "linkedFlowId": {
           "type": "string",
-          "x-ms-enum": {
-            "name": "manualUsersStatus",
-            "modelAsString": true
-          },
-          "description": "Status of manual users"
-        },
-        "maxData": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Enter the max (99th percentile) data sent in a day (GB)"
-        },
-        "origin": {
-          "type": "string",
-          "description": "What is the system of origin for this data?"
-        },
-        "primaryContactAlias": {
-          "type": "string",
-          "description": "Primary contact's alias for this data flow"
-        },
-        "secondaryContactsAliases": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Secondary contacts' aliases for this dataflow"
-        },
-        "serviceName": {
-          "type": "string",
-          "description": "Service Name"
-        },
-        "serviceTreeId": {
-          "type": "string",
-          "description": "Service Tree ID of the service"
+          "description": "Resource ID of the linked flow",
+          "readOnly": true
         },
         "status": {
           "enum": [
@@ -1274,29 +1439,17 @@
           "type": "string",
           "description": "Storage Container"
         },
-        "storageContainerType": {
+        "flowType": {
           "enum": [
             "Blob",
             "Table"
           ],
           "type": "string",
           "x-ms-enum": {
-            "name": "storageContainerType",
+            "name": "flowType",
             "modelAsString": true
           },
           "description": "Transfer Storage Blobs or Tables"
-        },
-        "subscriptionId": {
-          "type": "string",
-          "description": "Subscription ID for the storage account to be onboarded"
-        },
-        "title": {
-          "type": "string",
-          "description": "Title of flow"
-        },
-        "useCase": {
-          "type": "string",
-          "description": "Use case for this data flow."
         },
         "provisioningState": {
           "description": "Provisioning state of the flow",
@@ -1312,13 +1465,17 @@
             "modelAsString": true
           },
           "readOnly": true
+        },
+        "policies": {
+          "type": "array",
+          "description": "The policies for this flow",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
-        "storageAccountName",
-        "storageContainerName",
-        "storageContainerType",
-        "connection"
+        "flowType"
       ],
       "description": "Properties of flow"
     },
@@ -1343,6 +1500,30 @@
       ],
       "description": "The flow resource definition."
     },
+    "pendingFlow": {
+      "type": "object",
+      "description": "Pending flow object",
+      "properties": {
+        "subscriptionId": {
+          "type": "string",
+          "description": "Subscription ID of the pending flow.",
+          "readOnly": true
+        },
+        "connectionId": {
+          "type": "string",
+          "description": "Connection ID of the pending flow.",
+          "readOnly": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/flowProperties"
+        },
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
     "flowsPatch": {
       "type": "object",
       "properties": {
@@ -1364,7 +1545,10 @@
           "items": {
             "$ref": "#/definitions/flow"
           },
-          "description": "Flows array."
+          "description": "Flows array.",
+          "x-ms-identifiers": [
+            "id"
+          ]
         },
         "nextLink": {
           "description": "Link to next results",
@@ -1376,9 +1560,21 @@
     "connectionProperties": {
       "type": "object",
       "properties": {
-        "remoteCloud": {
+        "pipeline": {
           "type": "string",
-          "description": "Destination cloud of the data to be transferred"
+          "description": "Pipeline to use to transfer data"
+        },
+        "direction": {
+          "description": "Direction of data movement",
+          "enum": [
+            "Send",
+            "Receive"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "direction",
+            "modelAsString": true
+          }
         },
         "justification": {
           "type": "string",
@@ -1404,6 +1600,75 @@
           "description": "Reason for status",
           "readOnly": true
         },
+        "linkStatus": {
+          "enum": [
+            "Linked",
+            "Unlinked"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "linkStatus",
+            "modelAsString": true
+          },
+          "description": "Link status of the current connection",
+          "readOnly": true
+        },
+        "linkedConnectionId": {
+          "type": "string",
+          "description": "Resource ID of the linked connection",
+          "readOnly": true
+        },
+        "connectionTypes": {
+          "description": "Types of connection being requested",
+          "type": "array",
+          "items": {
+            "enum": [
+              "DevSecOps",
+              "ComplexDocuments",
+              "Messaging",
+              "Streaming"
+            ],
+            "type": "string",
+            "x-ms-enum": {
+              "name": "connectionTypes",
+              "modelAsString": true
+            }
+          }
+        },
+        "requirementId": {
+          "description": "Requirement ID of the connection",
+          "type": "string"
+        },
+        "remoteSubscriptionId": {
+          "description": "Subscription ID to link cloud subscriptions together",
+          "type": "string"
+        },
+        "approver": {
+          "description": "Approver of this connection request",
+          "type": "string",
+          "readOnly": true
+        },
+        "pin": {
+          "description": "PIN to link requests together",
+          "type": "string"
+        },
+        "dateSubmitted": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp that this connection request was submitted at",
+          "readOnly": true
+        },
+        "primaryContact": {
+          "type": "string",
+          "description": "The primary contact for this connection request"
+        },
+        "secondaryContacts": {
+          "type": "array",
+          "description": "The secondary contacts for this connection request",
+          "items": {
+            "type": "string"
+          }
+        },
         "provisioningState": {
           "description": "Provisioning state of the connection",
           "enum": [
@@ -1418,10 +1683,20 @@
             "modelAsString": true
           },
           "readOnly": true
+        },
+        "policies": {
+          "type": "array",
+          "description": "The policies for this connection",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
-        "remoteCloud"
+        "pipeline",
+        "justification",
+        "connectionTypes",
+        "requirementId"
       ],
       "description": "Properties of connection"
     },
@@ -1442,6 +1717,25 @@
         }
       ],
       "description": "The connection resource definition."
+    },
+    "pendingConnection": {
+      "type": "object",
+      "description": "Pending connection object",
+      "properties": {
+        "subscriptionId": {
+          "type": "string",
+          "description": "Subscription ID of the pending connection.",
+          "readOnly": true
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/connectionProperties"
+        },
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ]
     },
     "connectionsPatch": {
       "type": "object",
@@ -1464,7 +1758,50 @@
           "items": {
             "$ref": "#/definitions/connection"
           },
-          "description": "Connections array."
+          "description": "Connections array.",
+          "x-ms-identifiers": [
+            "id"
+          ]
+        },
+        "nextLink": {
+          "description": "Link to next results",
+          "type": "string"
+        }
+      },
+      "description": "The connections list result."
+    },
+    "pendingConnectionsListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pendingConnection"
+          },
+          "description": "Connections array.",
+          "x-ms-identifiers": [
+            "id"
+          ]
+        },
+        "nextLink": {
+          "description": "Link to next results",
+          "type": "string"
+        }
+      },
+      "description": "The connections list result."
+    },
+    "pendingFlowsListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pendingFlow"
+          },
+          "description": "flows array.",
+          "x-ms-identifiers": [
+            "id"
+          ]
         },
         "nextLink": {
           "description": "Link to next results",
@@ -1538,6 +1875,9 @@
         "location": {
           "type": "string",
           "description": "Connection location inside pipeline",
+          "x-ms-mutability": [
+            "read"
+          ],
           "readOnly": true
         },
         "etag": {
@@ -1546,9 +1886,6 @@
           "readOnly": true
         },
         "systemData": {
-          "readOnly": true,
-          "type": "object",
-          "description": "Azure Resource Manager metadata containing createdBy and modifiedBy information.",
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData"
         },
         "properties": {
@@ -1580,7 +1917,10 @@
             "$ref": "#/definitions/pipelineConnection"
           },
           "description": "Connections associated with pipeline",
-          "readOnly": true
+          "readOnly": true,
+          "x-ms-identifiers": [
+            "id"
+          ]
         },
         "provisioningState": {
           "description": "Provisioning state of the pipeline",
@@ -1596,6 +1936,13 @@
             "modelAsString": true
           },
           "readOnly": true
+        },
+        "policies": {
+          "type": "array",
+          "description": "The policies for this pipeline",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
@@ -1632,7 +1979,10 @@
               "items": {
                 "$ref": "#/definitions/pipelineConnection"
               },
-              "description": "Connections associated with pipeline"
+              "description": "Connections associated with pipeline",
+              "x-ms-identifiers": [
+                "id"
+              ]
             }
           },
           "description": "Properties of pipelines patch body."
@@ -1655,7 +2005,10 @@
           "items": {
             "$ref": "#/definitions/pipeline"
           },
-          "description": "Pipelines array."
+          "description": "Pipelines array.",
+          "x-ms-identifiers": [
+            "id"
+          ]
         },
         "nextLink": {
           "description": "Link to next results",
@@ -1664,22 +2017,22 @@
       },
       "description": "The pipelines list result."
     },
-    "connectionBody": {
+    "resourceBody": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
-          "description": "ID of the connection to approve or reject."
+          "description": "ID of the resource."
         },
         "statusReason": {
           "type": "string",
-          "description": "Reason for approval or rejection."
+          "description": "Reason for resource operation."
         }
       },
       "required": [
         "id"
       ],
-      "description": "The connection to approve or reject."
+      "description": "The resource to reference."
     }
   },
   "parameters": {
@@ -1689,6 +2042,7 @@
       "in": "path",
       "required": true,
       "type": "string",
+      "pattern": "^[a-zA-Z0-9-]{3,64}$",
       "maxLength": 64,
       "minLength": 3,
       "description": "The name for the flow that is to be onboarded."
@@ -1699,6 +2053,7 @@
       "in": "path",
       "required": true,
       "type": "string",
+      "pattern": "^[a-zA-Z0-9-]{3,64}$",
       "maxLength": 64,
       "minLength": 3,
       "description": "The name for the connection that is to be requested."
@@ -1709,6 +2064,7 @@
       "in": "path",
       "required": true,
       "type": "string",
+      "pattern": "^[a-zA-Z0-9-]{3,64}$",
       "maxLength": 64,
       "minLength": 3,
       "description": "The name for the pipeline that is to be requested."
