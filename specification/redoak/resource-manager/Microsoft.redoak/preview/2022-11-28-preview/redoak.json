@@ -6,6 +6,24 @@
     "version": "2022-11-28-preview"
   },
   "host": "management.azure.com",
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow.",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
   "paths": {
     "/providers/Microsoft.redoak/operations": {
       "get": {
@@ -220,6 +238,7 @@
       },
       "patch": {
         "operationId": "RedoakServices_Update",
+        "description": "Method that gets called if subscribed for Resource Patching or Update.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -345,10 +364,135 @@
         }
       }
     },
+    "NetworkingProperties": {
+      "type": "object",
+      "description": "Properties to configure Networking",
+      "properties": {
+        "virtualNetworkName": {
+          "description": "The name of the vnet",
+          "type": "string"
+        },
+        "virtualNetworkResourceGroup": {
+          "description": "The resource group in which vnet should be created",
+          "type": "string"
+        },
+        "subnetName": {
+          "description": "The subnet name",
+          "type": "string"
+        },
+        "subnetAddressPrefix": {
+          "description": "The prefix for subnet address",
+          "type": "string"
+        },
+        "enablePrivateLink": {
+          "enum": [
+            "true",
+            "false"
+          ],
+          "type": "string",
+          "description": "To enable private link or not",
+          "x-ms-enum": {
+            "name": "EnablePrivateLink",
+            "modelAsString": true
+          }
+        },
+        "virtualNetworkExisting": {
+          "enum": [
+            "Existing",
+            "New"
+          ],
+          "type": "string",
+          "description": "Vnet exists or new should be created",
+          "x-ms-enum": {
+            "name": "VirtualNetworkExisting",
+            "modelAsString": true
+          }
+        }
+      }
+    },
+    "CMEKConfiguration": {
+      "x-ms-client-flatten": true,
+      "type": "object",
+      "description": "Properties to configure CMEKConfiguration",
+      "properties": {
+        "keyVaultProperties": {
+          "$ref": "#/definitions/KeyVaultProperties",
+          "x-ms-client-name": "KeyVaultProperties"
+        }
+      }
+    },
+    "KeyVaultProperties": {
+      "type": "object",
+      "description": "Properties of KeyVault",
+      "required": [
+        "keyName",
+        "kvUrl"
+      ],
+      "properties": {
+        "keyName": {
+          "type": "string",
+          "description": "The name of the key vault key.",
+          "x-ms-client-name": "KeyName"
+        },
+        "keyVersion": {
+          "type": "string",
+          "description": "The version of the key vault key.",
+          "x-ms-client-name": "KeyVersion"
+        },
+        "kvUrl": {
+          "type": "string",
+          "description": "The Uri of the key vault.",
+          "x-ms-client-name": "KVURL"
+        },
+        "identityId": {
+          "type": "string",
+          "description": "The user assigned identity (ARM resource id) that has access to the key.",
+          "x-ms-client-name": "UserIdentity"
+        }
+      }
+    },
+    "Settings": {
+      "type": "object",
+      "description": "Properties to configure Settings Blade",
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "description": "Client Id or the app id used for authentication"
+        },
+        "dataPartitionNames": {
+          "type": "array",
+          "description": "List of data partitions to be created",
+          "items": {
+            "$ref": "#/definitions/DataPartitionNames"
+          },
+          "x-ms-identifiers": []
+        },
+        "clusterSize": {
+          "enum": [
+            "CostOptimised",
+            "Standard",
+            "HighSpec"
+          ],
+          "type": "string",
+          "description": "Size of the cluster to be used",
+          "x-ms-enum": {
+            "name": "ProvisioningState",
+            "modelAsString": true
+          }
+        },
+        "cmekConfiguration": {
+          "type": "object",
+          "description": "Properties to configure CMEK Encryption",
+          "$ref": "#/definitions/CMEKConfiguration"
+        }
+      }
+    },
     "RedoakServiceProperties": {
       "type": "object",
+      "description": "Properties for the RedOakService",
       "properties": {
         "provisioningState": {
+          "description": "State of the resource to be provisioned",
           "enum": [
             "Unknown",
             "Succeeded",
@@ -364,49 +508,19 @@
             "modelAsString": true
           }
         },
-        "applicationId": {
-          "type": "string"
-        },
-        "virtualNetworkName": {
-          "type": "string"
-        },
-        "virtualNetworkResourceGroup": {
-          "type": "string"
-        },
-        "subnetName": {
-          "type": "string"
-        },
-        "subnetAddressPrefix": {
-          "type": "string"
-        },
-        "enablePrivateLink": {
-          "enum": [
-            "Yes",
-            "No"
-          ],
+        "appName": {
           "type": "string",
-          "x-ms-enum": {
-            "name": "EnablePrivateLink",
-            "modelAsString": true
-          }
+          "description": "Name of the application"
         },
-        "virtualNetworkExisting": {
-          "enum": [
-            "Existing",
-            "New"
-          ],
-          "type": "string",
-          "x-ms-enum": {
-            "name": "VirtualNetworkExisting",
-            "modelAsString": true
-          }
+        "network": {
+          "type": "object",
+          "description": "Properties to configure network blade",
+          "$ref": "#/definitions/NetworkingProperties"
         },
-        "dataPartitionNames": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DataPartitionNames"
-          },
-          "x-ms-identifiers": []
+        "settings": {
+          "type": "object",
+          "description": "Properties to configure network blade",
+          "$ref": "#/definitions/Settings"
         }
       }
     },
@@ -415,6 +529,7 @@
         "location"
       ],
       "type": "object",
+      "description": "Definition of the redoak service",
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
@@ -442,7 +557,8 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The resource name."
+      "description": "The resource name.",
+      "x-ms-parameter-location": "method"
     }
   }
 }
