@@ -36,9 +36,7 @@ These settings apply only when `--tag=package-2021-01-03-preview` is specified o
 
 ```yaml $(tag) == 'package-2023-01-01-preview'
 input-file:
-  - Microsoft.OffAzureSpringBoot/preview/2023-01-01-preview/springbootsites.json
-  - Microsoft.OffAzureSpringBoot/preview/2023-01-01-preview/springbootservers.json
-  - Microsoft.OffAzureSpringBoot/preview/2023-01-01-preview/springbootapps.json
+  - Microsoft.OffAzureSpringBoot/preview/2023-01-01-preview/springbootdiscovery.json
 ```
 
 ---
