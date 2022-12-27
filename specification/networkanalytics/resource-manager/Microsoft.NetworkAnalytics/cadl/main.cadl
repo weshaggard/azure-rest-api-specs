@@ -4,8 +4,8 @@ import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
 import "@azure-tools/cadl-autorest";
 import "@cadl-lang/versioning";
-using Cadl.Versioning;
 
+using Cadl.Versioning;
 using Cadl.Http;
 using Cadl.Rest;
 using Azure.ResourceManager;
@@ -18,7 +18,8 @@ using OpenAPI;
 @versionedDependency(
   [
     [Microsoft.NetworkAnalytics.Versions.v2022_11_15_preview, Azure.ResourceManager.Versions.v1_0_Preview_1],
-    [Microsoft.NetworkAnalytics.Versions.v2023_04_30, Azure.ResourceManager.Versions.v1_0_Preview_1]
+    [Microsoft.NetworkAnalytics.Versions.v2023_04_30, Azure.ResourceManager.Versions.v1_0_Preview_1],
+    [Microsoft.NetworkAnalytics.Versions.v2023_03_31, Azure.ResourceManager.Versions.v1_0_Preview_1]
   ]
 )
 namespace Microsoft.NetworkAnalytics;
@@ -29,14 +30,34 @@ interface Operations extends Azure.ResourceManager.Operations {}
 
 enum Versions {
   v2022_11_15_preview: "2022-11-15-preview",
+  v2023_03_31: "2023-03-31",
   v2023_04_30: "2023-04-30"
 }
 
-@doc("A NetworkAnalyticsProviderHub resource")
+@doc("The DLH resource")
 model DataLakeHouseResources is TrackedResource < StorageProperties > {
-    @doc("Storage resource Properties")
+    @doc("DLH Resource name")
     @key("storageName")
     @segment("dataLakeHouses")
+    @path
+    name: string;
+}
+
+@doc("The Network Analytics Product Resource")
+@singleton
+model NetworkAnalyticsProducts is ProxyResource < NetworkAnalyticsProductsProperties > {
+    @doc("The Network Analytics Product name")
+    @key("networkAnalyticsProdcutName")
+    @segment("networkAnalyticsProducts")
+    @path
+    name: string;
+}
+
+@doc("The Data Pipeline Resource")
+model DataPipelines is TrackedResource <DataPipelinesProperties> {
+    @doc("The Data Pipeline name")
+    @key("dataPipelineName")
+    @segment("dataPipelines")
     @path
     name: string;
 }
@@ -60,6 +81,34 @@ model StorageProperties {
     azureDataExplorerProperties: AzureDataExplorerProperties;
 }
 
+@doc("Details of the Network Analytics Product Properties")
+model NetworkAnalyticsProductsProperties {
+    @doc("Network Analytics Product Properties provisioning state")
+    @visibility("read")
+    provisioningState ?: ProvisioningState;
+    @doc("The Network Analytics product information")
+    networkAnalyticsProductInformation: NetworkAnalyticsProductInformation;
+}
+
+@doc("Details of the Data Pipeline Properties")
+model DataPipelinesProperties {
+    @doc("Data pipeline provisioning state")
+    @visibility("read")
+    provisioningState ?: ProvisioningState;
+    @doc("The Network Analytics Prodcut to which this pipeline belongs to")
+    networkAnalyticsProductName: string;
+    @doc("The release version of the corresponding product")
+    networkAnalyticsProductRelease: string;
+    @doc("The pipeline type")
+    pipelineType: string,
+    @doc("The DLH array")
+    datalakeHouses: Array<string>,
+    @doc("the data ingestion path")
+    dataIngestionPath: string,
+    @doc("The data pipeline configuration")
+    dataPipelineConfiguration: DataPipelineConfiguration;
+}
+
 @doc("The status of the current operation.")
 enum ProvisioningState {
     Succeeded,
@@ -77,6 +126,68 @@ model ManagedResourceGroupConfiguration {
     name: string;
     @doc("MRG location")
     location: string;
+}
+
+@doc("Network Analytics Product Information")
+model NetworkAnalyticsProductInformation {
+    @doc("Name of the Network Analytics Product")
+    networkAnalyticsProductName: string;
+    @doc("The releases for the product")
+    @extension("x-ms-identifiers",[])
+    networkAnalyticsProductReleases: Array<string>;
+    @doc("The pipelines supported by the product")
+    @extension("x-ms-identifiers",[])
+    pipelines: Array<NetworkAnalyticsProductPipelineInformation>;
+}
+
+@doc("Data Pipeline Information")
+model NetworkAnalyticsProductPipelineInformation {
+    @doc("The pipeline name")
+    pipelineName: string,
+    @doc("The datasets supported by the pipeline")
+    datasets: Array<string>
+}
+
+@doc("The data retention, dataset and compute configurations for the pipeline")
+model DataPipelineConfiguration {
+  @doc("The dataset retention configuration")
+  @extension("x-ms-identifiers",[])
+  dataRetention: Array<DataRetentionConfiguration>,
+  @doc("The datasets configuration array ")
+  @extension("x-ms-identifiers",[])
+  datasets: Array<DatasetConfiguration>,
+  @doc("Compute configuration")
+  compute: ComputeConfig
+}
+
+@doc("The dataset retention config")
+model DataRetentionConfiguration {
+    @doc("The dataset resource name")
+    resourceName: string,
+    @doc("Dataset retention properties")
+    resourceDataRetentionProperties: DataRetentionProperties;
+}
+
+@doc("The pipeline dataset information ")
+model DatasetConfiguration {
+    @doc("The name of the dataset")
+    datasetName: string,
+    @doc("The timestamp key for the dataset")
+    timestampKey?: string,
+    @doc("Columns to be masked")
+    columnsToMask?: Array<string>
+}
+
+@doc("The compute configuration")
+model ComputeConfig {
+    @doc("The alert email in case of a failure")
+    failureAlertEmail?: string;
+}
+
+@doc("Data Retention Properties")
+model DataRetentionProperties {
+    @doc("Retention days for the data")
+    retentionDays: string 
 }
 
 @doc("Common Storage Account Properties.")
@@ -273,6 +384,14 @@ model MetricsIngestionEndpointProperties {
   @visibility("read")
   provisioningState?: ProvisioningState;
 }
+
+@added(Versions.v2023_03_31)
+@armResourceOperations(NetworkAnalyticsProducts)
+interface NetworkAnalyticsProduct extends ResourceOperations<NetworkAnalyticsProducts, NetworkAnalyticsProductsProperties> {}
+
+@added(Versions.v2023_03_31)
+@armResourceOperations(DataPipelines)
+interface DataPipeline extends ResourceOperations<DataPipelines, DataPipelinesProperties> {}
 
 @added(Microsoft.NetworkAnalytics.Versions.v2023_04_30)
 @armResourceOperations(MetricsIngestionEndpointProperties)
