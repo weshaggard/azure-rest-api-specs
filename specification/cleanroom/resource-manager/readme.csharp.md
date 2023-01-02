@@ -11,5 +11,5 @@ csharp:
   clear-output-folder: true
   client-side-validation: false
   namespace: Microsoft.CleanRoom
-  output-folder: $(csharp-sdks-folder)/cleanroomservice/management/Microsoft.CleanRoom/GeneratedProtocol
+  output-folder: $(csharp-sdks-folder)/cleanroom/management/Microsoft.CleanRoom/GeneratedProtocol
 ```

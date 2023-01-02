@@ -1,8 +1,8 @@
-# cleanroomservice
+# cleanroom
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for cleanroomservice.
+This is the AutoRest configuration file for cleanroom.
 
 ## Getting Started
 
@@ -22,20 +22,22 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the cleanroomservice.
+These are the global settings for the cleanroom.
 
 ```yaml
 openapi-type: arm
-tag: package-2022-04-22-privatepreview
+tag: package-2022-12-31-preview
 ```
 
-### Tag: package-2022-04-22-privatepreview
+### Tag: package-2022-12-31-preview
 
-These settings apply only when `--tag=package-2022-04-22-privatepreview` is specified on the command line.
+These settings apply only when `--tag=package-2022-12-31-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-04-22-privatepreview'
+```yaml $(tag) == 'package-2022-12-31-preview'
 input-file:
-  - Microsoft.CleanRoom/preview/2022-04-22-privatepreview/cleanroomservice.json
+  - Microsoft.CleanRoom/preview/2022-12-31-preview/cleanrooms.json
+  - Microsoft.CleanRoom/preview/2022-12-31-preview/microservices.json
+  - Microsoft.CleanRoom/preview/2022-12-31-preview/operations.json
 ```
 
 ---
@@ -51,10 +53,11 @@ This is not used by Autorest itself.
 swagger-to-sdk:
   - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
-  - repo: azure-sdk-for-go-track2
+  - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
   - repo: azure-resource-manager-schemas
   - repo: azure-cli-extensions
+  - repo: azure-powershell
 ```
 ## Az
 

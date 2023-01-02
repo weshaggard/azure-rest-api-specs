@@ -6,13 +6,13 @@ Please also specify `--python-sdks-folder=<path to the root directory of your az
 ``` yaml $(python)
 azure-arm: true
 license-header: MICROSOFT_MIT_NO_VERSION
-package-name: azure-mgmt-cleanroomservice
-namespace: azure.mgmt.cleanroomservice
+package-name: azure-mgmt-cleanroom
+namespace: azure.mgmt.cleanroom
 package-version: 1.0.0b1
 clear-output-folder: true
 ```
 
 ``` yaml $(python)
 no-namespace-folders: true
-output-folder: $(python-sdks-folder)/cleanroomservice/azure-mgmt-cleanroomservice/azure/mgmt/cleanroomservice
+output-folder: $(python-sdks-folder)/cleanroom/azure-mgmt-cleanroom/azure/mgmt/cleanroom
 ```
