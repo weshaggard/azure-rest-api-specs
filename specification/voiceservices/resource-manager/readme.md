@@ -39,13 +39,13 @@ input-file:
   - Microsoft.VoiceServices/preview/2022-12-01-preview/voiceservices.json
 ```
 
-### Tag: package-2023-01-31-preview
+### Tag: package-2023-01-31
 
-These settings apply only when `--tag=package-2023-01-31-preview` is specified on the command line.
+These settings apply only when `--tag=package-2023-01-31` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-01-31-preview'
+```yaml $(tag) == 'package-2023-01-31'
 input-file:
-  - Microsoft.VoiceServices/preview/2023-01-31-preview/voiceservices.json
+  - Microsoft.VoiceServices/stable/2023-01-31/voiceservices.json
 ```
 
 ### Tag: package-2023-02-28-preview
