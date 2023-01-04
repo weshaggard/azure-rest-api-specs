@@ -847,6 +847,9 @@
         },
         "enterpriseConfigurations": {
           "$ref": "#/definitions/EnterpriseConfigurations"
+        },
+        "grafanaConfigurations": {
+          "$ref": "#/definitions/GrafanaConfigurations"
         }
       }
     },
@@ -896,6 +899,9 @@
         },
         "enterpriseConfigurations": {
           "$ref": "#/definitions/EnterpriseConfigurations"
+        },
+        "grafanaConfigurations": {
+          "$ref": "#/definitions/GrafanaConfigurations"
         }
       }
     },
@@ -992,6 +998,65 @@
         "read",
         "create"
       ]
+    },
+    "GrafanaConfigurations": {
+      "description": "Server configurations of a Grafana instance",
+      "type": "object",
+      "properties": {
+        "smtpConfiguration": {
+          "$ref": "#/definitions/SMTPConfiguration"
+        }
+      }
+    },
+    "SMTPConfiguration": {
+      "description": "The SMTP configuration of the Grafana server\r\nhttps://grafana.com/docs/grafana/v9.0/setup-grafana/configure-grafana/#smtp",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Whether the SMTP setting is enabled for sending email. Default is false",
+          "type": "boolean"
+        },
+        "host": {
+          "description": "The SMTP server hostname (with port), e.g. test.sendgrid.net:587",
+          "type": "string"
+        },
+        "user": {
+          "description": "The username to use to authenticate to the SMTP server.",
+          "type": "string"
+        },
+        "password": {
+          "description": "The password to use to authenticate to the SMTP server.",
+          "type": "string"
+        },
+        "from_address": {
+          "description": "The email address used when sending out emails.\r\nhttps://pkg.go.dev/net/mail#Address",
+          "type": "string"
+        },
+        "from_name": {
+          "description": "The email sender name used when sending out emails.\r\nhttps://pkg.go.dev/net/mail#Address",
+          "type": "string"
+        },
+        "starttls_policy": {
+          "$ref": "#/definitions/StartTLSPolicy"
+        },
+        "skip_verify": {
+          "description": "InsecureSkipVerify controls whether a client verifies the server's certificate chain and host\r\nname. If InsecureSkipVerify is true, crypto/tls accepts any certificate presented by the server\r\nand any host name in that certificate. In this mode, TLS is susceptible to machine-in-the-middle\r\nattacks unless custom verification is used. This should be used only for testing or in combination\r\nwith VerifyConnection or VerifyPeerCertificate.\r\nhttps://pkg.go.dev/crypto/tls#Config",
+          "type": "boolean"
+        }
+      }
+    },
+    "StartTLSPolicy": {
+      "description": "The StartTLSPolicy setting of the SMTP configuration\r\nhttps://pkg.go.dev/github.com/go-mail/mail#StartTLSPolicy",
+      "enum": [
+        "OpportunisticStartTLS",
+        "MandatoryStartTLS",
+        "NoStartTLS"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "modelAsString": true,
+        "name": "StartTLSPolicy"
+      }
     },
     "GrafanaIntegrations": {
       "description": "GrafanaIntegrations is a bundled observability experience (e.g. pre-configured data source, tailored Grafana dashboards, alerting defaults) for common monitoring scenarios.",
