@@ -310,14 +310,26 @@
         "clusterUsage": {
           "type": "string",
           "enum": [
-            "paas",
+            "management",
             "networkFunctions"
           ],
           "x-ms-enum": {
             "name": "clusterUsage",
             "modelAsString": true
           },
-          "description": "Whether cluster is used for PaaS components or for hosting network functions"
+          "description": "Whether cluster is used for management components or for hosting network functions"
+        },
+        "clusterType": {
+          "type": "string",
+          "enum": [
+            "aks",
+            "hAks"
+          ],
+          "x-ms-enum": {
+            "name": "clusterType",
+            "modelAsString": true
+          },
+          "description": "The type of cluster"
         },
         "storage": {
           "type": "object",
@@ -366,6 +378,22 @@
                     }
                   }
                 }
+              },
+              "allocations": {
+                "type": "array",
+                "readOnly": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "usage": {
+                      "type": "string",
+                      "description": "For what this IP address is used"
+                    },
+                    "ipAddress": {
+                      "$ref": "./common.json#/definitions/ipAddress"
+                    }
+                  }
+                }
               }
             }
           }
@@ -396,6 +424,22 @@
               },
               "ipEnd": {
                 "$ref": "./common.json#/definitions/ipAddress"
+              },
+              "allocations": {
+                "type": "array",
+                "readOnly": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "usage": {
+                      "type": "string",
+                      "description": "For what this IP address is used"
+                    },
+                    "ipAddress": {
+                      "$ref": "./common.json#/definitions/ipAddress"
+                    }
+                  }
+                }
               }
             }
           }
@@ -426,33 +470,6 @@
         "safeDeploymentGroup": {
           "type": "string",
           "description": "Safe deployment grouping.  NFs deployed on clusters/NFVIs with the same safe deployment grouping value are managed together"
-        },
-        "ipAddressAllocations": {
-          "type": "array",
-          "readOnly": true,
-          "items": {
-            "type": "object",
-            "properties": {
-              "usage": {
-                "type": "string",
-                "description": "For what this IP range is used (e.g. NF: <name>, NAT pool)"
-              },
-              "startIp": {
-                "$ref": "./common.json#/definitions/ipAddress"
-              },
-              "endIp": {
-                "$ref": "./common.json#/definitions/ipAddress"
-              },
-              "aksDetails": {
-                "type": "object",
-                "properties": {
-                  "subnetName": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
         }
       }
     },
