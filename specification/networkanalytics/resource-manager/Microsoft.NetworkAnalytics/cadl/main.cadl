@@ -341,19 +341,18 @@ model VirtualNetworkConfiguration {
 interface Storage extends ResourceOperations<DataLakeHouseResources, StorageProperties> { }
 
 // Enable versioing of Model types once this is fixed https://github.com/Azure/cadl-azure/issues/2368
-//@added(Microsoft.NetworkAnalytics.Versions.v2023_04_30)
+//@added(Versions.v2023_04_30)
 @doc("A MetricsIngestionEndpoint Resource")
-@singleton
 model MetricsIngestionEndpointResources is ExtensionResource < MetricsIngestionEndpointProperties > {
-  @doc("Metrics Ingestion Endpoint Resource Properties")
+  @doc("Metrics Ingestion Endpoint Resource Name")
+  @key("metricsIngestionEndpointName")
   @segment("metricsIngestionEndpoints")
-  @key
   @path
   name: string;
 }
 
 // Enable versioing of Model types once this is fixed https://github.com/Azure/cadl-azure/issues/2368
-//@added(Microsoft.NetworkAnalytics.Versions.v2023_04_30)
+//@added(Versions.v2023_04_30)
 @doc("The resource-specific properties of a Metrics Ingestion Endpoint resource")
 model MetricsIngestionEndpointProperties {
   @doc("Name of the EMIG region where the compute should be deployed")
@@ -380,9 +379,12 @@ model MetricsIngestionEndpointProperties {
   @doc("Key Vault URL where the connection string exists for authentication")
   keyVaultUrl?: string;
 
-  @doc("The status of the last operation.")
+  @doc("The status of the last operation")
   @visibility("read")
   provisioningState?: ProvisioningState;
+
+  @doc("Managed Resource Group Configuration")
+  managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
 }
 
 @added(Versions.v2023_03_31)
@@ -393,10 +395,6 @@ interface NetworkAnalyticsProduct extends ResourceOperations<NetworkAnalyticsPro
 @armResourceOperations(DataPipelines)
 interface DataPipeline extends ResourceOperations<DataPipelines, DataPipelinesProperties> {}
 
-@added(Microsoft.NetworkAnalytics.Versions.v2023_04_30)
+@added(Versions.v2023_04_30)
 @armResourceOperations(MetricsIngestionEndpointProperties)
-  interface MetricsIngestionEndpoints
-    extends ExtensionResourceCreate <MetricsIngestionEndpointResources>,
-      ExtensionResourceRead <MetricsIngestionEndpointResources>,
-      ExtensionResourceUpdate<MetricsIngestionEndpointResources, MetricsIngestionEndpointProperties>,
-      ExtensionResourceDelete<MetricsIngestionEndpointResources> {}
+interface MetricsIngestionEndpoints extends ExtensionResourceOperations<MetricsIngestionEndpointResources, MetricsIngestionEndpointProperties> {}
