@@ -43,6 +43,9 @@
       "name": "Operations"
     },
     {
+      "name": "TestCases"
+    },
+    {
       "name": "JobTemplates"
     }
   ],
@@ -98,6 +101,40 @@
             "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/JobTemplateListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.AzureLinuxTestingService/testCases": {
+      "get": {
+        "tags": [
+          "TestCases"
+        ],
+        "operationId": "TestCases_ListBySubscription",
+        "description": "List TestCase resources by subscription ID",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/TestCaseListResult"
             }
           },
           "default": {
@@ -359,6 +396,84 @@
         },
         "x-ms-long-running-operation": true
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureLinuxTestingService/testCases": {
+      "get": {
+        "tags": [
+          "TestCases"
+        ],
+        "operationId": "TestCases_ListByResourceGroup",
+        "description": "List TestCase resources by resource group",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/TestCaseListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureLinuxTestingService/testCases/{testCaseName}": {
+      "get": {
+        "tags": [
+          "TestCases"
+        ],
+        "operationId": "TestCases_Get",
+        "description": "Get a TestCase",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "testCaseName",
+            "in": "path",
+            "required": true,
+            "description": "a LISA test case",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/TestCase"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -374,6 +489,12 @@
         "name": "ResourceProvisioningState",
         "modelAsString": true
       }
+    },
+    "CasePriorityLevel": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 0,
+      "maximum": 4
     },
     "JobTemplate": {
       "type": "object",
@@ -581,10 +702,9 @@
         "casePriority": {
           "type": "array",
           "items": {
-            "type": "integer",
-            "format": "int32"
+            "$ref": "#/definitions/CasePriorityLevel"
           },
-          "x-cadl-name": "int32[]",
+          "x-cadl-name": "CasePriorityLevel[]",
           "description": "Test case priority. Default is empty and represents all priorities. Valid values are from 0-4"
         },
         "caseTags": {
@@ -620,13 +740,33 @@
         },
         "ignoreFailure": {
           "type": "boolean",
-          "description": "Ignore failed test cases"
+          "description": "Ignore failed test cases. Default false",
+          "default": false
         }
       },
       "description": "Details test case criteria",
       "required": [
-        "casePriority",
-        "ignoreFailure"
+        "casePriority"
+      ]
+    },
+    "TestCase": {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/TestCaseResourceProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "description": "A LISA test case",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
       ]
     },
     "TestCaseAction": {
@@ -641,6 +781,80 @@
         "name": "TestCaseAction",
         "modelAsString": true
       }
+    },
+    "TestCaseListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestCase"
+          },
+          "x-cadl-name": "TestCase[]",
+          "description": "The TestCase items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items",
+          "x-cadl-name": "Rest.ResourceLocation"
+        }
+      },
+      "description": "The response of a TestCase list operation.",
+      "required": [
+        "value"
+      ]
+    },
+    "TestCaseResourceProperties": {
+      "type": "object",
+      "properties": {
+        "provisioningState": {
+          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "description": "Resource provisioning state.",
+          "readOnly": true
+        },
+        "area": {
+          "type": "string",
+          "description": "Test case area"
+        },
+        "category": {
+          "type": "string",
+          "description": "Test case category"
+        },
+        "tags": {
+          "type": "string",
+          "description": "Applied test tags"
+        },
+        "priority": {
+          "description": "Priority level to run"
+        },
+        "estimation": {
+          "description": "Time to complete in minutes"
+        },
+        "description": {
+          "type": "string",
+          "description": "Test case description"
+        },
+        "testSuiteName": {
+          "type": "string",
+          "description": "LISA test suite name"
+        },
+        "testSuiteDescription": {
+          "type": "string",
+          "description": "LISA test suite description"
+        }
+      },
+      "description": "Test case properties",
+      "required": [
+        "area",
+        "category",
+        "tags",
+        "priority",
+        "estimation",
+        "description",
+        "testSuiteName",
+        "testSuiteDescription"
+      ]
     }
   },
   "parameters": {}
