@@ -9,29 +9,21 @@
       }
     ]
   },
-  "schemes": [
-    "https"
-  ],
+  "schemes": ["https"],
   "host": "management.azure.com",
-  "produces": [
-    "application/json"
-  ],
-  "consumes": [
-    "application/json"
-  ],
+  "produces": ["application/json"],
+  "consumes": ["application/json"],
   "security": [
     {
-      "azure_auth": [
-        "user_impersonation"
-      ]
+      "azure_auth": ["user_impersonation"]
     }
   ],
   "securityDefinitions": {
     "azure_auth": {
       "type": "oauth2",
-      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
-      "flow": "implicit",
       "description": "Azure Active Directory OAuth2 Flow.",
+      "flow": "implicit",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
       "scopes": {
         "user_impersonation": "impersonate your user account"
       }
@@ -39,18 +31,16 @@
   },
   "tags": [
     {
-      "name": "Doctors"
+      "name": "Operations"
     },
     {
-      "name": "Operations"
+      "name": "Deployments"
     }
   ],
   "paths": {
     "/providers/Microsoft.FixMe/operations": {
       "get": {
-        "tags": [
-          "Operations"
-        ],
+        "tags": ["Operations"],
         "operationId": "Operations_List",
         "description": "List the operations for the provider",
         "parameters": [
@@ -66,7 +56,7 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
@@ -74,11 +64,17 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Operations_List_5": {
+            "$ref": "./examples/Operations_List.json"
+          }
         }
       }
     },
     "/subscriptions/{subscriptionId}/providers/Microsoft.FixMe/Deployments": {
       "get": {
+        "tags": ["Deployments"],
         "operationId": "Deployments_ListBySubscription",
         "description": "List Deployment resources by subscription ID",
         "parameters": [
@@ -97,7 +93,7 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
@@ -105,45 +101,17 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.FixMe/Doctors": {
-      "get": {
-        "tags": [
-          "Doctors"
-        ],
-        "operationId": "Doctors_ListBySubscription",
-        "description": "List Doctor resources by subscription ID",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/DoctorListResult"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
         },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
+        "x-ms-examples": {
+          "Deployments_ListBySubscription_1": {
+            "$ref": "./examples/Deployments_ListBySubscription.json"
+          }
         }
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.FixMe/Deployments": {
       "get": {
+        "tags": ["Deployments"],
         "operationId": "Deployments_ListByResourceGroup",
         "description": "List Deployment resources by resource group",
         "parameters": [
@@ -165,7 +133,7 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
@@ -173,11 +141,17 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Deployments_ListByResourceGroup_3": {
+            "$ref": "./examples/Deployments_ListByResourceGroup.json"
+          }
         }
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.FixMe/Deployments/{DeploymentName}": {
       "get": {
+        "tags": ["Deployments"],
         "operationId": "Deployments_Get",
         "description": "Get a Deployment",
         "parameters": [
@@ -191,7 +165,12 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/Deployment.DeploymentName"
+            "name": "DeploymentName",
+            "in": "path",
+            "required": true,
+            "description": "Name of Deployment.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
           }
         ],
         "responses": {
@@ -202,14 +181,20 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-examples": {
+          "Deployments_Get_2": {
+            "$ref": "./examples/Deployments_Get.json"
+          }
         }
       },
       "put": {
+        "tags": ["Deployments"],
         "operationId": "Deployments_CreateOrUpdate",
         "description": "Create a Deployment",
         "parameters": [
@@ -223,7 +208,12 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/Deployment.DeploymentName"
+            "name": "DeploymentName",
+            "in": "path",
+            "required": true,
+            "description": "Name of Deployment.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
           },
           {
             "name": "resource",
@@ -256,10 +246,15 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "Deployments_CreateOrUpdate_0": {
+            "$ref": "./examples/Deployments_CreateOrUpdate.json"
           }
         },
         "x-ms-long-running-operation-options": {
@@ -268,6 +263,7 @@
         "x-ms-long-running-operation": true
       },
       "patch": {
+        "tags": ["Deployments"],
         "operationId": "Deployments_Update",
         "description": "Update a Deployment",
         "parameters": [
@@ -281,7 +277,12 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/Deployment.DeploymentName"
+            "name": "DeploymentName",
+            "in": "path",
+            "required": true,
+            "description": "Name of Deployment.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
           },
           {
             "name": "properties",
@@ -301,14 +302,20 @@
             }
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       },
+      "x-ms-examples": {
+        "Deployments_Update_4": {
+          "$ref": "./examples/Deployments_Update.json"
+        }
+      },
       "delete": {
+        "tags": ["Deployments"],
         "operationId": "Deployments_Delete",
         "description": "Delete a Deployment",
         "parameters": [
@@ -322,7 +329,12 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/Deployment.DeploymentName"
+            "name": "DeploymentName",
+            "in": "path",
+            "required": true,
+            "description": "Name of Deployment.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
           }
         ],
         "responses": {
@@ -343,248 +355,15 @@
             "description": "Resource deleted successfully."
           },
           "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.FixMe/Doctors": {
-      "get": {
-        "tags": [
-          "Doctors"
-        ],
-        "operationId": "Doctors_ListByResourceGroup",
-        "description": "List Doctor resources by resource group",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/DoctorListResult"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.FixMe/Doctors/{DoctorName}": {
-      "get": {
-        "tags": [
-          "Doctors"
-        ],
-        "operationId": "Doctors_Get",
-        "description": "Get a Doctor",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/Doctor.DoctorName"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/Doctor"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-examples": {
-          "GetDoctor": {
-            "$ref": "./examples/Doctors_Get.json"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Doctors"
-        ],
-        "operationId": "Doctors_CreateOrUpdate",
-        "description": "Create a Doctor",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/Doctor.DoctorName"
-          },
-          {
-            "name": "resource",
-            "in": "body",
-            "required": true,
-            "description": "Resource create parameters.",
-            "schema": {
-              "$ref": "#/definitions/Doctor"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/Doctor"
-            }
-          },
-          "201": {
-            "description": "ARM create operation completed successfully.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/Doctor"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "CreateDoctor": {
-            "$ref": "./examples/Doctors_CreateOrUpdate.json"
-          }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
-      },
-      "patch": {
-        "tags": [
-          "Doctors"
-        ],
-        "operationId": "Doctors_Update",
-        "description": "Update a Doctor",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/Doctor.DoctorName"
-          },
-          {
-            "name": "properties",
-            "in": "body",
-            "required": true,
-            "description": "The resource properties to be updated.",
-            "schema": {
-              "$ref": "#/definitions/DoctorUpdate"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/Doctor"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Doctors"
-        ],
-        "operationId": "Doctors_Delete",
-        "description": "Delete a Doctor",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/Doctor.DoctorName"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Resource deleted successfully."
-          },
-          "202": {
-            "description": "Resource deletion accepted.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          "204": {
-            "description": "Resource deleted successfully."
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
+          "Deployments_Delete_6": {
+            "$ref": "./examples/Deployments_Delete.json"
           }
         },
         "x-ms-long-running-operation-options": {
@@ -601,17 +380,11 @@
         "properties": {
           "$ref": "#/definitions/DeploymentProperties",
           "description": "The resource-specific properties for this resource.",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ],
-          "x-ms-client-flatten": true
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": ["read", "create"]
         }
       },
       "description": "FixMe Deployment resource",
-      "required": [
-        "properties"
-      ],
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
@@ -631,13 +404,13 @@
         },
         "nextLink": {
           "type": "string",
-          "description": "The link to the next page of items"
+          "format": "uri",
+          "description": "The link to the next page of items",
+          "x-cadl-name": "Rest.ResourceLocation"
         }
       },
       "description": "The response of a Deployment list operation.",
-      "required": [
-        "value"
-      ]
+      "required": ["value"]
     },
     "DeploymentProperties": {
       "type": "object",
@@ -649,71 +422,88 @@
         },
         "prefix": {
           "type": "string",
-          "description": "Deployment Prefix."
+          "description": "Deployment Prefix.",
+          "x-ms-mutability": ["update", "create"]
         },
         "publisherName": {
           "type": "string",
-          "description": "Name of publisher."
+          "description": "Name of publisher.",
+          "x-ms-mutability": ["update", "create"]
         },
         "publisherEmail": {
           "type": "string",
-          "description": "Publisher Email."
+          "description": "Publisher Email.",
+          "x-ms-mutability": ["update", "create"]
         },
         "administratorLoginPassword": {
           "type": "string",
-          "description": "The administrator password of the SQL logical server."
+          "description": "The administrator password of the SQL logical server.",
+          "x-ms-mutability": ["update", "create"]
         },
         "synapseAdminLogin": {
           "type": "string",
-          "description": "Synapse Administrator Login."
+          "description": "Synapse Administrator Login.",
+          "x-ms-mutability": ["update", "create"]
         },
         "synapseAdminTenant": {
           "type": "string",
-          "description": "Synapse Administrator Tenant."
+          "description": "Synapse Administrator Tenant.",
+          "x-ms-mutability": ["update", "create"]
         },
         "synapseAdminSID": {
           "type": "string",
-          "description": "Synapse Admininstrator SID."
+          "description": "Synapse Admininstrator SID.",
+          "x-ms-mutability": ["update", "create"]
         },
         "adminUserName": {
           "type": "string",
-          "description": "Power Plaform Admininstrator User Name."
+          "description": "Power Plaform Admininstrator User Name.",
+          "x-ms-mutability": ["update", "create"]
         },
         "adminPassword": {
           "type": "string",
-          "description": "Power Plaform Admininstrator Password."
+          "description": "Power Plaform Admininstrator Password.",
+          "x-ms-mutability": ["update", "create"]
         },
         "accessPolicyUserId": {
           "type": "string",
-          "description": "Power Plaform Access Policy User Id."
+          "description": "Power Plaform Access Policy User Id.",
+          "x-ms-mutability": ["update", "create"]
         },
         "targetTenantId": {
           "type": "string",
-          "description": "Power Plaform Access Target Tenant Id."
+          "description": "Power Plaform Access Target Tenant Id.",
+          "x-ms-mutability": ["update", "create"]
         },
         "helpDeskUserName": {
           "type": "string",
-          "description": "Power Plaform Helpdesk User Name."
+          "description": "Power Plaform Helpdesk User Name.",
+          "x-ms-mutability": ["update", "create"]
         },
         "helpDeskUserPswd": {
           "type": "string",
-          "description": "Power Plaform Helpdesk User Password."
+          "description": "Power Plaform Helpdesk User Password.",
+          "x-ms-mutability": ["update", "create"]
         },
         "targetEnvironment": {
           "type": "string",
-          "description": "Power Plaform Target Environment."
+          "description": "Power Plaform Target Environment.",
+          "x-ms-mutability": ["update", "create"]
         },
         "sqlConnectionId": {
           "type": "string",
-          "description": "Power Plaform SQL Connection Id."
+          "description": "Power Plaform SQL Connection Id.",
+          "x-ms-mutability": ["update", "create"]
         },
         "oneDriveConnectionId": {
           "type": "string",
-          "description": "Power Plaform One Drive Connection Id."
+          "description": "Power Plaform One Drive Connection Id.",
+          "x-ms-mutability": ["update", "create"]
         },
         "teamsConnectionId": {
           "type": "string",
-          "description": "Power Plaform Teams Connection Id."
+          "description": "Power Plaform Teams Connection Id.",
+          "x-ms-mutability": ["update", "create"]
         }
       },
       "description": "Details of the Deployment resource.",
@@ -745,94 +535,106 @@
           "additionalProperties": {
             "type": "string"
           },
+          "x-cadl-name": "Record<string>",
           "description": "Resource tags."
         },
         "properties": {
-          "$ref": "#/definitions/DeploymentUpdateProperties"
+          "$ref": "#/definitions/DeploymentUpdateProperties",
+          "x-ms-client-flatten": true
         }
       },
       "description": "The type used for update operations of the Deployment."
     },
     "DeploymentUpdateProperties": {
       "type": "object",
-      "properties": {},
-      "description": "The updatable properties of the Deployment."
-    },
-    "Doctor": {
-      "type": "object",
       "properties": {
-        "properties": {
-          "$ref": "#/definitions/DoctorProperties",
-          "description": "The resource-specific properties for this resource.",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ],
-          "x-ms-client-flatten": true
-        }
-      },
-      "description": "FixMe Doctor resource",
-      "required": [
-        "properties"
-      ],
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
-        }
-      ]
-    },
-    "DoctorListResult": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Doctor"
-          },
-          "x-cadl-name": "Doctor[]",
-          "description": "The Doctor items on this page"
-        },
-        "nextLink": {
+        "prefix": {
           "type": "string",
-          "description": "The link to the next page of items"
-        }
-      },
-      "description": "The response of a Doctor list operation.",
-      "required": [
-        "value"
-      ]
-    },
-    "DoctorProperties": {
-      "type": "object",
-      "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "The status of the last operation.",
-          "readOnly": true
-        }
-      },
-      "description": "Details of the FixMe Doctor."
-    },
-    "DoctorUpdate": {
-      "type": "object",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags."
+          "description": "Deployment Prefix.",
+          "x-ms-mutability": ["update", "create"]
         },
-        "properties": {
-          "$ref": "#/definitions/DoctorUpdateProperties"
+        "publisherName": {
+          "type": "string",
+          "description": "Name of publisher.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "publisherEmail": {
+          "type": "string",
+          "description": "Publisher Email.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "administratorLoginPassword": {
+          "type": "string",
+          "description": "The administrator password of the SQL logical server.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "synapseAdminLogin": {
+          "type": "string",
+          "description": "Synapse Administrator Login.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "synapseAdminTenant": {
+          "type": "string",
+          "description": "Synapse Administrator Tenant.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "synapseAdminSID": {
+          "type": "string",
+          "description": "Synapse Admininstrator SID.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "adminUserName": {
+          "type": "string",
+          "description": "Power Plaform Admininstrator User Name.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "adminPassword": {
+          "type": "string",
+          "description": "Power Plaform Admininstrator Password.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "accessPolicyUserId": {
+          "type": "string",
+          "description": "Power Plaform Access Policy User Id.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "targetTenantId": {
+          "type": "string",
+          "description": "Power Plaform Access Target Tenant Id.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "helpDeskUserName": {
+          "type": "string",
+          "description": "Power Plaform Helpdesk User Name.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "helpDeskUserPswd": {
+          "type": "string",
+          "description": "Power Plaform Helpdesk User Password.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "targetEnvironment": {
+          "type": "string",
+          "description": "Power Plaform Target Environment.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "sqlConnectionId": {
+          "type": "string",
+          "description": "Power Plaform SQL Connection Id.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "oneDriveConnectionId": {
+          "type": "string",
+          "description": "Power Plaform One Drive Connection Id.",
+          "x-ms-mutability": ["update", "create"]
+        },
+        "teamsConnectionId": {
+          "type": "string",
+          "description": "Power Plaform Teams Connection Id.",
+          "x-ms-mutability": ["update", "create"]
         }
       },
-      "description": "The type used for update operations of the Doctor."
-    },
-    "DoctorUpdateProperties": {
-      "type": "object",
-      "properties": {},
-      "description": "The updatable properties of the Doctor."
+      "description": "The updatable properties of the Deployment."
     },
     "ProvisioningState": {
       "type": "string",
@@ -852,24 +654,5 @@
       }
     }
   },
-  "parameters": {
-    "Deployment.DeploymentName": {
-      "name": "DeploymentName",
-      "in": "path",
-      "required": true,
-      "description": "Name of Deployment.",
-      "pattern": "^[a-zA-Z0-9-]{3,24}$",
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "Doctor.DoctorName": {
-      "name": "DoctorName",
-      "in": "path",
-      "required": true,
-      "description": "Name.",
-      "pattern": "^[a-zA-Z0-9-]{3,24}$",
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    }
-  }
+  "parameters": {}
 }

@@ -1,57 +1,46 @@
 import "@cadl-lang/rest";
+import "@cadl-lang/versioning";
 import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
 
-@armNamespace
-@serviceTitle("Microsoft.FixMe")
-@serviceVersion("2021-08-01-preview")
+@armProviderNamespace("Microsoft.FixMe")
+@service({
+  title: "Microsoft.FixMe",
+  version: "2021-08-01-preview",
+})
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.FixMe;
 
 using Cadl.Http;
 using Cadl.Rest;
+using Cadl.Versioning;
 using Azure.ResourceManager;
 
-@doc("FixMe Doctor resource")
-model Doctor is TrackedResource<DoctorProperties> {
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("DoctorName")
-  @segment("Doctors")
-  @doc("Name.")
-  @path
-  @visibility("read")
-  name: string;
-}
+interface Operations extends Azure.ResourceManager.Operations {}
+
+#suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
+#suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 
 @doc("FixMe Deployment resource")
 model Deployment is TrackedResource<DeploymentProperties> {
+  @doc("Name of Deployment.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("DeploymentName")
   @segment("Deployments")
   @path
-  @doc("Name of Deployment.")
   @visibility("read")
   name: string;
 }
 
 @doc("The status of the current operation.")
-@knownValues(ProvisioningStateKV)
-model ProvisioningState is string {}
-enum ProvisioningStateKV {
-  Succeeded,
-  Failed,
-  Canceled,
+@Azure.Core.lroStatus
+enum ProvisioningState {
+  ...ResourceProvisioningState,
   Provisioning,
   Updating,
   Deleting,
   Accepted,
-}
-
-@doc("Details of the FixMe Doctor.")
-model DoctorProperties {
-  @visibility("read")
-  @doc("The status of the last operation.")
-  provisioningState?: ProvisioningState;
 }
 
 @doc("Details of the Deployment resource.")
@@ -61,75 +50,74 @@ model DeploymentProperties {
   provisioningState?: ProvisioningState;
 
   @doc("Deployment Prefix.")
-  @visibility("write")
+  @visibility("create", "update")
   prefix:string;
 
   @doc("Name of publisher.")
-  @visibility("write")
+  @visibility("create", "update")
   publisherName:string;
 
   @doc("Publisher Email.")
-  @visibility("write")
+  @visibility("create", "update")
   publisherEmail:string;
 
   @doc("The administrator password of the SQL logical server.")
-  @visibility("write")
+  @visibility("create", "update")
   administratorLoginPassword:string;
 
   @doc("Synapse Administrator Login.")
-  @visibility("write")
+  @visibility("create", "update")
   synapseAdminLogin:string;
 
   @doc("Synapse Administrator Tenant.")
-  @visibility("write")
+  @visibility("create", "update")
   synapseAdminTenant:string;
 
   @doc("Synapse Admininstrator SID.")
-  @visibility("write")
-  synapseAdminSID:string;
+  @visibility("create", "update")
+  synapseAdminSid:string;
 
   @doc("Power Plaform Admininstrator User Name.")
-  @visibility("write")
+  @visibility("create", "update")
   adminUserName:string;
 
   @doc("Power Plaform Admininstrator Password.")
-  @visibility("write")
+  @visibility("create", "update")
   adminPassword:string;
   
   @doc("Power Plaform Access Policy User Id.")
-  @visibility("write")
+  @visibility("create", "update")
   accessPolicyUserId:string;
   
   @doc("Power Plaform Access Target Tenant Id.")
-  @visibility("write")
+  @visibility("create", "update")
   targetTenantId:string;
   
   @doc("Power Plaform Helpdesk User Name.")
-  @visibility("write")
+  @visibility("create", "update")
   helpDeskUserName:string;
   
   @doc("Power Plaform Helpdesk User Password.")
-  @visibility("write")
+  @visibility("create", "update")
   helpDeskUserPswd:string;
   
   @doc("Power Plaform Target Environment.")
-  @visibility("write")
+  @visibility("create", "update")
   targetEnvironment:string;
 
   @doc("Power Plaform SQL Connection Id.")
-  @visibility("write")
+  @visibility("create", "update")
   sqlConnectionId:string;
   
   @doc("Power Plaform One Drive Connection Id.")
-  @visibility("write")
+  @visibility("create", "update")
   oneDriveConnectionId:string;
   
   @doc("Power Plaform Teams Connection Id.")
-  @visibility("write")
+  @visibility("create", "update")
   teamsConnectionId:string;
 
 }
 
 @armResourceOperations
-interface Doctors extends ResourceOperations<Doctor, DoctorProperties> {}
 interface Deployments extends ResourceOperations<Deployment, DeploymentProperties> {}
