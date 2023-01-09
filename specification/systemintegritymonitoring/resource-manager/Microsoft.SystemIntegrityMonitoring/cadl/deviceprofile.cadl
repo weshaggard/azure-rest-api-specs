@@ -5,19 +5,16 @@ import "@azure-tools/cadl-azure-resource-manager";
 import "./provisioningstate.cadl";
 import "./resourceconnection.cadl";
 
-@doc("The current state of the measurement profile.")
-@knownValues(MeasurementProfileStateValues)
-model MeasurementProfileState is string {}
 enum MeasurementProfileStateValues {
   Staged,
-  Approved
+  Approved,
 }
 
 @doc("SIM Device Profile properties.")
 model DeviceProfileProperties {
   @doc("The status of the last operation.")
   @visibility("read")
-  provisioningState?: ProvisioningState;
+  provisioningState?: ProvisioningStateValues;
 
   @doc("List of every measurement version that was created for the given IoT device profile.")
   @visibility("read")
@@ -28,7 +25,7 @@ model DeviceProfileProperties {
 model MeasurementProfileProperties {
   @doc("The version of this measurement.")
   @visibility("read")
-  version: string;
+  version?: string;
 
   @doc("The values that this measurement profile holds. Used for field devices to attest against.")
   values: Record<string>;
@@ -40,8 +37,8 @@ model MeasurementProfileProperties {
 @doc("Scope where a measurement profile applies to.")
 model MeasurementProfileResourceConnection {
   @doc("Resource of the scope. Expected to match any linked resources under SIM Hub.")
-  resource: ResourceConnectionProperties;
+  resourceId: string;
 
   @doc("The current state of the measurement in the specific scope.")
-  state: MeasurementProfileState;
+  state: MeasurementProfileStateValues;
 }
