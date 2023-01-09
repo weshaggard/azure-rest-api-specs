@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2022-12-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2022-12-01-preview'
 input-file:
-  - Microsoft.VoiceServices/preview/2022-12-01-preview/voiceservices.json
+  - Microsoft.VoiceServices/preview/2022-12-01-preview/openapi.json
 ```
 
 ### Tag: package-2023-01-31
@@ -73,6 +73,7 @@ swagger-to-sdk:
   - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
   - repo: azure-sdk-for-net
+  - repo: azure-sdk-for-net-track2
   - repo: azure-resource-manager-schemas
   - repo: azure-cli-extensions
   - repo: azure-powershell
