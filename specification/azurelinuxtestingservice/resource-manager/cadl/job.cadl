@@ -1,0 +1,169 @@
+namespace Microsoft.AzureLinuxTestingService;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.ResourceManager;
+using Azure.ResourceManager.Foundations;
+using Autorest;
+using Azure.Core;
+using Azure.Core.Foundations;
+using OpenAPI;
+
+@doc("A job is an instance of LISA running the specified test parameters")
+model Job is TrackedResource<JobResourceProperties> {
+    @doc("Job name")
+    @pattern("^[a-zA-Z0-9-]{3,24}$")
+    @key("jobName")
+    @segment("jobs")
+    @visibility("read")
+    @path()
+    name: string; 
+}
+
+@doc("The job properties")
+model JobResourceProperties is ResourceProperties {
+    @doc("Job Template to execute")
+    jobTemplateInstance: JobTemplateResourceProperties;
+
+    @doc("Prefix of related resource groups")
+    resourceGroupNamePrefix: string;
+
+    @doc("An array of strings that define different package repos to use in tests.")
+    repos: string[];
+
+    @doc("Default false")
+    keepFailedEnvironment?: boolean = false;
+
+    @doc("Test results once job is completed.")
+    results: TestResult[];
+
+    @doc("Test status: Pending, Scheduling, Running, Completed, Failed.")
+    status: string;
+
+    @doc("Test duration")
+    duration: plainTime;
+
+    @doc("URL to see test logs")
+    logUrl: string;
+}
+
+@doc("Image information")
+model Image {
+    @doc("Must be vhd, marketplace_image, or shared_image_gallery")
+    type: string;
+
+    @doc("Time test started")
+    startedOn: plainDate;
+
+    @doc("Time test ended")
+    finishedOn: plainDate;
+}
+
+@doc("Virtual Hard Disk")
+model Vhd extends Image {
+    @doc("SAS URL of VHD")
+    url: string;
+
+    @doc("VHD Generation. Default 1. Choice is 1 or 2")
+    vhdGeneration: string;
+
+    @doc("Default x64. One of x64 or arm64")
+    architecture: string;
+}
+
+@doc("Marketplace Image")
+model MarketplaceImage extends Image {
+    @doc("Publisher")
+    publisher: string;
+
+    @doc("Offer")
+    offer: string;
+
+    @doc("SKU")
+    sku: string;
+
+    @doc("Version")
+    version: string;
+}
+
+@doc("Shared Image Gallery")
+model SharedImageGallery extends Image {
+    @doc("Subscription")
+    subscription: string;
+
+    @doc("Resource group name")
+    resourceGroupName: string;
+
+    @doc("Image gallery")
+    imageGallery: string;
+
+    @doc("Image definition")
+    imageDefinition: string;
+
+    @doc("Image version")
+    imageVersion: string; 
+}
+
+@doc("Test results for a particular test case")
+model TestResult {
+    @doc("The job name")
+    jobName: string;
+
+    @doc("The test case")
+    caseName: string;
+
+    @doc("The test status")
+    status: string;
+
+    @doc("Message")
+    message: string;
+
+    @doc("Log URL")
+    logUrl: string;
+
+    @doc("Image name source string")
+    image: string;
+
+    @doc("VM Size used")
+    vmSize: string;
+
+    @doc("Region test ran")
+    location: string;
+
+    @doc("Kernel version used")
+    kernelVersion: string;
+
+    @doc("Distro version used")
+    distroVersion: string;
+
+    @doc("VHD Generation")
+    vhdGeneration: string;
+
+    @doc("Wala Version")
+    walaVersion: string;
+
+    @doc("Extra fields")
+    extraFields: string;
+
+    @doc("Test duration")
+    duration: plainTime;
+
+    @doc("Start time")
+    startTime: plainTime;
+
+    @doc("End time")
+    endTime: plainTime;
+}
+
+@doc("Job Operations")
+@armResourceOperations(Job)
+interface Jobs {
+    listByResourceGroup is ArmResourceListByParent<Job>;
+    listbySubscription is ArmListBySubscription<Job>;
+    get is ArmResourceRead<Job>;
+    create is ArmResourceCreateOrUpdateAsync<Job>;
+
+    @asyncOperationOptions("location")
+    delete is ArmResourceDeleteAsync<Job>;
+}
