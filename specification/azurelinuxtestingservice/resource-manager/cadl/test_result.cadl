@@ -1,0 +1,31 @@
+namespace Microsoft.AzureLinuxTestingService;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.ResourceManager;
+using Azure.ResourceManager.Foundations;
+using Autorest;
+using Azure.Core;
+using Azure.Core.Foundations;
+using OpenAPI;
+
+@doc("The test results for a job")
+@parentResource(Job)
+model TestResult is ProxyResource<TestResultProperties> {
+    @doc("Test results from a job")
+    @key("testResult")
+    @segment("results")
+    @visibility("read")
+    @path()
+    name: string;
+}
+
+@doc("Job Operations")
+@armResourceOperations(TestResult)
+interface TestResults {
+    get is ArmResourceRead<TestResult>;
+    listByResourceGroup is ArmResourceListByParent<TestResult>;
+    listbySubscription is ArmListBySubscription<TestResult>;
+
+}
