@@ -778,7 +778,7 @@
           "type": "string"
         },
         "resourceType": {
-          "description": "Resource type.",
+          "description": "Resource type. e.g. \"Microsoft.SignalRService/SignalR\"",
           "type": "string"
         },
         "resourceKind": {
@@ -1051,8 +1051,10 @@
     "CategoryStatus": {
       "description": "Indicates the category status.",
       "enum": [
-        "Healthy",
-        "Unhealthy"
+        "Passed",
+        "Failed",
+        "NotApplicable",
+        "PendingApproval"
       ],
       "readOnly": true,
       "type": "string",
@@ -1064,8 +1066,10 @@
     "ControlFamilyStatus": {
       "description": "Indicates the control family status.",
       "enum": [
-        "Healthy",
-        "Unhealthy"
+        "Passed",
+        "Failed",
+        "NotApplicable",
+        "PendingApproval"
       ],
       "readOnly": true,
       "type": "string",
@@ -1079,7 +1083,8 @@
       "enum": [
         "Passed",
         "Failed",
-        "NotApplicable"
+        "NotApplicable",
+        "PendingApproval"
       ],
       "readOnly": true,
       "type": "string",
@@ -1088,8 +1093,21 @@
         "modelAsString": true
       }
     },
-    "AssessmentSeverity": {
-      "description": "Indicates the assessment severity.",
+    "ResponsibilityType": {
+      "description": "Indicates the customer responsibility type.",
+      "enum": [
+        "Automated",
+        "Manual"
+      ],
+      "readOnly": true,
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ResponsibilityType",
+        "modelAsString": true
+      }
+    },
+    "ResponsibilitySeverity": {
+      "description": "Indicates the customer responsibility severity.",
       "enum": [
         "High",
         "Medium",
@@ -1098,49 +1116,51 @@
       "readOnly": true,
       "type": "string",
       "x-ms-enum": {
-        "name": "AssessmentSeverity",
+        "name": "ResponsibilitySeverity",
         "modelAsString": true
       }
     },
-    "ControlType": {
-      "description": "Indicates the control type.",
+    "ResponsibilityStatus": {
+      "description": "Indicates the customer responsibility status.",
       "enum": [
-        "FullyAutomated",
-        "PartiallyAutomated",
-        "Manual"
+        "Passed",
+        "Failed",
+        "NotApplicable",
+        "PendingApproval"
       ],
       "readOnly": true,
       "type": "string",
       "x-ms-enum": {
-        "name": "ControlType",
+        "name": "ResponsibilityStatus",
         "modelAsString": true
       }
     },
-    "ControlFamilyType": {
-      "description": "Indicates the control family type.",
+    "ResponsibilityEnvironment": {
+      "description": "Indicates the customer responsibility supported cloud environment.",
       "enum": [
-        "FullyAutomated",
-        "PartiallyAutomated",
-        "Manual"
+        "Azure",
+        "AWS",
+        "GCP",
+        "General"
       ],
       "readOnly": true,
       "type": "string",
       "x-ms-enum": {
-        "name": "ControlFamilyType",
+        "name": "ResponsibilityEnvironment",
         "modelAsString": true
       }
     },
-    "CategoryType": {
-      "description": "Indicates the compliance category type.",
+    "ResourceOrigin": {
+      "description": "Indicates the resource origin.",
       "enum": [
-        "FullyAutomated",
-        "PartiallyAutomated",
-        "Manual"
+        "Azure",
+        "AWS",
+        "GCP"
       ],
       "readOnly": true,
       "type": "string",
       "x-ms-enum": {
-        "name": "CategoryType",
+        "name": "ResourceOrigin",
         "modelAsString": true
       }
     },
@@ -1148,8 +1168,7 @@
       "description": "Indicates the resource status.",
       "enum": [
         "Healthy",
-        "Unhealthy",
-        "NotApplicable"
+        "Unhealthy"
       ],
       "readOnly": true,
       "type": "string",
@@ -1158,85 +1177,157 @@
         "modelAsString": true
       }
     },
-    "Assessment": {
+    "Recommendation": {
       "type": "object",
-      "description": "A class represent the assessment.",
+      "description": "A class represent the recommendation.",
       "properties": {
-        "name": {
-          "description": "The name of the assessment.",
+        "recommendationId": {
+          "description": "The Id of the recommendation.",
           "type": "string",
           "readOnly": true
         },
-        "severity": {
-          "$ref": "#/definitions/AssessmentSeverity",
-          "readOnly": true,
-          "description": "The severity level of this assessment."
-        },
-        "description": {
-          "description": "The description of the assessment.",
+        "recommendationShortName": {
+          "description": "The short name of the recommendation. e.g. \"Invalid TLS config\"",
           "type": "string",
           "readOnly": true
         },
-        "remediation": {
-          "description": "The remediation of the assessment.",
+        "recommendationDescription": {
+          "description": "The detail description of the recommendation.",
           "type": "string",
           "readOnly": true
-        },
-        "isPass": {
-          "type": "string",
-          "enum": [
-            "True",
-            "False"
-          ],
-          "readOnly": true,
-          "description": "Indicates whether all the resource(s) are compliant.",
-          "x-ms-enum": {
-            "name": "IsPass",
-            "modelAsString": true
-          }
-        },
-        "policyId": {
-          "description": "The policy id mapping to this assessment.",
-          "type": "string",
-          "readOnly": true
-        },
-        "resourceList": {
-          "readOnly": true,
-          "type": "array",
-          "description": "List of resource assessments.",
-          "items": {
-            "description": "Single resource metadata.",
-            "$ref": "#/definitions/AssessmentResource"
-          },
-          "x-ms-identifiers": [
-            "resourceId"
-          ]
         }
       }
     },
-    "AssessmentResource": {
+    "ResponsibilityResource": {
       "type": "object",
-      "description": "A class represent the assessment resource.",
+      "description": "A class represent the resource.",
       "properties": {
         "resourceId": {
           "description": "The Id of the resource.",
           "type": "string",
           "readOnly": true
         },
+        "resourceType": {
+          "description": "The type of the resource. e.g. \"Microsoft.SignalRService/SignalR\"",
+          "type": "string",
+          "readOnly": true
+        },
+        "resourceOrigin": {
+          "description": "Resource origin.",
+          "readOnly": true,
+          "$ref": "#/definitions/ResourceOrigin"
+        },
         "resourceStatus": {
           "description": "Resource status.",
           "readOnly": true,
           "$ref": "#/definitions/ResourceStatus"
         },
-        "reason": {
-          "description": "The reason for the N/A resource.",
+        "resourceStatusChangeDate": {
+          "description": "The status change date for the resource.",
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "recommendationIds": {
+          "description": "List of recommendation id.",
+          "type": "array",
+          "items": {
+            "description": "Recommendation id",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Responsibility": {
+      "type": "object",
+      "description": "A class represent the customer responsibility.",
+      "properties": {
+        "responsibilityId": {
+          "description": "The id of the customer responsibility.",
           "type": "string",
           "readOnly": true
         },
-        "statusChangeDate": {
-          "description": "The status change date for the resource. For unavailable date, set it as N/A.",
+        "responsibilityTitle": {
+          "description": "The title of the customer responsibility.",
           "type": "string",
           "readOnly": true
+        },
+        "responsibilityDescription": {
+          "description": "The description of the customer responsibility.",
+          "type": "string",
+          "readOnly": true
+        },
+        "responsibilityType": {
+          "$ref": "#/definitions/ResponsibilityType",
+          "readOnly": true,
+          "description": "The type of customer responsibility."
+        },
+        "responsibilitySeverity": {
+          "$ref": "#/definitions/ResponsibilitySeverity",
+          "readOnly": true,
+          "description": "The severity level of this customer responsibility."
+        },
+        "responsibilityStatus": {
+          "$ref": "#/definitions/ResponsibilityStatus",
+          "readOnly": true,
+          "description": "The status of this customer responsibility."
+        },
+        "responsibilityEnvironment": {
+          "$ref": "#/definitions/ResponsibilityEnvironment",
+          "readOnly": true,
+          "description": "The supported cloud environment of this customer responsibility."
+        },
+        "failedResourceCount": {
+          "format": "int32",
+          "type": "integer",
+          "description": "The count of all failed resources."
+        },
+        "totalResourceCount": {
+          "format": "int32",
+          "type": "integer",
+          "description": "The count of all resources."
+        },
+        "resourceList": {
+          "readOnly": true,
+          "type": "array",
+          "description": "List of resource.",
+          "items": {
+            "description": "Single resource metadata.",
+            "$ref": "#/definitions/ResponsibilityResource"
+          },
+          "x-ms-identifiers": [
+            "resourceId"
+          ]
+        },
+        "recommendationList": {
+          "readOnly": true,
+          "type": "array",
+          "description": "List of recommendation.",
+          "items": {
+            "description": "Single recommendation.",
+            "$ref": "#/definitions/Recommendation"
+          },
+          "x-ms-identifiers": [
+            "recommendationId"
+          ]
+        },
+        "guidance": {
+          "description": "The evidence upload guidance description.",
+          "type": "string",
+          "readOnly": true
+        },
+        "justification": {
+          "description": "The justification given by the user to clarify the reason.",
+          "type": "string",
+          "readOnly": true
+        },
+        "evidenceFiles": {
+          "description": "List of evidence file url.",
+          "type": "array",
+          "items": {
+            "description": "File url",
+            "type": "string"
+          }
         }
       }
     },
@@ -1249,19 +1340,14 @@
           "type": "string",
           "readOnly": true
         },
-        "controlShortName": {
-          "description": "The short name of the control. e.g. \"Unsupported OS and Software.\"",
+        "controlName": {
+          "description": "The name of the control. e.g. \"Unsupported OS and Software.\"",
           "type": "string",
           "readOnly": true
         },
         "controlFullName": {
           "description": "The full name of the control. e.g. \"Validate that unsupported operating systems and software components are not in use.\"",
           "type": "string",
-          "readOnly": true
-        },
-        "controlType": {
-          "description": "The control type ",
-          "$ref": "#/definitions/ControlType",
           "readOnly": true
         },
         "controlDescription": {
@@ -1279,16 +1365,16 @@
           "$ref": "#/definitions/ControlStatus",
           "readOnly": true
         },
-        "assessments": {
+        "responsibilities": {
           "readOnly": true,
           "type": "array",
-          "description": "List of assessments.",
+          "description": "List of customer responsibility.",
           "items": {
-            "description": "Single assessment content.",
-            "$ref": "#/definitions/Assessment"
+            "description": "Single customer responsibility content.",
+            "$ref": "#/definitions/Responsibility"
           },
           "x-ms-identifiers": [
-            "name"
+            "responsibilityId"
           ]
         }
       }
@@ -1297,20 +1383,15 @@
       "type": "object",
       "description": "A class represent the control family.",
       "properties": {
-        "familyName": {
+        "controlFamilyName": {
           "description": "The name of the control family. e.g. \"Malware Protection - Anti-Virus\"",
           "type": "string",
           "readOnly": true
         },
-        "familyType": {
-          "description": "The control family type ",
-          "$ref": "#/definitions/ControlFamilyType",
+        "controlFamilyStatus": {
+          "description": "The control family status ",
+          "$ref": "#/definitions/ControlFamilyStatus",
           "readOnly": true
-        },
-        "familyStatus": {
-          "readOnly": true,
-          "description": "Control family status.",
-          "$ref": "#/definitions/ControlFamilyStatus"
         },
         "controls": {
           "readOnly": true,
@@ -1335,11 +1416,6 @@
           "type": "string",
           "readOnly": true
         },
-        "categoryType": {
-          "description": "The category type ",
-          "$ref": "#/definitions/CategoryType",
-          "readOnly": true
-        },
         "categoryStatus": {
           "readOnly": true,
           "description": "Category status.",
@@ -1354,7 +1430,7 @@
             "$ref": "#/definitions/ControlFamily"
           },
           "x-ms-identifiers": [
-            "familyName"
+            "controlFamilyName"
           ]
         }
       }
@@ -1564,7 +1640,7 @@
           "readOnly": true
         },
         "resourceType": {
-          "description": "The resource type of this resource.",
+          "description": "The resource type of this resource. e.g. \"Microsoft.SignalRService/SignalR\"",
           "type": "string",
           "readOnly": true
         },
@@ -1633,6 +1709,11 @@
           "description": "The category name.",
           "readOnly": true
         },
+        "controlFamilyName": {
+          "type": "string",
+          "description": "The control family name.",
+          "readOnly": true
+        },
         "controlId": {
           "type": "string",
           "description": "The control Id - e.g. \"1\".",
@@ -1643,63 +1724,45 @@
           "description": "The control name.",
           "readOnly": true
         },
-        "controlType": {
-          "type": "string",
-          "description": "The control type.",
-          "$ref": "#/definitions/ControlType",
+        "controlStatus": {
+          "description": "Control status.",
+          "$ref": "#/definitions/ControlStatus",
           "readOnly": true
         },
-        "complianceState": {
+        "responsibilityTitle": {
+          "description": "The title of the customer responsibility.",
           "type": "string",
-          "enum": [
-            "Healthy",
-            "Unhealthy"
-          ],
-          "x-ms-enum": {
-            "name": "ComplianceState",
-            "modelAsString": true
-          },
-          "description": "The compliance result's status.",
           "readOnly": true
         },
-        "policyId": {
+        "responsibilityDescription": {
+          "description": "The description of the customer responsibility.",
           "type": "string",
-          "description": "The compliance result mapped policy Id.",
-          "readOnly": true
-        },
-        "policyDisplayName": {
-          "type": "string",
-          "description": "The policy's display name.",
-          "readOnly": true
-        },
-        "policyDescription": {
-          "type": "string",
-          "description": "The policy's detail description.",
-          "readOnly": true
-        },
-        "subscriptionId": {
-          "type": "string",
-          "description": "The compliance result mapped subscription Id.",
-          "readOnly": true
-        },
-        "resourceGroup": {
-          "type": "string",
-          "description": "The compliance result mapped resource group.",
-          "readOnly": true
-        },
-        "resourceType": {
-          "type": "string",
-          "description": "The compliance result mapped resource type.",
           "readOnly": true
         },
         "resourceId": {
+          "description": "The Id of the resource.",
           "type": "string",
-          "description": "The compliance result mapped resource Id - e.g. \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Compute/virtualMachines/vm1\".",
           "readOnly": true
         },
-        "statusChangeDate": {
-          "description": "The compliance result last changed date - e.g. \"2022-10-24T02:55:16.3274379Z\". For unavailable date, set it as \"N/A\".",
+        "resourceType": {
+          "description": "The type of the resource.  e.g. \"Microsoft.SignalRService/SignalR\"",
           "type": "string",
+          "readOnly": true
+        },
+        "resourceOrigin": {
+          "description": "Resource origin.",
+          "readOnly": true,
+          "$ref": "#/definitions/ResourceOrigin"
+        },
+        "resourceStatus": {
+          "description": "Resource status.",
+          "readOnly": true,
+          "$ref": "#/definitions/ResourceStatus"
+        },
+        "resourceStatusChangeDate": {
+          "description": "The status change date for the resource.",
+          "type": "string",
+          "format": "date-time",
           "readOnly": true
         }
       }
