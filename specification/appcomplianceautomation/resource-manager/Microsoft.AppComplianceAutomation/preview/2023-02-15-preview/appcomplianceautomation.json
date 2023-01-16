@@ -122,6 +122,58 @@
         }
       }
     },
+    "/providers/Microsoft.AppComplianceAutomation/triggerEvaluation": {
+      "post": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Trigger evaluation for given resourceIds to get quick compliance result.",
+        "operationId": "TriggerEvaluation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "Parameters for trigger evaluation operation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TriggerEvaluationRequest"
+            }
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. The response indicates given resource ids' evaluation has been triggered.",
+            "schema": {
+              "$ref": "#/definitions/TriggerEvaluationResponse"
+            }
+          },
+          "202": {
+            "description": "Accepted. The response indicates the trigger evaluation operation is performed in the background."
+          },
+          "default": {
+            "description": "Error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "TriggerEvaluation": {
+            "$ref": "./examples/TriggerEvaluation.json"
+          }
+        }
+      }
+    },
     "/providers/Microsoft.AppComplianceAutomation/reports": {
       "get": {
         "tags": [
@@ -1506,6 +1558,99 @@
             "description": "Subscription id for onboard",
             "type": "string"
           }
+        }
+      }
+    },
+    "TriggerEvaluationRequest": {
+      "type": "object",
+      "description": "Trigger evaluation request.",
+      "required": [
+        "resourceIds"
+      ],
+      "properties": {
+        "resourceIds": {
+          "description": "List of resource ids to be evaluated",
+          "type": "array",
+          "items": {
+            "description": "Resource id for evaluation",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TriggerEvaluationResponse": {
+      "type": "object",
+      "description": "Trigger evaluation response.",
+      "properties": {
+        "triggerTime": {
+          "description": "The time when the evaluation is triggered.",
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "evaluationEndTime": {
+          "description": "The time when the evaluation is end.",
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "resourceIds": {
+          "description": "List of resource ids to be evaluated",
+          "type": "array",
+          "items": {
+            "description": "Resource id for evaluation",
+            "type": "string"
+          }
+        },
+        "quickAssessments": {
+          "description": "List of quick assessments",
+          "type": "array",
+          "items": {
+            "description": "Quick assessment.",
+            "$ref": "#/definitions/QuickAssessment"
+          }
+        }
+      }
+    },
+    "QuickAssessment": {
+      "type": "object",
+      "description": "A class represent the quick assessment.",
+      "properties": {
+        "resourceId": {
+          "description": "Resource id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "responsibilityId": {
+          "description": "user responsibility id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp of resource creation (UTC).",
+          "readOnly": true
+        },
+        "resourceStatus": {
+          "description": "Quick assessment status.",
+          "$ref": "#/definitions/ResourceStatus",
+          "readOnly": true
+        },
+        "displayName": {
+          "description": "Quick assessment display name.",
+          "type": "string",
+          "readOnly": true
+        },
+        "remediationSteps": {
+          "description": "remediation steps for this quick assessment.",
+          "type": "string",
+          "readOnly": true
+        },
+        "reason": {
+          "description": "Reason for the quick assessment resource status.",
+          "type": "string",
+          "readOnly": true
         }
       }
     },
