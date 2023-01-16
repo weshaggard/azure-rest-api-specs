@@ -22,6 +22,24 @@ namespace Microsoft.OSConfigPrototype;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
+@doc("Device identity.")
+model DeviceIdentity {
+  @secret
+  @visibility("create", "update")
+  @doc("Identifier of the device.")
+  deviceId?: string;
+  
+  @secret
+  @visibility("create", "update")
+  @doc("Identifier of the module.")
+  moduleId?: string;
+
+  @secret
+  @visibility("create", "update")
+  @doc("Connection string of the device.")
+  connectionString?: string;
+}
+
 @doc("Device resource.")
 model Device is TrackedResource<DeviceProperties> {
   @key("deviceName")
@@ -34,11 +52,9 @@ model Device is TrackedResource<DeviceProperties> {
 
 @doc("Device properties.")
 model DeviceProperties {
-  @secret
-  // @visibility("create", "update")
-  @visibility("create")
-  @doc("Connection string of the device.")
-  connectionString?: string;
+  @visibility("create", "update")
+  @doc("Identity of the device.")
+  identity?: DeviceIdentity;
 
   @visibility("create", "update", "read")
   @doc("Desired state of the device.")
