@@ -57,6 +57,15 @@ input-file:
   - Microsoft.AppComplianceAutomation/preview/2022-05-10-beta/appcomplianceautomation.json
 ```
 
+### Tag: package-2023-02-15-preview
+
+These settings apply only when `--tag=package-2023-02-15-preview` is specified on the command line.
+
+``` yaml $(tag) == 'package-2023-02-15-preview'
+input-file:
+  - Microsoft.AppComplianceAutomation/preview/2023-02-15-preview/appcomplianceautomation.json
+```
+
 ---
 
 # Code Generation
