@@ -977,7 +977,6 @@
       "type": "object",
       "description": "Webhook properties.",
       "required": [
-        "name",
         "status",
         "sendAllEvents",
         "events",
@@ -1016,18 +1015,25 @@
           "readOnly": true
         },
         "sendAllEvents": {
-          "type": "boolean",
+          "type": "string",
           "description": "whether to send notification under any event.",
-          "readOnly": false
+          "enum": [
+            "true",
+            "false"
+          ],
+          "readOnly": false,
+          "x-ms-enum": {
+            "name": "SendAllEvents",
+            "modelAsString": true
+          }
         },
         "events": {
           "type": "array",
           "description": "under which event notification should be sent.",
           "readOnly": false,
           "items": {
-            "type": "string",
-            "description": "notification event",
-            "readOnly": false
+            "description": "Single notification event.",
+            "$ref": "#/definitions/NotificationEvent"
           }
         },
         "payloadUrl": {
@@ -1046,9 +1052,17 @@
           "readOnly": false
         },
         "sslVerified": {
-          "type": "boolean",
+          "type": "string",
           "description": "whether to enable ssl verification",
-          "readOnly": false
+          "enum": [
+            "true",
+            "false"
+          ],
+          "readOnly": false,
+          "x-ms-enum": {
+            "name": "SslVerified",
+            "modelAsString": true
+          }
         },
         "deliveryStatus": {
           "type": "string",
@@ -1066,6 +1080,18 @@
           "$ref": "#/definitions/ProvisioningState"
         }
       }
+    },
+    "NotificationEvent":{
+      "type": "string",
+      "description": "notification event.",
+      "enum": [
+        "generate_snapshot_success",
+        "generate_snapshot_failed",
+        "assessment_failure",
+        "report_configuration_changes",
+        "report_deletion"
+      ],
+      "readOnly": false
     },
     "WebhookResource": {
       "type": "object",
