@@ -1,0 +1,156 @@
+using OpenAPI;
+
+namespace Firewall; 
+
+namespace Desired {
+  enum RuleState {
+    Present: "present",
+    Absent: "absent"
+  }
+  
+  enum RuleDirection {
+    In: "in",
+    Out: "out"
+  }
+  
+  enum RuleAction {
+    Accept: "accept",
+    Drop: "drop",
+    Reject: "reject"
+  }
+  
+  enum RuleProtocol {
+    Any: "any",
+    TCP: "tcp",
+    UDP: "udp",
+    ICMP: "icmp"
+  }
+
+  @doc("Rule.")
+  model Rule {
+    @visibility("create", "update", "read")
+    @doc("State of the rule.")
+    desiredState?: RuleState;
+    
+    @visibility("create", "update", "read")
+    @doc("Action of the rule.")
+    action?: RuleDirection;
+    
+    @visibility("create", "update", "read")
+    @doc("Direction of the rule.")
+    direction?: RuleAction;
+    
+    @visibility("create", "update", "read")
+    @doc("Protocol of the rule.")
+    protocol?: RuleProtocol;
+    
+    @visibility("create", "update", "read")
+    @doc("Source address of the rule.")
+    sourceAddress?: string;
+    
+    @visibility("create", "update", "read")
+    @doc("Source port of the rule.")
+    sourcePort?: integer;
+    
+    @visibility("create", "update", "read")
+    @doc("Destination address of the rule.")
+    destinationAddress?: string;
+    
+    @visibility("create", "update", "read")
+    @doc("Destination port of the rule.")
+    destinationPort?: integer;
+  }
+      
+  enum DefaultPolicyDirection {
+    In: "in",
+    Out: "out"
+  }
+
+  enum DefaultPolicyAction {
+    Accept: "accept",
+    Drop: "drop"
+  }
+
+  @doc("Default policy.")
+  model DefaultPolicy {
+    @visibility("create", "update", "read")
+    @doc("Direction of the default policy.")
+    direction?: DefaultPolicyDirection;
+    
+    @visibility("create", "update", "read")
+    @doc("Action of the default policy.")
+    action?: DefaultPolicyAction;
+  }
+
+  @doc("Desired properties.")
+  model Properties {
+    @extension("x-ms-identifiers", ["sourceAddress", "sourcePort", "destinationAddress", "destinationPort"])
+    @visibility("create", "update", "read")
+    @doc("Rules of the firewall.")
+    desiredRules?: Firewall.Desired.Rule[];
+  
+    @extension("x-ms-identifiers", ["direction", "action"])
+    @visibility("create", "update", "read")
+    @doc("Default policies of the firewall.")
+    desiredDefaultPolicies?: Firewall.Desired.DefaultPolicy[];
+  }
+}
+
+namespace Reported {
+  enum State {
+    Unknown: "unknown",
+    Enabled: "enabled",
+    Disabled: "disabled",
+  }
+  
+  enum ConfigurationStatus {
+    Unknown: "unknown",
+    Success: "success",
+    Failure: "failure",
+  }
+  
+  enum DefaultPolicyDirection {
+    In: "in",
+    Out: "out"
+  }
+  
+  enum DefaultPolicyAction {
+    Accept: "accept",
+    Drop: "drop"
+  }
+  
+  @doc("Default policy.")
+  model DefaultPolicy {
+    @visibility("read")
+    @doc("Direction of the default policy.")
+    direction?: DefaultPolicyDirection;
+    
+    @visibility("read")
+    @doc("Action of the default policy.")
+    action?: DefaultPolicyAction;
+  }
+
+  @doc("Reported properties.")
+  model Properties {
+    @visibility("read")
+    @doc("State of the firewall.")
+    state?: Reported.State;
+    
+    @visibility("read")
+    @doc("Fingerprint of the firewall.")
+    fingerprint?: string;
+    
+    @visibility("read")
+    @doc("Configuration status of the firewall.")
+    configurationStatus?: Reported.ConfigurationStatus;
+    
+    @visibility("read")
+    @doc("Configuration status details of the firewall.")
+    configurationStatusDetail?: string;
+    
+    @extension("x-ms-identifiers", ["direction", "action"])
+    @visibility("read")
+    @doc("Default policies of the firewall.")
+    defaultPolicies?: Reported.DefaultPolicy[];
+  }
+}

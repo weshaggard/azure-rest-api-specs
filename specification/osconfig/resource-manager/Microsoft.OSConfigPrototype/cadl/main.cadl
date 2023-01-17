@@ -4,15 +4,19 @@ import "@azure-tools/cadl-autorest";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
 import "@azure-tools/cadl-providerhub";
-import "./models/commandrunner.cadl";
-import "./models/deviceinfo.cadl";
-import "./models/hostname.cadl";
+import "./models/commandrunner-3.cadl";
+import "./models/deviceinfo-5.cadl";
+import "./models/firewall-4.cadl";
+import "./models/hostname-2.cadl";
 
 using Cadl.Http;
 using Cadl.Rest;
 using Cadl.Versioning;
+using OpenAPI;
+using Autorest;
 using Azure.Core;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Foundations;
 
 #suppress "@azure-tools/cadl-azure-core/casing-style" "Existing service name."
 @armProviderNamespace
@@ -55,6 +59,7 @@ model Device is TrackedResource<DeviceProperties> {
 
 @doc("Device properties.")
 model DeviceProperties {
+  @extension("x-ms-secret", true)
   @visibility("create", "update")
   @doc("Identity of the device.")
   identity?: DeviceIdentity;
@@ -76,26 +81,34 @@ model DeviceProperties {
 model DesiredProperties {
   @visibility("create", "update", "read")
   @doc("Desired properties for CommandRunner.")
-  commandRunner?: DesiredCommandRunnerProperties;
+  commandRunner?: CommandRunner.Desired.Properties;
+
+  @visibility("create", "update", "read")
+  @doc("Desired properties for Firewall.")
+  firewall?: Firewall.Desired.Properties;
   
   @visibility("create", "update", "read")
   @doc("Desired properties for HostName.")
-  hostName?: DesiredHostNameProperties;
+  hostName?: HostName.Desired.Properties;
 }
 
 @doc("Reported properties.")
 model ReportedProperties {
   @visibility("read")
   @doc("Reported properties for CommandRunner.")
-  commandRunner?: ReportedCommandRunnerProperties;
+  commandRunner?: CommandRunner.Reported.Properties;
 
   @visibility("read")
   @doc("Reported properties for DeviceInfo.")
-  deviceInfo?: ReportedDeviceInfoProperties;
+  deviceInfo?: DeviceInfo.Reported.Properties;
+
+  @visibility("read")
+  @doc("Reported properties for Firewall.")
+  firewall?: Firewall.Reported.Properties;
 
   @visibility("read")
   @doc("Reported properties for HostName.")
-  hostName?: ReportedHostNameProperties;
+  hostName?: HostName.Reported.Properties;
 }
 
 @armResourceOperations

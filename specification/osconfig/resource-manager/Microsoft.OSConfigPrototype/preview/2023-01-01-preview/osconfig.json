@@ -382,7 +382,7 @@
     }
   },
   "definitions": {
-    "CommandAction": {
+    "CommandRunner.Desired.CommandAction": {
       "type": "number",
       "enum": [
         0,
@@ -423,7 +423,7 @@
         ]
       }
     },
-    "CommandArguments": {
+    "CommandRunner.Desired.CommandArguments": {
       "type": "object",
       "properties": {
         "commandId": {
@@ -462,7 +462,7 @@
           ]
         },
         "action": {
-          "$ref": "#/definitions/CommandAction",
+          "$ref": "#/definitions/CommandRunner.Desired.CommandAction",
           "description": "Action of the command.",
           "x-ms-mutability": [
             "read",
@@ -473,7 +473,22 @@
       },
       "description": "Command arguments."
     },
-    "CommandState": {
+    "CommandRunner.Desired.Properties": {
+      "type": "object",
+      "properties": {
+        "commandArguments": {
+          "$ref": "#/definitions/CommandRunner.Desired.CommandArguments",
+          "description": "Arguments of the command.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      },
+      "description": "Desired properties."
+    },
+    "CommandRunner.Reported.CommandState": {
       "type": "number",
       "enum": [
         0,
@@ -514,7 +529,7 @@
         ]
       }
     },
-    "CommandStatus": {
+    "CommandRunner.Reported.CommandStatus": {
       "type": "object",
       "properties": {
         "commandId": {
@@ -532,57 +547,29 @@
           "readOnly": true
         },
         "currentState": {
-          "$ref": "#/definitions/CommandState",
+          "$ref": "#/definitions/CommandRunner.Reported.CommandState",
           "description": "State of the command.",
           "readOnly": true
         }
       },
       "description": "Command status."
     },
-    "DesiredCommandRunnerProperties": {
+    "CommandRunner.Reported.Properties": {
       "type": "object",
       "properties": {
-        "commandArguments": {
-          "$ref": "#/definitions/CommandArguments",
-          "description": "Arguments of the command.",
-          "x-ms-mutability": [
-            "read",
-            "update",
-            "create"
-          ]
+        "commandStatus": {
+          "$ref": "#/definitions/CommandRunner.Reported.CommandStatus",
+          "description": "Status of the command.",
+          "readOnly": true
         }
       },
-      "description": "Desired properties for CommandRunner."
-    },
-    "DesiredHostNameProperties": {
-      "type": "object",
-      "properties": {
-        "desiredName": {
-          "type": "string",
-          "description": "Host name of the device.",
-          "x-ms-mutability": [
-            "read",
-            "update",
-            "create"
-          ]
-        },
-        "desiredHosts": {
-          "type": "string",
-          "description": "Hosts of the device.",
-          "x-ms-mutability": [
-            "read",
-            "update",
-            "create"
-          ]
-        }
-      },
-      "description": "Desired properties for HostName."
+      "description": "Reported properties."
     },
     "DesiredProperties": {
       "type": "object",
       "properties": {
         "commandRunner": {
-          "$ref": "#/definitions/DesiredCommandRunnerProperties",
+          "$ref": "#/definitions/CommandRunner.Desired.Properties",
           "description": "Desired properties for CommandRunner.",
           "x-ms-mutability": [
             "read",
@@ -590,8 +577,17 @@
             "create"
           ]
         },
+        "firewall": {
+          "$ref": "#/definitions/Firewall.Desired.Properties",
+          "description": "Desired properties for Firewall.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
         "hostName": {
-          "$ref": "#/definitions/DesiredHostNameProperties",
+          "$ref": "#/definitions/HostName.Desired.Properties",
           "description": "Desired properties for HostName.",
           "x-ms-mutability": [
             "read",
@@ -658,131 +654,7 @@
       },
       "description": "Device identity."
     },
-    "DeviceListResult": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Device"
-          },
-          "x-cadl-name": "Device[]",
-          "description": "The Device items on this page"
-        },
-        "nextLink": {
-          "type": "string",
-          "format": "uri",
-          "description": "The link to the next page of items",
-          "x-cadl-name": "Rest.ResourceLocation"
-        }
-      },
-      "description": "The response of a Device list operation.",
-      "required": [
-        "value"
-      ]
-    },
-    "DeviceProperties": {
-      "type": "object",
-      "properties": {
-        "identity": {
-          "$ref": "#/definitions/DeviceIdentity",
-          "description": "Identity of the device.",
-          "x-ms-mutability": [
-            "update",
-            "create"
-          ]
-        },
-        "desired": {
-          "$ref": "#/definitions/DesiredProperties",
-          "description": "Desired state of the device.",
-          "x-ms-mutability": [
-            "read",
-            "update",
-            "create"
-          ]
-        },
-        "reported": {
-          "$ref": "#/definitions/ReportedProperties",
-          "description": "Reported state of the device.",
-          "readOnly": true
-        },
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "The status of the last operation.",
-          "readOnly": true
-        }
-      },
-      "description": "Device properties."
-    },
-    "DeviceUpdate": {
-      "type": "object",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-cadl-name": "Record<string>",
-          "description": "Resource tags."
-        },
-        "properties": {
-          "$ref": "#/definitions/DeviceUpdateProperties",
-          "x-ms-client-flatten": true
-        }
-      },
-      "description": "The type used for update operations of the Device."
-    },
-    "DeviceUpdateProperties": {
-      "type": "object",
-      "properties": {
-        "identity": {
-          "$ref": "#/definitions/DeviceIdentity",
-          "description": "Identity of the device.",
-          "x-ms-mutability": [
-            "update",
-            "create"
-          ]
-        },
-        "desired": {
-          "$ref": "#/definitions/DesiredProperties",
-          "description": "Desired state of the device.",
-          "x-ms-mutability": [
-            "read",
-            "update",
-            "create"
-          ]
-        }
-      },
-      "description": "The updatable properties of the Device."
-    },
-    "ProvisioningState": {
-      "type": "string",
-      "enum": [
-        "Succeeded",
-        "Failed",
-        "Canceled",
-        "Provisioning",
-        "Updating",
-        "Deleting",
-        "Accepted"
-      ],
-      "x-ms-enum": {
-        "name": "ProvisioningState",
-        "modelAsString": true
-      }
-    },
-    "ReportedCommandRunnerProperties": {
-      "type": "object",
-      "properties": {
-        "commandStatus": {
-          "$ref": "#/definitions/CommandStatus",
-          "description": "Status of the command.",
-          "readOnly": true
-        }
-      },
-      "description": "Reported properties for CommandRunner."
-    },
-    "ReportedDeviceInfoProperties": {
+    "DeviceInfo.Reported.Properties": {
       "type": "object",
       "properties": {
         "osName": {
@@ -864,9 +736,564 @@
           "readOnly": true
         }
       },
-      "description": "Reported properties for DeviceInfo."
+      "description": "Reported properties."
     },
-    "ReportedHostNameProperties": {
+    "DeviceListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Device"
+          },
+          "x-cadl-name": "Device[]",
+          "description": "The Device items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items",
+          "x-cadl-name": "Rest.ResourceLocation"
+        }
+      },
+      "description": "The response of a Device list operation.",
+      "required": [
+        "value"
+      ]
+    },
+    "DeviceProperties": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "$ref": "#/definitions/DeviceIdentity",
+          "description": "Identity of the device.",
+          "x-ms-secret": true,
+          "x-ms-mutability": [
+            "update",
+            "create"
+          ]
+        },
+        "desired": {
+          "$ref": "#/definitions/DesiredProperties",
+          "description": "Desired state of the device.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "reported": {
+          "$ref": "#/definitions/ReportedProperties",
+          "description": "Reported state of the device.",
+          "readOnly": true
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The status of the last operation.",
+          "readOnly": true
+        }
+      },
+      "description": "Device properties."
+    },
+    "DeviceUpdate": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-cadl-name": "Record<string>",
+          "description": "Resource tags."
+        },
+        "properties": {
+          "$ref": "#/definitions/DeviceUpdateProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "description": "The type used for update operations of the Device."
+    },
+    "DeviceUpdateProperties": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "$ref": "#/definitions/DeviceIdentity",
+          "description": "Identity of the device.",
+          "x-ms-secret": true,
+          "x-ms-mutability": [
+            "update",
+            "create"
+          ]
+        },
+        "desired": {
+          "$ref": "#/definitions/DesiredProperties",
+          "description": "Desired state of the device.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      },
+      "description": "The updatable properties of the Device."
+    },
+    "Firewall.Desired.DefaultPolicy": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "$ref": "#/definitions/Firewall.Desired.DefaultPolicyDirection",
+          "description": "Direction of the default policy.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "action": {
+          "$ref": "#/definitions/Firewall.Desired.DefaultPolicyAction",
+          "description": "Action of the default policy.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      },
+      "description": "Default policy."
+    },
+    "Firewall.Desired.DefaultPolicyAction": {
+      "type": "string",
+      "enum": [
+        "accept",
+        "drop"
+      ],
+      "x-ms-enum": {
+        "name": "DefaultPolicyAction",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Accept",
+            "value": "accept"
+          },
+          {
+            "name": "Drop",
+            "value": "drop"
+          }
+        ]
+      }
+    },
+    "Firewall.Desired.DefaultPolicyDirection": {
+      "type": "string",
+      "enum": [
+        "in",
+        "out"
+      ],
+      "x-ms-enum": {
+        "name": "DefaultPolicyDirection",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "In",
+            "value": "in"
+          },
+          {
+            "name": "Out",
+            "value": "out"
+          }
+        ]
+      }
+    },
+    "Firewall.Desired.Properties": {
+      "type": "object",
+      "properties": {
+        "desiredRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Firewall.Desired.Rule"
+          },
+          "x-ms-identifiers": [
+            "sourceAddress",
+            "sourcePort",
+            "destinationAddress",
+            "destinationPort"
+          ],
+          "x-cadl-name": "Firewall.Desired.Rule[]",
+          "description": "Rules of the firewall.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "desiredDefaultPolicies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Firewall.Desired.DefaultPolicy"
+          },
+          "x-ms-identifiers": [
+            "direction",
+            "action"
+          ],
+          "x-cadl-name": "Firewall.Desired.DefaultPolicy[]",
+          "description": "Default policies of the firewall.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      },
+      "description": "Desired properties."
+    },
+    "Firewall.Desired.Rule": {
+      "type": "object",
+      "properties": {
+        "desiredState": {
+          "$ref": "#/definitions/Firewall.Desired.RuleState",
+          "description": "State of the rule.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "action": {
+          "$ref": "#/definitions/Firewall.Desired.RuleDirection",
+          "description": "Action of the rule.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "direction": {
+          "$ref": "#/definitions/Firewall.Desired.RuleAction",
+          "description": "Direction of the rule.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "protocol": {
+          "$ref": "#/definitions/Firewall.Desired.RuleProtocol",
+          "description": "Protocol of the rule.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "sourceAddress": {
+          "type": "string",
+          "description": "Source address of the rule.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "sourcePort": {
+          "description": "Source port of the rule.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "destinationAddress": {
+          "type": "string",
+          "description": "Destination address of the rule.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "destinationPort": {
+          "description": "Destination port of the rule.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      },
+      "description": "Rule."
+    },
+    "Firewall.Desired.RuleAction": {
+      "type": "string",
+      "enum": [
+        "accept",
+        "drop",
+        "reject"
+      ],
+      "x-ms-enum": {
+        "name": "RuleAction",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Accept",
+            "value": "accept"
+          },
+          {
+            "name": "Drop",
+            "value": "drop"
+          },
+          {
+            "name": "Reject",
+            "value": "reject"
+          }
+        ]
+      }
+    },
+    "Firewall.Desired.RuleDirection": {
+      "type": "string",
+      "enum": [
+        "in",
+        "out"
+      ],
+      "x-ms-enum": {
+        "name": "RuleDirection",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "In",
+            "value": "in"
+          },
+          {
+            "name": "Out",
+            "value": "out"
+          }
+        ]
+      }
+    },
+    "Firewall.Desired.RuleProtocol": {
+      "type": "string",
+      "enum": [
+        "any",
+        "tcp",
+        "udp",
+        "icmp"
+      ],
+      "x-ms-enum": {
+        "name": "RuleProtocol",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Any",
+            "value": "any"
+          },
+          {
+            "name": "TCP",
+            "value": "tcp"
+          },
+          {
+            "name": "UDP",
+            "value": "udp"
+          },
+          {
+            "name": "ICMP",
+            "value": "icmp"
+          }
+        ]
+      }
+    },
+    "Firewall.Desired.RuleState": {
+      "type": "string",
+      "enum": [
+        "present",
+        "absent"
+      ],
+      "x-ms-enum": {
+        "name": "RuleState",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Present",
+            "value": "present"
+          },
+          {
+            "name": "Absent",
+            "value": "absent"
+          }
+        ]
+      }
+    },
+    "Firewall.Reported.ConfigurationStatus": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "success",
+        "failure"
+      ],
+      "x-ms-enum": {
+        "name": "ConfigurationStatus",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Unknown",
+            "value": "unknown"
+          },
+          {
+            "name": "Success",
+            "value": "success"
+          },
+          {
+            "name": "Failure",
+            "value": "failure"
+          }
+        ]
+      }
+    },
+    "Firewall.Reported.DefaultPolicy": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "$ref": "#/definitions/Firewall.Reported.DefaultPolicyDirection",
+          "description": "Direction of the default policy.",
+          "readOnly": true
+        },
+        "action": {
+          "$ref": "#/definitions/Firewall.Reported.DefaultPolicyAction",
+          "description": "Action of the default policy.",
+          "readOnly": true
+        }
+      },
+      "description": "Default policy."
+    },
+    "Firewall.Reported.DefaultPolicyAction": {
+      "type": "string",
+      "enum": [
+        "accept",
+        "drop"
+      ],
+      "x-ms-enum": {
+        "name": "DefaultPolicyAction",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Accept",
+            "value": "accept"
+          },
+          {
+            "name": "Drop",
+            "value": "drop"
+          }
+        ]
+      }
+    },
+    "Firewall.Reported.DefaultPolicyDirection": {
+      "type": "string",
+      "enum": [
+        "in",
+        "out"
+      ],
+      "x-ms-enum": {
+        "name": "DefaultPolicyDirection",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "In",
+            "value": "in"
+          },
+          {
+            "name": "Out",
+            "value": "out"
+          }
+        ]
+      }
+    },
+    "Firewall.Reported.Properties": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/Firewall.Reported.State",
+          "description": "State of the firewall.",
+          "readOnly": true
+        },
+        "fingerprint": {
+          "type": "string",
+          "description": "Fingerprint of the firewall.",
+          "readOnly": true
+        },
+        "configurationStatus": {
+          "$ref": "#/definitions/Firewall.Reported.ConfigurationStatus",
+          "description": "Configuration status of the firewall.",
+          "readOnly": true
+        },
+        "configurationStatusDetail": {
+          "type": "string",
+          "description": "Configuration status details of the firewall.",
+          "readOnly": true
+        },
+        "defaultPolicies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Firewall.Reported.DefaultPolicy"
+          },
+          "x-ms-identifiers": [
+            "direction",
+            "action"
+          ],
+          "x-cadl-name": "Firewall.Reported.DefaultPolicy[]",
+          "description": "Default policies of the firewall.",
+          "readOnly": true
+        }
+      },
+      "description": "Reported properties."
+    },
+    "Firewall.Reported.State": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "enabled",
+        "disabled"
+      ],
+      "x-ms-enum": {
+        "name": "State",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Unknown",
+            "value": "unknown"
+          },
+          {
+            "name": "Enabled",
+            "value": "enabled"
+          },
+          {
+            "name": "Disabled",
+            "value": "disabled"
+          }
+        ]
+      }
+    },
+    "HostName.Desired.Properties": {
+      "type": "object",
+      "properties": {
+        "desiredName": {
+          "type": "string",
+          "description": "Host name of the device.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        "desiredHosts": {
+          "type": "string",
+          "description": "Hosts of the device.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      },
+      "description": "Desired properties."
+    },
+    "HostName.Reported.Properties": {
       "type": "object",
       "properties": {
         "name": {
@@ -880,23 +1307,44 @@
           "readOnly": true
         }
       },
-      "description": "Reported properties for HostName."
+      "description": "Reported properties."
+    },
+    "ProvisioningState": {
+      "type": "string",
+      "enum": [
+        "Succeeded",
+        "Failed",
+        "Canceled",
+        "Provisioning",
+        "Updating",
+        "Deleting",
+        "Accepted"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
     },
     "ReportedProperties": {
       "type": "object",
       "properties": {
         "commandRunner": {
-          "$ref": "#/definitions/ReportedCommandRunnerProperties",
+          "$ref": "#/definitions/CommandRunner.Reported.Properties",
           "description": "Reported properties for CommandRunner.",
           "readOnly": true
         },
         "deviceInfo": {
-          "$ref": "#/definitions/ReportedDeviceInfoProperties",
+          "$ref": "#/definitions/DeviceInfo.Reported.Properties",
           "description": "Reported properties for DeviceInfo.",
           "readOnly": true
         },
+        "firewall": {
+          "$ref": "#/definitions/Firewall.Reported.Properties",
+          "description": "Reported properties for Firewall.",
+          "readOnly": true
+        },
         "hostName": {
-          "$ref": "#/definitions/ReportedHostNameProperties",
+          "$ref": "#/definitions/HostName.Reported.Properties",
           "description": "Reported properties for HostName.",
           "readOnly": true
         }
