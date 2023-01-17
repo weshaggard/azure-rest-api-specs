@@ -4,6 +4,9 @@ import "@azure-tools/cadl-autorest";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
 import "@azure-tools/cadl-providerhub";
+import "./models/commandrunner.cadl";
+import "./models/deviceinfo.cadl";
+import "./models/hostname.cadl";
 
 using Cadl.Http;
 using Cadl.Rest;
@@ -72,6 +75,10 @@ model DeviceProperties {
 @doc("Desired properties.")
 model DesiredProperties {
   @visibility("create", "update", "read")
+  @doc("Desired properties for CommandRunner.")
+  commandRunner?: DesiredCommandRunnerProperties;
+  
+  @visibility("create", "update", "read")
   @doc("Desired properties for HostName.")
   hostName?: DesiredHostNameProperties;
 }
@@ -79,30 +86,16 @@ model DesiredProperties {
 @doc("Reported properties.")
 model ReportedProperties {
   @visibility("read")
+  @doc("Reported properties for CommandRunner.")
+  commandRunner?: ReportedCommandRunnerProperties;
+
+  @visibility("read")
+  @doc("Reported properties for DeviceInfo.")
+  deviceInfo?: ReportedDeviceInfoProperties;
+
+  @visibility("read")
   @doc("Reported properties for HostName.")
   hostName?: ReportedHostNameProperties;
-}
-
-@doc("Desired properties for HostName.")
-model DesiredHostNameProperties {
-  @visibility("create", "update", "read")
-  @doc("Host name of the device.")
-  desiredName?: string;
-
-  @visibility("create", "update", "read")
-  @doc("Hosts of the device.")
-  desiredHosts?: string;
-}
-
-@doc("Reported properties for HostName.")
-model ReportedHostNameProperties {
-  @visibility("read")
-  @doc("Host name of the device.")
-  name?: string;
-
-  @visibility("read")
-  @doc("Hosts of the device.")
-  hosts?: string;
 }
 
 @armResourceOperations

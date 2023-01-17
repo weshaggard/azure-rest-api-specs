@@ -382,6 +382,87 @@
     }
   },
   "definitions": {
+    "CommandState": {
+      "type": "number",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "x-ms-enum": {
+        "name": "CommandState",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Unknown",
+            "value": 0
+          },
+          {
+            "name": "Running",
+            "value": 1
+          },
+          {
+            "name": "Succeeded",
+            "value": 2
+          },
+          {
+            "name": "Failed",
+            "value": 3
+          },
+          {
+            "name": "TimedOut",
+            "value": 4
+          },
+          {
+            "name": "Canceled",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "CommandStatus": {
+      "type": "object",
+      "properties": {
+        "commandId": {
+          "type": "string",
+          "description": "Identifier of the command.",
+          "readOnly": true
+        },
+        "resultCode": {
+          "description": "Result code of the command.",
+          "readOnly": true
+        },
+        "textResult": {
+          "type": "string",
+          "description": "Text result of the command.",
+          "readOnly": true
+        },
+        "currentState": {
+          "$ref": "#/definitions/CommandState",
+          "description": "State of the command.",
+          "readOnly": true
+        }
+      },
+      "description": "Command status."
+    },
+    "DesiredCommandRunnerProperties": {
+      "type": "object",
+      "properties": {
+        "commandArguments": {
+          "type": "string",
+          "description": "Arguments of the command.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      },
+      "description": "Desired properties for CommandRunner."
+    },
     "DesiredHostNameProperties": {
       "type": "object",
       "properties": {
@@ -409,6 +490,15 @@
     "DesiredProperties": {
       "type": "object",
       "properties": {
+        "commandRunner": {
+          "$ref": "#/definitions/DesiredCommandRunnerProperties",
+          "description": "Desired properties for CommandRunner.",
+          "x-ms-mutability": [
+            "read",
+            "update",
+            "create"
+          ]
+        },
         "hostName": {
           "$ref": "#/definitions/DesiredHostNameProperties",
           "description": "Desired properties for HostName.",
@@ -590,6 +680,101 @@
         "modelAsString": true
       }
     },
+    "ReportedCommandRunnerProperties": {
+      "type": "object",
+      "properties": {
+        "commandStatus": {
+          "$ref": "#/definitions/CommandStatus",
+          "description": "Status of the command.",
+          "readOnly": true
+        }
+      },
+      "description": "Reported properties for CommandRunner."
+    },
+    "ReportedDeviceInfoProperties": {
+      "type": "object",
+      "properties": {
+        "osName": {
+          "type": "string",
+          "description": "Name of the OS.",
+          "readOnly": true
+        },
+        "osVersion": {
+          "type": "string",
+          "description": "Version of the OS.",
+          "readOnly": true
+        },
+        "cpuType": {
+          "type": "string",
+          "description": "Type of the CPU.",
+          "readOnly": true
+        },
+        "cpuVendorId": {
+          "type": "string",
+          "description": "Identifier of the CPU vendor.",
+          "readOnly": true
+        },
+        "cpuModel": {
+          "type": "string",
+          "description": "Model of the CPU.",
+          "readOnly": true
+        },
+        "totalMemory": {
+          "description": "Total memory available on the system.",
+          "readOnly": true
+        },
+        "freeMemory": {
+          "description": "Free memory available on the system.",
+          "readOnly": true
+        },
+        "kernelName": {
+          "type": "string",
+          "description": "Name of the kernel.",
+          "readOnly": true
+        },
+        "kernelRelease": {
+          "type": "string",
+          "description": "Release of the kernel.",
+          "readOnly": true
+        },
+        "kernelVersion": {
+          "type": "string",
+          "description": "Version of the kernel.",
+          "readOnly": true
+        },
+        "productVendor": {
+          "type": "string",
+          "description": "Vendor of the product.",
+          "readOnly": true
+        },
+        "productName": {
+          "type": "string",
+          "description": "Name of the product.",
+          "readOnly": true
+        },
+        "productVersion": {
+          "type": "string",
+          "description": "Version of the product.",
+          "readOnly": true
+        },
+        "systemCapabilities": {
+          "type": "string",
+          "description": "Capabilities of the system.",
+          "readOnly": true
+        },
+        "systemConfiguration": {
+          "type": "string",
+          "description": "Configuration the system.",
+          "readOnly": true
+        },
+        "osConfigVersion": {
+          "type": "string",
+          "description": "Version of OSConfig.",
+          "readOnly": true
+        }
+      },
+      "description": "Reported properties for DeviceInfo."
+    },
     "ReportedHostNameProperties": {
       "type": "object",
       "properties": {
@@ -609,6 +794,16 @@
     "ReportedProperties": {
       "type": "object",
       "properties": {
+        "commandRunner": {
+          "$ref": "#/definitions/ReportedCommandRunnerProperties",
+          "description": "Reported properties for CommandRunner.",
+          "readOnly": true
+        },
+        "deviceInfo": {
+          "$ref": "#/definitions/ReportedDeviceInfoProperties",
+          "description": "Reported properties for DeviceInfo.",
+          "readOnly": true
+        },
         "hostName": {
           "$ref": "#/definitions/ReportedHostNameProperties",
           "description": "Reported properties for HostName.",
