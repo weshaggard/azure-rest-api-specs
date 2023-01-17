@@ -186,10 +186,11 @@
           "readOnly": true,
           "enum": [
             "active",
-            "inactive",
             "inProgress",
             "rollingBack",
-            "failed"
+            "failed",
+            "inactivePreviouslyActivated",
+            "inactivePreviouslyPartiallyActivated"
           ],
           "x-ms-enum": {
             "name": "activationState",
@@ -197,26 +198,22 @@
           },
           "description": "Current activation state of the configuration snapshot"
         },
-        "activationStatus": {
-          "type": "string",
+        "summaryOfChanges": {
           "readOnly": true,
-          "enum": [
-            "actived",
-            "partiallyActivated",
-            "failed"
-          ],
-          "x-ms-enum": {
-            "name": "activationStatus",
-            "modelAsString": true
-          },
-          "description": "Last activation status of the configuration snapshot"
-        },
-        "armResources": {
-          "readOnly": true,
-          "$ref": "./common.json#/definitions/ReferencedResource"
+          "type": "array",
+          "description": "List of objects that have changed (added/delete/modified) from the previous snapshot",
+          "items": {
+            "$ref": "./common.json#/definitions/ReferencedResource",
+            "description": "The reference to the changed object"
+          }
         },
         "details": {
           "readOnly": true,
+          "type": "string"
+        },
+        "userIdentity": {
+          "readOnly": true,
+          "description": "Identity of user that created the snapshot",
           "type": "string"
         }
       }
