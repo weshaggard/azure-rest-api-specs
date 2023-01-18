@@ -38,15 +38,6 @@ input-file:
   - Microsoft.ManagedSC/preview/2023-02-01-preview/managedstorageclass.json
 ```
 
-### Tag: package-preview-2022-08-26
-
-These settings apply only when `--tag=package-preview-2022-08-26` is specified on the command line.
-
-```yaml $(tag) == 'package-preview-2022-08-26'
-input-file:
-  - Microsoft.ManagedSC/preview/2022-08-26-preview/managedstorageclass.json
-```
-
 ---
 
 # Code Generation
