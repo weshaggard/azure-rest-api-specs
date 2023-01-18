@@ -1,0 +1,94 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/versioning";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.ResourceManager;
+
+@armProviderNamespace
+@service({
+	title: "Microsoft.Sovereign",
+	version: "2023-04-01-privatepreview",
+})
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+namespace Microsoft.Sovereign;
+
+interface Operations extends Azure.ResourceManager.Operations {}
+
+@tenantResource
+@doc("A policy monitor resource")
+model PolicyMonitor is ProxyResource<PolicyMonitorProperties> {
+	@doc("The name of the employee")
+	@pattern("^[a-zA-Z0-9-]{3,24}$")
+	@key("policymonitorname")
+	@segment("policymonitors")
+	@path
+	name: string;
+}
+
+@doc("The status of the policy monitor operations.")
+@Azure.Core.lroStatus
+enum ProvisioningState {
+	...ResourceProvisioningState,
+	Provisioning,
+	Updating,
+	Deleting,
+	Accepted,
+}
+
+@doc("Details of the sovereign policy monitor resource type.")
+model PolicyMonitorProperties {
+	@visibility("read")
+	@doc("The status of the operation.")
+	provisioningState?: ProvisioningState;
+
+	@doc("The top level management group of the SLZ")
+	@visibility("read", "create", "update", "delete")
+	topLevelManagementGroup: string;
+
+	@doc("The category of the SLZ policies to be monitored.")
+	@visibility("read", "create", "update", "delete")
+	policyCategory: string;
+}
+
+@armResourceOperations(PolicyMonitor)
+interface PolicyMonitors
+	extends TenantResourceOperations<PolicyMonitor, PolicyMonitorProperties> {}
+
+@tenantResource
+model PolicyManagement is ProxyResource<PolicyManagementProperties> {
+	@doc("The name of the policy management resource.")
+	@pattern("^[a-zA-Z0-9-]{3,24}$")
+	@key("policymanagementname")
+	@segment("policymanagements")
+	@path
+	@visibility("read")
+	name: string;
+}
+
+@doc("The properties of a policy management resource.")
+model PolicyManagementProperties {
+	@visibility("read")
+	@doc("The status of the operation.")
+	provisioningState?: ProvisioningState;
+
+	@doc("The country of the policy management resource.")
+	@visibility("read", "create", "update", "delete")
+	countryName: Country;
+}
+
+enum Country {
+	Italy,
+	India,
+}
+
+@armResourceOperations(PolicyManagement)
+interface PolicyManagements
+	extends TenantResourceOperations<
+			PolicyManagement,
+			PolicyManagementProperties
+		> {}
