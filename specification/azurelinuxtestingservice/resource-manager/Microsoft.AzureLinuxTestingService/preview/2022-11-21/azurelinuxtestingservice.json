@@ -13,7 +13,7 @@
   "schemes": [
     "https"
   ],
-  "host": "alts.endpoint",
+  "host": "management.azure.com",
   "produces": [
     "application/json"
   ],
@@ -643,30 +643,13 @@
               "$ref": "#/definitions/JobTemplate"
             }
           },
-          "201": {
-            "description": "ARM create operation completed successfully.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/JobTemplate"
-            }
-          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
+        }
       },
       "patch": {
         "tags": [
@@ -746,16 +729,6 @@
           "200": {
             "description": "Resource deleted successfully."
           },
-          "202": {
-            "description": "Resource deletion accepted.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
           "204": {
             "description": "Resource deleted successfully."
           },
@@ -765,11 +738,7 @@
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        },
-        "x-ms-long-running-operation": true
+        }
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureLinuxTestingService/testCases": {
@@ -852,19 +821,6 @@
     }
   },
   "definitions": {
-    "Azure.ResourceManager.ResourceProvisioningState": {
-      "type": "string",
-      "description": "The provisioning state of a resource type.",
-      "enum": [
-        "Succeeded",
-        "Failed",
-        "Canceled"
-      ],
-      "x-ms-enum": {
-        "name": "ResourceProvisioningState",
-        "modelAsString": true
-      }
-    },
     "CasePriorityLevel": {
       "type": "integer",
       "format": "int32",
@@ -877,23 +833,11 @@
         "type": {
           "type": "string",
           "description": "Must be vhd, marketplace_image, or shared_image_gallery"
-        },
-        "startedOn": {
-          "type": "string",
-          "format": "date",
-          "description": "Time test started"
-        },
-        "finishedOn": {
-          "type": "string",
-          "format": "date",
-          "description": "Time test ended"
         }
       },
       "description": "Image information",
       "required": [
-        "type",
-        "startedOn",
-        "finishedOn"
+        "type"
       ]
     },
     "Job": {
@@ -943,7 +887,7 @@
       "type": "object",
       "properties": {
         "provisioningState": {
-          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "Resource provisioning state.",
           "readOnly": true
         },
@@ -953,7 +897,7 @@
         },
         "resourceGroupNamePrefix": {
           "type": "string",
-          "description": "Prefix of related resource groups"
+          "description": "Prefix to use for resource groups that are created during LISA validation."
         },
         "repos": {
           "type": "array",
@@ -975,26 +919,29 @@
           },
           "x-ms-identifiers": [],
           "x-cadl-name": "TestResultProperties[]",
-          "description": "Test results once job is completed."
+          "description": "Test results once job is completed.",
+          "readOnly": true
         },
         "status": {
           "type": "string",
-          "description": "Test status: Pending, Scheduling, Running, Completed, Failed."
+          "description": "Test status: Pending, Scheduling, Running, Completed, Failed.",
+          "readOnly": true
         },
         "duration": {
           "type": "string",
-          "format": "time",
-          "description": "Test duration"
+          "format": "duration",
+          "description": "Test duration",
+          "readOnly": true
         },
         "logUrl": {
           "type": "string",
-          "description": "URL to see test logs"
+          "description": "URL to see test logs",
+          "readOnly": true
         }
       },
       "description": "The job properties",
       "required": [
         "jobTemplateInstance",
-        "resourceGroupNamePrefix",
         "repos",
         "results",
         "status",
@@ -1049,7 +996,7 @@
       "type": "object",
       "properties": {
         "provisioningState": {
-          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "Resource provisioning state.",
           "readOnly": true
         },
@@ -1097,8 +1044,7 @@
       "required": [
         "templateTags",
         "region",
-        "vmSize",
-        "selections"
+        "vmSize"
       ]
     },
     "JobTemplateUpdate": {
@@ -1197,11 +1143,27 @@
         }
       ]
     },
+    "ProvisioningState": {
+      "type": "string",
+      "enum": [
+        "Succeeded",
+        "Failed",
+        "Canceled",
+        "Queued",
+        "Provisioning",
+        "Running",
+        "Cancelling"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
+    },
     "ResourceProperties": {
       "type": "object",
       "properties": {
         "provisioningState": {
-          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "Resource provisioning state.",
           "readOnly": true
         }
@@ -1283,10 +1245,7 @@
           "default": false
         }
       },
-      "description": "Details test case criteria",
-      "required": [
-        "casePriority"
-      ]
+      "description": "Details test case criteria"
     },
     "SharedImageGallery": {
       "type": "object",
@@ -1314,8 +1273,6 @@
       },
       "description": "Shared Image Gallery",
       "required": [
-        "subscription",
-        "resourceGroupName",
         "imageGallery",
         "imageDefinition",
         "imageVersion"
@@ -1386,7 +1343,7 @@
       "type": "object",
       "properties": {
         "provisioningState": {
-          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "Resource provisioning state.",
           "readOnly": true
         },
@@ -1480,7 +1437,7 @@
       "type": "object",
       "properties": {
         "provisioningState": {
-          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "Resource provisioning state.",
           "readOnly": true
         },
@@ -1533,7 +1490,7 @@
           "description": "Wala Version"
         },
         "extraFields": {
-          "type": "string",
+          "$ref": "#/definitions/object",
           "description": "Extra fields"
         },
         "duration": {
@@ -1599,6 +1556,10 @@
           "$ref": "#/definitions/Image"
         }
       ]
+    },
+    "object": {
+      "type": "object",
+      "properties": {}
     }
   },
   "parameters": {}

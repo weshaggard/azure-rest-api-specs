@@ -8,6 +8,7 @@ using Azure.ResourceManager.Foundations;
 using Autorest;
 using Azure.Core;
 using Azure.Core.Foundations;
+using OpenAPI;
 
 @doc("A template defining the parameters for a test job.")
 model JobTemplate is TrackedResource<JobTemplateResourceProperties> {
@@ -32,7 +33,7 @@ model JobTemplateResourceProperties is ResourceProperties{
     vmSize: string[];
 
     @doc("Test Selections. Default is to run the smoke_test case")
-    selections: Selections[];
+    selections?: Selections[];
 
     @doc("The number of concurrent environments. Default is 4.")
     concurrency?: int32 = 4;
@@ -44,6 +45,10 @@ enum TestCaseAction {
   ForceInclude,
   ForceExclude
 }
+
+@minValue(0)
+@maxValue(4)
+scalar CasePriorityLevel extends int32;
 
 @doc("Details test case criteria")
 model Selections {
@@ -57,7 +62,7 @@ model Selections {
     caseCategory?: string[] = [];
 
     @doc("Test case priority. Default is empty and represents all priorities. Valid values are from 0-4")
-    casePriority: int32[];
+    casePriority?: CasePriorityLevel[];
 
     @doc("Test case tags. Default empty")
     caseTags?: string[] = [];
@@ -74,23 +79,17 @@ model Selections {
     @doc("Use new environment for each test case. Default false")
     useNewEnvironment?: boolean = false;
 
-    @doc("Ignore failed test cases")
-    ignoreFailure: boolean;
+    @doc("Ignore failed test cases. Default false")
+    ignoreFailure?: boolean = false;
 }
 
-@doc("Job template operations.")
+@doc("JobTemplate operations.")
 @armResourceOperations(JobTemplate)
-/*
-interface JobTemplateOperations
-    extends ResourceOperations<JobTemplate, JobTemplateResourceProperties> {
-}
-*/
 interface JobTemplates {
-  get is ArmResourceRead<JobTemplate>;
-  createOrUpdate is ArmResourceCreateOrUpdateAsync<JobTemplate>;
-  update is ArmResourcePatchSync<JobTemplate, JobTemplateResourceProperties>;
-  @asyncOperationOptions("location")
-  delete is ArmResourceDeleteAsync<JobTemplate>;
   listByResourceGroup is ArmResourceListByParent<JobTemplate>;
   listbySubscription is ArmListBySubscription<JobTemplate>;
+  get is ArmResourceRead<JobTemplate>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<JobTemplate>;
+  update is ArmResourcePatchSync<JobTemplate, JobTemplateResourceProperties>;
+  delete is ArmResourceDeleteSync<JobTemplate>;
 }

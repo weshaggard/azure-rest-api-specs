@@ -26,8 +26,8 @@ model JobResourceProperties is ResourceProperties {
     @doc("Job Template to execute")
     jobTemplateInstance: JobTemplateResourceProperties;
 
-    @doc("Prefix of related resource groups")
-    resourceGroupNamePrefix: string;
+    @doc("Prefix to use for resource groups that are created during LISA validation.")
+    resourceGroupNamePrefix?: string;
 
     @doc("An array of strings that define different package repos to use in tests.")
     repos: string[];
@@ -36,15 +36,19 @@ model JobResourceProperties is ResourceProperties {
     keepFailedEnvironment?: boolean = false;
 
     @doc("Test results once job is completed.")
+    @visibility("read")
     results: TestResultProperties[];
 
     @doc("Test status: Pending, Scheduling, Running, Completed, Failed.")
+    @visibility("read")
     status: string;
 
     @doc("Test duration")
-    duration: plainTime;
+    @visibility("read")
+    duration: duration;
 
     @doc("URL to see test logs")
+    @visibility("read")
     logUrl: string;
 }
 
@@ -52,12 +56,6 @@ model JobResourceProperties is ResourceProperties {
 model Image {
     @doc("Must be vhd, marketplace_image, or shared_image_gallery")
     type: string;
-
-    @doc("Time test started")
-    startedOn: plainDate;
-
-    @doc("Time test ended")
-    finishedOn: plainDate;
 }
 
 @doc("Virtual Hard Disk")
@@ -90,10 +88,10 @@ model MarketplaceImage extends Image {
 @doc("Shared Image Gallery")
 model SharedImageGallery extends Image {
     @doc("Subscription")
-    subscription: string;
+    subscription?: string;
 
     @doc("Resource group name")
-    resourceGroupName: string;
+    resourceGroupName?: string;
 
     @doc("Image gallery")
     imageGallery: string;
@@ -103,57 +101,6 @@ model SharedImageGallery extends Image {
 
     @doc("Image version")
     imageVersion: string; 
-}
-
-@doc("Test results for a particular test case")
-model TestResultProperties is ResourceProperties {
-    @doc("The job name")
-    jobName: string;
-
-    @doc("The test case")
-    caseName: string;
-
-    @doc("The test status")
-    status: string;
-
-    @doc("Message")
-    message: string;
-
-    @doc("Log URL")
-    logUrl: string;
-
-    @doc("Image name source string")
-    image: string;
-
-    @doc("VM Size used")
-    vmSize: string;
-
-    @doc("Region test ran")
-    location: string;
-
-    @doc("Kernel version used")
-    kernelVersion: string;
-
-    @doc("Distro version used")
-    distroVersion: string;
-
-    @doc("VHD Generation")
-    vhdGeneration: string;
-
-    @doc("Wala Version")
-    walaVersion: string;
-
-    @doc("Extra fields")
-    extraFields: string;
-
-    @doc("Test duration")
-    duration: plainTime;
-
-    @doc("Start time")
-    startTime: plainTime;
-
-    @doc("End time")
-    endTime: plainTime;
 }
 
 @doc("Job Operations")
