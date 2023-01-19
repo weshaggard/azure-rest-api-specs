@@ -26,6 +26,7 @@ These are the global settings for the cleanroom.
 
 ```yaml
 openapi-type: arm
+openapi-subtype: providerHub
 tag: package-2022-12-31-preview
 ```
 
@@ -38,6 +39,7 @@ input-file:
   - Microsoft.CleanRoom/preview/2022-12-31-preview/cleanrooms.json
   - Microsoft.CleanRoom/preview/2022-12-31-preview/microservices.json
   - Microsoft.CleanRoom/preview/2022-12-31-preview/operations.json
+  - Microsoft.CleanRoom/preview/2022-12-31-preview/commonTypes.json
 ```
 
 ---
