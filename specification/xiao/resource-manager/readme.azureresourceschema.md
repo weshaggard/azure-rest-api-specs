@@ -19,6 +19,8 @@ batch:
   - tag: schema-testbase-2022-10-15-preview
   - tag: schema-testbase-2022-11-01-preview
   - tag: schema-testbase-2022-11-15-preview
+  - tag: schema-testbase-2022-12-01-preview
+  - tag: schema-testbase-2023-01-01-preview
 ```
 
 Please also specify `--azureresourceschema-folder=<path to the root directory of your azure-resource-manager-schemas clone>`.
@@ -142,3 +144,36 @@ output-folder: $(azureresourceschema-folder)/schemas
 input-file:
   - Microsoft.XiaoTest/preview/2022-11-15-preview/testbase.json
 ```
+
+### Tag: schema-testbase-2022-12-01-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2022-12-01-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.XiaoTest/preview/2022-12-01-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2022-12-01-preview/draftpackage.json
+```
+
+### Tag: schema-testbase-2023-01-01-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2023-01-01-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.XiaoTest/preview/2023-01-01-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2023-01-01-preview/draftpackage.json
+  - Microsoft.XiaoTest/preview/2023-01-01-preview/actionrequest.json
+```
+
+### Tag: schema-testbase-2023-01-15-preview and azureresourceschema
+
+``` yaml $(tag) == 'schema-testbase-2023-01-05-preview' && $(azureresourceschema)
+output-folder: $(azureresourceschema-folder)/schemas
+# all the input files in this apiVersion
+input-file:
+  - Microsoft.XiaoTest/preview/2023-01-05-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2023-01-05-preview/draftpackage.json
+  - Microsoft.XiaoTest/preview/2023-01-05-preview/testconfiguration.json
+```
+
