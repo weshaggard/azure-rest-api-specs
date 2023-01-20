@@ -555,31 +555,64 @@
       "type": "object",
       "properties": {
         "pfcpAssociationRetryInterval": {
-          "type": "integer"
+          "type": "integer",
+          "description": "PFCP Association Retry Interval - amount of time to wait before re-initiating Association (ms).",
+          "minimum": 20000,
+          "maximum": 3600000,
+          "default": 120000
         },
         "pfcpSessionResponseTimeout": {
-          "type": "integer"
+          "type": "integer",
+          "description": "PFCP Session Response Timeout Value - amount of time to wait before retransmitting a session level message (ms)",
+          "minimum": 100,
+          "maximum": 3600000,
+          "default": 2400
         },
         "pfcpSessionRetransmitCount": {
-          "type": "integer"
+          "type": "integer",
+          "description": "PFCP Session Retransmit Count - number of session level messages retransmissions to make before declaring timeout",
+          "minimum": 1,
+          "maximum": 5,
+          "default": 2
         },
         "pfcpNodeResponseTimeout": {
-          "type": "integer"
+          "type": "integer",
+          "description": "PFCP Node Response Timeout Value - amount of time to wait before retransmitting a node level message (ms)",
+          "minimum": 100,
+          "maximum": 3600000,
+          "default": 2000
         },
         "pfcpNodeRetransmitCount": {
-          "type": "integer"
+          "type": "integer",
+          "description": "PFCP Node Retransmit Count - number of node level messages retransmissions to make before declaring a timeout",
+          "minimum": 1,
+          "maximum": 5,
+          "default": 3
         },
         "pfcpHeartbeatPeriodicInterval": {
-          "type": "integer"
+          "type": "integer",
+          "description": "PFCP HeartBeat Periodic Interval - amount of time to wait before restrasmitting a heartbeat request (ms)",
+          "minimum": 300,
+          "maximum": 3600000,
+          "default": 60000
         },
         "pfcpHeartbeatDownThreshold": {
-          "type": "integer"
+          "type": "integer",
+          "description": "PFCP HeartBeat Down Threshold - amount of pfcp-heartbeat-periodic-intervals after which the association will be restarted, 0 means retry heartbeat indefinitely, operator can set it accordingly.",
+          "minimum": 0,
+          "maximum": 300,
+          "default": 0
         },
         "pfcpGuardTimeInterval": {
-          "type": "integer"
+          "type": "integer",
+          "description": "PFCP Guard Time Interval - amount of time to wait before tearing down Association (ms)",
+          "minimum": 300,
+          "maximum": 3600000,
+          "default": 120000
         },
         "dscpMarking": {
-          "$ref": "./common.json#/definitions/dscp"
+          "$ref": "./common.json#/definitions/dscp",
+          "description": "DSCP Marking"
         }
       }
     },
@@ -932,16 +965,30 @@
         "nnrfProfile": {
           "type": "object",
           "properties": {
+            "subscriptionValidityTimer": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 31680,
+              "default": 31680,
+              "description": "Validity time which the subscription is desired to be kept alive. Default: 31680; Unit: minutes"
+            },
+            "heartbeatInterval": {
+              "type": "integer",
+              "minimum": 60,
+              "maximum": 360,
+              "default": 120,
+              "description": "Heartbeat duration interval value in seconds. Default: 120"
+            },
             "discovery": {
               "type": "object",
               "properties": {
+                "dscpMarking": {
+                  "$ref": "./common.json#/definitions/dscp"
+                },
                 "responseTimeout": {
                   "type": "integer",
                   "minimum": 500,
                   "maximum": 30000
-                },
-                "dscpMarking": {
-                  "$ref": "./common.json#/definitions/dscp"
                 }
               }
             },
@@ -954,16 +1001,6 @@
                 "includeTaiInNrfRegistration": {
                   "$ref": "./common.json#/definitions/enableDisable",
                   "description": "Applicable to AMF"
-                },
-                "subscriptionValidityTimer": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 31680
-                },
-                "heartbeatInterval": {
-                  "type": "integer",
-                  "minimum": 60,
-                  "maximum": 360
                 }
               }
             }

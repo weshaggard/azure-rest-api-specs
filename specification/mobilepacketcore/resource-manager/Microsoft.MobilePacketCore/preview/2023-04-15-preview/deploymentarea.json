@@ -283,28 +283,7 @@
     }
   },
   "definitions": {
-    "profileTrace": {
-      "type": "object",
-      "properties": {
-        "mm": {
-          "type": "object",
-          "properties": {
-            "n2DefaultProbability": {
-              "$ref": "./common.json#/definitions/TraceProbability"
-            }
-          }
-        },
-        "sm": {
-          "type": "object",
-          "properties": {
-            "smDefaultProbability": {
-              "$ref": "./common.json#/definitions/TraceProbability"
-            }
-          }
-        }
-      }
-    },
-    "nfProfiles": {
+    "NfProfiles": {
       "type": "object",
       "properties": {
         "saegwCp": {
@@ -362,7 +341,7 @@
           }
         },
         "nfProfiles": {
-          "$ref": "#/definitions/nfProfiles"
+          "$ref": "#/definitions/NfProfiles"
         },
         "serviceAreaList": {
           "type": "array",
@@ -381,20 +360,12 @@
           },
           "description": "A list of service areas that make up the deployment area and their relative priority."
         },
-        "aaa3g4g": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "3G/4G AAA configuration"
-        },
         "routing": {
           "type": "array",
           "items": {
             "$ref": "./common.json#/definitions/ReferencedResource"
           },
           "description": "A list of routing instances applicable to this deployment area"
-        },
-        "securityDomain": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "Security configuration"
         },
         "dpi": {
           "$ref": "./common.json#/definitions/ReferencedResource",
@@ -440,36 +411,22 @@
                   "type": "object",
                   "properties": {
                     "fqdn": {
-                      "$ref": "./common.json#/definitions/Fqdn"
+                      "$ref": "./common.json#/definitions/Fqdn",
+                      "description": "The FQDN of the NRF service"
                     },
-                    "ipaddress": {
-                      "$ref": "./common.json#/definitions/ipAddress"
+                    "ipv4Address": {
+                      "$ref": "./common.json#/definitions/ipv4Address",
+                      "description": "The IPv4 of the NRF service"
+                    },
+                    "ipv6Address": {
+                      "$ref": "./common.json#/definitions/ipv6Address",
+                      "description": "The IPv6 of the NRF service"
                     },
                     "port": {
-                      "type": "integer"
-                    },
-                    "heartbeatUrl": {
-                      "type": "object",
-                      "properties": {
-                        "verb": {
-                          "type": "string",
-                          "enum": [
-                            "get",
-                            "patch",
-                            "post",
-                            "put"
-                          ],
-                          "x-ms-enum": {
-                            "name": "httpVerb",
-                            "modelAsString": true
-                          }
-                        },
-                        "path": {
-                          "type": "string",
-                          "description": "API specific resource URI part. The specific resource must be compatible to the service-type of this service"
-                        }
-                      },
-                      "description": "URI of the API to be used in the service heartbeat message. This is only applicable when the redundancy mode is set to 'primarySecondary'"
+                      "type": "integer",
+                      "description": "Port for the NRF Service. Default: 80",
+                      "default": 80,
+                      "maximum": 65536
                     }
                   }
                 },
@@ -477,107 +434,22 @@
                   "type": "object",
                   "properties": {
                     "fqdn": {
-                      "$ref": "./common.json#/definitions/Fqdn"
+                      "$ref": "./common.json#/definitions/Fqdn",
+                      "description": "The FQDN of the NRF service"
                     },
-                    "ipaddress": {
-                      "$ref": "./common.json#/definitions/ipAddress"
+                    "ipv4Address": {
+                      "$ref": "./common.json#/definitions/ipv4Address",
+                      "description": "The IPv4 of the NRF service"
+                    },
+                    "ipv6Address": {
+                      "$ref": "./common.json#/definitions/ipv6Address",
+                      "description": "The IPv6 of the NRF service"
                     },
                     "port": {
-                      "type": "integer"
-                    },
-                    "serviceHeartbeatUrl": {
-                      "type": "object",
-                      "properties": {
-                        "verb": {
-                          "type": "string",
-                          "enum": [
-                            "get",
-                            "patch",
-                            "post",
-                            "put"
-                          ],
-                          "x-ms-enum": {
-                            "name": "httpVerb",
-                            "modelAsString": true
-                          }
-                        },
-                        "path": {
-                          "type": "string",
-                          "description": "API specific resource URI part. The specific resource must be compatible to the service-type of this service."
-                        }
-                      },
-                      "description": "URI of the API to be used in the service heartbeat message. This is only applicable when the redundancy mode is set to 'primarySecondary'"
-                    }
-                  }
-                },
-                "role": {
-                  "type": "string",
-                  "enum": [
-                    "primary",
-                    "secondary"
-                  ],
-                  "x-ms-enum": {
-                    "name": "role",
-                    "modelAsString": true
-                  },
-                  "description": "Remote NRF Role"
-                },
-                "priority": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 20,
-                  "description": "Priority of the secondary NRF. Lower value is the higher priority"
-                }
-              }
-            },
-            "edrServer": {
-              "type": "object",
-              "properties": {}
-            },
-            "redundancyProfile": {
-              "type": "object",
-              "properties": {
-                "nrf": {
-                  "type": "object",
-                  "properties": {
-                    "redundancyMode": {
-                      "type": "string",
-                      "enum": [
-                        "multiActive",
-                        "primarySecondary"
-                      ],
-                      "x-ms-enum": {
-                        "name": "redundancyMode",
-                        "modelAsString": true
-                      },
-                      "description": "NRF Redundancy Mode"
-                    },
-                    "failoverErrorCode": {
-                      "type": "array",
-                      "items": {
-                        "type": "integer",
-                        "minimum": 400,
-                        "maximum": 599,
-                        "description": "HTTP error codes (4xx to 5xx) to consider for detecting NRF failure and trigger failover, a max 30 error codes can be configured. Default: '429','460','500','501','502','503','504','508'"
-                      }
-                    },
-                    "serviceHeartbeatInterval": {
                       "type": "integer",
-                      "minimum": 30,
-                      "maximum": 120,
-                      "description": "Service heartbeat message per service interval in seconds; If it is configured for service 'nnrf-nfm' then NRF level failover is indicated.  Must be less than the NRF heartbeat interval"
-                    },
-                    "recoveryCount": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 3,
-                      "description": "Number of successful service keep-alive responses received before moving back to Primary NRF. This is only applicable to primary NRF"
-                    },
-                    "failoverCount": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 3,
-                      "description": "Number of monitoring failure responses received from the primary NRF before failover to secondary NRF"
+                      "description": "Port for the NRF Service. Default: 80",
+                      "default": 80,
+                      "maximum": 65536
                     }
                   }
                 }
@@ -586,7 +458,7 @@
           }
         }
       },
-      "description": "The MobilePacketCore DeploymentArea resource definition."
+      "description": "The MobilePacketCore Deployment Area Format resource definition."
     },
     "DeploymentArea": {
       "type": "object",
