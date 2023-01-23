@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2022-11-11-preview",
+    "version": "2023-01-01-preview",
     "title": "DevCenter",
     "description": "DevCenter Management API"
   },
@@ -165,6 +165,9 @@
         "x-ms-examples": {
           "Pools_Get": {
             "$ref": "./examples/Pools_Get.json"
+          },
+          "Pools_GetUnhealthyStatus": {
+            "$ref": "./examples/Pools_GetUnhealthyStatus.json"
           }
         }
       },
@@ -289,6 +292,55 @@
         "x-ms-examples": {
           "Pools_Delete": {
             "$ref": "./examples/Pools_Delete.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}/runHealthChecks": {
+      "post": {
+        "tags": [
+          "Pools"
+        ],
+        "description": "Triggers a refresh of the pool status.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "commonDefinitions.json#/parameters/ProjectNameParameter"
+          },
+          {
+            "$ref": "#/parameters/PoolNameParameter"
+          }
+        ],
+        "operationId": "Pools_RunHealthChecks",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "responses": {
+          "200": {
+            "description": "OK. Successfully initiated refresh."
+          },
+          "202": {
+            "description": "Accepted. Initiating pool status refresh."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "commonDefinitions.json#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Pools_RefreshStatus": {
+            "$ref": "./examples/Pools_RunHealthChecks.json"
           }
         }
       }
@@ -865,7 +917,7 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}/runHealthChecks": {
       "post": {
         "tags": [
-          "Network Settings"
+          "Network Connection"
         ],
         "description": "Triggers a new health check run. The execution and health check result can be tracked via the network Connection health check details",
         "parameters": [
@@ -920,15 +972,23 @@
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
         },
         {
+          "$ref": "commonDefinitions.json#/parameters/TopParameter"
+        },
+        {
           "$ref": "#/parameters/NetworkConnectionName"
         }
       ],
       "get": {
         "tags": [
-          "Network Connections"
+          "Network Connection"
         ],
         "operationId": "NetworkConnections_ListOutboundNetworkDependenciesEndpoints",
-        "description": "Lists the endpoints that agents may call as part of VDI service administration.",
+        "description": "Lists the endpoints that agents may call as part of Dev Box service administration. These FQDNs should be allowed for outbound access in order for the Dev Box service to function.",
+        "x-ms-examples": {
+          "ListOutboundNetworkDependencies": {
+            "$ref": "./examples/NetworkConnections_ListOutboundNetworkDependenciesEndpoints.json"
+          }
+        },
         "responses": {
           "200": {
             "description": "The operation was successful. The response contains a list of outbound network dependencies.",
@@ -942,6 +1002,9 @@
               "$ref": "commonDefinitions.json#/definitions/CloudError"
             }
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     }
@@ -1002,6 +1065,10 @@
         "localAdministrator": {
           "description": "Indicates whether owners of Dev Boxes in this pool are added as local administrators on the Dev Box.",
           "$ref": "#/definitions/LocalAdminStatus"
+        },
+        "stopOnDisconnect": {
+          "description": "Stop on disconnect configuration settings for Dev Boxes created in this pool.",
+          "$ref": "#/definitions/StopOnDisconnectConfiguration"
         }
       }
     },
@@ -1014,6 +1081,19 @@
         }
       ],
       "properties": {
+        "healthStatus": {
+          "description": "Overall health status of the Pool. Indicates whether or not the Pool is available to create Dev Boxes.",
+          "$ref": "#/definitions/HealthStatus",
+          "readOnly": true
+        },
+        "healthStatusDetails": {
+          "description": "Details on the Pool health status to help diagnose issues. This is only populated when the pool status indicates the pool is in a non-healthy state",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HealthStatusDetail"
+          },
+          "readOnly": true
+        },
         "provisioningState": {
           "description": "The provisioning state of the resource.",
           "$ref": "commonDefinitions.json#/definitions/ProvisioningState",
@@ -1026,6 +1106,37 @@
         "licenseType",
         "localAdministrator"
       ]
+    },
+    "HealthStatus": {
+      "description": "Health status indicating whether a pool is available to create Dev Boxes.",
+      "enum": [
+        "Unknown",
+        "Pending",
+        "Healthy",
+        "Warning",
+        "Unhealthy"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "HealthStatus",
+        "modelAsString": true
+      }
+    },
+    "HealthStatusDetail": {
+      "type": "object",
+      "description": "Pool health status detail.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "An identifier for the issue.",
+          "readOnly": true
+        },
+        "message": {
+          "type": "string",
+          "description": "A message describing the issue, intended to be suitable for display in a user interface",
+          "readOnly": true
+        }
+      }
     },
     "LicenseType": {
       "description": "License Types",
@@ -1046,6 +1157,33 @@
       ],
       "x-ms-enum": {
         "name": "LocalAdminStatus",
+        "modelAsString": true
+      }
+    },
+    "StopOnDisconnectConfiguration": {
+      "type": "object",
+      "description": "Stop on disconnect configuration settings for Dev Boxes created in this pool.",
+      "properties": {
+        "status": {
+          "description": "Whether the feature to stop the devbox on disconnect once the grace period has lapsed is enabled.",
+          "$ref": "#/definitions/StopOnDisconnectEnabled"
+        },
+        "gracePeriodMinutes": {
+          "description": "The specified time in minutes to wait before stopping a Dev Box once disconnect is detected.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "StopOnDisconnectEnabled": {
+      "description": "Stop on disconnect enable or disable status. Indicates whether stop on disconnect to is either enabled or disabled.",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "StopOnDisconnectEnabled",
         "modelAsString": true
       }
     },
@@ -1096,18 +1234,6 @@
           "type": "string",
           "readOnly": true,
           "description": "The actual version of the image after use. When id references a gallery image latest version, this will indicate the actual version in use."
-        },
-        "publisher": {
-          "description": "The image publisher.",
-          "type": "string"
-        },
-        "offer": {
-          "description": "The image offer.",
-          "type": "string"
-        },
-        "sku": {
-          "description": "The image sku.",
-          "type": "string"
         }
       }
     },
@@ -1274,12 +1400,12 @@
     "HealthCheckStatus": {
       "description": "Health check status values",
       "enum": [
+        "Unknown",
         "Pending",
         "Running",
         "Passed",
-        "Failed",
         "Warning",
-        "Unknown"
+        "Failed"
       ],
       "type": "string",
       "x-ms-enum": {
@@ -1392,127 +1518,6 @@
         }
       }
     },
-    "Schedule": {
-      "type": "object",
-      "description": "Represents a Schedule to execute a task.",
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "description": "Properties of a Schedule resource",
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/ScheduleProperties"
-        }
-      }
-    },
-    "ScheduleUpdate": {
-      "description": "The schedule properties for partial update. Properties not provided in the update request will not be changed.",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "commonDefinitions.json#/definitions/TrackedResourceUpdate"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/ScheduleUpdateProperties",
-          "description": "Properties of a schedule resource to be updated."
-        }
-      }
-    },
-    "ScheduleUpdateProperties": {
-      "description": "Updatable properties of a Schedule.",
-      "type": "object",
-      "properties": {
-        "type": {
-          "description": "Supported type this scheduled task represents.",
-          "$ref": "#/definitions/ScheduledType"
-        },
-        "frequency": {
-          "description": "The frequency of this scheduled task.",
-          "$ref": "#/definitions/ScheduledFrequency"
-        },
-        "time": {
-          "description": "The target time to trigger the action. The format is HH:MM.",
-          "type": "string"
-        },
-        "timeZone": {
-          "description": "The IANA timezone id at which the schedule should execute.",
-          "type": "string"
-        },
-        "state": {
-          "description": "Indicates whether or not this scheduled task is enabled.",
-          "$ref": "devcenter.json#/definitions/EnableStatus"
-        }
-      }
-    },
-    "ScheduleProperties": {
-      "description": "The Schedule properties defining when and what to execute.",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ScheduleUpdateProperties"
-        }
-      ],
-      "properties": {
-        "provisioningState": {
-          "description": "The provisioning state of the resource.",
-          "$ref": "commonDefinitions.json#/definitions/ProvisioningState",
-          "readOnly": true
-        }
-      },
-      "required": [
-        "type",
-        "frequency",
-        "timeZone",
-        "time"
-      ]
-    },
-    "ScheduleListResult": {
-      "description": "Result of the schedule list operation.",
-      "type": "object",
-      "properties": {
-        "value": {
-          "description": "Current page of results.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Schedule"
-          },
-          "readOnly": true
-        },
-        "nextLink": {
-          "description": "URL to get the next set of results if there are any.",
-          "type": "string",
-          "readOnly": true
-        }
-      }
-    },
-    "ScheduledType": {
-      "description": "The supported types for a scheduled task.",
-      "enum": [
-        "StopDevBox"
-      ],
-      "type": "string",
-      "x-ms-enum": {
-        "name": "ScheduledType",
-        "modelAsString": true
-      }
-    },
-    "ScheduledFrequency": {
-      "description": "The frequency of task execution.",
-      "enum": [
-        "Daily"
-      ],
-      "type": "string",
-      "x-ms-enum": {
-        "name": "ScheduledFrequency",
-        "modelAsString": true
-      }
-    },
     "OutboundEnvironmentEndpointCollection": {
       "type": "object",
       "properties": {
@@ -1585,6 +1590,139 @@
         }
       },
       "description": "Details about the connection between the Batch service and the endpoint."
+    },
+    "Schedule": {
+      "type": "object",
+      "description": "Represents a Schedule to execute a task.",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "description": "Properties of a Schedule resource",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ScheduleProperties"
+        }
+      }
+    },
+    "ScheduleUpdate": {
+      "description": "The schedule properties for partial update. Properties not provided in the update request will not be changed.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "commonDefinitions.json#/definitions/TrackedResourceUpdate"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ScheduleUpdateProperties",
+          "description": "Properties of a schedule resource to be updated."
+        }
+      }
+    },
+    "ScheduleUpdateProperties": {
+      "description": "Updatable properties of a Schedule.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Supported type this scheduled task represents.",
+          "$ref": "#/definitions/ScheduledType"
+        },
+        "frequency": {
+          "description": "The frequency of this scheduled task.",
+          "$ref": "#/definitions/ScheduledFrequency"
+        },
+        "time": {
+          "description": "The target time to trigger the action. The format is HH:MM.",
+          "type": "string"
+        },
+        "timeZone": {
+          "description": "The IANA timezone id at which the schedule should execute.",
+          "type": "string"
+        },
+        "state": {
+          "description": "Indicates whether or not this scheduled task is enabled.",
+          "$ref": "#/definitions/ScheduleEnabled"
+        }
+      }
+    },
+    "ScheduleProperties": {
+      "description": "The Schedule properties defining when and what to execute.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ScheduleUpdateProperties"
+        }
+      ],
+      "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "commonDefinitions.json#/definitions/ProvisioningState",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "type",
+        "frequency",
+        "timeZone",
+        "time"
+      ]
+    },
+    "ScheduleListResult": {
+      "description": "Result of the schedule list operation.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Current page of results.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Schedule"
+          },
+          "readOnly": true
+        },
+        "nextLink": {
+          "description": "URL to get the next set of results if there are any.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ScheduledType": {
+      "description": "The supported types for a scheduled task.",
+      "enum": [
+        "StopDevBox"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ScheduledType",
+        "modelAsString": true
+      }
+    },
+    "ScheduledFrequency": {
+      "description": "The frequency of task execution.",
+      "enum": [
+        "Daily"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ScheduledFrequency",
+        "modelAsString": true
+      }
+    },
+    "ScheduleEnabled": {
+      "description": "Schedule enable or disable status. Indicates whether the schedule applied to is either enabled or disabled.",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "ScheduleEnabled",
+        "modelAsString": true
+      }
     }
   },
   "parameters": {
