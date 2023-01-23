@@ -25,7 +25,7 @@ if generatedFiles != fixedFiles:
   print(f'New {len(newFiles)} {newFiles}')
   missingFiles = [f for f in fixedFiles if f not in generatedFiles]
   print(f'Missing {len(missingFiles)} {missingFiles}')
-  exit
+  exit(1)
 
 def checkPath(path:str, hints):
   splits = path.split('.')

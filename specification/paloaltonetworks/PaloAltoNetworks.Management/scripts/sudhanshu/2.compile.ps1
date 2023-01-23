@@ -4,6 +4,7 @@ Push-Location $PSScriptRoot
 Push-Location ../../
 Remove-Item -path ./PaloAltoNetworks.Cloudngfw -recurse -ErrorAction SilentlyContinue
 Remove-Item -path ./examples -recurse -ErrorAction SilentlyContinue
+npx cadl format **/*.cadl
 npx cadl compile . --option arm-types-path="../../common-types/resource-management/v3/types.json" --output-path="./"
 npx cadl compile . --option arm-types-path="../../../../../common-types/resource-management/v3/types.json" --option azure-resource-provider-folder="../"
 Pop-Location
