@@ -42,6 +42,7 @@ input-file:
   - Private.ModSimWorkbench/preview/2021-03-01-preview/workload.json
   - Private.ModSimWorkbench/preview/2021-03-01-preview/files.json
   - Private.ModSimWorkbench/preview/2021-03-01-preview/fileRequests.json
+  - Private.ModSimWorkbench/preview/2021-03-01-preview/storage.json
 ```
 
 ---
