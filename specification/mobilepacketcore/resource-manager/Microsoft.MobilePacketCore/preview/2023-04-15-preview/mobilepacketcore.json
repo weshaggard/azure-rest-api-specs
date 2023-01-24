@@ -491,7 +491,8 @@
       "type": "object",
       "properties": {
         "state": {
-          "$ref": "./common.json#/definitions/enableDisable"
+          "$ref": "./common.json#/definitions/enableDisable",
+          "description": "Enable/disable 4G/5G interworking.  SMF, UPF"
         },
         "supportedType": {
           "type": "string",
@@ -502,11 +503,12 @@
           "x-ms-enum": {
             "name": "n26Support",
             "modelAsString": true
-          }
+          },
+          "description": "Whether to use the N26 interface for interworking between 4G and 5G.  AMF"
         },
         "sNssai": {
           "$ref": "./common.json#/definitions/Snssai",
-          "description": "Default S-NSSAI value to be used for EPC interworking"
+          "description": "Default S-NSSAI value to be used for EPC interworking.  AMF"
         }
       }
     },
@@ -514,10 +516,14 @@
       "type": "object",
       "properties": {
         "state": {
-          "$ref": "./common.json#/definitions/enableDisable"
+          "$ref": "./common.json#/definitions/enableDisable",
+          "default": "enabled",
+          "description": "Enable/disable emergency services.  AMF"
         },
         "fallback": {
-          "$ref": "./common.json#/definitions/enableDisable"
+          "$ref": "./common.json#/definitions/enableDisable",
+          "default": "enabled",
+          "description": "Controls support for fallback for emergency services.  AMF"
         },
         "emergencyUserOption": {
           "type": "string",
@@ -530,29 +536,38 @@
           "x-ms-enum": {
             "name": "emergencyUserOption",
             "modelAsString": true
-          }
+          },
+          "default": "allUes",
+          "description": "User category to allow an emergency call. AMF"
         },
         "skipAuthentication": {
-          "$ref": "./common.json#/definitions/enableDisable"
+          "$ref": "./common.json#/definitions/enableDisable",
+          "default": "disabled",
+          "description": "Skip authentication for UEs requesting emergency services. AMF"
         },
         "ueAmbrUplink": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 4000000000
+          "maximum": 4000000000,
+          "default": 64,
+          "description": "Emergency uplink Aggregated Maximum Bit Rate (AMBR). Unit: kbps.  AMF"
         },
         "ueAmbrDownlink": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 4000000000
+          "maximum": 4000000000,
+          "default": 64,
+          "description": "Emergency downlink Aggregated Maximum Bit Rate (AMBR). Unit: kbps.  AMF"
         },
         "sNssai": {
           "$ref": "./common.json#/definitions/Snssai",
-          "description": "S-NSSAI value to be used for emergency calls"
+          "description": "S-NSSAI value to be used for emergency calls.  AMF"
         }
       }
     },
     "pfcpProfile": {
       "type": "object",
+      "description": "Profile used for PFCP Associations.  SMF, UPF",
       "properties": {
         "pfcpAssociationRetryInterval": {
           "type": "integer",
@@ -618,6 +633,7 @@
     },
     "gtpcProfile": {
       "type": "object",
+      "description": "Profile used for GTP Interfaces.  AMF, SMF, UPF",
       "properties": {
         "n3Request": {
           "type": "integer",
@@ -628,6 +644,7 @@
         },
         "t3Response": {
           "type": "integer",
+          "minimum": 100,
           "maximum": 3600000,
           "default": 5000,
           "description": "t3-response time in milliseconds (100 - 3600000)"
@@ -641,19 +658,22 @@
         },
         "t3EchoResponse": {
           "type": "integer",
-          "default": 15000,
+          "minimum": 100,
           "maximum": 360000,
+          "default": 15000,
           "description": "t3-echo-response in milliseconds (100 - 360000)"
         },
         "n3EchoRequest": {
           "type": "integer",
           "default": 8,
+          "minimum": 1,
           "maximum": 20,
           "description": "n3-echo-request : number of attempts to send echo request message (1 - 20)"
         },
         "inactivityTimer": {
           "type": "integer",
           "default": 8,
+          "minimum": 1,
           "maximum": 36000,
           "description": "time in minutes to wait after GTP path failure for a peer (1 - 36000)"
         },
@@ -665,15 +685,18 @@
           "default": 5000
         },
         "dscpMarking": {
-          "$ref": "./common.json#/definitions/dscp"
+          "$ref": "./common.json#/definitions/dscp",
+          "default": "df"
         }
       }
     },
     "dnsProfile": {
       "type": "object",
+      "description": "Profile used for interfacing with DNS.  AMF",
       "properties": {
         "dscpMarking": {
-          "$ref": "./common.json#/definitions/dscp"
+          "$ref": "./common.json#/definitions/dscp",
+          "default": "df"
         }
       }
     },
@@ -682,6 +705,7 @@
       "properties": {
         "mobilityManagement": {
           "type": "array",
+          "description": "EDR Profile for Mobility Management events.  AMF",
           "items": {
             "type": "object",
             "properties": {
@@ -698,7 +722,8 @@
                 "x-ms-enum": {
                   "name": "layerName",
                   "modelAsString": true
-                }
+                },
+                "description": "Event layer name - predefined set of supported event layers"
               },
               "eventType": {
                 "type": "array",
@@ -716,7 +741,8 @@
                       "x-ms-enum": {
                         "name": "mmEventType",
                         "modelAsString": true
-                      }
+                      },
+                      "description": "Event type name - predefined set of supported event types"
                     },
                     "outcomeType": {
                       "type": "array",
@@ -730,7 +756,8 @@
                         "x-ms-enum": {
                           "name": "mmOutcomeType",
                           "modelAsString": true
-                        }
+                        },
+                        "description": "outcome type name - predefined set of supported outcomes"
                       }
                     }
                   }
@@ -741,6 +768,7 @@
         },
         "sessionManagement": {
           "type": "object",
+          "description": "EDR Profile for Session Management events.  SMF",
           "properties": {
             "eventType": {
               "type": "array",
@@ -757,7 +785,8 @@
                     "x-ms-enum": {
                       "name": "smEventType",
                       "modelAsString": true
-                    }
+                    },
+                    "description": "Event type name - predefined set of supported event types"
                   },
                   "outcomeType": {
                     "type": "array",
@@ -770,7 +799,8 @@
                       "x-ms-enum": {
                         "name": "smOutcomeType",
                         "modelAsString": true
-                      }
+                      },
+                      "description": "outcome type name - predefined set of supported outcomes"
                     }
                   }
                 }
@@ -780,25 +810,36 @@
         },
         "userPlane": {
           "type": "array",
+          "description": "EDR Profile for User Plane events.  UPF",
           "items": {
             "type": "object",
             "properties": {
               "startFlowEdrGeneration": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Enable or Disable START type Flow Edr generation",
+                "default": false
               },
               "interimFlowEdrGeneration": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Enable or Disable INTERIM type Flow Edr generation",
+                "default": false
               },
               "stopFlowEdrGeneration": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Enable or Disable STOP type Flow Edr generation",
+                "default": false
               },
               "interimEdrInterval": {
                 "type": "integer",
                 "minimum": 10,
-                "maximum": 360
+                "maximum": 360,
+                "description": "time interval between two successive interim edrs in seconds",
+                "default": 60
               },
               "optimizedInterimRecords": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "List of EDR types for which interim record optimization is enabled. if enabled, interim record size is optimized by skipping fields that did not change from last EDR and incremental stats",
+                "default": true
               }
             }
           }
@@ -810,29 +851,54 @@
       "properties": {
         "mobilityManagement": {
           "type": "object",
+          "description": "Profile for tracing.  AMF",
           "properties": {
             "n2Targets": {
               "type": "array",
               "items": {
                 "type": "object",
+                "description": "must ((count(ipv4-address-primary) != 0) or (count(ipv4-address-secondary) != 0) or (count(ipv6-address-primary) != 0) or (count(ipv6-address-secondary) != 0) or (count(global-node-id/plmn) != 0))",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Unique Global RAN Node name",
+                    "minLength": 1,
+                    "maxLength": 254
                   },
                   "ipv4AddressPrimary": {
-                    "$ref": "./common.json#/definitions/ipv4Address"
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "Primary IPv4 address of the node"
                   },
                   "ipv4AddressSecondary": {
-                    "$ref": "./common.json#/definitions/ipv4Address"
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "Secondary IPv4 address of the node - only applicable if primary IPv4 address is specified"
                   },
                   "ipv6AddressPrimary": {
-                    "$ref": "./common.json#/definitions/ipv6Address"
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "Primary IPv6 address of the node"
                   },
                   "ipv6AddressSecondary": {
-                    "$ref": "./common.json#/definitions/ipv6Address"
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "Secondary IPv6 address of the node - only applicable if primary IPv6 address is specified"
                   },
                   "probability": {
-                    "$ref": "./common.json#/definitions/TraceProbability"
+                    "$ref": "./common.json#/definitions/TraceProbability",
+                    "description": "Probability of sampling the trace for the target",
+                    "default": 0.1
+                  },
+                  "globalNodeId": {
+                    "type": "object",
+                    "description": "Identifier of the node",
+                    "properties": {
+                      "plmn": {
+                        "$ref": "./common.json#/definitions/PlmnId",
+                        "description": "A unique PLMN identifier;"
+                      },
+                      "gnbId": {
+                        "type": "integer",
+                        "description": "A unique 32-bit gNB identifier"
+                      }
+                    }
                   }
                 },
                 "required": [
@@ -842,6 +908,7 @@
             },
             "sessions": {
               "type": "array",
+              "description": "Per UE tracing",
               "items": {
                 "type": "object",
                 "properties": {
@@ -853,15 +920,18 @@
                     "x-ms-enum": {
                       "name": "targetType",
                       "modelAsString": true
-                    }
+                    },
+                    "description": "Type of target for tracing"
                   },
                   "targetValue": {
                     "type": "string",
-                    "pattern": "^imsi-[0-9]{5,15}$"
+                    "pattern": "^imsi-[0-9]{5,15}$",
+                    "description": "Value of target"
                   },
                   "sessionId": {
                     "type": "string",
-                    "pattern": "[0-9]{5,6}[.][0-9a-fA-F]{6}"
+                    "pattern": "[0-9]{5,6}[.][0-9a-fA-F]{6}",
+                    "description": "ID to uniquely identify the trace session. Format: PLMN.trace_id, where PLMN is input as 5 or 6 digit BCD number and trace-id is input as a 3 byte hexadecimal number. Example: 310070.70F13A"
                   }
                 },
                 "required": [
@@ -875,35 +945,44 @@
         },
         "sessionManagement": {
           "type": "object",
+          "description": "Profile for tracing.  SMF",
           "properties": {
             "sessions": {
               "type": "array",
               "items": {
                 "type": "object",
+                "description": "must count(./supi)!=0 or count(./dnn)!=0 or count(./pei)!=0 or count(./gpsi)!=0",
                 "properties": {
                   "priority": {
                     "type": "integer",
                     "minimum": 1,
-                    "maximum": 255
+                    "maximum": 255,
+                    "default": 255
                   },
                   "probability": {
-                    "$ref": "./common.json#/definitions/TraceProbability"
+                    "$ref": "./common.json#/definitions/TraceProbability",
+                    "default": 0.0,
+                    "description": "Probability of sampling the trace for SMF"
                   },
                   "supi": {
                     "type": "string",
-                    "pattern": "^imsi-[0-9]{5,15}$"
+                    "pattern": "^imsi-[0-9]{5,15}$",
+                    "description": "Subscription Permanent Identifier (SUPI) value to match traces"
                   },
                   "pei": {
                     "type": "string",
-                    "pattern": "^imei-[0-9]{5,15}$"
+                    "pattern": "^imei-[0-9]{5,15}$",
+                    "description": "Permanent Equipment Identifier (PEI) value to match traces"
                   },
                   "gpsi": {
                     "type": "string",
-                    "pattern": "^msisdn-[0-9]{5,15}$"
+                    "pattern": "^msisdn-[0-9]{5,15}$",
+                    "description": "Generic Public Subscription Identifier (GPSI) value to match traces"
                   },
                   "dnn": {
                     "type": "string",
-                    "pattern": "[a-zA-Z]([a-zA-Z0-9-._]){0,63}"
+                    "pattern": "[a-zA-Z]([a-zA-Z0-9-._]){0,63}",
+                    "description": "Data Network Name value to match traces"
                   }
                 }
               }
@@ -917,17 +996,23 @@
       "properties": {
         "n26Profile": {
           "type": "object",
+          "description": "N26 interface profile.  AMF",
           "properties": {
             "gtpcProfile": {
               "$ref": "#/definitions/gtpcProfile"
             },
             "srcAmfResourceReleaseTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Defines the duration the source AMF waits before releasing the UE context; The timer is started after UE context transfer request is received from target AMF; Default: 10000; Unit: milliseconds",
+              "minimum": 0,
+              "maximum": 30000,
+              "default": 10000
             }
           }
         },
         "nchfProfile": {
           "type": "object",
+          "description": "Nchf service based interface profile.  SMF",
           "properties": {
             "dscpMarking": {
               "$ref": "./common.json#/definitions/dscp"
@@ -942,20 +1027,24 @@
                   },
                   "description": "The set of HTTP status codes received for which the Nchf request needs to be failovered to an alternate CHF server"
                 },
-                "blacklistedServerExpiryInterval": {
+                "blocklistedServerExpiryInterval": {
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 86400,
+                  "default": 60,
                   "description": "Duration in seconds after which the CHF Server can be considered to be available for sending the Nchf requests to it."
                 },
                 "reachabilityFailuresPercentage": {
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 100,
+                  "default": 100,
                   "description": "The percentage of Nchf request failures within a duration defined by reachability-failures-duration configuration, after which the server is blocklisted."
                 },
                 "reachabilityFailuresDuration": {
                   "type": "integer",
+                  "maximum": 4294967295,
+                  "default": 5,
                   "description": "The duration in seconds which is considered to monitor the percentage of Nchf request failures, defined by the reachability-failures-percentage, to check if given CHF server needs to be blocklisted or not."
                 }
               }
@@ -964,6 +1053,7 @@
         },
         "nnrfProfile": {
           "type": "object",
+          "description": "Nnrf service based interface profile.  AMF, UPF, SMF, NSSF",
           "properties": {
             "subscriptionValidityTimer": {
               "type": "integer",
@@ -983,12 +1073,15 @@
               "type": "object",
               "properties": {
                 "dscpMarking": {
-                  "$ref": "./common.json#/definitions/dscp"
+                  "$ref": "./common.json#/definitions/dscp",
+                  "default": "df"
                 },
                 "responseTimeout": {
                   "type": "integer",
+                  "description": "Time period (in miliseconds) to wait for response after a request has been sent, after which it will be treated as no response from peer.  SMF",
                   "minimum": 500,
-                  "maximum": 30000
+                  "maximum": 30000,
+                  "default": 3000
                 }
               }
             },
@@ -996,11 +1089,13 @@
               "type": "object",
               "properties": {
                 "dscpMarking": {
-                  "$ref": "./common.json#/definitions/dscp"
+                  "$ref": "./common.json#/definitions/dscp",
+                  "default": "df"
                 },
                 "includeTaiInNrfRegistration": {
                   "$ref": "./common.json#/definitions/enableDisable",
-                  "description": "Applicable to AMF"
+                  "description": "Determines if the TAI list needs to be included in the NF Registration request (as defined by TS 29.510 section 5.2.2.2.2) sent to NRF. AMF",
+                  "default": "enabled"
                 }
               }
             }
@@ -1008,17 +1103,21 @@
         },
         "namfProfile": {
           "type": "object",
+          "description": "Namf service based interface profile.  AMF, SMF",
           "properties": {
             "dscpMarking": {
-              "$ref": "./common.json#/definitions/dscp"
+              "$ref": "./common.json#/definitions/dscp",
+              "default": "df"
             },
             "events": {
               "type": "object",
               "properties": {
                 "responseTimeout": {
                   "type": "integer",
+                  "description": "Time period (in miliseconds) to wait for response after a request has been sent, after which it will be treated as no response from peer.  SMF",
                   "minimum": 500,
-                  "maximum": 30000
+                  "maximum": 30000,
+                  "default": 3000
                 }
               }
             },
@@ -1026,18 +1125,29 @@
               "type": "object",
               "properties": {
                 "requestTimer": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+                  "minimum": 0,
+                  "maximum": 15000,
+                  "default": 6000
                 },
                 "responseTimeout": {
                   "type": "integer",
+                  "description": "Time period (in miliseconds) to wait for response after a request has been sent, after which it will be treated as no response from peer.  SMF",
                   "minimum": 500,
-                  "maximum": 30000
+                  "maximum": 30000,
+                  "default": 3000
                 },
                 "srcAmfResourceReleaseTimer": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "Defines the duration the source AMF waits before releasing the UE context; The timer is started after UE context transfer request is received from target AMF; Unit: milliseconds.  AMF",
+                  "minimum": 0,
+                  "maximum": 30000,
+                  "default": 10000
                 },
                 "includeSeafData": {
                   "type": "string",
+                  "description": "On the Source AMF, this controls whether the source AMF includes security context information in the form of SEAF (SEcurity Anchor Function) data in the UE Context Transfer response. On the Target AMF, this controls whether the SEAF data is expected in the response. The UE Context Transfer service operation is described in TS 29.518. A value of 'always' is compliant to Release 15 and prior. A value of 'exclude-when-ue-validated' is compliant to Release 16.  AMF",
                   "enum": [
                     "excludeWhenUeValidated",
                     "always"
@@ -1045,7 +1155,8 @@
                   "x-ms-enum": {
                     "name": "communicationsIncludeSeafData",
                     "modelAsString": true
-                  }
+                  },
+                  "default": "excludeWhenUeValidated"
                 }
               }
             }
@@ -1053,31 +1164,46 @@
         },
         "nausfProfile": {
           "type": "object",
+          "description": "Nausf service based interface profile.  AMF",
           "properties": {
             "authRequestTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+              "minimum": 0,
+              "maximum": 15000,
+              "default": 6000
             },
             "authSupportedFeaturesAuthenticationResultRemoval": {
-              "$ref": "./common.json#/definitions/enableDisable"
+              "$ref": "./common.json#/definitions/enableDisable",
+              "description": "Defines if the Authentication result removal procedure should be performed during purge or SMC failure",
+              "default": "disabled"
             }
           }
         },
         "nudmProfile": {
           "type": "object",
+          "description": "Nudm service based interface profile.  AMF, SMF",
           "properties": {
             "dscpMarking": {
-              "$ref": "./common.json#/definitions/dscp"
+              "$ref": "./common.json#/definitions/dscp",
+              "default": "df"
             },
             "sdm": {
               "type": "object",
               "properties": {
                 "requestTimer": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+                  "minimum": 0,
+                  "maximum": 15000,
+                  "default": 6000
                 },
                 "responseTimeout": {
                   "type": "integer",
+                  "description": "Time period (in miliseconds) to wait for response after a request has been sent, after which it will be treated as no response from peer.  SMF",
                   "minimum": 500,
-                  "maximum": 30000
+                  "maximum": 30000,
+                  "default": 3000
                 }
               }
             },
@@ -1085,12 +1211,18 @@
               "type": "object",
               "properties": {
                 "requestTimer": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+                  "minimum": 0,
+                  "maximum": 15000,
+                  "default": 6000
                 },
                 "responseTimeout": {
                   "type": "integer",
+                  "description": "Time period (in miliseconds) to wait for response after a request has been sent, after which it will be treated as no response from peer.  SMF",
                   "minimum": 500,
-                  "maximum": 30000
+                  "maximum": 30000,
+                  "default": 3000
                 }
               }
             },
@@ -1098,7 +1230,11 @@
               "type": "object",
               "properties": {
                 "requestTimer": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+                  "minimum": 0,
+                  "maximum": 15000,
+                  "default": 6000
                 }
               }
             }
@@ -1106,47 +1242,74 @@
         },
         "nsmfProfile": {
           "type": "object",
+          "description": "Nsmf service based interface profile.  AMF",
           "properties": {
             "pdusessionRequestTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+              "minimum": 0,
+              "maximum": 15000,
+              "default": 6000
             }
           }
         },
         "nnssfProfile": {
           "type": "object",
+          "description": "Nnssf service based interface profile.  AMF",
           "properties": {
             "nsselectionRequestTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+              "minimum": 0,
+              "maximum": 15000,
+              "default": 6000
             }
           }
         },
         "nsmsfProfile": {
           "type": "object",
+          "description": "Nsmsf service based interface profile.  AMF",
           "properties": {
             "smsRequestTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+              "minimum": 0,
+              "maximum": 15000,
+              "default": 6000
             }
           }
         },
         "npcfProfile": {
           "type": "object",
+          "description": "Nnssf service based interface profile.  AMF, SMF",
           "properties": {
             "dscpMarking": {
-              "$ref": "./common.json#/definitions/dscp"
+              "$ref": "./common.json#/definitions/dscp",
+              "default": "df"
             },
             "policycontrol": {
               "type": "object",
               "properties": {
                 "ueRequestTimer": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+                  "minimum": 0,
+                  "maximum": 15000,
+                  "default": 6000
                 },
                 "amRequestTimer": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+                  "minimum": 0,
+                  "maximum": 15000,
+                  "default": 6000
                 },
                 "responseTimeout": {
                   "type": "integer",
+                  "description": "Time period (in miliseconds) to wait for response after a request has been sent, after which it will be treated as no response from peer.  SMF",
                   "minimum": 500,
-                  "maximum": 30000
+                  "maximum": 30000,
+                  "default": 3000
                 }
               }
             }
@@ -1154,57 +1317,176 @@
         },
         "nlmfProfile": {
           "type": "object",
+          "description": "Nlmf service based interface profile.  AMF",
           "properties": {
             "locRequestTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+              "minimum": 0,
+              "maximum": 15000,
+              "default": 6000
             }
           }
         },
         "ngmlcProfile": {
           "type": "object",
+          "description": "Ngmlc service based interface profile.  AMF",
           "properties": {
             "locRequestTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Defines the duration the AMF waits for a response from the peer; Unit: milliseconds.  AMF",
+              "minimum": 0,
+              "maximum": 15000,
+              "default": 6000
             }
           }
         },
         "ngapProfile": {
           "type": "object",
+          "description": "NG-AP interface profile.  AMF",
           "properties": {
             "timeToWait": {
-              "type": "integer"
+              "type": "string",
+              "enum": [
+                "1",
+                "2",
+                "5",
+                "10",
+                "20",
+                "60"
+              ],
+              "x-ms-enum": {
+                "name": "ngapTimeToWait",
+                "modelAsString": true
+              },
+              "description": "Time to wait; the minimum allowed waiting time after a setup or configuration update failure; Default: 60; Unit: seconds",
+              "default": "60"
             },
             "resetAckDelayTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "5G-AN reset ACK delay timer; Default: 14; Unit: seconds",
+              "minimum": 8,
+              "maximum": 14,
+              "default": 14
             },
             "n2ReleaseDelayTimer": {
-              "type": "integer"
+              "type": "object",
+              "description": "Ngap service based interface profile.  AMF",
+              "properties": {
+                "state": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "default": "disabled",
+                  "description": "Enable/disable releasing of the N2 connection"
+                },
+                "value": {
+                  "type": "integer",
+                  "description": "If enabled, defines the time the AMF waits before releasing the N2 connection after a NAS procedure; Default: 5000; Units: milliseconds",
+                  "minimum": 1000,
+                  "maximum": 5000,
+                  "default": 5000
+                }
+              }
             },
             "relocPrepTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Time that the AMF waits for the target gNodeB to respond to the handover request in an N2 based handover. Default: 3000; Unit: milliseconds",
+              "minimum": 1000,
+              "maximum": 30000,
+              "default": 3000
             },
             "relocOverallTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Time that the AMF waits for the handover notify from the target gNodeB. Default: 5000; Unit: milliseconds",
+              "minimum": 1000,
+              "maximum": 30000,
+              "default": 5000
             },
             "handoverResourceReleaseTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Time that the AMF waits before releasing the N2 connection on the source gNodeB during an N2 based handover procedure. Default: 2000; Unit: milliseconds",
+              "minimum": 1000,
+              "maximum": 30000,
+              "default": 2000
             },
             "waitForMobilityRegistrationTimer": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Time that the AMF waits for a mobility registration after an intra-AMF relocation with TAI list change or after an inter-AMF relocation. Default: 5000; Unit: milliseconds",
+              "minimum": 1000,
+              "maximum": 10000,
+              "default": 5000
             }
           }
         },
         "nasProfile": {
           "type": "object",
+          "description": "NAS interface profile.  AMF",
           "properties": {
-            "mmSignalingRateControlInitialRegistrationRateLimit": {
-              "$ref": "./common.json#/definitions/enableDisable"
+            "signalingRateControlInitialRegistrationRateLimit": {
+              "type": "object",
+              "description": "Defines the maximum rate per second at which the applicable messages may be processed by an AMF Call Control microservice.  The value disable indicates that rate control functionality is disabled.",
+              "properties": {
+                "state": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "default": "disabled",
+                  "description": "Enable/disable initial registrations rate limiting"
+                },
+                "value": {
+                  "type": "integer",
+                  "description": "If enabled, Unit: messages per second",
+                  "minimum": 1,
+                  "maximum": 1000,
+                  "default": 1000
+                },
+                "action": {
+                  "type": "string",
+                  "description": "Defines the action to be taken when the signaling rate control limit has been exceeded. Default: reject.  Ignore: Do not send a response to the UE.  Reject: Send a registration reject to the UE with cause 22 (congestion)",
+                  "enum": [
+                    "ignore",
+                    "reject"
+                  ],
+                  "x-ms-enum": {
+                    "name": "action",
+                    "modelAsString": true
+                  },
+                  "default": "reject"
+                },
+                "t3346": {
+                  "type": "object",
+                  "description": "A random number between t3346-low and t3346-high is included in the initial registration reject message as defined by 3GPP TS 24.501 section 8.2.9, and may be used by the UE to re-send the request after the specified time",
+                  "properties": {
+                    "state": {
+                      "$ref": "./common.json#/definitions/enableDisable",
+                      "default": "enabled",
+                      "description": "The value disable indicates that the T3346 value is not included in the initial registration reject message"
+                    },
+                    "low": {
+                      "type": "integer",
+                      "description": "Defines the lower end of the range for the T3346 value sent to the UE. ",
+                      "minimum": 2,
+                      "maximum": 11159,
+                      "default": 4
+                    },
+                    "high": {
+                      "type": "integer",
+                      "description": "Defines the higher end of the range for the T3346 value sent to the UE. Must be greater than 'low'",
+                      "minimum": 3,
+                      "maximum": 11160,
+                      "default": 16
+                    }
+                  }
+                }
+              }
             },
             "pagingMaxVisitedGnbsTracked": {
-              "type": "integer"
+              "type": "integer",
+              "description": "Maximum number of visited gnbs to be tracked per UE for paging",
+              "minimum": 2,
+              "maximum": 16,
+              "default": 5
             },
             "pagingVisitedGnbsAllocation": {
               "type": "string",
+              "description": "Visited gnbs allocation method for paging",
               "enum": [
                 "taiList",
                 "unrestricted"
@@ -1212,90 +1494,125 @@
               "x-ms-enum": {
                 "name": "pagingVisitedGnbsAllocation",
                 "modelAsString": true
-              }
+              },
+              "default": "taiList"
             }
           }
         },
         "n2Profile": {
           "type": "object",
+          "description": "N2 interface profile.  AMF",
           "properties": {
             "dscpMarking": {
-              "$ref": "./common.json#/definitions/dscp"
+              "$ref": "./common.json#/definitions/dscp",
+              "default": "df"
             },
             "localPort": {
               "type": "integer",
-              "maximum": 65535
+              "description": "SCTP Port number; Default: 38412",
+              "minimum": 1,
+              "maximum": 65535,
+              "default": 38412
             },
             "sctp": {
               "type": "object",
+              "description": "SCTP parameters for N2.  AMF",
               "properties": {
                 "rtoInitial": {
                   "type": "integer",
+                  "description": "Retransmission Time Out (RTO) initial value. Default: 500; Unit: milliseconds",
                   "minimum": 1,
-                  "maximum": 5000
+                  "maximum": 5000,
+                  "default": 500
                 },
                 "rtoMin": {
                   "type": "integer",
+                  "description": "Retransmission Time Out (RTO) minimum value. Default: 250; Unit: milliseconds",
                   "minimum": 1,
-                  "maximum": 5000
+                  "maximum": 5000,
+                  "default": 250
                 },
                 "rtoMax": {
                   "type": "integer",
+                  "description": "Retransmission Time Out (RTO) maximum value. Default: 2000; Unit: milliseconds",
                   "minimum": 1,
-                  "maximum": 60000
+                  "maximum": 60000,
+                  "default": 2000
                 },
                 "pathMaxRetrans": {
                   "type": "integer",
+                  "description": "Maximum number of consecutive retransmissions over a destination transport address of a peer endpoint before it is marked as inactive. Default: 5",
                   "minimum": 1,
-                  "maximum": 29
+                  "maximum": 29,
+                  "default": 5
                 },
                 "associationInitMaxTransmit": {
                   "type": "integer",
+                  "description": "Maximum number of times an INIT chunk or a COOKIE ECHO chunk is retransmitted before an endpoint aborts the initialization process and closes the association. Default: 3",
                   "minimum": 1,
-                  "maximum": 10
+                  "maximum": 10,
+                  "default": 3
                 },
                 "associationMaxRetrans": {
                   "type": "integer",
+                  "description": "Maximum number of consecutive retransmissions to a peer before an endpoint considers that the peer is unreachable and closes the association. Default: 6",
                   "minimum": 1,
-                  "maximum": 20
+                  "maximum": 20,
+                  "default": 6
                 },
                 "noDelay": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Specifies no delay. Default: true"
                 },
                 "maxOutStream": {
                   "type": "integer",
+                  "description": "Specifies the maximum out stream. Default: 11",
                   "minimum": 1,
-                  "maximum": 64
+                  "maximum": 64,
+                  "default": 11
                 },
                 "maxInStream": {
                   "type": "integer",
+                  "description": "Specifies the maximum in stream. Default: 11",
                   "minimum": 1,
-                  "maximum": 120
+                  "maximum": 120,
+                  "default": 11
                 },
                 "hbInterval": {
                   "type": "integer",
+                  "description": "Specifies the heartbeat interval. Default: 30; Unit: seconds",
                   "minimum": 1,
-                  "maximum": 5000
+                  "maximum": 5000,
+                  "default": 30
                 },
                 "rxBufferSize": {
                   "type": "integer",
+                  "description": "Specifies the receive buffer size. Default: 149000; Unit: bytes",
                   "minimum": 25000,
-                  "maximum": 2097152
+                  "maximum": 2097152,
+                  "default": 149000
                 },
                 "txBufferSize": {
                   "type": "integer",
+                  "description": "Specifies the transmit buffer size. Default: 149000; Unit: bytes",
                   "minimum": 16000,
-                  "maximum": 5509000
+                  "maximum": 5509000,
+                  "default": 149000
                 },
                 "sackDelay": {
                   "type": "integer",
+                  "description": "Specifies the SCTP SACK delay value. Disable: 1; Default: 200; Unit: milliseconds",
                   "minimum": 1,
-                  "maximum": 500
+                  "maximum": 500,
+                  "default": 200
                 },
                 "sackFrequency": {
                   "type": "integer",
+                  "description": "Specifies the SCTP SACK frequency value. Disable: 1; Default: 2; Unit: packets",
                   "minimum": 1,
-                  "maximum": 5
+                  "maximum": 5,
+                  "default": 250
                 }
               }
             }
@@ -1308,14 +1625,7 @@
       "properties": {
         "s5S8S2aS2bProfile": {
           "type": "object",
-          "properties": {
-            "gtpcProfile": {
-              "$ref": "#/definitions/gtpcProfile"
-            }
-          }
-        },
-        "s10Profile": {
-          "type": "object",
+          "description": "S5/S8/S2a/S2b interface profile.  SMF",
           "properties": {
             "gtpcProfile": {
               "$ref": "#/definitions/gtpcProfile"
