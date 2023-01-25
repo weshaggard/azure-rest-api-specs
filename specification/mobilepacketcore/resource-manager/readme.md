@@ -66,6 +66,7 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/subscriberanalyzer.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/upfdeployment.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/upfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/configsnapshot.json
 ```
 
 
