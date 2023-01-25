@@ -313,7 +313,7 @@
         "tags": [
           "Jobs"
         ],
-        "operationId": "Jobs_Create",
+        "operationId": "Jobs_CreateOrUpdate",
         "description": "Create a Job",
         "parameters": [
           {
@@ -374,6 +374,55 @@
           "final-state-via": "azure-async-operation"
         },
         "x-ms-long-running-operation": true
+      },
+      "patch": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "Jobs_Update",
+        "description": "Update a Job",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "jobName",
+            "in": "path",
+            "required": true,
+            "description": "Job name",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
+          },
+          {
+            "name": "properties",
+            "in": "body",
+            "required": true,
+            "description": "The resource properties to be updated.",
+            "schema": {
+              "$ref": "#/definitions/JobUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/Job"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
       },
       "delete": {
         "tags": [
@@ -1109,6 +1158,51 @@
         }
       },
       "description": "The updatable properties of the JobTemplate."
+    },
+    "JobUpdate": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-cadl-name": "Record<string>",
+          "description": "Resource tags."
+        },
+        "properties": {
+          "$ref": "#/definitions/JobUpdateProperties",
+          "x-ms-client-flatten": true
+        }
+      },
+      "description": "The type used for update operations of the Job."
+    },
+    "JobUpdateProperties": {
+      "type": "object",
+      "properties": {
+        "jobTemplateInstance": {
+          "$ref": "#/definitions/JobTemplateResourceProperties",
+          "description": "Job Template to execute"
+        },
+        "resourceGroupNamePrefix": {
+          "type": "string",
+          "description": "Prefix to use for resource groups that are created during LISA validation."
+        },
+        "repos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-cadl-name": "string[]",
+          "description": "An array of strings that define different package repos to use in tests."
+        },
+        "keepFailedEnvironment": {
+          "type": "boolean",
+          "description": "Default false",
+          "default": false
+        }
+      },
+      "description": "The updatable properties of the Job."
     },
     "MarketplaceImage": {
       "type": "object",
