@@ -8,7 +8,7 @@ For new Resource Provider. It is highly recommended to onboard Azure CLI extensi
 az:
     extensions: azuredatatransfer
     namespace: azure.mgmt.azuredatatransfer
-    package-name: azure-mgmt-cloudtransferservice
+    package-name: azure-mgmt-azuredatatransfer
 az-output-folder: $(azure-cli-extension-folder)/src/azuredatatransfer
 python-sdk-output-folder: "$(az-output-folder)/azext_azuredatatransfer/vendored_sdks/azuredatatransfer"
 # add additional configuration here specific for Azure CLI
@@ -22,7 +22,7 @@ This is for command modules that already in azure cli main repo.
 az:
   extensions: azuredatatransfer
   namespace: azure.mgmt.azuredatatransfer
-  package-name: azure-mgmt-cloudtransferservice
+  package-name: azure-mgmt-azuredatatransfer
 az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/azuredatatransfer
 python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/azuredatatransfer"
 ``` 
