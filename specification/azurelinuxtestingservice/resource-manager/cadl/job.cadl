@@ -13,20 +13,12 @@ using OpenAPI;
 @doc("A job is an instance of LISA running the specified test parameters")
 model Job is TrackedResource<JobResourceProperties> {
     @doc("Job name")
-    @pattern("^[a-zA-Z0-9-]{3,24}$")
+    @pattern("^[a-zA-Z0-9]{3,24}$")
     @key("jobName")
     @segment("jobs")
     @visibility("read")
     @path()
     name: string; 
-}
-
-enum TestStatus {
-    Pending,
-    Scheduling,
-    Running,
-    Completed,
-    Failed
 }
 
 @doc("The job properties")
@@ -38,7 +30,7 @@ model JobResourceProperties is ResourceProperties {
     resourceGroupNamePrefix?: string;
 
     @doc("An array of strings that define different package repos to use in tests.")
-    repos: string[];
+    repos?: string[];
 
     @doc("Image used during job")
     image: Image;
@@ -48,19 +40,15 @@ model JobResourceProperties is ResourceProperties {
 
     @doc("Test results once job is completed.")
     @visibility("read")
-    results: TestResultProperties[];
+    results?: TestResultProperties[];
 
-    @doc("Test status: Pending, Scheduling, Running, Completed, Failed.")
+    @doc("Test duration in format 5h 10m 2s")
     @visibility("read")
-    status: string;
-
-    @doc("Test duration")
-    @visibility("read")
-    duration: duration;
+    duration?: string;
 
     @doc("URL to see test logs")
     @visibility("read")
-    logUrl: string;
+    logUrl?: string;
 }
 
 enum ImageType {
