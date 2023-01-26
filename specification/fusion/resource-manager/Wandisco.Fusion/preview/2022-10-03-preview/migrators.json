@@ -252,7 +252,7 @@
               "$ref": "#/definitions/Migrator"
             }
           },
-          "201": {
+          "202": {
             "description": "Updating Migrator.",
             "schema": {
               "$ref": "#/definitions/Migrator"
@@ -607,7 +607,7 @@
               "$ref": "#/definitions/LiveDataMigration"
             }
           },
-          "201": {
+          "202": {
             "description": "Updating LiveDataMigration",
             "schema": {
               "$ref": "#/definitions/LiveDataMigration"
@@ -908,7 +908,7 @@
               "$ref": "#/definitions/MigratorTarget"
             }
           },
-          "201": {
+          "202": {
             "description": "Updating Migrator Target.",
             "schema": {
               "$ref": "#/definitions/MigratorTarget"
@@ -1680,7 +1680,7 @@
               "$ref": "#/definitions/MetadataTarget"
             }
           },
-          "201": {
+          "202": {
             "description": "Metadata Target update accepted.",
             "schema": {
               "$ref": "#/definitions/MetadataTarget"
@@ -2095,9 +2095,9 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Wandisco.Fusion/migrators/{migratorName}/dataTransferAgents": {
       "get": {
         "tags": [
-          "migratorDataTransferAgents"
+          "dataTransferAgent"
         ],
-        "description": "Returns data transfer agents by migratorName.",
+        "description": "Returns a list of Data Transfer Agents for the specified Migrator",
         "operationId": "DataTransferAgents_ListByMigrator",
         "parameters": [
           {
@@ -2115,7 +2115,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Data Transfer Agent List.",
+            "description": "List of Data Transfer Agents",
             "schema": {
               "$ref": "#/definitions/DataTransferAgentList"
             }
@@ -2141,9 +2141,9 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Wandisco.Fusion/migrators/{migratorName}/dataTransferAgents/{dataTransferAgentName}": {
       "get": {
         "tags": [
-          "migratorDataTransferAgents"
+          "dataTransferAgent"
         ],
-        "description": "Returns data transfer agent by name.",
+        "description": "Returns a given Data Transfer Agent",
         "operationId": "DataTransferAgents_Get",
         "parameters": [
           {
@@ -2164,7 +2164,7 @@
         ],
         "responses": {
           "200": {
-            "description": "data transfer agent.",
+            "description": "Data Transfer Agent details",
             "schema": {
               "$ref": "#/definitions/DataTransferAgent"
             }
@@ -2185,9 +2185,9 @@
       },
       "put": {
         "tags": [
-          "migratorDataTransferAgents"
+          "dataTransferAgent"
         ],
-        "description": "Create or Update data transfer agent by name.",
+        "description": "Create or Update data transfer agent",
         "operationId": "DataTransferAgents_CreateOrUpdate",
         "parameters": [
           {
@@ -2207,7 +2207,7 @@
           },
           {
             "name": "DataTransferAgent",
-            "description": "data transfer agent create or update body.",
+            "description": "Data Transfer Agent details",
             "in": "body",
             "required": true,
             "schema": {
@@ -2217,13 +2217,13 @@
         ],
         "responses": {
           "200": {
-            "description": "data transfer agent.",
+            "description": "Updated Data Transfer Agent details",
             "schema": {
               "$ref": "#/definitions/DataTransferAgent"
             }
           },
           "201": {
-            "description": "data transfer agent.",
+            "description": "Created Data Transfer Agent details",
             "schema": {
               "$ref": "#/definitions/DataTransferAgent"
             }
@@ -2248,9 +2248,9 @@
       },
       "patch": {
         "tags": [
-          "migratorDataTransferAgents"
+          "dataTransferAgent"
         ],
-        "description": "Patch data transfer agent by name.",
+        "description": "Updates a given Data Transfer Agent",
         "operationId": "DataTransferAgents_Update",
         "parameters": [
           {
@@ -2274,19 +2274,19 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DataTransferAgent"
+              "$ref": "#/definitions/DataTransferAgentUpdate"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "data transfer agent.",
+            "description": "Updated Data Transfer Agent",
             "schema": {
               "$ref": "#/definitions/DataTransferAgent"
             }
           },
-          "201": {
-            "description": "data transfer agent.",
+          "202": {
+            "description": "Data Transfer Agent update accepted",
             "schema": {
               "$ref": "#/definitions/DataTransferAgent"
             }
@@ -2311,9 +2311,9 @@
       },
       "delete": {
         "tags": [
-          "migratorDataTransferAgents"
+          "dataTransferAgent"
         ],
-        "description": "Delete data transfer agent by name.",
+        "description": "Delete data transfer agent",
         "operationId": "DataTransferAgents_Delete",
         "parameters": [
           {
@@ -3652,7 +3652,6 @@
         },
         "value": {
           "description": "The list of migrations",
-
           "type": "array",
           "items": {
             "$ref": "#/definitions/LiveDataMigration"
@@ -3873,9 +3872,33 @@
           "readOnly": true
         },
         "status": {
-          "description": "wrapper for dta status",
-          "$ref": "#/definitions/DataTransferAgentStatus",
-          "readOnly": true
+          "type": "string",
+          "description": "The connection status of the DTA.",
+          "readOnly": true,
+          "enum": [
+            "Connected",
+            "Disconnected",
+            "Credentials_Error",
+            "Not_Valid"
+          ],
+          "x-ms-enum": {
+            "name": "DataTransferAgentStatus",
+            "modelAsString": true,
+            "values": [
+              {
+                "value": "Connected"
+              },
+              {
+                "value": "Disconnected"
+              },
+              {
+                "value": "Credentials_Error"
+              },
+              {
+                "value": "Not_Valid"
+              }
+            ]
+          }
         }
       }
     },
@@ -3887,38 +3910,6 @@
           "description": "Max Bytes Per Second",
           "type": "integer",
           "format": "int64"
-        }
-      }
-    },
-
-    "DataTransferAgentStatus": {
-      "description": "Data Transfer Agent Status",
-      "type": "string",
-      "properties": {
-        "status": {
-          "type": "string",
-          "description": "The connection status of the DTA.",
-          "readOnly": true,
-          "enum": [
-            "Connected",
-            "Connection Lost",
-            "Credentials Error"
-          ],
-          "x-ms-enum": {
-            "name": "status",
-            "modelAsString": true,
-            "values": [
-              {
-                "value": "Connected"
-              },
-              {
-                "value": "Connection Lost"
-              },
-              {
-                "value": "Credentials Error"
-              }
-            ]
-          }
         }
       }
     },

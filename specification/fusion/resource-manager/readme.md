@@ -12,6 +12,7 @@ tag: 2022-10-01-preview
 
 ### Supported API Versions
 
+
 ```yaml $(tag) == '2021-02-01-preview'
 input-file:
   - Wandisco.Fusion/preview/2021-02-01-preview/fusionGroups.json
