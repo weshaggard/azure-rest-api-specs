@@ -880,14 +880,72 @@
       "type": "object",
       "properties": {
         "type": {
-          "type": "string",
+          "$ref": "#/definitions/ImageType",
           "description": "Must be vhd, marketplace_image, or shared_image_gallery"
+        },
+        "vhdUrl": {
+          "type": "string",
+          "description": "VHD property. SAS URL of VHD"
+        },
+        "vhdGeneration": {
+          "$ref": "#/definitions/VhdGeneration",
+          "description": "VHD Generation. Default 1. Choice is 1 or 2"
+        },
+        "vhdArchitecture": {
+          "$ref": "#/definitions/VhdArchitecture",
+          "description": "VHD property. Default x64. One of x64 or arm64",
+          "default": "x64"
+        },
+        "marketplaceImagePublisher": {
+          "type": "string",
+          "description": "Marketplace Image Publisher"
+        },
+        "marketplaceImageOffer": {
+          "type": "string",
+          "description": "Marketplace Image Offer"
+        },
+        "marketplaceImageSku": {
+          "type": "string",
+          "description": "Marketplace Image SKU"
+        },
+        "marketplaceImageVersion": {
+          "type": "string",
+          "description": "Marketplace Image Version"
+        },
+        "imageGallerySubscription": {
+          "type": "string",
+          "description": "Shared Image Gallery Subscription - Optional. The default is the current subscription"
+        },
+        "imageGalleryResourceGroupName": {
+          "type": "string",
+          "description": "Shared Image Gallery resource group name - Optional"
+        },
+        "imageGallery": {
+          "type": "string",
+          "description": "Shared Image gallery"
+        },
+        "imageGalleryImageDef": {
+          "type": "string",
+          "description": "Shared Image Gallery image definition"
+        },
+        "imageGalleryImageVersion": {
+          "type": "string",
+          "description": "Shared Image Gallery image version"
         }
       },
-      "description": "Image information",
-      "required": [
-        "type"
-      ]
+      "description": "This object collects the image information used for testing. The associated properties of each image type must be populated.s"
+    },
+    "ImageType": {
+      "type": "string",
+      "enum": [
+        "vhd",
+        "marketplace_image",
+        "shared_image_gallery"
+      ],
+      "x-ms-enum": {
+        "name": "ImageType",
+        "modelAsString": true
+      }
     },
     "Job": {
       "type": "object",
@@ -956,6 +1014,10 @@
           "x-cadl-name": "string[]",
           "description": "An array of strings that define different package repos to use in tests."
         },
+        "image": {
+          "$ref": "#/definitions/Image",
+          "description": "Image used during job"
+        },
         "keepFailedEnvironment": {
           "type": "boolean",
           "description": "Default false",
@@ -992,6 +1054,7 @@
       "required": [
         "jobTemplateInstance",
         "repos",
+        "image",
         "results",
         "status",
         "duration",
@@ -1196,6 +1259,10 @@
           "x-cadl-name": "string[]",
           "description": "An array of strings that define different package repos to use in tests."
         },
+        "image": {
+          "$ref": "#/definitions/Image",
+          "description": "Image used during job"
+        },
         "keepFailedEnvironment": {
           "type": "boolean",
           "description": "Default false",
@@ -1203,39 +1270,6 @@
         }
       },
       "description": "The updatable properties of the Job."
-    },
-    "MarketplaceImage": {
-      "type": "object",
-      "properties": {
-        "publisher": {
-          "type": "string",
-          "description": "Publisher"
-        },
-        "offer": {
-          "type": "string",
-          "description": "Offer"
-        },
-        "sku": {
-          "type": "string",
-          "description": "SKU"
-        },
-        "version": {
-          "type": "string",
-          "description": "Version"
-        }
-      },
-      "description": "Marketplace Image",
-      "required": [
-        "publisher",
-        "offer",
-        "sku",
-        "version"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/Image"
-        }
-      ]
     },
     "ProvisioningState": {
       "type": "string",
@@ -1341,42 +1375,6 @@
         }
       },
       "description": "Details test case criteria"
-    },
-    "SharedImageGallery": {
-      "type": "object",
-      "properties": {
-        "subscription": {
-          "type": "string",
-          "description": "Subscription"
-        },
-        "resourceGroupName": {
-          "type": "string",
-          "description": "Resource group name"
-        },
-        "imageGallery": {
-          "type": "string",
-          "description": "Image gallery"
-        },
-        "imageDefinition": {
-          "type": "string",
-          "description": "Image definition"
-        },
-        "imageVersion": {
-          "type": "string",
-          "description": "Image version"
-        }
-      },
-      "description": "Shared Image Gallery",
-      "required": [
-        "imageGallery",
-        "imageDefinition",
-        "imageVersion"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/Image"
-        }
-      ]
     },
     "TestCase": {
       "type": "object",
@@ -1624,33 +1622,36 @@
         "endTime"
       ]
     },
-    "Vhd": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "type": "string",
-          "description": "SAS URL of VHD"
-        },
-        "vhdGeneration": {
-          "type": "string",
-          "description": "VHD Generation. Default 1. Choice is 1 or 2"
-        },
-        "architecture": {
-          "type": "string",
-          "description": "Default x64. One of x64 or arm64"
-        }
-      },
-      "description": "Virtual Hard Disk",
-      "required": [
-        "url",
-        "vhdGeneration",
-        "architecture"
+    "TestStatus": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Scheduling",
+        "Running",
+        "Completed",
+        "Failed"
       ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/Image"
-        }
-      ]
+      "x-ms-enum": {
+        "name": "TestStatus",
+        "modelAsString": true
+      }
+    },
+    "VhdArchitecture": {
+      "type": "string",
+      "enum": [
+        "x64",
+        "arm64"
+      ],
+      "x-ms-enum": {
+        "name": "VhdArchitecture",
+        "modelAsString": true
+      }
+    },
+    "VhdGeneration": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "maximum": 2
     },
     "object": {
       "type": "object",
