@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.MarcoHuang
-  output-folder: $(csharp-sdks-folder)/testbase/management/Microsoft.MarcoHuang/GeneratedProtocol
+  namespace: Microsoft.MarcoHuangTest
+  output-folder: $(csharp-sdks-folder)/testbase/management/Microsoft.MarcoHuangTest/GeneratedProtocol
 ```

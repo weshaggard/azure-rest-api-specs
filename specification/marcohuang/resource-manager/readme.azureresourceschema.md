@@ -25,7 +25,7 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.MarcoHuang/preview/2020-12-16-preview/testbase.json
+  - Microsoft.MarcoHuangTest/preview/2020-12-16-preview/testbase.json
 ```
 
 ### Tag: schema-testbase-2021-09-01-preview and azureresourceschema
@@ -35,7 +35,7 @@ output-folder: $(azureresourceschema-folder)/schemas
 
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.MarcoHuang/preview/2021-09-01-preview/testbase.json
+  - Microsoft.MarcoHuangTest/preview/2021-09-01-preview/testbase.json
 ```
 
 ### Tag: schema-testbase-2021-09-01 and azureresourceschema
@@ -44,7 +44,7 @@ input-file:
 output-folder: $(azureresourceschema-folder)/schemas
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.MarcoHuang/stable/2021-09-01/testbase.json
+  - Microsoft.MarcoHuangTest/stable/2021-09-01/testbase.json
 ```
 
 ### Tag: schema-testbase-2021-12-01 and azureresourceschema
@@ -53,7 +53,7 @@ input-file:
 output-folder: $(azureresourceschema-folder)/schemas
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.MarcoHuang/stable/2021-12-01/testbase.json
+  - Microsoft.MarcoHuangTest/stable/2021-12-01/testbase.json
 ```
 
 ### Tag: schema-testbase-2022-03-01-preview and azureresourceschema
@@ -62,7 +62,7 @@ input-file:
 output-folder: $(azureresourceschema-folder)/schemas
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.MarcoHuang/preview/2022-03-01-preview/testbase.json
+  - Microsoft.MarcoHuangTest/preview/2022-03-01-preview/testbase.json
 ```
 
 ### Tag: schema-testbase-2022-04-01-preview and azureresourceschema
@@ -71,7 +71,7 @@ input-file:
 output-folder: $(azureresourceschema-folder)/schemas
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.MarcoHuang/preview/2022-04-01-preview/testbase.json
+  - Microsoft.MarcoHuangTest/preview/2022-04-01-preview/testbase.json
 ```
 
 ### Tag: schema-testbase-2022-05-01-preview and azureresourceschema
@@ -80,7 +80,7 @@ input-file:
 output-folder: $(azureresourceschema-folder)/schemas
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.MarcoHuang/preview/2022-05-01-preview/testbase.json
+  - Microsoft.MarcoHuangTest/preview/2022-05-01-preview/testbase.json
 ```
 
 ### Tag: schema-testbase-2022-08-15-preview and azureresourceschema
@@ -89,5 +89,5 @@ input-file:
 output-folder: $(azureresourceschema-folder)/schemas
 # all the input files in this apiVersion
 input-file:
-  - Microsoft.MarcoHuang/preview/2022-08-15-preview/testbase.json
+  - Microsoft.MarcoHuangTest/preview/2022-08-15-preview/testbase.json
 ```
