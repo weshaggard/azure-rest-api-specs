@@ -306,12 +306,27 @@
         "terminate"
       ],
       "x-ms-enum": {
-        "name": "defaultAction",
+        "name": "resultCodeAction",
         "modelAsString": true
-      }
+      },
+      "description": "Action to be performed on the session based on the result code"
+    },
+    "RgLevelResultCodeAction": {
+      "type": "string",
+      "enum": [
+        "continue",
+        "terminateService",
+        "redirect"
+      ],
+      "x-ms-enum": {
+        "name": "rgLevelResultCodeAction",
+        "modelAsString": true
+      },
+      "description": "Action to be performed on the session based on the result code"
     },
     "ChargingResultCodeActionTemplate": {
       "type": "object",
+      "description": "Configure error codes from chf and the actions to be performed on the session",
       "properties": {
         "defaultAction": {
           "$ref": "#/definitions/ResultCodeAction"
@@ -324,15 +339,18 @@
               "statusCode": {
                 "type": "integer",
                 "minimum": 0,
-                "maximum": 65535
+                "maximum": 65535,
+                "description": "Valid HTTP status codes"
               },
               "applicationError": {
                 "type": "array",
+                "description": "Configure application error codes and the actions",
                 "items": {
                   "type": "object",
                   "properties": {
                     "applicationErrorCode": {
                       "type": "string",
+                      "description": "Application error codes from CHF server",
                       "enum": [
                         "chargingFailed",
                         "chargingNotApplicable",
@@ -355,6 +373,108 @@
                 "$ref": "#/definitions/ResultCodeAction"
               }
             }
+          }
+        }
+      }
+    },
+    "ChargingRgLevelResultCodeActionTemplate": {
+      "type": "object",
+      "description": "Configure list of expected RG level error result codes from CHF and any action to be taken",
+      "properties": {
+        "defaultAction": {
+          "$ref": "#/definitions/RgLevelResultCodeAction"
+        },
+        "redirectServerAddressType": {
+          "type": "string",
+          "enum": [
+            "ipv4",
+            "ipv6",
+            "url"
+          ],
+          "x-ms-enum": {
+            "name": "applicationError",
+            "modelAsString": true
+          },
+          "description": "Required when default action is 'redirect'"
+        },
+        "redirectServerAddress": {
+          "type": "string",
+          "description": "Required when default action is 'redirect'"
+        },
+        "rgResultCodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "string",
+                "description": "RG level application error codes from CHF server",
+                "enum": [
+                  "endUserServiceDenied",
+                  "quotaManagementNotApplicable",
+                  "quotaLimitReached",
+                  "endUserServiceRejected",
+                  "ratingFailed"
+                ],
+                "x-ms-enum": {
+                  "name": "resultCode",
+                  "modelAsString": true
+                }
+              },
+              "action": {
+                "$ref": "#/definitions/RgLevelResultCodeAction"
+              },
+              "redirectServerAddressType": {
+                "type": "string",
+                "enum": [
+                  "ipv4",
+                  "ipv6",
+                  "url"
+                ],
+                "x-ms-enum": {
+                  "name": "applicationError",
+                  "modelAsString": true
+                },
+                "description": "Required when action is 'redirect'"
+              },
+              "redirectServerAddress": {
+                "type": "string",
+                "description": "Required when action is 'redirect'"
+              },
+              "applicationError": {
+                "type": "array",
+                "description": "Configure application error codes and the actions",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "applicationErrorCode": {
+                      "type": "string",
+                      "description": "Application error codes from CHF server",
+                      "enum": [
+                        "chargingFailed",
+                        "chargingNotApplicable",
+                        "userUnknown",
+                        "endUserRequestDenied",
+                        "endUserRequestRejected"
+                      ],
+                      "x-ms-enum": {
+                        "name": "applicationError",
+                        "modelAsString": true
+                      }
+                    },
+                    "action": {
+                      "$ref": "#/definitions/ResultCodeAction"
+                    }
+                  }
+                }
+              },
+              "defaultAction": {
+                "$ref": "#/definitions/ResultCodeAction"
+              }
+            },
+            "required": [
+              "resultCode"
+            ]
           }
         }
       }
@@ -423,9 +543,8 @@
           "$ref": "#/definitions/matchCriteriaTypeWithBitSet"
         },
         "value": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535
+          "type": "string",
+          "pattern": "(0x[A-Fa-f0-9]{4})"
         }
       }
     },
@@ -436,8 +555,7 @@
           "$ref": "#/definitions/matchCriteriaTypeWithContains"
         },
         "value": {
-          "type": "string",
-          "pattern": "[a-zA-Z]([a-zA-Z0-9-._]){0,63}"
+          "$ref": "./common.json#/definitions/DataNetworkName"
         }
       }
     },
@@ -513,6 +631,28 @@
         }
       }
     },
+    "FilterTypePduType": {
+      "type": "object",
+      "properties": {
+        "matchCriteria": {
+          "$ref": "#/definitions/matchCriteriaTypeWithPresence"
+        },
+        "value": {
+          "type": "string",
+          "enum": [
+            "ipv4",
+            "ipv6",
+            "ipv4v6",
+            "unstr",
+            "ether"
+          ],
+          "x-ms-enum": {
+            "name": "pduType",
+            "modelAsString": true
+          }
+        }
+      }
+    },
     "FilterTypePdnType": {
       "type": "object",
       "properties": {
@@ -565,40 +705,269 @@
         "value": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "description": "Value of the custom filter (only if matchCriteria does not equal 'presence'"
           },
-          "description": "Max 10 entries"
+          "maxItems": 10
+        }
+      }
+    },
+    "FilterTypeServingLocation": {
+      "type": "object",
+      "properties": {
+        "matchCriteria": {
+          "$ref": "#/definitions/matchCriteriaTypeWithContains"
+        },
+        "servingAreaGroup": {
+          "type": "array",
+          "items": {
+            "$ref": "./common.json#/definitions/ReferencedResource",
+            "description": "URL to Service Area resource"
+          }
         }
       }
     },
     "SessionRule": {
       "type": "object",
+      "description": "session level default qos attributes",
       "properties": {
         "sessionAmbr": {
-          "type": "object",
-          "properties": {
-            "measurementUnit": {
-              "type": "string",
-              "enum": [
-                "kbps",
-                "mbps",
-                "gbps"
-              ],
-              "x-ms-enum": {
-                "name": "measurementType",
-                "modelAsString": true
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "measurementUnit": {
+                "type": "string",
+                "description": "rate-measurement-units: kbps/mbps/gbps",
+                "enum": [
+                  "kbps",
+                  "mbps",
+                  "gbps"
+                ],
+                "x-ms-enum": {
+                  "name": "measurementUnit",
+                  "modelAsString": true
+                },
+                "default": "kbps"
+              },
+              "uplinkAmbr": {
+                "type": "integer",
+                "maximum": 4294967295,
+                "description": "per session Uplink Aggregate Maximum Bit Rate"
+              },
+              "downlinkAmbr": {
+                "type": "integer",
+                "maximum": 4294967295,
+                "description": "per session Downlink Aggregate Maximum Bit Rate"
               }
             },
-            "uplinkAmbr": {
-              "type": "integer"
-            },
-            "downlinkAmbr": {
-              "type": "integer"
-            }
+            "required": [
+              "uplinkAmbr",
+              "downlinkAmbr"
+            ]
           }
         },
         "defaultQos": {
-          "$ref": "./common.json#/definitions/QosFlow"
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "description": "session level default qos attributes.  nonGbrFlow = true, relective-qos = false",
+            "properties": {
+              "fiveQi": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255,
+                "description": "Quality-of-service Identifier"
+              },
+              "arpPriorityLevel": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 15,
+                "description": "allocation & retention priority:  higher values are preferred"
+              },
+              "arpPreemptionCapability": {
+                "type": "string",
+                "enum": [
+                  "NOT_PREEMPT",
+                  "MAY_PREEMPT"
+                ],
+                "x-ms-enum": {
+                  "name": "arpPreemptionCapability",
+                  "modelAsString": true
+                }
+              },
+              "arpPreemptionVulnerability": {
+                "type": "string",
+                "enum": [
+                  "NOT_PREEMPTABLE",
+                  "MAY_PREEMPTABLE"
+                ],
+                "x-ms-enum": {
+                  "name": "arpPreemptionVulnerability",
+                  "modelAsString": true
+                }
+              },
+              "max-burst": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4095,
+                "description": "uplink maximum burst, measurement-units: bytes[1-4095]."
+              }
+            },
+            "required": [
+              "fiveQi",
+              "arpPriorityLevel",
+              "arpPreemptionCapability",
+              "arpPreemptionVulnerability"
+            ]
+          }
+        }
+      }
+    },
+    "AnalyzerNameType": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "([0-9a-zA-Z_.-])*",
+      "description": "Specific name type used by analyzer objects"
+    },
+    "FilterSetsSmf": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "description": "List of filterset for the given class (profile instance). A filterset can have multiple filters. All filters in filterset have to match for a class name to be chosen. If any one filterset matches, the class name associated with this filterset will be chosen",
+      "items": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "Filters to be applied to match the filterset. All filters needs to be matched.  Only one filter per object can be specified - it's identified by the ",
+            "items": {
+              "type": "object",
+              "properties": {
+                "filterType": {
+                  "type": "string",
+                  "enum": [
+                    "imsi",
+                    "msisdn",
+                    "imei",
+                    "dnn",
+                    "dnnType",
+                    "ratType",
+                    "pdnType",
+                    "chargingCharacteristics",
+                    "customFilters"
+                  ],
+                  "x-ms-enum": {
+                    "name": "filterType",
+                    "modelAsString": true
+                  },
+                  "description": "Type of filter specified.  Must be unique in the same filterset"
+                },
+                "dnn": {
+                  "$ref": "#/definitions/FilterTypeDnn"
+                },
+                "dnnType": {
+                  "$ref": "#/definitions/FilterTypeDnnType"
+                },
+                "imsiRange": {
+                  "$ref": "#/definitions/FilterTypeImsiRange"
+                },
+                "imeiRange": {
+                  "$ref": "#/definitions/FilterTypeImeiRange"
+                },
+                "msisdnRange": {
+                  "$ref": "#/definitions/FilterTypeMsisdnRange"
+                },
+                "ratType": {
+                  "$ref": "#/definitions/FilterTypeRat"
+                },
+                "pdnType": {
+                  "$ref": "#/definitions/FilterTypePdnType"
+                },
+                "chargingCharacteristics": {
+                  "$ref": "#/definitions/FilterTypeChargingCharacteristics"
+                },
+                "custom": {
+                  "$ref": "#/definitions/FilterTypeCustom"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "FilterSetsAmf": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "description": "List of filterset for the given class (profile instance). A filterset can have multiple filters. All filters in filterset have to match for a class name to be chosen. If any one filterset matches, the class name associated with this filterset will be chosen",
+      "items": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "Filters to be applied to match the filterset. All filters needs to be matched.  Only one filter per object can be specified - it's identified by the ",
+            "items": {
+              "type": "object",
+              "properties": {
+                "filterType": {
+                  "type": "string",
+                  "enum": [
+                    "servingLocation",
+                    "imsi",
+                    "msisdn",
+                    "imei",
+                    "dnn",
+                    "dnnType",
+                    "ratType",
+                    "pdnType",
+                    "customFilters"
+                  ],
+                  "x-ms-enum": {
+                    "name": "filterType",
+                    "modelAsString": true
+                  },
+                  "description": "Type of filter specified.  Must be unique in the same filterset"
+                },
+                "servingLocation": {
+                  "$ref": "#/definitions/FilterTypeServingLocation"
+                },
+                "dnn": {
+                  "$ref": "#/definitions/FilterTypeDnn"
+                },
+                "dnnType": {
+                  "$ref": "#/definitions/FilterTypeDnnType"
+                },
+                "imsiRange": {
+                  "$ref": "#/definitions/FilterTypeImsiRange"
+                },
+                "imeiRange": {
+                  "$ref": "#/definitions/FilterTypeImeiRange"
+                },
+                "msisdnRange": {
+                  "$ref": "#/definitions/FilterTypeMsisdnRange"
+                },
+                "ratType": {
+                  "$ref": "#/definitions/FilterTypeRat"
+                },
+                "pdnType": {
+                  "$ref": "#/definitions/FilterTypePdnType"
+                },
+                "custom": {
+                  "$ref": "#/definitions/FilterTypeCustom"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -610,19 +979,49 @@
           "$ref": "./common.json#/definitions/ProvisioningState",
           "description": "The provisioning state of the resource."
         },
-        "sm5g": {
+        "upfServicePolicy": {
           "type": "object",
           "properties": {
-            "filterSets": {
+            "filters": {
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
                   "dnn": {
+                    "$ref": "./common.json#/definitions/DataNetworkName"
+                  }
+                }
+              }
+            },
+            "firewallRuleGroup": {
+              "type": "array",
+              "items": {
+                "$ref": "./common.json#/definitions/ReferencedResource",
+                "description": "URL identifying a packet detection rule with firewall service policy."
+              }
+            }
+          },
+          "description": "UPF Service Policy."
+        },
+        "chargingProfile": {
+          "type": "object",
+          "properties": {
+            "priority": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4096,
+              "description": "Priority of the charging profile has to be unique across the Profile-Analyzers."
+            },
+            "filters": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "description": "Charging Profile Key. Method of procedure for modifying the Profile-Key: Remove the whole profile-key 'no profile-key <>'; commit; configure the profile-key with the updated configuration 'profile-key <>'; commit",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "dnn": {
                     "$ref": "#/definitions/FilterTypeDnn"
-                  },
-                  "dnnType": {
-                    "$ref": "#/definitions/FilterTypeDnnType"
                   },
                   "imsiRange": {
                     "$ref": "#/definitions/FilterTypeImsiRange"
@@ -633,308 +1032,233 @@
                   "msisdnRange": {
                     "$ref": "#/definitions/FilterTypeMsisdnRange"
                   },
-                  "rat": {
+                  "ratType": {
                     "$ref": "#/definitions/FilterTypeRat"
                   },
-                  "pdnType": {
-                    "$ref": "#/definitions/FilterTypePdnType"
+                  "pduType": {
+                    "$ref": "#/definitions/FilterTypePduType"
                   },
                   "chargingCharacteristics": {
                     "$ref": "#/definitions/FilterTypeChargingCharacteristics"
                   },
                   "roamingUser": {
-                    "type": "boolean",
-                    "description": "Only applicable to chargingProfile"
-                  },
-                  "custom": {
-                    "$ref": "#/definitions/FilterTypeCustom"
+                    "type": "boolean"
                   }
                 }
               }
             },
+            "partialRecordMethod": {
+              "type": "string",
+              "description": "Partial Charging Method",
+              "enum": [
+                "individual",
+                "default"
+              ],
+              "x-ms-enum": {
+                "name": "partialRecordMethod",
+                "modelAsString": true
+              }
+            },
+            "cdrOutputType": {
+              "type": "string",
+              "description": "CDR Output Type",
+              "enum": [
+                "chf",
+                "pgw"
+              ],
+              "x-ms-enum": {
+                "name": "cdrOutputType",
+                "modelAsString": true
+              }
+            },
+            "onlineEnabled": {
+              "type": "boolean",
+              "description": "default online charging enabled/disabled at PDU Session.  One of online or offline must be enabled",
+              "default": false
+            },
+            "offlineEnabled": {
+              "type": "boolean",
+              "description": "default offline charging enabled/disabled at PDU Session.  One of online or offline must be enabled",
+              "default": true
+            },
+            "usageReportingLevel": {
+              "type": "string",
+              "enum": [
+                "service",
+                "ratingGroup",
+                "sponsored"
+              ],
+              "x-ms-enum": {
+                "name": "usageReportingLevel",
+                "modelAsString": true
+              },
+              "description": "default usage reporting-level when not provided in a policy charging data",
+              "default": "ratingGroup"
+            },
+            "maxNumberOfChargeConditionChange": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000,
+              "default": 0,
+              "description": "max number of changes in charging condition to send explicit trigger"
+            },
+            "periodicReportingTimer": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 86400,
+              "default": 0,
+              "description": "measurement period for generating periodic reports (in seconds)"
+            },
+            "triggerTemplate": {
+              "type": "array",
+              "description": "associated to chargable events trigger template",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "triggerType": {
+                    "type": "string",
+                    "enum": [
+                      "plmnChange",
+                      "ratChange",
+                      "userLocationChange",
+                      "ueTimezoneChange",
+                      "qosChange",
+                      "volumeLimit",
+                      "sessionAmbrChange"
+                    ],
+                    "x-ms-enum": {
+                      "name": "triggerType",
+                      "modelAsString": true
+                    }
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "immediateReport",
+                      "deferredReport"
+                    ],
+                    "x-ms-enum": {
+                      "name": "triggerCategory",
+                      "modelAsString": true
+                    },
+                    "default": "immediateReport"
+                  },
+                  "volumeLimitValue": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "volume limit(threshold) bytes for session level volume reporting"
+                  }
+                },
+                "required": [
+                  "triggerType"
+                ]
+              }
+            },
+            "onlineChargingAttributes": {
+              "type": "array",
+              "maxItems": 256,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "defaultQuotaVolumeQuotaTotal": {
+                    "type": "integer",
+                    "minimum": 10000,
+                    "default": 1000000,
+                    "description": "Default Volume Quota(bytes) in both Uplink Downlink Directions"
+                  },
+                  "defaultQuotaVolumeQuotaThreshold": {
+                    "type": "integer",
+                    "minimum": 1000,
+                    "default": 100000,
+                    "description": "Default Volume Quota(bytes) threshold"
+                  },
+                  "defaultQuotaMaxNumDefaultQuota": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000,
+                    "default": 0,
+                    "description": "Max Number of Times a Session can be assigned Default Quota.  Zero means Unlimited Number of Default Quota Allocation"
+                  },
+                  "defaultQuotaValidityTime": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 7200,
+                    "default": 1800,
+                    "description": "Validity Time(seconds) of the Quota"
+                  },
+                  "chfDefaultValidityTime": {
+                    "type": "integer",
+                    "minimum": 60,
+                    "maximum": 7200,
+                    "description": "Default quota validity time if validity timer is missing in the CHF response"
+                  },
+                  "chfDefaultQuotaHoldingTime": {
+                    "type": "integer",
+                    "minimum": 60,
+                    "maximum": 1800,
+                    "description": "Default QHT if QHT is missing in the CHF response"
+                  }
+                },
+                "description": "Online charging parameters.  must: default-quota-volume-quota-threshold < default-quota-volume-quota-total"
+              }
+            },
+            "initialMsgResultCodeActions": {
+              "$ref": "#/definitions/ChargingResultCodeActionTemplate",
+              "description": "During create sessions, actions to be taken on the session based on the CHF returned error-code"
+            },
+            "updateMsgResultCodeActions": {
+              "$ref": "#/definitions/ChargingResultCodeActionTemplate",
+              "description": "During update sessions, actions to be taken on the session based on the CHF returned error-code"
+            },
+            "onlineChargingInitialRgLevelResultCodeActionTemplate": {
+              "$ref": "#/definitions/ChargingRgLevelResultCodeActionTemplate"
+            },
+            "onlineChargingUpdateRgLevelResultCodeActionTemplate": {
+              "$ref": "#/definitions/ChargingRgLevelResultCodeActionTemplate"
+            },
+            "chfServerDiscoveryThroughNrf": {
+              "type": "boolean",
+              "default": false,
+              "description": "enable chf server discovery through nrf when PCF does not provide"
+            },
+            "reflectiveQosTimer": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 92160,
+              "description": "reflective qos timer value in seconds"
+            }
+          },
+          "description": "Class Charging Profile.  SMF"
+        },
+        "smfSubscriberManagementProfile": {
+          "type": "object",
+          "description": "subscriber management profile to support subscriber data",
+          "properties": {
             "precedence": {
               "type": "integer",
               "minimum": 1,
               "maximum": 4096,
-              "description": "Must be unique for a specific class"
+              "description": "Defines the precedence of this instance. A smaller value is higher priority"
             },
-            "upfServicePolicy": {
-              "type": "object",
-              "properties": {
-                "firewallRuleGroup": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "./common.json#/definitions/ReferencedResource",
-                    "description": "URL identifying a packet detection rule with firewall service policy"
-                  }
-                }
-              },
-              "description": "Class UPF Service Policy.  Only valid filter type is DNN"
+            "filterSets": {
+              "$ref": "#/definitions/FilterSetsSmf"
             },
-            "chargingProfile": {
-              "type": "object",
-              "properties": {
-                "priority": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 4096,
-                  "description": "Must be unique across all charging profiles"
-                },
-                "partialRecordMethod": {
-                  "type": "string",
-                  "enum": [
-                    "individual",
-                    "default"
-                  ],
-                  "x-ms-enum": {
-                    "name": "partialRecordMethod",
-                    "modelAsString": true
-                  }
-                },
-                "cdrOutputType": {
-                  "type": "string",
-                  "enum": [
-                    "chf",
-                    "pgw"
-                  ],
-                  "x-ms-enum": {
-                    "name": "cdrOutputType",
-                    "modelAsString": true
-                  }
-                },
-                "onlineEnabled": {
-                  "type": "boolean"
-                },
-                "offlineEnabled": {
-                  "type": "boolean"
-                },
-                "usageReportingLevel": {
-                  "type": "string",
-                  "enum": [
-                    "service",
-                    "ratingGroup",
-                    "sponsored"
-                  ],
-                  "x-ms-enum": {
-                    "name": "usageReportingLevel",
-                    "modelAsString": true
-                  }
-                },
-                "maxNumberOfChargeConditionChange": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 1000
-                },
-                "periodicReportingTimer": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 86400
-                },
-                "triggerTemplate": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "triggerType": {
-                        "type": "string",
-                        "enum": [
-                          "plmnChange",
-                          "ratChange",
-                          "userLocationChange",
-                          "ueTimezoneChange",
-                          "qosChange",
-                          "volumeLimit",
-                          "sessionAmbrChange"
-                        ],
-                        "x-ms-enum": {
-                          "name": "triggerType",
-                          "modelAsString": true
-                        }
-                      },
-                      "category": {
-                        "type": "string",
-                        "enum": [
-                          "immediateReport",
-                          "deferredReport"
-                        ],
-                        "x-ms-enum": {
-                          "name": "triggerCategory",
-                          "modelAsString": true
-                        }
-                      },
-                      "volumeLimitValue": {
-                        "type": "integer",
-                        "description": "If volume limit type, this is the limit value"
-                      }
-                    }
-                  }
-                },
-                "onlineChargingAttributes": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "defaultQuotaVolumeQuotaTotal": {
-                        "type": "integer",
-                        "minimum": 10000
-                      },
-                      "defaultQuotaVolumeQuotaThreshold": {
-                        "type": "integer",
-                        "minimum": 1000
-                      },
-                      "defaultQuotaMaxNumDefaultQuota": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 1000
-                      },
-                      "defaultQuotaValidityTime": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 7200
-                      },
-                      "chfDefaultValidityTime": {
-                        "type": "integer",
-                        "minimum": 60,
-                        "maximum": 7200
-                      },
-                      "chfDefaultQuotaHoldingTime": {
-                        "type": "integer",
-                        "minimum": 60,
-                        "maximum": 1800
-                      }
-                    }
-                  }
-                },
-                "initialMsgResultCodeActions": {
-                  "$ref": "#/definitions/ChargingResultCodeActionTemplate"
-                },
-                "updateMsgResultCodeActions": {
-                  "$ref": "#/definitions/ChargingResultCodeActionTemplate"
-                }
-              },
-              "description": "Class Charging Profile.  Only valid filter types are dnn, imsiRange, imeiRange, msisdnRange, rat, pduType, or chargingCharacteristics"
+            "defaultSscMode": {
+              "$ref": "./common.json#/definitions/SscMode",
+              "description": "mode1, mode2 or mode3"
             },
-            "smfSubscriberManagementProfile": {
+            "defaultPduSessionType": {
+              "$ref": "./common.json#/definitions/PduType",
+              "description": "ipv4, ipv6, ipv4v6"
+            },
+            "dscpMappingPolicy": {
               "type": "object",
+              "description": "DSCP mapping policy",
               "properties": {
-                "defaultSscMode": {
-                  "$ref": "./common.json#/definitions/SscMode"
-                },
-                "defaultPduSessionType": {
-                  "$ref": "./common.json#/definitions/PduType"
-                },
-                "dscpMappingPolicy": {
-                  "type": "object",
-                  "properties": {
-                    "fiveQiDscpMap": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "fiveQi": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 255
-                          },
-                          "arpPriorityLevel": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 15
-                          },
-                          "dscp": {
-                            "$ref": "./common.json#/definitions/dscp"
-                          }
-                        }
-                      }
-                    },
-                    "defaultDscp": {
-                      "$ref": "./common.json#/definitions/dscp"
-                    },
-                    "dscpPagePolicyIndicaterMap": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "ppi": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 7
-                          },
-                          "dscp": {
-                            "$ref": "./common.json#/definitions/dscp"
-                          }
-                        }
-                      }
-                    },
-                    "defaultPagePolicyIndicate": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 7
-                    }
-                  }
-                },
-                "pagingProfile": {
+                "fiveQiDscpMap": {
                   "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "pageTimeout": {
-                        "type": "integer",
-                        "minimum": 1000,
-                        "maximum": 30000
-                      },
-                      "maxDownlinkPacketsToBuffer": {
-                        "type": "integer",
-                        "minimum": 1,
-                        "maximum": 20
-                      },
-                      "arpPriorityLevelThreshold": {
-                        "type": "integer",
-                        "minimum": 1,
-                        "maximum": 15
-                      },
-                      "downlinkPacketBufferingCapability": {
-                        "type": "boolean"
-                      }
-                    }
-                  }
-                },
-                "alwaysGrantPolicy": {
-                  "type": "string",
-                  "enum": [
-                    "disable",
-                    "enableOnRequest",
-                    "enableAlways"
-                  ],
-                  "x-ms-enum": {
-                    "name": "alwaysGrantPolicy",
-                    "modelAsString": true
-                  }
-                },
-                "inactivityTimerDuration": {
-                  "type": "integer",
-                  "minimum": 15,
-                  "maximum": 2160000
-                },
-                "sessionIdleTimer": {
-                  "type": "integer",
-                  "minimum": 15,
-                  "maximum": 2160000
-                },
-                "allowedSscModes": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "./common.json#/definitions/SscMode"
-                  }
-                },
-                "allowedPduSessionTypes": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "./common.json#/definitions/PduType"
-                  }
-                },
-                "qosFlowInactivityTimerMap": {
-                  "type": "array",
+                  "maxItems": 256,
+                  "description": "Configure 5qi to dscp mapping.  fiveQi and arpPriorityLevel combination must be unique per item",
                   "items": {
                     "type": "object",
                     "properties": {
@@ -948,21 +1272,216 @@
                         "minimum": 1,
                         "maximum": 15
                       },
-                      "qosFlowInactivityTimer": {
+                      "dscp": {
+                        "$ref": "./common.json#/definitions/dscp"
+                      }
+                    },
+                    "required": [
+                      "fiveQi",
+                      "dscp"
+                    ]
+                  }
+                },
+                "defaultDscp": {
+                  "$ref": "./common.json#/definitions/dscp",
+                  "description": "default dscp is used when 5qi isn't configured in five-qi-dscp-map"
+                },
+                "dscpPagePolicyIndicaterMap": {
+                  "type": "array",
+                  "maxItems": 128,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ppi": {
                         "type": "integer",
                         "minimum": 0,
-                        "maximum": 3600
+                        "maximum": 7
+                      },
+                      "dscp": {
+                        "$ref": "./common.json#/definitions/dscp"
                       }
-                    }
+                    },
+                    "required": [
+                      "ppi",
+                      "dscp"
+                    ]
+                  }
+                },
+                "defaultPagePolicyIndicate": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 7,
+                  "description": "default ppi is used when dscp value isn't configured in dscp-ppi-map"
+                }
+              },
+              "required": [
+                "defaultDscp",
+                "defaultPagePolicyIndicate"
+              ]
+            },
+            "pagingProfile": {
+              "type": "object",
+              "properties": {
+                "pageTimeout": {
+                  "type": "integer",
+                  "minimum": 1000,
+                  "maximum": 30000,
+                  "default": 10000,
+                  "description": "Page Timeout Value in milliseconds - the length of time to wait for a UE to be paged before discarding buffered data"
+                },
+                "maxDownlinkPacketsToBuffer": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 20,
+                  "default": 5,
+                  "description": "Maximum number of downlink data packets to buffer per flow when UE is being paged"
+                },
+                "arpPriorityLevelThreshold": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 15,
+                  "default": 4,
+                  "description": "Flows with ARP Priority Level values equal to or less than this threshold value will be marked for priority use"
+                },
+                "downlinkPacketBufferingCapability": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Indicates if SMF supports buffering data packets when UE is being paged"
+                }
+              }
+            },
+            "alwaysGrantPolicy": {
+              "type": "string",
+              "enum": [
+                "disable",
+                "enableOnRequest",
+                "enableAlways"
+              ],
+              "x-ms-enum": {
+                "name": "alwaysGrantPolicy",
+                "modelAsString": true
+              }
+            },
+            "inactivityTimerDuration": {
+              "type": "integer",
+              "minimum": 15,
+              "maximum": 2160000
+            },
+            "sessionIdleTimer": {
+              "type": "integer",
+              "minimum": 15,
+              "maximum": 2160000
+            },
+            "allowedSscModes": {
+              "type": "array",
+              "items": {
+                "$ref": "./common.json#/definitions/SscMode"
+              },
+              "description": "list of allowed-ssc-modes for the the subscriber"
+            },
+            "allowedPduSessionTypes": {
+              "type": "array",
+              "items": {
+                "$ref": "./common.json#/definitions/PduType"
+              },
+              "description": "list of allowed-pdu-session-types for the the subscriber"
+            },
+            "qosFlowInactivityTimerMap": {
+              "type": "array",
+              "maxItems": 256,
+              "description": "Configure QosFlow i.e. 5qi+arp(key) to inactivity-timer mapping.  fiveQi and arpPriorityLevel combination must be unique per item",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "fiveQi": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 255,
+                    "description": "5G QoS Identifier"
+                  },
+                  "arpPriorityLevel": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 15,
+                    "description": "arp priority level"
+                  },
+                  "qosFlowInactivityTimer": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3600,
+                    "default": 3600,
+                    "description": "Inactivity timer duration for 5qi+arp_pl combination in seconds[0-2160000]"
+                  }
+                },
+                "required": [
+                  "fiveQi"
+                ]
+              }
+            }
+          },
+          "required": [
+            "defaultSscMode"
+          ]
+        },
+        "smfPolicyProfile": {
+          "type": "object",
+          "properties": {
+            "precedence": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4096,
+              "description": "Defines the precedence of this instance. A smaller value is higher priority"
+            },
+            "filterSets": {
+              "$ref": "#/definitions/FilterSetsSmf"
+            },
+            "pccRules": {
+              "type": "array",
+              "maxItems": 64,
+              "description": "list of pcc rules to be associated",
+              "items": {
+                "$ref": "./common.json#/definitions/ReferencedResource",
+                "description": "URL to PCC Rule resource"
+              }
+            },
+            "pccRuleBase": {
+              "type": "array",
+              "maxItems": 64,
+              "description": "list of pcc rule base objects to be associated",
+              "items": {
+                "$ref": "./common.json#/definitions/ReferencedResource",
+                "description": "URL to PCC Rule Base resource"
+              }
+            },
+            "sessionRules": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": {
+                "$ref": "#/definitions/SessionRule"
+              }
+            },
+            "pcfResponseCodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "responseCode": {
+                    "type": "integer",
+                    "maximum": 65536,
+                    "description": "HTTP Response Codes.  If PCF response matches the response code the session is continued using the default policy profile"
                   }
                 }
               }
             },
-            "smfPolicyProfile": {
+            "defaultSubscriberPolicyProfile": {
               "type": "object",
+              "description": "Default Policy profile to be used in case of error in policy create response code",
               "properties": {
                 "pccRules": {
                   "type": "array",
+                  "maxItems": 64,
+                  "description": "list of pcc rules to be associated",
                   "items": {
                     "$ref": "./common.json#/definitions/ReferencedResource",
                     "description": "URL to PCC Rule resource"
@@ -970,6 +1489,8 @@
                 },
                 "pccRuleBase": {
                   "type": "array",
+                  "maxItems": 64,
+                  "description": "list of pcc rule bases to be associated",
                   "items": {
                     "$ref": "./common.json#/definitions/ReferencedResource",
                     "description": "URL to PCC Rule Base resource"
@@ -977,685 +1498,828 @@
                 },
                 "sessionRules": {
                   "type": "array",
+                  "maxItems": 1,
+                  "description": "session rule to apply default qos and ambr",
                   "items": {
                     "$ref": "#/definitions/SessionRule"
                   }
                 },
-                "pcfResponseCodes": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "responseCode": {
-                        "type": "integer",
-                        "description": "HTTP Response Codes.  If PCF response matches the response code the session is continued using the default policy profile"
-                      }
-                    }
-                  }
-                },
-                "defaultSubscriberPolicyProfile": {
-                  "type": "object",
-                  "properties": {
-                    "pccRules": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "./common.json#/definitions/ReferencedResource",
-                        "description": "URL to PCC Rule resource"
-                      }
-                    },
-                    "pccRuleBase": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "./common.json#/definitions/ReferencedResource",
-                        "description": "URL to PCC Rule Base resource"
-                      }
-                    },
-                    "sessionRules": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/SessionRule"
-                      }
-                    }
-                  },
-                  "description": "Policy to be applied if the PCF returns a matching response code"
-                },
-                "pcfRejoinTime": {
+                "reflectiveQosTimer": {
                   "type": "integer",
-                  "minimum": 90,
-                  "maximum": 86400
-                },
-                "pcfDownSessionHoldTime": {
-                  "type": "integer",
-                  "minimum": 180,
-                  "maximum": 172800
-                },
-                "supportedPcfFeatures": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "tsc",
-                      "adc",
-                      "netLoc",
-                      "ranNasCause",
-                      "pra",
-                      "ranSupportInfo"
-                    ],
-                    "x-ms-enum": {
-                      "name": "pcfFeatures",
-                      "modelAsString": true
-                    }
-                  }
+                  "description": "reflective qos timer value in seconds",
+                  "minimum": 0,
+                  "maximum": 92160
                 }
               }
             },
-            "smfNetworkInstanceProfile": {
+            "pcfRejoinTime": {
               "type": "object",
+              "description": "pcf rejoin time in seconds",
               "properties": {
-                "n3NetworkInstance": {
-                  "type": "string"
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
                 },
-                "n6NetworkInstance": {
-                  "type": "string"
+                "value": {
+                  "type": "integer",
+                  "minimum": 90,
+                  "maximum": 86400,
+                  "default": 900
+                }
+              }
+            },
+            "pcfDownSessionHoldTime": {
+              "type": "object",
+              "description": "pcf down session hold time in seconds",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": false
                 },
-                "n9NetworkInstance": {
-                  "type": "string"
-                },
-                "s5s8uS2buNetworkInstance": {
-                  "type": "string"
+                "value": {
+                  "type": "integer",
+                  "minimum": 180,
+                  "maximum": 172800,
+                  "default": 180
+                }
+              }
+            },
+            "supportedPcfFeatures": {
+              "type": "array",
+              "description": "List of Supported Features for PCF Interface",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tsc",
+                  "adc",
+                  "netLoc",
+                  "ranNasCause",
+                  "pra",
+                  "ranSupportInfo"
+                ],
+                "x-ms-enum": {
+                  "name": "pcfFeatures",
+                  "modelAsString": true
                 }
               }
             }
           }
         },
-        "mm5g": {
+        "smfNetworkInstanceProfile": {
+          "items": {
+            "type": "object",
+            "properties": {
+              "precedence": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4096,
+                "description": "Defines the precedence of this instance. A smaller value is higher priority"
+              },
+              "filterSets": {
+                "$ref": "#/definitions/FilterSetsSmf"
+              },
+              "n3NetworkInstance": {
+                "type": "string",
+                "description": "Network instance (context) name for the N3 interface"
+              },
+              "n6NetworkInstance": {
+                "type": "string",
+                "description": "Network instance (context) name for the N6 interface"
+              },
+              "n9NetworkInstance": {
+                "type": "string",
+                "description": "Network instance (context) name for the N9 interface"
+              },
+              "s5s8uS2buNetworkInstance": {
+                "type": "string",
+                "description": "Network instance (context) name for the s5/s8/s2b interfaces"
+              }
+            },
+            "required": [
+              "n3NetworkInstance",
+              "n6NetworkInstance",
+              "n9NetworkInstance"
+            ]
+          }
+        },
+        "mobilityPolicy": {
           "type": "object",
+          "description": "Parameters to control access and mobility policy.  AMF",
           "properties": {
+            "precedence": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4096,
+              "description": "Defines the precedence of this instance. A smaller value is higher priority"
+            },
             "filterSets": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "servingAreGroup": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "./common.json#/definitions/ReferencedResource",
-                      "description": "URL to Service Area resource"
+              "$ref": "#/definitions/FilterSetsAmf"
+            },
+            "default": {
+              "type": "boolean",
+              "default": false,
+              "description": "whether this is the default instance.  If true then the filterSets field is not needed (ignored if specified).  There can only be one default profile"
+            },
+            "pcfControl": {
+              "type": "object",
+              "description": "PCF Control attributes",
+              "properties": {
+                "reselectPcfOnMm5gRelocation": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "description": "Defines support for PCF re-selection on target AMF. Default: disable",
+                  "default": "disabled"
+                },
+                "forwardPcfIdToSmf": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "description": "Defines PCF-Id to be forwarded to SMF or not. Default: disable",
+                  "default": "disabled"
+                },
+                "uePolicyControlPolicyAssociation": {
+                  "type": "string",
+                  "description": "Defines support for UE Policy Association Establishment with PCF. Default: ue-requested",
+                  "enum": [
+                    "never",
+                    "always",
+                    "ueRequested"
+                  ],
+                  "x-ms-enum": {
+                    "name": "uePolicyAssociation",
+                    "modelAsString": true
+                  },
+                  "default": "ueRequested"
+                },
+                "amPolicyControlPolicyAssociation": {
+                  "type": "string",
+                  "description": "Defines support for AM Policy Association Establishment with PCF. Default: never",
+                  "enum": [
+                    "never",
+                    "always"
+                  ],
+                  "x-ms-enum": {
+                    "name": "amPolicyAssociation",
+                    "modelAsString": true
+                  },
+                  "default": "never"
+                }
+              }
+            },
+            "accessControl": {
+              "type": "object",
+              "description": "Access Control Policy",
+              "properties": {
+                "accessReject": {
+                  "type": "string",
+                  "description": "Access reject cause for the subscriber",
+                  "enum": [
+                    "undefinedMmCause0",
+                    "peiNotAccepted5",
+                    "illegalMe6",
+                    "servicesNotAllowed7",
+                    "plmnNotAllowed11",
+                    "taNotAllowed12",
+                    "roamingNotAllowedInThisTa13",
+                    "congestion22",
+                    "n1ModeNotAllowed27",
+                    "restrictedServiceArea28",
+                    "insufficientResourcesForSpecificSlice69"
+                  ],
+                  "x-ms-enum": {
+                    "name": "accessControl",
+                    "modelAsString": true
+                  },
+                  "default": "undefinedMmCause0"
+                },
+                "nssaiInclusionMode": {
+                  "type": "string",
+                  "description": "",
+                  "enum": [
+                    "disable",
+                    "mode-a",
+                    "mode-b",
+                    "mode-c",
+                    "mode-d"
+                  ],
+                  "x-ms-enum": {
+                    "name": "nssaiInclusionMode",
+                    "modelAsString": true
+                  }
+                },
+                "sliceSelectionSelectionPolicy": {
+                  "type": "string",
+                  "description": "Indicates the policy for slice selection",
+                  "enum": [
+                    "standard",
+                    "useNssfPolicy"
+                  ],
+                  "x-ms-enum": {
+                    "name": "selectionPolicy",
+                    "modelAsString": true
+                  },
+                  "default": "standard"
+                },
+                "sliceSelectionRejectCause": {
+                  "type": "string",
+                  "description": "Describes cause code for registration-reject. Default: causeNoSuitableCellInTa.",
+                  "enum": [
+                    "cause5gsServiceNotAllowed",
+                    "causePlmnNotAllowed",
+                    "causeRoamingNotAllowedInTa",
+                    "causeNoSuitableCellInTa",
+                    "causeN1ModeNotAllowed"
+                  ],
+                  "x-ms-enum": {
+                    "name": "rejectCause",
+                    "modelAsString": true
+                  },
+                  "default": "causeNoSuitableCellInTa"
+                },
+                "sliceSelectionSliceNegotiationDuringN26Handover": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "description": "Controls slice selection during N26 Handover. Default: enable",
+                  "default": "enabled"
+                },
+                "coreNetworkRestrictions": {
+                  "type": "array",
+                  "description": "Core network type restrictions applicable for a UE",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "cnrEpc",
+                      "cnr5gc"
+                    ],
+                    "x-ms-enum": {
+                      "name": "coreNetworkRestrictions",
+                      "modelAsString": true
                     }
-                  },
-                  "dnn": {
-                    "$ref": "#/definitions/FilterTypeDnn"
-                  },
-                  "dnnType": {
-                    "$ref": "#/definitions/FilterTypeDnnType"
-                  },
-                  "imsiRange": {
-                    "$ref": "#/definitions/FilterTypeImsiRange"
-                  },
-                  "imeiRange": {
-                    "$ref": "#/definitions/FilterTypeImeiRange"
-                  },
-                  "msisdnRange": {
-                    "$ref": "#/definitions/FilterTypeMsisdnRange"
-                  },
-                  "rat": {
-                    "$ref": "#/definitions/FilterTypeRat"
-                  },
-                  "pdnType": {
-                    "$ref": "#/definitions/FilterTypePdnType"
-                  },
-                  "chargingCharacteristics": {
-                    "$ref": "#/definitions/FilterTypeChargingCharacteristics"
-                  },
-                  "custom": {
-                    "$ref": "#/definitions/FilterTypeCustom"
+                  }
+                },
+                "ratRestrictions": {
+                  "type": "array",
+                  "description": "3GPP Radio Access Technology restrictions applicable for an UE",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "nr",
+                      "eutran"
+                    ],
+                    "x-ms-enum": {
+                      "name": "ratRestrictions",
+                      "modelAsString": true
+                    }
+                  }
+                },
+                "serviceAreaRestrictions": {
+                  "type": "array",
+                  "description": "Service Area restrictions applicable for a UE",
+                  "maxItems": 16,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "plmnId": {
+                        "$ref": "./common.json#/definitions/PlmnId",
+                        "description": "Supported PLMN identity; Range: numbers with 5-6 digits"
+                      },
+                      "restrictionType": {
+                        "type": "string",
+                        "description": "If the list of tracking areas are allowed or disallowed",
+                        "enum": [
+                          "allowedAreas",
+                          "notAllowedAreas"
+                        ],
+                        "x-ms-enum": {
+                          "name": "restrictionType",
+                          "modelAsString": true
+                        }
+                      },
+                      "tacs": {
+                        "type": "array",
+                        "maxItems": 16,
+                        "items": {
+                          "type": "string",
+                          "description": "Tracking Area Code (TAC); Valid values are hexadecimal values of length 4 or 6 with a leading '0x'",
+                          "pattern": "(0x[A-Fa-f0-9]{4})|(0x[A-Fa-f0-9]{6})"
+                        }
+                      }
+                    }
                   }
                 }
               }
             },
-            "precedence": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 65535
-            },
-            "mobilityPolicy": {
+            "serviceControl": {
               "type": "object",
+              "description": "Service Control Policy",
               "properties": {
-                "pcfControl": {
-                  "type": "object",
-                  "properties": {
-                    "reselectPcfOnMm5gRelocation": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "forwardPcfIdToSmf": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "uePolicyControlPolicyAssociation": {
-                      "enum": [
-                        "never",
-                        "always",
-                        "ueRequested"
-                      ],
-                      "x-ms-enum": {
-                        "name": "uePolicyAssociation",
-                        "modelAsString": true
-                      }
-                    },
-                    "amPolicyControlPolicyAssociation": {
-                      "enum": [
-                        "never",
-                        "always"
-                      ],
-                      "x-ms-enum": {
-                        "name": "amPolicyAssociation",
-                        "modelAsString": true
-                      }
-                    }
+                "smsSupport": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "description": "Controls Short Message Service (SMS) support. Default: disable",
+                  "default": "disabled"
+                },
+                "imsVopsSupport": {
+                  "type": "string",
+                  "description": "List of IMS Voice over PS support options",
+                  "enum": [
+                    "ims3gpp5gc",
+                    "imsFallbackEps",
+                    "imsNon3gpp5gc"
+                  ],
+                  "x-ms-enum": {
+                    "name": "imsVopsSupport",
+                    "modelAsString": true
                   }
                 },
-                "accessControl": {
-                  "type": "object",
-                  "properties": {
-                    "accessReject": {
-                      "enum": [
-                        "undefined-mm-cause-0",
-                        "pei-not-accepted-5",
-                        "illegal-me-6",
-                        "services-not-allowed-7",
-                        "plmn-not-allowed-11",
-                        "ta-not-allowed-12",
-                        "roaming-not-allowed-in-this-ta-13",
-                        "congestion-22",
-                        "n1-mode-not-allowed-27",
-                        "restricted-service-area-28",
-                        "insufficient-resources-for-specific-slice-69"
-                      ],
-                      "x-ms-enum": {
-                        "name": "accessControl",
-                        "modelAsString": true
-                      }
-                    },
-                    "nssaiInclusionMode": {
-                      "enum": [
-                        "disable",
-                        "mode-a",
-                        "mode-b",
-                        "mode-c",
-                        "mode-d"
-                      ],
-                      "x-ms-enum": {
-                        "name": "nssaiInclusionMode",
-                        "modelAsString": true
-                      }
-                    },
-                    "sliceSelectionSelectionPolicy": {
-                      "enum": [
-                        "standard",
-                        "useNssfPolicy"
-                      ],
-                      "x-ms-enum": {
-                        "name": "selectionPolicy",
-                        "modelAsString": true
-                      }
-                    },
-                    "sliceSelectionRejectCause": {
-                      "enum": [
-                        "cause-5gs-service-not-allowed",
-                        "cause-plmn-not-allowed",
-                        "cause-roaming-not-allowed-in-ta",
-                        "cause-no-suitable-cell-in-ta",
-                        "cause-n1-mode-not-allowed"
-                      ],
-                      "x-ms-enum": {
-                        "name": "rejectCause",
-                        "modelAsString": true
-                      }
-                    },
-                    "sliceSelectionRanReroutePreferred": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "sliceSelectionSliceNegotiationDuringN26Handover": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "coreNetworkRestrictions": {
-                      "type": "array",
-                      "items": {
-                        "enum": [
-                          "cnrEpc",
-                          "cnr5gc"
-                        ],
-                        "x-ms-enum": {
-                          "name": "coreNetworkRestrictions",
-                          "modelAsString": true
-                        }
-                      }
-                    },
-                    "ratRestrictions": {
-                      "type": "array",
-                      "items": {
-                        "enum": [
-                          "nr",
-                          "eutran"
-                        ],
-                        "x-ms-enum": {
-                          "name": "selectionPolicy",
-                          "modelAsString": true
-                        }
-                      }
-                    },
-                    "serviceAreaRestrictions": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "plmnId": {
-                            "$ref": "./common.json#/definitions/PlmnId"
-                          },
-                          "restrictionType": {
-                            "enum": [
-                              "allowedAreas",
-                              "notAllowedAreas"
-                            ],
-                            "x-ms-enum": {
-                              "name": "restrictionType",
-                              "modelAsString": true
-                            }
-                          },
-                          "tacs": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "description": "Tracking Area Code (TAC); Valid values are hexadecimal values of length 4 or 6 with a leading '0x'",
-                              "pattern": "(0x[A-Fa-f0-9]{4})|(0x[A-Fa-f0-9]{6})"
-                            }
-                          }
-                        }
-                      }
-                    }
+                "imsEmergencySupport": {
+                  "type": "string",
+                  "description": "Defines how UE obtains emergency service (fallback to EPS or provided by the 5G network)",
+                  "enum": [
+                    "ims3gpp5gc",
+                    "imsFallbackEps"
+                  ],
+                  "x-ms-enum": {
+                    "name": "imsEmergencySupport",
+                    "modelAsString": true
                   }
                 },
-                "serviceControl": {
-                  "type": "object",
-                  "properties": {
-                    "smsSupport": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "imsVopsSupport": {
-                      "enum": [
-                        "ims3gpp5gc",
-                        "imsFallbackEps",
-                        "imsNon3gpp5gc"
-                      ],
-                      "x-ms-enum": {
-                        "name": "imsVopsSupport",
-                        "modelAsString": true
-                      }
-                    },
-                    "imsEmergencySupport": {
-                      "enum": [
-                        "ims3gpp5gc",
-                        "imsFallbackEps"
-                      ],
-                      "x-ms-enum": {
-                        "name": "imsEmergencySupport",
-                        "modelAsString": true
-                      }
-                    },
-                    "lcsSupport": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "lcsNetworkInducedLocationRequestNiLrSupport": {
-                      "enum": [
-                        "disable",
-                        "enable-with-initial-positioning",
-                        "enable-without-initial-positioning"
-                      ],
-                      "x-ms-enum": {
-                        "name": "lcsNetworkInducedLocationRequestNiLrSupport",
-                        "modelAsString": true
-                      }
-                    },
-                    "lcsNetworkInducedLocationRequestHorizontalAccuracy": {
-                      "type": "number"
-                    },
-                    "lcsNetworkIncludedLocationRequestVerticalAccuracy": {
-                      "type": "number"
-                    },
-                    "lcsNetworkIncludedLocationRequestEmergencyTargetSender": {
-                      "enum": [
-                        "sourceNode",
-                        "targetNode"
-                      ],
-                      "x-ms-enum": {
-                        "name": "lcsNetworkIncludedLocationRequestEmergencyTargetSender",
-                        "modelAsString": true
-                      }
-                    },
-                    "lcsNetworkIncludedLocationRequestResponseTime": {
-                      "enum": [
-                        "noDelay",
-                        "lowDelay",
-                        "delayTolerant"
-                      ],
-                      "x-ms-enum": {
-                        "name": "lcsNetworkIncludedLocationRequestResponseTime",
-                        "modelAsString": true
-                      }
-                    },
-                    "lcsNetworkIncludedLocationRequestQosClass": {
-                      "enum": [
-                        "bestEffort",
-                        "assured"
-                      ],
-                      "x-ms-enum": {
-                        "name": "lcsNetworkIncludedLocationRequestQosClass",
-                        "modelAsString": true
-                      }
-                    },
-                    "lcsNasNotificationTimerTlcsn": {
-                      "type": "integer",
-                      "minimum": 10,
-                      "maximum": 20
-                    }
-                  }
-                },
-                "nasPolicy": {
-                  "type": "object",
-                  "properties": {
-                    "ueRegistrationRetryDelayT3502Value": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 60,
-                      "description": "1-60; Unit: minutes"
-                    },
-                    "uePeriodicRegistrationT3512Value": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 19200,
-                      "description": "1-19200; Unit: minutes"
-                    },
-                    "uePeriodicRegistrationT3512Source": {
-                      "enum": [
-                        "localConfig",
-                        "udmSubscription"
-                      ],
-                      "x-ms-enum": {
-                        "name": "t3512Source",
-                        "modelAsString": true
-                      }
-                    },
-                    "networkInitDeregistrationT3522": {
-                      "type": "integer",
-                      "minimum": 100,
-                      "maximum": 15000
-                    },
-                    "networkInitDeregistrationRetryN3522": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 5
-                    },
-                    "registrationAcceptT3550": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 65535
-                    },
-                    "registrationAcceptRetryN3550": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 5
-                    },
-                    "gutiLifetime": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 168
-                    },
-                    "identityT3570": {
-                      "type": "integer",
-                      "minimum": 100,
-                      "maximum": 15000
-                    },
-                    "identityRetryN3570": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 5
-                    },
-                    "mobileReachableTimer": {
-                      "enum": [
-                        "t3512plus4",
-                        "t3512times2plus1"
-                      ],
-                      "x-ms-enum": {
-                        "name": "mobileReachableTimer",
-                        "modelAsString": true
-                      }
-                    },
-                    "taiListMax": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 16
-                    },
-                    "taiListAllocation": {
-                      "enum": [
-                        "unrestricted",
-                        "withinPlmn"
-                      ],
-                      "x-ms-enum": {
-                        "name": "taiListAllocation",
-                        "modelAsString": true
-                      }
-                    },
-                    "configurationUpdateT3555": {
-                      "type": "integer",
-                      "minimum": 100,
-                      "maximum": 15000
-                    },
-                    "configurationUpdateRetryN3555": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 4
-                    },
-                    "optionalGutiReallocationUeInitServiceRequest": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "optionalGutiReallocationMobilityRegRequest": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "optionalGutiReallocationPeriodicRegRequest": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    },
-                    "non3gppValuesDeregistrationTimer": {
-                      "type": "integer",
-                      "minimum": 10,
-                      "maximum": 34560
-                    }
-                  }
-                },
-                "nasSecurity": {
-                  "type": "object",
-                  "properties": {
-                    "securityT3560": {
-                      "type": "integer",
-                      "minimum": 100,
-                      "maximum": 15000
-                    },
-                    "securityRetryN3560": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 5
-                    },
-                    "cipheringAlgorithms": {
-                      "type": "array",
-                      "items": {
-                        "enum": [
-                          "nea0",
-                          "nea1",
-                          "nea2"
-                        ],
-                        "x-ms-enum": {
-                          "name": "cipheringAlgorithms",
-                          "modelAsString": true
-                        }
-                      }
-                    },
-                    "integrityAlgorithms": {
-                      "type": "array",
-                      "items": {
-                        "enum": [
-                          "null",
-                          "nia1",
-                          "nia2"
-                        ],
-                        "x-ms-enum": {
-                          "name": "integrityAlgorithms",
-                          "modelAsString": true
-                        }
-                      }
-                    },
-                    "epsCipheringAlgorithms": {
-                      "type": "array",
-                      "items": {
-                        "enum": [
-                          "eea0",
-                          "eea1",
-                          "eea2"
-                        ],
-                        "x-ms-enum": {
-                          "name": "epsCipheringAlgorithms",
-                          "modelAsString": true
-                        }
-                      }
-                    },
-                    "epsIntegrityAlgorithms": {
-                      "type": "array",
-                      "items": {
-                        "enum": [
-                          "null",
-                          "e1a1",
-                          "e1a2"
-                        ],
-                        "x-ms-enum": {
-                          "name": "epsIntegrityAlgorithms",
-                          "modelAsString": true
-                        }
-                      }
-                    },
-                    "additionalAuthEvents": {
-                      "type": "array",
-                      "items": {
-                        "enum": [
-                          "intra-amf-mobility",
-                          "inter-amf-mobility",
-                          "periodic-registration",
-                          "service-request",
-                          "deregistration",
-                          "eps-mobility"
-                        ],
-                        "x-ms-enum": {
-                          "name": "additionalAuthEvents",
-                          "modelAsString": true
-                        }
-                      }
-                    },
-                    "additionalSecurityForEpsAlgorithms": {
-                      "$ref": "./common.json#/definitions/enableDisable"
-                    }
-                  }
-                },
-                "pagingProfile": {
+                "purgeTrigger": {
                   "type": "array",
+                  "description": "List of purge triggers",
+                  "maxItems": 3,
                   "items": {
                     "type": "object",
+                    "description": "The entry with 'deregistration-type' set to all is already present, no other entry is allowed to be configured; The 'deregistration-type' with value all is not allowed when entries with other deregistration types are already configured; The 'deregistration-type' with value all is not allowed when entries with other deregistration types are already configured",
                     "properties": {
-                      "precedence": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 255
-                      },
-                      "triggersQi": {
-                        "type": "array",
-                        "items": {
-                          "type": "integer",
-                          "minimum": 0,
-                          "maximum": 255
-                        }
-                      },
-                      "triggersService": {
-                        "type": "array",
-                        "items": {
-                          "enum": [
-                            "sms",
-                            "uePolicy",
-                            "lcs"
-                          ],
-                          "x-ms-enum": {
-                            "name": "triggersService",
-                            "modelAsString": true
-                          }
-                        }
-                      },
-                      "triggersArp": {
-                        "type": "array",
-                        "items": {
-                          "type": "integer",
-                          "minimum": 1,
-                          "maximum": 15
-                        }
-                      },
-                      "triggersPpi": {
-                        "type": "array",
-                        "items": {
-                          "type": "integer",
-                          "minimum": 0,
-                          "maximum": 7
-                        }
-                      },
-                      "t3513Initial": {
-                        "type": "integer",
-                        "minimum": 1000,
-                        "maximum": 30000
-                      },
-                      "t3513Increment": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 10000
-                      },
-                      "n3513Retry": {
-                        "type": "integer",
-                        "minimum": 2,
-                        "maximum": 4
-                      },
-                      "initialPagingTarget": {
+                      "deregistrationType": {
+                        "type": "string",
+                        "description": "Deregistration type",
                         "enum": [
-                          "lastKnownGnb",
-                          "lastVisitedGnbs",
-                          "lastKnownTa",
-                          "taList"
+                          "explicitDeregistration",
+                          "implicitDeregistration",
+                          "all"
                         ],
                         "x-ms-enum": {
-                          "name": "initialPagingTarget",
-                          "modelAsString": true
-                        }
-                      },
-                      "pagingPriority": {
-                        "enum": [
-                          "PrioLevel1",
-                          "PrioLevel2",
-                          "PrioLevel3",
-                          "PrioLevel4",
-                          "PrioLevel5",
-                          "PrioLevel6",
-                          "PrioLevel7",
-                          "PrioLevel8",
-                          "none"
-                        ],
-                        "x-ms-enum": {
-                          "name": "pagingPriority",
+                          "name": "deregistrationType",
                           "modelAsString": true
                         }
                       }
                     }
                   }
+                },
+                "lcsSupport": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "description": "Controls location service support. Default: disable",
+                  "default": "disabled"
+                },
+                "lcsNetworkInducedLocationRequestNiLrSupport": {
+                  "type": "string",
+                  "description": "Controls Network Induced - Location Request procedure initiation. Default: enableWithInitialPositioning",
+                  "enum": [
+                    "disable",
+                    "enableWithInitialPositioning",
+                    "enableWithoutInitialPositioning"
+                  ],
+                  "x-ms-enum": {
+                    "name": "lcsNetworkInducedLocationRequestNiLrSupport",
+                    "modelAsString": true
+                  },
+                  "default": "enableWithInitialPositioning"
+                },
+                "lcsNetworkInducedLocationRequestHorizontalAccuracy": {
+                  "type": "number",
+                  "description": "Describes NI-LR measurement for horizontal accuracy. Default: 50; Unit: meters",
+                  "default": 50.0
+                },
+                "lcsNetworkIncludedLocationRequestVerticalAccuracy": {
+                  "type": "number",
+                  "description": "Describes NI-LR measurement for vertical accuracy. Default: 0; Unit: meters",
+                  "default": 0.0
+                },
+                "lcsNetworkIncludedLocationRequestEmergencyTargetSender": {
+                  "type": "string",
+                  "description": "Specifies which node sends target node id to the GMLC. Default: sourceNode",
+                  "enum": [
+                    "sourceNode",
+                    "targetNode"
+                  ],
+                  "x-ms-enum": {
+                    "name": "lcsNetworkIncludedLocationRequestEmergencyTargetSender",
+                    "modelAsString": true
+                  },
+                  "default": "sourceNode"
+                },
+                "lcsNetworkIncludedLocationRequestResponseTime": {
+                  "type": "string",
+                  "description": "Controls initial NI-LR QoS response time. Default: delayTolerant",
+                  "enum": [
+                    "noDelay",
+                    "lowDelay",
+                    "delayTolerant"
+                  ],
+                  "x-ms-enum": {
+                    "name": "lcsNetworkIncludedLocationRequestResponseTime",
+                    "modelAsString": true
+                  },
+                  "default": "delayTolerant"
+                },
+                "lcsNetworkIncludedLocationRequestQosClass": {
+                  "type": "string",
+                  "description": "Describes NI-LR QoS class type. Default: bestEffort",
+                  "enum": [
+                    "bestEffort",
+                    "assured"
+                  ],
+                  "x-ms-enum": {
+                    "name": "lcsNetworkIncludedLocationRequestQosClass",
+                    "modelAsString": true
+                  },
+                  "default": "bestEffort"
+                },
+                "lcsNasNotificationTimerTlcsn": {
+                  "type": "integer",
+                  "description": "Defines the duration the AMF waits for a response to a NAS Notification invoke request sent to the UE; Default: 10; Unit: seconds",
+                  "minimum": 10,
+                  "maximum": 20,
+                  "default": 10
                 }
+              }
+            },
+            "nasPolicy": {
+              "type": "object",
+              "description": "Non Access Stratum Policy",
+              "properties": {
+                "ueRegistrationRetryDelayT3502Value": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60,
+                  "default": 12,
+                  "description": "Delay time before the UE retries a registration procedure after five consecutive failed attempts; Default: 12; Unit: minutes"
+                },
+                "uePeriodicRegistrationT3512Value": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 19200,
+                  "default": 60,
+                  "description": "Periodic registration procedure timer. Values in range 32..310 must be a multiple of 10, values in range 311..1860 must be a multiple of 60, values in range 1861..18600 must be a multiple of 600, and 19200. Default 60; Unit: minutes.  Values in range 32..310 must be a multiple of 10, values in range 311..1860 must be a multiple of 60, values in range 1861..18600 must be a multiple of 600, and 19200."
+                },
+                "uePeriodicRegistrationT3512Source": {
+                  "type": "string",
+                  "description": "Source for the periodic registration timer value sent to the UE as defined in 3GPP NAS standard section 8.2.7 of TS 24.501. If a subscribed value is not yet received from the UDM, then local-config will be used. Default: localConfig",
+                  "enum": [
+                    "localConfig",
+                    "udmSubscription"
+                  ],
+                  "x-ms-enum": {
+                    "name": "t3512Source",
+                    "modelAsString": true
+                  },
+                  "default": "localConfig"
+                },
+                "networkInitDeregistrationT3522": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 15000,
+                  "default": 6000,
+                  "description": "Defines the duration the AMF waits for a response to a deregistration request sent to the UE; Default: 6000; Unit: milliseconds"
+                },
+                "networkInitDeregistrationRetryN3522": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 5,
+                  "default": 2,
+                  "description": "Defines the number of retries the AMF performs for the network initiated deregistration procedure; Default: 2"
+                },
+                "registrationAcceptT3550": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535,
+                  "default": 6000,
+                  "description": "Defines the duration the AMF waits for a response to a registration accept; Default: 6000; Unit: milliseconds"
+                },
+                "registrationAcceptRetryN3550": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 5,
+                  "default": 3,
+                  "description": "Defines the number of retries the AMF performs for a registration accept; Default: 3"
+                },
+                "gutiLifetime": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 168,
+                  "default": 12,
+                  "description": "Defines the life time of a current 5G-GUTI; Default: 12; Unit: hours"
+                },
+                "identityT3570": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 15000,
+                  "default": 6000,
+                  "description": "Defines the duration the AMF waits for a response to an identity request; Default: 6000; Unit: milliseconds"
+                },
+                "identityRetryN3570": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 5,
+                  "default": 2,
+                  "description": "Defines the number of retries the AMF performs for an identity request; Default: 2"
+                },
+                "mobileReachableTimer": {
+                  "type": "string",
+                  "description": "Defines the duration the UE can stay IDLE without messaging the AMF; t3512plus4, t3512times2plus1, Default: t3512plus4; Unit: minutes",
+                  "enum": [
+                    "t3512plus4",
+                    "t3512times2plus1"
+                  ],
+                  "x-ms-enum": {
+                    "name": "mobileReachableTimer",
+                    "modelAsString": true
+                  },
+                  "default": "t3512plus4"
+                },
+                "taiListMax": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16,
+                  "default": 1,
+                  "description": "Defines the number of TAIs which can be stored for a particular UE; Default: 1"
+                },
+                "taiListAllocation": {
+                  "type": "string",
+                  "description": "Defines the PLMN based restriction for TAI list; Default: unrestricted",
+                  "enum": [
+                    "unrestricted",
+                    "withinPlmn"
+                  ],
+                  "x-ms-enum": {
+                    "name": "taiListAllocation",
+                    "modelAsString": true
+                  },
+                  "default": "unrestricted"
+                },
+                "configurationUpdateT3555": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 15000,
+                  "default": 6000,
+                  "description": "Defines the duration the AMF waits for a response to a configuration update command; Default: 6000; Unit: milliseconds"
+                },
+                "configurationUpdateRetryN3555": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4,
+                  "default": 4,
+                  "description": "Defines the number of retries the AMF performs for a configuration update command; Default: 4"
+                },
+                "optionalGutiReallocationUeInitServiceRequest": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "default": "disabled",
+                  "description": "Controls if the AMF allocates a new GUTI during UE inititated Service Request procedure. Default: disable"
+                },
+                "optionalGutiReallocationMobilityRegRequest": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "default": "enabled",
+                  "description": "Controls if the AMF allocates a new GUTI during Mobility Registration procedure. Default: enable"
+                },
+                "optionalGutiReallocationPeriodicRegRequest": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "default": "enabled",
+                  "description": "Controls if the AMF allocates a new GUTI during Periodic Registration procedure. Default: enable"
+                },
+                "non3gppValuesDeregistrationTimer": {
+                  "type": "integer",
+                  "minimum": 10,
+                  "maximum": 34560,
+                  "default": 54,
+                  "description": "Defines the non-3GPP deregistration timer value. This is sent in registration accept towards UE. Default: 54"
+                }
+              }
+            },
+            "nasSecurity": {
+              "type": "object",
+              "properties": {
+                "securityT3560": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 15000,
+                  "default": 6000,
+                  "description": "Defines the duration the AMF waits for a response to authentication and security mode; Default: 6000; Unit: milliseconds"
+                },
+                "securityRetryN3560": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 5,
+                  "default": 2,
+                  "description": "Defines the number of retries the AMF performs for authentication request and security mode command; Default: 2"
+                },
+                "cipheringAlgorithms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Defines the list of 5G ciphering algorithms that can be used for NAS ciphering. Valid values are nea0, nea1 and nea2 in any order or combination, with order indicating preference. SNOW3G (nea1) algorithm for NAS ciphering is considered compromised, and is not recommended. Default: nea2,nea0",
+                    "enum": [
+                      "nea0",
+                      "nea1",
+                      "nea2"
+                    ],
+                    "x-ms-enum": {
+                      "name": "cipheringAlgorithms",
+                      "modelAsString": true
+                    }
+                  }
+                },
+                "integrityAlgorithms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Defines the list of 5G integrity algorithms that can be used for NAS integrity protection. Valid values are null, nia1 and nia2 in any order or combination, with order indicating preference. Default: nia1,nia2,null",
+                    "enum": [
+                      "null",
+                      "nia1",
+                      "nia2"
+                    ],
+                    "x-ms-enum": {
+                      "name": "integrityAlgorithms",
+                      "modelAsString": true
+                    }
+                  }
+                },
+                "epsCipheringAlgorithms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Defines the list of EPS ciphering algorithms that can be used for NAS ciphering. Valid values are eea0, eea1 and eea2 in any order or combination, with order indicating preference. SNOW3G (eea1) algorithm for NAS ciphering is considered compromised, and is not recommended. Default: eea2,eea0",
+                    "enum": [
+                      "eea0",
+                      "eea1",
+                      "eea2"
+                    ],
+                    "x-ms-enum": {
+                      "name": "epsCipheringAlgorithms",
+                      "modelAsString": true
+                    }
+                  }
+                },
+                "epsIntegrityAlgorithms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Defines the list of EPS integrity algorithms that can be used for NAS integrity protection. Valid values are null, eia1 and eia2 in any order or combination, with order indicating preference. Default: eia1,eia2,null",
+                    "enum": [
+                      "null",
+                      "e1a1",
+                      "e1a2"
+                    ],
+                    "x-ms-enum": {
+                      "name": "epsIntegrityAlgorithms",
+                      "modelAsString": true
+                    }
+                  }
+                },
+                "additionalAuthEvents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Additional events for which AMF performs authentication",
+                    "enum": [
+                      "intraAmfMobility",
+                      "interAmfMobility",
+                      "periodicRegistration",
+                      "serviceRequest",
+                      "deregistration",
+                      "epsMobility"
+                    ],
+                    "x-ms-enum": {
+                      "name": "additionalAuthEvents",
+                      "modelAsString": true
+                    }
+                  }
+                },
+                "additionalSecurityForEpsAlgorithms": {
+                  "$ref": "./common.json#/definitions/enableDisable",
+                  "description": "Controls support of an additional security procedure in order to provide the selected EPS security algorithms to the UE when the AMF supports N26 interface and the UE indicates support of S1-mode. This attribute is applicable only when 'amf-cc interface nas version' is set to '15.6.0'. A value of 'disable' is compliant to TS 24.501 v15.6.0. A value of 'enable' is compliant to v16.6.0. Default: disable",
+                  "default": "disabled"
+                }
+              }
+            },
+            "pagingProfile": {
+              "type": "array",
+              "maxItems": 4,
+              "description": "Set of paging profiles",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "precedence": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 255,
+                    "description": "The precedence in the paging profile set of this paging profile. Lower value indicates higher precedence.  Must be unique within a paging profile"
+                  },
+                  "triggersQi": {
+                    "type": "array",
+                    "maxItems": 256,
+                    "description": "List of 5G QoS identifiers used to match this paging profile",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 255
+                    }
+                  },
+                  "triggersService": {
+                    "type": "array",
+                    "maxItems": 3,
+                    "description": "List of services used to match this paging profile",
+                    "items": {
+                      "type": "string",
+                      "description": "",
+                      "enum": [
+                        "sms",
+                        "uePolicy",
+                        "lcs"
+                      ],
+                      "x-ms-enum": {
+                        "name": "triggersService",
+                        "modelAsString": true
+                      }
+                    }
+                  },
+                  "triggersArp": {
+                    "type": "array",
+                    "maxItems": 15,
+                    "description": "List of Allocation & Retention Priorities (ARP) used to match this paging profile",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 15
+                    }
+                  },
+                  "triggersPpi": {
+                    "type": "array",
+                    "maxItems": 8,
+                    "description": "List of Paging Policy Indicators (PPI) used to match this paging profile",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 7
+                    }
+                  },
+                  "t3513Initial": {
+                    "type": "integer",
+                    "minimum": 1000,
+                    "maximum": 30000,
+                    "default": 5000,
+                    "description": "Defines the wait time for the initial page attempt. Default: 5000; Unit: milliseconds"
+                  },
+                  "t3513Increment": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000,
+                    "default": 2000,
+                    "description": "Defines the additional delay added to retried page attempts. Default: 2000; Unit: milliseconds"
+                  },
+                  "n3513Retry": {
+                    "type": "integer",
+                    "minimum": 2,
+                    "maximum": 4,
+                    "default": 2,
+                    "description": "Defines the number of paging retries the AMF performs before declaring paging failure. Default: 2"
+                  },
+                  "initialPagingTarget": {
+                    "type": "string",
+                    "description": "Defines initial paging target. Default: taListt",
+                    "enum": [
+                      "lastKnownGnb",
+                      "lastVisitedGnbs",
+                      "lastKnownTa",
+                      "taList"
+                    ],
+                    "x-ms-enum": {
+                      "name": "initialPagingTarget",
+                      "modelAsString": true
+                    },
+                    "default": "taList"
+                  },
+                  "pagingPriority": {
+                    "type": "string",
+                    "description": "Defines the paging priority. Lower value indicates higher priority as described in TS 38.413 section 9.3.1.78. Default: none",
+                    "enum": [
+                      "PrioLevel1",
+                      "PrioLevel2",
+                      "PrioLevel3",
+                      "PrioLevel4",
+                      "PrioLevel5",
+                      "PrioLevel6",
+                      "PrioLevel7",
+                      "PrioLevel8",
+                      "none"
+                    ],
+                    "x-ms-enum": {
+                      "name": "pagingPriority",
+                      "modelAsString": true
+                    },
+                    "default": "none"
+                  }
+                },
+                "required": [
+                  "precedence"
+                ]
               }
             }
           }

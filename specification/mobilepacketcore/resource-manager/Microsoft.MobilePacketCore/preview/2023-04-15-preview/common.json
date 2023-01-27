@@ -358,29 +358,46 @@
         "fiveQi": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 255
+          "maximum": 255,
+          "description": "Quality-of-service Identifier"
         },
         "arpPriorityLevel": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 15
+          "maximum": 15,
+          "description": "allocation & retention priority:  higher values are preferred"
         },
         "arpPreemptionCapability": {
           "type": "string",
           "enum": [
             "NOT_PREEMPT",
             "MAY_PREEMPT"
-          ]
+          ],
+          "x-ms-enum": {
+            "name": "arpPreemptionCapability",
+            "modelAsString": true
+          }
         },
         "arpPreemptionVulnerability": {
           "type": "string",
           "enum": [
             "NOT_PREEMPTABLE",
             "MAY_PREEMPTABLE"
-          ]
+          ],
+          "x-ms-enum": {
+            "name": "arpPreemptionVulnerability",
+            "modelAsString": true
+          }
         },
         "nonGbrFlow": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "indicates if this is non-gbr qos-flow",
+          "default": false
+        },
+        "criticalGbrType": {
+          "type": "boolean",
+          "description": "delay critical gbr type.  applicable when nonGbrFlow = false",
+          "default": false
         },
         "priorityLevel": {
           "type": "integer",
@@ -393,12 +410,75 @@
             "kbps",
             "mbps",
             "gbps"
-          ]
+          ],
+          "x-ms-enum": {
+            "name": "measurementUnit",
+            "modelAsString": true
+          },
+          "description": "rate-measurement-units: kbps/mbps/gbps",
+          "default": "kbps"
+        },
+        "uplink-mbr": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "uplink maximum bit rate"
+        },
+        "downlink-mbr": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "downlink maximum bit rate"
+        },
+        "uplink-gbr": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "uplink guaranteed bit rate.  applicable when nonGbrFlow = false"
+        },
+        "downlink-gbr": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "downlink guaranteed bit rate. applicable when nonGbrFlow = false"
+        },
+        "averaging-window": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4095,
+          "description": "averaging window [1-4095] in ms. applicable when nonGbrFlow = false"
+        },
+        "max-burst": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4095,
+          "description": "uplink maximum burst, measurement-units: bytes[1-4095]. applicable when nonGbrFlow = true"
+        },
+        "max-packet-loss-rate-dl": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "downlink maximum packet loss rate. applicable when nonGbrFlow = false"
+        },
+        "max-packet-loss-rate-ul": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "up-link maximum packet loss rate. applicable when nonGbrFlow = false"
         },
         "reflectiveQos": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "reflective qos config option. applicable when nonGbrFlow = true",
+          "default": false
         }
-      }
+      },
+      "required": [
+        "fiveQi",
+        "arpPriorityLevel",
+        "arpPreemptionCapability",
+        "arpPreemptionVulnerability"
+      ],
+      "description": "must 'not((./non-gbr-flow = 'false') and ((count(./uplink-mbr) = 0 and count(./downlink-mbr) = 0) or (count(./uplink-gbr) = 0 and count(./downlink-gbr) = 0)))' error-message 'uplink-mbr/downlink-mbr and uplink-gbr/downlink-gbr must be greater than zero for GBR qos flow';must 'not((./non-gbr-flow = 'true') and ((./five-qi < 5) or (./five-qi > 64 and ./five-qi < 68) or (./five-qi = 75 ) or (./five-qi > 81 and ./five-qi < 86)))'  error-message 'non-dynamic non-gbr 5qi must be 5,6,7,8,9, 69, 70, 79, 80'; must 'not((./non-gbr-flow = 'false') and (./critical-gbr-type = 'false') and ((./five-qi > 4 and ./five-qi < 10) or (./five-qi = 69) or (./five-qi = 70) or (./five-qi = 79) or (./five-qi = 80) or (./five-qi > 81 and ./five-qi < 86)))' error-message 'non-dynamic non-critical-gbr 5qi must be 1, 2, 3, 4, 65, 66, 67, 75'; must 'not((./non-gbr-flow = 'false') and (./critical-gbr-type = 'true') and ((./five-qi < 10) or (./five-qi > 64 and ./five-qi < 68) or (./five-qi = 75) or (./five-qi = 69) or (./five-qi = 70) or (./five-qi = 79) or (./five-qi = 80)))' error-message 'non-dynamic critical gbr 5qi must be 82, 83, 84, 85';}"
     },
     "LoopbackUsage": {
       "type": "string",
@@ -694,7 +774,8 @@
         },
         "sd": {
           "type": "string",
-          "description": "Slice differentiator"
+          "description": "Slice differentiator. Format is 3 octets specified in 2 digit hexidecimal format",
+          "pattern": "([A-Fa-f0-9]{6})"
         }
       },
       "required": [
