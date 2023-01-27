@@ -1,0 +1,50 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/versioning";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+using Azure.Core;
+using Azure.ResourceManager;
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+
+@armProviderNamespace("Microsoft.StandbyPool")
+@service({
+  title: "Microsoft.StandbyPool",
+  version: "2023-06-01-preview",
+})
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+namespace Microsoft.StandbyPool;
+
+interface Operations extends Azure.ResourceManager.Operations {}
+
+@doc("A StandbyVirtualMachinePoolResource")
+model StandbyVirtualMachinePoolResource is TrackedResource<StandbyVirtualMachinePoolResourceProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("standbyVirtualMachinePoolName")
+  @segment("standbyVirtualMachinePools")
+  @doc("Name of the standby virtual machine pool")
+  @path
+  name: string;
+}
+
+@doc("Details of the StandbyVirtualMachinePool.")
+model StandbyVirtualMachinePoolResourceProperties {
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+}
+
+@doc("Provisioning state")
+@lroStatus
+enum ProvisioningState {
+  ...ResourceProvisioningState,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted,
+}
+
+@armResourceOperations
+interface StandbyVirtualMachinePool extends ResourceOperations<StandbyVirtualMachinePoolResource, StandbyVirtualMachinePoolResourceProperties> {}
