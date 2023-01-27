@@ -645,10 +645,10 @@
             "$ref": "#/parameters/DomainName"
           },
           {
-            "$ref": "#/parameters/MaxPageSizeParameter"
+            "$ref": "#/parameters/TopParameter"
           },
           {
-            "$ref": "#/parameters/ContinuationTokenParameter"
+            "$ref": "#/parameters/SkipTokenParameter"
           }
         ],
         "responses": {
@@ -883,9 +883,9 @@
     },
     "ValidSenderUsernameCollection": {
       "description": "Collection of valid sender usernames. This is a key-value pair where key=username and value=display name.",
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SenderUsername"
       }
     },
     "RemoveValidSenderUsernameParameters": {
@@ -1212,6 +1212,24 @@
           "readOnly": true
         }
       }
+    },
+    "SenderUsername": {
+      "description": "Input parameters for add valid sender user name",
+      "type": "object",
+      "required": [
+        "name",
+        "displayName"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name of sender.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "The friendly display name of the sender.",
+          "type": "string"
+        }
+      }
     }
   },
   "parameters": {
@@ -1225,18 +1243,18 @@
       "type": "string",
       "x-ms-parameter-location": "method"
     },
-    "MaxPageSizeParameter": {
-      "name": "maxpagesize",
+    "TopParameter": {
+      "name": "$top",
       "in": "query",
-      "description": "The maximum number of resources to include in a single response. This value is honored if the specified value is smaller than server's default page size.",
+      "description": "The maximum number of records to include in a single response. This value is honored if the specified value is smaller than server's default page size.",
       "type": "integer",
       "format": "int32",
       "x-ms-parameter-location": "method"
     },
-    "ContinuationTokenParameter": {
-      "name": "continuationToken",
+    "SkipTokenParameter": {
+      "name": "$skipToken",
       "in": "query",
-      "description": "ContinuationToken is only used if a previous operation returned a partial result. If a previous response contains a nextLink element, the value of the nextLink element will include a continuationToken parameter that specifies a starting point to use for subsequent calls.",
+      "description": "SkipToken is only used if a previous operation returned a partial result. If a previous response contains a nextLink element, the value of the nextLink element will include a skipToken parameter that specifies a starting point to use for subsequent calls.",
       "type": "string",
       "x-ms-parameter-location": "method"
     },
