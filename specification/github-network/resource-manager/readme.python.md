@@ -10,7 +10,7 @@ python:
   payload-flattening-threshold: 2
   namespace: GitHub.Network
   package-name: github-network
-  package-version: 2022-10-01
+  package-version: 2023-02-15
   clear-output-folder: true
 ```
 

@@ -24,66 +24,21 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 These are the global settings for the Resource Provider.
 
----
-```yaml
-openapi-type: arm
-tag: package-2022-10-01-alpha
-```
-
-### Tag: package-2022-10-01-alpha
-
-These settings apply only when `--tag=package-2022-10-01-alpha` is specified on the command line.
-
-```yaml $(tag) == 'package-2022-10-01-alpha'
-input-file:
-  - GitHub.Network/preview/2022-10-01-alpha/GitHub.Network.json
-```
 
 ---
 ```yaml
 openapi-type: arm
-tag: package-2022-10-01-beta
+openapi-subtype: rpaas
+tag: package-2023-02-15-preview
 ```
 
-### Tag: package-2022-10-01-beta
+### Tag: package-2023-02-15-preview
 
-These settings apply only when `--tag=package-2022-10-01-beta` is specified on the command line.
+These settings apply only when `--tag=package-2023-02-15-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-10-01-beta'
+```yaml $(tag) == 'package-2023-02-15-preview'
 input-file:
-  - GitHub.Network/preview/2022-10-01-beta/GitHub.Network.json
-```
-
-
----
-```yaml
-openapi-type: arm
-tag: package-2022-10-01-privatepreview
-```
-
-### Tag: package-2020-06-01-privatepreview
-
-These settings apply only when `--tag=package-2022-10-01-privatepreview` is specified on the command line.
-
-```yaml $(tag) == 'package-2022-10-01-privatepreview'
-input-file:
-  - GitHub.Network/preview/2022-10-01-privatepreview/GitHub.Network.json
-```
-
-
----
-```yaml
-openapi-type: arm
-tag: package-2022-10-01
-```
-
-### Tag: package-2020-06-01
-
-These settings apply only when `--tag=package-2022-10-01` is specified on the command line.
-
-```yaml $(tag) == 'package-2022-10-01'
-input-file:
-  - GitHub.Network/preview/2022-10-01/GitHub.Network.json
+  - GitHub.Network/preview/2023-02-15-preview/GitHub.Network.json
 ```
 
 # Code Generation
