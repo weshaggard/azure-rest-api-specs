@@ -21,16 +21,54 @@ enum ProvisioningState {
   ...ResourceProvisioningState,
 }
 
+enum PerformanceTier {
+  Undefined,
+  Basic,
+  Standard,
+  Premium,
+  Ultra,
+}
+
+enum FailoverTier {
+  NotAvailable,
+  Slow,
+  Fast,
+  Super,
+}
+
+enum SCProvisioningState {
+  Provisioning,
+  Provisioned,
+  Failed,
+}
+
+enum SCType {
+  Native,
+  RWX,
+  S3,
+}
+
+enum DataResilienceTier {
+  NotDataResilient,
+  DataResilient,
+}
+
+enum VolumeExpansion {
+    Allow,
+    Disallow,
+}
+
 // All properties should be optional under TemplateParameterProperties
 @doc("The properties to create new ManagedStorageClass")
 model TemplateParameterProperties {
     @doc("The backing storageclass used to create new storageclass")
     backingStorageClassName?: string;
 
-    @doc("[S3] AccessKeyID")
-    accessKeyID?: string;
+    @doc("[S3] accessKeyId")
+    accessKeyId?: string;
 
     @doc("[S3] S3 SecretAccessKey")
+    @secret
     secretAccessKey?: string;
 
     @doc("[S3] S3 Endpoint")
@@ -43,54 +81,61 @@ model TemplateParameterProperties {
 @doc("The status of the ManagedStorageClass")
 model ManagedStorageClassStatus {
     @doc("The status of the ManagedStorageClass")
-    scProvisioningState?: string
+    @visibility("read")
+    scProvisioningState?: SCProvisioningState
 }
 
 @doc("The properties of ManagedStorageClass")
 model ManagedStorageClassProperties {
     @doc("[Native] Volume can be expanded or not")
-    allowVolumeExpansion?: boolean;
-
-    @doc("[Native] Configured as default")
-    default?: boolean;
+    @visibility("read")
+    allowVolumeExpansion?: VolumeExpansion;
 
     @doc("[Native] Additional mount options")
+    @visibility("read")
     mountOptions?: string[];
 
     @doc("[Native] Provisioner name")
+    @visibility("read")
     provisioner?: string;
 
     @doc("[Native] Binding mode of volumes: Immediate, WaitForFirstConsumer")
+    @visibility("read")
     volumeBindingMode?: string;
 
     @doc("The access mode: [RWO, RWX] or [RWO]")
+    @visibility("read")
     accessMode?: string[];
 
     @doc("Allow single data node failure")
-    dataResilience?: boolean;
+    @visibility("read")
+    dataResilience?: DataResilienceTier;
 
     @doc("Failover speed: NA, Slow, Fast")
-    failoverSpeed?: string;
+    failoverSpeed?: FailoverTier;
 
     @doc("Limitations")
+    @visibility("read")
     limitations?: string[];
 
     @doc("Performance tier")
-    performance?: string;
+    performance?: PerformanceTier;
 
     @doc("Selection priority when multiple storage classes meet the criteria. 0: Highest, -1: Never use")
     priority?: integer;
 
     @doc("Type of the ManagedStorageClass")
-    storageClassType: string;
+    storageClassType: SCType;
 
     @doc("Parameters to create new ManagedStorageClass")
     templateParameters?: TemplateParameterProperties;
 
     @doc("Actual Status of the ManagedStorageClass")
+    @visibility("read")
     status?: ManagedStorageClassStatus;
 
     @doc("Resource provision state")
+    @visibility("read")
     provisioningState?: ProvisioningState;
 }
 

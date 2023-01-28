@@ -396,6 +396,17 @@
     }
   },
   "definitions": {
+    "DataResilienceTier": {
+      "type": "string",
+      "enum": [
+        "NotDataResilient",
+        "DataResilient"
+      ],
+      "x-ms-enum": {
+        "name": "DataResilienceTier",
+        "modelAsString": true
+      }
+    },
     "ExtendedLocation": {
       "type": "object",
       "properties": {
@@ -414,16 +425,26 @@
         "name"
       ]
     },
+    "FailoverTier": {
+      "type": "string",
+      "enum": [
+        "NotAvailable",
+        "Slow",
+        "Fast",
+        "Super"
+      ],
+      "x-ms-enum": {
+        "name": "FailoverTier",
+        "modelAsString": true
+      }
+    },
     "ManagedStorageClassProperties": {
       "type": "object",
       "properties": {
         "allowVolumeExpansion": {
-          "type": "boolean",
-          "description": "[Native] Volume can be expanded or not"
-        },
-        "default": {
-          "type": "boolean",
-          "description": "[Native] Configured as default"
+          "$ref": "#/definitions/VolumeExpansion",
+          "description": "[Native] Volume can be expanded or not",
+          "readOnly": true
         },
         "mountOptions": {
           "type": "array",
@@ -431,15 +452,18 @@
             "type": "string"
           },
           "x-cadl-name": "string[]",
-          "description": "[Native] Additional mount options"
+          "description": "[Native] Additional mount options",
+          "readOnly": true
         },
         "provisioner": {
           "type": "string",
-          "description": "[Native] Provisioner name"
+          "description": "[Native] Provisioner name",
+          "readOnly": true
         },
         "volumeBindingMode": {
           "type": "string",
-          "description": "[Native] Binding mode of volumes: Immediate, WaitForFirstConsumer"
+          "description": "[Native] Binding mode of volumes: Immediate, WaitForFirstConsumer",
+          "readOnly": true
         },
         "accessMode": {
           "type": "array",
@@ -447,14 +471,16 @@
             "type": "string"
           },
           "x-cadl-name": "string[]",
-          "description": "The access mode: [RWO, RWX] or [RWO]"
+          "description": "The access mode: [RWO, RWX] or [RWO]",
+          "readOnly": true
         },
         "dataResilience": {
-          "type": "boolean",
-          "description": "Allow single data node failure"
+          "$ref": "#/definitions/DataResilienceTier",
+          "description": "Allow single data node failure",
+          "readOnly": true
         },
         "failoverSpeed": {
-          "type": "string",
+          "$ref": "#/definitions/FailoverTier",
           "description": "Failover speed: NA, Slow, Fast"
         },
         "limitations": {
@@ -463,17 +489,18 @@
             "type": "string"
           },
           "x-cadl-name": "string[]",
-          "description": "Limitations"
+          "description": "Limitations",
+          "readOnly": true
         },
         "performance": {
-          "type": "string",
+          "$ref": "#/definitions/PerformanceTier",
           "description": "Performance tier"
         },
         "priority": {
           "description": "Selection priority when multiple storage classes meet the criteria. 0: Highest, -1: Never use"
         },
         "storageClassType": {
-          "type": "string",
+          "$ref": "#/definitions/SCType",
           "description": "Type of the ManagedStorageClass"
         },
         "templateParameters": {
@@ -482,11 +509,13 @@
         },
         "status": {
           "$ref": "#/definitions/ManagedStorageClassStatus",
-          "description": "Actual Status of the ManagedStorageClass"
+          "description": "Actual Status of the ManagedStorageClass",
+          "readOnly": true
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
-          "description": "Resource provision state"
+          "description": "Resource provision state",
+          "readOnly": true
         }
       },
       "description": "The properties of ManagedStorageClass",
@@ -569,76 +598,24 @@
     "ManagedStorageClassResourceUpdateProperties": {
       "type": "object",
       "properties": {
-        "allowVolumeExpansion": {
-          "type": "boolean",
-          "description": "[Native] Volume can be expanded or not"
-        },
-        "default": {
-          "type": "boolean",
-          "description": "[Native] Configured as default"
-        },
-        "mountOptions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-cadl-name": "string[]",
-          "description": "[Native] Additional mount options"
-        },
-        "provisioner": {
-          "type": "string",
-          "description": "[Native] Provisioner name"
-        },
-        "volumeBindingMode": {
-          "type": "string",
-          "description": "[Native] Binding mode of volumes: Immediate, WaitForFirstConsumer"
-        },
-        "accessMode": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-cadl-name": "string[]",
-          "description": "The access mode: [RWO, RWX] or [RWO]"
-        },
-        "dataResilience": {
-          "type": "boolean",
-          "description": "Allow single data node failure"
-        },
         "failoverSpeed": {
-          "type": "string",
+          "$ref": "#/definitions/FailoverTier",
           "description": "Failover speed: NA, Slow, Fast"
         },
-        "limitations": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-cadl-name": "string[]",
-          "description": "Limitations"
-        },
         "performance": {
-          "type": "string",
+          "$ref": "#/definitions/PerformanceTier",
           "description": "Performance tier"
         },
         "priority": {
           "description": "Selection priority when multiple storage classes meet the criteria. 0: Highest, -1: Never use"
         },
         "storageClassType": {
-          "type": "string",
+          "$ref": "#/definitions/SCType",
           "description": "Type of the ManagedStorageClass"
         },
         "templateParameters": {
           "$ref": "#/definitions/TemplateParameterProperties",
           "description": "Parameters to create new ManagedStorageClass"
-        },
-        "status": {
-          "$ref": "#/definitions/ManagedStorageClassStatus",
-          "description": "Actual Status of the ManagedStorageClass"
-        },
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "Resource provision state"
         }
       },
       "description": "The updatable properties of the ManagedStorageClassResource."
@@ -647,11 +624,26 @@
       "type": "object",
       "properties": {
         "scProvisioningState": {
-          "type": "string",
-          "description": "The status of the ManagedStorageClass"
+          "$ref": "#/definitions/SCProvisioningState",
+          "description": "The status of the ManagedStorageClass",
+          "readOnly": true
         }
       },
       "description": "The status of the ManagedStorageClass"
+    },
+    "PerformanceTier": {
+      "type": "string",
+      "enum": [
+        "Undefined",
+        "Basic",
+        "Standard",
+        "Premium",
+        "Ultra"
+      ],
+      "x-ms-enum": {
+        "name": "PerformanceTier",
+        "modelAsString": true
+      }
     },
     "ProvisioningState": {
       "type": "string",
@@ -665,6 +657,30 @@
         "modelAsString": true
       }
     },
+    "SCProvisioningState": {
+      "type": "string",
+      "enum": [
+        "Provisioning",
+        "Provisioned",
+        "Failed"
+      ],
+      "x-ms-enum": {
+        "name": "SCProvisioningState",
+        "modelAsString": true
+      }
+    },
+    "SCType": {
+      "type": "string",
+      "enum": [
+        "Native",
+        "RWX",
+        "S3"
+      ],
+      "x-ms-enum": {
+        "name": "SCType",
+        "modelAsString": true
+      }
+    },
     "TemplateParameterProperties": {
       "type": "object",
       "properties": {
@@ -672,13 +688,15 @@
           "type": "string",
           "description": "The backing storageclass used to create new storageclass"
         },
-        "accessKeyID": {
+        "accessKeyId": {
           "type": "string",
-          "description": "[S3] AccessKeyID"
+          "description": "[S3] accessKeyId"
         },
         "secretAccessKey": {
           "type": "string",
-          "description": "[S3] S3 SecretAccessKey"
+          "description": "[S3] S3 SecretAccessKey",
+          "format": "password",
+          "x-ms-secret": true
         },
         "endpoint": {
           "type": "string",
@@ -690,6 +708,17 @@
         }
       },
       "description": "The properties to create new ManagedStorageClass"
+    },
+    "VolumeExpansion": {
+      "type": "string",
+      "enum": [
+        "Allow",
+        "Disallow"
+      ],
+      "x-ms-enum": {
+        "name": "VolumeExpansion",
+        "modelAsString": true
+      }
     }
   },
   "parameters": {}
