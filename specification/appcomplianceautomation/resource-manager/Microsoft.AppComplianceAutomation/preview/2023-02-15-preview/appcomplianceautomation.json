@@ -982,7 +982,6 @@
         "events",
         "payloadUrl",
         "contentType",
-        "webhookKey",
         "sslVerified"
       ],
       "properties": {
@@ -1000,7 +999,7 @@
           "type": "string",
           "description": "Webhook status.",
           "enum": [
-            "Active",
+            "Enabled",
             "Disabled"
           ],
           "readOnly": false,
@@ -1044,12 +1043,20 @@
         "contentType": {
           "type": "string",
           "description": "content type",
-          "readOnly": false
+          "enum": [
+            "application/json"
+          ],
+          "readOnly": false,
+          "x-ms-enum": {
+            "name": "ContentType",
+            "modelAsString": true
+          }
         },
         "webhookKey": {
           "type": "string",
-          "description": "webhook secret token",
-          "readOnly": false
+          "description": "webhook secret token. If not set, this field value is null; otherwise, please set a string value.",
+          "readOnly": false,
+          "x-ms-secret": true
         },
         "sslVerified": {
           "type": "string",
@@ -1076,7 +1083,7 @@
         },
         "provisioningState": {
           "readOnly": true,
-          "description": "Azure lifecycle management",
+          "description": "Azure Resource Provisioning State",
           "$ref": "#/definitions/ProvisioningState"
         }
       }
@@ -1091,7 +1098,11 @@
         "report_configuration_changes",
         "report_deletion"
       ],
-      "readOnly": false
+      "readOnly": false,
+      "x-ms-enum": {
+        "name": "NotificationEvent",
+        "modelAsString": true
+      }
     },
     "WebhookResource": {
       "type": "object",
@@ -2021,6 +2032,7 @@
       "description": "Webhook Name.",
       "required": true,
       "type": "string",
+      "pattern": "^[-a-zA-Z0-9_]+$",
       "x-ms-parameter-location": "method"
     },
     "SkipTokenParameter": {
