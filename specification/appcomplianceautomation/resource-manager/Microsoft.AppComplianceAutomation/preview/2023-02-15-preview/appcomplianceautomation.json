@@ -99,7 +99,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success. The response indicates given subscriptions has been onboarded."
+            "description": "Success. The response indicates given subscriptions has been onboarded.",
+            "schema": {
+              "$ref": "#/definitions/OnboardResponse"
+            }
           },
           "202": {
             "description": "Accepted. The response indicates the onboard operation is performed in the background."
@@ -530,6 +533,12 @@
               "$ref": "#/definitions/WebhookResource"
             }
           },
+          "201": {
+            "description": "Created. The response describes a AppComplianceAutomation webhook.",
+            "schema": {
+              "$ref": "#/definitions/WebhookResource"
+            }
+          },
           "default": {
             "description": "Error response.",
             "schema": {
@@ -830,7 +839,7 @@
           "type": "string"
         },
         "resourceType": {
-          "description": "Resource type. e.g. \"Microsoft.SignalRService/SignalR\"",
+          "description": "Resource type. e.g. \"Microsoft.Compute/virtualMachines\"",
           "type": "string"
         },
         "resourceKind": {
@@ -1077,7 +1086,7 @@
           "enum": [
             "Succeeded",
             "Failed",
-            "Not_yet"
+            "NotStarted"
           ],
           "readOnly": true
         },
@@ -1639,6 +1648,21 @@
         }
       }
     },
+    "OnboardResponse": {
+      "type": "object",
+      "description": "Onboard subscriptions response.",
+      "properties": {
+        "subscriptionIds": {
+          "description": "List of subscription ids that are onboarded",
+          "type": "array",
+          "items": {
+            "description": "Subscription id for onboard",
+            "type": "string"
+          }
+        }
+      }
+
+    },
     "TriggerEvaluationRequest": {
       "type": "object",
       "description": "Trigger evaluation request.",
@@ -1722,11 +1746,6 @@
         },
         "remediationLink": {
           "description": "Link to remediation steps for this quick assessment.",
-          "type": "string",
-          "readOnly": true
-        },
-        "reason": {
-          "description": "Reason for the quick assessment resource status.",
           "type": "string",
           "readOnly": true
         }
