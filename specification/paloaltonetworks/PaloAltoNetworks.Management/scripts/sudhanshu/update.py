@@ -20,7 +20,8 @@ fixed = sorted([os.path.join(fixedPath, f) for f in fixedFiles])
 print(generated, fixed)
 
 # Abort if the files are not same in examples and fixed
-if generatedFiles != fixedFiles:
+print(set(generatedFiles) != set(fixedFiles))
+if set(generatedFiles) != set(fixedFiles):
   newFiles = [f for f in generatedFiles if f not in fixedFiles]
   print(f'New {len(newFiles)} {newFiles}')
   missingFiles = [f for f in fixedFiles if f not in generatedFiles]
