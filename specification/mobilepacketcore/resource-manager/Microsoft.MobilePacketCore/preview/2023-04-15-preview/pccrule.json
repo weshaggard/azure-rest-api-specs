@@ -309,31 +309,24 @@
         },
         "chargingData": {
           "type": "object",
+          "description": "Configure charging instance associated to predefined/static pcc-rule. reporting-level needs to be configured;service-id and rating-group-id need to be filled if reporting level is serviceLevel;rating-group-id needs to be filled if reporting level is ratingGroupLevel",
           "properties": {
-            "offline": {
+            "chargingType": {
               "type": "string",
+              "description": "indicates whether online or offline charging is applicable to PCC rule",
               "enum": [
-                "disabled",
-                "enabled"
+                "offline",
+                "online"
               ],
               "x-ms-enum": {
-                "name": "offline",
+                "name": "chargingType",
                 "modelAsString": true
-              }
-            },
-            "online": {
-              "type": "string",
-              "enum": [
-                "disabled",
-                "enabled"
-              ],
-              "x-ms-enum": {
-                "name": "online",
-                "modelAsString": true
-              }
+              },
+              "default": "offline"
             },
             "measurementMethod": {
               "type": "string",
+              "description": "measurement method [time/volume/both/event]",
               "enum": [
                 "time",
                 "volume",
@@ -343,7 +336,8 @@
               "x-ms-enum": {
                 "name": "measurementMethod",
                 "modelAsString": true
-              }
+              },
+              "default": "volume"
             },
             "ratingGroupId": {
               "type": "integer"
@@ -351,8 +345,12 @@
             "serviceId": {
               "type": "integer"
             },
+            "sponsorId": {
+              "type": "string"
+            },
             "reportingLevel": {
               "type": "string",
+              "description": "policy control reporting level",
               "enum": [
                 "serviceLevel",
                 "ratingGroupLevel",
@@ -370,54 +368,225 @@
         },
         "precedence": {
           "type": "integer",
+          "description": "specifies the order in which this pcc rule can be applied relative to other pcc-rules",
           "minimum": 1,
           "maximum": 99999
         },
         "applicationId": {
-          "type": "string"
-        },
-        "ruleType": {
           "type": "string",
-          "enum": [
-            "nonTdefType",
-            "predefinedTdefType"
-          ],
-          "x-ms-enum": {
-            "name": "ruleType",
-            "modelAsString": true
+          "description": "Application ID.  Cannot be used in conjunction with packet filters (if application ID is specified, there can be no packet filters present)"
+        },
+        "packetFilter": {
+          "type": "array",
+          "maxItems": 512,
+          "description": "Defines the packet filter configuration identified via 5 tuples mainly source-ip-address, destination-ip-address, source-port, destination-port and protocol fields",
+          "items": {
+            "type": "object",
+            "description": "source-port-start != 0 is allowed only for protocols 255, 6, 17, 132;source-port-end != 65535 is allowed only for protocols 255, 6, 17, 132;source-port-end must be greater than or equal to source-port-start;destination-port-start != 0 is allowed only for protocols 255, 6, 17, 132;destination-port-end != 65535 is allowed only for protocols 255, 6, 17, 132;destination-port-end must be greater than or equal to destination-port-start",
+            "properties": {
+              "ipVersion": {
+                "type": "string",
+                "description": "IP version",
+                "enum": [
+                  "v4Only",
+                  "v6Only"
+                ],
+                "x-ms-enum": {
+                  "name": "ipVersion",
+                  "modelAsString": true
+                },
+                "default": "v4Only"
+              },
+              "sourceIpv4": {
+                "$ref": "./common.json#/definitions/ipv4Address",
+                "description": "source  IPv4 address (inclusive)",
+                "default": "0.0.0.0"
+              },
+              "sourceIpv4PrefixLen": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 32,
+                "default": 0,
+                "description": "source IPv4 address prefix length, 0 signifies for 'don't care'"
+              },
+              "sourceIpv6": {
+                "$ref": "./common.json#/definitions/ipv6Address",
+                "description": "source  IPv6 address (inclusive)",
+                "default": "::"
+              },
+              "sourceIpv6PrefixLen": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 128,
+                "default": 0,
+                "description": "source IPv6 address prefix length, 0 signifies for 'don't care'"
+              },
+              "destinationIpv4": {
+                "$ref": "./common.json#/definitions/ipv4Address",
+                "description": "destination  IPv4 address (inclusive)",
+                "default": "0.0.0.0"
+              },
+              "destinationIpv4PrefixLen": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 32,
+                "default": 0,
+                "description": "destination IPv4 address prefix length, 0 signifies for 'don't care'"
+              },
+              "destinationIpv6": {
+                "$ref": "./common.json#/definitions/ipv6Address",
+                "description": "destination  IPv6 address (inclusive)",
+                "default": "::"
+              },
+              "destinationIpv6PrefixLen": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 128,
+                "default": 0,
+                "description": "destination IPv6 address prefix length, 0 signifies for 'don't care'"
+              },
+              "sourcePortStart": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535,
+                "default": 0,
+                "description": "source port range start value (valid for protocol = TCP (6), UDP (17), SCTP (132), only)"
+              },
+              "sourcePortEnd": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 65535,
+                "default": 65535,
+                "description": "source port range end value (valid for protocol = TCP (6), UDP (17), SCTP (132), only)"
+              },
+              "destinationPortStart": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535,
+                "default": 0,
+                "description": "destination port range start value (valid for protocol = TCP (6), UDP (17), SCTP (132), only)"
+              },
+              "destinationPortEnd": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 65535,
+                "default": 65535,
+                "description": "destination port range end value (valid for protocol = TCP (6), UDP (17), SCTP (132), only)"
+              },
+              "protocol": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255,
+                "default": 255,
+                "description": "ip protocol values (e.g., all: 255, ICMP: 1, TCP: 6, UDP: 17, SCTP: 132)"
+              },
+              "initiator": {
+                "type": "string",
+                "description": "ue initiated or network initiated connection",
+                "enum": [
+                  "ue",
+                  "network",
+                  "both"
+                ],
+                "x-ms-enum": {
+                  "name": "initiator",
+                  "modelAsString": true
+                },
+                "default": "both"
+              },
+              "flowLabel": {
+                "type": "string",
+                "description": "ipV6 flow label header"
+              },
+              "tosTrafficClass": {
+                "type": "integer",
+                "description": "ipv4 type-of-service / ipv6 traffic class info",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "tosTrafficClassMask": {
+                "type": "integer",
+                "description": "ipv4 type-of-service mask / ipv6 traffic class mask info",
+                "minimum": 0,
+                "maximum": 255
+              }
+            }
           }
         },
-        "installPacketFiltersOnUe": {
+        "pcfActivationName": {
           "type": "string",
-          "enum": [
-            "disabled",
-            "enabled"
-          ],
-          "x-ms-enum": {
-            "name": "installPacketFiltersOnUe",
-            "modelAsString": true
-          }
+          "description": "Name used by the PCF to activate this PCC rule"
         },
-        "trafficControl": {
+        "usageMonitoringData": {
           "type": "object",
+          "description": "usage-monitoring instance associated to predefined/static pcc-rule",
           "properties": {
-            "flowStatus": {
+            "usageMonitorId": {
               "type": "string",
+              "description": "usage-monitoring id"
+            },
+            "measurementMethod": {
+              "type": "string",
+              "description": "measurement method [time/volume/both/event]",
               "enum": [
-                "enabledUplink",
-                "enabledDownlink",
-                "enabled",
-                "disabled"
+                "time",
+                "volume",
+                "timeAndVolume",
+                "event"
               ],
               "x-ms-enum": {
                 "name": "flowStatus",
                 "modelAsString": true
-              }
+              },
+              "default": "volume"
             },
-            "muteNotif": {
-              "type": "boolean"
+            "volumeMeasurementCount": {
+              "type": "string",
+              "description": "volume measurement count [input-octets/output-octets/total-octets]",
+              "enum": [
+                "totalOctets",
+                "inputOctets",
+                "okutputOctets"
+              ],
+              "x-ms-enum": {
+                "name": "flowStatus",
+                "modelAsString": true
+              },
+              "default": "totalOctets"
+            },
+            "volumeMeasurementLayer": {
+              "type": "string",
+              "description": "volume measurement layer",
+              "enum": [
+                "layer3",
+                "layer4",
+                "layer7"
+              ],
+              "x-ms-enum": {
+                "name": "flowStatus",
+                "modelAsString": true
+              },
+              "default": "layer3"
+            },
+            "tcpRetransmission": {
+              "type": "string",
+              "description": "inclusion or exclusion of TCP retransmissions in volume counts",
+              "enum": [
+                "charge",
+                "noCharge"
+              ],
+              "x-ms-enum": {
+                "name": "flowStatus",
+                "modelAsString": true
+              },
+              "default": "charge"
             }
           }
+        },
+        "installPacketFiltersOnUe": {
+          "$ref": "./common.json#/definitions/enableDisable",
+          "default": "disabled",
+          "description": "Enable/Disable installing packet filters for this pcc rule on UE.  If enabled, there cannot be more than 15 packet filters provisioned"
         }
       },
       "description": "The MobilePacketCore pccRule resource definition."
