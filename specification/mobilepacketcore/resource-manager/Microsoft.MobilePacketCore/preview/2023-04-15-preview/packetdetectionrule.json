@@ -312,6 +312,7 @@
         },
         "pdrId": {
           "type": "integer",
+          "description": "Unique ID used to identify the PDR",
           "minimum": 1,
           "maximum": 65535
         },
@@ -321,28 +322,21 @@
           "maximum": 4096
         },
         "applicationId": {
-          "type": "string"
+          "type": "string",
+          "description": "application identifier used in PCC rule to refer a pre-configured rule (this one) in UPF"
         },
         "pfdList": {
           "type": "array",
+          "maxItems": 256,
+          "description": "List of PFD's for this PDR",
           "items": {
-            "$ref": "./common.json#/definitions/ReferencedResource"
+            "$ref": "./common.json#/definitions/ReferencedResource",
+            "description": "Reference to specific packet detection rule resource"
           }
-        },
-        "tdefVideoOptPolicy": {
-          "$ref": "./common.json#/definitions/ReferencedResource"
-        },
-        "tdefProxyPolicy": {
-          "$ref": "./common.json#/definitions/ReferencedResource"
-        },
-        "tdefClientTcpOptProfile": {
-          "$ref": "./common.json#/definitions/ReferencedResource"
-        },
-        "tdefServerTcpOptProfile": {
-          "$ref": "./common.json#/definitions/ReferencedResource"
         },
         "firewallServicePolicyList": {
           "type": "array",
+          "description": "Array of associated firewall service policies",
           "items": {
             "type": "object",
             "properties": {
@@ -352,10 +346,12 @@
                 "maximum": 4096
               },
               "natPool": {
-                "$ref": "./common.json#/definitions/ReferencedResource"
+                "type": "string",
+                "description": "Name of the NAT pool associated to this service (provisioned in the UPF profile).  Required when action is 'nat'"
               },
               "action": {
                 "type": "string",
+                "description": "Action to take for this subscriber-firewall flow",
                 "enum": [
                   "nat",
                   "pass",
@@ -368,6 +364,7 @@
               },
               "alg": {
                 "type": "string",
+                "description": "Application Level Gateway",
                 "enum": [
                   "none",
                   "tftp",
@@ -381,9 +378,16 @@
                 }
               }
             }
-          }
+          },
+          "required": [
+            "priority"
+          ]
         }
       },
+      "required": [
+        "pdrId",
+        "priority"
+      ],
       "description": "The MobilePacketCore PacketDetectionRule resource definition."
     },
     "packetDetectionRule": {
