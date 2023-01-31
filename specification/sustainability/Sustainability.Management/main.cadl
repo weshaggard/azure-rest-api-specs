@@ -17,7 +17,7 @@ using Azure.ResourceManager;
   version: "2023-04-01-preview",
 })
 @doc("Sustainability Report Resource Provider query API.")
-@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 
 namespace Microsoft.Sustainability;
 
@@ -78,7 +78,7 @@ model MonthlySummaryReportQueryFilter extends QueryFilter {
 
 @doc("Query Parameters for Top Items Carbon Emission by Category Type")
 model TopItemsSummaryReportQueryFilter extends QueryFilter {
-  @doc("Report type")
+  @doc("Top items summary report type name")
   reportType: "TopItemsSummaryReport";
 
   @doc("Item Category type")
@@ -131,17 +131,17 @@ model CarbonEmissionData{
   @doc("Total carbon emissions for given query parameters")
   totalCarbonEmission: float;
 
-  @doc("Total carbon emissions for 12 months ago for given query parameters")
-  totalCarbonEmission12MonthsAgo: float;
-
   @doc("Total carbon emission for last month for given query parameters")
   totalCarbonEmissionLastMonth: float;
 
-  @doc("Change ratio between totalCarbonEmission and totalCarbonEmission12MonthsAgo")
-  changeRatioFor12Months: float;
-
   @doc("Change ratio between totalCarbonEmission and totalCarbonEmissionLastMonth")
   changeRatioForLastMonth: float;
+  
+  @doc("Total carbon emissions for 12 months ago for given query parameters")
+  totalCarbonEmission12MonthsAgo: float;
+
+  @doc("Change ratio between totalCarbonEmission and totalCarbonEmission12MonthsAgo")
+  changeRatioFor12Months: float;
 }
 
 @doc("Response for Overall Carbon Emissions Summary")
@@ -150,7 +150,7 @@ model CarbonEmissionOverallSummaryData extends CarbonEmissionData {
   dataType: "OverallSummaryData";
 
   @doc("Date when the data was refreshed")
-  lastDataRefreshDate: plainDate;
+  lastDataRefreshDate: string;
 }
 
 @doc("Response for Monthly Carbon Emissions Summary")
@@ -159,7 +159,7 @@ model CarbonEmissionMonthlySummaryData extends CarbonEmissionData {
   dataType: "MonthlySummaryData";
 
   @doc("Monthly date string")
-  date: plainDate;
+  date: string;
 
   @doc("Carbon Intensity")
   carbonIntensity: float;
@@ -189,7 +189,7 @@ model CarbonEmissionTopItemMonthlySummaryData extends CarbonEmissionData {
   categoryType: CategoryTypeEnum;
 
   @doc("Month date")
-  date: plainDate;
+  date: string;
 }
 
 @doc("Response for detailed carbon emissions")
@@ -207,10 +207,13 @@ model CarbonEmissionItemDetailData extends CarbonEmissionData {
   categoryType: CategoryTypeEnum;
 }
 
+@armResourceOperations
 interface SustainabilityService {
   @doc("API for Carbon Emissions Reports")
-  @post @route("/providers/Microsoft.Sustainability/carbonEmissionReports") 
+  @post @route("/providers/Microsoft.Sustainability/carbonEmissionReports")
+  @armResourceAction(QueryFilter)
   carbonEmissionReports(...ApiVersionParameter, 
-                                @body queryParameters:QueryFilter): Page<CarbonEmissionData>| ErrorResponse;
+                                @body
+                                @doc("Query parameters") 
+                                queryParameters:QueryFilter): Page<CarbonEmissionData>| ErrorResponse;
 }
-
