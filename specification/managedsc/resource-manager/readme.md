@@ -35,7 +35,7 @@ These settings apply only when `--tag=package-preview-2023-02-01` is specified o
 
 ```yaml $(tag) == 'package-preview-2023-02-01'
 input-file:
-  - Microsoft.ManagedSC/preview/2023-02-01-preview/managedstorageclass.json
+  - Microsoft.ManagedStorageClass/preview/2023-02-01-preview/managedstorageclass.json
 ```
 
 ---

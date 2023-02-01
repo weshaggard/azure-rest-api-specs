@@ -14,6 +14,6 @@ These settings apply only when `--tag=package-2023-02-01-preview --ruby` is spec
 Please also specify `--ruby-sdks-folder=<path to the root directory of your azure-sdk-for-ruby clone>`.
 
 ```yaml $(tag) == 'package-2023-02-01-preview' && $(ruby)
-namespace: Microsoft.ManagedSC
+namespace: Microsoft.ManagedStorageClass
 output-folder: $(ruby-sdks-folder)/managedsc
 ```
