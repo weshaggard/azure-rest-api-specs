@@ -308,13 +308,21 @@
           "description": "The provisioning state of the DNN resource."
         },
         "name": {
-          "$ref": "./common.json#/definitions/DataNetworkName"
+          "$ref": "./common.json#/definitions/DataNetworkName",
+          "description": "Data Network Name.  This is equivalent to the Access Point Name"
         },
         "networkContext": {
-          "$ref": "./common.json#/definitions/networkContext"
+          "$ref": "./common.json#/definitions/networkContext",
+          "description": "Network-Context to be associated with the DNN - UPF"
+        },
+        "pduSessionType": {
+          "$ref": "./common.json#/definitions/PduType",
+          "description": "Type of UE-IP address supported for this DNN - UPF",
+          "default": "ipv4"
         },
         "allowedSelectionMode": {
           "type": "string",
+          "description": "Policy to authorize dnn selection mode during session setup - SMF",
           "enum": [
             "nonSubscribedDnnAllowed",
             "nonSubscribedDnnBlocked"
@@ -322,59 +330,87 @@
           "x-ms-enum": {
             "name": "allowedSelectionMode",
             "modelAsString": true
-          }
+          },
+          "default": "nonSubscribedDnnAllowed"
         },
         "restriction": {
           "type": "integer",
+          "description": "Restriction value that determines whether subscriber can establish bearers with other DNNs. Value ranges from 0-4, zero being least restrictive - SMF",
           "minimum": 0,
-          "maximum": 4
+          "maximum": 4,
+          "default": 0
         },
         "dnsServerIpv4AddressPrimary": {
-          "$ref": "./common.json#/definitions/ipv4Address"
+          "$ref": "./common.json#/definitions/ipv4Address",
+          "description": "primary dns server IP V4 Address - SMF"
         },
         "dnsIpv4AddressSecondary": {
-          "$ref": "./common.json#/definitions/ipv4Address"
+          "$ref": "./common.json#/definitions/ipv4Address",
+          "description": "secondary dns server IP V4 Address - SMF"
         },
         "dnsServerIpv6AddressPrimary": {
-          "$ref": "./common.json#/definitions/ipv6Address"
+          "$ref": "./common.json#/definitions/ipv6Address",
+          "description": "primary dns server IP V6 Address - SMF"
         },
         "dnsServerIpv6AddressSecondary": {
-          "$ref": "./common.json#/definitions/ipv6Address"
+          "$ref": "./common.json#/definitions/ipv6Address",
+          "description": "secondary dns server IP V6 Address - SMF"
         },
         "pcoIpv4LinkMtuSize": {
           "type": "integer",
+          "description": "MTU Size for a Non-Roaming PDU Session to be sent in the PCO IE - SMF",
           "minimum": 576,
-          "maximum": 9216
+          "maximum": 9216,
+          "default": 1430
         },
         "pcoIpv4LinkMtuSizeRoaming": {
           "type": "integer",
+          "description": "MTU Size for a Roaming PDU Session to be sent in the PCO IE - SMF",
           "minimum": 576,
-          "maximum": 1800
+          "maximum": 1800,
+          "default": 1430
         },
         "isEmergencyDnn": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Indicates if the DNN is an emergency DNN - SMF, AMF",
+          "default": "false"
+        },
+        "emergencySessionInactivityTimerDuration": {
+          "type": "integer",
+          "description": "session inactivity timer duration in seconds for emergency session. Session will be deleted upon expiry - SMF",
+          "minimum": 5,
+          "maximum": 600,
+          "default": 30
         },
         "pCscfList": {
           "type": "object",
+          "description": "List of P-CSCF addresses - SMF",
           "properties": {
             "ipv4Addresses": {
               "type": "array",
+              "maxItems": 128,
+              "description": "List of IP V4 Address tuplets",
               "items": {
                 "type": "object",
                 "properties": {
                   "primary": {
-                    "$ref": "./common.json#/definitions/ipv4Address"
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "Primary P-CSCF server IP V4 Address"
                   },
                   "secondary": {
-                    "$ref": "./common.json#/definitions/ipv4Address"
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "Secondary P-CSCF server IP V4 Address"
                   },
                   "tertiary": {
-                    "$ref": "./common.json#/definitions/ipv4Address"
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "Tertiary P-CSCF server IP V4 Address"
                   },
                   "weight": {
                     "type": "integer",
+                    "description": "weight allocated for this set",
                     "minimum": 0,
-                    "maximum": 100
+                    "maximum": 100,
+                    "default": 1
                   }
                 }
               },
@@ -386,18 +422,23 @@
                 "type": "object",
                 "properties": {
                   "primary": {
-                    "$ref": "./common.json#/definitions/ipv6Address"
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "Primary P-CSCF server IP V6 Address"
                   },
                   "secondary": {
-                    "$ref": "./common.json#/definitions/ipv6Address"
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "Secondary P-CSCF server IP V6 Address"
                   },
                   "tertiary": {
-                    "$ref": "./common.json#/definitions/ipv6Address"
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "Tertiary P-CSCF server IP V6 Address"
                   },
                   "weight": {
                     "type": "integer",
+                    "description": "weight allocated for this set",
                     "minimum": 0,
-                    "maximum": 100
+                    "maximum": 100,
+                    "default": 1
                   }
                 }
               },
@@ -406,7 +447,7 @@
           }
         }
       },
-      "description": "The MobilePacketCore Dnn resource definition."
+      "description": "The Mobile Packet Core DNN resource definition."
     },
     "Dnn": {
       "type": "object",
