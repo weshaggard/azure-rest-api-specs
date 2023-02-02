@@ -65,12 +65,12 @@ model DataConnectors is TrackedResource <DataConnectorsProperties> {
 @doc("An ingestion endpoint for metrics relating to the parent resource")
 @singleton
 model MetricsIngestionEndpointResources is ExtensionResource < MetricsIngestionEndpointProperties > {
-  @doc("Metrics Ingestion Endpoint Name")
-  @key("metricsIngestionEndpointName")
-  @segment("metricsIngestionEndpoints")
-  @path
-  name: string;
-}
+    @doc("Metrics Ingestion Endpoint Name")
+    @key("metricsIngestionEndpointName")
+    @segment("metricsIngestionEndpoints")
+    @path
+    name: string;
+  }
 
 @doc("Details of the NetworkAnalytics Storage.")
 model StorageProperties {
@@ -369,42 +369,30 @@ model VirtualNetworkConfiguration {
 //@added(Versions.v2023_04_30)
 @doc("The resource-specific properties of a Metrics Ingestion Endpoint")
 model MetricsIngestionEndpointProperties {
-  @doc("Name of the External Metrics Ingress Gateway region where the compute should be deployed")
-  @visibility("create", "read")
-  emigRegionName: string;
+    @doc("Name of the External Metrics Ingress Gateway region where the compute should be deployed")
+    @visibility("create", "read")
+    ingressRegionName: string;
 
-  @doc("Name of the Geneva account to which the metrics should be sent for this resource")
-  @visibility("create", "read", "update")
-  genevaAccountName: string;
+    @visibility("read")
+    @doc("Event Hub URL to which the metrics should be sent for this resource")
+    eventHubUrl?: string;
 
-  @doc("URL of the Geneva stamp hosting that account")
-  @visibility("create", "read", "update")
-  genevaStampUrl: string;
+    @visibility("read")
+    @doc("Event Hub name to which the metrics should be sent for this resource")
+    eventHubName?: string;
 
-  @visibility("create", "read", "update")
-  @doc("Name of the namespace within the Geneva account")
-  genevaNamespace: string;
+    @visibility("read")
+    @doc("Key Vault URL where the connection string exists for authentication")
+    keyVaultUrl?: string;
 
-  @visibility("read")
-  @doc("Event Hub URL to which the metrics should be sent for this resource")
-  eventHubUrl?: string;
+    @doc("The status of the last operation")
+    @visibility("read")
+    provisioningState?: ProvisioningState;
 
-  @visibility("read")
-  @doc("Event Hub name to which the metrics should be sent for this resource")
-  eventHubName?: string;
-
-  @visibility("read")
-  @doc("Key Vault URL where the connection string exists for authentication")
-  keyVaultUrl?: string;
-
-  @doc("The status of the last operation")
-  @visibility("read")
-  provisioningState?: ProvisioningState;
-
-  @doc("Managed Resource Group Configuration")
-  @visibility("create", "read")
-  managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
-}
+    @doc("Managed Resource Group Configuration")
+    @visibility("create", "read")
+    managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
+  }
 
 @armResourceOperations
 interface Storage extends ResourceOperations<DataLakeHouseResources, StorageProperties> {}
