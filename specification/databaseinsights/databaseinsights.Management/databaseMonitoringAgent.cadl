@@ -27,9 +27,9 @@ interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("A DatabaseInsightsProviderHub resource")
 model DatabaseMonitoringAgent is TrackedResource<DatabaseMonitoringAgentProperties> {
-  @doc("Database Monitoring Agent name")
+  @doc("Database Monitoring Agent name.")
   @key("databaseMonitoringAgentName")
-  @pattern("^[a-zA-Z0-9-]{3,60}$")
+  @pattern("^[a-zA-Z]{1}[a-zA-Z0-9-_]{3,60}$")
   @path
   @segment("databaseMonitoringAgents")
   name: string;
@@ -37,28 +37,27 @@ model DatabaseMonitoringAgent is TrackedResource<DatabaseMonitoringAgentProperti
 
 @doc("rp specific properties of the resource DatabaseMonitoring Agent")
 model DatabaseMonitoringAgentProperties {
-  @doc("Principal Id of the identity assigned to DBMA that has access to monitoring targets (database instances), Key Vault secrets (if used to store database authentication credentials), and an Azure Data Explorer database used as the monitoring data store")
-  identity?: string;
-
-  @doc("A data store for collected monitoring data")
+  @doc("A data store for collected monitoring data.")
   datastore?: Datastore;
   
   @visibility("read")
   @doc("The provisioning state of the resource.")
-  provisioningState: ResourceProvisioningState;
+  provisioningState?: ResourceProvisioningState;
+
+  ...ManagedServiceIdentity
 }
 
 @doc("Properties of data store")
 model Datastore {
-  @doc("ARM ResourceId of an Azure Data Explorer database")
+  @doc("ARM ResourceId of an Azure Data Explorer database.")
   adxDatabaseResourceId: string;
-  @doc("URI of an Azure Data Explorer Cluster")
+  @doc("URI of an Azure Data Explorer Cluster.")
   adxClusterUri: string;
 }
 
 @armResourceOperations
 interface DatabaseMonitoringAgents extends ResourceOperations<DatabaseMonitoringAgent, DatabaseMonitoringAgentProperties> {
-  @doc("Action to start monitoring all monitoring targets in a given Database Monitoring Agent")
+  @doc("Action to start monitoring all monitoring targets in a given Database Monitoring Agent.")
   @action 
   @post
   @armResourceAction(DatabaseMonitoringAgent)
@@ -67,8 +66,9 @@ interface DatabaseMonitoringAgents extends ResourceOperations<DatabaseMonitoring
 
 @parentResource(DatabaseMonitoringAgent)
 model MonitoringTarget is ProxyResource<MonitoringTargetProperties> {
-  @doc("Monitoring target resource name")
+  @doc("Monitoring target resource name.")
   @key("monitoringTargetName")
+  @pattern("^[a-zA-Z]{1}[a-zA-Z0-9-_]{3,60}$")
   @segment("monitoringTargets")
   @path
   name: string;
