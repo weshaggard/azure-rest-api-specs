@@ -297,59 +297,148 @@
     }
   },
   "definitions": {
-    "prefixLengthIpv4": {
+    "PrefixLengthIpv4": {
       "type": "integer",
       "minimum": 0,
       "maximum": 32
     },
-    "prefixLengthIpv6": {
+    "PrefixLengthIpv6": {
       "type": "integer",
       "minimum": 0,
       "maximum": 128
     },
-    "prefixGeLeRangeIpv4": {
+    "PrefixGeLeRangeIpv4": {
       "type": "integer",
       "minimum": 0,
       "maximum": 32
     },
-    "prefixGeLeRangeIpv6": {
+    "PrefixGeLeRangeIpv6": {
       "type": "integer",
       "minimum": 0,
       "maximum": 128
     },
-    "bgpParams": {
+    "Action": {
+      "type": "string",
+      "enum": [
+        "deny",
+        "permit"
+      ],
+      "x-ms-enum": {
+        "name": "Action",
+        "modelAsString": true
+      }
+    },
+    "Redistribute": {
+      "type": "string",
+      "enum": [
+        "connected",
+        "static"
+      ],
+      "x-ms-enum": {
+        "name": "redistribute",
+        "modelAsString": true
+      }
+    },
+    "Direction": {
+      "type": "string",
+      "enum": [
+        "out",
+        "in"
+      ],
+      "x-ms-enum": {
+        "name": "direction",
+        "modelAsString": true
+      }
+    },
+    "AlphaNumericString": {
+      "type": "string",
+      "pattern": "^([a-zA-Z]([a-zA-Z0-9-._]){1,64})"
+    },
+    "BgpParams": {
       "type": "object",
+      "description": "Manage BGP4 routing",
       "properties": {
         "localAs": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Autonomous System Number for this BGP router",
+          "minimum": 1,
+          "maximum": 4294967295
         },
         "routerId": {
-          "$ref": "./common.json#/definitions/ipAddress"
+          "type": "object",
+          "description": "Parameters for deriving a local router ID",
+          "properties": {
+            "useInterfaceIp": {
+              "type": "boolean",
+              "description": "Use an IPv4 address from a local interface as the router ID",
+              "default": true
+            },
+            "idRange": {
+              "type": "object",
+              "description": "If useInterfaceIp is false, allocate the router ID from this range",
+              "properties": {
+                "start": {
+                  "$ref": "./common.json#/definitions/ipv4Address"
+                },
+                "end": {
+                  "$ref": "./common.json#/definitions/ipv4Address"
+                },
+                "allocations": {
+                  "type": "array",
+                  "readOnly": true,
+                  "description": "Values allocated from the start/end range",
+                  "items": {
+                    "$ref": "./common.json#/definitions/ipv4Address"
+                  }
+                }
+              },
+              "required": [
+                "start",
+                "end"
+              ]
+            }
+          }
         },
-        "bgpUpNotificationToL3am": {
-          "type": "string",
-          "enum": [
-            "on-single-session-up",
-            "on-all-session-up"
-          ],
-          "x-ms-enum": {
-            "name": "bgpUpNotificationToL3am",
-            "modelAsString": true
+        "gracefulRestart": {
+          "type": "object",
+          "description": "Configuration of BGP Graceful Restart Timers.  Enabled if present, disabled if omitted",
+          "properties": {
+            "restartTime": {
+              "type": "integer",
+              "description": "Restart Time [ 1..3600 in secs]",
+              "minimum": 1,
+              "maximum": 3600,
+              "default": 90
+            },
+            "stalePathTime": {
+              "type": "integer",
+              "description": "Stale Path Time [1..3600 in secs]",
+              "minimum": 1,
+              "maximum": 3600,
+              "default": 360
+            }
           }
         },
         "neighbors": {
           "type": "array",
+          "description": "Configure and manage BGP neighbors",
           "items": {
             "type": "object",
             "properties": {
               "remoteAddr": {
-                "$ref": "./common.json#/definitions/ipAddress"
+                "$ref": "./common.json#/definitions/ipAddress",
+                "description": "IP address of neighbor"
               },
               "remoteAs": {
-                "type": "integer"
+                "type": "integer",
+                "description": "Autonomous System of remote neighbor",
+                "minimum": 1,
+                "maximum": 4294967295
               },
               "failOverBfd": {
-                "$ref": "./common.json#/definitions/enableDisable"
+                "$ref": "./common.json#/definitions/enableDisable",
+                "description": "Enable Bi-directional Forwarding Detection",
+                "default": "disabled"
               }
             },
             "required": [
@@ -360,203 +449,463 @@
         },
         "ipv4UCast": {
           "type": "object",
+          "description": "IPv4 Address Family",
           "properties": {
             "neighbors": {
               "type": "array",
+              "description": "Manage ipv4 unicast address family features on a neighbor peering",
               "items": {
                 "type": "object",
                 "properties": {
                   "remoteAddr": {
-                    "$ref": "./common.json#/definitions/ipAddress"
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "IP address of neighbor.  Should match an entry in BGP neighbors array"
                   },
                   "activate": {
-                    "$ref": "./common.json#/definitions/enableDisable"
+                    "$ref": "./common.json#/definitions/enableDisable",
+                    "description": "Activate address family on peering.",
+                    "default": "enabled"
                   },
                   "nextHopSelf": {
-                    "$ref": "./common.json#/definitions/enableDisable"
+                    "$ref": "./common.json#/definitions/enableDisable",
+                    "description": "Set router as next-hop for all routes advertised to peer",
+                    "default": "disabled"
                   },
                   "capabilities": {
                     "type": "object",
+                    "description": "Configure the capabilities of this neighbor",
                     "properties": {
                       "gracefulRestart": {
-                        "$ref": "./common.json#/definitions/enableDisable"
+                        "$ref": "./common.json#/definitions/enableDisable",
+                        "description": "Advertise support of graceful restart",
+                        "default": "disabled"
                       }
                     }
                   },
                   "routeMap": {
                     "type": "array",
+                    "description": "Apply route-map filtering to in(bound) and/or out(bound) update messages carried by this peering",
                     "items": {
                       "type": "object",
                       "properties": {
                         "direction": {
-                          "type": "string",
-                          "enum": [
-                            "out",
-                            "in"
-                          ],
-                          "x-ms-enum": {
-                            "name": "direction",
-                            "modelAsString": true
-                          }
+                          "$ref": "#/definitions/Direction",
+                          "description": "Specify filter direction"
                         },
                         "routeMapName": {
-                          "type": "string"
+                          "$ref": "#/definitions/AlphaNumericString",
+                          "description": "Name of route map under the policy group"
                         }
-                      }
+                      },
+                      "required": [
+                        "direction"
+                      ]
                     }
                   }
-                }
+                },
+                "required": [
+                  "remoteAddr"
+                ]
               }
             },
             "redistribute": {
               "type": "array",
               "items": {
-                "type": "string",
-                "enum": [
-                  "connected",
-                  "static"
-                ],
-                "x-ms-enum": {
-                  "name": "redistribute",
-                  "modelAsString": true
-                }
+                "$ref": "#/definitions/Redistribute",
+                "description": "Protocol type to redistribute into BGP"
               }
             }
           }
         },
-        "ipv6UCast": {}
-      }
+        "ipv6UCast": {
+          "type": "object",
+          "description": "IPv6 Address Family",
+          "properties": {
+            "neighbors": {
+              "type": "array",
+              "description": "Manage ipv6 unicast address family features on a neighbor peering",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "remoteAddr": {
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "IP address of neighbor.  Should match an entry in BGP neighbors array"
+                  },
+                  "activate": {
+                    "$ref": "./common.json#/definitions/enableDisable",
+                    "description": "Activate address family on peering.",
+                    "default": "enabled"
+                  },
+                  "nextHopSelf": {
+                    "$ref": "./common.json#/definitions/enableDisable",
+                    "description": "Set router as next-hop for all routes advertised to peer",
+                    "default": "disabled"
+                  },
+                  "capabilities": {
+                    "type": "object",
+                    "description": "Configure the capabilities of this neighbor",
+                    "properties": {
+                      "gracefulRestart": {
+                        "$ref": "./common.json#/definitions/enableDisable",
+                        "description": "Advertise support of graceful restart",
+                        "default": "disabled"
+                      }
+                    }
+                  },
+                  "routeMap": {
+                    "type": "array",
+                    "description": "Apply route-map filtering to in(bound) and/or out(bound) update messages carried by this peering",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "direction": {
+                          "$ref": "#/definitions/Direction",
+                          "description": "Specify filter direction"
+                        },
+                        "routeMapName": {
+                          "$ref": "#/definitions/AlphaNumericString",
+                          "type": "string",
+                          "description": "Name of route map under the policy group"
+                        }
+                      },
+                      "required": [
+                        "direction"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "remoteAddr"
+                ]
+              }
+            },
+            "redistribute": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Redistribute",
+                "description": "Protocol type to redistribute into BGP"
+              }
+            }
+          }
+        },
+        "vpnv4UCast": {
+          "type": "object",
+          "description": "VPN-IPv4 Address Family",
+          "properties": {
+            "neighbors": {
+              "type": "array",
+              "description": "Manage vpn-v4 unicast address family features on a neighbor peering",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "remoteAddr": {
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "IP address of neighbor.  Should match an entry in BGP neighbors array"
+                  },
+                  "activate": {
+                    "$ref": "./common.json#/definitions/enableDisable",
+                    "description": "Activate address family on peering.",
+                    "default": "enabled"
+                  },
+                  "nextHopSelf": {
+                    "$ref": "./common.json#/definitions/enableDisable",
+                    "description": "Set router as next-hop for all routes advertised to peer",
+                    "default": "disabled"
+                  },
+                  "capabilities": {
+                    "type": "object",
+                    "description": "Configure the capabilities of this neighbor",
+                    "properties": {
+                      "gracefulRestart": {
+                        "$ref": "./common.json#/definitions/enableDisable",
+                        "description": "Advertise support of graceful restart",
+                        "default": "disabled"
+                      }
+                    }
+                  },
+                  "routeMap": {
+                    "type": "array",
+                    "description": "Apply route-map filtering to in(bound) and/or out(bound) update messages carried by this peering",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "direction": {
+                          "$ref": "#/definitions/Direction",
+                          "description": "Specify filter direction"
+                        },
+                        "routeMapName": {
+                          "$ref": "#/definitions/AlphaNumericString",
+                          "description": "Name of route map under the policy group"
+                        }
+                      },
+                      "required": [
+                        "direction"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "remoteAddr"
+                ]
+              }
+            }
+          }
+        },
+        "vpnv6UCast": {
+          "type": "object",
+          "description": "VPN-IPv6 Address Family",
+          "properties": {
+            "neighbors": {
+              "type": "array",
+              "description": "Manage vpn-v6 unicast address family features on a neighbor peering.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "remoteAddr": {
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "IP address of neighbor.  Should match an entry in BGP neighbors array"
+                  },
+                  "activate": {
+                    "$ref": "./common.json#/definitions/enableDisable",
+                    "description": "Activate address family on peering.",
+                    "default": "enabled"
+                  },
+                  "nextHopSelf": {
+                    "$ref": "./common.json#/definitions/enableDisable",
+                    "description": "Set router as next-hop for all routes advertised to peer",
+                    "default": "disabled"
+                  },
+                  "capabilities": {
+                    "type": "object",
+                    "description": "Configure the capabilities of this neighbor",
+                    "properties": {
+                      "gracefulRestart": {
+                        "$ref": "./common.json#/definitions/enableDisable",
+                        "description": "Advertise support of graceful restart",
+                        "default": "disabled"
+                      }
+                    }
+                  },
+                  "routeMap": {
+                    "type": "array",
+                    "description": "Apply route-map filtering to in(bound) and/or out(bound) update messages carried by this peering",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "direction": {
+                          "$ref": "#/definitions/Direction",
+                          "description": "Specify filter direction"
+                        },
+                        "routeMapName": {
+                          "$ref": "#/definitions/AlphaNumericString",
+                          "description": "Name of route map under the policy group"
+                        }
+                      },
+                      "required": [
+                        "direction"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "remoteAddr"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "localAs",
+        "routerId"
+      ]
     },
-    "staticRoute": {
+    "StaticRoute": {
       "type": "object",
       "properties": {
         "destination": {
-          "$ref": "./common.json#/definitions/ipAddress"
+          "$ref": "./common.json#/definitions/ipAddress",
+          "description": "IP address of the route destination"
         },
         "length": {
-          "type": "integer"
+          "type": "integer",
+          "description": "IP prefix length of the route destination"
         },
         "nextHop": {
-          "$ref": "./common.json#/definitions/ipAddress"
+          "$ref": "./common.json#/definitions/ipAddress",
+          "description": "IP Address of nexthop gateway"
         },
         "preference": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 255
-        }
-      }
-    },
-    "bfdParams": {
-      "type": "object",
-      "properties": {
-        "txInterval": {
+          "maximum": 255,
+          "description": "Distance metric for this route <1-255>"
+        },
+        "tag": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 50000
+          "maximum": 4294967295,
+          "description": "Tag Value for making Policy Decision"
+        }
+      },
+      "required": [
+        "destination",
+        "length",
+        "nextHop"
+      ]
+    },
+    "BfdParams": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/AlphaNumericString",
+          "description": "BFD Profile name - type is <alphanumeric, '_' is allowed>"
+        },
+        "txInterval": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 4294967,
+          "description": "Transmit interval in milliseconds in the range [100 .. 4294967]."
         },
         "rxInterval": {
           "type": "integer",
-          "minimum": 1,
-          "maximum": 50000
+          "minimum": 100,
+          "maximum": 4294967,
+          "description": "Minimum receive interval in milliseconds in the range [100 .. 4294967]."
         },
         "multiplier": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 50
+          "maximum": 255,
+          "description": "The hello multiplier value in the range [1 .. 255]."
         }
-      }
+      },
+      "required": [
+        "name",
+        "txInterval",
+        "rxInterval",
+        "multiplier"
+      ]
     },
-    "policy": {
+    "Policy": {
       "type": "object",
       "properties": {
         "prefixList": {
           "type": "array",
+          "description": "IPv4 prefix list",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string"
+                "$ref": "#/definitions/AlphaNumericString",
+                "description": "Ipv4 Prefix list name - type is <alphanumeric"
               },
               "line": {
                 "type": "array",
                 "items": {
                   "type": "object",
+                  "description": "Ipv4 prefix list entry; sequence number <1-2147483647>, action, ipv4 address, le and ge ranges <1..32>",
                   "properties": {
                     "number": {
-                      "type": "integer"
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647,
+                      "description": "Sequence number"
                     },
                     "action": {
-                      "type": "string",
-                      "enum": [
-                        "deny",
-                        "permit"
-                      ],
-                      "x-ms-enum": {
-                        "name": "plAction",
-                        "modelAsString": true
-                      }
+                      "$ref": "#/definitions/Action",
+                      "description": "Action: <deny : permit>"
                     },
                     "address": {
-                      "$ref": "./common.json#/definitions/ipAddress"
+                      "$ref": "./common.json#/definitions/ipv4Address",
+                      "description": "Configure the ip of the prefix"
                     },
                     "prefixLength": {
-                      "$ref": "#/definitions/prefixLengthIpv4"
+                      "$ref": "#/definitions/PrefixLengthIpv4",
+                      "description": "Configure the prefix length"
                     },
                     "le": {
-                      "$ref": "#/definitions/prefixGeLeRangeIpv4"
+                      "$ref": "#/definitions/PrefixGeLeRangeIpv4",
+                      "default": 0,
+                      "description": "LE range type <0..32> (Value must be greater than prefix-length ).  If both le and ge are specified, must (le > ge)"
                     },
                     "ge": {
-                      "$ref": "#/definitions/prefixGeLeRangeIpv4"
+                      "$ref": "#/definitions/PrefixGeLeRangeIpv4",
+                      "default": 0,
+                      "description": "GE range type <0..32> (Value must be greater than prefix-length ).  If both le and ge are specified, must (le > ge)"
                     }
-                  }
+                  },
+                  "required": [
+                    "number",
+                    "action",
+                    "address",
+                    "prefixLength"
+                  ]
                 }
               }
-            }
+            },
+            "required": [
+              "name"
+            ]
           }
         },
         "prefixListIpv6": {
           "type": "array",
+          "description": "Ipv6 prefix list",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string"
+                "$ref": "#/definitions/AlphaNumericString",
+                "description": "Ipv6 Prefix list name - type is <alphanumeric"
               },
               "line": {
                 "type": "array",
                 "items": {
                   "type": "object",
+                  "description": "Ipv6 prefix list entry; sequence number <1-2147483647>, action, ipv6 address, le and ge ranges <1..128>",
                   "properties": {
                     "number": {
-                      "type": "integer"
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647,
+                      "description": "Sequence number"
                     },
                     "action": {
-                      "type": "string",
-                      "enum": [
-                        "deny",
-                        "permit"
-                      ],
-                      "x-ms-enum": {
-                        "name": "pl6Action",
-                        "modelAsString": true
-                      }
+                      "$ref": "#/definitions/Action",
+                      "description": "Action: <deny : permit>"
                     },
                     "address": {
-                      "$ref": "./common.json#/definitions/ipAddress"
+                      "$ref": "./common.json#/definitions/ipv6Address",
+                      "description": "Configure the ip of the prefix"
                     },
                     "prefixLength": {
-                      "$ref": "#/definitions/prefixLengthIpv6"
+                      "$ref": "#/definitions/PrefixLengthIpv6",
+                      "description": "Configure the prefix length"
                     },
                     "le": {
-                      "$ref": "#/definitions/prefixGeLeRangeIpv6"
+                      "$ref": "#/definitions/PrefixGeLeRangeIpv6",
+                      "default": 0,
+                      "description": "LE range type <0..128> (Value must be greater than prefix-length ).  If both le and ge are specified, must (le > ge)"
                     },
                     "ge": {
-                      "$ref": "#/definitions/prefixGeLeRangeIpv6"
+                      "$ref": "#/definitions/PrefixGeLeRangeIpv6",
+                      "default": 0,
+                      "description": "GE range type <0..128> (Value must be greater than prefix-length ).  If both le and ge are specified, must (le > ge)"
                     }
-                  }
+                  },
+                  "required": [
+                    "number",
+                    "action",
+                    "address",
+                    "prefixLength"
+                  ]
                 }
               }
-            }
+            },
+            "required": [
+              "name"
+            ]
           }
         },
         "routeMap": {
@@ -565,50 +914,56 @@
             "type": "object",
             "properties": {
               "name": {
-                "type": "string"
+                "$ref": "#/definitions/AlphaNumericString",
+                "description": "Route-map tag - type is <alphanumeric"
               },
               "action": {
-                "type": "string",
-                "enum": [
-                  "deny",
-                  "permit"
-                ],
-                "x-ms-enum": {
-                  "name": "rmAction",
-                  "modelAsString": true
-                }
+                "$ref": "#/definitions/Action"
               },
               "number": {
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 65535
+                "maximum": 65535,
+                "description": "sequence number"
               },
               "matchTable": {
                 "type": "object",
+                "description": "Defines the match clauses for this route map entry",
                 "properties": {
                   "matchIpPrefixList": {
-                    "type": "string"
+                    "$ref": "#/definitions/AlphaNumericString",
+                    "description": "Name of provisioned Ipv4 Prefix list.  This should match an IPv4 prefix list provisioned under policy"
                   },
                   "matchIpv6PrefixList": {
-                    "type": "string"
+                    "$ref": "#/definitions/AlphaNumericString",
+                    "description": "Name of provisioned Ipv6 Prefix list.  This should match an IPv6 prefix list provisioned under policy"
                   }
                 }
               },
               "setTable": {
                 "type": "object",
+                "description": "Defines the set clauses for this route map entry",
                 "properties": {
                   "setIpNextHop": {
-                    "$ref": "./common.json#/definitions/ipAddress"
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "set IPV4 NextHop"
                   },
                   "setIpv6NextHop": {
-                    "$ref": "./common.json#/definitions/ipAddress"
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "set IPV6 NextHop"
                   },
                   "setVpnNextHop": {
-                    "$ref": "./common.json#/definitions/ipAddress"
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "set VPN-V4 NextHop"
                   }
                 }
               }
-            }
+            },
+            "required": [
+              "name",
+              "action",
+              "number"
+            ]
           }
         }
       }
@@ -619,23 +974,37 @@
         "provisioningState": {
           "readOnly": true,
           "$ref": "./common.json#/definitions/ProvisioningState",
-          "description": "The provisioning state of the PCC Rule Base resource."
+          "description": "The provisioning state of the resource."
         },
         "networkContext": {
           "type": "array",
           "items": {
             "type": "object",
+            "description": "Configure the Network Contexts supported by the associated network functions. Each Network Context represents an entire IPv4 address space and an entire IPv6 address space. The address spaces of all Network Contexts are disjoint",
+            "maxItems": 4096,
             "properties": {
               "name": {
-                "$ref": "./common.json#/definitions/networkContext"
+                "$ref": "./common.json#/definitions/NetworkContextName",
+                "description": "Network Context name - type is <alphanumeric, '_' is allowed>"
+              },
+              "enableStaticAll": {
+                "$ref": "./common.json#/definitions/enableDisable",
+                "description": "Enable BFD sessions for all IPv4/IPv6 static routes in this context",
+                "default": "disabled"
+              },
+              "singleHopBfdProfile": {
+                "$ref": "#/definitions/AlphaNumericString",
+                "description": "BFD profile to be used for Single-Hop BFD sessions under this context, if not configured default timers (tx-interval = 300, rx-interval = 300, multiplier = 3) will be used"
               },
               "bgpParams": {
-                "$ref": "#/definitions/bgpParams"
+                "$ref": "#/definitions/BgpParams"
               },
               "staticRoute": {
                 "type": "array",
+                "maxItems": 4096,
+                "description": "Configuration of static IP routes",
                 "items": {
-                  "$ref": "#/definitions/staticRoute"
+                  "$ref": "#/definitions/StaticRoute"
                 }
               }
             }
@@ -643,12 +1012,14 @@
         },
         "bfdParams": {
           "type": "array",
+          "description": "BFD Parameters.  These are applied when referenced",
           "items": {
-            "$ref": "#/definitions/bfdParams"
+            "$ref": "#/definitions/BfdParams"
           }
         },
         "policy": {
-          "$ref": "#/definitions/policy"
+          "description": "Routing policy configuration.  These are applied when referenced",
+          "$ref": "#/definitions/Policy"
         }
       },
       "required": [

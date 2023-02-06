@@ -10,45 +10,107 @@
         "networkContext": [
           {
             "name": "string",
+            "enableStaticAll": "disabled",
+            "singleHopBfdProfile": "bfdParams",
             "bgpParams": {
-              "localAs": 0,
+              "localAs": 4294967295,
               "routerId": {
-                "ipv4": "1.1.1.1",
-                "ipv6": "ffee::"
+                "useInterfaceIp": true,
+                "idRange": {
+                  "start": "128.0.0.0",
+                  "end": "128.0.0.255"
+                }
               },
-              "bgpUpNotificationToL3am": "on-single-session-up",
+              "gracefulRestart": {
+                "restartTime": 90,
+                "stalePathTime": 360
+              },
               "neighbors": [
                 {
                   "remoteAddr": {
                     "ipv4": "1.1.1.1",
                     "ipv6": "ffee::"
                   },
-                  "remoteAs": 0,
+                  "remoteAs": 1234,
                   "failOverBfd": "enabled"
                 }
               ],
               "ipv4UCast": {
                 "neighbors": [
                   {
-                    "remoteAddr": {
-                      "ipv4": "1.1.1.1",
-                      "ipv6": "ffee::"
-                    },
+                    "remoteAddr": "1.1.1.1",
                     "activate": "enabled",
-                    "nextHopSelf": "enabled",
+                    "nextHopSelf": "disabled",
                     "capabilities": {
-                      "gracefulRestart": "enabled"
+                      "gracefulRestart": "disabled"
                     },
                     "routeMap": [
                       {
                         "direction": "out",
-                        "routeMapName": "string"
+                        "routeMapName": "routeMap"
                       }
                     ]
                   }
                 ],
                 "redistribute": [
                   "connected"
+                ]
+              },
+              "ipv6UCast": {
+                "neighbors": [
+                  {
+                    "remoteAddr": "ffee::",
+                    "activate": "enabled",
+                    "nextHopSelf": "disabled",
+                    "capabilities": {
+                      "gracefulRestart": "disabled"
+                    },
+                    "routeMap": [
+                      {
+                        "direction": "out",
+                        "routeMapName": "routeMap"
+                      }
+                    ]
+                  }
+                ],
+                "redistribute": [
+                  "connected"
+                ]
+              },
+              "vpnv4UCast": {
+                "neighbors": [
+                  {
+                    "remoteAddr": "1.1.1.1",
+                    "activate": "enabled",
+                    "nextHopSelf": "disabled",
+                    "capabilities": {
+                      "gracefulRestart": "disabled"
+                    },
+                    "routeMap": [
+                      {
+                        "direction": "out",
+                        "routeMapName": "routeMap"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "vpnv6UCast": {
+                "neighbors": [
+                  {
+                    "remoteAddr": "ffee::",
+                    "activate": "enabled",
+                    "nextHopSelf": "disabled",
+                    "capabilities": {
+                      "gracefulRestart": "disabled"
+                    },
+                    "routeMap": [
+                      {
+                        "direction": "out",
+                        "routeMapName": "routeMap"
+                      }
+                    ]
+                  }
                 ]
               }
             },
@@ -63,77 +125,64 @@
                   "ipv4": "1.1.1.1",
                   "ipv6": "ffee::"
                 },
-                "preference": 1
+                "preference": 1,
+                "tag": 4294967295
               }
             ]
           }
         ],
         "bfdParams": [
           {
-            "txInterval": 1,
-            "rxInterval": 1,
+            "name": "bfdParams",
+            "txInterval": 100,
+            "rxInterval": 100,
             "multiplier": 1
           }
         ],
         "policy": {
           "prefixList": [
             {
-              "name": "string",
+              "name": "v4PrefixList",
               "line": [
                 {
                   "number": 1,
                   "action": "deny",
-                  "address": {
-                    "ipv4": "1.1.1.1",
-                    "ipv6": "ffee::"
-                  },
-                  "prefixLength": 0,
-                  "le": 0,
-                  "ge": 0
+                  "address": "1.1.1.1",
+                  "prefixLength": 32,
+                  "le": 32,
+                  "ge": 32
                 }
               ]
             }
           ],
           "prefixListIpv6": [
             {
-              "name": "string",
+              "name": "v6PrefixList",
               "line": [
                 {
-                  "number": 0,
+                  "number": 2147483647,
                   "action": "deny",
-                  "address": {
-                    "ipv4": "1.1.1.1",
-                    "ipv6": "ffee::"
-                  },
-                  "prefixLength": 0,
-                  "le": 0,
-                  "ge": 0
+                  "address": "ffee::",
+                  "prefixLength": 128,
+                  "le": 128,
+                  "ge": 128
                 }
               ]
             }
           ],
           "routeMap": [
             {
-              "name": "string",
+              "name": "routeMap",
               "action": "deny",
-              "number": 1,
+              "number": 65535,
               "matchTable": {
-                "matchIpPrefixList": "string",
-                "matchIpv6PrefixList": "string"
+                "matchIpPrefixList": "v4PrefixList",
+                "matchIpv6PrefixList": "v6PrefixList"
               },
               "setTable": {
-                "setIpNextHop": {
-                  "ipv4": "1.1.1.1",
-                  "ipv6": "ffee::"
-                },
-                "setIpv6NextHop": {
-                  "ipv4": "1.1.1.1",
-                  "ipv6": "ffee::"
-                },
-                "setVpnNextHop": {
-                  "ipv4": "1.1.1.1",
-                  "ipv6": "ffee::"
-                }
+                "setIpNextHop": "1.1.1.1",
+                "setIpv6NextHop": "ffee::",
+                "setVpnNextHop": "1.1.1.1"
               }
             }
           ]
@@ -160,45 +209,107 @@
           "networkContext": [
             {
               "name": "string",
+              "enableStaticAll": "disabled",
+              "singleHopBfdProfile": "bfdParams",
               "bgpParams": {
-                "localAs": 0,
+                "localAs": 4294967295,
                 "routerId": {
-                  "ipv4": "1.1.1.1",
-                  "ipv6": "ffee::"
+                  "useInterfaceIp": true,
+                  "idRange": {
+                    "start": "128.0.0.0",
+                    "end": "128.0.0.255"
+                  }
                 },
-                "bgpUpNotificationToL3am": "on-single-session-up",
+                "gracefulRestart": {
+                  "restartTime": 90,
+                  "stalePathTime": 360
+                },
                 "neighbors": [
                   {
                     "remoteAddr": {
                       "ipv4": "1.1.1.1",
                       "ipv6": "ffee::"
                     },
-                    "remoteAs": 0,
+                    "remoteAs": 1234,
                     "failOverBfd": "enabled"
                   }
                 ],
                 "ipv4UCast": {
                   "neighbors": [
                     {
-                      "remoteAddr": {
-                        "ipv4": "1.1.1.1",
-                        "ipv6": "ffee::"
-                      },
+                      "remoteAddr": "1.1.1.1",
                       "activate": "enabled",
-                      "nextHopSelf": "enabled",
+                      "nextHopSelf": "disabled",
                       "capabilities": {
-                        "gracefulRestart": "enabled"
+                        "gracefulRestart": "disabled"
                       },
                       "routeMap": [
                         {
                           "direction": "out",
-                          "routeMapName": "string"
+                          "routeMapName": "routeMap"
                         }
                       ]
                     }
                   ],
                   "redistribute": [
                     "connected"
+                  ]
+                },
+                "ipv6UCast": {
+                  "neighbors": [
+                    {
+                      "remoteAddr": "ffee::",
+                      "activate": "enabled",
+                      "nextHopSelf": "disabled",
+                      "capabilities": {
+                        "gracefulRestart": "disabled"
+                      },
+                      "routeMap": [
+                        {
+                          "direction": "out",
+                          "routeMapName": "routeMap"
+                        }
+                      ]
+                    }
+                  ],
+                  "redistribute": [
+                    "connected"
+                  ]
+                },
+                "vpnv4UCast": {
+                  "neighbors": [
+                    {
+                      "remoteAddr": "1.1.1.1",
+                      "activate": "enabled",
+                      "nextHopSelf": "disabled",
+                      "capabilities": {
+                        "gracefulRestart": "disabled"
+                      },
+                      "routeMap": [
+                        {
+                          "direction": "out",
+                          "routeMapName": "routeMap"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "vpnv6UCast": {
+                  "neighbors": [
+                    {
+                      "remoteAddr": "ffee::",
+                      "activate": "enabled",
+                      "nextHopSelf": "disabled",
+                      "capabilities": {
+                        "gracefulRestart": "disabled"
+                      },
+                      "routeMap": [
+                        {
+                          "direction": "out",
+                          "routeMapName": "routeMap"
+                        }
+                      ]
+                    }
                   ]
                 }
               },
@@ -213,77 +324,64 @@
                     "ipv4": "1.1.1.1",
                     "ipv6": "ffee::"
                   },
-                  "preference": 1
+                  "preference": 1,
+                  "tag": 4294967295
                 }
               ]
             }
           ],
           "bfdParams": [
             {
-              "txInterval": 1,
-              "rxInterval": 1,
+              "name": "bfdParams",
+              "txInterval": 100,
+              "rxInterval": 100,
               "multiplier": 1
             }
           ],
           "policy": {
             "prefixList": [
               {
-                "name": "string",
+                "name": "v4PrefixList",
                 "line": [
                   {
                     "number": 1,
                     "action": "deny",
-                    "address": {
-                      "ipv4": "1.1.1.1",
-                      "ipv6": "ffee::"
-                    },
-                    "prefixLength": 0,
-                    "le": 0,
-                    "ge": 0
+                    "address": "1.1.1.1",
+                    "prefixLength": 32,
+                    "le": 32,
+                    "ge": 32
                   }
                 ]
               }
             ],
             "prefixListIpv6": [
               {
-                "name": "string",
+                "name": "v6PrefixList",
                 "line": [
                   {
-                    "number": 0,
+                    "number": 2147483647,
                     "action": "deny",
-                    "address": {
-                      "ipv4": "1.1.1.1",
-                      "ipv6": "ffee::"
-                    },
-                    "prefixLength": 0,
-                    "le": 0,
-                    "ge": 0
+                    "address": "ffee::",
+                    "prefixLength": 128,
+                    "le": 128,
+                    "ge": 128
                   }
                 ]
               }
             ],
             "routeMap": [
               {
-                "name": "string",
+                "name": "routeMap",
                 "action": "deny",
-                "number": 1,
+                "number": 65535,
                 "matchTable": {
-                  "matchIpPrefixList": "string",
-                  "matchIpv6PrefixList": "string"
+                  "matchIpPrefixList": "v4PrefixList",
+                  "matchIpv6PrefixList": "v6PrefixList"
                 },
                 "setTable": {
-                  "setIpNextHop": {
-                    "ipv4": "1.1.1.1",
-                    "ipv6": "ffee::"
-                  },
-                  "setIpv6NextHop": {
-                    "ipv4": "1.1.1.1",
-                    "ipv6": "ffee::"
-                  },
-                  "setVpnNextHop": {
-                    "ipv4": "1.1.1.1",
-                    "ipv6": "ffee::"
-                  }
+                  "setIpNextHop": "1.1.1.1",
+                  "setIpv6NextHop": "ffee::",
+                  "setVpnNextHop": "1.1.1.1"
                 }
               }
             ]
@@ -309,45 +407,107 @@
           "networkContext": [
             {
               "name": "string",
+              "enableStaticAll": "disabled",
+              "singleHopBfdProfile": "bfdParams",
               "bgpParams": {
-                "localAs": 0,
+                "localAs": 4294967295,
                 "routerId": {
-                  "ipv4": "1.1.1.1",
-                  "ipv6": "ffee::"
+                  "useInterfaceIp": true,
+                  "idRange": {
+                    "start": "128.0.0.0",
+                    "end": "128.0.0.255"
+                  }
                 },
-                "bgpUpNotificationToL3am": "on-single-session-up",
+                "gracefulRestart": {
+                  "restartTime": 90,
+                  "stalePathTime": 360
+                },
                 "neighbors": [
                   {
                     "remoteAddr": {
                       "ipv4": "1.1.1.1",
                       "ipv6": "ffee::"
                     },
-                    "remoteAs": 0,
+                    "remoteAs": 1234,
                     "failOverBfd": "enabled"
                   }
                 ],
                 "ipv4UCast": {
                   "neighbors": [
                     {
-                      "remoteAddr": {
-                        "ipv4": "1.1.1.1",
-                        "ipv6": "ffee::"
-                      },
+                      "remoteAddr": "1.1.1.1",
                       "activate": "enabled",
-                      "nextHopSelf": "enabled",
+                      "nextHopSelf": "disabled",
                       "capabilities": {
-                        "gracefulRestart": "enabled"
+                        "gracefulRestart": "disabled"
                       },
                       "routeMap": [
                         {
                           "direction": "out",
-                          "routeMapName": "string"
+                          "routeMapName": "routeMap"
                         }
                       ]
                     }
                   ],
                   "redistribute": [
                     "connected"
+                  ]
+                },
+                "ipv6UCast": {
+                  "neighbors": [
+                    {
+                      "remoteAddr": "ffee::",
+                      "activate": "enabled",
+                      "nextHopSelf": "disabled",
+                      "capabilities": {
+                        "gracefulRestart": "disabled"
+                      },
+                      "routeMap": [
+                        {
+                          "direction": "out",
+                          "routeMapName": "routeMap"
+                        }
+                      ]
+                    }
+                  ],
+                  "redistribute": [
+                    "connected"
+                  ]
+                },
+                "vpnv4UCast": {
+                  "neighbors": [
+                    {
+                      "remoteAddr": "1.1.1.1",
+                      "activate": "enabled",
+                      "nextHopSelf": "disabled",
+                      "capabilities": {
+                        "gracefulRestart": "disabled"
+                      },
+                      "routeMap": [
+                        {
+                          "direction": "out",
+                          "routeMapName": "routeMap"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "vpnv6UCast": {
+                  "neighbors": [
+                    {
+                      "remoteAddr": "ffee::",
+                      "activate": "enabled",
+                      "nextHopSelf": "disabled",
+                      "capabilities": {
+                        "gracefulRestart": "disabled"
+                      },
+                      "routeMap": [
+                        {
+                          "direction": "out",
+                          "routeMapName": "routeMap"
+                        }
+                      ]
+                    }
                   ]
                 }
               },
@@ -362,77 +522,64 @@
                     "ipv4": "1.1.1.1",
                     "ipv6": "ffee::"
                   },
-                  "preference": 1
+                  "preference": 1,
+                  "tag": 4294967295
                 }
               ]
             }
           ],
           "bfdParams": [
             {
-              "txInterval": 1,
-              "rxInterval": 1,
+              "name": "bfdParams",
+              "txInterval": 100,
+              "rxInterval": 100,
               "multiplier": 1
             }
           ],
           "policy": {
             "prefixList": [
               {
-                "name": "string",
+                "name": "v4PrefixList",
                 "line": [
                   {
                     "number": 1,
                     "action": "deny",
-                    "address": {
-                      "ipv4": "1.1.1.1",
-                      "ipv6": "ffee::"
-                    },
-                    "prefixLength": 0,
-                    "le": 0,
-                    "ge": 0
+                    "address": "1.1.1.1",
+                    "prefixLength": 32,
+                    "le": 32,
+                    "ge": 32
                   }
                 ]
               }
             ],
             "prefixListIpv6": [
               {
-                "name": "string",
+                "name": "v6PrefixList",
                 "line": [
                   {
-                    "number": 0,
+                    "number": 2147483647,
                     "action": "deny",
-                    "address": {
-                      "ipv4": "1.1.1.1",
-                      "ipv6": "ffee::"
-                    },
-                    "prefixLength": 0,
-                    "le": 0,
-                    "ge": 0
+                    "address": "ffee::",
+                    "prefixLength": 128,
+                    "le": 128,
+                    "ge": 128
                   }
                 ]
               }
             ],
             "routeMap": [
               {
-                "name": "string",
+                "name": "routeMap",
                 "action": "deny",
-                "number": 1,
+                "number": 65535,
                 "matchTable": {
-                  "matchIpPrefixList": "string",
-                  "matchIpv6PrefixList": "string"
+                  "matchIpPrefixList": "v4PrefixList",
+                  "matchIpv6PrefixList": "v6PrefixList"
                 },
                 "setTable": {
-                  "setIpNextHop": {
-                    "ipv4": "1.1.1.1",
-                    "ipv6": "ffee::"
-                  },
-                  "setIpv6NextHop": {
-                    "ipv4": "1.1.1.1",
-                    "ipv6": "ffee::"
-                  },
-                  "setVpnNextHop": {
-                    "ipv4": "1.1.1.1",
-                    "ipv6": "ffee::"
-                  }
+                  "setIpNextHop": "1.1.1.1",
+                  "setIpv6NextHop": "ffee::",
+                  "setVpnNextHop": "1.1.1.1"
                 }
               }
             ]
