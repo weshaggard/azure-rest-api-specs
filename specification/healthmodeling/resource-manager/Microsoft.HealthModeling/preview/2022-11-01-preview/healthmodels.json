@@ -406,10 +406,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/HealthModel"
-              }
+              "$ref": "#/definitions/HealthModelCollectionResponse"
             }
           },
           "default": {
@@ -729,6 +726,10 @@
         ],
         "summary": "Returns an ordered list of snapshots for a health model (without the node or query details of them)",
         "operationId": "HealthModels_ListSnapshots",
+        "consumes": [
+          "application/json",
+          "application/*+json"
+        ],
         "produces": [
           "application/json"
         ],
@@ -757,23 +758,17 @@
           },
           {
             "in": "query",
-            "name": "queryFrom",
-            "description": "Defaults to now()-24h",
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "in": "query",
-            "name": "queryTo",
-            "description": "Defaults to now()",
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "in": "query",
             "name": "api-version",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetSnapshotListRequest"
+            }
           }
         ],
         "responses": {
@@ -1029,6 +1024,20 @@
       },
       "additionalProperties": { }
     },
+    "GetSnapshotListRequest": {
+      "type": "object",
+      "properties": {
+        "queryFrom": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "queryTo": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "HealthModel": {
       "type": "object",
       "properties": {
@@ -1060,15 +1069,15 @@
             "type": "string"
           }
         },
-        "properties": {
-          "$ref": "#/definitions/HealthModelProperties"
-        },
         "systemData": { },
         "eTag": {
           "type": "string"
         },
         "apiVersion": {
           "type": "string"
+        },
+        "properties": {
+          "$ref": "#/definitions/HealthModelProperties"
         },
         "sku": { },
         "plan": { },
@@ -1090,8 +1099,8 @@
     },
     "HealthModelActiveState": {
       "enum": [
-        "Active",
-        "Inactive"
+        "Inactive",
+        "Active"
       ],
       "type": "string"
     },
@@ -1113,6 +1122,25 @@
     "HealthModelPatchPayload": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "resourceGroup": {
+          "type": "string",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true
+        },
+        "location": {
+          "type": "string"
+        },
         "identity": {
           "$ref": "#/definitions/Identity"
         },
@@ -1121,6 +1149,13 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "systemData": { },
+        "eTag": {
+          "type": "string"
+        },
+        "apiVersion": {
+          "type": "string"
         },
         "properties": {
           "$ref": "#/definitions/HealthModelPatchProperties"
@@ -1261,6 +1296,9 @@
         "name": {
           "type": "string"
         },
+        "queryEndpoint": {
+          "type": "string"
+        },
         "credentialId": {
           "type": "string"
         },
@@ -1321,6 +1359,10 @@
         },
         "healthState": {
           "$ref": "#/definitions/HealthState"
+        },
+        "healthScore": {
+          "format": "double",
+          "type": "number"
         }
       },
       "additionalProperties": false
@@ -1364,10 +1406,6 @@
         },
         "dataType": {
           "$ref": "#/definitions/ResultDataType"
-        },
-        "queryTimeRange": {
-          "type": "string",
-          "example": "00:00:00"
         }
       },
       "additionalProperties": { }
