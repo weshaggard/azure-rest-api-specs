@@ -724,7 +724,7 @@
         "tags": [
           "Snapshots"
         ],
-        "summary": "Returns an ordered list of snapshots for a health model (without the node or query details of them)",
+        "summary": "Returns an ordered list of snapshot summaries for a health model (without the node or query details of them)",
         "operationId": "HealthModels_ListSnapshots",
         "consumes": [
           "application/json",
@@ -775,7 +775,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/HealthModelSnapshotCollectionResponse"
+              "$ref": "#/definitions/SnapshotSummaryCollectionResponse"
             }
           },
           "default": {
@@ -1248,21 +1248,6 @@
       },
       "additionalProperties": false
     },
-    "HealthModelSnapshotCollectionResponse": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/HealthModelSnapshot"
-          }
-        },
-        "nextLink": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
     "HealthState": {
       "enum": [
         "Healthy",
@@ -1406,6 +1391,9 @@
         },
         "dataType": {
           "$ref": "#/definitions/ResultDataType"
+        },
+        "dataUnit": {
+          "type": "string"
         }
       },
       "additionalProperties": { }
@@ -1491,6 +1479,41 @@
           "type": "string"
         },
         "cronSchedule": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SnapshotSummary": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "healthModelVersionNumber": {
+          "type": "string"
+        },
+        "timeGenerated": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "overallState": {
+          "$ref": "#/definitions/HealthState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SnapshotSummaryCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SnapshotSummary"
+          }
+        },
+        "nextLink": {
           "type": "string"
         }
       },
