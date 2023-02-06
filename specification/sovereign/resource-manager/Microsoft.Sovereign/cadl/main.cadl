@@ -1,17 +1,20 @@
 import "@cadl-lang/rest";
+import "@cadl-lang/openapi";
 import "@cadl-lang/versioning";
 import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
+import "./models.cadl";
 
 using Cadl.Http;
 using Cadl.Rest;
 using Cadl.Versioning;
 using Azure.ResourceManager;
+using Azure.Core;
 
 @armProviderNamespace
 @service({
-	title: "Microsoft.Sovereign",
+	title: "Microsoft Sovereign Resource Provider.",
 	version: "2023-04-01-privatepreview",
 })
 @versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
@@ -30,65 +33,30 @@ model PolicyMonitor is ProxyResource<PolicyMonitorProperties> {
 	name: string;
 }
 
-@doc("The status of the policy monitor operations.")
-@Azure.Core.lroStatus
-enum ProvisioningState {
-	...ResourceProvisioningState,
-	Provisioning,
-	Updating,
-	Deleting,
-	Accepted,
-}
-
-@doc("Details of the sovereign policy monitor resource type.")
-model PolicyMonitorProperties {
-	@visibility("read")
-	@doc("The status of the operation.")
-	provisioningState?: ProvisioningState;
-
-	@doc("The top level management group of the SLZ")
-	@visibility("read", "create", "update", "delete")
-	topLevelManagementGroup: string;
-
-	@doc("The category of the SLZ policies to be monitored.")
-	@visibility("read", "create", "update", "delete")
-	policyCategory: string;
-}
-
 @armResourceOperations(PolicyMonitor)
 interface PolicyMonitors
-	extends TenantResourceOperations<PolicyMonitor, PolicyMonitorProperties> {}
+	extends TenantResourceOperations<PolicyMonitor, PolicyMonitorProperties> {
+	@post
+	@action("validateSLZ")
+	@doc("Provides a mechanism for customers to trigger a validate of a particular SLZ instance")
+	@armResourceAction(PolicyMonitor)
+	validateSLZ(
+		...TenantInstanceParameters<PolicyMonitor>
+	): ArmResponse<SlzValidationHistory> | ErrorResponse;
 
-@tenantResource
-model PolicyManagement is ProxyResource<PolicyManagementProperties> {
-	@doc("The name of the policy management resource.")
-	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("policymanagementname")
-	@segment("policymanagements")
-	@path
-	@visibility("read")
-	name: string;
+	@post
+	@action("getPolicyMonitorExecutionResults")
+	@doc("Returns the results of the monitor executions. By default the results of the last 5 executions will be returned.")
+	@armResourceAction(PolicyMonitor)
+	getPolicyMonitorExecutionResults(
+		...TenantInstanceParameters<PolicyMonitor>
+	): ArmResponse<MonitorHistory> | ErrorResponse;
+
+	@post
+	@action("executePolicyMonitor")
+	@doc("Triggers the evaluation policy monitor against an SLZ.")
+	@armResourceAction(PolicyMonitor)
+	executePolicyMonitor(
+		...TenantInstanceParameters<PolicyMonitor>
+	): ArmResponse<PolicyMonitor> | ErrorResponse;
 }
-
-@doc("The properties of a policy management resource.")
-model PolicyManagementProperties {
-	@visibility("read")
-	@doc("The status of the operation.")
-	provisioningState?: ProvisioningState;
-
-	@doc("The country of the policy management resource.")
-	@visibility("read", "create", "update", "delete")
-	countryName: Country;
-}
-
-enum Country {
-	Italy,
-	India,
-}
-
-@armResourceOperations(PolicyManagement)
-interface PolicyManagements
-	extends TenantResourceOperations<
-			PolicyManagement,
-			PolicyManagementProperties
-		> {}

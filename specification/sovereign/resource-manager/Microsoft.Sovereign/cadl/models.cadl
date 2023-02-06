@@ -1,0 +1,234 @@
+//Models
+
+using Azure.ResourceManager;
+
+@doc("Details of the sovereign policy monitor resource type.")
+model PolicyMonitorProperties {
+	@visibility("read")
+	@doc("The status of the operation.")
+	provisioningState?: ProvisioningState;
+
+	@doc("The top level management group of the SLZ")
+	topLevelManagementGroup: string;
+
+	@doc("The category of the SLZ policies to be monitored.")
+	monitorCategory: MonitorCategory;
+
+	@doc("The channel to alert for divergence identified with the SLZ.")
+	alertChannel: AlertChannel;
+
+	@doc("The email address for alerting when alert channel is email.")
+	@pattern("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(.\\w{2,3})+$")
+	emailAddress?: string;
+
+	@doc("The azure monitor Id when alert channel is azure monitor.")
+	azureMonitorId?: string;
+
+	@doc("The azure monitor Id when alert channel is azure monitor.")
+	customerAllowedExclusions: CustomerAllowedExclusion[];
+}
+
+@doc("The exclusions allowed by a customer.")
+model CustomerAllowedExclusion {
+	@doc("the policy set for with the exclusion.")
+	policySetDefinitionId: string;
+
+	@doc("the policy for with the exclusion.")
+	policyDefinitionId: string;
+
+	@doc("the status of the exclusion.")
+	exclusionStatus: ExclusionStatus;
+}
+
+/*
+The provisioning status of the Resource. The current status are listed below -
+  Succeeded,
+  Failed,
+  Canceled,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted
+*/
+@doc("The status of the policy monitor operations.")
+@Azure.Core.lroStatus
+enum ProvisioningState {
+	...ResourceProvisioningState,
+	Provisioning,
+	Updating,
+	Deleting,
+	Accepted,
+}
+
+@doc("The details of the validation.")
+model SlzValidationHistory {
+	@doc("The top level management group of the SLZ")
+	topLevelManagementGroup: string;
+
+	@doc("The status of the validation.")
+	validationStatus: validationOrMonitorHistoryStatus;
+
+	@doc("The outcome of the validation.")
+	validationOutcome: ValidationHistoryOutcome;
+
+	@doc("The details of the monitor run.")
+	outcomeDescription?: string;
+
+	@doc("The completed time of the monitor execution")
+	completedOn?: zonedDateTime;
+
+	@doc("The details for each validation rule")
+	validationHistoryDetails?: SlzValidationHistoryDetail[];
+}
+
+@doc("The detail of each SLZ validation.")
+model SlzValidationHistoryDetail {
+	@doc("The name of the validation.")
+	validationName: string;
+
+	@doc("The outcome of each policy monitor rule.")
+	validationOutcome: ValidationHistoryDetailOutcome;
+
+	@doc("The details about the outcome.")
+	outcomeDescription: string;
+}
+
+@doc("The execution details")
+model MonitorHistory {
+	@doc("The top level management group of the SLZ.")
+	topLevelManagementGroup: string;
+
+	@doc("The category of the SLZ policies to be monitored.")
+	monitorCategory: MonitorCategory;
+
+	@doc("The status of the monitor execution.")
+	monitorHistoryStatus?: validationOrMonitorHistoryStatus;
+
+	@doc("The outcome of the monitor execution.")
+	monitorHistoryOutcome?: MonitorHistoryOutcome;
+
+	@doc("The details of the monitor run.")
+	outcomeDescription?: string;
+
+	@doc("The percentage of monitor rules that is compliant.")
+	compliancePercentage?: float64;
+
+	@doc("The completed time of the monitor execution")
+	completedOn?: zonedDateTime;
+
+	@doc("The details for each monitor rule")
+	monitorHistoryDetails?: MonitorHistoryDetail[];
+}
+
+@doc("The detail of an monitor execution")
+model MonitorHistoryDetail {
+	@doc("The name of the monitor rule.")
+	monitorHistoryDetailName: string;
+
+	@doc("The outcome of each policy monitor rule.")
+	monitorHistoryDetailOutcome: MonitorHistoryDetailOutcome;
+
+	@doc("The details about the outcome.")
+	outcomeDescription?: string;
+
+	@doc("True if the outcome is for a policy set")
+	isPolicySet: boolean;
+
+	@doc("The name of the policy/policy set")
+	policySetOrPolicyname: string;
+
+	@doc("The type of the policy - builtin/custom")
+	policyType?: PolicyType;
+}
+
+enum AlertChannel {
+	Email: "Email",
+	AzurePortal: "Azure Portal",
+	AzureMonitor: "Azure Monitor",
+}
+
+@doc("The type of the policy.")
+enum PolicyType {
+	custom: "Custom",
+	builtIn: "BuildIn",
+}
+
+@doc("the outcome of monitor execution")
+enum MonitorHistoryOutcome {
+	compliant: "Compliant",
+	partiallyCompliant: "PartiallyCompliant",
+	nonCompliant: "NonCompliant",
+}
+
+@doc("the outcome of each monitor rule.")
+enum MonitorHistoryDetailOutcome {
+	pass: "Pass",
+	fail: "Fail",
+}
+
+@doc("the outcome of SLZ validation.")
+enum ValidationHistoryOutcome {
+	validSLZ: "ValidSLZ",
+	invalidSLZ: "InvalidSLZ",
+}
+
+@doc("the outcome of each monitor rule.")
+enum ValidationHistoryDetailOutcome {
+	pass: "Pass",
+	fail: "Fail",
+}
+
+@doc("the category of the policy monitor.")
+enum MonitorCategory {
+	locationPolicies: "Location policies for data sovereignity",
+	confidentialPolicies: "Confidential policies",
+	generalPolicies: "General policies",
+}
+
+enum validationOrMonitorHistoryStatus {
+	Draft: "draft",
+	InProgress: "inProgress",
+	Completed: "completed",
+	Failed: "failed",
+}
+
+enum ExclusionStatus {
+	active: "Active",
+	inActive: "InActive",
+}
+
+/*
+@tenantResource
+model PolicyManagement is ProxyResource<PolicyManagementProperties> {
+	@doc("The name of the policy management resource.")
+	@pattern("^[a-zA-Z0-9-]{3,24}$")
+	@key("policymanagementname")
+	@segment("policymanagements")
+	@path
+	@visibility("read")
+	name: string;
+}
+
+@doc("The properties of a policy management resource.")
+model PolicyManagementProperties {
+	@visibility("read")
+	@doc("The status of the operation.")
+	provisioningState?: ProvisioningState;
+
+	@doc("The country of the policy management resource.")
+	@visibility("read", "create", "update", "delete")
+	countryName: Country;
+}
+
+enum Country {
+	Italy,
+	India,
+}
+
+@armResourceOperations(PolicyManagement)
+interface PolicyManagements
+	extends TenantResourceOperations<
+			PolicyManagement,
+			PolicyManagementProperties
+		> {}
+*/
