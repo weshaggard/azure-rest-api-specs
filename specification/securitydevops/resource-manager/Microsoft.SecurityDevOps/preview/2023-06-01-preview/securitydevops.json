@@ -1349,6 +1349,9 @@
         ],
         "parameters": [
           {
+            "$ref": "#/parameters/Token"
+          },
+          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
@@ -1395,6 +1398,9 @@
         "parameters": [
           {
             "$ref": "#/parameters/InstallationId"
+          },
+          {
+            "$ref": "#/parameters/Token"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -1738,6 +1744,14 @@
           "type": "string",
           "example": "00000000000000000000.",
           "x-ms-secret": true
+        },
+        "installations": {
+          "description": "Gets or sets org installation information.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GitHubInstallationMetadata"
+          },
+          "x-ms-identifiers": []
         }
       }
     },
@@ -1817,6 +1831,26 @@
         "nextLink": {
           "description": "Gets or sets next link to scroll over the results.",
           "type": "string"
+        }
+      }
+    },
+    "GitHubInstallationMetadata": {
+      "description": "Org onboarding info.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Gets or sets name of the AzureDevOps Org.",
+          "type": "string"
+        },
+        "autoDiscovery": {
+          "$ref": "#/definitions/AutoDiscovery"
+        },
+        "repositories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GitHubRepositoryMetadata"
+          },
+          "x-ms-identifiers": []
         }
       }
     },
@@ -1965,6 +1999,20 @@
         }
       }
     },
+    "GitHubRepositoryMetadata": {
+      "description": "Project onboarding info.",
+      "type": "object",
+      "properties": {
+        "repos": {
+          "description": "Gets or sets repositories.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
     "GitHubRepositoryProperties": {
       "description": "GitHub Repository properties.",
       "type": "object",
@@ -2091,10 +2139,9 @@
       "x-ms-parameter-location": "method"
     },
     "Token": {
-      "in": "path",
+      "in": "query",
       "name": "token",
       "description": "One time GitHub app token.",
-      "required": true,
       "type": "string",
       "x-ms-parameter-location": "method"
     },
