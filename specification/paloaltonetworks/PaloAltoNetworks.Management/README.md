@@ -4,27 +4,54 @@
 
 1. Need Node version >= 16
 
-## Initialize
+## Making the CADL Changes
+Here are some resources to get started on CADL:
 
-Run the initialize script
+https://github.com/Azure/cadl-azure/blob/main/docs/cadl-getting-started.md
 
+https://github.com/Azure/cadl-azure/blob/main/packages/cadl-providerhub-templates/README.md
+
+http://aka.ms/cadl/rpaas-start
+
+playground for Azure: https://aka.ms/trycadlazure
+
+## Compile and PR Ready
+
+We have scripts in place that allow us to easily run the commands to compile, generate examples and get check in ready once the cadl changes are made.
+
+We can execute them in order:
 ```powershell
-.\initialize.ps1
+.\scripts\sudhanshu\1.initialize.ps1
+.\scripts\sudhanshu\2.compile.ps1  
+.\scripts\sudhanshu\3.generate.ps1 
+.\scripts\sudhanshu\4.merge.ps1
+.\scripts\sudhanshu\5.validate.ps1
+.\scripts\sudhanshu\6.checkInReady.ps1
 ```
 
-## Emitters
+To understand what these scripts do, watch this learning session by Sudhanshu: https://microsoftapc-my.sharepoint.com/:v:/g/personal/sbaruntar_microsoft_com/Ea0Lqgs0u0lIo6E7eJhEmVUBitRhEyNEFF0XjsOXl7MK-Q
 
-To generate swagger
+Once all the scripts have run successfully, we need to update the specification file in both PaloAltoNetworks.Management directory and resource-manager directory. We can do that by performing these steps:
+
+#### 1. Update PaloAltoNetworks.Cloudngfw.json under PaloAltoNetworks.Management directory
+
+When we compile the CADL changes using the compile script mentioned above, it updates the `openapi.json` file.  This means our updated spec is as per `openapi.json`, and the previous spec is as per file `PaloAltoNetworks.Cloudngfw.json`. We need to compare these two files, and apply the updates in `openapi.json` to `PaloAltoNetworks.Cloudngfw.json`.
+
+#### 2. Update PaloAltoNetworks.Cloudngfw.json and examples under resource-manager directory
+We need to copy-paste the `examples` folder and the `PaloAltoNetworks.Cloudngfw.json` file under `resource-manager` directory, under the relevant api-version folder.
+
+#### 3. Raise a PR for RPSaaSDev branch.
+Link to [sample PR](https://github.com/Azure/azure-rest-api-specs-pr/pull/10817/files).
+#### 4. Raise a PR for RPSaaSMaster branch.
+This will only contain the changes under resource-manager. We can checkout a new branch from RPSaaSMaster, and check out only the changes under resource-manager directory that were made  from the RPSaaSDev based branch. Here are git commands to do the same:
 
 ```powershell
-npx cadl compile . --emit @azure-tools/cadl-autorest --option arm-types-path="../../../../../common-types/resource-management/v3/types.json"
+cd .\resource-manager\
+
+git checkout origin/RPSaaSDev -- **/*.json
 ```
 
-To generate swagger implicitly use
-
-```powershell
-npx cadl compile . --option arm-types-path="../../../../../common-types/resource-management/v3/types.json"
-```
+Here is a link to [sample PR](https://github.com/Azure/azure-rest-api-specs-pr/pull/10951/files).
 
 ## More Details
 
