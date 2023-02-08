@@ -11,17 +11,10 @@ import "@azure-tools/cadl-providerhub";
 })
 @versioned(Versions)
 @armProviderNamespace
-@versionedDependency(
-  [
-    [
-      Versions.v2022_06_01_preview,
-      Azure.ResourceManager.Versions.v1_0_Preview_1
-    ]
-  ]
-)
 namespace Microsoft.Throttling;
 
 enum Versions {
+  @useDependency(Azure.Core.Versions.v1_0_Preview_2, Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2022_06_01_preview: "2022-06-01-preview",
 }
 
@@ -29,7 +22,6 @@ using Cadl.Http;
 using Cadl.Rest;
 using Cadl.Versioning;
 using Autorest;
-// using Azure.Core; // see https://github.com/Azure/cadl-azure/issues/2476
 using Azure.ResourceManager;
 using OpenAPI;
 
@@ -55,7 +47,7 @@ model Account is TrackedResource<AccountProperties> {
 }
 
 @armResourceOperations(Account)
-interface Accounts extends ResourceOperations<Account, AccountProperties> {}
+interface Accounts extends TrackedResourceOperations<Account, AccountProperties> {}
 
 @doc("Account properties")
 model AccountProperties {
@@ -109,7 +101,7 @@ model Category is ProxyResource<CategoryProperties> {
 }
 
 @armResourceOperations(Category)
-interface Categories extends ResourceOperations<Category, CategoryProperties> {}
+interface Categories extends TrackedResourceOperations<Category, CategoryProperties> {}
 
 @doc("Category properties")
 model CategoryProperties {
@@ -133,7 +125,7 @@ model Threshold is ProxyResource<ThresholdProperties> {
 }
 
 @armResourceOperations(Threshold)
-interface Thresholds extends ResourceOperations<Threshold, ThresholdProperties> {}
+interface Thresholds extends TrackedResourceOperations<Threshold, ThresholdProperties> {}
 
 @doc("Threshold properties")
 model ThresholdProperties {
