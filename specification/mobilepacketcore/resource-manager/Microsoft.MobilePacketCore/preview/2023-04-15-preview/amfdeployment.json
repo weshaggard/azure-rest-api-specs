@@ -326,23 +326,32 @@
           "description": "Resolved details of the AMF deployment",
           "properties": {
             "amfName": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 150,
+              "description": "AMF name communicated to the 5GAN.  ASN.1 PrintableString; max 150 characters from upper and lower case letters, digits, space, apostrophe, and any of '()+,-./:=?'"
             },
             "nfInstanceId": {
-              "type": "string"
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Unique identity of the AMF in the form of a uuid"
             },
             "relativeCapacity": {
               "type": "integer",
               "minimum": 0,
-              "maximum": 255
+              "maximum": 255,
+              "description": "The relative processing capacity of an AMF with respect to the other AMFs in the AMF Set"
             },
             "setId": {
               "type": "integer",
               "minimum": 0,
-              "maximum": 1023
+              "maximum": 1023,
+              "description": "AMF set identifier - part of GUAMI"
             },
             "pointer": {
               "type": "array",
+              "minItems": 1,
+              "maxItems": 16,
+              "description": "AMF pointer information",
               "items": {
                 "type": "integer",
                 "minimum": 0,
@@ -354,26 +363,47 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "primary": {
-                    "type": "boolean"
-                  },
                   "weight": {
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 100,
                     "description": "Relative weight of the endpoint on a scale of 0 to 255. 0 would indicate RAN to not use the TNLA represented by the endpoint"
                   },
+                  "primary": {
+                    "type": "boolean",
+                    "description": "Primary SCTP endpoint on AMF for 5GAN to use on initial connection, it is mandatory. Subsequent connections may optionally use non-primary endpoints as dynamically directed by AMF.  Only one n2Endpoint can be marked as primary"
+                  },
                   "ipv4Fqdn": {
-                    "$ref": "./common.json#/definitions/Fqdn"
+                    "$ref": "./common.json#/definitions/Fqdn",
+                    "description": "The IPv4 FQDN of the associated N2 endpoint. If provided it is published in the N2 Profile."
+                  },
+                  "ipv4Address": {
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "The IPv4 address of the associated N2 endpoint"
                   },
                   "ipv6Fqdn": {
-                    "$ref": "./common.json#/definitions/Fqdn"
+                    "$ref": "./common.json#/definitions/Fqdn",
+                    "description": "The IPv6 FQDN of the associated N2 endpoint. If provided it is published in the N2 Profile."
+                  },
+                  "ipv6Address": {
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "The IPv6 address of the associated N2 endpoint"
                   },
                   "multiHomeIpv4Fqdn": {
-                    "$ref": "./common.json#/definitions/Fqdn"
+                    "$ref": "./common.json#/definitions/Fqdn",
+                    "description": "The Multi-Home IPv4 FQDN of the associated N2 endpoint. If provided it is published in the N2 Profile."
+                  },
+                  "multiHomeIpv4Address": {
+                    "$ref": "./common.json#/definitions/ipv4Address",
+                    "description": "The multi-home IPv4 address of the associated N2 endpoint"
                   },
                   "multiHomeIpv6Fqdn": {
-                    "$ref": "./common.json#/definitions/Fqdn"
+                    "$ref": "./common.json#/definitions/Fqdn",
+                    "description": "The Multi-Home IPv6 FQDN of the associated N2 endpoint. If provided it is published in the N2 Profile."
+                  },
+                  "multiHomeIpv6Address": {
+                    "$ref": "./common.json#/definitions/ipv6Address",
+                    "description": "The multi-home IPv6 address of the associated N2 endpoint"
                   }
                 }
               }

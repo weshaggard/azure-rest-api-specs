@@ -303,12 +303,6 @@
       "type": "string",
       "description": "CNSI Id is defined in TS 29.531, only for Core Network"
     },
-    "CNSIIdList": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/CNSIId"
-      }
-    },
     "PlmnInfo": {
       "type": "object",
       "properties": {
@@ -338,13 +332,12 @@
           "type": "object",
           "properties": {
             "serviceProfileId": {
-              "type": "string"
+              "type": "string",
+              "description": "ID of the service profile to which this slice belongs"
             },
             "plmnInfoList": {
-              "$ref": "#/definitions/PlmnInfoList"
-            },
-            "cnSIIdList": {
-              "$ref": "#/definitions/CNSIIdList"
+              "$ref": "#/definitions/PlmnInfoList",
+              "description": "It defines which PLMN and S-NSSAI combinations that are served by the SliceProfile in case of network slicing feature is supported.  This is the default set used if not specified at the slice subnet level.  See TS 28.541."
             },
             "dnnList": {
               "type": "array",
@@ -363,19 +356,30 @@
                     "description": "A Distinguished Name (DN) is used to uniquely identify a Managed Object (MO) within a name space.  This is referenced by the NFs that participate in this slice"
                   },
                   "maxNumberofUEs": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "An attribute specifies the maximum number of UEs may simultaneously access the network slice or network slice subnet instance.  See TS 28.541"
                   },
                   "maxNumberOfPDUSessions": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "This parameter defines the maximum number of concurrent PDU sessions supported by the network slice.  See TS 28.541"
+                  },
+                  "plmnInfoList": {
+                    "$ref": "#/definitions/PlmnInfoList",
+                    "description": "List of PLMNIDs and S-NSSAI values associated to this slice subnet.  This overrides the default slice level configuration.  If not specified, the default is used for this slice subnet.  See TS 28.541"
+                  },
+                  "cnSIId": {
+                    "$ref": "#/definitions/CNSIId",
+                    "description": "Core Network Network Slice Identifier for this slice subnet - NSSF"
                   },
                   "coverageAreaTAList": {
                     "type": "array",
+                    "description": "An attribute specifies a list of Tracking Areas for the network slice.  See TS 28.541",
                     "items": {
                       "type": "object",
                       "properties": {
                         "serviceAreaName": {
                           "$ref": "./common.json#/definitions/ReferencedResource",
-                          "description": "The reference to the service area which can be part of this slice"
+                          "description": "The reference to the service area which is part of this slice.  The service area defines the set of tracking areas applicable to this slice subnet"
                         }
                       }
                     }
