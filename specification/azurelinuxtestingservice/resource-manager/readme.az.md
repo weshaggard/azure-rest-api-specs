@@ -6,11 +6,11 @@ For new Resource Provider. It is highly recommended to onboard Azure CLI extensi
 
 ``` yaml $(az) && $(target-mode) != 'core'
 az:
-    extensions: azurelinuxtestservice
-    namespace: azure.mgmt.azurelinuxtestservice
-    package-name: azure-mgmt-azurelinuxtestservice
-az-output-folder: $(azure-cli-extension-folder)/src/azurelinuxtestservice
-python-sdk-output-folder: "$(az-output-folder)/azext_azurelinuxtestservice/vendored_sdks/azurelinuxtestservice"
+    extensions: azurelinuxtestingservice
+    namespace: azure.mgmt.azurelinuxtestingservice
+    package-name: azure-mgmt-azurelinuxtestingservice
+az-output-folder: $(azure-cli-extension-folder)/src/azurelinuxtestingservice
+python-sdk-output-folder: "$(az-output-folder)/azext_azurelinuxtestingservice/vendored_sdks/azurelinuxtestingservice"
 # add additional configuration here specific for Azure CLI
 # refer to the faq.md for more details
 ```
@@ -20,9 +20,9 @@ python-sdk-output-folder: "$(az-output-folder)/azext_azurelinuxtestservice/vendo
 This is for command modules that already in azure cli main repo. 
 ``` yaml $(az) && $(target-mode) == 'core'
 az:
-  extensions: azurelinuxtestservice
-  namespace: azure.mgmt.azurelinuxtestservice
-  package-name: azure-mgmt-azurelinuxtestservice
-az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/azurelinuxtestservice
-python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/azurelinuxtestservice"
+  extensions: azurelinuxtestingservice
+  namespace: azure.mgmt.azurelinuxtestingservice
+  package-name: azure-mgmt-azurelinuxtestingservice
+az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/azurelinuxtestingservice
+python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/azurelinuxtestingservice"
 ``` 

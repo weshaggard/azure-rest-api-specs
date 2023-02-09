@@ -6,13 +6,13 @@ Please also specify `--python-sdks-folder=<path to the root directory of your az
 ``` yaml $(python)
 azure-arm: true
 license-header: MICROSOFT_MIT_NO_VERSION
-package-name: azure-mgmt-azurelinuxtestservice
-namespace: azure.mgmt.azurelinuxtestservice
+package-name: azure-mgmt-azurelinuxtestingservice
+namespace: azure.mgmt.azurelinuxtestingservice
 package-version: 1.0.0b1
 clear-output-folder: true
 ```
 
 ``` yaml $(python)
 no-namespace-folders: true
-output-folder: $(python-sdks-folder)/azurelinuxtestservice/azure-mgmt-azurelinuxtestservice/azure/mgmt/azurelinuxtestservice
+output-folder: $(python-sdks-folder)/azurelinuxtestingservice/azure-mgmt-azurelinuxtestingservice/azure/mgmt/azurelinuxtestingservice
 ```

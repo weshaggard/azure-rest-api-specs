@@ -1,8 +1,8 @@
-# azurelinuxtestservice
+# azurelinuxtestingservice
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for azurelinuxtestservice.
+This is the AutoRest configuration file for azurelinuxtestingservice.
 
 ## Getting Started
 
@@ -22,20 +22,21 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the azurelinuxtestservice.
+These are the global settings for the azurelinuxtestingservice.
 
 ```yaml
 openapi-type: arm
-tag: package-2022-11-21
+openapi-subtype: providerHub
+tag: package-2023-01-31-preview
 ```
 
-### Tag: package-2022-11-21
+### Tag: package-2023-01-31-preview
 
-These settings apply only when `--tag=package-2022-11-21` is specified on the command line.
+These settings apply only when `--tag=package-2023-01-31-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-11-21'
+```yaml $(tag) == 'package-2023-01-31-preview'
 input-file:
-  - Microsoft.AzureLinuxTestService/preview/2022-11-21/azurelinuxtestservice.json
+  - Microsoft.AzureLinuxTestingService/preview/2023-01-31-preview/azurelinuxtestingservice.json
 ```
 
 ---

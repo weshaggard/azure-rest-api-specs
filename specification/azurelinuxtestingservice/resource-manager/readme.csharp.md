@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.AzureLinuxTestService
-  output-folder: $(csharp-sdks-folder)/azurelinuxtestservice/management/Microsoft.AzureLinuxTestService/GeneratedProtocol
+  namespace: Microsoft.AzureLinuxTestingService
+  output-folder: $(csharp-sdks-folder)/azurelinuxtestingservice/management/Microsoft.AzureLinuxTestingService/GeneratedProtocol
 ```
