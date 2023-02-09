@@ -758,6 +758,22 @@
           },
           {
             "in": "query",
+            "name": "$top",
+            "description": "Limit the number of results, always based on ordering by 'TimeGenerated desc'",
+            "type": "integer",
+            "format": "int32",
+            "default": 100
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "How many (if any) rows to skip. Used for pagination",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "in": "query",
             "name": "api-version",
             "required": true,
             "type": "string"
@@ -894,6 +910,22 @@
           },
           {
             "in": "query",
+            "name": "$top",
+            "description": "",
+            "type": "integer",
+            "format": "int32",
+            "default": 100
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "in": "query",
             "name": "api-version",
             "required": true,
             "type": "string"
@@ -911,7 +943,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/NodeHistory"
+              "$ref": "#/definitions/NodeStatePointInTimeCollectionResponse"
             }
           },
           "default": {
@@ -1309,29 +1341,6 @@
       },
       "additionalProperties": { }
     },
-    "NodeHistory": {
-      "type": "object",
-      "properties": {
-        "nodeId": {
-          "type": "string"
-        },
-        "historyFrom": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "historyTo": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "history": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NodeStatePointInTime"
-          }
-        }
-      },
-      "additionalProperties": false
-    },
     "NodeState": {
       "type": "object",
       "properties": {
@@ -1371,6 +1380,21 @@
       },
       "additionalProperties": false
     },
+    "NodeStatePointInTimeCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NodeStatePointInTime"
+          }
+        },
+        "nextLink": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "Query": {
       "type": "object",
       "properties": {
@@ -1394,9 +1418,19 @@
         },
         "dataUnit": {
           "type": "string"
+        },
+        "enabledState": {
+          "$ref": "#/definitions/QueryEnabledState"
         }
       },
       "additionalProperties": { }
+    },
+    "QueryEnabledState": {
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "type": "string"
     },
     "QueryOperator": {
       "enum": [
