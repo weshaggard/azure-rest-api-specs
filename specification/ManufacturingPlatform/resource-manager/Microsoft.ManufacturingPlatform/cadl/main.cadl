@@ -90,6 +90,10 @@ model MdsResourceProperties {
   @visibility("read")
   @doc("Profile of Synapse Created.")
   synapseProfile?: SynapseProfile;
+
+  @visibility("read")
+  @doc("Profile of Monitoring Profile.")
+  monitoringProfile?: MonitoringProfile;
 }
 
 @doc("The properties related to Aks Resource")
@@ -164,6 +168,14 @@ model RedisProfile {
     
 }
 
+@doc("The properties related to Monitoring Resource")
+model MonitoringProfile {
+  
+  @doc("Resource Id of Application Insights Resource")
+  @visibility("read")
+  id?: string;
+    
+}
 
 @doc("The properties related to Synapse Resource")
 model SynapseProfile {
@@ -172,7 +184,7 @@ model SynapseProfile {
   @visibility("read")
   id?: string;
 
-  @doc("Synapse Development Endpoinjt")
+  @doc("Synapse Development Endpoint")
   @visibility("read")
   devEndpoint?: string;
 }
@@ -185,4 +197,38 @@ interface ManufacturingDataServices extends Azure.ResourceManager.Operations {
   delete is ArmResourceDeleteSync<MdsResource>;
   listByResourceGroup is ArmResourceListByParent<MdsResource>;
   listBySubscription is ArmListBySubscription<MdsResource>;
+  listAvailableVersions is ArmResourceListActionSync<MdsResource, AvailableVersionListResult>;
+}
+
+
+
+// note this is a template for an empty body resource action, which will be added to the library at some point
+#suppress "@azure-tools/cadl-azure-core/documentation-required" "This is a template"
+#suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-operation-outside-interface" "This is a template"
+@armResourceAction(TResource)
+@post
+op ArmResourceListActionSync<
+  TResource extends Azure.ResourceManager.Foundations.ArmResource,
+  TResponse extends object,
+  TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
+>(
+  ...ResourceInstanceParameters<TResource, TBaseParameters>
+): ArmResponse<TResponse> | ErrorResponse;
+
+
+@doc("The list of available versions")
+model AvailableVersionListResult {
+  @doc("The list of versions")
+  @OpenAPI.extension("x-ms-identifiers", [])
+  versions: ApplicationVersion[];
+}
+
+
+@doc("Information about application versions")
+model ApplicationVersion {
+  @doc("Version")
+  version: float32;
+
+  @doc("Is Latest")
+  isLatest: boolean;
 }

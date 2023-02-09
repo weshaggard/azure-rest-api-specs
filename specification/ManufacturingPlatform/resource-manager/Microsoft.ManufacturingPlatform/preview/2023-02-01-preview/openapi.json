@@ -359,6 +359,47 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManufacturingPlatform/manufacturingDataServices/{mdsResourceName}/listAvailableVersions": {
+      "post": {
+        "tags": [
+          "ManufacturingDataServices"
+        ],
+        "operationId": "ManufacturingDataServices_ListAvailableVersions",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "mdsResourceName",
+            "in": "path",
+            "required": true,
+            "description": "Name.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/AvailableVersionListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -420,6 +461,43 @@
         }
       },
       "description": "The properties related to Azure Key Vault (Akv) Resource"
+    },
+    "ApplicationVersion": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "format": "float",
+          "description": "Version"
+        },
+        "isLatest": {
+          "type": "boolean",
+          "description": "Is Latest"
+        }
+      },
+      "description": "Information about application versions",
+      "required": [
+        "version",
+        "isLatest"
+      ]
+    },
+    "AvailableVersionListResult": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApplicationVersion"
+          },
+          "x-ms-identifiers": [],
+          "x-cadl-name": "ApplicationVersion[]",
+          "description": "The list of versions"
+        }
+      },
+      "description": "The list of available versions",
+      "required": [
+        "versions"
+      ]
     },
     "DatabaseProfile": {
       "type": "object",
@@ -546,6 +624,11 @@
           "$ref": "#/definitions/SynapseProfile",
           "description": "Profile of Synapse Created.",
           "readOnly": true
+        },
+        "monitoringProfile": {
+          "$ref": "#/definitions/MonitoringProfile",
+          "description": "Profile of Monitoring Profile.",
+          "readOnly": true
         }
       },
       "description": "Details of the ManufacturingPlatform MdsResource."
@@ -592,6 +675,17 @@
         }
       },
       "description": "The updatable properties of the MdsResource."
+    },
+    "MonitoringProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Resource Id of Application Insights Resource",
+          "readOnly": true
+        }
+      },
+      "description": "The properties related to Monitoring Resource"
     },
     "ProvisioningState": {
       "type": "string",
@@ -642,7 +736,7 @@
         },
         "devEndpoint": {
           "type": "string",
-          "description": "Synapse Development Endpoinjt",
+          "description": "Synapse Development Endpoint",
           "readOnly": true
         }
       },
