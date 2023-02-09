@@ -1,0 +1,173 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2023-02-08-preview",
+    "title": "fist",
+    "description": "The definitions and parameters in this swagger specification will be used to manage the IoT Firmware Defense resources.",
+    "x-ms-code-generation-settings": {
+      "name": "fistClient"
+    }
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow.",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {},
+  "definitions": {
+    "UrlToken": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "Token URL for creating or accessing a blob file.",
+          "type": "string",
+          "x-nullable": true
+        }
+      },
+      "description": "Url data for creating or accessing a blob file."
+    },
+    "Firmware": {
+      "type": "object",
+      "description": "Firmware definition",
+      "properties": {
+        "properties": {
+          "title": "Firmware properties",
+          "description": "List the properties of firmwares",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/FirmwareProperties"
+        },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
+          "description": "The system data."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "FirmwareProperties": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string",
+          "description": "File name for a firmware that user uploaded."
+        },
+        "vendor": {
+          "type": "string",
+          "description": "Firmware vendor."
+        },
+        "model": {
+          "type": "string",
+          "description": "Firmware model."
+        },
+        "version": {
+          "type": "string",
+          "description": "Firmware version."
+        },
+        "description": {
+          "type": "string",
+          "description": "User-specified description of the firmware."
+        },
+        "fileSize": {
+          "description": "File size of the uploaded firmware image.",
+          "type": "integer",
+          "format": "int64",
+          "x-nullable": true
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of firmware scan.",
+          "enum": [
+            "Pending",
+            "Extracting",
+            "Analyzing",
+            "Ready",
+            "Error"
+          ],
+          "default": "Pending",
+          "x-ms-enum": {
+            "name": "status",
+            "modelAsString": true
+          }
+        },
+        "statusMessages": {
+          "type": "array",
+          "description": "A list of errors or other messages generated during firmware analysis",
+          "items": {
+            "$ref": "#/definitions/StatusMessage"
+          },
+          "x-ms-identifiers": []
+        },
+        "provisioningState": {
+          "description": "Provisioning state of the resource.",
+          "type": "string",
+          "enum": [
+            "Accepted",
+            "Succeeded",
+            "Canceled",
+            "Failed"
+          ],
+          "x-ms-enum": {
+            "name": "ProvisioningStatus",
+            "modelAsString": true
+          },
+          "readOnly": true
+        }
+      },
+      "description": "Firmware properties."
+    },
+    "StatusMessage": {
+      "type": "object",
+      "description": "Error and status message",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The error or status message"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "FirmwareGroupNameParameter": {
+      "name": "firmwareGroupName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name of firmware Group.",
+      "x-ms-parameter-location": "method"
+    },
+    "FirmwareIdParameter": {
+      "name": "firmwareId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The id of firmware.",
+      "x-ms-parameter-location": "method"
+    }
+  }
+}
