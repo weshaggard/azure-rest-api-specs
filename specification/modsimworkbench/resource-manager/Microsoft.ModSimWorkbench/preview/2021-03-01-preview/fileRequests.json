@@ -51,18 +51,21 @@
           {
             "in": "path",
             "name": "workbenchName",
+            "description": "the workbench name.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "chamberName",
+            "description": "the chamber name.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "requestName",
+            "description": "the request name.",
             "required": true,
             "type": "string"
           },
@@ -80,7 +83,7 @@
           "default": {
             "description": "Default error response",
             "schema": {
-              "$ref": "./modsimworkbench.json#/definitions/ErrorResponse"
+              "$ref": "./modsimworkbenches.json#/definitions/ErrorResponse"
             },
             "x-ms-error-response": true
           }
@@ -94,7 +97,7 @@
         ],
         "x-ms-examples": {
           "Request Get": {
-            "$ref": "./examples/fileRequestsGet.json"
+            "$ref": "./examples/FileRequestsGet.json"
           }
         }
       }
@@ -155,17 +158,23 @@
           },
           "202": {
             "description": "Accepted",
-            "schema": {
-              "$ref": "#/definitions/FileRequestsManage"
+            "headers": {
+              "Location": {
+                "type": "string"
+              }
             }
           },
           "default": {
             "description": "",
             "schema": {
-              "$ref": "./modsimworkbench.json#/definitions/ErrorResponse"
+              "$ref": "./modsimworkbenches.json#/definitions/ErrorResponse"
             },
             "x-ms-error-response": true
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         },
         "x-ms-examples": {
           "Files Data Inbound Sync": {
@@ -222,17 +231,23 @@
           },
           "202": {
             "description": "Accepted",
-            "schema": {
-              "$ref": "#/definitions/FileDownloadSasUri"
+            "headers": {
+              "Location": {
+                "type": "string"
+              }
             }
           },
           "default": {
             "description": "",
             "schema": {
-              "$ref": "./modsimworkbench.json#/definitions/ErrorResponse"
+              "$ref": "./modsimworkbenches.json#/definitions/ErrorResponse"
             },
             "x-ms-error-response": true
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         },
         "x-ms-examples": {
           "Files Data Inbound Sync": {
@@ -286,7 +301,7 @@
           "default": {
             "description": "Default Error Response",
             "schema": {
-              "$ref": "./modsimworkbench.json#/definitions/ErrorResponse"
+              "$ref": "./modsimworkbenches.json#/definitions/ErrorResponse"
             },
             "x-ms-error-response": true
           }
@@ -296,7 +311,7 @@
         },
         "x-ms-examples": {
           "List all files": {
-            "$ref": "./examples/RequestList.json"
+            "$ref": "./examples/FileRequestsList.json"
           }
         }
       }
@@ -316,7 +331,10 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Request"
-          }
+          },
+          "x-ms-identifiers": [
+            "value"
+          ]
         }
       }
     },
@@ -363,6 +381,7 @@
       }
     },
     "RequestPropertiesFormat": {
+      "description": "File requests properties.",
       "type": "object",
       "properties": {
         "timestamp": {
@@ -394,18 +413,22 @@
           "type": "object",
           "properties": {
             "id": {
+              "x-ms-client-flatten": true,
               "type": "string",
               "description": "The globally unique identifier for the approval."
             },
             "description": {
+              "x-ms-client-flatten": true,
               "type": "string",
               "description": "Description of approval"
             },
             "userId": {
+              "x-ms-client-flatten": true,
               "type": "string",
               "description": "Specifies the principal ID of Azure Active Directory User who approved to download."
             },
             "timestamp": {
+              "x-ms-client-flatten": true,
               "type": "string",
               "format": "date-time",
               "description": "The timestamp for the approval"
@@ -416,15 +439,18 @@
           "type": "object",
           "properties": {
             "location": {
+              "x-ms-client-flatten": true,
               "type": "string",
               "description": "Download destination location."
             },
             "startTime": {
+              "x-ms-client-flatten": true,
               "type": "string",
               "format": "date-time",
               "description": "The timestamp for the start of download."
             },
             "completeTime": {
+              "x-ms-client-flatten": true,
               "type": "string",
               "format": "date-time",
               "description": "The timestamp for the completion of download."
@@ -435,29 +461,30 @@
           "type": "object",
           "properties": {
             "sasUriId": {
+              "x-ms-client-flatten": true,
               "type": "string",
               "description": "sas uri id"
             }
           }
         },
         "provisioningState": {
-          "$ref": "./modsimworkbench.json#/definitions/ProvisioningState",
+          "$ref": "./modsimworkbenches.json#/definitions/ProvisioningState",
           "description": "Gets the status of the request at the time the operation was called"
         }
       }
     },
     "Request": {
-      "type": "object",
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/RequestPropertiesFormat",
-          "description": "Request properties"
+          "description": "Request properties",
+          "type": "object"
         }
       },
       "allOf": [
         {
-          "$ref": "./modsimworkbench.json#/definitions/Resource"
+          "$ref": "./modsimworkbenches.json#/definitions/Resource"
         }
       ],
       "description": "Request resource"
