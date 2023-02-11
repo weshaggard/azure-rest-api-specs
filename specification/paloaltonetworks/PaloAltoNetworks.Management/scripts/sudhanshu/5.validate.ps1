@@ -48,8 +48,8 @@ $examplesBackup = ((Get-Item $targetFolder).Parent.FullName | Join-Path -ChildPa
 Remove-Item -path $examplesBackup -recurse -ErrorAction SilentlyContinue
 Rename-Item -Path $targetFolder -NewName "examplesBackup"
 Move-Item -Path $destinationFolder -Destination $targetFolder -ErrorAction Stop
-npx oav validate-example ((Get-Item $targetFolder).Parent.FullName | Join-Path -ChildPath "\openapi.json")
+npm run oav -- validate-example ((Get-Item $targetFolder).Parent.FullName | Join-Path -ChildPath "\openapi.json")
 Copy-Item ((Get-Item $sourceFolder).Parent.FullName | Join-Path -ChildPath "\PaloAltoNetworks.Cloudngfw.json") -Destination (Get-Item $targetFolder).Parent.FullName -Force -ErrorAction Stop
-npx oav validate-example ((Get-Item $targetFolder).Parent.FullName | Join-Path -ChildPath "\PaloAltoNetworks.Cloudngfw.json")
+npm run oav -- validate-example ((Get-Item $targetFolder).Parent.FullName | Join-Path -ChildPath "\PaloAltoNetworks.Cloudngfw.json")
 Move-Item -Path $targetFolder -Destination $destinationFolder -ErrorAction Stop
 Rename-Item -Path $examplesBackup -NewName "examples" -ErrorAction Stop

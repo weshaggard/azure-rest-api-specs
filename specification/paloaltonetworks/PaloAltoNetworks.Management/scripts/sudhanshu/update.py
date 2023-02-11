@@ -77,7 +77,7 @@ def isIgnored(pPath:str, k:str, hints, isNew=True):
 def compareDict(gDict, fDict, hints, path=''):
   # print(type(gDict), type(fDict), path)
   anyHint = checkPath(path, hints)
-  # print("checkPath", path, anyHint)
+  print("checkPath", path, anyHint)
   if anyHint:
     return anyHint
   if type (gDict) != type (fDict):
@@ -91,6 +91,7 @@ def compareDict(gDict, fDict, hints, path=''):
   if type(gDict) == type(['']):
     for i in range(len(gDict)):
       gDict[i] = compareDict(gDict[i], fDict[i], hints, f'{path}[{i}]')
+      print(gDict)
   elif type(gDict) == type({}):
     fKeys = set(fDict.keys())
     gKeys = set(gDict.keys())
