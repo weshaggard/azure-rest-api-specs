@@ -3,7 +3,7 @@
   "info": {
     "title": "Test Base",
     "description": "Use these REST APIs for performing operations on Test Base Draft Packages, which are used to facilitate the creation and update of Test Base Package.",
-    "version": "2022-12-15-preview"
+    "version": "2023-01-01-preview"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -34,7 +34,7 @@
     }
   },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.TestBaseBin/testBaseAccounts/{testBaseAccountName}/draftPackages": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiangTestBase/testBaseAccounts/{testBaseAccountName}/draftPackages": {
       "get": {
         "tags": [
           "Test Base Draft Package"
@@ -85,7 +85,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.TestBaseBin/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiangTestBase/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}": {
       "put": {
         "tags": [
           "Test Base Draft Package"
@@ -277,7 +277,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.TestBaseBin/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}/getPath": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiangTestBase/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}/getPath": {
       "post": {
         "tags": [
           "Test Base Draft Package"
@@ -322,7 +322,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.TestBaseBin/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}/copyFromPackage": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiangTestBase/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}/copyFromPackage": {
       "post": {
         "tags": [
           "Test Base Draft Package"
@@ -390,7 +390,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.TestBaseBin/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}/extractFile": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiangTestBase/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}/extractFile": {
       "post": {
         "tags": [
           "Test Base Draft Package"
@@ -458,7 +458,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.TestBaseBin/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}/generateFoldersAndScripts": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.XiangTestBase/testBaseAccounts/{testBaseAccountName}/draftPackages/{draftPackageName}/generateFoldersAndScripts": {
       "post": {
         "tags": [
           "Test Base Draft Package"
@@ -597,11 +597,6 @@
           "type": "boolean",
           "description": "Specifies whether a sample package should be used instead of the one uploaded by the user."
         },
-        "testTool": {
-          "$ref": "./testbase.json#/definitions/TestToolType",
-          "description": "Test Framework",
-          "default": "PowerShell"
-        },
         "comments": {
           "type": "string",
           "description": "Comments added by user."
@@ -632,6 +627,18 @@
           "type": "string",
           "description": "Specifies the package id from which the draft package copied."
         },
+        "useAutofill": {
+          "type": "boolean",
+          "description": "Indicates whether user choose to enable script auto-fill."
+        },
+        "executableLaunchCommand": {
+          "type": "string",
+          "description": "The executable launch command for script auto-fill. Will be used to run the application."
+        },
+        "processName": {
+          "type": "string",
+          "description": "The process name for script auto-fill. Will be used to identify the application process."
+        },
         "tabState": {
           "type": "object",
           "$ref": "#/definitions/TabState",
@@ -643,13 +650,50 @@
             "$ref": "./testbase.json#/definitions/TestType"
           },
           "description": "OOB, functional or flow driven. Mapped to the data in 'tests' property."
+        },
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "./testbase.json#/definitions/ProvisioningState"
+        },
+        "targetOSList": {
+          "type": "array",
+          "items": {
+            "$ref": "./testbase.json#/definitions/TargetOSInfo"
+          },
+          "x-ms-identifiers": [],
+          "description": "Specifies the target OSs of specific OS Update types."
+        },
+        "inplaceUpgradeOSPair": {
+          "$ref": "./testbase.json#/definitions/InplaceUpgradeOSInfo",
+          "description": "Specifies the baseline os and target os for inplace upgrade."
+        },
+        "lastModifiedTime": {
+          "readOnly": true,
+          "type": "string",
+          "format": "date-time",
+          "description": "The UTC timestamp when the package was last modified."
+        },
+        "flightingRing": {
+          "type": "string",
+          "description": "The flighting ring for feature update."
+        },
+        "firstPartyApps": {
+          "description": "The list of first party applications to test along with user application.",
+          "type": "array",
+          "x-ms-identifiers": [],
+          "items": {
+            "$ref": "./testbase.json#/definitions/FirstPartyAppDefinition"
+          }
+        },
+        "tests": {
+          "type": "array",
+          "items": {
+            "$ref": "./testbase.json#/definitions/Test"
+          },
+          "x-ms-identifiers": [],
+          "description": "The detailed test information."
         }
-      },
-      "allOf": [
-        {
-          "$ref": "./testbase.json#/definitions/PackageCommonProperties"
-        }
-      ]
+      }
     },
     "DraftPackageUpdateParameters": {
       "description": "Parameters supplied to update a Test Base Draft Package.",
@@ -687,11 +731,6 @@
           "type": "boolean",
           "description": "Specifies whether a sample package should be used instead of the one uploaded by the user."
         },
-        "testTool": {
-          "$ref": "./testbase.json#/definitions/TestToolType",
-          "description": "Test Tool",
-          "default": "PowerShell"
-        },
         "comments": {
           "type": "string",
           "description": "Comments added by user."
@@ -717,6 +756,18 @@
           "type": "string",
           "description": "Specifies the package id from which the draft package copied."
         },
+        "useAutofill": {
+          "type": "boolean",
+          "description": "Indicates whether user choose to enable script auto-fill."
+        },
+        "executableLaunchCommand": {
+          "type": "string",
+          "description": "The executable launch command for script auto-fill. Will be used to run the application."
+        },
+        "processName": {
+          "type": "string",
+          "description": "The process name for script auto-fill. Will be used to identify the application process."
+        },
         "tabState": {
           "type": "object",
           "$ref": "#/definitions/TabState",
@@ -728,13 +779,40 @@
             "$ref": "./testbase.json#/definitions/TestType"
           },
           "description": "OOB, functional or flow driven. Mapped to the data in 'tests' property."
+        },
+        "targetOSList": {
+          "type": "array",
+          "items": {
+            "$ref": "./testbase.json#/definitions/TargetOSInfo"
+          },
+          "x-ms-identifiers": [],
+          "description": "Specifies the target OSs of specific OS Update types."
+        },
+        "inplaceUpgradeOSPair": {
+          "$ref": "./testbase.json#/definitions/InplaceUpgradeOSInfo",
+          "description": "Specifies the baseline os and target os for in-place upgrade."
+        },
+        "flightingRing": {
+          "type": "string",
+          "description": "The flighting ring for feature update."
+        },
+        "firstPartyApps": {
+          "description": "Specifies the list of first party applications to test along with user application.",
+          "type": "array",
+          "x-ms-identifiers": [],
+          "items": {
+            "$ref": "./testbase.json#/definitions/FirstPartyAppDefinition"
+          }
+        },
+        "tests": {
+          "type": "array",
+          "items": {
+            "$ref": "./testbase.json#/definitions/Test"
+          },
+          "x-ms-identifiers": [],
+          "description": "The detailed test information."
         }
-      },
-      "allOf": [
-        {
-          "$ref": "./testbase.json#/definitions/PackageUpdateCommonParameterProperties"
-        }
-      ]
+      }
     },
     "DraftPackageSourceType": {
       "type": "string",
