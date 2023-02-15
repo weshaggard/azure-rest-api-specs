@@ -24,17 +24,18 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 These are the global settings for the testbase.
 
-```yaml
+``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2023-01-01-preview
+tag: package-2023-01-15-preview
 ```
+
 
 ### Tag: package-2020-12-16-preview
 
 These settings apply only when `--tag=package-2020-12-16-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2020-12-16-preview'
+``` yaml $(tag) == 'package-2020-12-16-preview'
 input-file:
   - Microsoft.TestBase/preview/2020-12-16-preview/testbase.json
 ```
@@ -43,7 +44,7 @@ input-file:
 
 These settings apply only when `--tag=package-2021-09-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-09-01-preview'
+``` yaml $(tag) == 'package-2021-09-01-preview'
 input-file:
   - Microsoft.TestBase/preview/2021-09-01-preview/testbase.json
 ```
@@ -52,7 +53,7 @@ input-file:
 
 These settings apply only when `--tag=package-2021-09-01` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-09-01'
+``` yaml $(tag) == 'package-2021-09-01'
 input-file:
   - Microsoft.TestBase/stable/2021-09-01/testbase.json
 ```
@@ -61,7 +62,7 @@ input-file:
 
 These settings apply only when `--tag=package-2021-12-01` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-12-01'
+``` yaml $(tag) == 'package-2021-12-01'
 input-file:
   - Microsoft.TestBase/stable/2021-12-01/testbase.json
 ```
@@ -70,7 +71,7 @@ input-file:
 
 These settings apply only when `--tag=package-2022-03-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-03-01-preview'
+``` yaml $(tag) == 'package-2022-03-01-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-03-01-preview/testbase.json
 ```
@@ -79,7 +80,7 @@ input-file:
 
 These settings apply only when `--tag=package-2022-04-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-04-01-preview'
+``` yaml $(tag) == 'package-2022-04-01-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-04-01-preview/testbase.json
 ```
@@ -88,7 +89,7 @@ input-file:
 
 These settings apply only when `--tag=package-2022-05-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-05-01-preview'
+``` yaml $(tag) == 'package-2022-05-01-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-05-01-preview/testbase.json
 ```
@@ -97,7 +98,7 @@ input-file:
 
 These settings apply only when `--tag=package-2022-08-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-08-01-preview'
+``` yaml $(tag) == 'package-2022-08-01-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-08-01-preview/testbase.json
 ```
@@ -106,7 +107,7 @@ input-file:
 
 These settings apply only when `--tag=package-2022-08-15-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-08-15-preview'
+``` yaml $(tag) == 'package-2022-08-15-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-08-15-preview/testbase.json
 ```
@@ -115,7 +116,7 @@ input-file:
 
 These settings apply only when `--tag=package-2022-09-15-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-09-15-preview'
+``` yaml $(tag) == 'package-2022-09-15-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-09-15-preview/testbase.json
 ```
@@ -124,7 +125,7 @@ input-file:
 
 These settings apply only when `--tag=package-2022-10-15-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-10-15-preview'
+``` yaml $(tag) == 'package-2022-10-15-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-10-15-preview/testbase.json
   - Microsoft.TestBase/preview/2022-10-15-preview/draftpackage.json
@@ -134,7 +135,7 @@ input-file:
 
 These settings apply only when `--tag=package-2022-11-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-11-01-preview'
+``` yaml $(tag) == 'package-2022-11-01-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-11-01-preview/testbase.json
 ```
@@ -143,19 +144,30 @@ input-file:
 
 These settings apply only when `--tag=package-2022-11-15-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-11-15-preview'
+``` yaml $(tag) == 'package-2022-11-15-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-11-15-preview/testbase.json
+  - Microsoft.TestBase/preview/2022-11-15-preview/draftpackage.json
 ```
 
 ### Tag: package-2022-12-01-preview
 
 These settings apply only when `--tag=package-2022-12-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-12-01-preview'
+``` yaml $(tag) == 'package-2022-12-01-preview'
 input-file:
   - Microsoft.TestBase/preview/2022-12-01-preview/testbase.json
   - Microsoft.TestBase/preview/2022-12-01-preview/draftpackage.json
+```
+
+### Tag: package-2022-12-15-preview
+
+These settings apply only when `--tag=package-2022-12-15-preview` is specified on the command line.
+
+``` yaml $(tag) == 'package-2022-12-15-preview'
+input-file:
+  - Microsoft.TestBase/preview/2022-12-15-preview/draftpackage.json
+  - Microsoft.TestBase/preview/2022-12-15-preview/testbase.json
 ```
 
 ### Tag: package-2023-01-01-preview
@@ -167,6 +179,19 @@ input-file:
   - Microsoft.TestBase/preview/2023-01-01-preview/draftpackage.json
   - Microsoft.TestBase/preview/2023-01-01-preview/testbase.json
   - Microsoft.TestBase/preview/2023-01-01-preview/actionrequest.json
+```
+
+### Tag: package-2023-01-15-preview
+
+These settings apply only when `--tag=package-2023-01-15-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-01-15-preview'
+input-file:
+  - Microsoft.TestBase/preview/2023-01-15-preview/draftpackage.json
+  - Microsoft.TestBase/preview/2023-01-15-preview/testbase.json
+  - Microsoft.TestBase/preview/2023-01-15-preview/testconfiguration.json
+  - Microsoft.TestBase/preview/2023-01-15-preview/actionrequest.json
+  - Microsoft.TestBase/preview/2023-01-15-preview/customimage.json
 ```
 
 ## Suppression
@@ -187,7 +212,7 @@ directive:
 This section describes what SDK should be generated by the automatic system.
 This is not used by Autorest itself.
 
-```yaml $(swagger-to-sdk)
+``` yaml $(swagger-to-sdk)
 swagger-to-sdk:
   - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
@@ -198,8 +223,10 @@ swagger-to-sdk:
       - node sdkauto_afterscript.js testbase/resource-manager
   - repo: azure-powershell
 ```
+
 ## Suppression
-```
+
+``` 
 directive:
   - suppress: SECRET_PROPERTY
     from:
