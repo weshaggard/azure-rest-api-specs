@@ -3,7 +3,7 @@
   "info": {
     "title": "HybridNetworkManagementClient",
     "description": "The resources in this swagger specification will be used to manage the network function publisher in a Hybrid Network resource provider.",
-    "version": "2022-09-01-preview"
+    "version": "2023-04-01-preview"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -73,7 +73,7 @@
           }
         },
         "x-ms-examples": {
-          "List publishers under a subscription": {
+          "List artifacts under an artifact store": {
             "$ref": "./examples/PureProxyArtifact/ArtifactList.json"
           }
         },
@@ -82,7 +82,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridNetwork/publishers/{publisherName}/artifactStores/{artifactStoreName}/artifacts/{artifactName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridNetwork/publishers/{publisherName}/artifactStores/{artifactStoreName}/artifactVersions": {
       "get": {
         "tags": [
           "ProxyArtifact"
@@ -98,7 +98,7 @@
           },
           {
             "$ref": "./common.json#/parameters/ArtifactStoreParameter"
-          },    
+          },
           {
             "$ref": "./common.json#/parameters/ArtifactNameParameter"
           },
@@ -124,9 +124,68 @@
           }
         },
         "x-ms-examples": {
-          "Get a publisher overview": {
+          "Get an artifact overview": {
             "$ref": "./examples/PureProxyArtifact/ArtifactGet.json"
           }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ProxyArtifact"
+        ],
+        "operationId": "Change Artifact State",
+        "description": "Change artifact state defined in artifact store.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/PublisherNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/ArtifactStoreParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArtifactChangeState"
+            },
+            "description": "Parameters supplied to update the state of artifact manifest."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request is successful. Artifact State updated successfully",
+            "schema": {
+              "$ref": "#/definitions/ProxyArtifactOverview"
+            }
+          },
+          "202": {
+            "description": "Request of updating artifact state is accepted."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update an artifact state": {
+            "$ref": "./examples/PureProxyArtifact/ArtifactChangeState.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         }
       }
     }
@@ -198,21 +257,27 @@
         }
       }
     },
-    "ArtifactUpdateState": {
+    "ArtifactChangeState": {
       "description": "The artifact updating request payload.",
       "type": "object",
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/ArtifactUpdateStateProperties",
-          "description": "Artifact update state properties."    
-        }  
+          "$ref": "#/definitions/ArtifactChangeStateProperties",
+          "description": "Artifact update state properties."
+        }
       }
     },
-    "ArtifactUpdateStateProperties": {
+    "ArtifactChangeStateProperties": {
       "description": "The artifact update state properties.",
       "type": "object",
       "properties": {
+        "artifactName": {
+          "type": "string"
+        },
+        "artifactVersion": {
+          "type": "string"    
+        },
         "artifactState": {
           "$ref": "#/definitions/ArtifactState",
           "description": "The artifact state"
@@ -235,4 +300,3 @@
     }
   }
 }
-  
