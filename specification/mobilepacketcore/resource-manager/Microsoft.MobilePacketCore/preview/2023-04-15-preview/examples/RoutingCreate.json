@@ -10,6 +10,12 @@
         "networkContext": [
           {
             "name": "string",
+            "vrf": false,
+            "vrfNames": [
+              {
+                "networkContextName": "string"
+              }
+            ],
             "enableStaticAll": "disabled",
             "singleHopBfdProfile": "bfdParams",
             "bgpParams": {
@@ -91,7 +97,8 @@
                         "direction": "out",
                         "routeMapName": "routeMap"
                       }
-                    ]
+                    ],
+                    "sendCommunity": "standard"
                   }
                 ]
               },
@@ -109,10 +116,42 @@
                         "direction": "out",
                         "routeMapName": "routeMap"
                       }
-                    ]
+                    ],
+                    "sendCommunity": "standard"
                   }
                 ]
-              }
+              },
+              "vrf": [
+                {
+                  "activate": "enabled",
+                  "nextHopSelf": "disabled",
+                  "networkContextName": "networkContextName",
+                  "routeDistinguisher": "1.1.1.1:111",
+                  "routeTarget": [
+                    {
+                      "direction": "import",
+                      "value": "1.1.1.1:111"
+                    }
+                  ],
+                  "importMap": {
+                    "routeMapName": "routeMap",
+                    "ignoreRouteTargetImport": false
+                  },
+                  "mplsExp": 7,
+                  "ipv4Ucast": {
+                    "mplsExp": 7,
+                    "redistribute": [
+                      "connected"
+                    ]
+                  },
+                  "ipv6Ucast": {
+                    "mplsExp": 7,
+                    "redistribute": [
+                      "connected"
+                    ]
+                  }
+                }
+              ]
             },
             "staticRoute": [
               {
@@ -145,7 +184,7 @@
               "name": "v4PrefixList",
               "line": [
                 {
-                  "number": 1,
+                  "number": 2147483647,
                   "action": "deny",
                   "address": "1.1.1.1",
                   "prefixLength": 32,
@@ -170,20 +209,94 @@
               ]
             }
           ],
+          "communityList": [
+            {
+              "id": 99,
+              "line": [
+                {
+                  "action": "deny",
+                  "expr": "internet"
+                }
+              ]
+            }
+          ],
+          "extendedCommunityList": [
+            {
+              "id": 199,
+              "line": [
+                {
+                  "action": "deny",
+                  "expr": "string"
+                }
+              ]
+            }
+          ],
+          "communityListWord": [
+            {
+              "id": "string",
+              "line": [
+                {
+                  "action": "deny",
+                  "expr": "local-AS"
+                }
+              ]
+            }
+          ],
+          "extendedCommunityListWord": [
+            {
+              "id": "string",
+              "line": [
+                {
+                  "action": "deny",
+                  "expr": "string"
+                }
+              ]
+            }
+          ],
           "routeMap": [
             {
               "name": "routeMap",
-              "action": "deny",
-              "number": 65535,
-              "matchTable": {
-                "matchIpPrefixList": "v4PrefixList",
-                "matchIpv6PrefixList": "v6PrefixList"
-              },
-              "setTable": {
-                "setIpNextHop": "1.1.1.1",
-                "setIpv6NextHop": "ffee::",
-                "setVpnNextHop": "1.1.1.1"
-              }
+              "continueRouteMapMatchRules": false,
+              "routeMapRule": [
+                {
+                  "action": "deny",
+                  "number": 65535,
+                  "matchTable": {
+                    "matchIpPrefixList": "v4PrefixList",
+                    "matchIpv6PrefixList": "v6PrefixList",
+                    "communityListTypes": {
+                      "communityListType": "communityList",
+                      "communityListId": 99,
+                      "extendedCommunityListId": 199,
+                      "communityListWordId": "string",
+                      "extendedCommunityListWordId": "string"
+                    },
+                    "matchIpNextHop": "1.1.1.1",
+                    "matchIpV6NextHop": "ffee::",
+                    "matchTag": 4294967295
+                  },
+                  "setTable": {
+                    "setIpNextHop": "1.1.1.1",
+                    "setIpv6NextHop": "ffee::",
+                    "setVpnNextHop": "1.1.1.1",
+                    "setLocalPreference": 4294967295,
+                    "setCommunity": {
+                      "communityNumberType": "communityNumber",
+                      "communityNumber": {
+                        "numberFormat": 4294967295,
+                        "numberAltFormat": "'100:200 300:400'"
+                      },
+                      "wellKnownCommunity": "internet",
+                      "additive": false
+                    },
+                    "setExtendedCommunity": {
+                      "routeTarget": "100:200",
+                      "sightOfOrigin": "100:200"
+                    },
+                    "setTag": 4294967295
+                  }
+                }
+              ]
             }
           ]
         }
@@ -209,6 +322,12 @@
           "networkContext": [
             {
               "name": "string",
+              "vrf": false,
+              "vrfNames": [
+                {
+                  "networkContextName": "string"
+                }
+              ],
               "enableStaticAll": "disabled",
               "singleHopBfdProfile": "bfdParams",
               "bgpParams": {
@@ -290,7 +409,8 @@
                           "direction": "out",
                           "routeMapName": "routeMap"
                         }
-                      ]
+                      ],
+                      "sendCommunity": "standard"
                     }
                   ]
                 },
@@ -308,10 +428,42 @@
                           "direction": "out",
                           "routeMapName": "routeMap"
                         }
-                      ]
+                      ],
+                      "sendCommunity": "standard"
                     }
                   ]
-                }
+                },
+                "vrf": [
+                  {
+                    "activate": "enabled",
+                    "nextHopSelf": "disabled",
+                    "networkContextName": "networkContextName",
+                    "routeDistinguisher": "1.1.1.1:111",
+                    "routeTarget": [
+                      {
+                        "direction": "import",
+                        "value": "1.1.1.1:111"
+                      }
+                    ],
+                    "importMap": {
+                      "routeMapName": "routeMap",
+                      "ignoreRouteTargetImport": false
+                    },
+                    "mplsExp": 7,
+                    "ipv4Ucast": {
+                      "mplsExp": 7,
+                      "redistribute": [
+                        "connected"
+                      ]
+                    },
+                    "ipv6Ucast": {
+                      "mplsExp": 7,
+                      "redistribute": [
+                        "connected"
+                      ]
+                    }
+                  }
+                ]
               },
               "staticRoute": [
                 {
@@ -344,7 +496,7 @@
                 "name": "v4PrefixList",
                 "line": [
                   {
-                    "number": 1,
+                    "number": 2147483647,
                     "action": "deny",
                     "address": "1.1.1.1",
                     "prefixLength": 32,
@@ -369,20 +521,94 @@
                 ]
               }
             ],
+            "communityList": [
+              {
+                "id": 99,
+                "line": [
+                  {
+                    "action": "deny",
+                    "expr": "internet"
+                  }
+                ]
+              }
+            ],
+            "extendedCommunityList": [
+              {
+                "id": 199,
+                "line": [
+                  {
+                    "action": "deny",
+                    "expr": "string"
+                  }
+                ]
+              }
+            ],
+            "communityListWord": [
+              {
+                "id": "string",
+                "line": [
+                  {
+                    "action": "deny",
+                    "expr": "local-AS"
+                  }
+                ]
+              }
+            ],
+            "extendedCommunityListWord": [
+              {
+                "id": "string",
+                "line": [
+                  {
+                    "action": "deny",
+                    "expr": "string"
+                  }
+                ]
+              }
+            ],
             "routeMap": [
               {
                 "name": "routeMap",
-                "action": "deny",
-                "number": 65535,
-                "matchTable": {
-                  "matchIpPrefixList": "v4PrefixList",
-                  "matchIpv6PrefixList": "v6PrefixList"
-                },
-                "setTable": {
-                  "setIpNextHop": "1.1.1.1",
-                  "setIpv6NextHop": "ffee::",
-                  "setVpnNextHop": "1.1.1.1"
-                }
+                "continueRouteMapMatchRules": false,
+                "routeMapRule": [
+                  {
+                    "action": "deny",
+                    "number": 65535,
+                    "matchTable": {
+                      "matchIpPrefixList": "v4PrefixList",
+                      "matchIpv6PrefixList": "v6PrefixList",
+                      "communityListTypes": {
+                        "communityListType": "communityList",
+                        "communityListId": 99,
+                        "extendedCommunityListId": 199,
+                        "communityListWordId": "string",
+                        "extendedCommunityListWordId": "string"
+                      },
+                      "matchIpNextHop": "1.1.1.1",
+                      "matchIpV6NextHop": "ffee::",
+                      "matchTag": 4294967295
+                    },
+                    "setTable": {
+                      "setIpNextHop": "1.1.1.1",
+                      "setIpv6NextHop": "ffee::",
+                      "setVpnNextHop": "1.1.1.1",
+                      "setLocalPreference": 4294967295,
+                      "setCommunity": {
+                        "communityNumberType": "communityNumber",
+                        "communityNumber": {
+                          "numberFormat": 4294967295,
+                          "numberAltFormat": "'100:200 300:400'"
+                        },
+                        "wellKnownCommunity": "internet",
+                        "additive": false
+                      },
+                      "setExtendedCommunity": {
+                        "routeTarget": "100:200",
+                        "sightOfOrigin": "100:200"
+                      },
+                      "setTag": 4294967295
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -407,6 +633,12 @@
           "networkContext": [
             {
               "name": "string",
+              "vrf": false,
+              "vrfNames": [
+                {
+                  "networkContextName": "string"
+                }
+              ],
               "enableStaticAll": "disabled",
               "singleHopBfdProfile": "bfdParams",
               "bgpParams": {
@@ -488,7 +720,8 @@
                           "direction": "out",
                           "routeMapName": "routeMap"
                         }
-                      ]
+                      ],
+                      "sendCommunity": "standard"
                     }
                   ]
                 },
@@ -506,10 +739,42 @@
                           "direction": "out",
                           "routeMapName": "routeMap"
                         }
-                      ]
+                      ],
+                      "sendCommunity": "standard"
                     }
                   ]
-                }
+                },
+                "vrf": [
+                  {
+                    "activate": "enabled",
+                    "nextHopSelf": "disabled",
+                    "networkContextName": "networkContextName",
+                    "routeDistinguisher": "1.1.1.1:111",
+                    "routeTarget": [
+                      {
+                        "direction": "import",
+                        "value": "1.1.1.1:111"
+                      }
+                    ],
+                    "importMap": {
+                      "routeMapName": "routeMap",
+                      "ignoreRouteTargetImport": false
+                    },
+                    "mplsExp": 7,
+                    "ipv4Ucast": {
+                      "mplsExp": 7,
+                      "redistribute": [
+                        "connected"
+                      ]
+                    },
+                    "ipv6Ucast": {
+                      "mplsExp": 7,
+                      "redistribute": [
+                        "connected"
+                      ]
+                    }
+                  }
+                ]
               },
               "staticRoute": [
                 {
@@ -542,7 +807,7 @@
                 "name": "v4PrefixList",
                 "line": [
                   {
-                    "number": 1,
+                    "number": 2147483647,
                     "action": "deny",
                     "address": "1.1.1.1",
                     "prefixLength": 32,
@@ -567,20 +832,94 @@
                 ]
               }
             ],
+            "communityList": [
+              {
+                "id": 99,
+                "line": [
+                  {
+                    "action": "deny",
+                    "expr": "internet"
+                  }
+                ]
+              }
+            ],
+            "extendedCommunityList": [
+              {
+                "id": 199,
+                "line": [
+                  {
+                    "action": "deny",
+                    "expr": "string"
+                  }
+                ]
+              }
+            ],
+            "communityListWord": [
+              {
+                "id": "string",
+                "line": [
+                  {
+                    "action": "deny",
+                    "expr": "local-AS"
+                  }
+                ]
+              }
+            ],
+            "extendedCommunityListWord": [
+              {
+                "id": "string",
+                "line": [
+                  {
+                    "action": "deny",
+                    "expr": "string"
+                  }
+                ]
+              }
+            ],
             "routeMap": [
               {
                 "name": "routeMap",
-                "action": "deny",
-                "number": 65535,
-                "matchTable": {
-                  "matchIpPrefixList": "v4PrefixList",
-                  "matchIpv6PrefixList": "v6PrefixList"
-                },
-                "setTable": {
-                  "setIpNextHop": "1.1.1.1",
-                  "setIpv6NextHop": "ffee::",
-                  "setVpnNextHop": "1.1.1.1"
-                }
+                "continueRouteMapMatchRules": false,
+                "routeMapRule": [
+                  {
+                    "action": "deny",
+                    "number": 65535,
+                    "matchTable": {
+                      "matchIpPrefixList": "v4PrefixList",
+                      "matchIpv6PrefixList": "v6PrefixList",
+                      "communityListTypes": {
+                        "communityListType": "communityList",
+                        "communityListId": 99,
+                        "extendedCommunityListId": 199,
+                        "communityListWordId": "string",
+                        "extendedCommunityListWordId": "string"
+                      },
+                      "matchIpNextHop": "1.1.1.1",
+                      "matchIpV6NextHop": "ffee::",
+                      "matchTag": 4294967295
+                    },
+                    "setTable": {
+                      "setIpNextHop": "1.1.1.1",
+                      "setIpv6NextHop": "ffee::",
+                      "setVpnNextHop": "1.1.1.1",
+                      "setLocalPreference": 4294967295,
+                      "setCommunity": {
+                        "communityNumberType": "communityNumber",
+                        "communityNumber": {
+                          "numberFormat": 4294967295,
+                          "numberAltFormat": "'100:200 300:400'"
+                        },
+                        "wellKnownCommunity": "internet",
+                        "additive": false
+                      },
+                      "setExtendedCommunity": {
+                        "routeTarget": "100:200",
+                        "sightOfOrigin": "100:200"
+                      },
+                      "setTag": 4294967295
+                    }
+                  }
+                ]
               }
             ]
           }

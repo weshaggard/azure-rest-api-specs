@@ -354,6 +354,34 @@
       "type": "string",
       "pattern": "^([a-zA-Z]([a-zA-Z0-9-._]){1,64})"
     },
+    "BgpSendCommunity": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "extended",
+        "both"
+      ],
+      "x-ms-enum": {
+        "name": "BgpSendCommunity",
+        "modelAsString": true
+      }
+    },
+    "BgpVrfIdType": {
+      "type": "string",
+      "description": "<ASN-2>:[0..4294967295] or <ASN-4>:[0..65535] or <ipv4-addr>:[0..65535]"
+    },
+    "BgpRTDirectionType": {
+      "type": "string",
+      "enum": [
+        "import",
+        "export",
+        "both"
+      ],
+      "x-ms-enum": {
+        "name": "BgpRTDirectionType",
+        "modelAsString": true
+      }
+    },
     "BgpParams": {
       "type": "object",
       "description": "Manage BGP4 routing",
@@ -498,7 +526,8 @@
                         }
                       },
                       "required": [
-                        "direction"
+                        "direction",
+                        "routeMapName"
                       ]
                     }
                   }
@@ -569,7 +598,8 @@
                         }
                       },
                       "required": [
-                        "direction"
+                        "direction",
+                        "routeMapName"
                       ]
                     }
                   }
@@ -639,9 +669,15 @@
                         }
                       },
                       "required": [
-                        "direction"
+                        "direction",
+                        "routeMapName"
                       ]
                     }
+                  },
+                  "sendCommunity": {
+                    "$ref": "#/definitions/BgpSendCommunity",
+                    "default": "both",
+                    "description": "Configure type of community support - standard, extended or both."
                   }
                 },
                 "required": [
@@ -702,9 +738,15 @@
                         }
                       },
                       "required": [
-                        "direction"
+                        "direction",
+                        "routeMapName"
                       ]
                     }
+                  },
+                  "sendCommunity": {
+                    "$ref": "#/definitions/BgpSendCommunity",
+                    "default": "both",
+                    "description": "Configure type of community support - standard, extended or both."
                   }
                 },
                 "required": [
@@ -712,6 +754,119 @@
                 ]
               }
             }
+          }
+        },
+        "vrf": {
+          "type": "array",
+          "maxItems": 4096,
+          "description": "Configure and manage VRFs",
+          "items": {
+            "type": "object",
+            "properties": {
+              "activate": {
+                "$ref": "./common.json#/definitions/enableDisable",
+                "description": "Activate address family on peering.",
+                "default": "enabled"
+              },
+              "nextHopSelf": {
+                "$ref": "./common.json#/definitions/enableDisable",
+                "description": "Set router as next-hop for all routes advertised to peer",
+                "default": "disabled"
+              },
+              "networkContextName": {
+                "$ref": "./common.json#/definitions/NetworkContextName",
+                "description": "Network Context name - type is <alphanumeric, '_' is allowed>.  Is the name of a network cotext with vrf = true"
+              },
+              "routeDistinguisher": {
+                "$ref": "#/definitions/BgpVrfIdType",
+                "description": "Route Distinguisher - '<ASN>:<nn>' or '<ipv4-addr>:<nn>'. Cannot be modified once VRF has been created"
+              },
+              "routeTarget": {
+                "type": "array",
+                "description": "Route Target configuration",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "direction": {
+                      "$ref": "#/definitions/BgpRTDirectionType",
+                      "description": "Filter direction - 'import', 'export' or 'both'"
+                    },
+                    "value": {
+                      "$ref": "#/definitions/BgpVrfIdType",
+                      "description": "Route Target - '<ASN>:<nn>' or '<ipv4-addr>:<nn>"
+                    }
+                  },
+                  "required": [
+                    "direction",
+                    "value"
+                  ]
+                }
+              },
+              "importMap": {
+                "type": "object",
+                "description": "Route map to filter routes imported into VRF. Applied after import route targets.(Needs hard clear of bgp sessions to take effect)",
+                "properties": {
+                  "routeMapName": {
+                    "$ref": "#/definitions/AlphaNumericString",
+                    "type": "string",
+                    "description": "Name of route map filter under the policy group"
+                  },
+                  "ignoreRouteTargetImport": {
+                    "type": "boolean",
+                    "description": "Ignore Route Target Import and exclusively use Import-Map to filter routes",
+                    "default": false
+                  }
+                }
+              },
+              "mplsExp": {
+                "type": "integer",
+                "description": "MPLS EXP value to be carried in this VRF for both IPv4 & IPv6 traffic. Reset BGP Peering to take this value in effect",
+                "minimum": 0,
+                "maximum": 7
+              },
+              "ipv4Ucast": {
+                "type": "object",
+                "description": "IPv4 Address Family",
+                "properties": {
+                  "mplsExp": {
+                    "type": "integer",
+                    "description": "MPLS EXP value to be carried in this VRF for IPv4 traffic. It overrides VRF level mplss-exp value. Reset BGP Peering to take this value in effect",
+                    "minimum": 0,
+                    "maximum": 7
+                  },
+                  "redistribute": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/Redistribute",
+                      "description": "Protocol type to redistribute into BGP"
+                    }
+                  }
+                }
+              },
+              "ipv6Ucast": {
+                "type": "object",
+                "description": "IPv6 Address Family",
+                "properties": {
+                  "mplsExp": {
+                    "type": "integer",
+                    "description": "MPLS EXP value to be carried in this VRF for IPv4 traffic. It overrides VRF level mplss-exp value. Reset BGP Peering to take this value in effect",
+                    "minimum": 0,
+                    "maximum": 7
+                  },
+                  "redistribute": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/Redistribute",
+                      "description": "Protocol type to redistribute into BGP"
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "networkContextName",
+              "routeDistinguisher"
+            ]
           }
         }
       },
@@ -908,6 +1063,160 @@
             ]
           }
         },
+        "communityList": {
+          "type": "array",
+          "description": "Configure a Community List <1-99> to match BGP Standard Community Attributes",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 99,
+                "description": "<1-99>;;Community list id (standard)"
+              },
+              "line": {
+                "type": "array",
+                "description": "Community List Entry <1-99>: community num | AN:NN | local-AS | no-advertise | no-export, action",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "$ref": "#/definitions/Action",
+                      "description": "Action: <deny : permit>"
+                    },
+                    "expr": {
+                      "type": "string",
+                      "description": "<1-4294967295>  community number; aa:nn           community number; internet        Internet (well-known community); local-AS        Do not send outside local AS (well-known community); no-advertise    Do not advertise to any peer (well-known community); no-export       Do not export to next AS (well-known community)",
+                      "pattern": "((internet)|(local-AS)|(no-advertise)|(no-export)|(d+)|((d+:d+)|(d+.d+.d+.d+:d+))((d+:d+)|(d+)))( (internet)|(local-AS)|(no-advertise)|(no-export)|((d+:d+)|(d+.d+.d+.d+:d+))((d+:d+)|(d+)))*"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expr"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "extendedCommunityList": {
+          "type": "array",
+          "description": "Configure an Extended Community List <100-199> to match BGP Extended Community Attributes",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 100,
+                "maximum": 199,
+                "description": "<100-199>;;Community list id (extended)"
+              },
+              "line": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Extended Community List Entry <100-199>: action, regular expression",
+                  "properties": {
+                    "action": {
+                      "$ref": "#/definitions/Action",
+                      "description": "Action: <deny : permit>"
+                    },
+                    "expr": {
+                      "type": "string",
+                      "description": "LINE;;A regular-expression to match communities."
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expr"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "communityListWord": {
+          "type": "array",
+          "description": "Configure a named Community List to match BGP Standard Community Attributes",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "<WORD>;;Community list name (standard)"
+              },
+              "line": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Community List Entry <WORD>: community num | AN:NN | local-AS | no-advertise | no-export, action",
+                  "properties": {
+                    "action": {
+                      "$ref": "#/definitions/Action",
+                      "description": "Action: <deny : permit>"
+                    },
+                    "expr": {
+                      "type": "string",
+                      "description": "<1-4294967295>  community number; internet        Internet (well-known community);local-AS        Do not send outside local AS (well-known community);no-advertise    Do not advertise to any peer (well-known community);no-export       Do not export to next AS (well-known community)",
+                      "pattern": "((internet)|(local-AS)|(no-advertise)|(no-export)|(d+)|((d+:d+)|(d+.d+.d+.d+:d+))((d+:d+)|(d+)))( (internet)|(local-AS)|(no-advertise)|(no-export)|((d+:d+)|(d+.d+.d+.d+:d+))((d+:d+)|(d+)))*"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expr"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "extendedCommunityListWord": {
+          "type": "array",
+          "description": "Configure a Named Extended Community List <WORD> to match BGP Extended Community Attributes",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "<WORD>;;Community list name (extended)"
+              },
+              "line": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Extended Community List Entry <WORD>: action, regular expression",
+                  "properties": {
+                    "action": {
+                      "$ref": "#/definitions/Action",
+                      "description": "Action: <deny : permit>"
+                    },
+                    "expr": {
+                      "type": "string",
+                      "description": "LINE;;A regular-expression to match communities."
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expr"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
         "routeMap": {
           "type": "array",
           "items": {
@@ -917,52 +1226,203 @@
                 "$ref": "#/definitions/AlphaNumericString",
                 "description": "Route-map tag - type is <alphanumeric"
               },
-              "action": {
-                "$ref": "#/definitions/Action"
+              "continueRouteMapMatchRules": {
+                "type": "boolean",
+                "description": "Enable/continue matching all route-map match rules (significant when >1 match rules present)",
+                "default": false
               },
-              "number": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 65535,
-                "description": "sequence number"
-              },
-              "matchTable": {
-                "type": "object",
-                "description": "Defines the match clauses for this route map entry",
-                "properties": {
-                  "matchIpPrefixList": {
-                    "$ref": "#/definitions/AlphaNumericString",
-                    "description": "Name of provisioned Ipv4 Prefix list.  This should match an IPv4 prefix list provisioned under policy"
+              "routeMapRule": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "$ref": "#/definitions/Action"
+                    },
+                    "number": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 65535,
+                      "description": "sequence number"
+                    },
+                    "matchTable": {
+                      "type": "object",
+                      "description": "Defines the match clauses for this route map entry",
+                      "properties": {
+                        "matchIpPrefixList": {
+                          "$ref": "#/definitions/AlphaNumericString",
+                          "description": "Name of provisioned Ipv4 Prefix list.  This should match an IPv4 prefix list provisioned under policy"
+                        },
+                        "matchIpv6PrefixList": {
+                          "$ref": "#/definitions/AlphaNumericString",
+                          "description": "Name of provisioned Ipv6 Prefix list.  This should match an IPv6 prefix list provisioned under policy"
+                        },
+                        "communityListTypes": {
+                          "type": "object",
+                          "description": "Different community list match types",
+                          "properties": {
+                            "communityListType": {
+                              "type": "string",
+                              "description": "Type of community list",
+                              "enum": [
+                                "communityList",
+                                "extendedCommunityList",
+                                "communityListWord",
+                                "extendedCommunityListWord"
+                              ],
+                              "x-ms-enum": {
+                                "name": "communityListType",
+                                "modelAsString": true
+                              }
+                            },
+                            "communityListId": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 99,
+                              "description": "<1-99>;;Community list id (standard)"
+                            },
+                            "extendedCommunityListId": {
+                              "type": "integer",
+                              "minimum": 100,
+                              "maximum": 199,
+                              "description": "<100-199>;;Community list id (extended)"
+                            },
+                            "communityListWordId": {
+                              "type": "string",
+                              "description": "Matches provisioned communityListWord entry"
+                            },
+                            "extendedCommunityListWordId": {
+                              "type": "string",
+                              "description": "Matches provisioned extendedCommunityListWord entry"
+                            }
+                          },
+                          "required": [
+                            "communityListType"
+                          ]
+                        },
+                        "matchIpNextHop": {
+                          "$ref": "./common.json#/definitions/ipv4Address",
+                          "description": "Match ipv4 address of next hop (Only applicable to route map in)"
+                        },
+                        "matchIpV6NextHop": {
+                          "$ref": "./common.json#/definitions/ipv6Address",
+                          "description": "Match ipv6 address of next hop (Only applicable to route map in)"
+                        },
+                        "matchTag": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 4294967295,
+                          "description": "Match tag of route"
+                        }
+                      }
+                    },
+                    "setTable": {
+                      "type": "object",
+                      "description": "Defines the set clauses for this route map entry",
+                      "properties": {
+                        "setIpNextHop": {
+                          "$ref": "./common.json#/definitions/ipv4Address",
+                          "description": "Set ipv4 address of next hop"
+                        },
+                        "setIpv6NextHop": {
+                          "$ref": "./common.json#/definitions/ipv6Address",
+                          "description": "Set ipv6 address of next hop"
+                        },
+                        "setVpnNextHop": {
+                          "$ref": "./common.json#/definitions/ipv4Address",
+                          "description": "Set the next hop address for vpnv4 routes"
+                        },
+                        "setLocalPreference": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 4294967295,
+                          "description": "Set BGP local preference path attribute"
+                        },
+                        "setCommunity": {
+                          "type": "object",
+                          "description": "BGP community attribute",
+                          "properties": {
+                            "communityNumberType": {
+                              "type": "string",
+                              "description": "Type of community number",
+                              "enum": [
+                                "communityNumber",
+                                "wellKnownCommunity"
+                              ],
+                              "x-ms-enum": {
+                                "name": "communityNumberType",
+                                "modelAsString": true
+                              }
+                            },
+                            "communityNumber": {
+                              "type": "object",
+                              "properties": {
+                                "numberFormat": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 4294967295,
+                                  "description": "<1-4294967295>;;community number"
+                                },
+                                "numberAltFormat": {
+                                  "type": "string",
+                                  "description": "aa:nn;;community number in aa:nn format. Up to 5. If multiple community numbers are to be specified they must be separated by a space and quoted, e.g. '100:200 300:400'"
+                                }
+                              }
+                            },
+                            "wellKnownCommunity": {
+                              "type": "string",
+                              "description": "Type of community number",
+                              "enum": [
+                                "internet",
+                                "localAs",
+                                "noAdvertise",
+                                "noExport",
+                                "none"
+                              ],
+                              "x-ms-enum": {
+                                "name": "wellKnownCommunity",
+                                "modelAsString": true
+                              }
+                            },
+                            "additive": {
+                              "type": "boolean",
+                              "description": "Add to the existing community",
+                              "default": false
+                            }
+                          }
+                        },
+                        "setExtendedCommunity": {
+                          "type": "object",
+                          "description": "Configure a Named Extended Community",
+                          "properties": {
+                            "routeTarget": {
+                              "type": "string",
+                              "description": "Regular Expression for route target AA:NN"
+                            },
+                            "sightOfOrigin": {
+                              "type": "string",
+                              "description": "Regular Expression for sight of origin AA:NN"
+                            }
+                          }
+                        },
+                        "setTag": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 4294967295,
+                          "description": "Set tag value for destination routing protocol"
+                        }
+                      }
+                    }
                   },
-                  "matchIpv6PrefixList": {
-                    "$ref": "#/definitions/AlphaNumericString",
-                    "description": "Name of provisioned Ipv6 Prefix list.  This should match an IPv6 prefix list provisioned under policy"
-                  }
-                }
-              },
-              "setTable": {
-                "type": "object",
-                "description": "Defines the set clauses for this route map entry",
-                "properties": {
-                  "setIpNextHop": {
-                    "$ref": "./common.json#/definitions/ipv4Address",
-                    "description": "set IPV4 NextHop"
-                  },
-                  "setIpv6NextHop": {
-                    "$ref": "./common.json#/definitions/ipv6Address",
-                    "description": "set IPV6 NextHop"
-                  },
-                  "setVpnNextHop": {
-                    "$ref": "./common.json#/definitions/ipv4Address",
-                    "description": "set VPN-V4 NextHop"
-                  }
+                  "required": [
+                    "action",
+                    "number"
+                  ]
                 }
               }
             },
             "required": [
-              "name",
-              "action",
-              "number"
+              "name"
             ]
           }
         }
@@ -978,14 +1438,36 @@
         },
         "networkContext": {
           "type": "array",
+          "maxItems": 4096,
           "items": {
             "type": "object",
             "description": "Configure the Network Contexts supported by the associated network functions. Each Network Context represents an entire IPv4 address space and an entire IPv6 address space. The address spaces of all Network Contexts are disjoint",
-            "maxItems": 4096,
             "properties": {
               "name": {
                 "$ref": "./common.json#/definitions/NetworkContextName",
                 "description": "Network Context name - type is <alphanumeric, '_' is allowed>"
+              },
+              "vrf": {
+                "type": "boolean",
+                "description": "Whether this network context represents a VRF or not",
+                "default": false
+              },
+              "vrfNames": {
+                "type": "array",
+                "description": "Configure and manage VRFs to associate to VR.  Only applicable if vrf = false.",
+                "maxItems": 4096,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "networkContextName": {
+                      "$ref": "./common.json#/definitions/NetworkContextName",
+                      "description": "Network Context name - type is <alphanumeric, '_' is allowed>.  Points to provisioned network context that has vrf = true"
+                    }
+                  },
+                  "required": [
+                    "networkContextName"
+                  ]
+                }
               },
               "enableStaticAll": {
                 "$ref": "./common.json#/definitions/enableDisable",
@@ -1007,7 +1489,10 @@
                   "$ref": "#/definitions/StaticRoute"
                 }
               }
-            }
+            },
+            "required": [
+              "name"
+            ]
           }
         },
         "bfdParams": {
@@ -1023,7 +1508,6 @@
         }
       },
       "required": [
-        "networkContext",
         "bfdParams",
         "policy"
       ],
