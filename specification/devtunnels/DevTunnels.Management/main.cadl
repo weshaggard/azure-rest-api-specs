@@ -29,10 +29,6 @@ enum ProvisioningState {
 
 @doc("The properties of TunnelPlan")
 model TunnelPlanProperties {
-  @doc("The creation time of the plan")
-  @visibility("read")
-  creationTime?: zonedDateTime;
-
   @doc("The billing tier for the plan")
   billingTier: string;
 
@@ -54,9 +50,6 @@ model TunnelPlanResource is TrackedResource<TunnelPlanProperties> {
   ...EntityTag;
 }
 
-@doc("The details of a getToken request")
-model GetTokenDetails { }
-
 @doc("The response to a getToken request")
 model GetTokenResponse {
     @doc("The TunnelPlan token")
@@ -65,14 +58,26 @@ model GetTokenResponse {
 
 @armResourceOperations
 interface TunnelPlans {
+  @autoRoute
+  @armResourceAction(TResource)
+  @post
+  @doc("POST ARM resource action with no body")
+  op ArmResourceActionNoBodySync<
+    TResource extends ArmResource,
+    TResponse extends object,
+    TBaseParameters = BaseParameters<TResource>
+  >(
+    ...ResourceInstanceParameters<TResource, TBaseParameters>
+  ): ArmResponse<TResponse> | ErrorResponse;
+
   get is ArmResourceRead<TunnelPlanResource>;
-  create is ArmResourceCreateOrUpdateAsync<TunnelPlanResource>;
-  update is ArmResourcePatchAsync<TunnelPlanResource, TunnelPlanProperties>;
-  delete is ArmResourceDeleteAsync<TunnelPlanResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<TunnelPlanResource>;
+  update is ArmResourcePatchSync<TunnelPlanResource, TunnelPlanProperties>;
+  delete is ArmResourceDeleteSync<TunnelPlanResource>;
   listByResourceGroup is ArmResourceListByParent<TunnelPlanResource>;
   listBySubscription is ArmListBySubscription<TunnelPlanResource>;
   @doc("Get a Tunnel Plan token")
-  GetToken is ArmResourceActionSync<TunnelPlanResource, GetTokenDetails, GetTokenResponse>
+  ListToken is TunnelPlans.ArmResourceActionNoBodySync<TunnelPlanResource, GetTokenResponse>
 }
 
 @doc("The properties of a billing plan")

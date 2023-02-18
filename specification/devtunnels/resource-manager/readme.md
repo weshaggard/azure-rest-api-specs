@@ -26,16 +26,17 @@ These are the global settings for the devtunnels.
 
 ```yaml
 openapi-type: arm
-tag: package-2023-05-23-privatepreview
+openapi-subtype: providerHub
+tag: package-2023-05-23-preview
 ```
 
-### Tag: package-2023-05-23-privatepreview
+### Tag: package-2023-05-23-preview
 
-These settings apply only when `--tag=package-2023-05-23-privatepreview` is specified on the command line.
+These settings apply only when `--tag=package-2023-05-23-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-05-23-privatepreview'
+```yaml $(tag) == 'package-2023-05-23-preview'
 input-file:
-  - Microsoft.DevTunnels/preview/2023-05-23-privatepreview/devtunnels.json
+  - Microsoft.DevTunnels/preview/2023-05-23-preview/devtunnels.json
 ```
 
 ---
