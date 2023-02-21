@@ -776,13 +776,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SecurityDevOps/gitHubConnectors/{gitHubConnectorName}/generateOAuthToken": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SecurityDevOps/gitHubConnectors/{gitHubConnectorName}/configure": {
       "post": {
         "tags": [
           "default"
         ],
-        "summary": "Exchanges one-time token for an OAuth token.\r\nPersists the same in KeyVault.",
-        "operationId": "GitHubOAuthToken_Create",
+        "summary": "Configures a SecurityDevOps connector with the user's selected resources.",
+        "operationId": "GitHubConnector_Create",
         "consumes": [
           "application/json"
         ],
@@ -804,10 +804,10 @@
           },
           {
             "in": "body",
-            "name": "gitHubConnector",
-            "description": "GitHub Connector param.",
+            "name": "gitHubConnectorConfiguration",
+            "description": "GitHub Connector Configuration param.",
             "schema": {
-              "$ref": "#/definitions/GitHubConnector"
+              "$ref": "#/definitions/GitHubConnectorConfiguration"
             }
           }
         ],
@@ -815,7 +815,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/GitHubConnector"
+              "$ref": "#/definitions/GitHubConnectorConfiguration"
             }
           },
           "default": {
@@ -826,8 +826,8 @@
           }
         },
         "x-ms-examples": {
-          "GitHubOAuthToken_Create": {
-            "$ref": "./examples/GitHubOAuthTokenCreate.json"
+          "GitHubConnector_Create": {
+            "$ref": "./examples/GitHubConnectorCreate.json"
           }
         }
       }
@@ -1395,6 +1395,37 @@
         }
       }
     },
+    "GitHubConnectorConfiguration": {
+      "description": "GitHub Connector Configuration Resource.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/GitHubConnectorConfigurationProperties"
+        }
+      }
+    },
+    "GitHubConnectorConfigurationProperties": {
+      "description": "Properties of the ARM resource for GitHub Connector Configuration.",
+      "type": "object",
+      "properties": {
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState"
+        },
+        "installations": {
+          "description": "Gets or sets org installation information.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GitHubInstallationMetadata"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
     "GitHubConnectorListResponse": {
       "type": "object",
       "properties": {
@@ -1424,14 +1455,6 @@
           "type": "string",
           "example": "00000000000000000000.",
           "x-ms-secret": true
-        },
-        "installations": {
-          "description": "Gets or sets org installation information.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/GitHubInstallationMetadata"
-          },
-          "x-ms-identifiers": []
         }
       }
     },
