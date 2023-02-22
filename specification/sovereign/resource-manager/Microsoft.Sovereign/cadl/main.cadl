@@ -4,20 +4,23 @@ import "@cadl-lang/versioning";
 import "@azure-tools/cadl-providerhub";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
-import "./models.cadl";
+import "./policyMonitorModels.cadl";
 
 using Cadl.Http;
 using Cadl.Rest;
 using Cadl.Versioning;
 using Azure.ResourceManager;
 using Azure.Core;
+using OpenAPI;
+using Autorest;
+using Azure.ResourceManager.Foundations;
 
 @armProviderNamespace
 @service({
 	title: "Microsoft Sovereign Resource Provider.",
 	version: "2023-04-01-privatepreview",
 })
-@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.Sovereign;
 
 interface Operations extends Azure.ResourceManager.Operations {}
@@ -36,27 +39,74 @@ model PolicyMonitor is ProxyResource<PolicyMonitorProperties> {
 @armResourceOperations(PolicyMonitor)
 interface PolicyMonitors
 	extends TenantResourceOperations<PolicyMonitor, PolicyMonitorProperties> {
-	@post
-	@action("validateSLZ")
+	//Should this be Data plane or Control plane
+
+	@action("executeValidateSLZ")
 	@doc("Provides a mechanism for customers to trigger a validate of a particular SLZ instance")
 	@armResourceAction(PolicyMonitor)
-	validateSLZ(
-		...TenantInstanceParameters<PolicyMonitor>
-	): ArmResponse<SlzValidationHistory> | ErrorResponse;
+	// Workaround implemented. change to ArmResourceActionAsync once the fix is implemented by the CADL team
+	validateSLZ is MyResourceActionAsync<
+		PolicyMonitor,
+		ValidateRequest,
+		ValidationResult
+	>;
+
+	@action("executePolicyMonitor")
+	@doc("Provides a mechanism for customers to trigger the evaluation policy monitor against an SLZ.")
+	@armResourceAction(PolicyMonitor)
+	// Workaround implemented. change to ArmResourceActionAsync once the fix is implemented by the CADL team
+	monitorSLZ is MyResourceActionAsync<
+		PolicyMonitor,
+		MonitorRequest,
+		MonitorResult
+	>;
 
 	@post
 	@action("getPolicyMonitorExecutionResults")
-	@doc("Returns the results of the monitor executions. By default the results of the last 5 executions will be returned.")
+	@doc("Returns the results of the policy monitor executions. By default the results of the last 50 executions will be returned.")
 	@armResourceAction(PolicyMonitor)
 	getPolicyMonitorExecutionResults(
-		...TenantInstanceParameters<PolicyMonitor>
-	): ArmResponse<MonitorHistory> | ErrorResponse;
+		...ResourceInstanceParameters<
+			PolicyMonitor,
+			BaseParameters<PolicyMonitor>
+		>
+	): ArmResponse<MonitorResultList> | ErrorResponse;
 
 	@post
-	@action("executePolicyMonitor")
-	@doc("Triggers the evaluation policy monitor against an SLZ.")
+	@action("getSLZValidationResults")
+	@doc("Returns the results of the SLZ Validation. By default the results of the last 50 executions will be returned.")
 	@armResourceAction(PolicyMonitor)
-	executePolicyMonitor(
-		...TenantInstanceParameters<PolicyMonitor>
-	): ArmResponse<PolicyMonitor> | ErrorResponse;
+	getSLZValidationResults(
+		...ResourceInstanceParameters<
+			PolicyMonitor,
+			BaseParameters<PolicyMonitor>
+		>
+	): ArmResponse<ValidationResultList> | ErrorResponse;
 }
+
+// Workaround suggested by the CADL team until the issue is fixed in their next sprint. Need to change the code once the fix is available.
+#suppress "@azure-tools/cadl-azure-core/documentation-required" "This is a template"
+#suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-operation-outside-interface" "This is a template"
+@autoRoute
+@OpenAPI.extension("x-ms-long-running-operation", true)
+@OpenAPI.extension(
+	"x-ms-long-running-operation-options",
+	{
+		"final-state-via": "azure-async-operation",
+	}
+)
+@armResourceAction(TResource)
+@post
+op MyResourceActionAsync<
+	TResource extends Azure.ResourceManager.Foundations.ArmResource,
+	TRequest extends object,
+	TResponse extends object,
+	TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
+>(
+	...ResourceInstanceParameters<TResource, TBaseParameters>,
+
+	@doc("The content of the action request")
+	@body
+	body: TRequest
+): ArmAcceptedResponse | ArmResponse<TResponse> | ErrorResponse;
+

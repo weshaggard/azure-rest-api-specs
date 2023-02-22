@@ -310,8 +310,8 @@
         "tags": [
           "PolicyMonitors"
         ],
-        "operationId": "PolicyMonitors_ExecutePolicyMonitor",
-        "description": "Triggers the evaluation policy monitor against an SLZ.",
+        "operationId": "PolicyMonitors_MonitorSlz",
+        "description": "Provides a mechanism for customers to trigger the evaluation policy monitor against an SLZ.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -323,49 +323,32 @@
             "description": "The name of the employee",
             "pattern": "^[a-zA-Z0-9-]{3,24}$",
             "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/PolicyMonitor"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/providers/Microsoft.Sovereign/policymonitors/{policymonitorname}/getPolicyMonitorExecutionResults": {
-      "post": {
-        "tags": [
-          "PolicyMonitors"
-        ],
-        "operationId": "PolicyMonitors_GetPolicyMonitorExecutionResults",
-        "description": "Returns the results of the monitor executions. By default the results of the last 5 executions will be returned.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "name": "policymonitorname",
-            "in": "path",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "description": "The name of the employee",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$",
-            "type": "string"
+            "description": "The content of the action request",
+            "schema": {
+              "$ref": "#/definitions/MonitorRequest"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/MonitorHistory"
+              "$ref": "#/definitions/MonitorResult"
+            }
+          },
+          "202": {
+            "description": "Resource operation accepted.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              }
             }
           },
           "default": {
@@ -374,10 +357,14 @@
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
       }
     },
-    "/providers/Microsoft.Sovereign/policymonitors/{policymonitorname}/validateSLZ": {
+    "/providers/Microsoft.Sovereign/policymonitors/{policymonitorname}/executeValidateSLZ": {
       "post": {
         "tags": [
           "PolicyMonitors"
@@ -395,13 +382,32 @@
             "description": "The name of the employee",
             "pattern": "^[a-zA-Z0-9-]{3,24}$",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "The content of the action request",
+            "schema": {
+              "$ref": "#/definitions/ValidateRequest"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/SlzValidationHistory"
+              "$ref": "#/definitions/ValidationResult"
+            }
+          },
+          "202": {
+            "description": "Resource operation accepted.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              }
             }
           },
           "default": {
@@ -410,38 +416,94 @@
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/providers/Microsoft.Sovereign/policymonitors/{policymonitorname}/getPolicyMonitorExecutionResults": {
+      "post": {
+        "tags": [
+          "PolicyMonitors"
+        ],
+        "operationId": "PolicyMonitors_GetPolicyMonitorExecutionResults",
+        "description": "Returns the results of the policy monitor executions. By default the results of the last 50 executions will be returned.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "policymonitorname",
+            "in": "path",
+            "required": true,
+            "description": "The name of the employee",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/MonitorResultList"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/providers/Microsoft.Sovereign/policymonitors/{policymonitorname}/getSLZValidationResults": {
+      "post": {
+        "tags": [
+          "PolicyMonitors"
+        ],
+        "operationId": "PolicyMonitors_GetSlzValidationResults",
+        "description": "Returns the results of the SLZ Validation. By default the results of the last 50 executions will be returned.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "policymonitorname",
+            "in": "path",
+            "required": true,
+            "description": "The name of the employee",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/ValidationResultList"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     }
   },
   "definitions": {
-    "AlertChannel": {
-      "type": "string",
-      "enum": [
-        "Email",
-        "Azure Portal",
-        "Azure Monitor"
-      ],
-      "x-ms-enum": {
-        "name": "AlertChannel",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Email",
-            "value": "Email"
-          },
-          {
-            "name": "AzurePortal",
-            "value": "Azure Portal"
-          },
-          {
-            "name": "AzureMonitor",
-            "value": "Azure Monitor"
-          }
-        ]
-      }
-    },
-    "CustomerAllowedExclusion": {
+    "AllowedExclusion": {
       "type": "object",
       "properties": {
         "policySetDefinitionId": {
@@ -454,7 +516,8 @@
         },
         "exclusionStatus": {
           "$ref": "#/definitions/ExclusionStatus",
-          "description": "the status of the exclusion."
+          "description": "the status of the exclusion.",
+          "readOnly": true
         }
       },
       "description": "The exclusions allowed by a customer.",
@@ -489,87 +552,71 @@
       "type": "string",
       "description": "the category of the policy monitor.",
       "enum": [
-        "Location policies for data sovereignity",
-        "Confidential policies",
-        "General policies"
+        "locationPolicies",
+        "confidentialPolicies",
+        "generalPolicies"
       ],
       "x-ms-enum": {
         "name": "MonitorCategory",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "locationPolicies",
-            "value": "Location policies for data sovereignity"
-          },
-          {
-            "name": "confidentialPolicies",
-            "value": "Confidential policies"
-          },
-          {
-            "name": "generalPolicies",
-            "value": "General policies"
-          }
-        ]
+        "modelAsString": true
       }
     },
-    "MonitorHistory": {
+    "MonitorRequest": {
       "type": "object",
       "properties": {
         "topLevelManagementGroup": {
           "type": "string",
-          "description": "The top level management group of the SLZ."
+          "description": "The top level management group of the SLZ"
         },
         "monitorCategory": {
           "$ref": "#/definitions/MonitorCategory",
           "description": "The category of the SLZ policies to be monitored."
-        },
-        "monitorHistoryStatus": {
-          "$ref": "#/definitions/validationOrMonitorHistoryStatus",
-          "description": "The status of the monitor execution."
-        },
-        "monitorHistoryOutcome": {
-          "$ref": "#/definitions/MonitorHistoryOutcome",
+        }
+      },
+      "description": "The request object to invoke monitoring of the SLZ.",
+      "required": [
+        "topLevelManagementGroup",
+        "monitorCategory"
+      ]
+    },
+    "MonitorResult": {
+      "type": "object",
+      "properties": {
+        "monitorResultOutcome": {
+          "$ref": "#/definitions/MonitorResultOutcome",
           "description": "The outcome of the monitor execution."
-        },
-        "outcomeDescription": {
-          "type": "string",
-          "description": "The details of the monitor run."
         },
         "compliancePercentage": {
           "type": "number",
           "format": "double",
           "description": "The percentage of monitor rules that is compliant."
         },
-        "completedOn": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The completed time of the monitor execution"
-        },
-        "monitorHistoryDetails": {
+        "monitorResultDetails": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/MonitorHistoryDetail"
+            "$ref": "#/definitions/MonitorResultDetail"
           },
           "x-ms-identifiers": [],
-          "x-cadl-name": "MonitorHistoryDetail[]",
-          "description": "The details for each monitor rule"
+          "x-cadl-name": "MonitorResultDetail[]",
+          "description": "The result details for each monitor rule"
         }
       },
       "description": "The execution details",
-      "required": [
-        "topLevelManagementGroup",
-        "monitorCategory"
+      "allOf": [
+        {
+          "$ref": "#/definitions/Result"
+        }
       ]
     },
-    "MonitorHistoryDetail": {
+    "MonitorResultDetail": {
       "type": "object",
       "properties": {
-        "monitorHistoryDetailName": {
+        "monitorResultDetailName": {
           "type": "string",
           "description": "The name of the monitor rule."
         },
-        "monitorHistoryDetailOutcome": {
-          "$ref": "#/definitions/MonitorHistoryDetailOutcome",
+        "monitorRetailDetailOutcome": {
+          "$ref": "#/definitions/MonitorResultDetailOutcome",
           "description": "The outcome of each policy monitor rule."
         },
         "outcomeDescription": {
@@ -591,13 +638,13 @@
       },
       "description": "The detail of an monitor execution",
       "required": [
-        "monitorHistoryDetailName",
-        "monitorHistoryDetailOutcome",
+        "monitorResultDetailName",
+        "monitorRetailDetailOutcome",
         "isPolicySet",
         "policySetOrPolicyname"
       ]
     },
-    "MonitorHistoryDetailOutcome": {
+    "MonitorResultDetailOutcome": {
       "type": "string",
       "description": "the outcome of each monitor rule.",
       "enum": [
@@ -605,7 +652,7 @@
         "Fail"
       ],
       "x-ms-enum": {
-        "name": "MonitorHistoryDetailOutcome",
+        "name": "MonitorResultDetailOutcome",
         "modelAsString": true,
         "values": [
           {
@@ -619,7 +666,29 @@
         ]
       }
     },
-    "MonitorHistoryOutcome": {
+    "MonitorResultList": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MonitorResult"
+          },
+          "x-ms-identifiers": [],
+          "x-cadl-name": "MonitorResult[]",
+          "description": "The MonitorResult items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The link to the next page of items"
+        }
+      },
+      "description": "The response of getPolicyMonitorExecutionResult operation.",
+      "required": [
+        "value"
+      ]
+    },
+    "MonitorResultOutcome": {
       "type": "string",
       "description": "the outcome of monitor execution",
       "enum": [
@@ -628,7 +697,7 @@
         "NonCompliant"
       ],
       "x-ms-enum": {
-        "name": "MonitorHistoryOutcome",
+        "name": "MonitorResultOutcome",
         "modelAsString": true,
         "values": [
           {
@@ -642,6 +711,27 @@
           {
             "name": "nonCompliant",
             "value": "NonCompliant"
+          }
+        ]
+      }
+    },
+    "MonitorStatus": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "InActive"
+      ],
+      "x-ms-enum": {
+        "name": "MonitorStatus",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "active",
+            "value": "Active"
+          },
+          {
+            "name": "inActive",
+            "value": "InActive"
           }
         ]
       }
@@ -697,43 +787,93 @@
           "description": "The status of the operation.",
           "readOnly": true
         },
+        "monitorStatus": {
+          "$ref": "#/definitions/MonitorStatus",
+          "description": "The status of the policy monitor.",
+          "readOnly": true
+        },
         "topLevelManagementGroup": {
           "type": "string",
           "description": "The top level management group of the SLZ"
         },
-        "monitorCategory": {
-          "$ref": "#/definitions/MonitorCategory",
-          "description": "The category of the SLZ policies to be monitored."
+        "monitorCategories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MonitorCategory"
+          },
+          "x-cadl-name": "MonitorCategory[]",
+          "description": "The category of the SLZ policies to be monitored.",
+          "x-ms-identifiers": []
         },
         "alertChannel": {
-          "$ref": "#/definitions/AlertChannel",
-          "description": "The channel to alert for divergence identified with the SLZ."
-        },
-        "emailAddress": {
           "type": "string",
-          "description": "The email address for alerting when alert channel is email.",
+          "description": "The channel to alert for divergence identified with the SLZ.",
+          "enum": [
+            "Email",
+            "Azure Portal",
+            "Azure Monitor"
+          ],
+          "x-ms-enum": {
+            "name": "string",
+            "modelAsString": true,
+            "values": [
+              {
+                "name": "Email",
+                "value": "Email"
+              },
+              {
+                "name": "AzurePortal",
+                "value": "Azure Portal"
+              },
+              {
+                "name": "AzureMonitor",
+                "value": "Azure Monitor"
+              }
+            ]
+          }
+        },
+        "alertingEmailAddress": {
+          "type": "string",
+          "description": "The email address for alerting when alert channel is email. Recommended to be a Distribution List",
           "pattern": "^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(.\\w{2,3})+$"
         },
         "azureMonitorId": {
           "type": "string",
           "description": "The azure monitor Id when alert channel is azure monitor."
         },
+        "createdByPrincipalName": {
+          "type": "string",
+          "description": "The principle name who created the policy monitor",
+          "readOnly": true
+        },
         "customerAllowedExclusions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CustomerAllowedExclusion"
+            "$ref": "#/definitions/AllowedExclusion"
           },
           "x-ms-identifiers": [],
-          "x-cadl-name": "CustomerAllowedExclusion[]",
+          "x-cadl-name": "AllowedExclusion[]",
           "description": "The azure monitor Id when alert channel is azure monitor."
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the policy monitor was created.",
+          "readOnly": true
+        },
+        "modifiedOn": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the policy monitor was modified.",
+          "readOnly": true
         }
       },
       "description": "Details of the sovereign policy monitor resource type.",
       "required": [
         "topLevelManagementGroup",
-        "monitorCategory",
+        "monitorCategories",
         "alertChannel",
-        "customerAllowedExclusions"
+        "createdOn"
       ]
     },
     "PolicyMonitorUpdate": {
@@ -753,17 +893,45 @@
           "type": "string",
           "description": "The top level management group of the SLZ"
         },
-        "monitorCategory": {
-          "$ref": "#/definitions/MonitorCategory",
-          "description": "The category of the SLZ policies to be monitored."
+        "monitorCategories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MonitorCategory"
+          },
+          "x-cadl-name": "MonitorCategory[]",
+          "description": "The category of the SLZ policies to be monitored.",
+          "x-ms-identifiers": []
         },
         "alertChannel": {
-          "$ref": "#/definitions/AlertChannel",
-          "description": "The channel to alert for divergence identified with the SLZ."
-        },
-        "emailAddress": {
           "type": "string",
-          "description": "The email address for alerting when alert channel is email.",
+          "description": "The channel to alert for divergence identified with the SLZ.",
+          "enum": [
+            "Email",
+            "Azure Portal",
+            "Azure Monitor"
+          ],
+          "x-ms-enum": {
+            "name": "string",
+            "modelAsString": true,
+            "values": [
+              {
+                "name": "Email",
+                "value": "Email"
+              },
+              {
+                "name": "AzurePortal",
+                "value": "Azure Portal"
+              },
+              {
+                "name": "AzureMonitor",
+                "value": "Azure Monitor"
+              }
+            ]
+          }
+        },
+        "alertingEmailAddress": {
+          "type": "string",
+          "description": "The email address for alerting when alert channel is email. Recommended to be a Distribution List",
           "pattern": "^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(.\\w{2,3})+$"
         },
         "azureMonitorId": {
@@ -773,10 +941,10 @@
         "customerAllowedExclusions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CustomerAllowedExclusion"
+            "$ref": "#/definitions/AllowedExclusion"
           },
           "x-ms-identifiers": [],
-          "x-cadl-name": "CustomerAllowedExclusion[]",
+          "x-cadl-name": "AllowedExclusion[]",
           "description": "The azure monitor Id when alert channel is azure monitor."
         }
       },
@@ -821,57 +989,69 @@
         "modelAsString": true
       }
     },
-    "SlzValidationHistory": {
+    "Result": {
+      "type": "object",
+      "properties": {
+        "resultDescription": {
+          "type": "string",
+          "description": "The details of the validation run."
+        }
+      },
+      "description": "The result associated with a job history.",
+      "required": [
+        "resultDescription"
+      ]
+    },
+    "ValidateRequest": {
       "type": "object",
       "properties": {
         "topLevelManagementGroup": {
           "type": "string",
           "description": "The top level management group of the SLZ"
-        },
-        "validationStatus": {
-          "$ref": "#/definitions/validationOrMonitorHistoryStatus",
-          "description": "The status of the validation."
-        },
-        "validationOutcome": {
-          "$ref": "#/definitions/ValidationHistoryOutcome",
+        }
+      },
+      "description": "The request object to invoke SLZ validation.",
+      "required": [
+        "topLevelManagementGroup"
+      ]
+    },
+    "ValidationResult": {
+      "type": "object",
+      "properties": {
+        "validationResultOutcome": {
+          "$ref": "#/definitions/ValidationResultOutcome",
           "description": "The outcome of the validation."
         },
-        "outcomeDescription": {
-          "type": "string",
-          "description": "The details of the monitor run."
-        },
-        "completedOn": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The completed time of the monitor execution"
-        },
-        "validationHistoryDetails": {
+        "validationResultDetails": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SlzValidationHistoryDetail"
+            "$ref": "#/definitions/ValidationResultDetail"
           },
           "x-ms-identifiers": [],
-          "x-cadl-name": "SlzValidationHistoryDetail[]",
+          "x-cadl-name": "ValidationResultDetail[]",
           "description": "The details for each validation rule"
         }
       },
-      "description": "The details of the validation.",
+      "description": "The validation record of a particular SLZ.",
       "required": [
-        "topLevelManagementGroup",
-        "validationStatus",
-        "validationOutcome"
+        "validationResultOutcome"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/Result"
+        }
       ]
     },
-    "SlzValidationHistoryDetail": {
+    "ValidationResultDetail": {
       "type": "object",
       "properties": {
-        "validationName": {
+        "validationResultDetailName": {
           "type": "string",
-          "description": "The name of the validation."
+          "description": "The name of the validation result detail."
         },
-        "validationOutcome": {
-          "$ref": "#/definitions/ValidationHistoryDetailOutcome",
-          "description": "The outcome of each policy monitor rule."
+        "validationResultDetailOutcome": {
+          "$ref": "#/definitions/validationResultDetailOutcome",
+          "description": "The outcome of each validation rule."
         },
         "outcomeDescription": {
           "type": "string",
@@ -880,34 +1060,34 @@
       },
       "description": "The detail of each SLZ validation.",
       "required": [
-        "validationName",
-        "validationOutcome",
+        "validationResultDetailName",
+        "validationResultDetailOutcome",
         "outcomeDescription"
       ]
     },
-    "ValidationHistoryDetailOutcome": {
-      "type": "string",
-      "description": "the outcome of each monitor rule.",
-      "enum": [
-        "Pass",
-        "Fail"
-      ],
-      "x-ms-enum": {
-        "name": "ValidationHistoryDetailOutcome",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "pass",
-            "value": "Pass"
+    "ValidationResultList": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationResult"
           },
-          {
-            "name": "fail",
-            "value": "Fail"
-          }
-        ]
-      }
+          "x-ms-identifiers": [],
+          "x-cadl-name": "ValidationResult[]",
+          "description": "The ValidationResult items on this page"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The link to the next page of items"
+        }
+      },
+      "description": "The response of getSLZValidationResult operation.",
+      "required": [
+        "value"
+      ]
     },
-    "ValidationHistoryOutcome": {
+    "ValidationResultOutcome": {
       "type": "string",
       "description": "the outcome of SLZ validation.",
       "enum": [
@@ -915,7 +1095,7 @@
         "InvalidSLZ"
       ],
       "x-ms-enum": {
-        "name": "ValidationHistoryOutcome",
+        "name": "ValidationResultOutcome",
         "modelAsString": true,
         "values": [
           {
@@ -929,33 +1109,24 @@
         ]
       }
     },
-    "validationOrMonitorHistoryStatus": {
+    "validationResultDetailOutcome": {
       "type": "string",
+      "description": "the outcome of each monitor rule.",
       "enum": [
-        "draft",
-        "inProgress",
-        "completed",
-        "failed"
+        "Pass",
+        "Fail"
       ],
       "x-ms-enum": {
-        "name": "validationOrMonitorHistoryStatus",
+        "name": "validationResultDetailOutcome",
         "modelAsString": true,
         "values": [
           {
-            "name": "Draft",
-            "value": "draft"
+            "name": "pass",
+            "value": "Pass"
           },
           {
-            "name": "InProgress",
-            "value": "inProgress"
-          },
-          {
-            "name": "Completed",
-            "value": "completed"
-          },
-          {
-            "name": "Failed",
-            "value": "failed"
+            "name": "fail",
+            "value": "Fail"
           }
         ]
       }
