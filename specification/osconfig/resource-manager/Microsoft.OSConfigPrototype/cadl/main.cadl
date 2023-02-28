@@ -66,35 +66,26 @@ model DeviceProperties {
 }
 
 @parentResource(Device)
-model Component is TrackedResource<ComponentProperties> {
-  @key("componentName")
+model Assignment is TrackedResource<AssignmentProperties> {
+  @key("assignmentName")
   @path
-  @segment("components")
+  @segment("assignments")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @doc("Name of the assignment.")
+  name: string;
+}
+
+@doc("Assignment properties.")
+model AssignmentProperties {
+  @visibility("create", "update", "read")
   @doc("Name of the MIM component.")
-  name: string;
-}
-
-@doc("Component properties.")
-model ComponentProperties {
-  @visibility("read")
-  @doc("The status of the last operation.")
-  provisioningState?: ProvisioningState;
-}
-
-@parentResource(Component)
-model Object is TrackedResource<ObjectProperties> {
-  @key("objectName")
-  @path
-  @segment("objects")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  componentName?: string;
+  
+  @visibility("create", "update", "read")
   @doc("Name of the MIM object.")
-  name: string;
-}
+  objectName?: string;
 
-@doc("Object properties.")
-model ObjectProperties {
-  @visibility("read")
+  @visibility("create", "update", "read")
   @doc("Desired flag of the object.")
   desired?: boolean;
 
@@ -113,13 +104,8 @@ interface Devices extends TrackedResourceOperations<Device, DeviceProperties> {
 }
 
 @armResourceOperations
-interface Components extends TrackedResourceOperations<Component, ComponentProperties> {
-  delete is ArmResourceDeleteSync<Component>
-}
-
-@armResourceOperations
-interface Objects extends TrackedResourceOperations<Object, ObjectProperties> {
-  delete is ArmResourceDeleteSync<Object>
+interface Assignments extends TrackedResourceOperations<Assignment, AssignmentProperties> {
+  delete is ArmResourceDeleteSync<Assignment>
 }
 
 @lroStatus
