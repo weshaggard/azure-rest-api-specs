@@ -4,10 +4,6 @@ import "@azure-tools/cadl-autorest";
 import "@azure-tools/cadl-azure-core";
 import "@azure-tools/cadl-azure-resource-manager";
 import "@azure-tools/cadl-providerhub";
-import "./models/commandrunner-3.cadl";
-import "./models/deviceinfo-5.cadl";
-import "./models/firewall-4.cadl";
-import "./models/hostname-2.cadl";
 
 using Cadl.Http;
 using Cadl.Rest;
@@ -22,9 +18,9 @@ using Azure.ResourceManager.Foundations;
 @armProviderNamespace
 @service({
   title: "Microsoft.OSConfigPrototype",
-  version: "2023-01-01-preview",
+  version: "2023-03-01-preview",
 })
-@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.OSConfigPrototype;
 
 interface Operations extends Azure.ResourceManager.Operations {}
@@ -64,61 +60,74 @@ model DeviceProperties {
   @doc("Identity of the device.")
   identity?: DeviceIdentity;
 
-  @visibility("create", "update", "read")
-  @doc("Desired state of the device.")
-  desired?: DesiredProperties;
-
   @visibility("read")
-  @doc("Reported state of the device.")
-  reported?: ReportedProperties;
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+}
+
+@parentResource(Device)
+model Component is TrackedResource<ComponentProperties> {
+  @key("componentName")
+  @path
+  @segment("components")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @doc("Name of the MIM component.")
+  name: string;
+}
+
+@doc("Component properties.")
+model ComponentProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+}
+
+@parentResource(Component)
+model Object is TrackedResource<ObjectProperties> {
+  @key("objectName")
+  @path
+  @segment("objects")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @doc("Name of the MIM object.")
+  name: string;
+}
+
+@doc("Object properties.")
+model ObjectProperties {
+  @visibility("read")
+  @doc("Desired flag of the object.")
+  desired?: boolean;
+
+  @visibility("create", "update", "read")
+  @doc("Value of the object.")
+  value?: string;
 
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
 }
 
-@doc("Desired properties.")
-model DesiredProperties {
-  @visibility("create", "update", "read")
-  @doc("Desired properties for CommandRunner.")
-  commandRunner?: CommandRunner.Desired.Properties;
-
-  @visibility("create", "update", "read")
-  @doc("Desired properties for Firewall.")
-  firewall?: Firewall.Desired.Properties;
-  
-  @visibility("create", "update", "read")
-  @doc("Desired properties for HostName.")
-  hostName?: HostName.Desired.Properties;
-}
-
-@doc("Reported properties.")
-model ReportedProperties {
-  @visibility("read")
-  @doc("Reported properties for CommandRunner.")
-  commandRunner?: CommandRunner.Reported.Properties;
-
-  @visibility("read")
-  @doc("Reported properties for DeviceInfo.")
-  deviceInfo?: DeviceInfo.Reported.Properties;
-
-  @visibility("read")
-  @doc("Reported properties for Firewall.")
-  firewall?: Firewall.Reported.Properties;
-
-  @visibility("read")
-  @doc("Reported properties for HostName.")
-  hostName?: HostName.Reported.Properties;
+@armResourceOperations
+interface Devices extends TrackedResourceOperations<Device, DeviceProperties> {
+  delete is ArmResourceDeleteSync<Device>
 }
 
 @armResourceOperations
-interface Devices extends ResourceOperations<Device, DeviceProperties> {
-  delete is ArmResourceDeleteSync<Device>
+interface Components extends TrackedResourceOperations<Component, ComponentProperties> {
+  delete is ArmResourceDeleteSync<Component>
+}
+
+@armResourceOperations
+interface Objects extends TrackedResourceOperations<Object, ObjectProperties> {
+  delete is ArmResourceDeleteSync<Object>
 }
 
 @lroStatus
 enum ProvisioningState {
-  ...ResourceProvisioningState,
+  // ...ResourceProvisioningState,
+  Succeeded,
+  Failed,
+  Canceled,
   Provisioning,
   Updating,
   Deleting,
