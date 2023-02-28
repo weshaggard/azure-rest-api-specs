@@ -48,15 +48,6 @@ input-file:
   - Microsoft.VoiceServices/stable/2023-01-31/voiceservices.json
 ```
 
-### Tag: package-2023-02-28-preview
-
-These settings apply only when `--tag=package-2023-02-28-preview` is specified on the command line.
-
-```yaml $(tag) == 'package-2023-02-28-preview'
-input-file:
-  - Microsoft.VoiceServices/preview/2023-02-28-preview/voiceservices.json
-```
-
 ### Tag: package-2023-03-01-preview
 
 These settings apply only when `--tag=package-2023-03-01-preview` is specified on the command line.
