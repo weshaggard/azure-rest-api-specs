@@ -184,7 +184,7 @@
         "summary": "Compare specific resources against the latest or another snapshot.",
         "operationId": "ConfigSnapshot_Compare",
         "x-ms-examples": {
-          "MobilePacketCoreAction_Activate": {
+          "ConfigSnapshotAction_Compare": {
             "$ref": "./examples/ConfigSnapshotAction_Compare.json"
           }
         },
@@ -222,8 +222,61 @@
           "200": {
             "description": "Ok."
           },
-          "202": {
-            "description": "Accepted. The header contains 'Azure-AsyncOperation' header which can be used to monitor the progress of the operation."
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": false
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mpcName}/configSnapshots/{configSnapshotName}/summary": {
+      "post": {
+        "tags": [
+          "SUMMARY"
+        ],
+        "summary": "List resources that differ from the latest or another snapshot.",
+        "operationId": "ConfigSnapshot_Summary",
+        "x-ms-examples": {
+          "ConfigSnapshotAction_Summary": {
+            "$ref": "./examples/ConfigSnapshotAction_Summary.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MPCName"
+          },
+          {
+            "name": "configSnapshotName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the configSnapshot object."
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfigSnapshotSummaryRequest"
+            },
+            "description": "Parameters supplied to the summary action."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -232,10 +285,7 @@
             }
           }
         },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
+        "x-ms-long-running-operation": false
       }
     }
   },
@@ -355,13 +405,23 @@
         },
         "otherSnapshot": {
           "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "If specified, the other snapshot to compare against"
+          "description": "If specified, the other snapshot to compare against.  If not present, latest"
         }
       },
       "required": [
         "resourceId"
       ],
       "description": "Request to compare a resource in the current snapshot to the latest or the version present in another snapshot"
+    },
+    "ConfigSnapshotSummaryRequest": {
+      "type": "object",
+      "properties": {
+        "otherSnapshot": {
+          "$ref": "./common.json#/definitions/ReferencedResource",
+          "description": "If specified, the other snapshot to compare against.  If not present, latest"
+        }
+      },
+      "description": "Request to list resources in the current snapshot that differ from the latest or the versions present in another snapshot"
     }
   }
 }
