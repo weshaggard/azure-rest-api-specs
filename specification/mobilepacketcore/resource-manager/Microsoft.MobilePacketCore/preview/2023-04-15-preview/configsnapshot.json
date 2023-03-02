@@ -220,7 +220,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Ok."
+            "description": "Ok.",
+            "schema": {
+              "$ref": "#/definitions/ConfigSnapshotCompareResponse"
+            }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -276,7 +279,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Ok."
+            "description": "Ok.",
+            "schema": {
+              "$ref": "#/definitions/ConfigSnapshotSummaryResponse"
+            }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -290,6 +296,33 @@
     }
   },
   "definitions": {
+    "SummaryOfChanges": {
+      "readOnly": true,
+      "type": "array",
+      "description": "List of objects that have changed (added/delete/modified)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "resourceId": {
+            "$ref": "./common.json#/definitions/ReferencedResource",
+            "description": "The reference to the changed object"
+          },
+          "action": {
+            "description": "The action applied to the object",
+            "type": "string",
+            "enum": [
+              "create",
+              "update",
+              "delete"
+            ],
+            "x-ms-enum": {
+              "name": "SummaryChangeAction",
+              "modelAsString": true
+            }
+          }
+        }
+      }
+    },
     "ConfigSnapshotPropertiesFormat": {
       "type": "object",
       "properties": {
@@ -311,35 +344,13 @@
           "description": "Current activation state of the configuration snapshot"
         },
         "summaryOfChanges": {
-          "readOnly": true,
-          "type": "array",
-          "description": "List of objects that have changed (added/delete/modified) from the previous snapshot",
-          "items": {
-            "type": "object",
-            "properties": {
-              "resourceId": {
-                "$ref": "./common.json#/definitions/ReferencedResource",
-                "description": "The reference to the changed object"
-              },
-              "action": {
-                "description": "The action applied to the object.",
-                "type": "string",
-                "enum": [
-                  "create",
-                  "update",
-                  "delete"
-                ],
-                "x-ms-enum": {
-                  "name": "SummaryChangeAction",
-                  "modelAsString": true
-                }
-              }
-            }
-          }
+          "$ref": "#/definitions/SummaryOfChanges",
+          "description": "List of objects that have changed (added/delete/modified) from the previous snapshot"
         },
         "details": {
           "readOnly": true,
-          "type": "string"
+          "type": "string",
+          "description": "Specific details associated with this snapshot"
         },
         "userIdentity": {
           "readOnly": true,
@@ -405,7 +416,7 @@
         },
         "otherSnapshot": {
           "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "If specified, the other snapshot to compare against.  If not present, latest"
+          "description": "Optional.  If specified, the other snapshot to compare against.  If not present, latest"
         }
       },
       "required": [
@@ -418,10 +429,30 @@
       "properties": {
         "otherSnapshot": {
           "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "If specified, the other snapshot to compare against.  If not present, latest"
+          "description": "Optional.  If specified, the other snapshot to compare against.  If not present, latest"
         }
       },
       "description": "Request to list resources in the current snapshot that differ from the latest or the versions present in another snapshot"
+    },
+    "ConfigSnapshotCompareResponse": {
+      "type": "object",
+      "properties": {
+        "details": {
+          "type": "string",
+          "description": "Details of the difference between the two instances of the resource"
+        }
+      },
+      "description": "Response to a request to compare a resource in the current snapshot to the latest or the version present in another snapshot"
+    },
+    "ConfigSnapshotSummaryResponse": {
+      "type": "object",
+      "properties": {
+        "summaryOfChanges": {
+          "$ref": "#/definitions/SummaryOfChanges",
+          "description": "List of objects that are different (added/delete/modified) in this snapshot"
+        }
+      },
+      "description": "Response to a request to list resources in the current snapshot that differ from the latest or the versions present in another snapshot"
     }
   }
 }
