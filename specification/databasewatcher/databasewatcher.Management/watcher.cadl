@@ -14,7 +14,7 @@ import "./sqlVmTarget.cadl";
   version: "2023-03-01-preview",
 })
 
-@Versioning.versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+@Versioning.useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 @armProviderNamespace
 namespace Microsoft.DatabaseWatcher;
 
@@ -29,7 +29,7 @@ interface Operations extends Azure.ResourceManager.Operations {}
 model Watcher is TrackedResource<WatcherProperties> {
   @doc("Database watcher name.")
   @key("watcherName")
-  @pattern("^[a-zA-Z]{1}[a-zA-Z0-9-_]{3,60}$")
+  @pattern("^[a-zA-Z0-9]{1}[a-zA-Z0-9-_]{3,60}$")
   @path
   @segment("watchers")
   name: string;
@@ -41,6 +41,11 @@ model Watcher is TrackedResource<WatcherProperties> {
 model WatcherProperties {
   @doc("A data store for collected monitoring data.")
   datastore?: Datastore;
+
+  @visibility("read")
+  @doc("The monitoring collection status of the watcher.")
+  @knownValues(WatcherStatus)
+  status?: string;
   
   @visibility("read")
   @doc("The provisioning state of the resource.")
@@ -56,20 +61,32 @@ model Datastore {
 }
 
 @armResourceOperations
-interface Watchers extends ResourceOperations<Watcher, WatcherProperties> {
+interface Watchers extends TrackedResourceOperations<Watcher, WatcherProperties> {
   @doc("Action to start monitoring all targets configured for a given database watcher.")
   @action 
   @post
   @armResourceAction(Watcher)
   start(...ResourceInstanceParameters<Watcher>): ArmResponse<Watcher> | ErrorResponse;
+
+  @doc("Action to stop monitoring all targets configured for a given database watcher.")
+  @action 
+  @post
+  @armResourceAction(Watcher)
+  stop(...ResourceInstanceParameters<Watcher>): ArmResponse<Watcher> | ErrorResponse;
 }
 
 @parentResource(Watcher)
 model Target is ProxyResource<TargetProperties> {
   @doc("Target resource name.")
   @key("targetName")
-  @pattern("^[a-zA-Z]{1}[a-zA-Z0-9-_]{3,60}$")
+  @pattern("^[a-zA-Z0-9]{1}[a-zA-Z0-9-_]{3,60}$")
   @segment("targets")
   @path
   name: string;
+}
+
+@doc("The monitoring collection status of the watcher.")
+enum WatcherStatus {
+  Running,
+  Stopped
 }
