@@ -1,0 +1,34 @@
+namespace Microsoft.AppSecurity;
+
+using Cadl.Http;
+using Cadl.Rest;
+using Azure.ResourceManager;
+
+/* *********************************
+ * IpList resource definitions
+ ********************************* */
+@doc("The IpList properties")
+model IpListProperties {
+  @doc("The status of the last operation")
+  @visibility("read")
+  provisioningState?: ProvisioningState;
+
+  @doc("The list of IP addresses and ranges")
+  ipList: string[];
+
+  @doc("The list of back references to policies that use this IP list")
+  @visibility("read")
+  policies?: string[];
+}
+
+@doc("IpList resource")
+model IpList is TrackedResource<IpListProperties> {
+  @doc("The name of the IpList")
+  @key("listName")
+  @segment("ipLists")
+  @path
+  name: string;
+}
+
+@armResourceOperations(IpList)
+interface IpLists extends TrackedResourceOperations<IpList, IpListProperties> {}

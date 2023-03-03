@@ -1,0 +1,56 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/versioning";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+using Azure.ResourceManager;
+using Azure.Core;
+
+namespace Microsoft.AppSecurity;
+
+@lroStatus
+enum ProvisioningState {
+  ...ResourceProvisioningState,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted,
+}
+
+@doc("Describes wether an object (a policy, a custom rule, a managed rule set or other objects) is enabled or disabled")
+enum EnabledState {
+  Enabled,
+  Disabled,
+}
+
+scalar IpListResourceId
+  extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+      type: "Microsoft.AppSecurity/IpLists",
+    }
+  ]>;
+
+scalar GeoListResourceId
+  extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+      type: "Microsoft.AppSecurity/GeoLists",
+    }
+  ]>;
+
+scalar ProtectedAppId
+  extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+      type: "Microsoft.Network/applicationGateways",
+    },
+    {
+      type: "Microsoft.Network/applicationGateways/httpListeners",
+    },
+    {
+      type: "Microsoft.Network/applicationGateways/requestRoutingRules",
+    },
+    {
+      type: "Microsoft.CDN/frontdoors",
+    }
+    // TODO - add frontdoors/routingrules and all others
+  ]>;
