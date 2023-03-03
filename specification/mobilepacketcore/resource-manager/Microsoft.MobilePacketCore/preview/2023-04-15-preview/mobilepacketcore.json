@@ -230,16 +230,16 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mpcName}/activate": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mpcName}/whatIfActivate": {
       "post": {
         "tags": [
-          "ACTIVATE"
+          "WHATIFACTIVATE"
         ],
-        "summary": "Activate the mobile packet core instance.",
-        "operationId": "MobilePacketCoreAction_Activate",
+        "summary": "Perform a 'what-if' operation on the specified snapshot to show what operations would be taken if the snapshow were activated.",
+        "operationId": "MobilePacketCoreAction_WhatIfActivate",
         "x-ms-examples": {
           "MobilePacketCoreAction_Activate": {
-            "$ref": "./examples/MobilePacketCoreAction_Activate.json"
+            "$ref": "./examples/MobilePacketCoreAction_WhatIfActivate.json"
           }
         },
         "parameters": [
@@ -260,9 +260,9 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/MobilePacketCoreActivateRequest"
+              "$ref": "#/definitions/MobilePacketCoreWhatIfActivateRequest"
             },
-            "description": "Parameters supplied to the rollback action."
+            "description": "Parameters supplied to the action."
           }
         ],
         "responses": {
@@ -285,62 +285,16 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mpcName}/revert": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mpcName}/whatIfSnapshot": {
       "post": {
         "tags": [
-          "REVERT"
-        ],
-        "summary": "Revert the mobile packet core instance resources to the active snapshot.",
-        "operationId": "MobilePacketCoreAction_Revert",
-        "x-ms-examples": {
-          "MobilePacketCoreAction_Revert": {
-            "$ref": "./examples/MobilePacketCoreAction_Revert.json"
-          }
-        },
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "./common.json#/parameters/MPCName"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Ok."
-          },
-          "202": {
-            "description": "Accepted. The header contains 'Azure-AsyncOperation' header which can be used to monitor the progress of the operation."
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mpcName}/rollback": {
-      "post": {
-        "tags": [
-          "ROLLBACK"
+          "WHATIFSNAPSHOT"
         ],
         "summary": "Rollback the mobile packet core instance to a previous snapshot",
-        "operationId": "MobilePacketCoreAction_Rollback",
+        "operationId": "MobilePacketCoreAction_WhatIfSnapshot",
         "x-ms-examples": {
           "MobilePacketCoreAction_Rollback": {
-            "$ref": "./examples/MobilePacketCoreAction_Rollback.json"
+            "$ref": "./examples/MobilePacketCoreAction_WhatIfSnapshot.json"
           }
         },
         "parameters": [
@@ -355,15 +309,6 @@
           },
           {
             "$ref": "./common.json#/parameters/MPCName"
-          },
-          {
-            "name": "parameters",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/MobilePacketCoreRollbackRequest"
-            },
-            "description": "Parameters supplied to the rollback action."
           }
         ],
         "responses": {
@@ -1664,10 +1609,9 @@
             ]
           }
         },
-        "currentActiveSnapshot": {
-          "readOnly": true,
+        "activeSnapshot": {
           "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "Resource identifier of the currently active snapshot"
+          "description": "Resource identifier of the desired active snapshot.  When this parameter is changed the active snapshot will be applied to the running mobile packet core"
         },
         "networkFunctionVersionManagement": {
           "type": "object",
@@ -1849,33 +1793,15 @@
       },
       "description": "Response for MobilePacketCore API service call."
     },
-    "MobilePacketCoreActivateRequest": {
+    "MobilePacketCoreWhatIfActivateRequest": {
       "type": "object",
       "properties": {
-        "dryRun": {
-          "type": "boolean",
-          "description": "Allows the validation and visualization of the action without implementing the action"
-        },
-        "userDescription": {
-          "type": "string",
-          "description": "User-supplied description - this is added to the created configsnapshot object and is returned in that object"
-        }
-      },
-      "description": "Request for Mobile Packet Core Activation action"
-    },
-    "MobilePacketCoreRollbackRequest": {
-      "type": "object",
-      "properties": {
-        "dryRun": {
-          "type": "boolean",
-          "description": "Allows the validation and visualization of the action without implementing the action"
-        },
-        "targetSnapshot": {
+        "snapshot": {
           "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "Target snapshot"
+          "description": "Snapshot against which to run what-if activate"
         }
       },
-      "description": "Request for Mobile Packet Core Rollback action"
+      "description": "Allows the validation and visualization of activating a specific snapshot without activating it"
     }
   }
 }

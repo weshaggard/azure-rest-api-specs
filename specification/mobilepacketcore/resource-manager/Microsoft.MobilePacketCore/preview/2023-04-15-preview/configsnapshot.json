@@ -35,6 +35,119 @@
   },
   "paths": {
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mpcName}/configSnapshots/{configSnapshotName}": {
+      "put": {
+        "tags": [
+          "ConfigSnapshots"
+        ],
+        "operationId": "ConfigSnapshot_Create",
+        "description": "Creates a Mobile Packet Core Configuration Snapshot resource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MPCName"
+          },
+          {
+            "name": "configSnapshotName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the configSnapshot object."
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfigSnapshot"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates the MobilePacketCore config snapshot resource.",
+            "schema": {
+              "$ref": "#/definitions/ConfigSnapshot"
+            }
+          },
+          "201": {
+            "description": "Creates the MobilePacketCore config snapshot resource.",
+            "schema": {
+              "$ref": "#/definitions/ConfigSnapshot"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get ConfigSnapshot": {
+            "$ref": "./examples/ConfigSnapshotCreate.json"
+          }
+        },
+        "x-ms-long-running-operation": false,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      },
+      "delete": {
+        "tags": [
+          "ConfigSnapshots"
+        ],
+        "operationId": "ConfigSnapshot_Delete",
+        "description": "Deletes the specified Mobile Packet Core Configuration Snapshot resource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MPCName"
+          },
+          {
+            "name": "configSnapshotName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the configSnapshot object."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deletes the Mobile Packet Core Configuration Snapshot resource."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Delete ConfigSnapshot": {
+            "$ref": "./examples/ConfigSnapshotDelete.json"
+          }
+        },
+        "x-ms-long-running-operation": false,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      },
       "get": {
         "tags": [
           "ConfigSnapshots"
@@ -128,6 +241,62 @@
         "x-ms-long-running-operation": false,
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
+        }
+      },
+      "patch": {
+        "tags": [
+          "ConfigSnapshots"
+        ],
+        "operationId": "ConfigSnapshot_UpdateTags",
+        "description": "Update Mobile Packet Core Configuration snapshot tags.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MPCName"
+          },
+          {
+            "name": "configSnapshotName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the configSnapshot object."
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "./common.json#/definitions/TagsObject"
+            },
+            "description": "Parameters supplied to the update configuration snapshot tags operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update MobilePacketCore config snapshot resource Tag.",
+            "schema": {
+              "$ref": "#/definitions/ConfigSnapshot"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update Configuration Snapshot Tags": {
+            "$ref": "./examples/ConfigSnapshotUpdateTags.json"
+          }
         }
       }
     },
@@ -326,6 +495,15 @@
     "ConfigSnapshotPropertiesFormat": {
       "type": "object",
       "properties": {
+        "provisioningState": {
+          "readOnly": true,
+          "$ref": "./common.json#/definitions/ProvisioningState",
+          "description": "The provisioning state of the resource."
+        },
+        "userDescription": {
+          "type": "string",
+          "description": "User-supplied description of this snapshot"
+        },
         "activationState": {
           "type": "string",
           "readOnly": true,
@@ -357,10 +535,10 @@
           "description": "Identity of user that created the snapshot",
           "type": "string"
         },
-        "userDescription": {
-          "readOnly": true,
+        "timestamp": {
           "type": "string",
-          "description": "User-supplied description when activation was triggered"
+          "format": "date-time",
+          "description": "Timestamp (UTC) when snapshot was created"
         }
       }
     },
