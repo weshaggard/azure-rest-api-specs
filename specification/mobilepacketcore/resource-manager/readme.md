@@ -36,7 +36,8 @@ These settings apply only when `--tag=package-2023-04-15-preview` is specified o
 
 ```yaml $(tag) == 'package-2023-04-15-preview'
 input-file:
-  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/common.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/operation.json 
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/common.json 
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/routing.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/servicearea.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/trackingarea.json
