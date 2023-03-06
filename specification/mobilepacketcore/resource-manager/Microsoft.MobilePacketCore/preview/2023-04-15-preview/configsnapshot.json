@@ -462,13 +462,63 @@
         },
         "x-ms-long-running-operation": false
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mpcName}/configSnapshots/{configSnapshotName}/manifest": {
+      "post": {
+        "tags": [
+          "MANIFEST"
+        ],
+        "summary": "List resources present in this snapshot.",
+        "operationId": "ConfigSnapshot_Manifest",
+        "x-ms-examples": {
+          "ConfigSnapshotAction_Summary": {
+            "$ref": "./examples/ConfigSnapshotAction_Manifest.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MPCName"
+          },
+          {
+            "name": "configSnapshotName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the configSnapshot object."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "schema": {
+              "$ref": "#/definitions/ConfigSnapshotManifestResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": false
+      }
     }
   },
   "definitions": {
-    "SummaryOfChanges": {
+    "SummaryOfResources": {
       "readOnly": true,
       "type": "array",
-      "description": "List of objects that have changed (added/delete/modified)",
+      "description": "List of objects that are present or have changed (added/delete/modified)",
       "items": {
         "type": "object",
         "properties": {
@@ -477,7 +527,7 @@
             "description": "The reference to the changed object"
           },
           "action": {
-            "description": "The action applied to the object",
+            "description": "The action applied to the object.  Used when getting change lists.  Not used in the manifest response",
             "type": "string",
             "enum": [
               "create",
@@ -522,7 +572,7 @@
           "description": "Current activation state of the configuration snapshot"
         },
         "summaryOfChanges": {
-          "$ref": "#/definitions/SummaryOfChanges",
+          "$ref": "#/definitions/SummaryOfResources",
           "description": "List of objects that have changed (added/delete/modified) from the previous snapshot"
         },
         "details": {
@@ -626,11 +676,21 @@
       "type": "object",
       "properties": {
         "summaryOfChanges": {
-          "$ref": "#/definitions/SummaryOfChanges",
+          "$ref": "#/definitions/SummaryOfResources",
           "description": "List of objects that are different (added/delete/modified) in this snapshot"
         }
       },
       "description": "Response to a request to list resources in the current snapshot that differ from the latest or the versions present in another snapshot"
+    },
+    "ConfigSnapshotManifestResponse": {
+      "type": "object",
+      "properties": {
+        "resourceList": {
+          "$ref": "#/definitions/SummaryOfResources",
+          "description": "List of objects that are present in this snapshot"
+        }
+      },
+      "description": "Response to a request to list resources in the current snapshot"
     }
   }
 }
