@@ -3,7 +3,7 @@
   "info": {
     "title": "CodeSigningManagementClient",
     "description": "Code Signing Resource Provider Account and Certificate Profile management API.",
-    "version": "2020-12-14-preview"
+    "version": "2023-04-30-preview"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -355,15 +355,6 @@
           },
           {
             "$ref": "#/parameters/ProfileNameParameter"
-          },
-          {
-            "in": "body",
-            "name": "certificateProfilePatch",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CertificateProfilePatch"
-            },
-            "description": "Parameters supplied to update certificate profile"
           }
         ],
         "responses": {
@@ -785,19 +776,61 @@
           "type": "string",
           "description": "Used as O in the subject name of the certificate"
         },
+        "organizationUnit": {
+          "type": "string",
+          "description": "Used as OU in the subject name of the private trust certificate"
+        },
         "streetAddress": {
           "type": "string",
           "readOnly": true
         },
-        "country": {
-          "type": "string",
-          "readOnly": true
+        "includeStreetAddress": {
+          "description": "Whether to include in the public trust certificate subject name",
+          "type": "boolean",
+          "default": false
         },
         "state": {
           "type": "string",
           "readOnly": true
         },
+        "includeState": {
+          "description": "Whether to include in the public trust or private trust certificate subject name",
+          "type": "boolean",
+          "default": false
+        },
         "city": {
+          "type": "string",
+          "readOnly": true
+        },
+        "includeCity": {
+          "description": "Whether to include in the public trust or private trust certificate subject name",
+          "type": "boolean",
+          "default": false
+        },
+        "postalCode": {
+          "type": "string",
+          "readOnly": true
+        },
+        "includePostalCode": {
+          "description": "Whether to include in the public trust certificate subject name",
+          "type": "boolean",
+          "default": false
+        },
+        "country": {
+          "type": "string",
+          "readOnly": true
+        },
+        "includeCountry": {
+          "description": "Whether to include in the public trust or private trust certificate subject name",
+          "type": "boolean",
+          "default": false
+        },
+        "enhancedKeyUsage": {
+          "description": "Enhanced Key Usage of the certificate",
+          "type": "string",
+          "readOnly": true
+        },
+        "identityValidationId": {
           "type": "string",
           "readOnly": true
         },
@@ -820,7 +853,7 @@
       "type": "object",
       "properties": {
         "serialNumber": {
-          "description": "Id of the certificate",
+          "description": "Serial number of the certificate",
           "type": "string"
         },
         "subjectName": {
@@ -838,48 +871,9 @@
         "expiryDate": {
           "description": "Certificate expiry date",
           "type": "string"
-        }
-      }
-    },
-    "CertificateProfilePatch": {
-      "type": "object",
-      "description": "Certificate Profile Patch Properties",
-      "x-ms-azure-resource": true,
-      "properties": {
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/CertificateProfilePatchProperties",
-          "description": "Properties of the certificate profile"
-        }
-      }
-    },
-    "CertificateProfilePatchProperties": {
-      "description": "Properties of the certificate profile",
-      "type": "object",
-      "properties": {
-        "streetAddress": {
-          "type": "string",
-          "readOnly": true
         },
-        "country": {
-          "type": "string",
-          "readOnly": true
-        },
-        "state": {
-          "type": "string",
-          "readOnly": true
-        },
-        "city": {
-          "type": "string",
-          "readOnly": true
-        },
-        "certificates": {
-          "readOnly": true,
-          "type": "array",
-          "x-ms-client-flatten": true,
-          "items": {
-            "$ref": "#/definitions/Certificate"
-          }
+        "status": {
+          "$ref": "#/definitions/CertificateStatus"
         }
       }
     },
@@ -916,10 +910,25 @@
       "description": "Rotation policy of the certificate",
       "type": "string",
       "enum": [
+        "3 Days",
         "30 Days"
       ],
+      "default": "3 Days",
       "x-ms-enum": {
         "name": "RotationPolicy",
+        "modelAsString": true
+      }
+    },
+    "CertificateStatus": {
+      "description": "Status of the certificate",
+      "type": "string",
+      "enum": [
+        "Active",
+        "Expired"
+      ],
+      "default": "Active",
+      "x-ms-enum": {
+        "name": "CertificateStatus",
         "modelAsString": true
       }
     },
