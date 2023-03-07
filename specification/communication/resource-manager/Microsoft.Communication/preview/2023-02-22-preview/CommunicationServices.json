@@ -62,7 +62,7 @@
         },
         "x-ms-examples": {
           "Operations_List": {
-            "$ref": "./examples/operationsList.json"
+            "$ref": "./examples/communicationServices/operationsList.json"
           }
         }
       }
@@ -637,7 +637,8 @@
     "LinkNotificationHubParameters": {
       "description": "Description of an Azure Notification Hub to link to the communication service",
       "required": [
-        "resourceId"
+        "resourceId",
+        "connectionString"
       ],
       "type": "object",
       "properties": {
@@ -693,7 +694,7 @@
           "x-ms-client-flatten": true
         },
         "identity": {
-          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/ManagedServiceIdentity"
+          "$ref": "../../../../../common-types/resource-management/v5/managedidentity.json#/definitions/ManagedServiceIdentity"
         }
       }
     },
@@ -703,6 +704,24 @@
       "items": {
         "type": "string",
         "description": "Resource ID of an EmailService/Domain resource linked to this resource."
+      }
+    },
+    "TaggedResource": {
+      "description": "An ARM resource with that can accept tags",
+      "type": "object",
+      "properties": {
+        "tags": {
+          "description": "Tags of the service which is a list of key value pairs that describe the resource.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ]
+        }
       }
     },
     "CommunicationServiceProperties": {
@@ -817,29 +836,19 @@
     "CommunicationServiceResourceUpdate": {
       "description": "A class representing update parameters for CommunicationService resource.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaggedResource"
+        }
+      ],
       "properties": {
-        "tags": {
-          "description": "Tags to add or overwrite.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": [
-            "read",
-            "create",
-            "update"
-          ]
-        },
         "properties": {
           "$ref": "#/definitions/CommunicationServiceUpdateProperties",
-          "description": "The writeable properties to update.",
+          "description": "The properties of the service.",
           "x-ms-client-flatten": true
         },
-        "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData"
-        },
         "identity": {
-          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/ManagedServiceIdentity"
+          "$ref": "../../../../../common-types/resource-management/v5/managedidentity.json#/definitions/ManagedServiceIdentity"
         }
       }
     }
