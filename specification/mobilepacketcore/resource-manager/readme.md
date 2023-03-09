@@ -45,8 +45,8 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/amfprofile.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/cluster.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/deploymentarea.json
-  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/dnn.json
-  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/dpi.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/datanetwork.json
+  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/deeppacketinspection.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/mmedeployment.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/mobilepacketcore.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/networkslice.json
