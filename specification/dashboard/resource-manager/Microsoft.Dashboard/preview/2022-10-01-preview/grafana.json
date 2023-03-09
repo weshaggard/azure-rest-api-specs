@@ -1556,7 +1556,8 @@
         },
         "systemData": {
           "description": "The system meta data relating to this managed private endpoint.",
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
+          "readOnly": true
         },
         "tags": {
           "type": "object",
@@ -1586,23 +1587,47 @@
       "properties": {
         "provisioningState": {
           "description": "Provisioning state of the resource.",
-          "$ref": "#/definitions/ProvisioningState"
+          "$ref": "#/definitions/ProvisioningState",
+          "readOnly": true
         },
         "privateLinkResourceId": {
           "description": "The ARM resource ID of the resource for which the managed private endpoint is pointing to.",
-          "type": "string"
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
         "privateLinkResourceRegion": {
           "description": "The region of the resource to which the managed private endpoint is pointing to.",
-          "type": "string"
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
-        "groupId": {
-          "description": "The group Id property of the managed private endpoint.",
-          "type": "string"
+        "groupIds": {
+          "description": "The group Ids of the managed private endpoint.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
         "requestMessage": {
           "description": "User input request message of the managed private endpoint.",
-          "type": "string"
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "connectionState": {
+          "$ref": "#/definitions/ManagedPrivateEndpointConnectionState",
+          "readOnly": true
         }
       }
     },
@@ -1618,6 +1643,33 @@
         "nextLink": {
           "type": "string"
         }
+      }
+    },
+    "ManagedPrivateEndpointConnectionState": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/ManagedPrivateEndpointConnectionStatus",
+          "readOnly": true
+        },
+        "description": {
+          "description": "Gets or sets the reason for approval/rejection of the connection.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ManagedPrivateEndpointConnectionStatus": {
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected",
+        "Disconnected"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "modelAsString": true,
+        "name": "ManagedPrivateEndpointConnectionStatus"
       }
     }
   },
