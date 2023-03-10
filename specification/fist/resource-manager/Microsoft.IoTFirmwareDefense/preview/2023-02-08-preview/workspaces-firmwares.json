@@ -876,6 +876,108 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.IoTFirmwareDefense/workspaces/{workspaceName}/firmwares/{firmwareId}/generateCryptoCertificateList": {
+      "post": {
+        "tags": [
+          "Firmwares"
+        ],
+        "operationId": "Firmware_ListGenerateCryptoCertificateList",
+        "description": "The operation to list all crypto certificates for a firmware.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/WorkspaceNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/FirmwareIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CryptoCertificateList"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Firmware_ListGenerateCryptoCertificateList_MaximumSet_Gen": {
+            "$ref": "./examples/Firmware_ListGenerateCryptoCertificateList_MaximumSet_Gen.json"
+          },
+          "Firmware_ListGenerateCryptoCertificateList_MinimumSet_Gen": {
+            "$ref": "./examples/Firmware_ListGenerateCryptoCertificateList_MinimumSet_Gen.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.IoTFirmwareDefense/workspaces/{workspaceName}/firmwares/{firmwareId}/generateCryptoKeyList": {
+      "post": {
+        "tags": [
+          "Firmwares"
+        ],
+        "operationId": "Firmware_ListGenerateCryptoKeyList",
+        "description": "The operation to list all crypto keys for a firmware.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/WorkspaceNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/FirmwareIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CryptoKeyList"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Firmware_ListGenerateCryptoKeyList_MaximumSet_Gen": {
+            "$ref": "./examples/Firmware_ListGenerateCryptoKeyList_MaximumSet_Gen.json"
+          },
+          "Firmware_ListGenerateCryptoKeyList_MinimumSet_Gen": {
+            "$ref": "./examples/Firmware_ListGenerateCryptoKeyList_MinimumSet_Gen.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1127,6 +1229,11 @@
     "BinaryHardeningSummary": {
       "type": "object",
       "properties": {
+        "totalFiles": {
+          "description": "Total number of binaries that were analyzed",
+          "type": "integer",
+          "format": "int64"
+        },
         "nx": {
           "description": "NX summary percentage",
           "type": "integer",
@@ -1288,6 +1395,18 @@
           "type": "string",
           "x-nullable": true
         },
+        "isShortKeySize": {
+          "description": "Indicates the key size is considered too small to be secure for the algorithm type.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "name": "isShortKeySize",
+            "modelAsString": true
+          }
+        },
         "matchingCertificate": {
           "description": "Matching certificate for the key.",
           "type": "string",
@@ -1295,6 +1414,165 @@
         }
       },
       "description": "Crypto key properties"
+    },
+    "CryptoCertificateList": {
+      "type": "object",
+      "description": "Crypto certificates list",
+      "properties": {
+        "value": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/CryptoCertificate"
+          },
+          "description": "Crypto certificates list",
+          "x-ms-identifiers": [
+            "cryptoCertId"
+          ]
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The uri to fetch the next page of asset."
+        }
+      }
+    },
+    "CryptoCertificate": {
+      "type": "object",
+      "properties": {
+        "cryptoCertId": {
+          "description": "Id for the certificate.",
+          "type": "string",
+          "x-nullable": true
+        },
+        "name": {
+          "description": "Name of the certificate.",
+          "type": "string",
+          "x-nullable": true
+        },
+        "role": {
+          "description": "Role of the certificate.",
+          "type": "string",
+          "x-nullable": true
+        },
+        "expirationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Expiration date for the certificate.",
+          "x-nullable": true
+        },
+        "filePaths": {
+          "type": "array",
+          "readOnly": true,
+          "description": "List of files paths for this certificate",
+          "items": {
+            "type": "string"
+          }
+        },
+        "signatureAlgorithm": {
+          "description": "The signature algorithm used in the certificate.",
+          "type": "string"
+        },
+        "keyAlgorithm": {
+          "description": "The key algorithm used in the certificate.",
+          "type": "string"
+        },
+        "keySize": {
+          "description": "Size of the key in bits",
+          "type": "integer",
+          "format": "int64",
+          "x-nullable": true
+        },
+        "encoding": {
+          "description": "The encoding used for the certificate.",
+          "type": "string"
+        },
+        "selfSigned": {
+          "description": "Indicates if the certificate was self-signed.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "name": "selfSigned",
+            "modelAsString": true
+          }
+        },
+        "usage": {
+          "description": "Functions the certificate can fulfill.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serialNumber": {
+          "description": "Serial number of the certificate.",
+          "type": "string"
+        },
+        "fingerprint": {
+          "description": "Fingerprint of the certificate.",
+          "type": "string"
+        },
+        "subjectEntity": {
+          "description": "Subject information of the certificate.",
+          "$ref": "#/definitions/CryptoCertEntity"
+        },
+        "issuerEntity": {
+          "description": "Issuer information of the certificate.",
+          "$ref": "#/definitions/CryptoCertEntity"
+        },
+        "isWeakAlgorithm": {
+          "description": "Indicates the algorithm used is insecure.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "name": "isWeakAlgorithm",
+            "modelAsString": true
+          }
+        },
+        "isShortKeySize": {
+          "description": "Indicates the key size is considered too small to be secure for the algorithm type.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "name": "isShortKeySize",
+            "modelAsString": true
+          }
+        }
+      },
+      "description": "Crypto certificate properties"
+    },
+    "CryptoCertEntity": {
+      "type": "object",
+      "description": "Information on an entity in a cryptographic certificate",
+      "properties": {
+        "commonName": {
+          "description": "Name of the certificate entity.",
+          "type": "string"
+        },
+        "organization": {
+          "description": "Organization of the certificate entity.",
+          "type": "string"
+        },
+        "organizationalUnit": {
+          "description": "The Organizational unit of the certificate entity.",
+          "type": "string"
+        },
+        "state": {
+          "description": "Geographical state of the certificate entity.",
+          "type": "string"
+        },
+        "region": {
+          "description": "Geographical region of the certificate entity.",
+          "type": "string"
+        }
+      }
     },
     "CveList": {
       "type": "object",
