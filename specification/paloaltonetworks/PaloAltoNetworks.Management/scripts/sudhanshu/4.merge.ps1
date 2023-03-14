@@ -3,7 +3,9 @@ param(
   [String]$sourceFolder,
   [String]$destinationFolder,
   [String]$hintsFile = "$PSScriptRoot\hints.txt",
-  [String]$newHintsFile
+  [String]$newHintsFile,
+  [ValidateSet("strict", "mixMissing", "mixNew", "mixAll")]
+  [String]$matchMode = "strict"
 )
 
 if ([string]::IsNullOrWhiteSpace($targetFolder)) {
@@ -56,5 +58,5 @@ if ([string]::IsNullOrWhiteSpace($newHintsFile)) {
 # Write-Host $newHintsFile
 
 Push-Location $PSScriptRoot
-python update.py $targetFolder $sourceFolder $destinationFolder $hintsFile $newHintsFile
+python update.py $targetFolder $sourceFolder $destinationFolder $hintsFile $newHintsFile $matchMode
 Pop-Location

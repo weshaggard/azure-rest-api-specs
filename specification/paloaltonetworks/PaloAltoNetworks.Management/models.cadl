@@ -553,3 +553,61 @@ model SupportInfo {
   @doc("URL for registering product in paloaltonetworks Customer Service Portal")
   registerURL?: string;
 }
+
+enum HealthStatusValues {
+  "GREEN",
+  "YELLOW",
+  "RED",
+  "INITIALIZING",
+}
+
+@doc("Status Codes for the Firewall")
+@knownValues(
+  HealthStatusValues
+)
+model HealthStatus is string {}
+
+enum ServerStatusValues {
+  "UP",
+  "DOWN",
+}
+
+@doc("Connectivity Status for Panorama Server")
+@knownValues(
+  ServerStatusValues
+)
+model ServerStatus is string {}
+
+@doc("Panorama connectivity information")
+model PanoramaStatus {
+  @doc("Primary Panorama connection status")
+  @visibility("read")
+  panoramaServerStatus?: ServerStatus;
+
+  @doc("Secondary Panorama connection status")
+  @visibility("read")
+  panoramaServer2Status?: ServerStatus;
+}
+
+@doc("Firewall Status")
+model FirewallStatusProperty {
+  @doc("Panorama Managed: Default is False. Default will be CloudSec managed")
+  @visibility("read")
+  isPanoramaManaged?: BooleanEnum;
+
+  @doc("Current status of the Firewall")
+  @visibility("read")
+  healthStatus?: HealthStatus;
+
+  @doc("Detail description of current health of the Firewall")
+  @visibility("read")
+  healthReason?: string;
+
+  @doc("Panorama Status")
+  @visibility("read")
+  panoramaStatus?: PanoramaStatus;
+
+  @visibility("read")
+  @doc("Provisioning state of the resource.")
+  provisioningState?: ProvisioningState;
+}

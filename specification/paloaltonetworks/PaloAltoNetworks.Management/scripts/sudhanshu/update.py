@@ -5,28 +5,44 @@ import traceback
 import sys
 
 print(sys.argv)
-if len(sys.argv) != 6:
+if len(sys.argv) != 7:
   print("Usage: ")
   exit(1)
-[generatedPath, fixedPath, savedPath, hintsFilePath, newHintsFilePath] = sys.argv[1:]
-print(generatedPath, fixedPath, savedPath, hintsFilePath, newHintsFilePath)
+[generatedPath, fixedPath, savedPath, hintsFilePath, newHintsFilePath, matchMode] = sys.argv[1:]
+print(generatedPath, fixedPath, savedPath, hintsFilePath, newHintsFilePath, matchMode)
 
 generatedFiles = [f for f in os.listdir(generatedPath) if os.path.isfile(os.path.join(generatedPath, f))]
-generated = sorted([os.path.join(generatedPath, f) for f in generatedFiles])
-saved = sorted([os.path.join(savedPath, f) for f in generatedFiles])
+generated = {f: os.path.join(generatedPath, f) for f in generatedFiles}
+saved = {f: os.path.join(savedPath, f) for f in generatedFiles}
 fixedFiles = [f for f in os.listdir(fixedPath) if os.path.isfile(os.path.join(fixedPath, f))]
-fixed = sorted([os.path.join(fixedPath, f) for f in fixedFiles])
+fixed = {f: os.path.join(fixedPath, f) for f in fixedFiles}
 
 print(generated, fixed)
 
 # Abort if the files are not same in examples and fixed
-print(set(generatedFiles) != set(fixedFiles))
-if set(generatedFiles) != set(fixedFiles):
-  newFiles = [f for f in generatedFiles if f not in fixedFiles]
+print(set(generated.keys()) != set(fixed.keys()))
+if set(generated.keys()) != set(fixed.keys()):
+  newFiles = [f for f in generated if f not in fixed]
   print(f'New {len(newFiles)} {newFiles}')
-  missingFiles = [f for f in fixedFiles if f not in generatedFiles]
+  missingFiles = [f for f in fixed if f not in generated]
   print(f'Missing {len(missingFiles)} {missingFiles}')
-  exit(1)
+  if matchMode == 'strict':
+    exit(1)
+  elif matchMode == 'mixNew':
+    for f in newFiles:
+      fixed[f] = generated[f]
+  elif matchMode == 'mixMissing':
+    for f in missingFiles:
+      generated[f] = fixed[f]
+      saved[f] = fixed[f]
+  elif matchMode == 'mixAll':
+    for f in newFiles:
+      fixed[f] = generated[f]
+    for f in missingFiles:
+      generated[f] = fixed[f]
+      saved[f] = fixed[f]
+  else:
+    print(f"Invalid match mode {matchMode}")
 
 def checkPath(path:str, hints):
   splits = path.split('.')
@@ -136,9 +152,10 @@ with open(hintsFilePath) as hintsFile:
     pass
   if not hints:
     hints = {}
-  for k in zip(generated, fixed, saved):
+  for key in generated:
     gDict = None
     isCompleted = False
+    k = [generated[key], fixed[key], saved[key]]
     try:
       with open(k[0]) as gDictFile, open(k[1]) as fDictFile:
           gDict = json.load(gDictFile)
