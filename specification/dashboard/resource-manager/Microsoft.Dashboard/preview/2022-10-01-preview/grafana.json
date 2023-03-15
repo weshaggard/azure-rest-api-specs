@@ -927,11 +927,14 @@
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Dashboard/grafana/{workspaceName}/grafanaTeams": {
-      "get": {
+      "post": {
         "tags": [
           "AADGroupSync"
         ],
         "operationId": "GrafanaTeams_Get",
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
@@ -946,13 +949,14 @@
             "$ref": "#/parameters/WorkspaceNameParameter"
           },
           {
-            "$ref": "#/parameters/PerPageParameter"
-          },
-          {
-            "$ref": "#/parameters/PageParameter"
-          },
-          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "in": "body",
+            "name": "requestBodyParameters",
+            "schema": {
+              "$ref": "#/definitions/GrafanaTeamSearchRequest"
+            }
           }
         ],
         "responses": {
@@ -1739,6 +1743,19 @@
         }
       }
     },
+    "GrafanaTeamSearchRequest": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "perPage": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
     "GrafanaTeamSearchResult": {
       "type": "object",
       "properties": {
@@ -1798,20 +1815,6 @@
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method"
-    },
-    "PerPageParameter": {
-      "in": "query",
-      "name": "itemsPerPage",
-      "type": "integer",
-      "format": "int32",
-      "default": 1000
-    },
-    "PageParameter": {
-      "in": "query",
-      "name": "page",
-      "type": "integer",
-      "format": "int32",
-      "default": 1
     }
   }
 }
