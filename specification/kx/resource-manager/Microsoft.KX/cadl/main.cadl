@@ -12,13 +12,13 @@ using Cadl.Http;
 using Cadl.Rest;
 using Azure.ResourceManager;
 
-@doc("A kdbinsightsenterprise resource")
+@doc("A kdbInsightsEnterprise resource")
 model KdbInsightsEnterpriseResource is TrackedResource<KdbInsightsEnterpriseProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("kdbinsightsenterpriseName")
-  @segment("kdbinsightsenterprise")
+  @key("kdbInsightsEnterpriseName")
+  @segment("kdbInsightsEnterprise")
   @path
-  @doc("The name of the kdb Insights Enterprise resource")
+  @doc("The name of the kdbInsightsEnterprise resource")
   name: string;
 }
 
@@ -38,7 +38,16 @@ enum ProvisioningStateKV {
 @secret
 model PasswordString is string {}
 
-@doc("Details of the KdbInsightsEnterprise resource.")
+@doc("Configuration of the managed resource group associated with the resource.")
+model ManagedResourceGroupConfiguration {
+  @doc("The resource group name.")
+  name: string;
+
+  @doc("The resource group location.")
+  location: string;
+}
+
+@doc("Details of the kdbInsightsEnterprise resource.")
 model KdbInsightsEnterpriseProperties {
   @visibility("create")
   @doc("The password to use for KeyCloak")
@@ -48,6 +57,10 @@ model KdbInsightsEnterpriseProperties {
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
+
+  @visibility("read")
+  @doc("Configuration of the managed resource group associated with the resource.")
+  managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
 }
 
 @armResourceOperations
