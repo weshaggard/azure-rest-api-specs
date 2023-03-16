@@ -36,5 +36,5 @@ These settings apply only when `--tag=package-2023-04-01-preview` is specified o
 
 ``` yaml $(tag) == 'package-2023-04-01-preview'
 input-file:
-- Microsoft.Sustainability/preview/2023-04-01-preview/main.json
+- Microsoft.Carbon/preview/2023-04-01-preview/main.json
 ```
