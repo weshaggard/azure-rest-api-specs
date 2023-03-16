@@ -2,7 +2,7 @@
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for deviceupdate.
+This is the AutoRest configuration file for connectedcache.
 
 ## Getting Started
 
@@ -84,7 +84,7 @@ input-file:
 directive:
   - suppress: ENUM_CASE_MISMATCH
     where: $.definitions.Identity.properties.type
-    from: deviceupdate.json
+    from: connectedcache.json
     reason: Managed Identity type can be case in-sensitive
 ```
 
@@ -103,7 +103,7 @@ swagger-to-sdk:
   - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-go
     after_scripts:
-      - bundle install && rake arm:regen_all_profiles['azure_mgmt_deviceupdate']
+      - bundle install && rake arm:regen_all_profiles['azure_mgmt_connectedcache']
 ```
 
 ## CSharp

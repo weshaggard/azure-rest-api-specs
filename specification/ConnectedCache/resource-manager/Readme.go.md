@@ -21,7 +21,7 @@ These settings apply only when `--tag=package-2021-09-15-preview --go` is specif
 Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
 ```yaml $(tag) == 'package-2021-09-15-preview' && $(go)
-namespace: deviceupdate
+namespace: connectedcache
 output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2021-09-15-preview/$(namespace)
 ```
 ### Tag: package-2022-02-11-preview and go
@@ -30,7 +30,7 @@ These settings apply only when `--tag=package-2022-02-11-preview --go` is specif
 Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
 ```yaml $(tag) == 'package-2022-02-11-preview' && $(go)
-namespace: deviceupdate
+namespace: connectedcache
 output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2022-02-11-preview/$(namespace)
 ```
 
@@ -40,6 +40,17 @@ These settings apply only when `--tag=package-2022-03-21-preview --go` is specif
 Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
 ```yaml $(tag) == 'package-2022-03-21-preview' && $(go)
-namespace: deviceupdate
+namespace: connectedcache
 output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2022-03-21-preview/$(namespace)
 ```
+
+### Tag: package-2023-04-01-preview and go
+
+These settings apply only when `--tag=package-2023-04-01-preview --go` is specified on the command line.
+Please also specify `--go-sdks-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag) == 'package-2023-04-01-preview' && $(go)
+namespace: connectedcache
+output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2023-04-01-preview/$(namespace)
+```
+

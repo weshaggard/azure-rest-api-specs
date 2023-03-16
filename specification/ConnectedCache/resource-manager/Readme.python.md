@@ -6,14 +6,14 @@ Please also specify `--python-sdks-folder=<path to the root directory of your az
 ```yaml $(python) && $(track2)
 azure-arm: true
 license-header: MICROSOFT_MIT_NO_VERSION
-package-name: azure-mgmt-deviceupdate
+package-name: azure-mgmt-connectedcache
 package-version: 1.0.0b1
 no-namespace-folders: true
 ```
 
 ```yaml $(python) && $(track2) && $(python-mode) == 'update'
 no-namespace-folders: true
-output-folder: $(python-sdks-folder)/deviceupdate/azure-mgmt-connectedcache/azure/mgmt/connectdCache
+output-folder: $(python-sdks-folder)/connectedcache/azure-mgmt-connectedcache/azure/mgmt/connectdCache
 ```
 
 ```yaml $(python) && $(track2) && $(python-mode) == 'create'
