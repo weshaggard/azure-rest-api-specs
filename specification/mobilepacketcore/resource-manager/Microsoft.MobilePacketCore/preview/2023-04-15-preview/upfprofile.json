@@ -233,6 +233,39 @@
     }
   },
   "definitions": {
+    "IpLoopbackProfile": {
+      "type": "array",
+      "description": "Configure IPv4/IPv6 loopback interfaces that will be deployed in this Network Context. Each loopback entry will be deployed as an interface in the Network Context FIB. A loopback interface is defined by a 'loopback-address' and a 'prefix-length'. The 'loopback-address', masked by the 'prefix-length', defines a loopback subnet. All host addresses in the subnet will be loopback addresses, including the 'all 0's' and 'all 1's' host addresses. 'prefix-length' is optional, defaulting to 32 if not specified. Multicast addresses are invalid and will not be deployed.  The 'loopback-address', masked by 'prefix-length', represents the routing prefix used to advertise reachability to the loopback addresses supported by the interface. 'admin-state' controls the administrative state of the loopback interface. If set to 'disabled', all traffic received on the loopback interface will be dropped, and no traffic will be originated from the interface.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "$ref": "./common.json#/definitions/IpLoopbackScope"
+          },
+          "loopbacksPerPod": {
+            "type": "integer",
+            "description": "Number of loopback interfaces assigned to a ppe when the scope is type pod",
+            "minimum": 1,
+            "maximum": 128,
+            "default": 1
+          },
+          "count": {
+            "type": "integer",
+            "description": "The number of loopback IPs to allocate",
+            "minimum": 0,
+            "maximum": 128,
+            "default": 1
+          },
+          "usage": {
+            "type": "array",
+            "description": "Purpose of loopback",
+            "items": {
+              "$ref": "./common.json#/definitions/LoopbackUsage"
+            }
+          }
+        }
+      }
+    },
     "UpfProfilePropertiesFormat": {
       "type": "object",
       "properties": {
@@ -340,70 +373,10 @@
                 }
               },
               "ipv4Loopbacks": {
-                "type": "array",
-                "description": "Configure IPv4 loopback interfaces that will be deployed in this Network Context. Each loopback entry will be deployed as an interface in the Network Context FIB. A loopback interface is defined by a 'loopback-address' and a 'prefix-length'. The 'loopback-address', masked by the 'prefix-length', defines a loopback subnet. All host addresses in the subnet will be loopback addresses, including the 'all 0's' and 'all 1's' host addresses. 'prefix-length' is optional, defaulting to 32 if not specified. Multicast addresses are invalid and will not be deployed.  The 'loopback-address', masked by 'prefix-length', represents the routing prefix used to advertise reachability to the loopback addresses supported by the interface. 'admin-state' controls the administrative state of the loopback interface. If set to 'disabled', all traffic received on the loopback interface will be dropped, and no traffic will be originated from the interface.",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "scope": {
-                      "$ref": "./common.json#/definitions/IpLoopbackScope"
-                    },
-                    "loopbacksPerPod": {
-                      "type": "integer",
-                      "description": "Number of loopback interfaces assigned to a ppe when the scope is type pod",
-                      "minimum": 1,
-                      "maximum": 128,
-                      "default": 1
-                    },
-                    "count": {
-                      "type": "integer",
-                      "description": "The number of loopback IPs to allocate",
-                      "minimum": 0,
-                      "maximum": 128,
-                      "default": 1
-                    },
-                    "usage": {
-                      "type": "array",
-                      "description": "Purpose of loopback",
-                      "items": {
-                        "$ref": "./common.json#/definitions/LoopbackUsage"
-                      }
-                    }
-                  }
-                }
+                "$ref": "#/definitions/IpLoopbackProfile"
               },
               "ipv6Loopbacks": {
-                "type": "array",
-                "description": "Configure IPv4 loopback interfaces that will be deployed in this Network Context. Each loopback entry will be deployed as an interface in the Network Context FIB. A loopback interface is defined by a 'loopback-address' and a 'prefix-length'. The 'loopback-address', masked by the 'prefix-length', defines a loopback subnet. All host addresses in the subnet will be loopback addresses, including the 'all 0's' and 'all 1's' host addresses. 'prefix-length' is optional, defaulting to 32 if not specified. Multicast addresses are invalid and will not be deployed.  The 'loopback-address', masked by 'prefix-length', represents the routing prefix used to advertise reachability to the loopback addresses supported by the interface. 'admin-state' controls the administrative state of the loopback interface. If set to 'disabled', all traffic received on the loopback interface will be dropped, and no traffic will be originated from the interface.",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "scope": {
-                      "$ref": "./common.json#/definitions/IpLoopbackScope"
-                    },
-                    "loopbacksPerPod": {
-                      "type": "integer",
-                      "description": "Number of loopback interfaces assigned to a ppe when the scope is type pod",
-                      "minimum": 1,
-                      "maximum": 128,
-                      "default": 1
-                    },
-                    "count": {
-                      "type": "integer",
-                      "description": "The number of loopback IPs to allocate",
-                      "minimum": 0,
-                      "maximum": 128,
-                      "default": 1
-                    },
-                    "usage": {
-                      "type": "array",
-                      "description": "Purpose of loopback",
-                      "items": {
-                        "$ref": "./common.json#/definitions/LoopbackUsage"
-                      }
-                    }
-                  }
-                }
+                "$ref": "#/definitions/IpLoopbackProfile"
               },
               "ipPools": {
                 "type": "array",

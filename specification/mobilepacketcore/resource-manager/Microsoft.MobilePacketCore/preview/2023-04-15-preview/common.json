@@ -44,8 +44,7 @@
         "Accepted",
         "Deleting",
         "Failed",
-        "Canceled",
-        "Deleted"
+        "Canceled"
       ],
       "x-ms-enum": {
         "name": "ProvisioningState",
@@ -628,6 +627,20 @@
         }
       }
     },
+    "ManagementStatus": {
+      "type": "string",
+      "description": "Status of this event",
+      "enum": [
+        "Processing",
+        "Succeeded",
+        "Failed",
+        "Canceled"
+      ],
+      "x-ms-enum": {
+        "name": "ManagementStatus",
+        "modelAsString": true
+      }
+    },
     "DeploymentStatus": {
       "type": "object",
       "description": "Status of the deployment",
@@ -678,22 +691,11 @@
                 }
               },
               "status": {
-                "type": "string",
-                "description": "Status of this event",
-                "enum": [
-                  "Processing",
-                  "Succeeded",
-                  "Failed",
-                  "Cancelled"
-                ],
-                "x-ms-enum": {
-                  "name": "LifecycleManagementStatus",
-                  "modelAsString": true
-                }
+                "$ref": "#/definitions/ManagementStatus"
               },
               "details": {
                 "type": "string",
-                "description": "Details of the LCM event"
+                "description": "Details of the lifecycle management event"
               }
             }
           }
@@ -719,22 +721,11 @@
                 "description": "URI of triggering snapshot event"
               },
               "status": {
-                "type": "string",
-                "description": "Status of this event",
-                "enum": [
-                  "Processing",
-                  "Succeeded",
-                  "Failed",
-                  "Cancelled"
-                ],
-                "x-ms-enum": {
-                  "name": "ConfigurationManagementStatus",
-                  "modelAsString": true
-                }
+                "$ref": "#/definitions/ManagementStatus"
               },
               "details": {
                 "type": "string",
-                "description": "Details of the LCM event"
+                "description": "Details of the configuration management event"
               }
             }
           }
@@ -761,7 +752,7 @@
                 "properties": {
                   "subnetName": {
                     "type": "string",
-                    "description": "Name of the vnet subnet from which this IP range is allocated."
+                    "description": "Name of the virtual network subnet from which this IP range is allocated."
                   }
                 }
               }
@@ -981,13 +972,13 @@
         "arpPreemptionVulnerability": {
           "$ref": "#/definitions/ArpPreemptionVulnerability"
         },
-        "nonGbrFlow": {
+        "nonGuaranteedBitRateFlow": {
           "$ref": "#/definitions/Ao5gcBoolean",
-          "description": "indicates if this is non-gbr qos-flow"
+          "description": "indicates if this is non-guaranteed bit rate qos-flow"
         },
         "criticalGbrType": {
           "$ref": "#/definitions/Ao5gcBoolean",
-          "description": "delay critical gbr type.  applicable when nonGbrFlow = false"
+          "description": "delay critical gbr type.  applicable when nonGuaranteedBitRateFlow = false"
         },
         "priorityLevel": {
           "type": "integer",
@@ -998,63 +989,63 @@
         "measurementUnit": {
           "$ref": "#/definitions/MeasurementUnit"
         },
-        "uplinkMbr": {
+        "uplinkMaximumBitRate": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
           "description": "uplink maximum bit rate"
         },
-        "downlinkMbr": {
+        "downlinkMaximumBitRate": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
           "description": "downlink maximum bit rate"
         },
-        "uplinkGbr": {
+        "uplinkGuaranteedBitRate": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
-          "description": "uplink guaranteed bit rate.  applicable when nonGbrFlow = false"
+          "description": "uplink guaranteed bit rate.  applicable when nonGuaranteedBitRateFlow = false"
         },
-        "downlinkGbr": {
+        "downlinkGuaranteedBitRate": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
-          "description": "downlink guaranteed bit rate. applicable when nonGbrFlow = false"
+          "description": "downlink guaranteed bit rate. applicable when nonGuaranteedBitRateFlow = false"
         },
         "averagingWindow": {
           "type": "integer",
           "minimum": 1,
           "maximum": 4095,
-          "description": "averaging window [1-4095] in ms. applicable when nonGbrFlow = false"
+          "description": "averaging window [1-4095] in ms. applicable when nonGuaranteedBitRateFlow = false"
         },
         "maxBurst": {
           "type": "integer",
           "minimum": 1,
           "maximum": 4095,
-          "description": "uplink maximum burst, measurement-units: bytes[1-4095]. applicable when nonGbrFlow = true"
+          "description": "uplink maximum burst, measurement-units: bytes[1-4095]. applicable when nonGuaranteedBitRateFlow = true"
         },
-        "maxPacketLossRateDl": {
+        "maxPacketLossRateDownlink": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
-          "description": "downlink maximum packet loss rate. applicable when nonGbrFlow = false"
+          "description": "downlink maximum packet loss rate. applicable when nonGuaranteedBitRateFlow = false"
         },
-        "maxPacketLossRateUl": {
+        "maxPacketLossRateUplink": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
-          "description": "up-link maximum packet loss rate. applicable when nonGbrFlow = false"
+          "description": "up-link maximum packet loss rate. applicable when nonGuaranteedBitRateFlow = false"
         },
         "reflectiveQos": {
           "$ref": "#/definitions/Ao5gcBoolean",
-          "description": "reflective qos config option. applicable when nonGbrFlow = true"
+          "description": "reflective qos config option. applicable when nonGuaranteedBitRateFlow = true"
         }
       },
       "required": [
@@ -1111,7 +1102,7 @@
       "description": "Definition of a network context name",
       "pattern": "^([a-zA-Z]([a-zA-Z0-9-._]){1,64})"
     },
-    "Dscp": {
+    "DscpMarking": {
       "type": "string",
       "description": "DSCP marking, Valid values are: 0..63, df (0), af11 (10), af12 (12), af13 (14), af21 (18), af22 (20), af23 (22), af31 (26), af32 (28), af33 (30), af41 (34), af42 (36), af43 (38), cs1 (8), cs2 (16), cs3 (24), cs4 (32), cs5 (40), cs6 (48), cs7 (56), ef (46)",
       "enum": [
@@ -1202,7 +1193,7 @@
         "ef"
       ],
       "x-ms-enum": {
-        "name": "dscpValue",
+        "name": "DscpMarkingValue",
         "modelAsString": true
       },
       "default": "df"
@@ -1252,12 +1243,12 @@
       },
       "description": "Tags object for patch operations."
     },
-    "Tac": {
+    "TrackingAreaCode": {
       "type": "integer",
       "maximum": 16777215,
       "description": "Tracking Area Code"
     },
-    "Tai": {
+    "TrackingAreaIdentifier": {
       "type": "object",
       "description": "Tracking Area Identifier",
       "properties": {
@@ -1265,7 +1256,7 @@
           "$ref": "#/definitions/PlmnId"
         },
         "trackingAreaCode": {
-          "$ref": "#/definitions/Tac"
+          "$ref": "#/definitions/TrackingAreaCode"
         }
       }
     },
