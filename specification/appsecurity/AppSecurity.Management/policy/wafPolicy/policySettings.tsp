@@ -17,7 +17,7 @@ model PolicySettings {
   mode?: PolicyMode = PolicyMode.Detection;
 
   @doc("If action type is redirect, this field represents redirect URL for the client")
-  redirectUrl?: string = ""; // TODO - didn't find a url built-in type in /workspace/src/api/node_modules/@cadl-lang/compiler/lib/lib.cadl
+  redirectUrl?: string = ""; // TODO - didn't find a url built-in type in /workspace/src/API/node_modules/@typespec/compiler/lib/lib.tsp
 
   @doc("If the action type is block, customer can override the response status code")
   @minValue(0)

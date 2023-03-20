@@ -1,5 +1,5 @@
 using OpenAPI;
-using Cadl.Rest;
+using TypeSpec.Rest;
 
 namespace Microsoft.AppSecurity;
 

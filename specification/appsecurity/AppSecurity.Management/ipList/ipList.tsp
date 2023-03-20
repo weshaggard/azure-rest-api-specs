@@ -1,7 +1,7 @@
 namespace Microsoft.AppSecurity;
 
-using Cadl.Http;
-using Cadl.Rest;
+using TypeSpec.Http;
+using TypeSpec.Rest;
 using Azure.ResourceManager;
 
 /* *********************************

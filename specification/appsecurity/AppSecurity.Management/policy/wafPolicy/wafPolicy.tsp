@@ -1,10 +1,10 @@
-import "./customRules.cadl";
-import "./logScrubbing.cadl";
-import "./managedRules.cadl";
-import "./policySettings.cadl";
+import "./customRules.tsp";
+import "./logScrubbing.tsp";
+import "./managedRules.tsp";
+import "./policySettings.tsp";
 
-using Cadl.Http;
-using Cadl.Rest;
+using TypeSpec.Http;
+using TypeSpec.Rest;
 using Azure.ResourceManager;
 using OpenAPI;
 

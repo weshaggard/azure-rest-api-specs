@@ -1,8 +1,8 @@
-import "@cadl-lang/rest";
-import "@cadl-lang/versioning";
-import "@azure-tools/cadl-providerhub";
-import "@azure-tools/cadl-azure-core";
-import "@azure-tools/cadl-azure-resource-manager";
+import "@typespec/rest";
+import "@typespec/versioning";
+import "@azure-tools/typespec-providerhub";
+import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-azure-resource-manager";
 
 using Azure.ResourceManager;
 using Azure.Core;
@@ -18,7 +18,7 @@ enum ProvisioningState {
   Accepted,
 }
 
-@doc("Describes wether an object (a policy, a custom rule, a managed rule set or other objects) is enabled or disabled")
+@doc("Describes whether an object (a policy, a custom rule, a managed rule set or other objects) is enabled or disabled")
 enum EnabledState {
   Enabled,
   Disabled,
