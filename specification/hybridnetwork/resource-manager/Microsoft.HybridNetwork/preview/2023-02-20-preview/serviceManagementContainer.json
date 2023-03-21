@@ -718,6 +718,9 @@
         "x-ms-examples": {
           "RolloutGet": {
             "$ref": "./examples/GCA/RolloutGet.json"
+          },
+          "RolloutGetWithDetailedState": {
+            "$ref": "./examples/GCA/RolloutGetWithDetailedState.json"
           }
         }
       },
@@ -984,6 +987,55 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridNetwork/serviceManagementContainers/{serviceManagementContainerName}/updateSpecs/{updateSpecName}/rollouts/{rolloutName}/updateRolloutState": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "./common.json#/parameters/ServiceManagementContainerNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/UpdateSpecNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/RolloutNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted and the operation will complete asynchronously."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": [
+          "Rollout"
+        ],
+        "operationId": "Rollout_UpdateRolloutState",
+        "summary": "Update state of the rollout",
+        "x-ms-examples": {
+          "RolloutUpdateState": {
+            "$ref": "./examples/GCA/RolloutUpdateState.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
+    },    
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridNetwork/serviceManagementContainers/{serviceManagementContainerName}/updateSpecs/{updateSpecName}/rollouts": {
       "get": {
         "parameters": [
@@ -1616,6 +1668,12 @@
           "x-ms-mutability": [
             "read"
           ]
+        },
+        "rolloutDetailedState": {
+          "$ref": "#/definitions/RolloutDetailedState",
+          "x-ms-mutability": [
+            "read"
+          ]
         }
       }
     },
@@ -1778,7 +1836,7 @@
             "update"
           ]
         },
-        "insideTierActions": {
+        "intraTierActions": {
           "description": "SDP stays the same between SiteNetWorkServices whithin RolloutTiers.",
           "$ref": "#/definitions/GateAction",
           "x-ms-mutability": [
@@ -1787,7 +1845,7 @@
             "update"
           ]
         },
-        "postTierActions": {
+        "interTierActions": {
           "description": "SDP may vary from Tier to Tier",
           "$ref": "#/definitions/GateAction",
           "x-ms-mutability": [
@@ -1965,6 +2023,141 @@
           ]
         }
       }
+    },
+    "RolloutDetailedState": {
+      "type": "object",
+      "readOnly": true,
+      "description": "Detailed state of rollout properties.",
+      "properties": {
+        "rolloutInfo": {
+          "readOnly": true,
+          "$ref": "#/definitions/rolloutInfo"
+        },
+        "rolloutTiers": {
+          "items" : {
+            "$ref": "#/definitions/RolloutTierRolloutState"
+          },
+          "type": "array",
+          "x-ms-mutability": [
+            "read"
+          ]
+        }
+      }
+    },
+    "RolloutTierRolloutState": {
+      "type": "object",
+      "properties": {
+        "rolloutTierReference": {
+          "$ref": "./common.json#/definitions/ReferencedResource",
+          "x-ms-mutability": [
+            "read"         
+          ]
+        },
+        "rolloutInfo": {
+          "readOnly": true,
+          "$ref": "#/definitions/rolloutInfo"
+        },
+        "interTierActionsRolloutState": {
+          "readOnly": true,
+          "$ref": "#/definitions/GateActionRolloutStates"
+        },
+        "siteNetworkServices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SiteNetworkServiceRolloutState"
+          },
+          "x-ms-mutability": [
+            "read"         
+          ]
+        }
+      }
+    },
+    "SiteNetworkServiceRolloutState": {
+      "type": "object",
+      "properties": {
+        "siteNetworkServiceReference": {
+          "$ref": "./common.json#/definitions/ReferencedResource",
+          "readOnly": true
+        },
+        "rolloutInfo": {
+          "$ref": "#/definitions/rolloutInfo",
+          "readOnly": true
+        },
+        "intraTierActionsRolloutState": {
+          "$ref": "#/definitions/GateActionRolloutStates",
+          "readOnly": true
+        }
+      }
+    },
+    "GateActionRolloutStates": {
+      "type": "object",
+      "properties": {
+        "preActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PreActionRolloutState"
+          },
+          "readOnly": true
+        },
+        "postActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostActionRolloutState"
+          },
+          "readOnly": true
+        }
+      }
+    },
+    "PreActionRolloutState": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "./common.json#/definitions/PreAction",
+          "readOnly": true
+        },
+        "rolloutInfo": {
+          "$ref": "#/definitions/rolloutInfo",
+          "readOnly": true
+        }
+      }
+    },
+    "PostActionRolloutState": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "./common.json#/definitions/PostAction",
+          "readOnly": true
+        },
+        "rolloutInfo": {
+          "$ref": "#/definitions/rolloutInfo",
+          "readOnly": true
+        }
+      }
+    },
+
+    "rolloutInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "errorInfo": {
+          "type": "string"
+        }
+      },
+      "readOnly": true
     }
   }
 }
