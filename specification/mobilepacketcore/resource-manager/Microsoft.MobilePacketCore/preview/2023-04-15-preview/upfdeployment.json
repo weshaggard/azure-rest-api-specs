@@ -296,39 +296,28 @@
                   },
                   "networkContextUsage": {
                     "$ref": "./common.json#/definitions/NetworkContextUsage",
-                    "description": "Usage of the network context - interface type mapping"
+                    "description": "Usage of the network context for specific interface types.  If specified, the interfaces' IP will be allocated from a pool within the specified network context"
                   },
                   "ipInterfaces": {
                     "type": "array",
                     "description": "Provisioned IP Interfaces",
                     "items": {
                       "type": "object",
+                      "allOf": [
+                        {
+                          "$ref": "./common.json#/definitions/IpInterfacesCommon"
+                        }
+                      ],
                       "properties": {
-                        "vlanId": {
-                          "type": "integer",
-                          "description": "The VLAN Identifier for this interface."
-                        },
-                        "interfaceLabel": {
-                          "type": "string",
-                          "description": "Optional label to identify the h/w interface where this subinterface is created."
-                        },
-                        "ipMtu": {
-                          "type": "integer",
-                          "description": "The Layer 3 MTU of the sub-interface"
-                        },
-                        "sharedSubnet": {
-                          "$ref": "./common.json#/definitions/Ao5gcBoolean",
-                          "description": "Whether subnet is shared or not"
-                        },
                         "ipAddressTemplates": {
                           "type": "array",
-                          "description": "Provisioned set of IPv4 addresses available for use when deploying this ip-interface",
+                          "description": "Provisioned set of IPv4/IPv6 addresses available for use when deploying this ip-interface",
                           "items": {
                             "type": "object",
                             "properties": {
                               "prefixLength": {
                                 "type": "integer",
-                                "description": "IPv4 subnet length of all addresses created by template"
+                                "description": "IPv4/IPv6 subnet length of all addresses created by template"
                               },
                               "count": {
                                 "type": "integer",
@@ -336,7 +325,7 @@
                               },
                               "baseAddress": {
                                 "$ref": "./common.json#/definitions/IpAddress",
-                                "description": "IPv4 end-point address, (subnet and host), of first address created by template"
+                                "description": "IPv4/IPv6 end-point address, (subnet and host), of first address created by template"
                               }
                             }
                           }
@@ -349,6 +338,11 @@
                     "description": "Provisioned IP loopbacks",
                     "items": {
                       "type": "object",
+                      "allOf": [
+                        {
+                          "$ref": "./common.json#/definitions/IpLoopbackCommon"
+                        }
+                      ],
                       "properties": {
                         "startIp": {
                           "$ref": "./common.json#/definitions/IpAddress",
@@ -357,20 +351,6 @@
                         "endIp": {
                           "$ref": "./common.json#/definitions/IpAddress",
                           "description": "IP address of loopback interface - end address for the range"
-                        },
-                        "scope": {
-                          "$ref": "./common.json#/definitions/IpLoopbackScope"
-                        },
-                        "loopbacksPerPod": {
-                          "type": "integer",
-                          "description": "Number of loopback interfaces assigned to a ppe when the scope is type pod"
-                        },
-                        "usage": {
-                          "type": "array",
-                          "description": "Purpose of loopback",
-                          "items": {
-                            "$ref": "./common.json#/definitions/LoopbackUsage"
-                          }
                         }
                       }
                     }
@@ -380,14 +360,12 @@
                     "description": "Provisioned IP pools",
                     "items": {
                       "type": "object",
+                      "allOf": [
+                        {
+                          "$ref": "./common.json#/definitions/IpPoolCommon"
+                        }
+                      ],
                       "properties": {
-                        "poolType": {
-                          "$ref": "./common.json#/definitions/IpPoolType"
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "Unique name identifying this IP Pool (referenced by other resources such as the packet detection rule)"
-                        },
                         "startIp": {
                           "$ref": "./common.json#/definitions/IpAddress",
                           "description": "Starting value for IP address of this IP pool"
@@ -395,32 +373,6 @@
                         "endIp": {
                           "$ref": "./common.json#/definitions/IpAddress",
                           "description": "Ending value for IP address of this IP pool"
-                        },
-                        "routeSummaryPrefixLength": {
-                          "type": "integer",
-                          "description": "Route summary prefix length of this IP pool."
-                        },
-                        "advertise": {
-                          "$ref": "./common.json#/definitions/Ao5gcBoolean",
-                          "description": "Advertise reachability of this UE IP Pool over dynamic routing"
-                        },
-                        "layer3AffinityModeChunkSize": {
-                          "type": "integer",
-                          "description": "Size of the UE IP pool chunks that will be used in resource blocks for Layer 3 Affinity mode - for resource management with multiple packet processing engine instances. Only applicable to pools of type UE"
-                        },
-                        "nat": {
-                          "type": "object",
-                          "description": "NAT parameters specific to this deployment",
-                          "properties": {
-                            "maxPortsPerSession": {
-                              "type": "integer",
-                              "description": "Number of ports allowed per UE. Default 0 implies unlimited ports per UE."
-                            },
-                            "layer3AffinityModeIpsPerPacketProcessingEngine": {
-                              "type": "integer",
-                              "description": "Number of IPs per packet processing engine to be allocated"
-                            }
-                          }
                         }
                       }
                     }
@@ -435,7 +387,7 @@
         },
         "deploymentArea": {
           "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "The reference to the deployment area to which this NF belongs.",
+          "description": "The reference to the deployment area to which this network function belongs.",
           "x-ms-mutability": [
             "create",
             "read"
@@ -448,7 +400,7 @@
             "properties": {
               "networkSlice": {
                 "$ref": "./common.json#/definitions/ReferencedResource",
-                "description": "Network slice in which this NF participates"
+                "description": "Network slice in which this network function participates"
               },
               "distinguishedName": {
                 "$ref": "./common.json#/definitions/DistinguishedName",

@@ -238,30 +238,18 @@
       "description": "Configure IPv4/IPv6 loopback interfaces that will be deployed in this Network Context. Each loopback entry will be deployed as an interface in the Network Context FIB. A loopback interface is defined by a 'loopback-address' and a 'prefix-length'. The 'loopback-address', masked by the 'prefix-length', defines a loopback subnet. All host addresses in the subnet will be loopback addresses, including the 'all 0's' and 'all 1's' host addresses. 'prefix-length' is optional, defaulting to 32 if not specified. Multicast addresses are invalid and will not be deployed.  The 'loopback-address', masked by 'prefix-length', represents the routing prefix used to advertise reachability to the loopback addresses supported by the interface. 'admin-state' controls the administrative state of the loopback interface. If set to 'disabled', all traffic received on the loopback interface will be dropped, and no traffic will be originated from the interface.",
       "items": {
         "type": "object",
+        "allOf": [
+          {
+            "$ref": "./common.json#/definitions/IpLoopbackCommon"
+          }
+        ],
         "properties": {
-          "scope": {
-            "$ref": "./common.json#/definitions/IpLoopbackScope"
-          },
-          "loopbacksPerPod": {
-            "type": "integer",
-            "description": "Number of loopback interfaces assigned to a ppe when the scope is type pod",
-            "minimum": 1,
-            "maximum": 128,
-            "default": 1
-          },
           "count": {
             "type": "integer",
             "description": "The number of loopback IPs to allocate",
             "minimum": 0,
             "maximum": 128,
             "default": 1
-          },
-          "usage": {
-            "type": "array",
-            "description": "Purpose of loopback",
-            "items": {
-              "$ref": "./common.json#/definitions/LoopbackUsage"
-            }
           }
         }
       }
@@ -286,37 +274,19 @@
               },
               "networkContextUsage": {
                 "$ref": "./common.json#/definitions/NetworkContextUsage",
-                "description": "Usage of the network context - interface type mapping"
+                "description": "Usage of the network context for specific interface types.  If specified, the interfaces' IP will be allocated from a pool within the specified network context"
               },
               "ipInterfaces": {
                 "type": "array",
                 "description": "Configure the ip-interface that will be created on every ethernet interface in this Network Context if the interface-label is not specified. Otherwise, the ip-interface will be created only on the interface-label matching interface.",
                 "items": {
                   "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "./common.json#/definitions/IpInterfacesCommon"
+                    }
+                  ],
                   "properties": {
-                    "vlanId": {
-                      "type": "integer",
-                      "description": "The VLAN Identifier for this interface. The acceptable range is [0, 4094] and the value must be unique across all Network Contexts. The default VLAN-ID is 0, which is used to specifies an untagged interface.",
-                      "minimum": 0,
-                      "maximum": 4094,
-                      "default": 0
-                    },
-                    "interfaceLabel": {
-                      "type": "string",
-                      "description": "Optionally specify a label to identify the h/w interface where this subinterface will be created.",
-                      "default": ""
-                    },
-                    "ipMtu": {
-                      "type": "integer",
-                      "description": "Optionally set the Layer 3 MTU of the sub-interface - range [1280, 9216] - default is 1500.  Received packets larger than this value will be dropped. Transmitted packets will be fragmented to stay below this value. The setting applies to both IPv4 and IPv6 packets.",
-                      "minimum": 1280,
-                      "maximum": 9216,
-                      "default": 1500
-                    },
-                    "sharedSubnet": {
-                      "$ref": "./common.json#/definitions/Ao5gcBoolean",
-                      "description": "Enables or disables shared subnet"
-                    },
                     "ipv4AddressTemplate": {
                       "type": "array",
                       "description": "Configure a set of IPv4 addresses available for use when deploying this ip-interface",
@@ -383,70 +353,19 @@
                 "description": "IP Pools configuration",
                 "items": {
                   "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "./common.json#/definitions/IpPoolCommon"
+                    }
+                  ],
                   "properties": {
-                    "poolType": {
-                      "$ref": "./common.json#/definitions/IpPoolType"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "Unique name identifying this IP Pool (referenced by other resources such as the packet detection rule).  Warning!!! This name must be unique across all network contexts"
-                    },
                     "poolSize": {
                       "type": "integer",
                       "description": "Size of this pool"
-                    },
-                    "tag": {
-                      "type": "string",
-                      "description": "Optional tag to be used to identify the cluster pool from which this pool is allocated.  If specified, only pools provisioned with the same tag value can be used to populate this IP Pool when a UPF is deployed.  If not specified any untagged pool can be used.  Applicable to pools of type UE"
-                    },
-                    "dataNetworkList": {
-                      "type": "array",
-                      "description": "Optional list of data networks which can use this IP pool.  If not specified this pool can be used by any DNN in the same network context.  Applicable to pools of type UE",
-                      "items": {
-                        "$ref": "./common.json#/definitions/ReferencedResource"
-                      }
-                    },
-                    "routeSummaryPrefixLength": {
-                      "type": "integer",
-                      "maximum": 128,
-                      "description": "Route summary prefix length of this IP pool.  Max 32 or 128 depending on IP version"
-                    },
-                    "advertise": {
-                      "$ref": "./common.json#/definitions/Ao5gcBoolean",
-                      "description": "Advertise reachability of this UE IP Pool over dynamic routing.  Default is true"
-                    },
-                    "layer3AffinityModeChunkSize": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 4294967295,
-                      "default": 8192,
-                      "description": "Size of the UE IP pool chunks that will be used in resource blocks for Layer 3 Affinity mode - for resource management with multiple packet processing engine instances. Only applicable to pools of type UE"
-                    },
-                    "nat": {
-                      "type": "object",
-                      "description": "Network Address Translation parameters",
-                      "properties": {
-                        "maxPortsPerSession": {
-                          "type": "integer",
-                          "description": "Number of ports allowed per UE. Default 0 implies unlimited ports per UE.",
-                          "minimum": 0,
-                          "maximum": 64511,
-                          "default": 0
-                        },
-                        "layer3AffinityModeIpsPerPacketProcessingEngine": {
-                          "type": "integer",
-                          "description": "Number of IPs per packet processing engine to be allocated",
-                          "minimum": 1,
-                          "maximum": 4294967295,
-                          "default": 1
-                        }
-                      }
                     }
                   },
                   "required": [
-                    "name",
-                    "poolSize",
-                    "routeSummaryPrefixLength"
+                    "poolSize"
                   ]
                 }
               }

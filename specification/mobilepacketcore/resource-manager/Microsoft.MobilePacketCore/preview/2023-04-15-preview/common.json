@@ -809,7 +809,7 @@
           }
         }
       },
-      "description": "A list of remote PFCP peers with which the local NF instance communicates"
+      "description": "A list of remote PFCP peers with which the local network function instance communicates"
     },
     "ResolvedNrfs": {
       "type": "array",
@@ -954,7 +954,7 @@
         "name": "MeasurementUnit",
         "modelAsString": true
       },
-      "description": "rate-measurement-units: kbps/mbps/gbps",
+      "description": "rate-measurement-units: kilobits/megabits/gigabits per second",
       "default": "Kbps"
     },
     "QosFlow": {
@@ -1330,7 +1330,7 @@
     },
     "NetworkContextUsage": {
       "type": "array",
-      "description": "Usage of the network context - interface type mapping",
+      "description": "Usage of the network context for specific interface types.  If specified, the interfaces' IP will be allocated from a pool within the specified network context",
       "items": {
         "type": "string",
         "enum": [
@@ -1384,6 +1384,122 @@
       "description": "match against ue or network traffic",
       "default": "Both"
     },
+    "IpPoolCommon": {
+      "type": "object",
+      "description": "Common attributes for IP Pool provisioning",
+      "properties": {
+        "poolType": {
+          "$ref": "#/definitions/IpPoolType"
+        },
+        "name": {
+          "type": "string",
+          "description": "Unique name identifying this IP Pool (referenced by other resources such as the packet detection rule).  Warning!!! This name must be unique across all network contexts"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Optional tag to be used to identify the cluster pool from which this pool is allocated.  If specified, only pools provisioned with the same tag value can be used to populate this IP Pool when a UPF is deployed.  If not specified any untagged pool can be used.  Applicable to pools of type UE"
+        },
+        "dataNetworkList": {
+          "type": "array",
+          "description": "Optional list of data networks which can use this IP pool.  If not specified this pool can be used by any DNN in the same network context.  Applicable to pools of type UE",
+          "items": {
+            "$ref": "#/definitions/ReferencedResource"
+          }
+        },
+        "routeSummaryPrefixLength": {
+          "type": "integer",
+          "maximum": 128,
+          "description": "Route summary prefix length of this IP pool.  Max 32 or 128 depending on IP version"
+        },
+        "advertise": {
+          "$ref": "#/definitions/Ao5gcBoolean",
+          "description": "Advertise reachability of this UE IP Pool over dynamic routing.  Default is true"
+        },
+        "layer3AffinityModeChunkSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "default": 8192,
+          "description": "Size of the UE IP pool chunks that will be used in resource blocks for Layer 3 Affinity mode - for resource management with multiple packet processing engine instances. Only applicable to pools of type UE"
+        },
+        "nat": {
+          "type": "object",
+          "description": "Network Address Translation parameters",
+          "properties": {
+            "maxPortsPerSession": {
+              "type": "integer",
+              "description": "Number of ports allowed per UE. Default 0 implies unlimited ports per UE.",
+              "minimum": 0,
+              "maximum": 64511,
+              "default": 0
+            },
+            "layer3AffinityModeIpsPerPacketProcessingEngine": {
+              "type": "integer",
+              "description": "Number of IPs per packet processing engine to be allocated",
+              "minimum": 1,
+              "maximum": 4294967295,
+              "default": 1
+            }
+          }
+        }
+      },
+      "required": [
+        "name",
+        "routeSummaryPrefixLength"
+      ]
+    },
+    "IpInterfacesCommon": {
+      "type": "object",
+      "description": "Common attributes for IP Interface provisioning",
+      "properties": {
+        "vlanId": {
+          "type": "integer",
+          "description": "The VLAN Identifier for this interface. The acceptable range is [0, 4094] and the value must be unique across all Network Contexts. The default VLAN-ID is 0, which is used to specifies an untagged interface.",
+          "minimum": 0,
+          "maximum": 4094,
+          "default": 0
+        },
+        "interfaceLabel": {
+          "type": "string",
+          "description": "Optionally specify a label to identify the h/w interface where this subinterface will be created.",
+          "default": ""
+        },
+        "ipMtu": {
+          "type": "integer",
+          "description": "Optionally set the Layer 3 MTU of the sub-interface - range [1280, 9216] - default is 1500.  Received packets larger than this value will be dropped. Transmitted packets will be fragmented to stay below this value. The setting applies to both IPv4 and IPv6 packets.",
+          "minimum": 1280,
+          "maximum": 9216,
+          "default": 1500
+        },
+        "isSharedSubnet": {
+          "$ref": "#/definitions/Ao5gcBoolean",
+          "description": "Enables or disables shared subnet"
+        }
+      }
+    },
+    "IpLoopbackCommon": {
+      "type": "object",
+      "description": "Common attributes for IP Loopback provisioning",
+      "properties": {
+        "scope": {
+          "$ref": "./common.json#/definitions/IpLoopbackScope"
+        },
+        "loopbacksPerPod": {
+          "type": "integer",
+          "description": "Number of loopback interfaces assigned to a ppe when the scope is type pod",
+          "minimum": 1,
+          "maximum": 128,
+          "default": 1
+        },
+        "usage": {
+          "type": "array",
+          "description": "Purpose of loopback",
+          "items": {
+            "$ref": "./common.json#/definitions/LoopbackUsage"
+          }
+        }
+      }
+    },
     "Ao5gcOperationStatus": {
       "description": "The current status of an async operation.",
       "type": "object",
@@ -1434,17 +1550,17 @@
           "type": "object",
           "properties": {
             "networkFunctionInstance": {
-              "description": "The NF tasks execution status.",
+              "description": "The network function tasks execution status.",
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
                   "resourceId": {
-                    "description": "Reference to the NF instance.",
+                    "description": "Reference to the network function instance.",
                     "$ref": "#/definitions/ReferencedResource"
                   },
                   "status": {
-                    "description": "The aggregate execution status for the NF instance.",
+                    "description": "The aggregate execution status for the network function instance.",
                     "type": "string",
                     "enum": [
                       "Submitted",
@@ -1469,11 +1585,11 @@
                     "format": "date-time"
                   },
                   "details": {
-                    "description": "The detailed message for the NF instance.",
+                    "description": "The detailed message for the network function instance.",
                     "type": "string"
                   },
                   "task": {
-                    "description": "The execution statuses for child tasks for the NF instance.",
+                    "description": "The execution statuses for child tasks for the network function instance.",
                     "type": "array",
                     "items": {
                       "type": "object",
