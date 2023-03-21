@@ -221,15 +221,11 @@
     }
   },
   "definitions": {
-    "NfviPropertiesFormat": {
+    "NfviTypeSpecificData": {
       "type": "object",
       "description": "Mobile Packet Core NFVI properties.",
+      "discriminator": "type",
       "properties": {
-        "provisioningState": {
-          "readOnly": true,
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "description": "The provisioning state of the resource."
-        },
         "type": {
           "type": "string",
           "enum": [
@@ -240,15 +236,60 @@
             "name": "NfviType",
             "modelAsString": true
           },
-          "description": "Type of NFVI"
-        },
-        "location": {
-          "type": "string",
-          "description": "If type is AzureCore, this is the region"
-        },
+          "description": "Type of NFVI",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "AzureNexusData": {
+      "type": "object",
+      "description": "Azure Nexus NFVI properties.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NfviTypeSpecificData"
+        }
+      ],
+      "properties": {
         "customLocationReference": {
           "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "If the type is AODS, this is the reference to the custom location."
+          "description": "Custom location if the type is AzureNexus"
+        }
+      },
+      "x-ms-discriminator-value": "AzureNexus"
+    },
+    "AzureCoreData": {
+      "type": "object",
+      "description": "Azure Nexus NFVI properties.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NfviTypeSpecificData"
+        }
+      ],
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "Location if type is AzureCore"
+        }
+      },
+      "x-ms-discriminator-value": "AzureCore"
+    },
+    "NfviPropertiesFormat": {
+      "type": "object",
+      "description": "Mobile Packet Core NFVI properties.",
+      "properties": {
+        "provisioningState": {
+          "readOnly": true,
+          "$ref": "./common.json#/definitions/ProvisioningState",
+          "description": "The provisioning state of the resource."
+        },
+        "typeSpecificData": {
+          "$ref": "#/definitions/NfviTypeSpecificData"
         },
         "deploymentAreaList": {
           "type": "array",

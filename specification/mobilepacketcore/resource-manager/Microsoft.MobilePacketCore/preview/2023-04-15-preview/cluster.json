@@ -233,6 +233,35 @@
     }
   },
   "definitions": {
+    "ClusterIpPools": {
+      "type": "object",
+      "description": "Common parameters for IP pools",
+      "properties": {
+        "ipStart": {
+          "$ref": "./common.json#/definitions/IpAddress"
+        },
+        "ipEnd": {
+          "$ref": "./common.json#/definitions/IpAddress"
+        },
+        "allocations": {
+          "type": "array",
+          "description": "IP addresses that have been allocated for workloads (in use)",
+          "readOnly": true,
+          "items": {
+            "type": "object",
+            "properties": {
+              "usage": {
+                "type": "string",
+                "description": "For what this IP address is used"
+              },
+              "ipAddress": {
+                "$ref": "./common.json#/definitions/IpAddress"
+              }
+            }
+          }
+        }
+      }
+    },
     "ClusterPropertiesFormat": {
       "type": "object",
       "description": "Mobile packet core cluster properties.",
@@ -292,13 +321,12 @@
           "description": "Management data IP Pools supported by this cluster for use by deployed workloads",
           "items": {
             "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/definitions/ClusterIpPools"
+              }
+            ],
             "properties": {
-              "ipStart": {
-                "$ref": "./common.json#/definitions/IpAddress"
-              },
-              "ipEnd": {
-                "$ref": "./common.json#/definitions/IpAddress"
-              },
               "aksPoolParameters": {
                 "type": "object",
                 "description": "Parameters specific to AKS clusters",
@@ -326,23 +354,6 @@
                     }
                   }
                 }
-              },
-              "allocations": {
-                "type": "array",
-                "description": "IP addresses that have been allocated for workloads (in use)",
-                "readOnly": true,
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "usage": {
-                      "type": "string",
-                      "description": "For what this IP address is used"
-                    },
-                    "ipAddress": {
-                      "$ref": "./common.json#/definitions/IpAddress"
-                    }
-                  }
-                }
               }
             }
           }
@@ -352,6 +363,11 @@
           "description": "User data IP Pools supported by this cluster for use by deployed workloads",
           "items": {
             "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/definitions/ClusterIpPools"
+              }
+            ],
             "properties": {
               "networkContextName": {
                 "$ref": "./common.json#/definitions/NetworkContextName"
@@ -369,32 +385,9 @@
                 },
                 "description": "Usage of IP pool"
               },
-              "ipStart": {
-                "$ref": "./common.json#/definitions/IpAddress"
-              },
-              "ipEnd": {
-                "$ref": "./common.json#/definitions/IpAddress"
-              },
               "tag": {
                 "type": "string",
                 "description": "Optional tag to be used to identify this cluster pool.  If specified, only IP pools in the Network Function profile object that have the same tag value can be populated with data from this pool.  Applicable to pools of type user"
-              },
-              "allocations": {
-                "type": "array",
-                "description": "IP addresses that have been allocated for workloads (in use)",
-                "readOnly": true,
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "usage": {
-                      "type": "string",
-                      "description": "For what this IP address is used"
-                    },
-                    "ipAddress": {
-                      "$ref": "./common.json#/definitions/IpAddress"
-                    }
-                  }
-                }
               }
             }
           }
