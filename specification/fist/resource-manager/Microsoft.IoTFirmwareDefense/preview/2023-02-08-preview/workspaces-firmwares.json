@@ -826,57 +826,6 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.IoTFirmwareDefense/workspaces/{workspaceName}/firmwares/{firmwareId}/resources": {
-      "post": {
-        "tags": [
-          "Firmwares"
-        ],
-        "operationId": "Firmware_ResourcesQuery",
-        "description": "An ARG-like method to generate a paginated list of analysis results with sorting and filtering.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "./common.json#/parameters/WorkspaceNameParameter"
-          },
-          {
-            "$ref": "./common.json#/parameters/FirmwareIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/ResourcesQueryBodyParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ResourcesData"
-            }
-          },
-          "default": {
-            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "Firmware_ResourcesQuery_MaximumSet_Gen": {
-            "$ref": "./examples/Firmware_ResourcesQuery_MaximumSet_Gen.json"
-          },
-          "Firmware_ResourcesQuery_MinimumSet_Gen": {
-            "$ref": "./examples/Firmware_ResourcesQuery_MinimumSet_Gen.json"
-          }
-        }
-      }
-    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.IoTFirmwareDefense/workspaces/{workspaceName}/firmwares/{firmwareId}/generateCryptoCertificateSummary": {
       "post": {
         "tags": [
@@ -1475,20 +1424,53 @@
           "type": "string",
           "x-nullable": true
         },
-        "type": {
-          "description": "Type of the key.",
+        "keyType": {
+          "description": "Type of the key (public or private)",
           "type": "string",
           "x-nullable": true
         },
-        "size": {
+        "keySize": {
           "description": "Size of the key in bits",
           "type": "integer",
           "format": "int64",
           "x-nullable": true
         },
-        "algorithm": {
+        "keyAlgorithm": {
           "description": "Key algorithm name",
           "type": "string",
+          "x-nullable": true
+        },
+        "usage": {
+          "description": "Functions the key can fulfill.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "filePaths": {
+          "type": "array",
+          "readOnly": true,
+          "description": "List of files paths for this certificate",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pairedKey": {
+          "description": "A matching paired key or certificate.",
+          "$ref": "#/definitions/PairedKey",
+          "x-nullable": true
+        },
+        "isWeakAlgorithm": {
+          "description": "Indicates the algorithm used is insecure.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "name": "isWeakAlgorithm",
+            "modelAsString": true
+          },
           "x-nullable": true
         },
         "isShortKeySize": {
@@ -1501,11 +1483,7 @@
           "x-ms-enum": {
             "name": "isShortKeySize",
             "modelAsString": true
-          }
-        },
-        "matchingCertificate": {
-          "description": "Matching certificate for the key.",
-          "type": "string",
+          },
           "x-nullable": true
         }
       },
@@ -1529,8 +1507,8 @@
           "type": "integer",
           "format": "int64"
         },
-        "matchedCertificate": {
-          "description": "Total number of keys found that have a matching certificate.",
+        "pairedKeys": {
+          "description": "Total number of keys found that have a matching paired key or certificate.",
           "type": "integer",
           "format": "int64"
         },
@@ -1581,9 +1559,18 @@
           "type": "string",
           "x-nullable": true
         },
-        "role": {
-          "description": "Role of the certificate.",
+        "subject": {
+          "description": "Subject information of the certificate.",
+          "$ref": "#/definitions/CryptoCertificateEntity"
+        },
+        "issuer": {
+          "description": "Issuer information of the certificate.",
+          "$ref": "#/definitions/CryptoCertificateEntity"
+        },
+        "issuedDate": {
           "type": "string",
+          "format": "date-time",
+          "description": "Expiration date for the certificate.",
           "x-nullable": true
         },
         "expirationDate": {
@@ -1592,20 +1579,13 @@
           "description": "Expiration date for the certificate.",
           "x-nullable": true
         },
-        "filePaths": {
-          "type": "array",
-          "readOnly": true,
-          "description": "List of files paths for this certificate",
-          "items": {
-            "type": "string"
-          }
+        "role": {
+          "description": "Role of the certificate.",
+          "type": "string",
+          "x-nullable": true
         },
         "signatureAlgorithm": {
           "description": "The signature algorithm used in the certificate.",
-          "type": "string"
-        },
-        "keyAlgorithm": {
-          "description": "The key algorithm used in the certificate.",
           "type": "string"
         },
         "keySize": {
@@ -1614,28 +1594,13 @@
           "format": "int64",
           "x-nullable": true
         },
+        "keyAlgorithm": {
+          "description": "The key algorithm used in the certificate.",
+          "type": "string"
+        },
         "encoding": {
           "description": "The encoding used for the certificate.",
           "type": "string"
-        },
-        "selfSigned": {
-          "description": "Indicates if the certificate was self-signed.",
-          "type": "string",
-          "enum": [
-            "True",
-            "False"
-          ],
-          "x-ms-enum": {
-            "name": "selfSigned",
-            "modelAsString": true
-          }
-        },
-        "usage": {
-          "description": "Functions the certificate can fulfill.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         },
         "serialNumber": {
           "description": "Serial number of the certificate.",
@@ -1645,13 +1610,49 @@
           "description": "Fingerprint of the certificate.",
           "type": "string"
         },
-        "subjectEntity": {
-          "description": "Subject information of the certificate.",
-          "$ref": "#/definitions/CryptoCertEntity"
+        "usage": {
+          "description": "Functions the certificate can fulfill.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
-        "issuerEntity": {
-          "description": "Issuer information of the certificate.",
-          "$ref": "#/definitions/CryptoCertEntity"
+        "filePaths": {
+          "type": "array",
+          "readOnly": true,
+          "description": "List of files paths for this certificate",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pairedKey": {
+          "description": "A matching paired key.",
+          "$ref": "#/definitions/PairedKey",
+          "x-nullable": true
+        },
+        "isExpired": {
+          "description": "Indicates if the certificate was self-signed.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "name": "isExpired",
+            "modelAsString": true
+          }
+        },
+        "isSelfSigned": {
+          "description": "Indicates if the certificate was self-signed.",
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "name": "isSelfSigned",
+            "modelAsString": true
+          }
         },
         "isWeakAlgorithm": {
           "description": "Indicates the algorithm used is insecure.",
@@ -1663,10 +1664,11 @@
           "x-ms-enum": {
             "name": "isWeakAlgorithm",
             "modelAsString": true
-          }
+          },
+          "x-nullable": true
         },
         "isShortKeySize": {
-          "description": "Indicates the key size is considered too small to be secure for the algorithm type.",
+          "description": "Indicates the certificate's key size is considered too small to be secure for the algorithm type.",
           "type": "string",
           "enum": [
             "True",
@@ -1675,14 +1677,15 @@
           "x-ms-enum": {
             "name": "isShortKeySize",
             "modelAsString": true
-          }
+          },
+          "x-nullable": true
         }
       },
       "description": "Crypto certificate properties"
     },
-    "CryptoCertEntity": {
+    "CryptoCertificateEntity": {
       "type": "object",
-      "description": "Information on an entity in a cryptographic certificate",
+      "description": "Information on an entity (distinguished name) in a cryptographic certificate",
       "properties": {
         "commonName": {
           "description": "Name of the certificate entity.",
@@ -1697,11 +1700,11 @@
           "type": "string"
         },
         "state": {
-          "description": "Geographical state of the certificate entity.",
+          "description": "Geographical state or province of the certificate entity.",
           "type": "string"
         },
-        "region": {
-          "description": "Geographical region of the certificate entity.",
+        "country": {
+          "description": "Country code of the certificate entity.",
           "type": "string"
         }
       }
@@ -1711,6 +1714,11 @@
       "properties": {
         "totalCertificates": {
           "description": "Total number of certificates found.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "pairedKeys": {
+          "description": "Total number of certificates found that have a matching paired key.",
           "type": "integer",
           "format": "int64"
         },
@@ -1914,137 +1922,19 @@
         }
       }
     },
-    "ResourcesQuery": {
+    "PairedKey": {
       "type": "object",
-      "description": "Details necessary to query analysis results.",
-      "required": [
-        "query"
-      ],
+      "description": "Details of a matching paired key or certificate.",
       "properties": {
-        "options": {
-          "type": "object",
-          "description": "The query evaluation options.",
-          "properties": {
-            "top": {
-              "description": "The maximum number of rows that the query should return.",
-              "type": "integer",
-              "format": "int32",
-              "x-nullable": true
-            },
-            "skip": {
-              "description": "The number of rows to skip from the beginning of the results.",
-              "type": "integer",
-              "format": "int64",
-              "x-nullable": true
-            }
-          }
-        },
-        "query": {
+        "id": {
           "type": "string",
-          "description": "The resources query."
+          "description": "ID of the paired key or certificate."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type indicating whether the paired object is a key or certificate."
         }
       }
-    },
-    "ResourcesData": {
-      "type": "object",
-      "description": "Paginated and optionally filtered analysis results",
-      "discriminator": "analysisType",
-      "properties": {
-        "analysisType": {
-          "type": "string",
-          "description": "Specifies the type of analysis result.",
-          "enum": [
-            "binaryHardening",
-            "component",
-            "cve"
-          ],
-          "x-ms-enum": {
-            "name": "analysisType",
-            "modelAsString": true
-          }
-        },
-        "count": {
-          "description": "Number of records returned in the current response.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "totalRecords": {
-          "description": "Number of total records matching the query.",
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "required": [
-        "analysisType",
-        "count",
-        "totalRecords"
-      ]
-    },
-    "BinaryHardeningResourcesData": {
-      "description": "Paginated SBOM results.",
-      "type": "object",
-      "x-ms-discriminator-value": "binaryHardening",
-      "properties": {
-        "data": {
-          "description": "The result array data.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BinaryHardening"
-          },
-          "x-ms-identifiers": [
-            "binaryHardeningId"
-          ]
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ResourcesData"
-        }
-      ]
-    },
-    "ComponentResourcesData": {
-      "description": "Paginated SBOM results.",
-      "type": "object",
-      "x-ms-discriminator-value": "component",
-      "properties": {
-        "data": {
-          "description": "The result array data.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Component"
-          },
-          "x-ms-identifiers": [
-            "componentId"
-          ]
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ResourcesData"
-        }
-      ]
-    },
-    "CveResourcesData": {
-      "description": "Paginated CVE results.",
-      "type": "object",
-      "x-ms-discriminator-value": "cve",
-      "properties": {
-        "data": {
-          "description": "The result array data.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Cve"
-          },
-          "x-ms-identifiers": [
-            "cveId"
-          ]
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/ResourcesData"
-        }
-      ]
     }
   },
   "parameters": {
@@ -2082,16 +1972,6 @@
       "required": false,
       "type": "string",
       "description": "The id of firmware binary.",
-      "x-ms-parameter-location": "method"
-    },
-    "ResourcesQueryBodyParameter": {
-      "name": "parameters",
-      "in": "body",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/ResourcesQuery"
-      },
-      "description": "The query to return analysis data.",
       "x-ms-parameter-location": "method"
     }
   }
