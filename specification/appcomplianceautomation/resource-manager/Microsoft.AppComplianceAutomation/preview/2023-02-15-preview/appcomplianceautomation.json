@@ -792,6 +792,216 @@
           }
         }
       }
+    },
+    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/evidences": {
+      "get": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Returns a paginated list of evidences for a specified report.",
+        "operationId": "Evidences_ListByReport",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          },
+          {
+            "$ref": "#/parameters/SkipTokenParameter"
+          },
+          {
+            "$ref": "#/parameters/TopParameter"
+          },
+          {
+            "$ref": "#/parameters/SelectParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/OfferGuidParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportCreatorTenantIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EvidenceResourceList"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "x-ms-client-name": "ErrorCode"
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "Evidences_ListByReport": {
+            "$ref": "./examples/Evidences_ListByReport.json"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/evidences/{evidenceName}": {
+      "get": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Get the evidence metadata",
+        "operationId": "Evidences_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          },
+          {
+            "$ref": "#/parameters/EvidenceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/OfferGuidParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportCreatorTenantIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EvidenceResource"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Evidences_Get": {
+            "$ref": "./examples/Evidences_Get.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Create or Update an evidence a specified report",
+        "operationId": "Evidences_CreateOrUpdate",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "Parameters for the create or update operation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EvidenceResource"
+            }
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          },
+          {
+            "$ref": "#/parameters/EvidenceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/OfferGuidParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportCreatorTenantIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EvidenceResource"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Evidences_CreateOrUpdate": {
+            "$ref": "./examples/Evidences_CreateOrUpdate.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Delete an existent evidence from a specified report",
+        "operationId": "Evidences_Delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          },
+          {
+            "$ref": "#/parameters/EvidenceNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. The response indicates the resource has been deleted."
+          },
+          "204": {
+            "description": "Success. The response indicates the resource is already deleted."
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Evidences_Delete": {
+            "$ref": "./examples/Evidences_Delete.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1039,7 +1249,7 @@
           "type": "string",
           "description": "webhook payload url",
           "readOnly": false,
-          "pattern": "^(http(s)?:\/\/)[\\S]{0,64994}$"
+          "pattern": "^(http(s)?://)[\\S]{0,64994}$"
         },
         "contentType": {
           "type": "string",
@@ -2063,6 +2273,95 @@
         "name": "provisioningState",
         "modelAsString": true
       }
+    },
+    "EvidenceProperties": {
+      "type": "object",
+      "description": "Evidence's properties.",
+      "properties": {
+        "evidenceType": {
+          "description": "Evidence type.",
+          "$ref": "#/definitions/EvidenceType"
+        },
+        "evidenceName": {
+          "type": "string",
+          "description": "Evidence name.",
+          "readOnly": true
+        },
+        "filePath": {
+          "type": "string",
+          "description": "The path of the file in storage."
+        },
+        "controlId": {
+          "type": "string",
+          "description": "Control id."
+        },
+        "responsibilityId": {
+          "type": "string",
+          "description": "Responsibility id."
+        },
+        "reportName": {
+          "type": "string",
+          "description": "Report name.",
+          "readOnly": true
+        },
+        "url": {
+          "type": "string",
+          "description": "The url of the evidence file.",
+          "readOnly": true
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "description": "Azure lifecycle management",
+          "$ref": "#/definitions/ProvisioningState"
+        }
+      }
+    },
+    "EvidenceType": {
+      "type": "string",
+      "description": "Evidence type",
+      "enum": [
+        "File"
+      ],
+      "x-ms-enum": {
+        "name": "EvidenceType",
+        "modelAsString": true
+      }
+    },
+    "EvidenceResource": {
+      "type": "object",
+      "description": "A class represent an AppComplianceAutomation evidence resource.",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "description": "Evidence property.",
+          "$ref": "#/definitions/EvidenceProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "EvidenceResourceList": {
+      "description": "Object that includes an array of resources and a possible link for next set.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "List of the evidence resources.",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/EvidenceResource"
+          }
+        },
+        "nextLink": {
+          "description": "The URL the client should use to fetch the next page (per server side paging).\r\nIt's null for now, added for future use.",
+          "type": "string"
+        }
+      }
     }
   },
   "parameters": {
@@ -2090,6 +2389,14 @@
       "required": true,
       "type": "string",
       "pattern": "^[-a-zA-Z0-9_]{1,50}$",
+      "x-ms-parameter-location": "method"
+    },
+    "EvidenceNameParameter": {
+      "name": "evidenceName",
+      "in": "path",
+      "description": "The evidence name.",
+      "required": true,
+      "type": "string",
       "x-ms-parameter-location": "method"
     },
     "SkipTokenParameter": {
