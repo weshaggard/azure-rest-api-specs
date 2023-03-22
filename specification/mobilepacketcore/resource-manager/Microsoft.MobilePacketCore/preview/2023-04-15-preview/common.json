@@ -957,9 +957,25 @@
       "description": "rate-measurement-units: kilobits/megabits/gigabits per second",
       "default": "Kbps"
     },
+    "QosFlowType": {
+      "type": "string",
+      "enum": [
+        "GuaranteedBitRate",
+        "NonGuaranteedBitRate"
+      ],
+      "x-ms-enum": {
+        "name": "QosFlowType",
+        "modelAsString": true
+      },
+      "description": "Whether QoS flow is GBR or Non-GBR"
+    },
     "QosFlow": {
       "type": "object",
+      "discriminator": "qosFlowType",
       "properties": {
+        "qosFlowType": {
+          "$ref": "#/definitions/QosFlowType"
+        },
         "fiveQi": {
           "$ref": "#/definitions/FiveQi"
         },
@@ -971,14 +987,6 @@
         },
         "arpPreemptionVulnerability": {
           "$ref": "#/definitions/ArpPreemptionVulnerability"
-        },
-        "nonGuaranteedBitRateFlow": {
-          "$ref": "#/definitions/Ao5gcBoolean",
-          "description": "indicates if this is non-guaranteed bit rate qos-flow"
-        },
-        "criticalGbrType": {
-          "$ref": "#/definitions/Ao5gcBoolean",
-          "description": "delay critical gbr type.  applicable when nonGuaranteedBitRateFlow = false"
         },
         "priorityLevel": {
           "type": "integer",
@@ -1002,59 +1010,88 @@
           "minimum": 1,
           "maximum": 4294967295,
           "description": "downlink maximum bit rate"
+        }
+      },
+      "required": [
+        "qosFlowType",
+        "fiveQi",
+        "arpPriorityLevel",
+        "arpPreemptionCapability",
+        "arpPreemptionVulnerability"
+      ],
+      "description": "Common QosFlow parameters"
+    },
+    "NonGbrQosFlow": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/QosFlow"
+        }
+      ],
+      "properties": {
+        "reflectiveQos": {
+          "$ref": "#/definitions/Ao5gcBoolean",
+          "description": "reflective qos config option"
+        }
+      },
+      "x-ms-discriminator-value": "NonGuaranteedBitRate",
+      "description": "Non guaranteed bit rate QoS flow properties. Non-gbr 5qi must be 5,6,7,8,9, 69, 70, 79, 80"
+    },
+    "GbrQosFlow": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/QosFlow"
+        }
+      ],
+      "properties": {
+        "criticalGuaranteedBitRateType": {
+          "$ref": "#/definitions/Ao5gcBoolean",
+          "description": "delay critical gbr type"
         },
         "uplinkGuaranteedBitRate": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
-          "description": "uplink guaranteed bit rate.  applicable when nonGuaranteedBitRateFlow = false"
+          "description": "uplink guaranteed bit rate"
         },
         "downlinkGuaranteedBitRate": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
-          "description": "downlink guaranteed bit rate. applicable when nonGuaranteedBitRateFlow = false"
+          "description": "downlink guaranteed bit rate"
         },
         "averagingWindow": {
           "type": "integer",
           "minimum": 1,
           "maximum": 4095,
-          "description": "averaging window [1-4095] in ms. applicable when nonGuaranteedBitRateFlow = false"
+          "description": "averaging window [1-4095] in ms"
         },
         "maxBurst": {
           "type": "integer",
           "minimum": 1,
           "maximum": 4095,
-          "description": "uplink maximum burst, measurement-units: bytes[1-4095]. applicable when nonGuaranteedBitRateFlow = true"
+          "description": "uplink maximum burst, measurement-units: bytes[1-4095]"
         },
         "maxPacketLossRateDownlink": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
-          "description": "downlink maximum packet loss rate. applicable when nonGuaranteedBitRateFlow = false"
+          "description": "downlink maximum packet loss rate"
         },
         "maxPacketLossRateUplink": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 4294967295,
-          "description": "up-link maximum packet loss rate. applicable when nonGuaranteedBitRateFlow = false"
-        },
-        "reflectiveQos": {
-          "$ref": "#/definitions/Ao5gcBoolean",
-          "description": "reflective qos config option. applicable when nonGuaranteedBitRateFlow = true"
+          "description": "uplink maximum packet loss rate"
         }
       },
-      "required": [
-        "fiveQi",
-        "arpPriorityLevel",
-        "arpPreemptionCapability",
-        "arpPreemptionVulnerability"
-      ],
-      "description": "must 'not((./non-gbr-flow = 'false') and ((count(./uplink-mbr) = 0 and count(./downlink-mbr) = 0) or (count(./uplink-gbr) = 0 and count(./downlink-gbr) = 0)))' error-message 'uplink-mbr/downlink-mbr and uplink-gbr/downlink-gbr must be greater than zero for GBR qos flow';must 'not((./non-gbr-flow = 'true') and ((./five-qi < 5) or (./five-qi > 64 and ./five-qi < 68) or (./five-qi = 75 ) or (./five-qi > 81 and ./five-qi < 86)))'  error-message 'non-dynamic non-gbr 5qi must be 5,6,7,8,9, 69, 70, 79, 80'; must 'not((./non-gbr-flow = 'false') and (./critical-gbr-type = 'false') and ((./five-qi > 4 and ./five-qi < 10) or (./five-qi = 69) or (./five-qi = 70) or (./five-qi = 79) or (./five-qi = 80) or (./five-qi > 81 and ./five-qi < 86)))' error-message 'non-dynamic non-critical-gbr 5qi must be 1, 2, 3, 4, 65, 66, 67, 75'; must 'not((./non-gbr-flow = 'false') and (./critical-gbr-type = 'true') and ((./five-qi < 10) or (./five-qi > 64 and ./five-qi < 68) or (./five-qi = 75) or (./five-qi = 69) or (./five-qi = 70) or (./five-qi = 79) or (./five-qi = 80)))' error-message 'non-dynamic critical gbr 5qi must be 82, 83, 84, 85';}"
+      "x-ms-discriminator-value": "GuaranteedBitRate",
+      "description": "Guaranteed bit rate QoS flow properties. Uplink-mbr/downlink-mbr and uplink-gbr/downlink-gbr must be greater than zero for GBR qos flow. Non-critical-gbr 5qi must be 1, 2, 3, 4, 65, 66, 67, 75. Critical gbr 5qi must be 82, 83, 84, 85"
     },
     "LoopbackUsage": {
       "type": "string",
@@ -1595,6 +1632,7 @@
                       "type": "object",
                       "properties": {
                         "name": {
+                          "type": "string",
                           "description": "The task identifier, e.g. LCM-instantiate."
                         },
                         "snapshotId": {
