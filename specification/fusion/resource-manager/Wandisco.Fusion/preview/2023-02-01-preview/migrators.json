@@ -595,6 +595,7 @@
             "name": "LiveDataMigration",
             "description": "LiveDataMigration update properties.",
             "in": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/LiveDataMigrationUpdate"
             }
@@ -745,6 +746,7 @@
             "name": "LiveDataMigration",
             "description": "Live Data Migration reset properties",
             "in": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/LiveDataMigrationReset"
             }
@@ -2448,6 +2450,10 @@
               "format": "int32",
               "description": "Minimum number of seconds from start of first scan until the next. Default is 0",
               "minimum": 0
+            },
+            "priority": {
+              "description": "Assign a priority of High, Normal, or Low to your migration based on how time-critical the data transfer is",
+              "$ref": "#/definitions/LiveDataMigrationPriority"
             }
           }
         }
@@ -2934,6 +2940,12 @@
           "description": "The overall application bandwidth policy set for a migrator.",
           "$ref": "#/definitions/MigratorBandwidthPolicy",
           "readOnly": true
+        },
+        "maxRunningMigrations": {
+          "description": "Maximum number of migrations can run simultaneously. Set 0 for unlimited number of migrations",
+          "type": "integer",
+          "format": "int32",
+          "readOnly": true
         }
       }
     },
@@ -3047,6 +3059,11 @@
               "title": "KerberosConfiguration",
               "description": "The configuration properties for authenticating to the source metastore",
               "$ref": "#/definitions/KerberosConfiguration"
+            },
+            "maxRunningMigrations": {
+              "description": "Maximum number of migrations can run simultaneously. Set 0 for unlimited number of migrations",
+              "type": "integer",
+              "format": "int32"
             }
           }
         }
@@ -3860,12 +3877,40 @@
           "description": "Minimum number of seconds from start of first scan until the next. Default is 0",
           "default": 0,
           "minimum": 0
+        },
+        "priority": {
+          "description": "Assign a priority of High, Normal, or Low to your migration based on how time-critical the data transfer is",
+          "$ref": "#/definitions/LiveDataMigrationPriority"
         }
       },
       "required": [
         "path",
         "targetId"
       ]
+    },
+    "LiveDataMigrationPriority": {
+      "description": "Assign a priority of High, Normal, or Low to your migration based on how time-critical the data transfer is",
+      "type": "string",
+      "enum": [
+        "LOW",
+        "NORMAL",
+        "HIGH"
+      ],
+      "x-ms-enum": {
+        "name": "LiveDataMigrationPriority",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "LOW"
+          },
+          {
+            "value": "NORMAL"
+          },
+          {
+            "value": "HIGH"
+          }
+        ]
+      }
     },
     "LiveDataMigrationReset": {
       "description": "Live Data Migration reset",
