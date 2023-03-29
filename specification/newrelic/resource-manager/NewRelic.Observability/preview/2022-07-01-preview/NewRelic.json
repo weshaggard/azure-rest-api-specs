@@ -750,6 +750,52 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/NewRelic.Observability/getMarketplaceSaaSResourceDetails": {
+      "post": {
+        "tags": [
+          "Monitors"
+        ],
+        "operationId": "Monitors_GetMarketplaceSaaSResourceDetails",
+        "description": "Get Marketplace SaaS resource details",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/TenantIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/MarketplaceSaaSResourceDetailsResponse"
+            }
+          },
+          "404": {
+            "description": "No Marketplace SaaS resource found for the given tenant Id",
+            "x-ms-error-response": true
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Monitors_GetMarketplaceSaaSResourceDetails_MaximumSet_Gen": {
+            "$ref": "./examples/Monitors_GetMarketplaceSaaSResourceDetails_MaximumSet_Gen.json"
+          },
+          "Monitors_GetMarketplaceSaaSResourceDetails_MinimumSet_Gen": {
+            "$ref": "./examples/Monitors_GetMarketplaceSaaSResourceDetails_MinimumSet_Gen.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/NewRelic.Observability/monitors/{monitorName}/tagRules": {
       "get": {
         "tags": [
@@ -1138,6 +1184,24 @@
       "required": [
         "value"
       ]
+    },
+    "MarketplaceSaaSResourceDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "marketplaceSaaSResourceId": {
+          "type": "string",
+          "description": "Id of the Marketplace SaaS Resource"
+        },
+        "planId": {
+          "type": "string",
+          "description": "Id of the plan"
+        },
+        "marketplaceSubscriptionStatus": {
+          "$ref": "#/definitions/MarketplaceSubscriptionStatus",
+          "description": "Marketplace subscription status"
+        }
+      },
+      "description": "Marketplace SaaS resource details linked to the given tenant Id"
     },
     "AccountsRequest": {
       "type": "object",
@@ -1744,6 +1808,19 @@
       },
       "description": "Request of get plan data Operation."
     },
+    "MarketplaceSaaSResourceDetailsRequest": {
+      "description": "Request for getting Marketplace SaaS resource details for a tenant Id",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "description": "Tenant Id"
+        }
+      },
+      "required": [
+        "tenantId"
+      ]
+    },
     "PlanDataResponse": {
       "type": "object",
       "properties": {
@@ -2210,6 +2287,16 @@
       "type": "string",
       "description": "User Email.",
       "x-ms-parameter-location": "method"
+    },
+    "TenantIdParameter": {
+      "x-ms-parameter-location": "method",
+      "name": "request",
+      "in": "body",
+      "required": true,
+      "description": "Tenant Id",
+      "schema": {
+        "$ref": "#/definitions/MarketplaceSaaSResourceDetailsRequest"
+      }
     }
   }
 }
