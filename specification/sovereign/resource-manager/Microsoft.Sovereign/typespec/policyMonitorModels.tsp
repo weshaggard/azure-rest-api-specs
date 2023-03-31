@@ -16,7 +16,7 @@ model PolicyMonitorProperties {
 
 	@visibility("read")
 	@doc("The details of the last run of validation for the associated SLZ.")
-	slzValidationDescription? : string;
+	slzValidationDescription?: string;
 
 	@doc("The top level management group of the SLZ")
 	topLevelManagementGroup: string;
@@ -43,6 +43,16 @@ model PolicyMonitorProperties {
 	@visibility("read")
 	@doc("The tenant id of the resource.")
 	tenantId?: string;
+}
+
+@doc("properties of the slzvalidate proxyresource type.")
+model SlzValidationProperties {
+	@visibility("read")
+	@doc("The status of the operation.")
+	provisioningState?: ProvisioningState;
+
+	@doc("The id of the policymonitor resource.")
+	policyMonitorResourceId?: string;
 }
 
 @doc("The exclusions allowed by a customer.")
@@ -93,29 +103,7 @@ enum ProvisioningState {
 	Accepted,
 }
 
-@doc("The history of the executions for a particular SLZ. Include validations and monitor executions")
-model JobHistory {
-	@doc("The name of the job history.")
-	name: string;
-
-	@doc("The type of the job.")
-	jobType: JobType;
-
-	@OpenAPI.extension("x-ms-identifiers", [])
-	@doc("the outcome of the job.")
-	result?: Result[];
-
-	@doc("The job history status.")
-	jobHistoryStatus: JobHistoryStatus;
-
-	@doc("The time when the job history record was created.")
-	createdOn: zonedDateTime;
-
-	@doc("The time when the processing completed")
-	completedOn: zonedDateTime;
-}
-
-@doc("The result associated with a job history.")
+@doc("The result associated with a monitor/validation execution.")
 model Result {
 	@doc("The details of the validation run.")
 	resultDescription: string;
@@ -123,6 +111,15 @@ model Result {
 
 @doc("The validation record of a particular SLZ.")
 model ValidationResult extends Result {
+	@doc("The Name of the validation Result.")
+	name: string;
+
+	@doc("The datetime when the validation was triggered.")
+	startedOn?: zonedDateTime;
+
+	@doc("The datetime when the validation was completed.")
+	completedOn?: zonedDateTime;
+
 	@doc("The outcome of the validation.")
 	validationResultOutcome: ValidationResultOutcome;
 
@@ -251,17 +248,6 @@ enum MonitorStatus {
 	...Status,
 }
 
-enum JobType {
-	validate: "Validate",
-	monitor: "Monitor",
-}
-
-enum JobHistoryStatus {
-	inProgress: "InProgress",
-	succeeded: "Succeeded",
-	failed: "Failed",
-}
-
 // Workaround suggested by the CADL team until the issue is fixed in their next sprint. Need to change the code once the fix is available.
 @Azure.Core.pagedResult
 @friendlyName("Paged{name}", TResource)
@@ -286,4 +272,3 @@ model ValidationResultList is Page<ValidationResult>;
 @friendlyName("MonitorResultList")
 // Workaround implemented. change to Azure.Core.Page once the fix is implemented by the CADL team
 model MonitorResultList is Page<MonitorResult>;
-

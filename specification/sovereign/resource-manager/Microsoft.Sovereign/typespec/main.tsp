@@ -1,14 +1,14 @@
-import "@cadl-lang/rest";
-import "@cadl-lang/openapi";
-import "@cadl-lang/versioning";
-import "@azure-tools/cadl-providerhub";
-import "@azure-tools/cadl-azure-core";
-import "@azure-tools/cadl-azure-resource-manager";
-import "./policyMonitorModels.cadl";
+import "@typespec/http";
+import "@typespec/rest";
+import "@typespec/versioning";
+import "@azure-tools/typespec-providerhub";
+import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-azure-resource-manager";
+import "./policyMonitorModels.tsp";
 
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Azure.Core;
 using OpenAPI;
@@ -39,12 +39,10 @@ model PolicyMonitor is ProxyResource<PolicyMonitorProperties> {
 @armResourceOperations(PolicyMonitor)
 interface PolicyMonitors
 	extends TenantResourceOperations<PolicyMonitor, PolicyMonitorProperties> {
-	
 	@action("executeValidateSLZ")
 	@doc("Provides a mechanism for customers to trigger a validate of a particular SLZ instance")
 	@armResourceAction(PolicyMonitor)
-	// Workaround implemented. change to ArmResourceActionAsync once the fix is implemented by the CADL team
-	validateSLZ is MyResourceActionAsync<
+	validateSLZ is ArmResourceActionAsync<
 		PolicyMonitor,
 		ValidateRequest,
 		ValidateRequest
@@ -53,8 +51,7 @@ interface PolicyMonitors
 	@action("executePolicyMonitor")
 	@doc("Provides a mechanism for customers to trigger the evaluation policy monitor against an SLZ.")
 	@armResourceAction(PolicyMonitor)
-	// Workaround implemented. change to ArmResourceActionAsync once the fix is implemented by the CADL team
-	monitorSLZ is MyResourceActionAsync<
+	monitorSLZ is ArmResourceActionAsync<
 		PolicyMonitor,
 		MonitorRequest,
 		MonitorRequest
@@ -84,30 +81,3 @@ interface PolicyMonitors
 		>
 	): ArmResponse<ValidationResultList> | ErrorResponse;
 }
-
-// Workaround suggested by the CADL team until the issue is fixed in their next sprint. Need to change the code once the fix is available.
-#suppress "@azure-tools/cadl-azure-core/documentation-required" "This is a template"
-#suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-operation-outside-interface" "This is a template"
-@autoRoute
-@OpenAPI.extension("x-ms-long-running-operation", true)
-@OpenAPI.extension(
-	"x-ms-long-running-operation-options",
-	{
-		"final-state-via": "azure-async-operation",
-	}
-)
-@armResourceAction(TResource)
-@post
-op MyResourceActionAsync<
-	TResource extends Azure.ResourceManager.Foundations.ArmResource,
-	TRequest extends object,
-	TResponse extends object,
-	TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
->(
-	...ResourceInstanceParameters<TResource, TBaseParameters>,
-
-	@doc("The content of the action request")
-	@body
-	body: TRequest
-): ArmAcceptedResponse | ArmResponse<TResponse> | ErrorResponse;
-
