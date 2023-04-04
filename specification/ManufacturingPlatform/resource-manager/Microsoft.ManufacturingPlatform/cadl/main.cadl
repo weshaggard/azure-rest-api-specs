@@ -114,6 +114,10 @@ model MdsResourceProperties {
   @visibility("read")
   @doc("Profile of EventHub Resource.")
   eventHubProfile?: EventHubProfile;
+
+  @visibility("read")
+  @doc("Profile of Function App Resource.")
+  functionAppProfile?: FunctionAppProfile;
 }
 
 @doc("The properties related to Aks Resource")
@@ -121,31 +125,57 @@ model AksProfile {
   
   @doc("Resource Id of AKS Resource")
   @visibility("read")
-  id?: string;
+  id?: AksResourceId;
 }
+
+@doc("Aks resource Id")
+scalar AksResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.ContainerService/managedClusters",
+    }
+]>;
 
 @doc("The properties related to Storage Resource")
 model StorageProfile {
   
   @doc("Resource Id of Storage Resource")
   @visibility("read")
-  id?: string;
+  id?: StorageResourceId;
 }
+
+@doc("Azure Storage resource Id")
+scalar StorageResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.Storage/storageAccounts",
+    }
+]>;
+
 
 @doc("The properties related to Database Resource")
 model DatabaseProfile {
 
   @doc("Resource Id of Cosmos Resource")
   @visibility("read")
-  cosmosId?: string;
+  cosmosId?: CosmosResourceId;
 }
 
-@doc("The properties related to Azure Data Factory (Adx) Resource")
+
+@doc("Azure Cosmos DB resource Id")
+scalar CosmosResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.DocumentDB/databaseAccounts",
+    }
+]>;
+
+@doc("The properties related to Azure Data Explorer (Adx) Resource")
 model AdxProfile {
   
   @doc("Resource Id of Adx Resource")
   @visibility("read")
-  id?: string;
+  id?: AdxResourceId;
 
   @doc("Uri of Adx Resource")
   @visibility("read")
@@ -157,70 +187,148 @@ model AdxProfile {
 
 }
 
-@doc("The properties related to Azure Data Twin (Adt) Resource")
+@doc("Azure Data Explorer resource Id")
+scalar AdxResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.Kusto/Clusters",
+    }
+]>;
+
+@doc("The properties related to Azure Digital Twin (Adt) Resource")
 model AdtProfile {
   
   @doc("Resource Id of Adt Resource")
   @visibility("read")
-  id?: string;
+  id?: AdtResourceId;
 
   @doc("Host Name")
   @visibility("read")
   hostName?: string;
 
 }
+
+@doc("Azure Digital Twin resource Id")
+scalar AdtResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.DigitalTwins/digitalTwinsInstances",
+    }
+]>;
 
 @doc("The properties related to Azure Key Vault (Akv) Resource")
 model AkvProfile {
   
   @doc("Resource Id of Akv Resource")
   @visibility("read")
-  id?: string;
+  id?: AkvResourceId;
     
 }
+
+@doc("Azure Key Vault resource Id")
+scalar AkvResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.KeyVault/vaults",
+    }
+]>;
 
 @doc("The properties related to Azure Redis Cache Resource")
 model RedisProfile {
   
   @doc("Resource Id of Azure Redis Cache Resource")
   @visibility("read")
-  id?: string;
+  id?: RedisResourceId;
     
 }
+
+@doc("Azure Redis resource Id")
+scalar RedisResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.Cache/Redis",
+    }
+]>;
+
 
 @doc("The properties related to Monitoring Resource")
 model MonitoringProfile {
   
   @doc("Resource Id of Application Insights Resource")
   @visibility("read")
-  id?: string;
+  id?: AppInisightsResourceId;
     
 }
+
+@doc("Application Insights resource Id")
+scalar AppInisightsResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "microsoft.insights/components",
+    }
+]>;
 
 @doc("The properties related to Synapse Resource")
 model SynapseProfile {
   
   @doc("Resource Id of Synapse Resource")
   @visibility("read")
-  id?: string;
+  id?: SynapseResourceId;
 
   @doc("Synapse Development Endpoint")
   @visibility("read")
   devEndpoint?: string;
 }
 
+@doc("Synapse workspace resource Id")
+scalar SynapseResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.Synapse/workspaces",
+    }
+]>;
+
 
 @doc("The properties related to EventHub Resource")
 model EventHubProfile {
   
-  @doc("Resource Id of EventHub Resource")
+  @doc("Resource Id of Ingestion Instance EventHub Resource")
   @visibility("read")
-  id?: string;
+  ingestionInstanceId?: EventHubResourceId;
+
+  @doc("Resource Id of Data History Instance EventHub Resource")
+  @visibility("read")
+  dhInstanceId?: EventHubResourceId;
 
   @doc("Host Name")
   @visibility("read")
   hostName?: string;
 }
+
+@doc("Event hub namespace resource Id")
+scalar EventHubResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.EventHub/namespaces",
+    }
+]>;
+
+@doc("The properties related to Azure Function App Resource")
+model FunctionAppProfile {
+  
+  @doc("Resource Id of Azure Function App Resource")
+  @visibility("read")
+  id?: FunctionAppResourceId;
+    
+}
+
+@doc("Azure Function App resource Id")
+scalar FunctionAppResourceId
+    extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+        type: "Microsoft.Web/sites",
+    }
+]>;
 
 @armResourceOperations(MdsResource)
 interface ManufacturingDataServices extends Azure.ResourceManager.Operations {
@@ -230,6 +338,8 @@ interface ManufacturingDataServices extends Azure.ResourceManager.Operations {
   delete is ArmResourceDeleteSync<MdsResource>;
   listByResourceGroup is ArmResourceListByParent<MdsResource>;
   listBySubscription is ArmListBySubscription<MdsResource>;
+
+  @doc("Returns the list of available versions")
   listAvailableVersions is ArmResourceListActionSync<MdsResource, AvailableVersionListResult>;
 }
 
