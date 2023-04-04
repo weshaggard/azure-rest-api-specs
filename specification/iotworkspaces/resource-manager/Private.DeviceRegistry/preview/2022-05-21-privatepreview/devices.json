@@ -111,7 +111,14 @@
         "responses": {
           "200": {
             "x-nullable": false,
-            "description": "",
+            "description": "Device is created successfully.",
+            "schema": {
+              "$ref": "#/definitions/Device"
+            }
+          },
+          "201": {
+            "x-nullable": false,
+            "description": "Async operation to create or update the device is created.",
             "schema": {
               "$ref": "#/definitions/Device"
             }
@@ -136,6 +143,15 @@
           },
           {
             "$ref": "#/parameters/deviceNameParameter"
+          },
+          {
+            "name": "deviceUpdatePayload",
+            "in": "body",
+            "required": true,
+            "description": "Device Parameters to patch",
+            "schema": {
+              "$ref": "#/definitions/DeviceUpdatePayload"
+            }
           }
         ],
         "responses": {
@@ -292,6 +308,32 @@
       },
       "description": "List of Devices."
     },
+    "DeviceUpdatePayload": {
+      "description": "Request payload used to update Device.",
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags."
+        },
+        "properties": {
+          "$ref": "#/definitions/DeviceUpdateProperties"
+        }
+      }
+    },
+    "DeviceUpdateProperties": {
+      "description": "Device Properties that can be updated",
+      "type": "object",
+      "properties": {        
+        "enabled": {
+          "type": "boolean",
+          "description": "Indicates if the resource and identity are enabled or not. A disabled device cannot authenticate with AAD."
+        }
+      }
+    },
     "Device": {
       "type": "object",
       "properties": {
@@ -317,7 +359,8 @@
         },
         "enabled": {
           "type": "boolean",
-          "description": "Indicates if the resource and identity are enabled or not. A disabled device cannot authenticate with AAD."
+          "description": "Indicates if the resource and identity are enabled or not. A disabled device cannot authenticate with AAD.",
+          "default": true
         },
         "externalDeviceId": {
           "description": "Device Id provided by customer.",
@@ -420,6 +463,11 @@
         }
       },
       "description": "Results of the request to list operations."
+    },
+    "ProvisioningState": {
+      "type": "string",
+      "description": "Provisioning state of the resource.",
+      "readOnly": true
     }
   }
 }
