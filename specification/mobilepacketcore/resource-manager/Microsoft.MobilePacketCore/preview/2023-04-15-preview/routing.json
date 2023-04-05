@@ -52,7 +52,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "./common.json#/parameters/MobilePacketCoreName"
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
           },
           {
             "name": "routingName",
@@ -108,7 +108,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "./common.json#/parameters/MobilePacketCoreName"
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
           },
           {
             "name": "routingName",
@@ -155,7 +155,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "./common.json#/parameters/MobilePacketCoreName"
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
           },
           {
             "name": "routingName",
@@ -204,7 +204,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "./common.json#/parameters/MobilePacketCoreName"
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
           }
         ],
         "responses": {
@@ -350,7 +350,8 @@
           "description": "Parameters for deriving a local router ID",
           "properties": {
             "useInterfaceIp": {
-              "$ref": "./common.json#/definitions/Ao5gcBoolean",
+              "type": "boolean",
+              "default": true,
               "description": "Use an IPv4 address from a local interface as the router ID"
             },
             "idRange": {
@@ -745,8 +746,17 @@
                     "$ref": "#/definitions/AlphaNumericString",
                     "description": "Name of route map filter under the policy group"
                   },
-                  "ignoreRouteTargetImport": {
-                    "$ref": "./common.json#/definitions/Ao5gcBoolean",
+                  "routeTargetImport": {
+                    "type": "string",
+                    "enum": [
+                      "Ignore",
+                      "DontIgnore"
+                    ],
+                    "x-ms-enum": {
+                      "name": "NetworkSliceIdentifier",
+                      "modelAsString": true
+                    },
+                    "default": "DontIgnore",
                     "description": "Ignore Route Target Import and exclusively use Import-Map to filter routes"
                   }
                 }
@@ -812,6 +822,8 @@
         },
         "length": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 128,
           "description": "IP prefix length of the route destination"
         },
         "nextHop": {
@@ -1154,7 +1166,7 @@
                 "description": "Route-map tag - type is <alphanumeric"
               },
               "continueRouteMapMatchRules": {
-                "$ref": "./common.json#/definitions/Ao5gcBoolean",
+                "$ref": "./common.json#/definitions/EnableDisable",
                 "description": "Enable/continue matching all route-map match rules (significant when >1 match rules present)"
               },
               "routeMapRule": {
@@ -1314,8 +1326,9 @@
                                 "modelAsString": true
                               }
                             },
-                            "additive": {
-                              "$ref": "./common.json#/definitions/Ao5gcBoolean",
+                            "isAdditive": {
+                              "type": "boolean",
+                              "default": false,
                               "description": "Add to the existing community"
                             }
                           }
@@ -1357,7 +1370,7 @@
         }
       }
     },
-    "RoutingPropertiesFormat": {
+    "RoutingProperties": {
       "type": "object",
       "properties": {
         "provisioningState": {
@@ -1377,8 +1390,9 @@
                 "$ref": "./common.json#/definitions/NetworkContextName",
                 "description": "Network Context name - type is <alphanumeric, '_' is allowed>"
               },
-              "virtualRoutingFunction": {
-                "$ref": "./common.json#/definitions/Ao5gcBoolean",
+              "isVirtualRoutingFunction": {
+                "type": "boolean",
+                "default": false,
                 "description": "Whether this network context represents a Virtual Routing Function or not"
               },
               "virtualRoutingFunctionNames": {
@@ -1441,7 +1455,7 @@
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/RoutingPropertiesFormat",
+          "$ref": "#/definitions/RoutingProperties",
           "description": "Routing properties."
         }
       },

@@ -52,7 +52,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "./common.json#/parameters/MobilePacketCoreName"
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
           },
           {
             "name": "subscriberAnalyzerName",
@@ -108,7 +108,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "./common.json#/parameters/MobilePacketCoreName"
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
           },
           {
             "name": "subscriberAnalyzerName",
@@ -155,7 +155,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "./common.json#/parameters/MobilePacketCoreName"
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
           },
           {
             "name": "subscriberAnalyzerName",
@@ -204,7 +204,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "./common.json#/parameters/MobilePacketCoreName"
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
           }
         ],
         "responses": {
@@ -699,12 +699,14 @@
               "uplinkAmbr": {
                 "type": "integer",
                 "format": "int64",
+                "minimum": 0,
                 "maximum": 4294967295,
                 "description": "per session Uplink Aggregate Maximum Bit Rate"
               },
               "downlinkAmbr": {
                 "type": "integer",
                 "format": "int64",
+                "minimum": 0,
                 "maximum": 4294967295,
                 "description": "per session Downlink Aggregate Maximum Bit Rate"
               }
@@ -1130,7 +1132,7 @@
         }
       }
     },
-    "SubscriberAnalyzerPropertiesFormat": {
+    "SubscriberAnalyzerProperties": {
       "type": "object",
       "properties": {
         "provisioningState": {
@@ -1202,8 +1204,9 @@
                   "chargingCharacteristics": {
                     "$ref": "#/definitions/FilterTypeChargingCharacteristics"
                   },
-                  "roamingUser": {
-                    "$ref": "./common.json#/definitions/Ao5gcBoolean",
+                  "isRoamingUser": {
+                    "type": "boolean",
+                    "default": false,
                     "description": "Whether the user is roaming or not"
                   }
                 }
@@ -1233,12 +1236,12 @@
                 "modelAsString": true
               }
             },
-            "onlineEnabled": {
-              "$ref": "./common.json#/definitions/Ao5gcBoolean",
+            "online": {
+              "$ref": "./common.json#/definitions/EnableDisable",
               "description": "default online charging enabled/disabled at PDU Session.  One of online or offline must be enabled"
             },
-            "offlineEnabled": {
-              "$ref": "./common.json#/definitions/Ao5gcBoolean",
+            "offline": {
+              "$ref": "./common.json#/definitions/EnableDisable",
               "description": "default offline charging enabled/disabled at PDU Session.  One of online or offline must be enabled"
             },
             "usageReportingLevel": {
@@ -1307,6 +1310,7 @@
                   },
                   "volumeLimitValue": {
                     "type": "integer",
+                    "format": "int64",
                     "minimum": 1,
                     "description": "volume limit(threshold) bytes for session level volume reporting"
                   }
@@ -1380,7 +1384,7 @@
               "$ref": "#/definitions/ChargingRgLevelResultCodeActionTemplate"
             },
             "chfServerDiscoveryThroughNrf": {
-              "$ref": "./common.json#/definitions/Ao5gcBoolean",
+              "$ref": "./common.json#/definitions/EnableDisable",
               "description": "enable chf server discovery through nrf when PCF does not provide"
             },
             "reflectiveQosTimer": {
@@ -1505,7 +1509,7 @@
                   "description": "Flows with ARP Priority Level values equal to or less than this threshold value will be marked for priority use"
                 },
                 "downlinkPacketBufferingCapability": {
-                  "$ref": "./common.json#/definitions/Ao5gcBoolean",
+                  "$ref": "./common.json#/definitions/EnableDisable",
                   "description": "Indicates if SMF supports buffering data packets when UE is being paged"
                 }
               }
@@ -1628,6 +1632,7 @@
                 "properties": {
                   "responseCode": {
                     "type": "integer",
+                    "minimum": 0,
                     "maximum": 65536,
                     "description": "HTTP Response Codes.  If PCF response matches the response code the session is continued using the default policy profile"
                   }
@@ -1676,8 +1681,8 @@
               "type": "object",
               "description": "pcf rejoin time in seconds",
               "properties": {
-                "enabled": {
-                  "$ref": "./common.json#/definitions/Ao5gcBoolean",
+                "state": {
+                  "$ref": "./common.json#/definitions/EnableDisable",
                   "description": "Whether this parameter is enabled or not"
                 },
                 "value": {
@@ -1693,8 +1698,8 @@
               "type": "object",
               "description": "pcf down session hold time in seconds",
               "properties": {
-                "enabled": {
-                  "$ref": "./common.json#/definitions/Ao5gcBoolean",
+                "state": {
+                  "$ref": "./common.json#/definitions/EnableDisable",
                   "description": "Whether this parameter is enabled or not"
                 },
                 "value": {
@@ -1776,8 +1781,9 @@
             "filterSets": {
               "$ref": "#/definitions/FilterSetsAmf"
             },
-            "default": {
-              "$ref": "./common.json#/definitions/Ao5gcBoolean",
+            "isDefault": {
+              "type": "boolean",
+              "default": false,
               "description": "whether this is the default instance.  If true then the filterSets field is not needed (ignored if specified).  There can only be one default profile"
             },
             "pcfControl": {
@@ -2492,7 +2498,7 @@
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/SubscriberAnalyzerPropertiesFormat",
+          "$ref": "#/definitions/SubscriberAnalyzerProperties",
           "description": "Mobile Packet Core Subscriber Analyzer properties."
         }
       },
