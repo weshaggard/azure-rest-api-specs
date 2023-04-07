@@ -27,7 +27,16 @@ These are the global settings for the SearchIndexManagementClient API.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2022-06-preview
+tag: package-2023-05-preview
+```
+
+### Tag: package-2023-05-preview
+
+These settings apply only when `--tag=package-2023-05` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-05'
+input-file:
+  - preview/2023-05-01/index.json
 ```
 
 ### Tag: package-2022-06-preview
