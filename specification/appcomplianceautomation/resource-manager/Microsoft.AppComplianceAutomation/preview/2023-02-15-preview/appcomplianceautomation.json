@@ -1002,6 +1002,54 @@
           }
         }
       }
+    },
+    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/evidences/{evidenceName}/download": {
+      "post": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Download evidence file.",
+        "operationId": "Evidences_Download",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          },
+          {
+            "$ref": "#/parameters/EvidenceNameParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "Parameters for the query operation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EvidenceFileDownloadRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/EvidenceFileDownloadResponse"
+            }
+          },
+          "default": {
+            "description": "Error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Evidences_Download": {
+            "$ref": "./examples/Evidences_File_Download.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1045,7 +1093,7 @@
           "description": "The subscription id which 'bring your own storage' account belongs to",
           "type": "string"
         },
-        "resourceGroup" : {
+        "resourceGroup": {
           "description": "The resourceGroup which 'bring your own storage' account belongs to",
           "type": "string"
         },
@@ -1891,6 +1939,22 @@
         }
       }
     },
+    "EvidenceFileDownloadRequest": {
+      "type": "object",
+      "description": "Evidence file's download request.",
+      "properties": {
+        "reportCreatorTenantId": {
+          "description": "Tenant id.",
+          "type": "string"
+        },
+        "offerGuid": {
+          "type": "string",
+          "description": "The offerGuid which mapping to the reports.",
+          "x-ms-parameter-location": "method",
+          "minLength": 1
+        }
+      }
+    },
     "OnboardRequest": {
       "type": "object",
       "description": "Onboard subscriptions request.",
@@ -2167,12 +2231,30 @@
         }
       }
     },
+    "EvidenceFileDownloadResponse": {
+      "description": "Object that includes all the possible response for the evidence file download operation.",
+      "type": "object",
+      "properties": {
+        "evidenceFile": {
+          "description": "The uri of evidence file",
+          "type": "object",
+          "readOnly": true,
+          "properties": {
+            "url": {
+              "description": "The url of evidence file",
+              "type": "string",
+              "readOnly": true
+            }
+          }
+        }
+      }
+    },
     "DownloadResponse": {
       "description": "Object that includes all the possible response for the download operation.",
       "type": "object",
       "properties": {
         "resourceList": {
-          "description": "List of the reports",
+          "description": "Resource list of the report",
           "type": "array",
           "readOnly": true,
           "items": {
@@ -2328,11 +2410,6 @@
         "reportName": {
           "type": "string",
           "description": "Report name.",
-          "readOnly": true
-        },
-        "url": {
-          "type": "string",
-          "description": "The url of the evidence file.",
           "readOnly": true
         },
         "provisioningState": {
