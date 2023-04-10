@@ -1,0 +1,121 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/versioning";
+import "@azure-tools/cadl-providerhub";
+import "@azure-tools/cadl-azure-core";
+import "@azure-tools/cadl-azure-resource-manager";
+
+using Cadl.Http;
+using Cadl.Rest;
+using Cadl.Versioning;
+using Azure.ResourceManager;
+using OpenAPI;
+
+@armProviderNamespace("Microsoft.Eds")
+@service({
+  title: "Microsoft.Eds",
+  version: "2023-03-02-preview",
+})
+@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+namespace Microsoft.Eds;
+interface Operations extends Azure.ResourceManager.Operations {}
+
+#suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
+#suppress "@azure-tools/cadl-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
+
+@doc("The status of the current operation.")
+@Azure.Core.lroStatus
+enum ProvisioningState {
+  ...ResourceProvisioningState,
+  Provisioning,
+  Updating,
+  Deleting,
+  Accepted,
+}
+
+@doc("A purchase request.")
+model PurchaseRequest is TrackedResource<PurchaseRequestProperties> {
+  @doc("Purchase API details")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("purchaseId")
+  @segment("purchaseRequests")
+  @visibility("read")
+  @path
+  name: string;
+}
+  
+#suppress "@azure-tools/cadl-azure-resource-manager/no-resource-delete-operation" "This is a warning suppression for delete operation."  
+@armResourceOperations
+interface Purchases {  
+  get is ArmResourceRead<PurchaseResponse>;  
+  create is ArmResourceCreateOrUpdateAsync<PurchaseRequest>;    
+}
+
+@doc("EDS Purchase.request")
+model PurchaseRequestProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;        
+  @doc("Subscription Identifier")
+  subscriptionId:string;
+  @doc("Resource Identifier.")
+  resourceId: string;     
+  @doc("Big Catalog Products detail like product Id, SkuId, etc.")
+  @extension("x-ms-identifiers",[])
+  productDetails:Array<PurchaseLineRequest>;       
+}
+
+@doc("LineItem details.")
+model PurchaseLineRequest
+{
+    @doc("UPN associated with Big Catalog XDK product.")
+	bigCatProdUpn:string;
+	@doc("Product Identifier in Guid format.")
+	productId:string;
+	@doc("SKU Identifier")
+	skuId:string;
+	@doc("Quantity being bought.")
+    qty:int32; 
+}
+
+@doc("Purchase Response.")
+model PurchaseResponse is TrackedResource<PurchaseResponseProperties> {
+  @doc("Purchase API details")
+  @key("purchaseId")
+  @segment("purchaseResponses")
+  @visibility("read")
+  @path
+  name: string;
+}
+
+@doc("Purchase response properties.")
+model PurchaseResponseProperties{
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState; 
+  @doc("Purchase response time.")
+  purchaseResponseTime : zonedDateTime;	  
+  @doc("Final purchase response.")
+  @extension("x-ms-identifiers",[])
+  purchaseLineItemResponse:Array<PurchaseLineResponse>;
+}
+
+@doc("Purchase line item response details.")
+model PurchaseLineResponse
+{
+  @doc("Response Status Code.")
+  status: PurchaseStatus;
+  @doc("Purchase Status Message.")
+  purchaseMessage: string;
+  @doc("Whether transaction if failed can be retried.")
+  isRetriableError: string;
+  @doc("Transaction Identifier. This may be used to identify the retriable scenarios.")
+  tranIdentifier:string;
+}
+
+@doc("Purchase status.")
+enum PurchaseStatus
+{
+    None,
+	Success,
+	Error,
+}
