@@ -91,6 +91,16 @@ input-file:
   - Microsoft.DevCenter/preview/2022-11-11-preview/vdi.json
 ```
 
+### Tag: v2023-04-01
+
+These settings apply only when `--tag=2023-04-01` is specified on the command line.
+
+``` yaml $(tag) == 'v2023-04-01'
+input-file:
+  - Microsoft.DevCenter/preview/2023-04-01/devcenter.json
+  - Microsoft.DevCenter/preview/2023-04-01/vdi.json
+```
+
 ### Tag: v2023-06-01-preview
 
 These settings apply only when `--tag=2023-06-01-preview` is specified on the command line.
