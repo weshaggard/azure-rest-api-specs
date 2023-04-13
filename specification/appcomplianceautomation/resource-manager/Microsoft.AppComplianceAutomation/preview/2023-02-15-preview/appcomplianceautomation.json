@@ -177,6 +177,53 @@
         }
       }
     },
+    "/providers/Microsoft.AppComplianceAutomation/listInUseStorageAccounts": {
+      "post": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "List the storage accounts which are in use by related reports",
+        "operationId": "Reports_ListInUseStorageAccount",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "Parameters for listing in use storage accounts operation. If subscription list is null, it will check the user's all subscriptions.",
+            "schema": {
+              "$ref": "#/definitions/ListInUseStorageAccountsRequest"
+            }
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/ListInUseStorageAccountsResponse"
+            }
+          },
+          "default": {
+            "description": "Error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "ListInUseStorageAccountsWithSubscriptions": {
+            "$ref": "./examples/ListInUseStorageAccountsWithSubscriptions.json"
+          },
+          "ListInUseStorageAccountsWithoutSubscriptions": {
+            "$ref": "./examples/ListInUseStorageAccountsWithoutSubscriptions.json"
+          }
+        }
+      }
+    },
     "/providers/Microsoft.AppComplianceAutomation/reports": {
       "get": {
         "tags": [
@@ -1982,6 +2029,34 @@
           "items": {
             "description": "Subscription id for onboard",
             "type": "string"
+          }
+        }
+      }
+    },
+    "ListInUseStorageAccountsRequest": {
+      "type": "object",
+      "description": "List in use storage accounts request.",
+      "properties": {
+        "subscriptions": {
+          "description": "List of subscription ids to be query. If the list is null or empty, the API will query all the subscriptions of the user.",
+          "type": "array",
+          "items": {
+            "description": "Subscription id for querying.",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ListInUseStorageAccountsResponse": {
+      "type": "object",
+      "description": "List in use storage accounts response.",
+      "properties": {
+        "storageAccountList": {
+          "description": "The storage account list which in use in related reports.",
+          "type": "array",
+          "items": {
+            "description": "Single storage account info.",
+            "$ref": "#/definitions/StorageInfo"
           }
         }
       }
