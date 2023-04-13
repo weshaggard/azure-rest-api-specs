@@ -43,11 +43,12 @@ model PurchaseRequest is TrackedResource<PurchaseRequestProperties> {
   name: string;
 }
   
-#suppress "@azure-tools/cadl-azure-resource-manager/no-resource-delete-operation" "This is a warning suppression for delete operation."  
 @armResourceOperations
-interface Purchases {  
-  get is ArmResourceRead<PurchaseResponse>;  
-  create is ArmResourceCreateOrUpdateAsync<PurchaseRequest>;    
+interface PurchaseRequests {
+  get is ArmResourceRead<PurchaseRequest>;
+  create is ArmResourceCreateOrUpdateAsync<PurchaseRequest>;
+  update is ArmResourcePatchSync<PurchaseRequest, PurchaseRequestProperties>;
+  delete is ArmResourceDeleteSync<PurchaseRequest>;
 }
 
 @doc("EDS Purchase.request")
@@ -61,7 +62,8 @@ model PurchaseRequestProperties {
   resourceId: string;     
   @doc("Big Catalog Products detail like product Id, SkuId, etc.")
   @extension("x-ms-identifiers",[])
-  productDetails:Array<PurchaseLineRequest>;       
+  @minItems(1)
+  productDetails:PurchaseLineRequest[];       
 }
 
 @doc("LineItem details.")
@@ -78,13 +80,23 @@ model PurchaseLineRequest
 }
 
 @doc("Purchase Response.")
+@parentResource(PurchaseRequest)
 model PurchaseResponse is TrackedResource<PurchaseResponseProperties> {
-  @doc("Purchase API details")
-  @key("purchaseId")
+  @doc("Transaction Identifier.")
+  @key("tranIdentifier")
   @segment("purchaseResponses")
   @visibility("read")
   @path
   name: string;
+}
+
+@armResourceOperations
+interface PurchaseResponses {
+  get is ArmResourceRead<PurchaseResponse>;
+  create is ArmResourceCreateOrUpdateAsync<PurchaseResponse>;
+  update is ArmResourcePatchSync<PurchaseResponse, PurchaseResponseProperties>;
+  delete is ArmResourceDeleteSync<PurchaseResponse>;
+  listByParent is ArmResourceListByParent<PurchaseResponse>;
 }
 
 @doc("Purchase response properties.")
@@ -94,20 +106,12 @@ model PurchaseResponseProperties{
   provisioningState?: ProvisioningState; 
   @doc("Purchase response time.")
   purchaseResponseTime : zonedDateTime;	  
-  @doc("Final purchase response.")
-  @extension("x-ms-identifiers",[])
-  purchaseLineItemResponse:Array<PurchaseLineResponse>;
-}
-
-@doc("Purchase line item response details.")
-model PurchaseLineResponse
-{
   @doc("Response Status Code.")
   status: PurchaseStatus;
   @doc("Purchase Status Message.")
   purchaseMessage: string;
   @doc("Whether transaction if failed can be retried.")
-  isRetriableError: string;
+  isRetriableError: boolean;
   @doc("Transaction Identifier. This may be used to identify the retriable scenarios.")
   tranIdentifier:string;
 }
