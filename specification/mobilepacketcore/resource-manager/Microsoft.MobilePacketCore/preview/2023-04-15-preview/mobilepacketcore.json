@@ -239,7 +239,7 @@
         "summary": "Perform a 'what-if' operation on the specified snapshot to show what operations would be taken if the snapshot were activated.",
         "operationId": "MobilePacketCores_WhatIfActivate",
         "x-ms-examples": {
-          "MobilePacketCoreAction_Activate": {
+          "MobilePacketCoreAction_WhatIfActivate": {
             "$ref": "./examples/MobilePacketCoreAction_WhatIfActivate.json"
           }
         },
@@ -268,7 +268,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Ok."
+            "description": "Ok.",
+            "schema": {
+              "$ref": "#/definitions/MobilePacketCoreWhatIfActivateResponse"
+            }
           },
           "202": {
             "description": "Accepted. The header contains 'Azure-AsyncOperation' header which can be used to monitor the progress of the operation."
@@ -294,7 +297,7 @@
         "summary": "Perform a 'what-if' operation to validate the current set of resources as if a snapshot were to be created",
         "operationId": "MobilePacketCores_WhatIfSnapshot",
         "x-ms-examples": {
-          "MobilePacketCoreAction_Rollback": {
+          "MobilePacketCoreAction_WhatIfSnapshot": {
             "$ref": "./examples/MobilePacketCoreAction_WhatIfSnapshot.json"
           }
         },
@@ -314,7 +317,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Ok."
+            "description": "Ok.",
+            "schema": {
+              "$ref": "#/definitions/MobilePacketCoreWhatIfSnapshotResponse"
+            }
           },
           "202": {
             "description": "Accepted. The header contains 'Azure-AsyncOperation' header which can be used to monitor the progress of the operation."
@@ -1796,6 +1802,16 @@
       },
       "description": "Response for Mobile Packet Core API service call."
     },
+    "MobilePacketCoreWhatIfSnapshotResponse": {
+      "type": "object",
+      "properties": {
+        "details": {
+          "type": "string",
+          "description": "Details of the operation"
+        }
+      },
+      "description": "Allows the validation and visualization of activating a specific snapshot without activating it"
+    },
     "MobilePacketCoreWhatIfActivateRequest": {
       "type": "object",
       "properties": {
@@ -1805,6 +1821,51 @@
         }
       },
       "description": "Allows the validation and visualization of activating a specific snapshot without activating it"
+    },
+    "MobilePacketCoreWhatIfActivateResponse": {
+      "type": "object",
+      "properties": {
+        "snapshot": {
+          "$ref": "./common.json#/definitions/ReferencedResource",
+          "description": "Snapshot against which the what-if activate operation was run"
+        },
+        "networkFunctionInstance": {
+          "type": "array",
+          "description": "Affected network functions",
+          "items": {
+            "type": "object",
+            "description": "Network function instance",
+            "properties": {
+              "resourceId": {
+                "$ref": "./common.json#/definitions/ReferencedResource",
+                "description": "Identifier of the Network Function instance"
+              },
+              "task": {
+                "type": "array",
+                "description": "List of tasks to be run against the specific netork function",
+                "items": {
+                  "type": "object",
+                  "description": "Task instance",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Task name"
+                    },
+                    "taskType": {
+                      "$ref": "./common.json#/definitions/OperationalTaskType",
+                      "description": "Task type"
+                    },
+                    "details": {
+                      "type": "string",
+                      "description": "Additional details about the task"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
