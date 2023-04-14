@@ -169,6 +169,17 @@ input-file:
   - Microsoft.XiaoTest/preview/2023-01-01-preview/actionrequest.json
 ```
 
+### Tag: package-2023-01-16-preview
+
+These settings apply only when `--tag=package-2023-01-16-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-01-16-preview'
+input-file:
+  - Microsoft.XiaoTest/preview/2023-01-16-preview/draftpackage.json
+  - Microsoft.XiaoTest/preview/2023-01-16-preview/testbase.json
+  - Microsoft.XiaoTest/preview/2023-01-16-preview/actionrequest.json
+```
+
 ## Suppression
 
 ``` yaml
