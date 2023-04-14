@@ -27,18 +27,19 @@ These are the global settings for the graphservicesprod.
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2023-04-13-preview
+tag: package-2023-04-13
 ```
 
 
-### Tag: package-2023-04-13-preview
+### Tag: package-2023-04-13
 
-These settings apply only when `--tag=package-2023-04-13-preview` is specified on the command line.
+These settings apply only when `--tag=package-2023-04-13` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-04-13-preview'
+```yaml $(tag) == 'package-2023-04-13'
 input-file:
-  - Microsoft.GraphServices/preview/2023-04-13-preview/graphservicesprod.json
+  - Microsoft.GraphServices/stable/2023-04-13/graphservicesprod.json
 ```
+
 ### Tag: package-2022-09-22-preview
 
 These settings apply only when `--tag=package-2022-09-22-preview` is specified on the command line.
