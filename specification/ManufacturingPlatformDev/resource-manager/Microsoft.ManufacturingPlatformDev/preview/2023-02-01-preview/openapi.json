@@ -359,6 +359,48 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManufacturingPlatformDev/manufacturingDataServices/{mdsResourceName}/listAvailableVersions": {
+      "post": {
+        "tags": [
+          "ManufacturingDataServices"
+        ],
+        "operationId": "ManufacturingDataServices_ListAvailableVersions",
+        "description": "Returns the list of available versions",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "mdsResourceName",
+            "in": "path",
+            "required": true,
+            "description": "Name.",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/AvailableVersionListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -376,7 +418,7 @@
           "readOnly": true
         }
       },
-      "description": "The properties related to Azure Data Twin (Adt) Resource"
+      "description": "The properties related to Azure Digital Twin (Adt) Resource"
     },
     "AdxProfile": {
       "type": "object",
@@ -397,7 +439,7 @@
           "readOnly": true
         }
       },
-      "description": "The properties related to Azure Data Factory (Adx) Resource"
+      "description": "The properties related to Azure Data Explorer (Adx) Resource"
     },
     "AksProfile": {
       "type": "object",
@@ -421,14 +463,50 @@
       },
       "description": "The properties related to Azure Key Vault (Akv) Resource"
     },
+    "ApplicationVersion": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Application Version"
+        },
+        "isLatest": {
+          "type": "boolean",
+          "description": "Is Latest"
+        },
+        "isPreview": {
+          "type": "boolean",
+          "description": "Is Preview"
+        }
+      },
+      "description": "Information about application versions",
+      "required": [
+        "version",
+        "isLatest",
+        "isPreview"
+      ]
+    },
+    "AvailableVersionListResult": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApplicationVersion"
+          },
+          "x-ms-identifiers": [],
+          "x-cadl-name": "ApplicationVersion[]",
+          "description": "The list of versions"
+        }
+      },
+      "description": "The list of available versions",
+      "required": [
+        "versions"
+      ]
+    },
     "DatabaseProfile": {
       "type": "object",
       "properties": {
-        "sqlId": {
-          "type": "string",
-          "description": "Resource Id of SQL Resource",
-          "readOnly": true
-        },
         "cosmosId": {
           "type": "string",
           "description": "Resource Id of Cosmos Resource",
@@ -436,6 +514,38 @@
         }
       },
       "description": "The properties related to Database Resource"
+    },
+    "EventHubProfile": {
+      "type": "object",
+      "properties": {
+        "ingestionInstanceId": {
+          "type": "string",
+          "description": "Resource Id of Ingestion Instance EventHub Resource",
+          "readOnly": true
+        },
+        "dhInstanceId": {
+          "type": "string",
+          "description": "Resource Id of Data History Instance EventHub Resource",
+          "readOnly": true
+        },
+        "hostName": {
+          "type": "string",
+          "description": "Host Name",
+          "readOnly": true
+        }
+      },
+      "description": "The properties related to EventHub Resource"
+    },
+    "FunctionAppProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Resource Id of Azure Function App Resource",
+          "readOnly": true
+        }
+      },
+      "description": "The properties related to Azure Function App Resource"
     },
     "MdsResource": {
       "type": "object",
@@ -493,8 +603,7 @@
           "readOnly": true
         },
         "version": {
-          "type": "number",
-          "format": "float",
+          "type": "string",
           "description": "Mds Resource Version.",
           "x-ms-mutability": [
             "read",
@@ -508,6 +617,33 @@
           "x-ms-mutability": [
             "read",
             "update",
+            "create"
+          ]
+        },
+        "aadApplicationId": {
+          "type": "string",
+          "description": "AAD Application Id.",
+          "pattern": "^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "aksAdminGroupId": {
+          "type": "string",
+          "description": "AKS Admin Group Id.",
+          "pattern": "^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "continuousExportPeriod": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Continuous Export Period.",
+          "x-ms-mutability": [
+            "read",
             "create"
           ]
         },
@@ -545,9 +681,39 @@
           "$ref": "#/definitions/AkvProfile",
           "description": "Profile of Akv Created.",
           "readOnly": true
+        },
+        "redisProfile": {
+          "$ref": "#/definitions/RedisProfile",
+          "description": "Profile of Azure Redis Created.",
+          "readOnly": true
+        },
+        "synapseProfile": {
+          "$ref": "#/definitions/SynapseProfile",
+          "description": "Profile of Synapse Created.",
+          "readOnly": true
+        },
+        "monitoringProfile": {
+          "$ref": "#/definitions/MonitoringProfile",
+          "description": "Profile of Monitoring Resource Created.",
+          "readOnly": true
+        },
+        "eventHubProfile": {
+          "$ref": "#/definitions/EventHubProfile",
+          "description": "Profile of EventHub Resource.",
+          "readOnly": true
+        },
+        "functionAppProfile": {
+          "$ref": "#/definitions/FunctionAppProfile",
+          "description": "Profile of Function App Resource.",
+          "readOnly": true
         }
       },
-      "description": "Details of the ManufacturingPlatform MdsResource."
+      "description": "Details of the ManufacturingPlatform MdsResource.",
+      "required": [
+        "aadApplicationId",
+        "aksAdminGroupId",
+        "continuousExportPeriod"
+      ]
     },
     "MdsResourceUpdate": {
       "type": "object",
@@ -575,8 +741,7 @@
       "type": "object",
       "properties": {
         "version": {
-          "type": "number",
-          "format": "float",
+          "type": "string",
           "description": "Mds Resource Version.",
           "x-ms-mutability": [
             "read",
@@ -596,6 +761,17 @@
       },
       "description": "The updatable properties of the MdsResource."
     },
+    "MonitoringProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Resource Id of Application Insights Resource",
+          "readOnly": true
+        }
+      },
+      "description": "The properties related to Monitoring Resource"
+    },
     "ProvisioningState": {
       "type": "string",
       "description": "The status of the current operation.",
@@ -613,6 +789,17 @@
         "modelAsString": true
       }
     },
+    "RedisProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Resource Id of Azure Redis Cache Resource",
+          "readOnly": true
+        }
+      },
+      "description": "The properties related to Azure Redis Cache Resource"
+    },
     "StorageProfile": {
       "type": "object",
       "properties": {
@@ -623,6 +810,22 @@
         }
       },
       "description": "The properties related to Storage Resource"
+    },
+    "SynapseProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Resource Id of Synapse Resource",
+          "readOnly": true
+        },
+        "devEndpoint": {
+          "type": "string",
+          "description": "Synapse Development Endpoint",
+          "readOnly": true
+        }
+      },
+      "description": "The properties related to Synapse Resource"
     }
   },
   "parameters": {}
