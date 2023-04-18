@@ -333,13 +333,21 @@
       "type": "object",
       "properties": {
         "uuid": {
-          "description": "Gets a unique identifier for this resource.",
+          "description": "Globally unique, immutable, non-reusable id.",
           "type": "string",
           "readOnly": true
         },
+        "type": {
+          "description": "Resource path to asset type (model) definition.",
+          "type": "string"
+        },
+        "path": {
+          "description": "Asset path that identifies the asset within a namespace (Redmond/ElectricCars/Painting/LeftBack).",
+          "type": "string"
+        },
         "enabled": {
           "type": "boolean",
-          "description": "Indicates if the resource and identity are enabled or not. A disabled asset cannot authenticate with AAD."
+          "description": "Enabled/Disabled status of the asset."
         },
         "externalAssetId": {
           "type": "string",
@@ -347,50 +355,104 @@
             "read",
             "create"
           ],
-          "description": "Gets the asset Id provided by customer."
+          "description": "Asset id provided by the customer."
         },
-        "assetTemplateId": {
+        "displayName": {
           "type": "string",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ],
-          "description": "Asset Template Id."
+          "description": "Human-readable display name."
         },
         "manufacturer": {
           "type": "string",
-          "readOnly": true,
-          "description": "Hardware manufacturer name."
+          "description": "Asset manufacturer name."
+        },
+        "manufacturerUri": {
+          "type": "string",
+          "description": "Asset manufacturer URI."
         },
         "model": {
           "type": "string",
-          "readOnly": true,
-          "description": "Hardware model name."
+          "description": "Asset model name."
         },
-        "operatingSystem": {
+        "productCode": {
           "type": "string",
-          "readOnly": true,
-          "description": "operating system name."
+          "description": "Asset product code."
         },
-        "operatingSystemVersion": {
+        "hardwareRevision": {
           "type": "string",
-          "description": "operating system version."
+          "description": "Revision number of the hardware."
         },
-        "identity": {
-          "description": "Identity for the resource.",
-          "type": "object",
-          "properties": {
-            "principalId": {
-              "type": "string",
-              "readOnly": true,
-              "description": "Principal id for the asset resource."
-            },
-            "tenantId": {
-              "type": "string",
-              "readOnly": true,
-              "description": "Tenant id for the AAD tenant."
+        "softwareRevision": {
+          "type": "string",
+          "description": "Revision number of the software."
+        },
+        "overallRevision": {
+          "type": "string",
+          "description": "Overall revision number of the asset."
+        },
+        "manual": {
+          "type": "string",
+          "description": "URL for the manual."
+        },
+        "class": {
+          "type": "string",
+          "description": "The domain or purpose of the asset."
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Asset serial number."
+        },
+        "productInstanceUri": {
+          "type": "string",
+          "description": "Unique resource identifier for the asset."
+        },
+        "revisionCounter": {
+          "type": "integer",
+          "description": "The number of times the configuration data has been modified."
+        },
+        "softwareReleaseDate": {
+          "type": "string",
+          "description": "The date when the software is released."
+        },
+        "patchIdentifiers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of patches applied to a software version."
+        },
+        "mappings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dataSource": {
+                "type": "string",
+                "description": "The address of the source of the data in the asset (e.g. URL) so that a client can access the data source on the asset."
+              },
+              "typePath": {
+                "type": "string",
+                "description": "The path to the type definition of the capability (e.g. DTMI, OPC UA information model node id, etc.), for example dtmi:com:example:Robot:_contents:__prop1;1."
+              },
+              "observabilityMode": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "histogram",
+                  "gauge",
+                  "counter"
+                ],
+                "description": "An indication of how the data point should be mapped to OpenTelemetry (none, histogram, gauge, counter, etc.)."
+              },
+              "additionalConfiguration": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Protocol-specific configuration for the data point. For OPC UA, this could include configuration like, publishingInterval, samplingInterval, and queueSize."
+              }
             }
-          }
+          },
+          "description": "Array of mapping (binding) elements, one for each capability in the asset type definition (e.g. where to find the value for each asset capability)."
         }
       }
     },
