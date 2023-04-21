@@ -38,10 +38,8 @@ These settings apply only when `--tag=package-2023-02-08-preview` is specified o
 ```yaml $(tag) == 'package-2023-02-08-preview'
 input-file:
   - Microsoft.IoTFirmwareDefense/preview/2023-02-08-preview/common.json
-  - Microsoft.IoTFirmwareDefense/preview/2023-02-08-preview/firmwareGroups.json
   - Microsoft.IoTFirmwareDefense/preview/2023-02-08-preview/firmwares.json
   - Microsoft.IoTFirmwareDefense/preview/2023-02-08-preview/workspaces.json
-  - Microsoft.IoTFirmwareDefense/preview/2023-02-08-preview/workspaces-firmwares.json
   - Microsoft.IoTFirmwareDefense/preview/2023-02-08-preview/operations.json
 ```
 ### Tag: package-2022-09-15-privatepreview
