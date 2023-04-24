@@ -461,6 +461,58 @@
         }
       }
     },
+    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/syncCertData": {
+      "post": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Synchronize attestation data from app compliance.",
+        "operationId": "Reports_SyncCertData",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "Parameters for synchronize certification data operation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SyncCertDataRequest"
+            }
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. The response indicates the given data has been successfully synchronized."
+          },
+          "202": {
+            "description": "Accepted. The response indicates the synchronize operation is performed in the background."
+          },
+          "default": {
+            "description": "Error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "Reports_SyncCertData": {
+            "$ref": "./examples/Reports_SyncCertData.json"
+          }
+        }
+      }
+    },
     "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/webhooks": {
       "get": {
         "tags": [
@@ -1287,6 +1339,18 @@
           "description": "The information of 'bring your own storage' binding to the report",
           "$ref": "#/definitions/StorageInfo"
         },
+        "certData": {
+          "type": "array",
+          "description": "List of synchronized certification data.",
+          "items": {
+            "description": "Single synchronized certification data.",
+            "$ref": "#/definitions/CertSyncData"
+          },
+          "readOnly": true,
+          "x-ms-identifiers": [
+            "offerGuid"
+          ]
+        },
         "provisioningState": {
           "readOnly": true,
           "description": "Azure lifecycle management",
@@ -1830,7 +1894,7 @@
       "description": "A class represent the control.",
       "properties": {
         "controlId": {
-          "description": "The Id of the control. e.g. \"Operational Security#10\"",
+          "description": "The Id of the control. e.g. \"Operational_Security#10\"",
           "type": "string",
           "readOnly": true
         },
@@ -1952,6 +2016,53 @@
         }
       }
     },
+    "CertSyncData": {
+      "type": "object",
+      "description": "A class represent the certification data synchronized from app compliance.",
+      "properties": {
+        "offerGuid": {
+          "type": "string",
+          "description": "The offerGuid which mapping to the reports.",
+          "x-ms-parameter-location": "method",
+          "minLength": 1
+        },
+        "certificationStatus": {
+          "type": "string",
+          "description": "Indicates the status of certification process."
+        },
+        "ingestionStatus": {
+          "type": "string",
+          "description": "Indicates the status of compliance process."
+        },
+        "controls": {
+          "description": "The control data list to be synchronized.",
+          "type": "array",
+          "items": {
+            "description": "Single control data to be synchronized.",
+            "$ref": "#/definitions/ControlSyncData"
+          },
+          "x-ms-identifiers": [
+            "controlId"
+          ]
+        }
+      }
+    },
+    "ControlSyncData": {
+      "type": "object",
+      "description": "A class represent the control data synchronized from app compliance.",
+      "properties": {
+        "controlId": {
+          "description": "The Id of the control. e.g. \"Operational_Security#10\"",
+          "type": "string",
+          "readOnly": true
+        },
+        "controlStatus": {
+          "description": "Control status synchronized from app compliance.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
     "SnapshotDownloadRequest": {
       "type": "object",
       "description": "Snapshot's download request.",
@@ -2030,6 +2141,19 @@
             "description": "Subscription id for onboard",
             "type": "string"
           }
+        }
+      }
+    },
+    "SyncCertDataRequest": {
+      "type": "object",
+      "description": "Synchronize certification data request.",
+      "required": [
+        "certData"
+      ],
+      "properties": {
+        "certData": {
+          "description": "certification data to be synchronized.",
+          "$ref": "#/definitions/CertSyncData"
         }
       }
     },
