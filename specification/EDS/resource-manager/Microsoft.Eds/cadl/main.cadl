@@ -32,10 +32,13 @@ enum ProvisioningState {
   Accepted,
 }
 
+@minValue(1)
+scalar ProductQuantity extends int32;
+
 @doc("A purchase request.")
 model PurchaseRequest is TrackedResource<PurchaseRequestProperties> {
   @doc("Purchase API details")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @pattern("^[a-zA-Z0-9-]{36,38}$")
   @key("purchaseId")
   @segment("purchaseRequests")
   @visibility("read")
@@ -57,11 +60,7 @@ interface PurchaseRequests {
 model PurchaseRequestProperties {
   @visibility("read")
   @doc("The status of the last operation.")
-  provisioningState?: ProvisioningState;        
-  @doc("Subscription Identifier")
-  subscriptionId:string;
-  @doc("Resource Identifier.")
-  resourceId: string;     
+  provisioningState?: ProvisioningState;  
   @doc("Big Catalog Products detail like product Id, SkuId, etc.")
   @extension("x-ms-identifiers",[])
   @minItems(1)
@@ -73,12 +72,12 @@ model PurchaseLineRequest
 {
     @doc("UPN associated with Big Catalog XDK product.")
     productCode:string;
-	@doc("Product Identifier in Guid format.")
+	@doc("Big Catalog Product Identifier.")
 	productId:string;
 	@doc("SKU Identifier")
 	skuId:string;
 	@doc("Quantity being bought.")
-    qty:int32; 
+	qty:ProductQuantity; 
 }
 
 @doc("Purchase Response.")
