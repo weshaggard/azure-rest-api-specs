@@ -3401,15 +3401,15 @@
           "type": "string",
           "description": "The custom file name of the uploaded blob."
         },
-        "resourceType": {
+        "resourceType":{
           "type": "string",
-          "enum": [
+          "description": "The resource type of file request for uploading.",
+          "enum":[
             "Package",
-            "VHD"
+            "Vhd"
           ],
-          "description": "Resource type for file uploading.",
           "x-ms-enum": {
-            "name": "fileUploadResourceType",
+            "name": "osProductState",
             "modelAsString": true
           }
         }
@@ -3849,8 +3849,7 @@
           "default": "SecurityUpdate",
           "enum": [
             "SecurityUpdate",
-            "FeatureUpdate",
-            "InplaceUpgrade"
+            "FeatureUpdate"
           ],
           "x-ms-enum": {
             "name": "osUpdateType",
@@ -3868,23 +3867,8 @@
         "flightingRing": {
           "type": "string",
           "description": "The flighting ring, only for release of feature updates."
-        },
-        "buildVersion": {
-          "type": "string",
-          "description": "The build version of the operating system."
-        },
-        "mediaPackageVersion": {
-          "type": "string",
-          "description": "The package version of the operating system. It can be empty."
-        },
-        "customImageId": {
-          "type": "string",
-          "description": "The tested custom image id. 'osName', 'release', 'buildVersion' and 'mediaPackageVersion' would be ignored when it's eligible.'"
         }
-      },
-      "required": [
-        "testType"
-      ]
+      }
     },
     "PackageListResult": {
       "description": "A list of Test Base Packages.",
@@ -3924,28 +3908,9 @@
       "description": "The properties of the Test Base Package.",
       "type": "object",
       "properties": {
-        "testConfigurationIds": {
-          "type": "array",
-          "description": "An array of test configuration ids assigned to the package.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "provisioningState": {
-          "description": "The provisioning state of the resource.",
-          "$ref": "#/definitions/ProvisioningState"
-        },
-        "applicationName": {
+        "draftPackageName": {
           "type": "string",
-          "description": "Application name"
-        },
-        "version": {
-          "type": "string",
-          "description": "Application version"
-        },
-        "draftPackageId": {
-          "type": "string",
-          "description": "The id of draft package. Used to create or update this package from a draft package."
+          "description": "The name of draft package. Used to create or update this package from a draft package."
         },
         "packageStatus": {
           "readOnly": true,
@@ -3984,6 +3949,29 @@
           },
           "x-ms-identifiers": [],
           "description": "The validation results. There's validation on package when it's created or updated."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/PackageCommonProperties"
+        }
+      ]
+    },
+    "PackageCommonProperties": {
+      "description": "The common properties of the Test Base package and draft package.",
+      "type": "object",
+      "properties": {
+        "provisioningState": {
+          "description": "The provisioning state of the resource.",
+          "$ref": "#/definitions/ProvisioningState"
+        },
+        "applicationName": {
+          "type": "string",
+          "description": "Application name"
+        },
+        "version": {
+          "type": "string",
+          "description": "Application version"
         },
         "testTypes": {
           "type": "array",
@@ -4256,6 +4244,18 @@
         "postUpgrade": {
           "type": "boolean",
           "description": "Specifies whether the command is assigned to be executed after in-place upgrade."
+        },
+        "commandAlias": {
+          "type": "string",
+          "description": "Specifies the test alias of the command for in-place upgrade test, the marked command would obtain extra supports in a test.",
+          "enum": [
+            "Install",
+            "Uninstall"
+          ],
+          "x-ms-enum": {
+            "name": "commandAlias",
+            "modelAsString": true
+          }
         }
       },
       "required": [
@@ -4284,16 +4284,9 @@
       "description": "Parameters supplied to update a Test Base Package.",
       "type": "object",
       "properties": {
-        "testConfigurationIds": {
-          "type": "array",
-          "description": "An array of test configuration ids assigned to the package.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "draftPackageId": {
+        "draftPackageName": {
           "type": "string",
-          "description": "The id of draft package. Used to create or update this package from a draft package."
+          "description": "The name of draft package. Used to create or update this package from a draft package."
         },
         "isEnabled": {
           "type": "boolean",
@@ -4302,7 +4295,18 @@
         "blobPath": {
           "type": "string",
           "description": "The file name of the package."
-        },
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/PackageUpdateCommonParameterProperties"
+        }
+      ]
+    },
+    "PackageUpdateCommonParameterProperties": {
+      "description": "Common parameters to update Test Base package and draft package.",
+      "type": "object",
+      "properties": {
         "targetOSList": {
           "type": "array",
           "items": {
@@ -4648,13 +4652,13 @@
           "type": "string",
           "description": "Application version."
         },
+        "customImageId": {
+          "type": "string",
+          "description": "Specify the referenced Test Base Custom Image Id if available."
+        },
         "osName": {
           "type": "string",
           "description": "The operating system name, e.g. Windows 10 1809."
-        },
-        "customImageId": {
-          "type": "string",
-          "description": "Specify the referenced Test Base Custom Image Id if applicable."
         },
         "releaseName": {
           "type": "string",
@@ -6203,13 +6207,13 @@
           "type": "string",
           "description": "The name of the OS."
         },
-        "customImageId": {
-          "type": "string",
-          "description": "Specify the referenced Test Base Custom Image Id if available."
-        },
         "releaseProperties": {
           "$ref": "#/definitions/ReleaseProperties",
           "description": "The properties of the OS release."
+        },
+        "customImageId": {
+          "type": "string",
+          "description": "Specify the referenced Test Base Custom Image Id if available."
         }
       },
       "description": "The properties of an operating system."
@@ -6252,7 +6256,7 @@
         },
         "customImageId": {
           "type": "string",
-          "description": "Specify the referenced Test Base Custom Image Id if applicable."
+          "description": "Specify the referenced Test Base Custom Image Id if available."
         },
         "baselineOsName": {
           "type": "string",
