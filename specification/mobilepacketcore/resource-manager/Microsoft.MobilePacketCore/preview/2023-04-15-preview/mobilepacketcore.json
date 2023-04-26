@@ -1804,13 +1804,17 @@
     },
     "MobilePacketCoreWhatIfSnapshotResponse": {
       "type": "object",
+      "description": "Allows the validation and visualization of taking a snapshot without taking the snapshot",
       "properties": {
-        "details": {
-          "type": "string",
-          "description": "Details of the operation"
+        "summaryOfChanges": {
+          "$ref": "./common.json#/definitions/SummaryOfResources",
+          "description": "List of objects that have changed (added/delete/modified)"
+        },
+        "activeSnapshot": {
+          "$ref": "./common.json#/definitions/ReferencedResource",
+          "description": "Currently active snapshot"
         }
-      },
-      "description": "Allows the validation and visualization of activating a specific snapshot without activating it"
+      }
     },
     "MobilePacketCoreWhatIfActivateRequest": {
       "type": "object",
@@ -1822,48 +1826,53 @@
       },
       "description": "Allows the validation and visualization of activating a specific snapshot without activating it"
     },
+    "AffectedNetworkFunctions": {
+      "type": "array",
+      "description": "Affected network functions",
+      "items": {
+        "type": "object",
+        "description": "Network function instance",
+        "properties": {
+          "resourceId": {
+            "$ref": "./common.json#/definitions/ReferencedResource",
+            "description": "Identifier of the Network Function instance"
+          },
+          "task": {
+            "type": "array",
+            "description": "List of tasks to be run against the specific netork function",
+            "items": {
+              "type": "object",
+              "description": "Task instance",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Task name"
+                },
+                "taskType": {
+                  "$ref": "./common.json#/definitions/OperationalTaskType",
+                  "description": "Task type"
+                },
+                "details": {
+                  "type": "string",
+                  "description": "Additional details about the task"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "MobilePacketCoreWhatIfActivateResponse": {
       "type": "object",
+      "description": "Allows for the validation of creating a snapshot resource without creating the resource",
       "properties": {
         "snapshot": {
           "$ref": "./common.json#/definitions/ReferencedResource",
           "description": "Snapshot against which the what-if activate operation was run"
         },
-        "networkFunctionInstance": {
-          "type": "array",
-          "description": "Affected network functions",
-          "items": {
-            "type": "object",
-            "description": "Network function instance",
-            "properties": {
-              "resourceId": {
-                "$ref": "./common.json#/definitions/ReferencedResource",
-                "description": "Identifier of the Network Function instance"
-              },
-              "task": {
-                "type": "array",
-                "description": "List of tasks to be run against the specific netork function",
-                "items": {
-                  "type": "object",
-                  "description": "Task instance",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "description": "Task name"
-                    },
-                    "taskType": {
-                      "$ref": "./common.json#/definitions/OperationalTaskType",
-                      "description": "Task type"
-                    },
-                    "details": {
-                      "type": "string",
-                      "description": "Additional details about the task"
-                    }
-                  }
-                }
-              }
-            }
-          }
+        "networkFunctionInstances": {
+          "$ref": "#/definitions/AffectedNetworkFunctions",
+          "description": "List of affectd network function instances"
         }
       }
     }
