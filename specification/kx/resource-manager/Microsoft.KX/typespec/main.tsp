@@ -1,30 +1,34 @@
-import "@cadl-lang/rest";
-import "@azure-tools/cadl-providerhub";
-import "@azure-tools/cadl-azure-core";
-import "@azure-tools/cadl-azure-resource-manager";
+import "@typespec/http";
+import "@typespec/versioning";
+import "@azure-tools/typespec-providerhub";
+import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-azure-resource-manager";
 
-@armNamespace
-@serviceTitle("KX Resource Provider")
-@serviceVersion("2022-11-01-preview")
+@armProviderNamespace("Microsoft.KX")
+@service({
+  title: "KX Resource Provider",
+  version: "2022-11-01-preview",
+})
+@Versioning.useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.KX;
 
-using Cadl.Http;
-using Cadl.Rest;
+using TypeSpec.Http;
+using TypeSpec.Rest;
 using Azure.ResourceManager;
 
 @doc("A kdbInsightsEnterprise resource")
 model KdbInsightsEnterpriseResource is TrackedResource<KdbInsightsEnterpriseProperties> {
+  @doc("The name of the kdbInsightsEnterprise resource")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("kdbInsightsEnterpriseName")
   @segment("kdbInsightsEnterprise")
   @path
-  @doc("The name of the kdbInsightsEnterprise resource")
   name: string;
 }
 
 @doc("Provisioning State")
 @knownValues(ProvisioningStateKV)
-model ProvisioningState is string {}
+scalar ProvisioningState extends string;
 
 enum ProvisioningStateKV {
   Succeeded,
@@ -36,7 +40,7 @@ enum ProvisioningStateKV {
 }
 
 @secret
-model PasswordString is string {}
+scalar PasswordString extends string;
 
 @doc("Configuration of the managed resource group associated with the resource.")
 model ManagedResourceGroupConfiguration {
