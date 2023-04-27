@@ -1,8 +1,8 @@
-# [[Microsoft.MySecondRP]]
+# [[testbase]]
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for [[Microsoft.MySecondRP]].
+This is the AutoRest configuration file for [[testbase]].
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the [Microsoft.MySecondRP].
+These are the global settings for the [testbase].
 
 ```yaml
 openapi-type: arm
@@ -37,6 +37,7 @@ These settings apply only when `--tag=package-[2020-06-01-preview]` is specified
 ```yaml $(tag) == 'package-[2020-06-01-preview]'
 input-file:
   - Microsoft.MySecondRP/preview/2020-06-01-preview/testbase.json
+  - Microsoft.MyThirdRP/preview/2020-06-01-preview/testbase.json
 ```
 
 ---
