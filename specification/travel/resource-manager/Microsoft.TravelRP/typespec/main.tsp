@@ -23,11 +23,11 @@ interface Operations extends Azure.ResourceManager.Operations {}
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 @doc("A TravelRPProviderHub resource")
-model Employee is TrackedResource<EmployeeProperties> {
-  @doc("The name of the employee")
+model Vacation is TrackedResource<VacationProperties> {
+  @doc("The name of the vacation")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("EmployeeName")
-  @segment("Employees")
+  @key("VacationName")
+  @segment("Vacations")
   @path
   name: string;
 }
@@ -42,12 +42,12 @@ enum ProvisioningState {
   Accepted,
 }
 
-@doc("Details of the TravelRP Employee.")
-model EmployeeProperties {
+@doc("Details of the TravelRP Vacation.")
+model VacationProperties {
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
 }
 
 @armResourceOperations
-interface Employees extends TrackedResourceOperations<Employee, EmployeeProperties> {}
+interface Vacations extends TrackedResourceOperations<Vacation, VacationProperties> {}
