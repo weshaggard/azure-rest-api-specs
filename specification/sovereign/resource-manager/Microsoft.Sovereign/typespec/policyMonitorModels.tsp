@@ -1,4 +1,7 @@
+import "@typespec/http";
+
 using Azure.ResourceManager;
+using TypeSpec.Http;
 
 @doc("Details of the sovereign policy monitor resource type.")
 model PolicyMonitorProperties {

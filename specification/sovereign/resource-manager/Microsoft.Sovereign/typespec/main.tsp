@@ -42,18 +42,16 @@ interface PolicyMonitors
 	@action("executeValidateSLZ")
 	@doc("Provides a mechanism for customers to trigger a validate of a particular SLZ instance")
 	@armResourceAction(PolicyMonitor)
-	validateSLZ is ArmResourceActionAsync<
+	validateSLZ is ArmResourceActionNoContentAsync<
 		PolicyMonitor,
-		ValidateRequest,
 		ValidateRequest
 	>;
 
 	@action("executePolicyMonitor")
 	@doc("Provides a mechanism for customers to trigger the evaluation policy monitor against an SLZ.")
 	@armResourceAction(PolicyMonitor)
-	monitorSLZ is ArmResourceActionAsync<
+	monitorSLZ is ArmResourceActionNoContentAsync<
 		PolicyMonitor,
-		MonitorRequest,
 		MonitorRequest
 	>;
 
@@ -80,4 +78,15 @@ interface PolicyMonitors
 			BaseParameters<PolicyMonitor>
 		>
 	): ArmResponse<ValidationResultList> | ErrorResponse;
+
+	@post
+	@action("downloadSLZ")
+	@doc("Returns the slz packaged as a zip file.")
+	op downloadSLZ(...ResourceInstanceParameters<
+			PolicyMonitor,
+			BaseParameters<PolicyMonitor>
+		>) : {
+	  @header contentType: "application/zip";
+	  @body image: bytes;
+	};
 }
