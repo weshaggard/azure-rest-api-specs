@@ -10,19 +10,19 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
 
-@armProviderNamespace("Microsoft.TravelRP")
+@armProviderNamespace("Microsoft.TravelsRP")
 @service({
-  title: "Microsoft.TravelRP",
+  title: "Microsoft.TravelsRP",
   version: "2021-08-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.TravelRP;
+namespace Microsoft.TravelsRP;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
-@doc("A TravelRPProviderHub resource")
+@doc("A TravelsRPProviderHub resource")
 model Vacation is TrackedResource<VacationProperties> {
   @doc("The name of the vacation")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
@@ -42,7 +42,7 @@ enum ProvisioningState {
   Accepted,
 }
 
-@doc("Details of the TravelRP Vacation.")
+@doc("Details of the TravelsRP Vacation.")
 model VacationProperties {
   @visibility("read")
   @doc("The status of the last operation.")
