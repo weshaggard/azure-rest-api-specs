@@ -2,7 +2,7 @@
   "x-generator": "NSwag v13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v12.0.0.0))",
   "swagger": "2.0",
   "info": {
-    "title": "IoT Workspace Resource Provider",
+    "title": "Azure Device Registry Resource Provider Service",
     "version": "2022-05-21-preview"
   },
   "host": "management.azure.com",
@@ -138,18 +138,29 @@
             "$ref": "#/parameters/deviceNameParameter"
           }, 
           {
-            "name": "device",
+            "name": "deviceUpdatePayload",
             "in": "body",
             "required": true,
-            "description": "Resource Patch parameters.",
+            "description": "Device Parameters to patch",
             "schema": {
-              "$ref": "#/definitions/Device"
+              "$ref": "#/definitions/DeviceUpdatePayload"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "x-nullable": false,
+            "description": "Device is created successfully.",
+            "schema": {
+              "$ref": "#/definitions/Device"
+            }
+          },
+          "201": {
+            "x-nullable": false,
+            "description": "Async operation to create or update the device is created.",
+            "schema": {
+              "$ref": "#/definitions/Device"
+            }
           }
         }
       },
@@ -301,6 +312,32 @@
       },
       "description": "List of Devices."
     },
+    "DeviceUpdatePayload": {
+      "description": "Request payload used to update Device.",
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags."
+        },
+        "properties": {
+          "$ref": "#/definitions/DeviceUpdateProperties"
+        }
+      }
+    },
+    "DeviceUpdateProperties": {
+      "description": "Device Properties that can be updated",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Indicates if the resource and identity are enabled or not. A disabled device cannot authenticate with AAD."
+        }
+      }
+    },
     "Device": {
       "type": "object",
       "properties": {
@@ -320,29 +357,22 @@
       "type": "object",
       "properties": {
         "uuid": {
-          "description": "Gets a unique identifier for this resource.",
+          "description": "Unique identifier for this resource.",
           "type": "string",
           "readOnly": true
         },
         "enabled": {
           "type": "boolean",
-          "description": "Indicates if the resource and identity are enabled or not. A disabled device cannot authenticate with AAD."
+          "description": "Indicates if the resource and identity are enabled or not. A disabled device cannot authenticate with AAD.",
+          "default": true
         },
         "externalDeviceId": {
           "type": "string",
+          "description": "Device Id provided by customer.",
           "x-ms-mutability": [
             "read",
             "create"
-          ],
-          "description": "Gets the device Id provided by customer."
-        },
-        "deviceTemplateId": {
-          "type": "string",
-           "x-ms-mutability": [
-            "read",
-            "create"
-          ],
-          "description": "device Template Id."
+          ]
         },
         "manufacturer": {
           "type": "string",
@@ -353,6 +383,14 @@
           "type": "string",
           "readOnly": true,
           "description": "Hardware model name."
+        },
+        "deviceTemplateId": {
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
+          "description": "device Template Id."
         },
         "operatingSystem": {
           "type": "string",
@@ -378,6 +416,10 @@
               "description": "Tenant id for the AAD tenant."
             }
           }
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {}
         }
       }
     },
