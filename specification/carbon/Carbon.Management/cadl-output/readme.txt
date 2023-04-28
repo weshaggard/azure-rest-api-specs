@@ -1,1 +1,0 @@
-Add empty cadl-output folder to avoid cadlAPIView validation failure.
