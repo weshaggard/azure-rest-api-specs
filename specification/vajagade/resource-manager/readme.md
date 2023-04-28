@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-[2020-06-01-preview]` is specified
 
 ```yaml $(tag) == 'package-[2020-06-01-preview]'
 input-file:
-  - Microsoft.MyFirstRP/preview/2020-06-01-preview/spec.json
+  - Microsoft.VandanaRP/preview/2020-06-01-preview/spec.json
 ```
 
 ---
