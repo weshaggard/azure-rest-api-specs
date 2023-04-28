@@ -231,6 +231,48 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mobilePacketCoreName}/safeDeploymentContinue": {
+      "post": {
+        "tags": [
+          "MobilePacketCores"
+        ],
+        "summary": "Continue a safe deployment rollout.  This is used when the 'manual' continuation policy is used for safe deployment rollouts between groups.  If the safe deployment rollout is not waiting for user input, this action has no effect",
+        "operationId": "MobilePacketCores_SafeDeploymentContinue",
+        "x-ms-examples": {
+          "MobilePacketCoreAction_SafeDeploymentContinue": {
+            "$ref": "./examples/MobilePacketCoreAction_SafeDeploymentContinue.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/MobilePacketCoreNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "schema": {
+              "$ref": "#/definitions/MobilePacketCoreSafeDeploymentContinueResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/{mobilePacketCoreName}/whatIfActivate": {
       "post": {
         "tags": [
@@ -1586,19 +1628,33 @@
                 "maximum": 255,
                 "description": "Order of safe deployment group rollout.  Lower values are rolled out prior to larger values"
               },
+              "continuationPolicy": {
+                "type": "string",
+                "enum": [
+                  "Manual",
+                  "Immediate"
+                ],
+                "x-ms-enum": {
+                  "name": "ContinuationPolicy",
+                  "modelAsString": true
+                },
+                "default": "Manual",
+                "description": "Policy to use when contining a safe deployment rollout from one group to the next.  Manual indicates halt until the user issues the 'safeDeploymentContinue' action.  Immediate indicates no gate - the next group will start the rollout immediately"
+              },
               "status": {
                 "readOnly": true,
                 "type": "string",
                 "enum": [
                   "Completed",
                   "Processing",
+                  "WaitingForUserInput",
                   "Pending"
                 ],
                 "x-ms-enum": {
                   "name": "SafeDeploymentStatus",
                   "modelAsString": true
                 },
-                "description": "During a safe deployment rollout, current status of the SDP group"
+                "description": "During a safe deployment rollout, current status of the SDP group.  Completed indicates the SDP group has completed the rollout.  Processing indicates the SDP group in the process of rolling out the change.  WaitingForUserInput indicates the SDP rollout has completed but cannot continue to the next group until the user issues a 'safeDeploymentContinue' action.  Pending indicates the safe deployment group has not yet started the rollout."
               }
             },
             "required": [
@@ -1859,6 +1915,32 @@
         "networkFunctionInstances": {
           "$ref": "#/definitions/AffectedNetworkFunctions",
           "description": "List of affectd network function instances"
+        }
+      }
+    },
+    "MobilePacketCoreSafeDeploymentContinueResponse": {
+      "type": "object",
+      "description": "Indicates the result of the safe deployment continue action",
+      "properties": {
+        "actionTaken": {
+          "type": "string",
+          "enum": [
+            "None",
+            "Continued"
+          ],
+          "x-ms-enum": {
+            "name": "ActionTaken",
+            "modelAsString": true
+          },
+          "description": "Action taken as a result of the Safe Deployment Continue operation"
+        },
+        "completedSafeDeploymentGroupName": {
+          "type": "string",
+          "description": "Name of safe deployment group that was completed by this action"
+        },
+        "currentSafeDeploymentGroupName": {
+          "type": "string",
+          "description": "Name of safe deployment group that was started by this action"
         }
       }
     }
