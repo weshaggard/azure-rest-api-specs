@@ -78,6 +78,15 @@ input-file:
   - Microsoft.ConnectedCache/preview/2023-04-01-preview/ConnectedCache.json
 ```
 
+### Tag: package-2023-05-01-preview
+
+These settings apply only when `--tag=package-2023-05-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-05-01-preview'
+input-file:
+  - Microsoft.ConnectedCache/preview/2023-05-01-preview/ConnectedCache.json
+```
+
 ## Suppression
 
 ``` yaml
