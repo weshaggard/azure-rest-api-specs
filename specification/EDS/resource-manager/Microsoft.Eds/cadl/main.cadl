@@ -36,39 +36,39 @@ enum ProvisioningState {
 scalar ProductQuantity extends int32;
 
 @doc("A purchase request.")
-model PurchaseRequest is TrackedResource<PurchaseRequestProperties> {
-  @doc("Purchase API details")
+model OrderRequest is TrackedResource<OrderRequestProperties> {
+  @doc("Order request API details")
   @pattern("^[a-zA-Z0-9-]{36,38}$")
-  @key("purchaseId")
-  @segment("purchaseRequests")
+  @key("orderId")
+  @segment("orders")
   @visibility("read")
   @path
   name: string;
 }
   
 @armResourceOperations
-interface PurchaseRequests {
-  get is ArmResourceRead<PurchaseRequest>;
-  create is ArmResourceCreateOrUpdateAsync<PurchaseRequest>;
-  update is ArmResourcePatchSync<PurchaseRequest, PurchaseRequestProperties>;
-  delete is ArmResourceDeleteSync<PurchaseRequest>;
-  listByResourceGroup is ArmResourceListByParent<PurchaseRequest>;
-  listBySubscription is ArmListBySubscription<PurchaseRequest>;
+interface OrderRequests {
+  get is ArmResourceRead<OrderRequest>;
+  create is ArmResourceCreateOrUpdateAsync<OrderRequest>;
+  update is ArmResourcePatchSync<OrderRequest, OrderRequestProperties>;
+  delete is ArmResourceDeleteSync<OrderRequest>;
+  listByResourceGroup is ArmResourceListByParent<OrderRequest>;
+  listBySubscription is ArmListBySubscription<OrderRequest>;
 }
 
-@doc("EDS Purchase.request")
-model PurchaseRequestProperties {
+@doc("Order request properties.")
+model OrderRequestProperties {
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;  
   @doc("Big Catalog Products detail like product Id, SkuId, etc.")
   @extension("x-ms-identifiers",[])
   @minItems(1)
-  productDetails:PurchaseLineRequest[];       
+  orderLineItemRequests:OrderLineItemRequest[];       
 }
 
 @doc("LineItem details.")
-model PurchaseLineRequest
+model OrderLineItemRequest
 {
     @doc("UPN associated with Big Catalog XDK product.")
     productCode:string;
@@ -77,44 +77,16 @@ model PurchaseLineRequest
 	@doc("SKU Identifier")
 	skuId:string;
 	@doc("Quantity being bought.")
-	qty:ProductQuantity; 
-}
-
-@doc("Purchase Response.")
-@parentResource(PurchaseRequest)
-model PurchaseResponse is TrackedResource<PurchaseResponseProperties> {
-  @doc("Transaction Identifier.")
-  @key("tranIdentifier")
-  @segment("purchaseResponses")
-  @visibility("read")
-  @path
-  name: string;
-}
-
-@armResourceOperations
-interface PurchaseResponses {
-  get is ArmResourceRead<PurchaseResponse>;
-  create is ArmResourceCreateOrUpdateAsync<PurchaseResponse>;
-  update is ArmResourcePatchSync<PurchaseResponse, PurchaseResponseProperties>;
-  delete is ArmResourceDeleteSync<PurchaseResponse>;
-  listByParent is ArmResourceListByParent<PurchaseResponse>;
-}
-
-@doc("Purchase response properties.")
-model PurchaseResponseProperties{
-  @visibility("read")
-  @doc("The status of the last operation.")
-  provisioningState?: ProvisioningState; 
-  @doc("Purchase response time.")
-  purchaseResponseTime : zonedDateTime;	  
-  @doc("Response Status Code.")
-  status: PurchaseStatus;
-  @doc("Purchase Status Message.")
-  purchaseMessage: string;
-  @doc("Whether transaction if failed can be retried.")
-  isRetriableError: boolean;
-  @doc("Transaction Identifier. This may be used to identify the retriable scenarios.")
-  tranIdentifier:string;
+	quantity:ProductQuantity;
+	@visibility("read")
+	@doc("Response Status Code.")
+    lineitemPurchaseStatus: PurchaseStatus;
+	@visibility("read")
+	@doc("Purchase Status Message.")
+    purchaseMessage: string;
+	@visibility("read")
+	@doc("Whether transaction if failed can be retried.")
+    isRetriableError: boolean;
 }
 
 @doc("Purchase status.")
