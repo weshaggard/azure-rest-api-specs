@@ -45,6 +45,7 @@ directive:
       - storageContainers.json
       - virtualHardDisks.json
       - virtualMachines.json
+      - virtualMachineInstances.json
       - virtualNetworks.json
     reason: Microsoft.AzureStackHCI is the correct name for our RP.
 ```
@@ -61,7 +62,7 @@ input-file:
   - Microsoft.AzureStackHCI/preview/2023-06-01-preview/networkInterfaces.json
   - Microsoft.AzureStackHCI/preview/2023-06-01-preview/storageContainers.json
   - Microsoft.AzureStackHCI/preview/2023-06-01-preview/virtualHardDisks.json
-  - Microsoft.AzureStackHCI/preview/2023-06-01-preview/virtualMachines.json
+  - Microsoft.AzureStackHCI/preview/2023-06-01-preview/virtualMachineInstances.json
   - Microsoft.AzureStackHCI/preview/2023-06-01-preview/virtualNetworks.json
 ```
 
