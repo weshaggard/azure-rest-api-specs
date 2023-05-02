@@ -13,7 +13,7 @@ using Azure.ResourceManager;
 @armProviderNamespace("Microsoft.MartinRPDemo")
 @service({
   title: "Microsoft.MartinRPDemo",
-  version: "2021-08-01-preview",
+  version: "2021-08-02-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.MartinRPDemo;
@@ -50,4 +50,11 @@ model DatabaseProperties {
 }
 
 @armResourceOperations
-interface Databases extends TrackedResourceOperations<Database, DatabaseProperties> {}
+interface Databases extends TrackedResourceOperations<Database, DatabaseProperties> {
+  @post
+  @doc("Action to Check the database via api")
+  @segment("checkDB")
+  op CheckDB(
+    ...ResourceInstanceParameters<Database>
+  ) : ArmResponse<string> | ErrorResponse;
+}
