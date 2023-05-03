@@ -13,7 +13,7 @@ using Azure.ResourceManager;
 @armProviderNamespace("Microsoft.MartinRPDemo")
 @service({
   title: "Microsoft.MartinRPDemo",
-  version: "2021-08-02-preview",
+  version: "2021-08-03-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.MartinRPDemo;
@@ -49,12 +49,19 @@ model DatabaseProperties {
   provisioningState?: ProvisioningState;
 }
 
+@doc("The response sent by the HealthCheck operation")
+model HealthCheckResponse{
+  @doc("The health of the resource.")
+  healthStatus: string;
+}
+
 @armResourceOperations
 interface Databases extends TrackedResourceOperations<Database, DatabaseProperties> {
-  @post
-  @doc("Action to Check the database via api")
+  @armResourceAction(Database)
+  @doc("Action to check the status of the database")
   @segment("checkDB")
-  op CheckDB(
+  @post op CheckDB(
     ...ResourceInstanceParameters<Database>
-  ) : ArmResponse<string> | ErrorResponse;
+  ) : ArmResponse<HealthCheckResponse> | ErrorResponse;
 }
+
