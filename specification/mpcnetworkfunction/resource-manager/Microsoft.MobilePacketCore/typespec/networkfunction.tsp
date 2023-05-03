@@ -9,9 +9,9 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
 
-namespace Microsoft.MobilePacketCoreNetworkFunction;
+namespace Microsoft.MobilePacketCore;
 
-@doc("AO5GC Basic Network Function")
+@doc("AO5GC Network Function Resource")
 model NetworkFunctionResource
   is TrackedResource<NetworkFunctionResourceProperties> {
   @doc("The name of the network function")
@@ -27,16 +27,22 @@ model NetworkFunctionResourceProperties {
   @visibility("create", "read")
   sku: SkuValues;
 
+  @doc("Type of network function")
+  @visibility("create", "read")
+  networkFunctionType: NetworkFunctionType;
+
   @doc("State of the network function")
-  @visibility("read")
   networkFunctionState: NetworkFunctionState;
 
   @doc("User provided description")
   userDescription?: string;
 
+  @doc("User provided deployment notes.  This is used to optionally provide details about the NF deployment")
+  deploymentNotes?: string;
+
   @doc("Billing information")
   @visibility("read")
-  billing: Billing;
+  billing?: Billing;
 
   @doc("The status of the last operation.")
   @visibility("read")
@@ -54,14 +60,61 @@ model Billing {
 
 @armResourceOperations(NetworkFunctionResource)
 interface NetworkFunctions
-  extends TrackedResourceOperations<NetworkFunctionResource, NetworkFunctionResourceProperties> {}
+  extends TrackedResourceOperations<NetworkFunctionResource, NetworkFunctionResourceProperties> {
+    delete is ArmResourceDeleteSync<NetworkFunctionResource>;
+    createOrUpdate is ArmResourceCreateOrUpdateSync<NetworkFunctionResource>
+}
 
-@doc("Available SKUs")
+@doc("SKU Values")
 enum SkuValues {
-  AMF,
-  SMF,
-  UPF,
-  SaeGw
+  ProductionKvm2,
+  ProductionKvm4,
+  ProductionKvm8,
+  ProductionKvm16,
+  ProductionKvm32,
+  ProductionAzureNexus2,
+  ProductionAzureNexus4,
+  ProductionAzureNexus8,
+  ProductionAzureNexus16,
+  ProductionAzureNexus32,
+  ProductionAzureCore2,
+  ProductionAzureCore4,
+  ProductionAzureCore8,
+  ProductionAzureCore16,
+  ProductionAzureCore32,
+  LabKvm2,
+  LabKvm4,
+  LabKvm8,
+  LabKvm16,
+  LabKvm32,
+  LabAzureNexus2,
+  LabAzureNexus4,
+  LabAzureNexus8,
+  LabAzureNexus16,
+  LabAzureNexus32,
+  LabAzureCore2,
+  LabAzureCore4,
+  LabAzureCore8,
+  LabAzureCore16,
+  LabAzureCore32,
+}
+
+@doc("Type of Network Function")
+enum NetworkFunctionType {
+  Amf,
+  Smf,
+  Upf,
+  Nrf,
+  Nssf,
+  ContainerizedMme,
+  SaeGwCombined,
+  SaeGwControlPlane,
+  SaeGwUserPlane,
+  VirtualMme,
+  Epdg,
+  Paas,
+  Ems,
+  Opm
 }
 
 @doc("Enable/Disable enumerations")
@@ -77,7 +130,6 @@ enum NetworkFunctionState {
   Decommissioned,
   Inactive
 }
-
 
 @Azure.Core.lroStatus
 enum ProvisioningState {

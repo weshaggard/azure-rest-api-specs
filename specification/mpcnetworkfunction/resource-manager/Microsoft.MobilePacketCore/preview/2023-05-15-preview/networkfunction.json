@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Microsoft.MobilePacketCoreNetworkFunction",
+    "title": "Microsoft.MobilePacketCore Network Function resource",
     "version": "2023-05-15-preview",
     "description": "Mobile Packet Core Network Function Management API",
     "x-typespec-generated": [
@@ -75,6 +75,11 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "OperationsList": {
+            "$ref": "./examples/OperationList.json"
+          }
         }
       }
     },
@@ -109,6 +114,11 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "NetworkFunctions_ListBySubscription": {
+            "$ref": "./examples/NetworkFunctions_ListBySubscription.json"
+          }
         }
       }
     },
@@ -146,6 +156,11 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "NetworkFunctions_ListByResourceGroup": {
+            "$ref": "./examples/NetworkFunctions_ListByResourceGroup.json"
+          }
         }
       }
     },
@@ -186,6 +201,11 @@
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "NetworkFunctions_Get": {
+            "$ref": "./examples/NetworkFunctions_Get.json"
           }
         }
       },
@@ -229,19 +249,6 @@
               "$ref": "#/definitions/NetworkFunctionResource"
             }
           },
-          "201": {
-            "description": "ARM create operation completed successfully.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/NetworkFunctionResource"
-            }
-          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -249,10 +256,11 @@
             }
           }
         },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
+        "x-ms-examples": {
+          "NetworkFunctions_CreateOrUpdate": {
+            "$ref": "./examples/NetworkFunctions_CreateOrUpdate.json"
+          }
+        }
       },
       "patch": {
         "tags": [
@@ -300,6 +308,11 @@
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-examples": {
+          "NetworkFunctions_Update": {
+            "$ref": "./examples/NetworkFunctions_Update.json"
+          }
         }
       },
       "delete": {
@@ -330,20 +343,6 @@
           "200": {
             "description": "Resource deleted successfully."
           },
-          "202": {
-            "description": "Resource deletion accepted.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              },
-              "Location": {
-                "description": "The Location header contains the URL where the status of the long running operation can be checked.",
-                "type": "string"
-              }
-            }
-          },
           "204": {
             "description": "Resource deleted successfully."
           },
@@ -354,10 +353,11 @@
             }
           }
         },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        },
-        "x-ms-long-running-operation": true
+        "x-ms-examples": {
+          "NetworkFunctions_Delete": {
+            "$ref": "./examples/NetworkFunctions_Delete.json"
+          }
+        }
       }
     }
   },
@@ -405,7 +405,7 @@
           ]
         }
       },
-      "description": "AO5GC Basic Network Function",
+      "description": "AO5GC Network Function Resource",
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
@@ -446,14 +446,25 @@
             "create"
           ]
         },
+        "networkFunctionType": {
+          "$ref": "#/definitions/NetworkFunctionType",
+          "description": "Type of network function",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
         "networkFunctionState": {
           "$ref": "#/definitions/NetworkFunctionState",
-          "description": "State of the network function",
-          "readOnly": true
+          "description": "State of the network function"
         },
         "userDescription": {
           "type": "string",
           "description": "User provided description"
+        },
+        "deploymentNotes": {
+          "type": "string",
+          "description": "User provided deployment notes.  This is used to optionally provide details about the NF deployment"
         },
         "billing": {
           "$ref": "#/definitions/Billing",
@@ -469,8 +480,8 @@
       "description": "Network Function Properties.",
       "required": [
         "sku",
-        "networkFunctionState",
-        "billing"
+        "networkFunctionType",
+        "networkFunctionState"
       ]
     },
     "NetworkFunctionResourceUpdate": {
@@ -494,9 +505,17 @@
     "NetworkFunctionResourceUpdateProperties": {
       "type": "object",
       "properties": {
+        "networkFunctionState": {
+          "$ref": "#/definitions/NetworkFunctionState",
+          "description": "State of the network function"
+        },
         "userDescription": {
           "type": "string",
           "description": "User provided description"
+        },
+        "deploymentNotes": {
+          "type": "string",
+          "description": "User provided deployment notes.  This is used to optionally provide details about the NF deployment"
         }
       },
       "description": "The updatable properties of the NetworkFunctionResource."
@@ -512,6 +531,30 @@
       ],
       "x-ms-enum": {
         "name": "NetworkFunctionState",
+        "modelAsString": true
+      }
+    },
+    "NetworkFunctionType": {
+      "type": "string",
+      "description": "Type of Network Function",
+      "enum": [
+        "Amf",
+        "Smf",
+        "Upf",
+        "Nrf",
+        "Nssf",
+        "ContainerizedMme",
+        "SaeGwCombined",
+        "SaeGwControlPlane",
+        "SaeGwUserPlane",
+        "VirtualMme",
+        "Epdg",
+        "Paas",
+        "Ems",
+        "Opm"
+      ],
+      "x-ms-enum": {
+        "name": "NetworkFunctionType",
         "modelAsString": true
       }
     },
@@ -533,12 +576,38 @@
     },
     "SkuValues": {
       "type": "string",
-      "description": "Available SKUs",
+      "description": "SKU Values",
       "enum": [
-        "AMF",
-        "SMF",
-        "UPF",
-        "SaeGw"
+        "ProductionKvm2",
+        "ProductionKvm4",
+        "ProductionKvm8",
+        "ProductionKvm16",
+        "ProductionKvm32",
+        "ProductionAzureNexus2",
+        "ProductionAzureNexus4",
+        "ProductionAzureNexus8",
+        "ProductionAzureNexus16",
+        "ProductionAzureNexus32",
+        "ProductionAzureCore2",
+        "ProductionAzureCore4",
+        "ProductionAzureCore8",
+        "ProductionAzureCore16",
+        "ProductionAzureCore32",
+        "LabKvm2",
+        "LabKvm4",
+        "LabKvm8",
+        "LabKvm16",
+        "LabKvm32",
+        "LabAzureNexus2",
+        "LabAzureNexus4",
+        "LabAzureNexus8",
+        "LabAzureNexus16",
+        "LabAzureNexus32",
+        "LabAzureCore2",
+        "LabAzureCore4",
+        "LabAzureCore8",
+        "LabAzureCore16",
+        "LabAzureCore32"
       ],
       "x-ms-enum": {
         "name": "SkuValues",

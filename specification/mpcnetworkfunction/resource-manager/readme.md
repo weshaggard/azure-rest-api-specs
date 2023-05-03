@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2023-05-15-preview` is specified o
 
 ```yaml $(tag) == 'package-2023-05-15-preview'
 input-file:
-  - Microsoft.MobilePacketCore/preview/2023-05-15-preview/openapi.json 
+  - Microsoft.MobilePacketCore/preview/2023-05-15-preview/networkfunction.json
 ```
 
 
