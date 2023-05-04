@@ -1,9 +1,9 @@
-import "@cadl-lang/rest";
-import "@cadl-lang/versioning";
-import "@azure-tools/cadl-autorest";
-import "@azure-tools/cadl-azure-core";
-import "@azure-tools/cadl-azure-resource-manager";
-import "@azure-tools/cadl-providerhub";
+import "@typespec/rest";
+import "@typespec/versioning";
+import "@azure-tools/typespec-autorest";
+import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-azure-resource-manager";
+import "@azure-tools/typespec-providerhub";
 
 @doc("Azure Throttling Solutions (ATS)")
 @service({
@@ -18,9 +18,9 @@ enum Versions {
   v2022_06_01_preview: "2022-06-01-preview",
 }
 
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using Autorest;
 using Azure.ResourceManager;
 using OpenAPI;
