@@ -780,10 +780,10 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Wandisco.Fusion/migrators/{migratorName}/verifications": {
       "get": {
         "tags": [
-          "LiveDataMigrationVerifications"
+          "verifications"
         ],
         "description": "Returns list of Migration Verifications.",
-        "operationId": "LiveDataMigrationVerifications_List",
+        "operationId": "Verifications_ListByMigrator",
         "parameters": [
           {
             "$ref": "./commonTypes.json#/parameters/ResourceGroupNameParameter"
@@ -802,7 +802,7 @@
           "200": {
             "description": "migration verification details.",
             "schema": {
-              "$ref": "#/definitions/LiveDataMigrationVerificationList"
+              "$ref": "#/definitions/MigrationVerificationList"
             }
           },
           "default": {
@@ -818,7 +818,7 @@
         },
         "x-ms-examples": {
           "Get Migrators list": {
-            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/LiveDataVerificationList.json"
+            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/VerificationList.json"
           }
         }
       }
@@ -826,10 +826,10 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Wandisco.Fusion/migrators/{migratorName}/verifications/{verificationName}": {
       "get": {
         "tags": [
-          "LiveDataMigrationVerifications"
+          "verifications"
         ],
         "description": "Return a Migration Verification.",
-        "operationId": "LiveDataMigrationVerifications_Get",
+        "operationId": "Verifications_Get",
         "parameters": [
           {
             "$ref": "./commonTypes.json#/parameters/ResourceGroupNameParameter"
@@ -851,7 +851,7 @@
           "200": {
             "description": "migration verification details.",
             "schema": {
-              "$ref": "#/definitions/LiveDataMigrationVerification"
+              "$ref": "#/definitions/MigrationVerification"
             }
           },
           "default": {
@@ -863,16 +863,16 @@
         },
         "x-ms-examples": {
           "Get Migrator by name": {
-            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/LiveDataVerificationGet.json"
+            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/VerificationGet.json"
           }
         }
       },
       "put": {
         "tags": [
-          "LiveDataMigrationVerifications"
+          "verifications"
         ],
         "description": "Create a Migration Verification.",
-        "operationId": "LiveDataMigrationVerifications_CreateOrUpdate",
+        "operationId": "Verifications_CreateOrUpdate",
         "parameters": [
           {
             "$ref": "./commonTypes.json#/parameters/ResourceGroupNameParameter"
@@ -895,26 +895,26 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/LiveDataMigrationVerification"
+              "$ref": "#/definitions/MigrationVerification"
             }
           }
         ],
         "x-ms-examples": {
           "Create Migration Verification": {
-            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/LiveDataVerificationCreate.json"
+            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/VerificationCreate.json"
           }
         },
         "responses": {
           "200": {
             "description": "Updating Migration Verification.",
             "schema": {
-              "$ref": "#/definitions/LiveDataMigrationVerification"
+              "$ref": "#/definitions/MigrationVerification"
             }
           },
           "201": {
             "description": "Creating Migration Verification.",
             "schema": {
-              "$ref": "#/definitions/LiveDataMigrationVerification"
+              "$ref": "#/definitions/MigrationVerification"
             }
           },
           "default": {
@@ -931,10 +931,10 @@
       },
       "patch": {
         "tags": [
-          "LiveDataMigrationVerifications"
+          "verifications"
         ],
         "description": "Update a Migration Verification.",
-        "operationId": "LiveDataMigrationVerifications_Update",
+        "operationId": "Verifications_Update",
         "parameters": [
           {
             "$ref": "./commonTypes.json#/parameters/ResourceGroupNameParameter"
@@ -964,7 +964,7 @@
           "200": {
             "description": "Updating Migration Verification.",
             "schema": {
-              "$ref": "#/definitions/LiveDataMigrationVerification"
+              "$ref": "#/definitions/MigrationVerification"
             }
           },
           "default": {
@@ -976,16 +976,16 @@
         },
         "x-ms-examples": {
           "Successful Migration Verification Patch": {
-            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/LiveDataMigrationVerificationPatch.json"
+            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/VerificationPatch.json"
           }
         }
       },
       "delete": {
         "tags": [
-          "LiveDataMigrationVerifications"
+          "verifications"
         ],
         "description": "Delete a Migration Verification.",
-        "operationId": "LiveDataMigrationVerifications_Delete",
+        "operationId": "Verifications_Delete",
         "parameters": [
           {
             "$ref": "./commonTypes.json#/parameters/ResourceGroupNameParameter"
@@ -1022,12 +1022,61 @@
         },
         "x-ms-examples": {
           "Successful migrator delete": {
-            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/LiveDataVerificationDelete.json"
+            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/VerificationDelete.json"
           }
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Wandisco.Fusion/migrators/{migratorName}/verifications/{verificationName}/cancel": {
+      "post": {
+        "tags": [
+          "verifications"
+        ],
+        "description": "Cancel an existing migration verification",
+        "operationId": "Verifications_Cancel",
+        "parameters": [
+          {
+            "$ref": "./commonTypes.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./commonTypes.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "./commonTypes.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/MigratorNameParameter"
+          },
+          {
+            "$ref": "#/parameters/VerificationNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Migration Verification was successfully cancelled"
+          },
+          "202": {
+            "description": "The request to cancel Migration Verification was accepted"
+          },
+          "default": {
+            "description": "Error response describing the reason for operation failure.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-examples": {
+          "Cancel Verification": {
+            "$ref": "../2023-02-01-preview/examples/LiveDataMigrator/VerificationCancel.json"
+          }
         }
       }
     },
@@ -4353,7 +4402,7 @@
         ]
       }
     },
-    "LiveDataMigrationVerification": {
+    "MigrationVerification": {
       "description": "Instance of a Migration Verification",
       "type": "object",
       "allOf": [
@@ -4365,11 +4414,11 @@
         "properties": {
           "description": "Migration Verification properties",
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/LiveDataMigrationVerificationProperties"
+          "$ref": "#/definitions/MigrationVerificationProperties"
         }
       }
     },
-    "LiveDataMigrationVerificationList": {
+    "MigrationVerificationList": {
       "description": "The list of Migration Verifications.",
       "type": "object",
       "properties": {
@@ -4381,12 +4430,12 @@
           "description": "The list of migration verifications",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/LiveDataMigrationVerification"
+            "$ref": "#/definitions/MigrationVerification"
           }
         }
       }
     },
-    "LiveDataMigrationVerificationProperties": {
+    "MigrationVerificationProperties": {
       "description": "Properties of Migration Verification",
       "type": "object",
       "x-ms-client-flatten": true,
@@ -4402,7 +4451,7 @@
           "description": "ID of the migration"
         },
         "ignoreAfterTimestamp": {
-          "description": "Any verification with a date later than ignoreAfterTimestamp will be ignored",
+          "description": "Any file modified later than ignoreAfterTimestamp will be ignored",
           "type": "string",
           "format": "date-time"
         },
@@ -4417,6 +4466,179 @@
           "items": {
             "type": "string"
           }
+        },
+        "status": {
+          "type": "string",
+          "description": "The verification status.",
+          "readOnly": true,
+          "enum": [
+            "Queued",
+            "In_Progress",
+            "Complete",
+            "Cancelled",
+            "Removed"
+          ],
+          "x-ms-enum": {
+            "name": "VerificationStatus",
+            "modelAsString": true,
+            "values": [
+              {
+                "value": "Queued",
+                "description": "The verification has been created and is in a queue ready to start"
+              },
+              {
+                "value": "In_Progress",
+                "description": "The verification is currently in progress"
+              },
+              {
+                "value": "Complete",
+                "description": "The verification has completed and the full report can be accessed on the filesystem"
+              },
+              {
+                "value": "Cancelled",
+                "description": "The verification has been cancelled"
+              },
+              {
+                "value": "Removed",
+                "description": "The verification has been removed from the file system. This may be as a result of too many verifications existing for the migration"
+              }
+            ]
+          }
+        },
+        "reportLocation": {
+          "description": "The location of the verification report on the filesystem",
+          "type": "string"
+        },
+        "reportSummary": {
+          "description": "A summary of the results from the generated verification report",
+          "$ref": "#/definitions/VerificationReportSummary",
+          "readOnly": true
+        }
+      }
+    },
+    "VerificationReportSummary": {
+      "description": "Properties of Verification summary report",
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time the verification was created"
+        },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time the verification was started"
+        },
+        "finishedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time the verification finished"
+        },
+        "filesOnSource": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of files found on the source"
+        },
+        "directoriesOnSource": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of directories found on the source"
+        },
+        "bytesOnSource": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of bytes found on the source"
+        },
+        "filesExcluded": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of files on the source that matched exclusions right now"
+        },
+        "filesExcludedExistsOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Discrepancy; The number of files that were excluded but found on target"
+        },
+        "filesExcludedNotExistsOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of files not found on target, which is ok because they were excluded"
+        },
+        "directoriesExcluded": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of directories on the source that matched exclusions right now"
+        },
+        "directoriesExcludedExistsOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Discrepancy; The number of directories that were excluded but found on target"
+        },
+        "directoriesExcludedNotExistsOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of directories not found on target, which is ok because they were excluded"
+        },
+        "bytesExcluded": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of bytes on the source that matched exclusions right now"
+        },
+        "bytesExcludedExistsOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Discrepancy; The size of files that were excluded but found on the target"
+        },
+        "bytesExcludedNotExistsOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The size of files not found on target, which is ok because they were excluded"
+        },
+        "filesOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The total number of files on the target"
+        },
+        "directoriesOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The total number of directories on the target"
+        },
+        "bytesOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The total number of bytes on the target"
+        },
+        "filesMissingOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Discrepancy; The number of files that should exist on target but don't"
+        },
+        "directoriesMissingOnTarget": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Discrepancy; The number of directories that should exist on target but don't"
+        },
+        "filesMissingOnSource": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Discrepancy; Hanging file. i.e. file exists on the target but not on the source anymore (possible cause: missed delete action)"
+        },
+        "directoriesMissingOnSource": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Discrepancy; Hanging Directory. i.e. directory exists on the target but not on source anymore (possible cause: missed delete action)"
+        },
+        "fileSizeMismatches": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Discrepancy; The number of files found on both side, but their sizes match so different versions of same file"
+        },
+        "totalDiscrepancies": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The total number of discrepancies found in the verification"
         }
       }
     }
