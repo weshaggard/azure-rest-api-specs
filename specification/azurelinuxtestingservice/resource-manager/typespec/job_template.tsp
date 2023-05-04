@@ -1,8 +1,8 @@
 namespace Microsoft.AzureLinuxTestingService;
 
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 using Autorest;
@@ -13,7 +13,7 @@ using OpenAPI;
 @doc("A template defining the parameters for a test job.")
 model JobTemplate is TrackedResource<JobTemplateResourceProperties> {
     @doc("Job template name")
-    @pattern("^[a-zA-Z0-9-_]+{3,60}$")
+    @pattern("^[a-zA-Z0-9-_]{3,60}$")
     @key("jobTemplateName")
     @segment("jobTemplates")
     @visibility("read")

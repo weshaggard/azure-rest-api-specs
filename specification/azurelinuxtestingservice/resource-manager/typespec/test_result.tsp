@@ -1,8 +1,8 @@
 namespace Microsoft.AzureLinuxTestingService;
 
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 using Autorest;
@@ -66,10 +66,10 @@ model TestResultProperties is ResourceProperties {
     duration: string;
 
     @doc("Start time")
-    startTime: zonedDateTime;
+    startTime: utcDateTime;
 
     @doc("End time")
-    endTime: zonedDateTime;
+    endTime: utcDateTime;
 }
 
 

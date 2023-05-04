@@ -1,8 +1,8 @@
 namespace Microsoft.AzureLinuxTestingService;
 
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 using Autorest;
@@ -13,7 +13,7 @@ using OpenAPI;
 @doc("A job is an instance of LISA running the specified test parameters")
 model Job is TrackedResource<JobResourceProperties> {
     @doc("Job name")
-    @pattern("^[a-zA-Z0-9-_]+{3,60}$")
+    @pattern("^[a-zA-Z0-9-_]{3,60}$")
     @key("jobName")
     @segment("jobs")
     @visibility("read")
@@ -117,6 +117,6 @@ interface Jobs {
 
     update is ArmResourcePatchSync<Job, JobResourceProperties>;
     
-    @asyncOperationOptions("location")
+    //@asyncOperationOptions("location")
     delete is ArmResourceDeleteAsync<Job>;
 }

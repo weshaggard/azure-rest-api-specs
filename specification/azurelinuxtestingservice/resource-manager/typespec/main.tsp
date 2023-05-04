@@ -1,20 +1,20 @@
 // Necessary libraries to build an Azure Service
-import "@cadl-lang/rest";
-import "@cadl-lang/openapi";
-import "@cadl-lang/versioning";
-import "@azure-tools/cadl-autorest";
-import "@azure-tools/cadl-azure-core";
-import "@azure-tools/cadl-azure-resource-manager";
+import "@typespec/rest";
+import "@typespec/openapi";
+import "@typespec/versioning";
+import "@azure-tools/typespec-autorest";
+import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-azure-resource-manager";
 
-import "./test_case.cadl";
-import "./job_template.cadl";
-import "./job.cadl";
-import "./test_result.cadl";
+import "./test_case.tsp";
+import "./job_template.tsp";
+import "./job.tsp";
+import "./test_result.tsp";
 
 // Include models, operations, and decorators
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 using Autorest;
@@ -38,7 +38,7 @@ Requirements for defining an ARM Service:
 
 
 @doc("This is the Azure Linux Validation Service")
-@versionedDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureLinuxTestingService; 
 
 

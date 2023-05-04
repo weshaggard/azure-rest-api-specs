@@ -1,8 +1,8 @@
 namespace Microsoft.AzureLinuxTestingService;
 
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Autorest;
 using Azure.Core;
@@ -13,6 +13,7 @@ using OpenAPI;
 @doc("A LISA test case")
 model TestCase is ProxyResource<TestCaseResourceProperties> {
     @doc("a LISA test case")
+    @pattern("^[a-zA-Z0-9-_]{3,60}$")
     @key("testCaseName")
     @segment("testCases")
     @visibility("read")
