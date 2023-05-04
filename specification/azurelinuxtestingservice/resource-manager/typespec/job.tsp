@@ -23,8 +23,11 @@ model Job is TrackedResource<JobResourceProperties> {
 
 @doc("The job properties")
 model JobResourceProperties is ResourceProperties {
+    @doc("Job template name. The name or the instance should be provided.")
+    jobTemplateName?: string;
+
     @doc("Job Template to execute")
-    jobTemplateInstance: JobTemplateResourceProperties;
+    jobTemplateInstance?: JobTemplateResourceProperties;
 
     @doc("Prefix to use for resource groups that are created during LISA validation.")
     resourceGroupNamePrefix?: string;

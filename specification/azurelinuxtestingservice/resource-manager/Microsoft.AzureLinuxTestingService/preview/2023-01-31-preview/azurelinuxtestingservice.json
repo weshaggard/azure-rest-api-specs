@@ -6,7 +6,7 @@
     "description": "This is the Azure Linux Validation Service",
     "x-typespec-generated": [
       {
-        "emitter": "@azure-tools/cadl-autorest"
+        "emitter": "@azure-tools/typespec-autorest"
       }
     ]
   },
@@ -1106,7 +1106,7 @@
           "type": "string",
           "format": "uri",
           "description": "The link to the next page of items",
-          "x-typespec-name": "Rest.ResourceLocation"
+          "x-typespec-name": "TypeSpec.Rest.ResourceLocation"
         }
       },
       "description": "The response of a Job list operation.",
@@ -1121,6 +1121,10 @@
           "$ref": "#/definitions/ProvisioningState",
           "description": "Resource provisioning state.",
           "readOnly": true
+        },
+        "jobTemplateName": {
+          "type": "string",
+          "description": "Job template name. The name or the instance should be provided."
         },
         "jobTemplateInstance": {
           "$ref": "#/definitions/JobTemplateResourceProperties",
@@ -1170,7 +1174,6 @@
       },
       "description": "The job properties",
       "required": [
-        "jobTemplateInstance",
         "image"
       ]
     },
@@ -1209,7 +1212,7 @@
           "type": "string",
           "format": "uri",
           "description": "The link to the next page of items",
-          "x-typespec-name": "Rest.ResourceLocation"
+          "x-typespec-name": "TypeSpec.Rest.ResourceLocation"
         }
       },
       "description": "The response of a JobTemplate list operation.",
@@ -1257,6 +1260,14 @@
           "x-ms-identifiers": [],
           "x-typespec-name": "Selections[]",
           "description": "Test Selections. Default is to run the smoke_test case"
+        },
+        "customParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-typespec-name": "Record<string>",
+          "description": "Custom parameters for different test cases"
         },
         "concurrency": {
           "type": "integer",
@@ -1307,6 +1318,14 @@
           "x-ms-identifiers": [],
           "x-typespec-name": "Selections[]",
           "description": "Test Selections. Default is to run the smoke_test case"
+        },
+        "customParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-typespec-name": "Record<string>",
+          "description": "Custom parameters for different test cases"
         },
         "concurrency": {
           "type": "integer",
@@ -1371,6 +1390,14 @@
           "x-typespec-name": "Selections[]",
           "description": "Test Selections. Default is to run the smoke_test case"
         },
+        "customParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-typespec-name": "Record<string>",
+          "description": "Custom parameters for different test cases"
+        },
         "concurrency": {
           "type": "integer",
           "format": "int32",
@@ -1401,6 +1428,10 @@
     "JobUpdateProperties": {
       "type": "object",
       "properties": {
+        "jobTemplateName": {
+          "type": "string",
+          "description": "Job template name. The name or the instance should be provided."
+        },
         "jobTemplateInstance": {
           "$ref": "#/definitions/JobTemplateResourcePropertiesUpdate",
           "description": "Job Template to execute"
@@ -1582,7 +1613,7 @@
           "type": "string",
           "format": "uri",
           "description": "The link to the next page of items",
-          "x-typespec-name": "Rest.ResourceLocation"
+          "x-typespec-name": "TypeSpec.Rest.ResourceLocation"
         }
       },
       "description": "The response of a TestCase list operation.",
@@ -1676,7 +1707,7 @@
           "type": "string",
           "format": "uri",
           "description": "The link to the next page of items",
-          "x-typespec-name": "Rest.ResourceLocation"
+          "x-typespec-name": "TypeSpec.Rest.ResourceLocation"
         }
       },
       "description": "The response of a TestResult list operation.",
@@ -1706,7 +1737,7 @@
         },
         "message": {
           "type": "string",
-          "description": "Test result information"
+          "description": "Test details"
         },
         "logUrl": {
           "type": "string",
@@ -1741,7 +1772,11 @@
           "description": "Wala Version"
         },
         "extraFields": {
-          "$ref": "#/definitions/object",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-typespec-name": "Record<string>",
           "description": "Extra fields"
         },
         "duration": {
@@ -1795,10 +1830,6 @@
       "format": "int32",
       "minimum": 1,
       "maximum": 2
-    },
-    "object": {
-      "type": "object",
-      "properties": {}
     }
   },
   "parameters": {}

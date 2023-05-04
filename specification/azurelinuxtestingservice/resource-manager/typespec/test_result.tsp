@@ -32,7 +32,7 @@ model TestResultProperties is ResourceProperties {
     @doc("The test status")
     status: string;
 
-    @doc("Message")
+    @doc("Test details")
     message: string;
 
     @doc("Log URL")
@@ -60,7 +60,7 @@ model TestResultProperties is ResourceProperties {
     walaVersion: string;
 
     @doc("Extra fields")
-    extraFields: object;
+    extraFields: Record<string>;
 
     @doc("Test duration")
     duration: string;

@@ -35,6 +35,9 @@ model JobTemplateResourceProperties is ResourceProperties{
     @doc("Test Selections. Default is to run the smoke_test case")
     selections?: Selections[];
 
+    @doc("Custom parameters for different test cases")
+    customParameters?: Record<string>;
+
     @doc("The number of concurrent environments. Default is 4.")
     concurrency?: int32 = 4;
 }
