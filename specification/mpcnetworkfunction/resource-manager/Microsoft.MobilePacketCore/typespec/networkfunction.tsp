@@ -23,7 +23,7 @@ model NetworkFunctionResource
 
 @doc("Network Function Properties.")
 model NetworkFunctionResourceProperties {
-  @doc("SKU")
+  @doc("SKU Value")
   @visibility("create", "read")
   sku: SkuValues;
 
