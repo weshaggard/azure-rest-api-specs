@@ -31,8 +31,12 @@ model NetworkFunctionResourceProperties {
   @visibility("create", "read")
   networkFunctionType: NetworkFunctionType;
 
-  @doc("State of the network function")
-  networkFunctionState: NetworkFunctionState;
+  @doc("Administrative state of the network function")
+  networkFunctionAdministrativeState: NetworkFunctionAdministrativeState;
+
+  @doc("Operational state of the network function")
+  @visibility("read")
+  networkFunctionOperationalStatus?: NetworkFunctionOperationalStatus;
 
   @doc("User provided description")
   userDescription?: string;
@@ -123,11 +127,15 @@ enum EnableDisable {
   Disabled
 }
 
-@doc("Network Function State enumerations")
-enum NetworkFunctionState {
+@doc("Network Function Administrative State enumerations")
+enum NetworkFunctionAdministrativeState {
   Commissioned,
+  Decommissioned
+}
+
+@doc("Network Function Operational Status enumerations")
+enum NetworkFunctionOperationalStatus {
   Active,
-  Decommissioned,
   Inactive
 }
 
