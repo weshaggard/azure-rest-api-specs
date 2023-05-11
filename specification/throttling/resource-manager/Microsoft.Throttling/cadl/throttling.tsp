@@ -25,7 +25,10 @@ using Autorest;
 using Azure.ResourceManager;
 using OpenAPI;
 
-interface Operations extends Azure.ResourceManager.Operations {}
+interface Operations extends Azure.ResourceManager.Operations {
+  checkName is checkGlobalNameAvailability;
+  checkLocalName is checkLocalNameAvailability;
+}
 
 @doc("Provisioning state")
 @Azure.Core.lroStatus
