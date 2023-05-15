@@ -38,7 +38,7 @@ model NetworkFunctionResourceProperties {
   @visibility("read")
   networkFunctionOperationalStatus?: NetworkFunctionOperationalStatus;
 
-  @doc("Count of infrastructure elemens (kubernetes nodes for containterized network functions, virtual machines for virtual network functions)")
+  @doc("Count of infrastructure elements (kubernetes nodes for containerized network functions, virtual machines for virtual network functions)")
   @visibility("read")
   infrastructureElementCount?: int32;
 
