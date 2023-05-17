@@ -3,7 +3,7 @@
   "info": {
     "title": "MobileNetworkManagementClient",
     "description": "The resources in this API specification will be used to manage packet core control plane resources",
-    "version": "2022-11-01"
+    "version": "2023-06-01"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -186,7 +186,7 @@
           "PacketCoreControlPlane"
         ],
         "operationId": "PacketCoreControlPlanes_UpdateTags",
-        "description": "Updates packet core control planes tags.",
+        "description": "Patch packet core control plane resource.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
@@ -199,9 +199,9 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "./common.json#/definitions/TagsObject"
+              "$ref": "./common.json#/definitions/IdentityAndTagsObject"
             },
-            "description": "Parameters supplied to update packet core control plane tags."
+            "description": "Parameters supplied to patch packet core control plane resource."
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -225,8 +225,8 @@
           }
         },
         "x-ms-examples": {
-          "Update packet core control plane tags": {
-            "$ref": "./examples/PacketCoreControlPlaneUpdateTags.json"
+          "Patch packet core control plane": {
+            "$ref": "./examples/PacketCoreControlPlanePatch.json"
           }
         }
       }
@@ -468,6 +468,122 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/packetCoreControlPlanes/{packetCoreControlPlaneName}/startPacketCapture": {
+      "post": {
+        "tags": [
+          "PacketCoreControlPlaneStartPacketCapture"
+        ],
+        "operationId": "PacketCoreControlPlanes_StartPacketCapture",
+        "description": "Start a packet capture on the specified packet core. The packet capture will be uploaded to the Storage Account Container URL specified in the packet core control plane properties.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/PacketCoreControlPlaneNameParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PacketCapture"
+            },
+            "description": "Parameters supplied to the packet core control plane start packet capture operation."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Async operation completed.",
+            "schema": {
+              "$ref": "./common.json#/definitions/AsyncOperationStatus"
+            }
+          },
+          "202": {
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Start packet capture for packet core control plane": {
+            "$ref": "./examples/PacketCoreControlPlaneStartPacketCapture.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/packetCoreControlPlanes/{packetCoreControlPlaneName}/stopPacketCapture": {
+      "post": {
+        "tags": [
+          "PacketCoreControlPlaneStopPacketCapture"
+        ],
+        "operationId": "PacketCoreControlPlanes_StopPacketCapture",
+        "description": "Stop a packet capture on the specified packet core. The packet capture will be uploaded to the storage account diagnostics container specified in the packet core control plane properties.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/PacketCoreControlPlaneNameParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StopPacketCapture"
+            },
+            "description": "Parameters supplied to the packet core control plane stop packet capture operation."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Async operation completed.",
+            "schema": {
+              "$ref": "./common.json#/definitions/AsyncOperationStatus"
+            }
+          },
+          "202": {
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Stop packet capture for packet core control plane": {
+            "$ref": "./examples/PacketCoreControlPlaneStopPacketCapture.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
+    },
     "/providers/Microsoft.MobileNetwork/packetCoreControlPlaneVersions/{versionName}": {
       "get": {
         "tags": [
@@ -543,6 +659,88 @@
           "nextLinkName": "nextLink"
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.MobileNetwork/packetCoreControlPlaneVersions/{versionName}": {
+      "get": {
+        "tags": [
+          "PacketCoreControlPlaneVersion"
+        ],
+        "operationId": "PacketCoreControlPlaneVersions_GetBySubscription",
+        "description": "Gets information about the specified packet core control plane version.",
+        "parameters": [
+          {
+            "name": "versionName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the packet core control plane version."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request successful. The operation returns the resulting packet core control plane version resource.",
+            "schema": {
+              "$ref": "#/definitions/PacketCoreControlPlaneVersion"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get packet core control plane version by subscription": {
+            "$ref": "./examples/PacketCoreControlPlaneVersionGetBySubscription.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.MobileNetwork/packetCoreControlPlaneVersions": {
+      "get": {
+        "tags": [
+          "PacketCoreControlPlaneVersion"
+        ],
+        "operationId": "PacketCoreControlPlaneVersions_ListBySubscription",
+        "description": "Lists all supported packet core control planes versions.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get supported packet core control plane versions successful.",
+            "schema": {
+              "$ref": "#/definitions/PacketCoreControlPlaneVersionListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get supported packet core control plane versions by subscription": {
+            "$ref": "./examples/PacketCoreControlPlaneVersionListBySubscription.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
     }
   },
   "definitions": {
@@ -555,7 +753,7 @@
           "description": "Packet core control plane Properties."
         },
         "identity": {
-          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/ManagedServiceIdentity",
+          "$ref": "./common.json#/definitions/ManagedServiceIdentity",
           "description": "The identity used to retrieve the ingress certificate from Azure key vault."
         }
       },
@@ -579,7 +777,6 @@
           "description": "The provisioning state of the packet core control plane resource."
         },
         "installation": {
-          "readOnly": true,
           "$ref": "#/definitions/Installation",
           "description": "The installation state of the packet core control plane resource."
         },
@@ -602,7 +799,12 @@
         },
         "version": {
           "type": "string",
-          "description": "The version of the packet core software that is deployed."
+          "description": "The desired version of the packet core software."
+        },
+        "installedVersion": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The currently installed version of the packet core software."
         },
         "rollbackVersion": {
           "type": "string",
@@ -628,6 +830,10 @@
         "localDiagnosticsAccess": {
           "$ref": "#/definitions/LocalDiagnosticsAccessConfiguration",
           "description": "The kubernetes ingress configuration to control access to packet core diagnostics over local APIs."
+        },
+        "diagnosticsUpload": {
+          "$ref": "#/definitions/DiagnosticsUploadConfiguration",
+          "description": "Configuration for uploading packet core diagnostics."
         },
         "interopSettings": {
           "type": "object",
@@ -664,14 +870,56 @@
       "description": "The installation state of the packet core.",
       "type": "object",
       "properties": {
+        "targetState": {
+          "description": "The target installation state",
+          "$ref": "#/definitions/TargetInstallationState"
+        },
         "state": {
           "description": "Installation state",
+          "readOnly": true,
           "$ref": "#/definitions/InstallationState"
+        },
+        "reasons": {
+          "description": "Reason(s) for the current installation state of the packet core.",
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstallationReason"
+          },
+          "uniqueItems": true
+        },
+        "reinstallRequired": {
+          "type": "boolean",
+          "readOnly": true,
+          "description": "Whether a reinstall of the packet core is required to pick up the latest configuration changes in ARM."
         },
         "operation": {
           "description": "A reference to an in-progress installation operation",
+          "readOnly": true,
           "$ref": "./common.json#/definitions/AsyncOperationId"
         }
+      }
+    },
+    "TargetInstallationState": {
+      "type": "string",
+      "description": "The target installation state of the packet core.",
+      "enum": [
+        "Uninstalled",
+        "Installed"
+      ],
+      "x-ms-enum": {
+        "name": "InstallationState",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "Uninstalled",
+            "description": "Don't install the packet core."
+          },
+          {
+            "value": "Installed",
+            "description": "Install the packet core."
+          }
+        ]
       }
     },
     "InstallationState": {
@@ -727,6 +975,33 @@
           {
             "value": "Failed",
             "description": "The packet core is in failed state."
+          }
+        ]
+      }
+    },
+    "InstallationReason": {
+      "type": "string",
+      "description": "The reason for the installation state of the packet core.",
+      "enum": [
+        "NoSlices",
+        "NoPacketCoreDataPlane",
+        "NoAttachedDataNetworks"
+      ],
+      "x-ms-enum": {
+        "name": "InstallationReason",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "NoSlices",
+            "description": "The mobile network does not have any configured slices."
+          },
+          {
+            "value": "NoPacketCoreDataPlane ",
+            "description": "There is no configured data plane for this packet core."
+          },
+          {
+            "value": "NoAttachedDataNetworks",
+            "description": "The packet core has no attached data networks."
           }
         ]
       }
@@ -825,6 +1100,19 @@
         "authenticationType"
       ]
     },
+    "DiagnosticsUploadConfiguration": {
+      "description": "Configuration for uploading packet core diagnostics",
+      "type": "object",
+      "properties": {
+        "storageAccountContainerUrl": {
+          "type": "string",
+          "description": "The Storage Account Container URL to upload diagnostics to."
+        }
+      },
+      "required": [
+        "storageAccountContainerUrl"
+      ]
+    },
     "HttpsServerCertificate": {
       "description": "HTTPS server certificate configuration.",
       "type": "object",
@@ -886,13 +1174,73 @@
       "description": "Packet core control plane collect diagnostics package options",
       "type": "object",
       "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the diagnostics package. A package of this name is uploaded to the Storage Account Container URL in the packet core control plane properties."
+        },
         "storageAccountBlobUrl": {
           "type": "string",
-          "description": "The Storage Account Blob URL to upload the diagnostics package to."
+          "description": "The Storage Account Blob URL to upload the diagnostics package to. This is mandatory if diagnosticsUpload.storageAccountContainerUrl is not set on the packet core control plane resource."
+        }
+      }
+    },
+    "PacketCapture": {
+      "description": "Packet capture options",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the packet capture. Packet capture file(s) derived from this name will be uploaded to the Storage Account Container URL in the packet core control plane properties once the capture completes."
+        },
+        "networkInterfaces": {
+          "type": "array",
+          "items": {
+            "$ref": "./common.json#/definitions/MobileNetworkSubResourceId"
+          },
+          "uniqueItems": true,
+          "minItems": 1,
+          "description": "List of Mobile Network sub resource IDs to capture packets on. Packet capture will be performed on network interfaces owned by these objects. If this property is not provided, packet capture will run on all available interfaces"
+        },
+        "bytesToCapturePerPacket": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "default": 0,
+          "description": "Number of bytes captured per packet, the remaining bytes are truncated. The default \"0\" means the entire packet is captured."
+        },
+        "totalBytesPerSession": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "default": 1073741824,
+          "description": "Maximum size of the capture output."
+        },
+        "timeLimitInSeconds": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "maximum": 18000,
+          "default": 18000,
+          "description": "Maximum duration of the capture session in seconds."
         }
       },
       "required": [
-        "storageAccountBlobUrl"
+        "name"
+      ]
+    },
+    "StopPacketCapture": {
+      "description": "Stop packet capture options",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the packet capture. Packet capture file(s) derived from this name will be uploaded to the target storage container once the capture completes."
+        }
+      },
+      "required": [
+        "name"
       ]
     },
     "PacketCoreControlPlaneVersion": {

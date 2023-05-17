@@ -3,7 +3,7 @@
   "info": {
     "title": "MobileNetworkManagementClient",
     "description": "The resources in this API specification will be used to manage mobile network resources",
-    "version": "2022-11-01"
+    "version": "2023-06-01"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -412,6 +412,122 @@
           "final-state-via": "location"
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/simGroups/{simGroupName}/sims/{simName}/move": {
+      "post": {
+        "tags": [
+          "SIM"
+        ],
+        "operationId": "Sims_Move",
+        "description": "Move the specified SIM to a new SIM group.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/SimGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/SimNameParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TargetSimGroup"
+            },
+            "description": "Parameters supplied to the SIM move operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Move successful."
+          },
+          "202": {
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Move SIM": {
+            "$ref": "./examples/SimMove.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobileNetwork/simGroups/{simGroupName}/sims/{simName}/clone": {
+      "post": {
+        "tags": [
+          "SIM"
+        ],
+        "operationId": "Sims_Clone",
+        "description": "Clone the specified SIM to a new SIM group.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/SimGroupNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/SimNameParameter"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TargetSimGroup"
+            },
+            "description": "Parameters supplied to the SIM clone operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Clone successful."
+          },
+          "202": {
+            "description": "Accepted. Returns an operation URI that can be queried to find the current state of the operation."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Clone SIM": {
+            "$ref": "./examples/SimClone.json"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
     }
   },
   "definitions": {
@@ -534,10 +650,10 @@
           "$ref": "./common.json#/definitions/SimState",
           "description": "The state of the SIM resource."
         },
-        "siteProvisioningState": {
+        "packetCoreProvisioningState": {
           "readOnly": true,
-          "$ref": "./common.json#/definitions/SiteProvisioning",
-          "description": "A dictionary of sites to the provisioning state of this SIM on that site."
+          "$ref": "./common.json#/definitions/PacketCoreProvisioning",
+          "description": "A dictionary of packet cores to the provisioning state of this SIM on that packet core."
         },
         "internationalMobileSubscriberIdentity": {
           "type": "string",
@@ -719,6 +835,15 @@
         "signedTransportKey",
         "sims"
       ]
+    },
+    "TargetSimGroup": {
+      "type": "object",
+      "properties": {
+        "targetSimGroup": {
+          "$ref": "./common.json#/definitions/SimGroupResourceId"
+        }
+      },
+      "description": "The target SIM group resource."
     }
   }
 }
