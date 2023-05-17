@@ -6,17 +6,13 @@ Please also specify `--python-sdks-folder=<path to the root directory of your az
 ```yaml $(python)
 azure-arm: true
 license-header: MICROSOFT_MIT_NO_VERSION
-package-name: azure-mgmt-Dell.Storage
+package-name: azure-mgmt-dell-storage
+namespace: azure.mgmt.dell.storage
 package-version: 1.0.0b1
-no-namespace-folders: true
+clear-output-folder: true
 ```
 
-```yaml $(python-mode) == 'update' && $(track2)
+```yaml $(python)
 no-namespace-folders: true
-output-folder: $(python-sdks-folder)/Dell.Storage/azure-mgmt-Dell.Storage/azure/mgmt/Dell.Storage
-```
-
-```yaml $(python-mode) == 'create' && $(track2)
-basic-setup-py: true
-output-folder: $(python-sdks-folder)/Dell.Storage/azure-mgmt-Dell.Storage
+output-folder: $(python-sdks-folder)/dell/azure-mgmt-dell-storage/azure/mgmt/dell/storage
 ```
