@@ -47,6 +47,9 @@ model DeidServiceProperties {
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
+  @visibility("read")
+  @doc("Deid service url")
+  serviceUrl?: string 
 }
 
 @armResourceOperations
