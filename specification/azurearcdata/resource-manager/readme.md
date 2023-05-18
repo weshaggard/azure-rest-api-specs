@@ -27,7 +27,27 @@ These are the global settings for the azurearcdata.
 ``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-preview-2023-03
+tag: package-preview-2023-05
+```
+
+
+### Tag: package-preview-2023-05
+
+These settings apply only when `--tag=package-preview-2023-05` is specified on the command line.
+
+```yaml $(tag) == 'package-preview-2023-05'
+input-file:
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/activeDirectoryConnectors.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/azurearcdata.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/common.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/dataControllers.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/failoverGroups.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/operations.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/postgresInstances.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlManagedInstances.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerDatabases.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerInstances.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerAvailabilityGroups.json
 ```
 
 ### Tag: package-preview-2023-03
@@ -57,6 +77,7 @@ These settings apply only when `--tag=package-2021-11-01` is specified on the co
 ```yaml $(tag) == 'package-2021-11-01'
 input-file:
   - Microsoft.AzureArcData/stable/2021-11-01/azurearcdata.json
+```
 
 ### Tag: package-2021-08-01
 
