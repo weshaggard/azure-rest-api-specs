@@ -89,8 +89,12 @@ model AzureActiveDirectoryProperties {
   userAssignedIdentities: UserAssignedManagedIdentityReference[]
 }
 
-@doc( "A type definition that refers the id to an ARM resource.")
-scalar UserAssignedManagedIdentityReference extends string;
+@doc("User-assigned managed identity ARM resource id")
+scalar UserAssignedManagedIdentityReference extends ResourceIdentifier<[
+    {
+      type: "Microsoft.ManagedIdentity/userAssignedIdentities";
+    }
+  ]>;
 
 @doc("Throttling category")
 @parentResource(Account)
