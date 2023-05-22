@@ -47,6 +47,10 @@ model MicrosoftEdgeZoneProperties {
   @visibility("read")
   @doc("MicrosoftEdgeZone registration approved or not")
   registrationState?: RegistrationState;
+
+  @visibility("read")
+  @doc("MicrosoftEdgeZone display name")
+  displayName: string;
 }
 
 @doc("A MicrosoftEdgeZone resource")
@@ -81,5 +85,3 @@ op ArmResourceActionNoBodyNoContentSync<
   @doc("Unregisters a subscription for a Microsoft Edge Zone")
   Unregister is ArmResourceActionNoBodyNoContentSync<MicrosoftEdgeZone>;
 }
-
-
