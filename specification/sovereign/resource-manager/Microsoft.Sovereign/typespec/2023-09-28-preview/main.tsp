@@ -48,7 +48,7 @@ interface LandingZonesConfigurations
 			LandingZoneConfiguration,
 			LandingZoneConfigurationProperties
 		> {
-	@action("GenerateLandingZone ")
+	@action("GenerateLandingZone")
 	@doc("Generate the Sovereign Landing Zone")
 	@armResourceAction(LandingZoneConfiguration)
 	generateLandingZone is ArmResourceActionAsync<

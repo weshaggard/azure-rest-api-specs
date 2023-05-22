@@ -1,7 +1,7 @@
 ﻿import "./common.tsp";
 using Azure.ResourceManager;
 
-@doc("Properties of Landing Zone Configuration resource type.")
+@doc("The properties of Landing Zone Configuration resource type.")
 model LandingZoneConfigurationProperties {
 	@visibility("read")
 	@doc("The status of a user-initiated, control-plane operation on the Landing Zone Configuration.")
@@ -86,7 +86,7 @@ model LandingZoneConfigurationProperties {
 	azureBastion: AzureBastion;
 
 	@doc("Existing azure bastion Id.")
-	azureBastionId: string;
+	azureBastionId?: string;
 
 	@doc("Azure Bastion subnet. IP v4 CIDR block")
 	//TODO : Add Regex
@@ -152,12 +152,12 @@ model PolicyAssignmentDetails {
 	id: string;
 
 	@doc("The parameters for the policy or initiatives.")
-	parameters: string;
+	parameters: object;
 }
 
 @doc("Decommissioned managemenrt group properties")
 model DecommissionedMgProperties {
-	...ManagementGroupProperties;
+	...ManagementGroupPolicyDetails;
 
 	@doc("when set to false this MG is not created")
 	create: boolean;
@@ -165,7 +165,7 @@ model DecommissionedMgProperties {
 
 @doc("sandbox management group properties")
 model SandboxMgProperties {
-	...ManagementGroupProperties;
+	...ManagementGroupPolicyDetails;
 
 	@doc("when set to false this MG is not created")
 	create: boolean;
