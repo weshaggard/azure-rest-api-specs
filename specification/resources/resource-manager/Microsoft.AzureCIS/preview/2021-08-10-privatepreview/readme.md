@@ -33,4 +33,8 @@ input-file:
   - examples/GetServiceTypeEnablement.json
   - examples/GetServiceTypeEnablementInResourceGroup.json
   - examples/PatchServiceTypeEnablement.json
+  - dsmsAllowlist.json
+  - dsmsRootFolder.json
+  - examples/CreateDsmsAllowlist.json
+  - examples/CreateDsmsRootFolder.json
 ```
