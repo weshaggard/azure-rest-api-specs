@@ -4,6 +4,7 @@ import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 
+#suppress "@azure-tools/typespec-azure-core/casing-style"
 @armProviderNamespace("Microsoft.KX")
 @service({
   title: "KX Resource Provider",
@@ -15,6 +16,7 @@ namespace Microsoft.KX;
 using TypeSpec.Http;
 using TypeSpec.Rest;
 using Azure.ResourceManager;
+using Azure.Core;
 
 @doc("A kdbInsightsEnterprise resource")
 model KdbInsightsEnterpriseResource is TrackedResource<KdbInsightsEnterpriseProperties> {
@@ -26,16 +28,17 @@ model KdbInsightsEnterpriseResource is TrackedResource<KdbInsightsEnterpriseProp
   name: string;
 }
 
-@doc("Provisioning State")
-@knownValues(ProvisioningStateKV)
-scalar ProvisioningState extends string;
-
-enum ProvisioningStateKV {
-  Succeeded,
-  Failed,
-  Canceled,
+@lroStatus
+@doc("The full set of provisioning states")
+enum ProvisioningState {
+  ...Azure.ResourceManager.ResourceProvisioningState,
+  @doc("Provisioning the resource is in progress")
   Provisioning,
+  @doc("Resource is being updated")
+  Updating,
+  @doc("Resource is being deleted")
   Deleting,
+  @doc("The change request has been accepted")
   Accepted,
 }
 
@@ -83,4 +86,6 @@ model KdbInsightsEnterpriseProperties {
 }
 
 @armResourceOperations
-interface KdbInsightsEnterprise extends ResourceOperations<KdbInsightsEnterpriseResource, KdbInsightsEnterpriseProperties> {}
+interface KdbInsightsEnterprise extends Azure.ResourceManager.TrackedResourceOperations<KdbInsightsEnterpriseResource, KdbInsightsEnterpriseProperties> {}
+
+interface Operations extends Azure.ResourceManager.Operations {}
