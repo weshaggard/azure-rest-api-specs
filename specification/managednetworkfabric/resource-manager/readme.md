@@ -48,6 +48,7 @@ input-file:
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/NetworkFabricControllers.json
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/NetworkFabricSkus.json
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/NetworkFabrics.json
+  - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/NetworkPacketBrockers.json
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/NetworkRackSkus.json
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/NetworkRacks.json
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/Operations.json
