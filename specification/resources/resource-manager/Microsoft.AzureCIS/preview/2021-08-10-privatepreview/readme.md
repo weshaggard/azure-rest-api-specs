@@ -37,4 +37,7 @@ input-file:
   - dsmsRootFolder.json
   - examples/CreateDsmsAllowlist.json
   - examples/CreateDsmsRootFolder.json
+  - dstsApplication.json
+  - examples/CreateDstsApplicationAccount.json
+  - examples/CreateDstsApplicationGroup.json
 ```
