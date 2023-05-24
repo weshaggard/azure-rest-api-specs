@@ -1,7 +1,6 @@
 import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/versioning";
-import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 
@@ -39,7 +38,7 @@ scalar ProductQuantity extends int32;
 @doc("An Order request.")
 model OrderRequest is TrackedResource<OrderRequestProperties> {
   @doc("Order request API details")
-  @pattern("^[a-zA-Z0-9-]{36,38}$")
+  @pattern("^[0-9]{3,12}$")
   @key("orderRequestId")
   @segment("orderRequests")
   @visibility("read")
