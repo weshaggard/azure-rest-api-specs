@@ -40,7 +40,7 @@
           "Test Base Custom Image"
         ],
         "operationId": "CustomImages_ListByTestBaseAccount",
-        "description": "Lists all the custom images under a Test Base Account.",
+        "description": "Lists all the Custom Images under a Test Base Account.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -86,6 +86,10 @@
         ],
         "operationId": "CustomImages_Create",
         "description": "Creates a Test Base Custom Image.",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "name": "parameters",
@@ -150,6 +154,10 @@
         ],
         "operationId": "CustomImages_Delete",
         "description": "Deletes a Test Base Custom Image.",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
@@ -172,17 +180,7 @@
             "description": "The Test Base Custom Image 'delete' operation was completed successfully."
           },
           "202": {
-            "description": "The Test Base Custom Image 'delete' operation was successfully enqueued. Follow the Location header to poll for final outcome.",
-            "headers": {
-              "Azure-AsyncOperation": {
-                "description": "URL to query for status of the operation.",
-                "type": "string"
-              },
-              "Location": {
-                "description": "URL to query for status of the operation.",
-                "type": "string"
-              }
-            }
+            "description": "The Test Base Custom Image 'delete' operation was successfully enqueued. Follow the Location header to poll for final outcome."
           },
           "204": {
             "description": "The Test Base Custom Image 'delete' operation was completed successfully."
@@ -250,7 +248,7 @@
           "Test Base Custom Image"
         ],
         "operationId": "CustomImages_CheckImageNameAvailability",
-        "description": "Checks that the Test Base Custom Image generted from VHD resource has valid and unique defition and version, return architecture and OS state of potential existing image definition.",
+        "description": "Checks that the Test Base Custom Image generated from VHD resource has valid and unique definition and version, return architecture and OS state of potential existing image definition.",
         "parameters": [
           {
             "name": "parameters",
@@ -295,23 +293,14 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MarcoHuangTest/testBaseAccounts/{testBaseAccountName}/getImageDefinition": {
-      "post": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MarcoHuangTest/testBaseAccounts/{testBaseAccountName}/imageDefinitions": {
+      "get": {
         "tags": [
-          "Test Base Custom Image"
+          "Test Base Image Definition // Reminder: Need renaming."
         ],
-        "operationId": "CustomImages_GetImageDefinition",
-        "description": "Get image properties under the image definition name created by Test Base Vhd.",
+        "operationId": "ImageDefinitions_ListByTestBaseAccount",
+        "description": "List all Image Definition properties created by Test Base Custom Images which are derived from 'VHD' source.",
         "parameters": [
-          {
-            "name": "parameters",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetImageDefinitionParameters"
-            },
-            "description": "Parameters supplied to get the Test Base Custom Image Definition operation."
-          },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
@@ -327,9 +316,66 @@
         ],
         "responses": {
           "200": {
-            "description": "Get image definition existence and get detailed properties if applicable.",
+            "description": "Get Image Definition existence and get detailed properties if applicable.",
             "schema": {
-              "$ref": "#/definitions/GetImageDefinitionResult"
+              "$ref": "#/definitions/ImageDefinitionsListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "ListImageDefinitions": {
+            "$ref": "./examples/ImageDefinitionsList.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MarcoHuangTest/testBaseAccounts/{testBaseAccountName}/imageDefinitions/{imageDefinitionName}": {
+      "put": {
+        "tags": [
+          "Test Base Image Definition"
+        ],
+        "operationId": "ImageDefinitions_Create",
+        "description": "Create Image Definition for Test Base Custom Images which are derived from 'VHD' source.",
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ImageDefinitionResource"
+            },
+            "description": "Parameters supplied to create a Test Base Image Definition."
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./testbase.json#/parameters/TestBaseAccountNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ImageDefinitionNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Create a Test Base Image Definition Resource.",
+            "schema": {
+              "$ref": "#/definitions/ImageDefinitionResource"
             }
           },
           "default": {
@@ -340,8 +386,94 @@
           }
         },
         "x-ms-examples": {
-          "CheckImageAvailability": {
-            "$ref": "./examples/GetImageDefinition.json"
+          "ImageDefinitionCreate": {
+            "$ref": "./examples/ImageDefinitionCreate.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Test Base ImageDefinition"
+        ],
+        "operationId": "ImageDefinitions_Get",
+        "description": "Get image properties under the Image Definition name created by Test Base Custom Image which derived from 'VHD' source.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./testbase.json#/parameters/TestBaseAccountNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ImageDefinitionNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get the detailed properties of  the Image Definition if applicable.",
+            "schema": {
+              "$ref": "#/definitions/ImageDefinitionResource"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "ImageDefinitionGet": {
+            "$ref": "./examples/ImageDefinitionGet.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Test Base Image Definition"
+        ],
+        "operationId": "ImageDefinitions_Delete",
+        "description": "Delete a Test Base Image Definition Resource.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "./testbase.json#/parameters/TestBaseAccountNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ImageDefinitionNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Test Base Image Definition 'delete' operation was completed successfully."
+          },
+          "204": {
+            "description": "The Test Base Image Definition 'delete' operation was completed successfully."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "ImageDefinitionDelete": {
+            "$ref": "./examples/ImageDefinitionDelete.json"
           }
         }
       }
@@ -530,48 +662,6 @@
           }
         }
       }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MarcoHuangTest/testBaseAccounts/{testBaseAccountName}/getPathForVHD": {
-      "post": {
-        "tags": [
-          "Test Base VHD"
-        ],
-        "operationId": "VHDs_GetPath",
-        "description": "Gets VHD path with SAS.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "./testbase.json#/parameters/TestBaseAccountNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The path with access token is returned.",
-            "schema": {
-              "$ref": "#/definitions/VHDGetPathResponse"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "VHDGetPath": {
-            "$ref": "./examples/VHDGetPath.json"
-          }
-        }
-      }
     }
   },
   "definitions": {
@@ -617,10 +707,6 @@
           "type": "string",
           "description": "The Id of the associated VHD resource."
         },
-        "sourceGalleryId": {
-          "type": "string",
-          "description": "The Id of the Shared Image Gallery where the image registered."
-        },
         "definitionName": {
           "type": "string",
           "description": "Image definition name."
@@ -628,10 +714,6 @@
         "versionName": {
           "type": "string",
           "description": "Image version name."
-        },
-        "imageDefinition": {
-          "$ref": "#/definitions/ImageDefinition",
-          "description": "The image properties under the image definition name."
         },
         "source": {
           "type": "string",
@@ -648,44 +730,86 @@
         },
         "product": {
           "type": "string",
-          "description": "Product of the custom image."
+          "description": "Product of the custom image.",
+          "readOnly": true
         },
         "release": {
           "type": "string",
-          "description": "Release of the custom image OS."
+          "description": "Release of the custom image OS.",
+          "readOnly": true
         },
         "status": {
           "type": "string",
           "description": "Status of the custom image.",
+          "readOnly": true,
           "enum": [
             "Unknown",
             "Ready",
             "Failed",
-            "Validating",
-            "Pending"
+            "Validating"
           ],
           "x-ms-enum": {
             "name": "ImageStatus",
             "modelAsString": true
           }
         },
-        "validationResult": {
-          "$ref": "#/definitions/ImageValidationResult",
-          "description": "The validation reuslt of the iamge."
+        "validationResults": {
+          "$ref": "#/definitions/ImageValidationResults",
+          "description": "The validation result of the Custom Image.",
+          "readOnly": true
         },
-        "osDiskImageSize": {
+        "osDiskImageSizeInGB": {
+          "type": "integer",
+          "format": "int64",
+          "readOnly": true,
+          "description": "This property indicates the size of the VHD to be created."
+        },
+        "provisioningState": {
           "type": "string",
-          "description": "The size of the image."
+          "readOnly": true
         }
       },
       "required": [
         "definitionName",
         "versionName",
-        "source",
-        "imageDefinition"
+        "source"
       ]
     },
-    "ImageDefinition": {
+    "ImageDefinitionListResult": {
+      "description": "A list of Test Base Image Definitions.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImageDefinitionResource"
+          },
+          "description": "The list of Test Base Image Definitions."
+        },
+        "nextLink": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
+        }
+      }
+    },
+    "ImageDefinitionResource": {
+      "description": "The Test Base Image Definition resource.",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/ImageDefinitionProperties",
+          "x-ms-client-flatten": true,
+          "description": "Test Base Custom Image properties."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "ImageDefinitionProperties": {
       "description": "The image properties under the image definition name.",
       "type": "object",
       "properties": {
@@ -705,10 +829,10 @@
           "type": "string",
           "enum": [
             "Generalized",
-            "Specailized"
+            "Specialized"
           ],
           "x-ms-enum": {
-            "name": "ImageOsState",
+            "name": "ImageOSState",
             "modelAsString": true
           }
         },
@@ -723,6 +847,10 @@
             "name": "ImageSecurityType",
             "modelAsString": true
           }
+        },
+        "provisioningState": {
+          "type": "string",
+          "readOnly": true
         }
       },
       "required": [
@@ -731,34 +859,21 @@
         "securityType"
       ]
     },
-    "ImageValidationResult": {
-      "description": "The Test Base Custom Image validation result properties.",
+    "ImageValidationResults": {
+      "description": "The image validation result.",
       "type": "object",
       "properties": {
-        "bootable": {
-          "$ref": "#/definitions/VerificationResult",
-          "readOnly": true,
-          "description": "Indicates if VM can boot with the image."
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VerificationResult"
+          },
+          "description": "The validation results of the image."
         },
-        "supportedProduct": {
-          "$ref": "#/definitions/VerificationResult",
-          "readOnly": true,
-          "description": "Indicates if the product of the image is available for Test Base."
-        },
-        "autoLogonEnbled": {
-          "$ref": "#/definitions/VerificationResult",
-          "readOnly": true,
-          "description": "Indicates if the image supports auto-logon."
-        },
-        "vmAgentInstalled": {
-          "$ref": "#/definitions/VerificationResult",
-          "readOnly": true,
-          "description": "Indicates if the image installed VM agent."
-        },
-        "testRunTime":{
+        "testRunStartTime": {
           "type": "string",
           "format": "date-time",
-          "description": "Validation run execution time stamp."
+          "description": "Validation run start date of the image."
         }
       }
     },
@@ -766,15 +881,30 @@
       "description": "The detailed result of a validation or rule checking.",
       "type": "object",
       "properties": {
-        "passed": {
-          "type": "boolean",
-          "description": "Indicates if the validation or rule checking is passed."
+        "verificationName": {
+          "type": "string",
+          "description": "The name of the verification rule."
+        },
+        "result": {
+          "type": "string",
+          "enum": [
+            "Passed",
+            "Failed"
+          ],
+          "description": "Indicates if the validation or rule checking is passed.",
+          "x-ms-enum": {
+            "name": "VerificationStatus",
+            "modelAsString": true
+          }
         },
         "message": {
           "type": "string",
           "description": "Message for clarification."
         }
-      }
+      },
+      "required": [
+        "result"
+      ]
     },
     "ImageNameCheckAvailabilityParameters": {
       "description": "Parameter body to request Test Base Custom Image availability.",
@@ -796,7 +926,7 @@
     },
     "CheckImageAvailabilityResult": {
       "$ref": "#/definitions/VerificationResult",
-      "description": "The image availabiliity result."
+      "description": "The image availability result."
     },
     "GetImageDefinitionParameters": {
       "description": "Parameters supplied to get the Test Base Custom Image Definition operation.",
@@ -808,13 +938,21 @@
         }
       }
     },
-    "GetImageDefinitionResult": {
-      "description": "The result of image definition existence and get detailed properties if applicable.",
+    "ImageDefinitionsListResult": {
+      "description": "The result of all available image definition under a test base account.",
       "type": "object",
       "properties": {
-        "imageDefinition":{
-          "$ref": "#/definitions/ImageDefinition",
-          "description": "The image properties under the same image definition name"
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImageDefinitionResource"
+          },
+          "description": "The list of image definitions."
+        },
+        "nextLink": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Link to the next set of results. Not empty if value contains incomplete list of results."
         }
       }
     },
@@ -858,65 +996,43 @@
       "properties": {
         "path": {
           "type": "string",
-          "readOnly": true,
           "description": "The relative path of the VHD file."
         },
         "fileName": {
           "type": "string",
-          "readOnly": true,
           "description": "The VHD file name."
         },
         "fileSize": {
-          "type": "string",
+          "type": "integer",
+          "format": "int64",
           "readOnly": true,
-          "description": "The file size of the VHD file."
+          "description": "The file size in bytes of the VHD file."
         },
         "status": {
           "type": "string",
           "description": "The status of the VHD.",
+          "readOnly": true,
           "enum": [
             "Unknown",
             "Ready",
             "Failed",
-            "Verifying"
+            "Verifying",
+            "Occupied"
           ],
           "x-ms-enum": {
-            "name": "ImageStatus",
+            "name": "VHDStatus",
             "modelAsString": true
           }
+        },
+        "provisioningState": {
+          "type": "string",
+          "readOnly": true
         }
       },
       "required": [
         "path",
         "fileName"
       ]
-    },
-    "VHDGetPathResponse": {
-      "description": "Provide VHD upload path and secret.",
-      "properties": {
-        "baseUrl": {
-          "type": "string",
-          "readOnly": true,
-          "description": "The base URL of the storage account."
-        },
-        "path": {
-          "type": "string",
-          "readOnly": true,
-          "description": "The relative path of the VHD file."
-        },
-        "sasToken": {
-          "type": "string",
-          "readOnly": true,
-          "x-ms-secret": true,
-          "description": "A SAS token for the storage account to upload the vhd file."
-        },
-        "tokenExpirationTime": {
-          "type": "string",
-          "readOnly": true,
-          "format": "date-time",
-          "description": "Expiry date of the SAS token."
-        }
-      }
     }
   },
   "parameters": {
@@ -927,6 +1043,14 @@
       "type": "string",
       "x-ms-parameter-location": "method",
       "description": "The resource name of the Test Base Custom Image."
+    },
+    "ImageDefinitionNameParameter": {
+      "name": "imageDefinitionName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method",
+      "description": "The resource name of the Test Base Image Definition."
     },
     "VhdNameParameter": {
       "name": "vhdName",
