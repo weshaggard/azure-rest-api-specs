@@ -26,6 +26,7 @@ These are the global settings for the Azure API Center.
 
 ```yaml
 openapi-type: arm
+openapi-subtype: providerHub
 tag: package-2023-07-01-preview
 ```
 
