@@ -4,6 +4,7 @@ import "@typespec/versioning";
 import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
+import "@azure-tools/typespec-autorest";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -183,6 +184,39 @@ model CarbonEmissionTopItemsSummaryData extends CarbonEmissionData {
   categoryType: CategoryTypeEnum;
 }
 
+@doc("Response for Top Items For Resource")
+model ResourceCarbonEmissionTopItemsSummaryData extends CarbonEmissionData {
+  @doc("Top items summary data")
+  dataType: "ResourceTopItemsSummaryData";
+
+  @doc("Item name")
+  itemName: string;
+
+  @doc("Item category")
+  categoryType: CategoryTypeEnum;
+
+  @doc("Subscription Id")
+  subscriptionId: string;
+
+  @doc("Resource Group")
+  resourceGroup: string
+}
+
+@doc("Response for Top Items For ResourceGroup")
+model ResourceGroupCarbonEmissionTopItemsSummaryData extends CarbonEmissionData {
+  @doc("Top items summary data")
+  dataType: "ResourceGroupTopItemsSummaryData";
+
+  @doc("Item name")
+  itemName: string;
+
+  @doc("Item category")
+  categoryType: CategoryTypeEnum;
+
+  @doc("Subscription Id")
+  subscriptionId: string;
+}
+
 @doc("Response for Top Items Carbon Emissions by Month")
 model CarbonEmissionTopItemMonthlySummaryData extends CarbonEmissionData {
   @doc("Top items Monthly summary data")
@@ -196,6 +230,45 @@ model CarbonEmissionTopItemMonthlySummaryData extends CarbonEmissionData {
 
   @doc("Month date")
   date: string;
+}
+
+@doc("Response for Top Items Carbon Emissions by Month for ResourceType")
+model ResourceCarbonEmissionTopItemMonthlySummaryData extends CarbonEmissionData {
+  @doc("Top items Monthly summary data")
+  dataType: "ResourceTopItemsMonthlySummaryData";
+
+  @doc("Item name")
+  itemName: string;
+
+  @doc("Item category")
+  categoryType: CategoryTypeEnum;
+
+  @doc("Month date")
+  date: string;
+
+  @doc("Subscription Id")
+  subscriptionId: string;
+
+  @doc("Resource Group")
+  resourceGroup: string
+}
+
+@doc("Response for Top Items Carbon Emissions by Month for ResourceGroupType")
+model ResourceGroupCarbonEmissionTopItemMonthlySummaryData extends CarbonEmissionData {
+  @doc("Top items Monthly summary data")
+  dataType: "ResourceGroupTopItemsMonthlySummaryData";
+
+  @doc("Item name")
+  itemName: string;
+
+  @doc("Item category")
+  categoryType: CategoryTypeEnum;
+
+  @doc("Month date")
+  date: string;
+
+  @doc("Subscription Id")
+  subscriptionId: string;
 }
 
 @doc("Response for detailed carbon emissions")
