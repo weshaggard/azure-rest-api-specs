@@ -40,6 +40,9 @@ model AdminResourceProperties {
   @visibility("read")
   @doc("The provisioning state of the last operation.")
   provisioningState?: ProvisioningState;
+
+  @doc("Properties.")
+  properties: Properties;
 }
 
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
@@ -89,4 +92,14 @@ enum ProvisioningState {
 enum Versions {
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_05_21: "2023-05-21-preview",
+}
+
+
+@doc("Properties.")
+model Properties{
+  @doc("Tenant Id.")
+  tenantId: string;
+
+  @doc("Feature Id.")
+  featureId: string;
 }
