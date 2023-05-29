@@ -28,16 +28,16 @@ model LandingZoneConfigurationProperties {
 	organization: string;
 
 	@doc("yes to deploy DDoS, otherwise no. To provide an existing DDoS protection plan select existing.")
-	ddosProtection: DdosProtection;
+	ddosProtection: ResourceCreationOptions;
 
 	@doc("Existing ddos protection plan id.")
 	ddosProtectionId?: string;
 
+	@doc("yes to deploy log Analytics workspace, otherwise no. To provide an existing log Analytics workspace select existing.")
+	logAnalyticsWorkspace: ResourceCreationOptions;
+
 	@doc("The ID for the Log Analytics workspace that was created to centralize log ingest.")
 	logAnalyticsWorkspaceId?: string;
-
-	@doc("Telemetry Output")
-	telemetryOutput: boolean;
 
 	@doc("Array of tag objects in format of {'name':'a tag name', 'value':'a tag value'}")
 	@OpenAPI.extension("x-ms-identifiers", [])
@@ -50,9 +50,8 @@ model LandingZoneConfigurationProperties {
 	firewallId?: string;
 
 	@doc("Azure Firewall subnet. IPv4 CIDR block.")
-	//TODO : Add Regex
-	@pattern("")
-	firewallSubnet: string;
+	@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
+	firewallSubnet?: string;
 
 	@doc("Management Subscription Id.")
 	managementSubscriptionId?: string;
@@ -67,62 +66,64 @@ model LandingZoneConfigurationProperties {
 	environment: Environment;
 
 	@doc("Set how long logs are retained for, in days. Minimum length is 30 and maximum is 730")
+	@minLength(30)
+	@maxLength(730)
 	logRetentionInDays: string;
 
 	@doc("Location to run deployment(s) from the list of Azure Regions")
 	deploymentLocation: string;
 
 	@doc("The allowed Azure regions where resources are allowed to be deployed")
-	allowedLocations: Array<string>;
+	allowedLocations: string[];
 
 	@doc("The allowed Azure regions where confidential computing resources are allowed to be deployed")
-	allowedConfidentialComputingLocations: Array<string>;
+	allowedConfidentialComputingLocations: string[];
 
 	@doc("Hub network subnet. IPv4 CIDR")
-	//TODO : Add Regex
-	hubNetworkSubnet?: string;
+	@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
+	hubNetworkSubnet: string;
 
 	@doc("To deploy the Bastion service choose the yes, no otherwise. For existing bastion service existing.")
-	azureBastion: AzureBastion;
+	azureBastion: ResourceCreationOptions;
 
 	@doc("Existing azure bastion Id.")
 	azureBastionId?: string;
 
 	@doc("Azure Bastion subnet. IP v4 CIDR block")
-	//TODO : Add Regex
+	@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
 	azureBastionSubnet?: string;
 
 	@doc("landing zone management group properties")
 	@OpenAPI.extension("x-ms-identifiers", [])
-	landingZonesManagementGroups?: ManagementGroupProperties[];
+	landingZonesManagementGroups?: LandingZoneManagementGroupProperties[];
 
 	@doc("This will be applied to the deployment root of the landing zone")
-	rootMg: ManagementGroupPolicyDetails;
+	rootMg?: ManagementGroupPolicyDetails;
 
 	@doc("This will be applied to the Landing Zones management group")
-	landingZonesMg: ManagementGroupPolicyDetails;
+	landingZonesMg?: ManagementGroupPolicyDetails;
 
 	@doc("This will be applied to the Platform management group")
-	platformMg: ManagementGroupPolicyDetails;
+	platformMg?: ManagementGroupPolicyDetails;
 
 	@doc("This will be applied to the Management management group under Platform")
-	platformManagementMg: ManagementGroupPolicyDetails;
+	platformManagementMg?: ManagementGroupPolicyDetails;
 
 	@doc("This will be applied to the Connectivity management group under Platform")
-	platformConnectivityMg: ManagementGroupPolicyDetails;
+	platformConnectivityMg?: ManagementGroupPolicyDetails;
 
 	@doc("This will be applied to the Identity management group under Platform")
-	platformIdentityMg: ManagementGroupPolicyDetails;
+	platformIdentityMg?: ManagementGroupPolicyDetails;
 
 	@doc("This will be applied to the decommissioned management group.")
-	decommissionedMg: DecommissionedMgProperties;
+	decommissionedMg?: DecommissionedMgProperties;
 
 	@doc("This will be applied to the sandbox management group.")
-	sandboxMg: SandboxMgProperties;
+	sandboxMg?: SandboxMgProperties;
 }
 
 @doc("Landing zone management group properties")
-model ManagementGroupProperties {
+model LandingZoneManagementGroupProperties {
 	...ManagementGroupPolicyDetails;
 
 	@doc("Management group name.")
@@ -137,13 +138,9 @@ model ManagementGroupProperties {
 
 @doc("Details of policy and initiatives associated with the management group.")
 model ManagementGroupPolicyDetails {
-	@doc("Array of policy assignments to be applied to the management group.")
-	@OpenAPI.extension("x-ms-identifiers", [])
-	policies: Array<PolicyAssignmentDetails>;
-
 	@doc("Array of initiative assignments to be applied to the management group.")
 	@OpenAPI.extension("x-ms-identifiers", [])
-	policySets: Array<PolicyAssignmentDetails>;
+	policySets: PolicyAssignmentDetails[];
 }
 
 @doc("Details of policy assignments")
@@ -151,8 +148,9 @@ model PolicyAssignmentDetails {
 	@doc("The id of the policy or initiatives.")
 	id: string;
 
+	#suppress "@azure-tools/typespec-azure-core/bad-record-type" "This would be customer defined parameter based on the policy initiatives to be assigned. Hence we need to use Record<unknown> as it will differ per initiative."
 	@doc("The parameters for the policy or initiatives.")
-	parameters: object;
+	parameters: Record<unknown>;
 }
 
 @doc("Decommissioned managemenrt group properties")
@@ -180,7 +178,7 @@ model Tags {
 	value: string;
 }
 
-@doc("URL for storage")
+@doc("The request body to generate a Landing Zone.")
 model GenerateLandingZoneRequest {
 	@doc("The options that code can be generated in")
 	outputFormat: OutputFormat;
@@ -192,6 +190,12 @@ model GenerateLandingZoneRequest {
 	enrollmentAccountId?: string;
 }
 
+@doc("The request body to update the publish status.")
+model SetPublishStatusRequest {
+	@doc("The value of the publish status to be update")
+	publishStatus: PublishStatus;
+}
+
 @doc("response URL for storage")
 model GenerateLandingZoneResponse {
 	@visibility("read")
@@ -200,9 +204,9 @@ model GenerateLandingZoneResponse {
 }
 
 enum PublishStatus {
-	configuring: "Configuring",
-	active: "Active",
-	inactive: "Inactive",
+	editable: "Editable",
+	readOnly: "Read-Only",
+	disabled: "Disabled",
 }
 
 enum OutputFormat {
@@ -227,13 +231,7 @@ enum Environment {
 	demo: "Demo",
 }
 
-enum AzureBastion {
-	yes: "Yes",
-	no: "No",
-	existing: "Existing",
-}
-
-enum DdosProtection {
+enum ResourceCreationOptions {
 	yes: "Yes",
 	no: "No",
 	existing: "Existing",

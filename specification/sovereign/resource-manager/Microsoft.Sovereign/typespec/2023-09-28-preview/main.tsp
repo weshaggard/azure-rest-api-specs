@@ -6,6 +6,7 @@ import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 import "./policyMonitorModels.tsp";
 import "./landingZoneConfigurationModels.tsp";
+import "./landingZoneModels.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -18,23 +19,27 @@ using Azure.ResourceManager.Foundations;
 
 @armProviderNamespace
 @service({
-  title: "Microsoft.Sovereign",
+	title: "Microsoft.Sovereign",
 })
 @versioned(Versions)
 namespace Microsoft.Sovereign;
 
 enum Versions {
-  @useDependency(Azure.Core.Versions.v1_0_Preview_2, Azure.ResourceManager.Versions.v1_0_Preview_1)
-  v2023_09_28_preview: "2023-09-28-preview",
+	@useDependency(
+		Azure.Core.Versions.v1_0_Preview_2,
+		Azure.ResourceManager.Versions.v1_0_Preview_1
+	)
+	v2023_09_28_preview: "2023-09-28-preview",
 }
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
+// Landing Zone Configuration Resource Type
 @tenantResource
-@doc("A landing zone resource")
+@doc("A landing zone Configuration resource")
 model LandingZoneConfiguration
 	is ProxyResource<LandingZoneConfigurationProperties> {
-	@doc("The name of the Landing Zone resource type")
+	@doc("The name of the Landing Zone configuration resource type")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
 	@key("landingzoneconfigurationname")
 	@segment("landingzoneconfigurations")
@@ -43,7 +48,7 @@ model LandingZoneConfiguration
 }
 
 @armResourceOperations(LandingZoneConfiguration)
-interface LandingZonesConfigurations
+interface LandingZoneConfigurations
 	extends TenantResourceOperations<
 			LandingZoneConfiguration,
 			LandingZoneConfigurationProperties
@@ -57,40 +62,32 @@ interface LandingZonesConfigurations
 		GenerateLandingZoneResponse
 	>;
 
-	@action("ActivateConfiguration")
-	@doc("Updates the Publish status to active")
+	@action("setPublishingStatus")
+	@doc("Provides a mechanism to update the Publish Status")
 	@armResourceAction(LandingZoneConfiguration)
-	activateConfiguration is ArmResourceNoBodyNoContentActionSync<
-		LandingZoneConfiguration
-	>;
-
-	@action("DeactivateConfiguration")
-	@doc("Update the publish status to inactive")
-	@armResourceAction(LandingZoneConfiguration)
-	deactivateConfiguration is ArmResourceNoBodyNoContentActionSync<
-		LandingZoneConfiguration
-	>;
-
-	@action("ResetConfiguration")
-	@doc("Update the publish status to Configuring.")
-	@armResourceAction(LandingZoneConfiguration)
-	resetConfiguration is ArmResourceNoBodyNoContentActionSync<
-		LandingZoneConfiguration
+	setPublishingStatus is ArmResourceActionNoContentSync<
+		LandingZoneConfiguration,
+		SetPublishStatusRequest
 	>;
 }
 
-// note this is a template for an empty body resource action, which might be added to the typespec library at some point
-#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a template"
-#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation-outside-interface" "This is a template"
-@armResourceAction(TResource)
-@post
-op ArmResourceNoBodyNoContentActionSync<
-  TResource extends Azure.ResourceManager.Foundations.ArmResource,
-  TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
->(
-  ...ResourceInstanceParameters<TResource, TBaseParameters>
-): ArmNoContentResponse<"Action completed successfully."> | ErrorResponse;
+@tenantResource
+@doc("A landing zone resource")
+model LandingZone is ProxyResource<LandingZoneProperties> {
+	@doc("The name of the Landing Zone resource type")
+	@pattern("^[a-zA-Z0-9-]{3,24}$")
+	@key("landingzonename")
+	@segment("landingzones")
+	@path
+	name: string;
+}
 
+@armResourceOperations(LandingZone)
+interface LandingZones
+	extends TenantResourceOperations<LandingZone, LandingZoneProperties> {}
+
+// Policy Monitor Resource Type
+/*
 @tenantResource
 @doc("A policy monitor resource")
 model PolicyMonitor is ProxyResource<PolicyMonitorProperties> {
@@ -145,3 +142,4 @@ interface PolicyMonitors
 		>
 	): ArmResponse<ValidationResultList> | ErrorResponse;
 }
+*/
