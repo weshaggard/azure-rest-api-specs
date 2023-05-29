@@ -50,7 +50,7 @@ model LandingZoneConfigurationProperties {
 	firewallId?: string;
 
 	@doc("Azure Firewall subnet. IPv4 CIDR block.")
-	@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
+	//@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
 	firewallSubnet?: string;
 
 	@doc("Management Subscription Id.")
@@ -66,9 +66,9 @@ model LandingZoneConfigurationProperties {
 	environment: Environment;
 
 	@doc("Set how long logs are retained for, in days. Minimum length is 30 and maximum is 730")
-	@minLength(30)
-	@maxLength(730)
-	logRetentionInDays: string;
+	@minValue(30)
+	@maxValue(730)
+	logRetentionInDays: integer;
 
 	@doc("Location to run deployment(s) from the list of Azure Regions")
 	deploymentLocation: string;
@@ -80,7 +80,7 @@ model LandingZoneConfigurationProperties {
 	allowedConfidentialComputingLocations: string[];
 
 	@doc("Hub network subnet. IPv4 CIDR")
-	@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
+	//@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
 	hubNetworkSubnet: string;
 
 	@doc("To deploy the Bastion service choose the yes, no otherwise. For existing bastion service existing.")
@@ -90,7 +90,7 @@ model LandingZoneConfigurationProperties {
 	azureBastionId?: string;
 
 	@doc("Azure Bastion subnet. IP v4 CIDR block")
-	@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
+	//@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
 	azureBastionSubnet?: string;
 
 	@doc("landing zone management group properties")
