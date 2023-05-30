@@ -39,7 +39,7 @@
         "tags": [
           "Test Configuration"
         ],
-        "operationId": "TestConfigurations_List",
+        "operationId": "TestConfiguration_List",
         "description": "List test configurations.",
         "parameters": [
           {
@@ -106,6 +106,7 @@
             "name": "TestConfiguration",
             "in": "body",
             "required": true,
+            "description": "Parameters supplied to create the resource.",
             "schema": {
               "$ref": "#/definitions/TestConfigurationResource"
             }
@@ -167,6 +168,7 @@
             "name": "TestConfiguration",
             "in": "body",
             "required": true,
+            "description": "Parameters supplied to update the resource.",
             "schema": {
               "$ref": "#/definitions/TestConfigurationResourceUpdateParameters"
             }
@@ -422,6 +424,7 @@
       }
     },
     "TestConfigurationProperties": {
+      "description": "test configuration properties.",
       "type": "object",
       "properties": {
         "packageIds": {
@@ -462,6 +465,7 @@
       ]
     },
     "TestConfigurationUpdateProperties": {
+      "description": "Properties are used to update the test configuration.",
       "type": "object",
       "properties": {
         "isEnabled": {
@@ -487,6 +491,7 @@
       }
     },
     "TriggerType": {
+      "description": "Specifies the option for trigger the test config.",
       "type": "string",
       "enum": [
         "RunOnNewChurn",
@@ -506,7 +511,11 @@
           "enum": [
             "SecurityUpdate",
             "FeatureUpdate"
-          ]
+          ],
+          "x-ms-enum": {
+            "name": "updateType",
+            "modelAsString": true
+          }
         },
         "securityUpdateSpec": {
           "$ref": "#/definitions/SecurityUpdateSpec"
@@ -520,17 +529,23 @@
       ]
     },
     "SecurityUpdateSpec": {
+      "description": "Specifies the config for the security update.",
       "type": "object",
       "properties": {
         "targetOSs": {
+          "description": "Specifies the target OSs to be tested.",
           "type": "array",
           "items": {
             "type": "string"
           }
         }
-      }
+      },
+      "required": [
+        "targetOSs"
+      ]
     },
     "FeatureUpdateSpec": {
+      "description": "Specifies the config for the feature update.",
       "type": "object",
       "properties": {
         "insiderChannelIds": {
@@ -543,11 +558,16 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Specifies the baseline OSs to be tested."
         }
-      }
+      },
+      "required": [
+        "insiderChannelIds"
+      ]
     },
     "TestEnvironment": {
+      "description": "Specifies the config for the test environment",
       "type": "object",
       "properties": {
         "vmConfigurationTypeName": {
@@ -559,6 +579,7 @@
       ]
     },
     "CustomTriggerSpec": {
+      "description": "Specifies the config for the custom type trigger.",
       "type": "object",
       "properties": {
         "executionScheduleTime": {
@@ -581,6 +602,7 @@
       ]
     },
     "RecurringType": {
+      "description": "The recurring type of the trigger.",
       "type": "string",
       "enum": [
         "ByDay",
@@ -593,6 +615,8 @@
       }
     },
     "WeekRecurrenceTriggerSpec": {
+      "description": "Specifies the week recurrence config when recurring by week.",
+      "type": "object",
       "properties": {
         "daysOfWeek": {
           "type": "array",
@@ -600,9 +624,14 @@
             "$ref": "#/definitions/DayOfWeek"
           }
         }
-      }
+      },
+      "required": [
+        "daysOfWeek"
+      ]
     },
     "MonthRecurrenceTriggerSpec": {
+      "description": "Specifies the month recurrence config when recurring by month.",
+      "type": "object",
       "properties": {
         "daysOfMonth": {
           "type": "object",
@@ -616,11 +645,19 @@
             "weekOfMonth": {
               "type": "integer"
             }
-          }
+          },
+          "required": [
+            "daysOfWeek",
+            "weekOfMonth"
+          ]
         }
-      }
+      },
+      "required": [
+        "daysOfMonth"
+      ]
     },
     "DayOfWeek": {
+      "description": "The day of week.",
       "type": "string",
       "enum": [
         "Sunday",
@@ -671,6 +708,7 @@
       ]
     },
     "AvailableVMConfigurationTypeProperties": {
+      "description": "The properties of AvailableVMConfigurationType resource.",
       "type": "object",
       "properties": {
         "categoryName": {
@@ -698,10 +736,10 @@
     },
     "ArchitectureType": {
       "type": "string",
-      "description": "Specifies the Architecture Type",
+      "description": "Specifies the Architecture Type supported by VM",
       "enum": [
         "x64",
-        "Arm64"
+        "arm64"
       ],
       "x-ms-enum": {
         "name": "ArchitectureType",

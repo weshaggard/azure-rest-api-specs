@@ -3261,10 +3261,6 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/TestBaseAccountResourceProperties",
           "description": "Properties of a Test Base Account."
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/SystemAssignedServiceIdentity",
-          "description": "The identity of the testBaseAccount."
         }
       },
       "allOf": [
@@ -3320,10 +3316,6 @@
           "$ref": "#/definitions/TestBaseAccountUpdateParameterProperties",
           "x-ms-client-flatten": true,
           "description": "Test Base Account update parameters."
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v3/managedidentity.json#/definitions/SystemAssignedServiceIdentity",
-          "description": "The identity of the testBaseAccount."
         },
         "tags": {
           "description": "The tags of the Test Base Account.",
@@ -3408,6 +3400,18 @@
         "blobName": {
           "type": "string",
           "description": "The custom file name of the uploaded blob."
+        },
+        "resourceType": {
+          "type": "string",
+          "enum": [
+            "Package",
+            "VHD"
+          ],
+          "description": "Resource type for file uploading.",
+          "x-ms-enum": {
+            "name": "fileUploadResourceType",
+            "modelAsString": true
+          }
         }
       }
     },
@@ -3872,11 +3876,14 @@
         "mediaPackageVersion": {
           "type": "string",
           "description": "The package version of the operating system. It can be empty."
+        },
+        "customImageId": {
+          "type": "string",
+          "description": "The tested custom image id. 'osName', 'release', 'buildVersion' and 'mediaPackageVersion' would be ignored when it's eligible.'"
         }
       },
       "required": [
-        "testType",
-        "osName"
+        "testType"
       ]
     },
     "PackageListResult": {
@@ -3985,25 +3992,6 @@
             "$ref": "#/definitions/TestType"
           },
           "description": "OOB, functional or flow driven. Mapped to the data in 'tests' property."
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/PackageCommonProperties"
-        }
-      ],
-      "required": [
-        "applicationName",
-        "version"
-      ]
-    },
-    "PackageCommonProperties": {
-      "description": "The common properties of the Test Base package and draft package.",
-      "type": "object",
-      "properties": {
-        "provisioningState": {
-          "description": "The provisioning state of the resource.",
-          "$ref": "#/definitions/ProvisioningState"
         },
         "targetOSList": {
           "type": "array",
@@ -4043,7 +4031,11 @@
           "x-ms-identifiers": [],
           "description": "The detailed test information."
         }
-      }
+      },
+      "required": [
+        "applicationName",
+        "version"
+      ]
     },
     "TestType": {
       "type": "string",
@@ -4064,9 +4056,7 @@
       "enum": [
         "x86",
         "x64",
-        "arm64",
-        "arm",
-        "ia64"
+        "arm64"
       ],
       "x-ms-enum": {
         "name": "architecture",
@@ -4101,6 +4091,13 @@
             "type": "string"
           },
           "description": "Specifies the baseline OSs to be tested."
+        },
+        "targetOSImageIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Specifies the ids of the target OSs from Custom Images to be tested."
         }
       },
       "required": [
@@ -4303,18 +4300,7 @@
         "blobPath": {
           "type": "string",
           "description": "The file name of the package."
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/PackageUpdateCommonParameterProperties"
-        }
-      ]
-    },
-    "PackageUpdateCommonParameterProperties": {
-      "description": "Common parameters to update Test Base package and draft package.",
-      "type": "object",
-      "properties": {
+        },
         "targetOSList": {
           "type": "array",
           "items": {
@@ -4555,6 +4541,14 @@
           "type": "string",
           "description": "The operating system name. e.g. Windows 10 1809."
         },
+        "customImageId": {
+          "type": "string",
+          "description": "Specify the referenced Test Base Custom Image Id if available."
+        },
+        "customImageDisplayName": {
+          "type": "string",
+          "description": "The name of the custom image resource."
+        },
         "releaseName": {
           "type": "string",
           "description": "The name of the tested release (OS update)."
@@ -4659,6 +4653,14 @@
         "osName": {
           "type": "string",
           "description": "The operating system name, e.g. Windows 10 1809."
+        },
+        "customImageId": {
+          "type": "string",
+          "description": "Specify the referenced Test Base Custom Image Id if applicable."
+        },
+        "customImageDisplayName": {
+          "type": "string",
+          "description": "The name of the custom image resource."
         },
         "releaseName": {
           "type": "string",
@@ -4832,7 +4834,8 @@
           "description": "The type of this release (OS update).",
           "enum": [
             "SecurityUpdate",
-            "FeatureUpdate"
+            "FeatureUpdate",
+            "InplaceUpgrade"
           ],
           "x-ms-enum": {
             "name": "type",
@@ -4847,6 +4850,14 @@
         "inplaceUpgradeBaselineProperties": {
           "$ref": "#/definitions/OsProperties",
           "description": "The properties of baseline os for in-place upgrade test."
+        },
+        "customImageId": {
+          "type": "string",
+          "description": "Specify the referenced Test Base Custom Image Id if available."
+        },
+        "customImageDisplayName": {
+          "type": "string",
+          "description": "The name of the custom image resource."
         }
       }
     },
@@ -6207,6 +6218,15 @@
           "type": "string",
           "description": "The name of the OS."
         },
+        "customImageId": {
+          "type": "string",
+          "description": "Specify the referenced Test Base Custom Image Id if available."
+        },
+        "customImageDisplayName": {
+          "type": "string",
+          "description": "The name of the custom image resource.",
+          "readOnly": true
+        },
         "releaseProperties": {
           "$ref": "#/definitions/ReleaseProperties",
           "description": "The properties of the OS release."
@@ -6249,6 +6269,14 @@
           "type": "string",
           "format": "date-time",
           "description": "Time stamp for os upgrading end (UTC)."
+        },
+        "customImageId": {
+          "type": "string",
+          "description": "Specify the referenced Test Base Custom Image Id if applicable."
+        },
+        "customImageDisplayName": {
+          "type": "string",
+          "description": "The name of the custom image resource."
         },
         "baselineOsName": {
           "type": "string",
