@@ -130,6 +130,9 @@
         "x-ms-examples": {
           "Jobs_ListbySubscription_MaximumSet_Gen": {
             "$ref": "./examples/Jobs_ListbySubscription_MaximumSet_Gen.json"
+          },
+          "Jobs_ListbySubscription_MinimumSet_Gen": {
+            "$ref": "./examples/Jobs_ListbySubscription_MinimumSet_Gen.json"
           }
         }
       }
@@ -177,6 +180,9 @@
         "x-ms-examples": {
           "TestResults_ListbySubscription_MaximumSet_Gen": {
             "$ref": "./examples/TestResults_ListbySubscription_MaximumSet_Gen.json"
+          },
+          "TestResults_ListbySubscription_MinimumSet_Gen": {
+            "$ref": "./examples/TestResults_ListbySubscription_MinimumSet_Gen.json"
           }
         }
       }
@@ -300,6 +306,9 @@
         "x-ms-examples": {
           "Jobs_ListByResourceGroup_MaximumSet_Gen": {
             "$ref": "./examples/Jobs_ListByResourceGroup_MaximumSet_Gen.json"
+          },
+          "Jobs_ListByResourceGroup_MinimumSet_Gen": {
+            "$ref": "./examples/Jobs_ListByResourceGroup_MinimumSet_Gen.json"
           }
         }
       }
@@ -347,6 +356,9 @@
         "x-ms-examples": {
           "Jobs_Get_MaximumSet_Gen": {
             "$ref": "./examples/Jobs_Get_MaximumSet_Gen.json"
+          },
+          "Jobs_Get_MinimumSet_Gen": {
+            "$ref": "./examples/Jobs_Get_MinimumSet_Gen.json"
           }
         }
       },
@@ -418,6 +430,9 @@
         "x-ms-examples": {
           "Jobs_CreateOrUpdate_MaximumSet_Gen": {
             "$ref": "./examples/Jobs_CreateOrUpdate_MaximumSet_Gen.json"
+          },
+          "Jobs_CreateOrUpdate_MinimumSet_Gen": {
+            "$ref": "./examples/Jobs_CreateOrUpdate_MinimumSet_Gen.json"
           }
         }
       },
@@ -588,6 +603,9 @@
         "x-ms-examples": {
           "TestResults_ListByJob_MaximumSet_Gen": {
             "$ref": "./examples/TestResults_ListByJob_MaximumSet_Gen.json"
+          },
+          "TestResults_ListByJob_MinimumSet_Gen": {
+            "$ref": "./examples/TestResults_ListByJob_MinimumSet_Gen.json"
           }
         }
       }
@@ -642,6 +660,9 @@
         "x-ms-examples": {
           "TestResults_Get_MaximumSet_Gen": {
             "$ref": "./examples/TestResults_Get_MaximumSet_Gen.json"
+          },
+          "TestResults_Get_MinimumSet_Gen": {
+            "$ref": "./examples/TestResults_Get_MinimumSet_Gen.json"
           }
         }
       }
@@ -994,6 +1015,17 @@
     }
   },
   "definitions": {
+    "Architecture": {
+      "type": "string",
+      "enum": [
+        "x64",
+        "arm64"
+      ],
+      "x-ms-enum": {
+        "name": "Architecture",
+        "modelAsString": true
+      }
+    },
     "CasePriorityLevel": {
       "type": "integer",
       "format": "int32",
@@ -1004,72 +1036,61 @@
       "type": "object",
       "properties": {
         "type": {
-          "$ref": "#/definitions/ImageType",
-          "description": "Must be vhd, marketplace_image, or shared_image_gallery"
-        },
-        "vhdUrl": {
           "type": "string",
-          "description": "VHD property. SAS URL of VHD"
+          "description": "Discriminator property for Image."
         },
         "vhdGeneration": {
           "$ref": "#/definitions/VhdGeneration",
-          "description": "VHD Generation. Default 1. Choice is 1 or 2"
+          "description": "Options are 1 or 2. Defaults to 1",
+          "default": 1
         },
-        "vhdArchitecture": {
-          "$ref": "#/definitions/VhdArchitecture",
-          "description": "VHD property. Default x64. One of x64 or arm64",
+        "architecture": {
+          "$ref": "#/definitions/Architecture",
+          "description": "Options are x64 or arm64. Defaults to x64",
           "default": "x64"
-        },
-        "marketplaceImagePublisher": {
-          "type": "string",
-          "description": "Marketplace Image Publisher"
-        },
-        "marketplaceImageOffer": {
-          "type": "string",
-          "description": "Marketplace Image Offer"
-        },
-        "marketplaceImageSku": {
-          "type": "string",
-          "description": "Marketplace Image SKU"
-        },
-        "marketplaceImageVersion": {
-          "type": "string",
-          "description": "Marketplace Image Version"
-        },
-        "imageGallerySubscription": {
-          "type": "string",
-          "description": "Shared Image Gallery Subscription - Optional. The default is the current subscription"
-        },
-        "imageGalleryResourceGroupName": {
-          "type": "string",
-          "description": "Shared Image Gallery resource group name - Optional"
-        },
-        "imageGallery": {
-          "type": "string",
-          "description": "Shared Image gallery"
-        },
-        "imageGalleryImageDef": {
-          "type": "string",
-          "description": "Shared Image Gallery image definition"
-        },
-        "imageGalleryImageVersion": {
-          "type": "string",
-          "description": "Shared Image Gallery image version"
         }
       },
-      "description": "This object collects the image information used for testing. The associated properties of each image type must be populated.s"
+      "description": "This object collects the image information used for testing. The associated properties of each image type must be populated.s",
+      "discriminator": "type",
+      "required": [
+        "type"
+      ]
     },
     "ImageType": {
       "type": "string",
       "enum": [
         "vhd",
-        "marketplace_image",
-        "shared_image_gallery"
+        "marketplace",
+        "shared_gallery"
       ],
       "x-ms-enum": {
         "name": "ImageType",
         "modelAsString": true
       }
+    },
+    "ImageUpdate": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Discriminator property for Image."
+        },
+        "vhdGeneration": {
+          "$ref": "#/definitions/VhdGeneration",
+          "description": "Options are 1 or 2. Defaults to 1",
+          "default": 1
+        },
+        "architecture": {
+          "$ref": "#/definitions/Architecture",
+          "description": "Options are x64 or arm64. Defaults to x64",
+          "default": "x64"
+        }
+      },
+      "description": "This object collects the image information used for testing. The associated properties of each image type must be populated.s",
+      "discriminator": "type",
+      "required": [
+        "type"
+      ]
     },
     "Job": {
       "type": "object",
@@ -1172,10 +1193,7 @@
           "readOnly": true
         }
       },
-      "description": "The job properties",
-      "required": [
-        "image"
-      ]
+      "description": "The job properties"
     },
     "JobTemplate": {
       "type": "object",
@@ -1449,7 +1467,7 @@
           "description": "An array of strings that define different package repos to use in tests."
         },
         "image": {
-          "$ref": "#/definitions/Image",
+          "$ref": "#/definitions/ImageUpdate",
           "description": "Image used during job"
         },
         "keepFailedEnvironment": {
@@ -1459,6 +1477,64 @@
         }
       },
       "description": "The updatable properties of the Job."
+    },
+    "MarketplaceImage": {
+      "type": "object",
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "description": "Image Publisher",
+          "default": ""
+        },
+        "offer": {
+          "type": "string",
+          "description": "Image Offer",
+          "default": ""
+        },
+        "sku": {
+          "type": "string",
+          "description": "Image SKU",
+          "default": ""
+        },
+        "version": {
+          "type": "string",
+          "description": "Image Version",
+          "default": ""
+        }
+      },
+      "description": "Marketplace image type object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Image"
+        }
+      ]
+    },
+    "MarketplaceImageUpdate": {
+      "type": "object",
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "description": "Image Publisher"
+        },
+        "offer": {
+          "type": "string",
+          "description": "Image Offer"
+        },
+        "sku": {
+          "type": "string",
+          "description": "Image SKU"
+        },
+        "version": {
+          "type": "string",
+          "description": "Image Version"
+        }
+      },
+      "description": "Marketplace image type object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ImageUpdate"
+        }
+      ]
     },
     "ProvisioningState": {
       "type": "string",
@@ -1564,6 +1640,77 @@
         }
       },
       "description": "Details test case criteria"
+    },
+    "SharedImageGallery": {
+      "type": "object",
+      "properties": {
+        "subscriptionId": {
+          "type": "string",
+          "description": "SIG subscription ID - Optional. The default is the current subscription",
+          "default": ""
+        },
+        "resourceGroup": {
+          "type": "string",
+          "description": "Resource group name - Optional",
+          "default": ""
+        },
+        "gallery": {
+          "type": "string",
+          "description": "Gallery"
+        },
+        "definition": {
+          "type": "string",
+          "description": "Image definition"
+        },
+        "version": {
+          "type": "string",
+          "description": "Image version"
+        }
+      },
+      "description": "SIG image type object",
+      "required": [
+        "gallery",
+        "definition",
+        "version"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/Image"
+        }
+      ]
+    },
+    "SharedImageGalleryUpdate": {
+      "type": "object",
+      "properties": {
+        "subscriptionId": {
+          "type": "string",
+          "description": "Shared Image Gallery Subscription - Optional. The default is the current subscription",
+          "default": ""
+        },
+        "resourceGroup": {
+          "type": "string",
+          "description": "Resource group name - Optional",
+          "default": ""
+        },
+        "gallery": {
+          "type": "string",
+          "description": "Gallery"
+        },
+        "definition": {
+          "type": "string",
+          "description": "Image definition"
+        },
+        "version": {
+          "type": "string",
+          "description": "Image version"
+        }
+      },
+      "description": "Shared Image Gallery image type object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ImageUpdate"
+        }
+      ]
     },
     "TestCase": {
       "type": "object",
@@ -1814,23 +1961,45 @@
         "endTime"
       ]
     },
-    "VhdArchitecture": {
-      "type": "string",
-      "enum": [
-        "x64",
-        "arm64"
+    "Vhd": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "VHD URL"
+        }
+      },
+      "description": "VHD image type object",
+      "required": [
+        "url"
       ],
-      "x-ms-enum": {
-        "name": "VhdArchitecture",
-        "modelAsString": true
-      }
+      "allOf": [
+        {
+          "$ref": "#/definitions/Image"
+        }
+      ]
     },
     "VhdGeneration": {
       "type": "integer",
       "format": "int32",
       "minimum": 1,
       "maximum": 2
+    },
+    "VhdUpdate": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "VHD URL"
+        }
+      },
+      "description": "VHD image type object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ImageUpdate"
+        }
+      ]
     }
-  },
+  },  
   "parameters": {}
 }

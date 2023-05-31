@@ -36,7 +36,7 @@ model JobResourceProperties is ResourceProperties {
     repos?: string[];
 
     @doc("Image used during job")
-    image: Image;
+    image?: Image;
 
     @doc("Default false")
     keepFailedEnvironment?: boolean = false;
@@ -56,11 +56,11 @@ model JobResourceProperties is ResourceProperties {
 
 enum ImageType {
     vhd,
-    marketplace_image,
-    shared_image_gallery
+    marketplace,
+    shared_gallery
 }
 
-enum VhdArchitecture {
+enum Architecture {
     x64,
     arm64
 }
@@ -70,46 +70,63 @@ enum VhdArchitecture {
 scalar VhdGeneration extends int32;
 
 @doc("This object collects the image information used for testing. The associated properties of each image type must be populated.s")
+@discriminator("type")
 model Image {
-    @doc("Must be vhd, marketplace_image, or shared_image_gallery")
-    type?: ImageType;
+    @doc("Options are 1 or 2. Defaults to 1")
+    vhdGeneration?: VhdGeneration = 1;
 
-    @doc("VHD property. SAS URL of VHD")
-    vhdUrl?: string;
-
-    @doc("VHD Generation. Default 1. Choice is 1 or 2")
-    vhdGeneration?: VhdGeneration;
-
-    @doc("VHD property. Default x64. One of x64 or arm64")
-    vhdArchitecture?: VhdArchitecture = VhdArchitecture.x64;
-
-    @doc("Marketplace Image Publisher")
-    marketplaceImagePublisher?: string;
-
-    @doc("Marketplace Image Offer")
-    marketplaceImageOffer?: string;
-
-    @doc("Marketplace Image SKU")
-    marketplaceImageSku?: string;
-
-    @doc("Marketplace Image Version")
-    marketplaceImageVersion?: string;
-
-    @doc("Shared Image Gallery Subscription - Optional. The default is the current subscription")
-    imageGallerySubscription?: string;
-
-    @doc("Shared Image Gallery resource group name - Optional")
-    imageGalleryResourceGroupName?: string;
-
-    @doc("Shared Image gallery")
-    imageGallery?: string;
-
-    @doc("Shared Image Gallery image definition")
-    imageGalleryImageDef?: string;
-
-    @doc("Shared Image Gallery image version")
-    imageGalleryImageVersion?: string; 
+    @doc("Options are x64 or arm64. Defaults to x64")
+    architecture?: Architecture = Architecture.x64;
 }
+
+@doc("VHD image type object")
+model Vhd extends Image {
+    @doc("Image type = VHD")
+    type: ImageType.vhd;
+
+    @doc("VHD URL")
+    url: string;
+}
+
+@doc("Marketplace image type object")
+model MarketplaceImage extends Image {
+    @doc("Image type = marketplace")
+    type: ImageType.marketplace;
+
+    @doc("Image Publisher")
+    publisher?: string = "";
+
+    @doc("Image Offer")
+    offer?: string = "";
+
+    @doc("Image SKU")
+    sku?: string = "";
+
+    @doc("Image Version")
+    version?: string = "";
+}
+
+@doc("SIG image type object")
+model SharedImageGallery extends Image {
+    @doc("Image type = shared_gallery")
+    type: ImageType.shared_gallery;
+
+    @doc("SIG subscription ID - Optional. The default is the current subscription")
+    subscriptionId?: string = "";
+
+    @doc("Resource group name - Optional")
+    resourceGroup?: string = "";
+
+    @doc("Gallery")
+    gallery: string;
+
+    @doc("Image definition")
+    definition: string;
+
+    @doc("Image version")
+    version: string; 
+}
+
 @doc("Job Operations")
 @armResourceOperations(Job)
 interface Jobs {
@@ -117,9 +134,6 @@ interface Jobs {
     listbySubscription is ArmListBySubscription<Job>;
     get is ArmResourceRead<Job>;
     createOrUpdate is ArmResourceCreateOrUpdateAsync<Job>;
-
-    update is ArmResourcePatchSync<Job, JobResourceProperties>;
-    
-    //@asyncOperationOptions("location")
+    update is ArmResourcePatchSync<Job, JobResourceProperties>;    
     delete is ArmResourceDeleteAsync<Job>;
 }
