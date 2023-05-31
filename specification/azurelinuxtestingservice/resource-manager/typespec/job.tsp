@@ -94,16 +94,16 @@ model MarketplaceImage extends Image {
     type: ImageType.marketplace;
 
     @doc("Image Publisher")
-    publisher?: string = "";
+    publisher: string;
 
     @doc("Image Offer")
-    offer?: string = "";
+    offer: string;
 
     @doc("Image SKU")
-    sku?: string = "";
+    sku: string;
 
     @doc("Image Version")
-    version?: string = "";
+    version: string;
 }
 
 @doc("SIG image type object")
