@@ -155,9 +155,6 @@ model CarbonEmissionData{
 model CarbonEmissionOverallSummaryData extends CarbonEmissionData {
   @doc("Overall summary data")
   dataType: "OverallSummaryData";
-
-  @doc("Date when the data was refreshed")
-  lastDataRefreshDate: string;
 }
 
 @doc("Response for Monthly Carbon Emissions Summary")
