@@ -335,9 +335,10 @@
         "uuid": {
           "description": "Globally unique, immutable, non-reusable id.",
           "type": "string",
+          "format": "uuid",
           "readOnly": true
         },
-        "type": {
+        "assetType": {
           "description": "Resource path to asset type (model) definition.",
           "type": "string"
         },
@@ -360,6 +361,18 @@
         "displayName": {
           "type": "string",
           "description": "Human-readable display name."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the asset."
+        },
+        "connectivityProfileUri": {
+          "type": "string",
+          "description": "A reference to the connectivity profile (connection information) used by brokers to connect to an endpoint that provides data points for this asset. Must have the format <ModuleCR.metadata.namespace>/<ModuleCR.metadata.name>."
+        },
+        "version": {
+          "type": "integer",
+          "description": "An integer that is incremented each time the resource is modified."
         },
         "manufacturer": {
           "type": "string",
@@ -385,42 +398,29 @@
           "type": "string",
           "description": "Revision number of the software."
         },
-        "overallRevision": {
+        "documentationUri": {
           "type": "string",
-          "description": "Overall revision number of the asset."
-        },
-        "manual": {
-          "type": "string",
-          "description": "URL for the manual."
-        },
-        "class": {
-          "type": "string",
-          "description": "The domain or purpose of the asset."
+          "description": "Reference to the documentation."
         },
         "serialNumber": {
           "type": "string",
           "description": "Asset serial number."
         },
-        "productInstanceUri": {
-          "type": "string",
-          "description": "Unique resource identifier for the asset."
-        },
-        "revisionCounter": {
-          "type": "integer",
-          "description": "The number of times the configuration data has been modified."
-        },
-        "softwareReleaseDate": {
-          "type": "string",
-          "description": "The date when the software is released."
-        },
-        "patchIdentifiers": {
-          "type": "array",
-          "items": {
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
             "type": "string"
           },
-          "description": "List of patches applied to a software version."
+          "description": "A set of key-value pairs that contain custom attributes set by the customer."
         },
-        "mappings": {
+        "defaultDataPointsConfiguration": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Protocol-specific default configuration for all data points. Each data point can have its own configuration that overrides the default settings here. This assumes that each asset instance has one protocol."
+        },
+        "dataPoints": {
           "type": "array",
           "items": {
             "type": "object",
@@ -429,7 +429,7 @@
                 "type": "string",
                 "description": "The address of the source of the data in the asset (e.g. URL) so that a client can access the data source on the asset."
               },
-              "typePath": {
+              "capabilityId": {
                 "type": "string",
                 "description": "The path to the type definition of the capability (e.g. DTMI, OPC UA information model node id, etc.), for example dtmi:com:example:Robot:_contents:__prop1;1."
               },
@@ -443,40 +443,54 @@
                 ],
                 "description": "An indication of how the data point should be mapped to OpenTelemetry (none, histogram, gauge, counter, etc.)."
               },
-              "additionalConfiguration": {
+              "dataPointConfiguration": {
                 "type": "object",
                 "additionalProperties": {
                   "type": "string"
                 },
                 "description": "Protocol-specific configuration for the data point. For OPC UA, this could include configuration like, publishingInterval, samplingInterval, and queueSize."
+              },
+              "requestedValue": {
+                "type": "string",
+                "description": "For settable properties (e.g. temperature setpoint), the desired value to be set on the data point."
               }
             }
           },
-          "description": "Array of mapping (binding) elements, one for each capability in the asset type definition (e.g. where to find the value for each asset capability)."
+          "description": "Array of data points that are part of the asset. Each data point can reference an asset type capability and have per-data point configuration. See below for more details for the definition of the dataPoints element."
         },
-        "references": {
+        "events": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "targetId"
-            ],
             "properties": {
-              "targetId": {
+              "eventSource": {
                 "type": "string",
-                "description": "The asset id to target."
+                "description": "The address of the source of the event in the asset (e.g. URL) so that a client can access the event on the asset."
               },
-              "name": {
+              "capabilityId": {
                 "type": "string",
-                "description": "The name of the reference."
+                "description": "The path to the type definition of the capability (e.g. DTMI, OPC UA information model node id, etc.), for example dtmi:com:example:Robot:_contents:__prop1;1."
               },
-              "assetTypeReferenceId": {
+              "observabilityMode": {
                 "type": "string",
-                "description": "The capability id of the reference (relationship) in the asset type."
+                "enum": [
+                  "none",
+                  "histogram",
+                  "gauge",
+                  "counter"
+                ],
+                "description": "An indication of how the event should be mapped to OpenTelemetry (none, histogram, gauge, counter, etc.)."
+              },
+              "eventConfiguration": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Protocol-specific configuration for the event. For OPC UA, this could include configuration like, publishingInterval, samplingInterval, and queueSize."
               }
             }
           },
-          "description": "Set of references from this asset (defined by the asset type). One common reference type is a component (part-of) reference."
+          "description": "Array of events that are part of the asset. Each event can reference an asset type capability and have per-event configuration. See below for more details about the definition of the events element."
         },
         "provisioningState": {
           "type": "string",
