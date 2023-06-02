@@ -27,15 +27,38 @@ These are the global settings for the Managed Network Fabric.
 ``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2023-02-01-preview
+tag: package-2023-06-01
 ```
 
 
+### Tag: package-2023-06-01
+
+These settings apply only when `--tag=package-2023-06-01` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-06-01'
+input-file:
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/AccessControlLists.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpCommunities.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpExtendedCommunities.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpPrefixes.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/L2IsolationDomains.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/L3IsolationDomains.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkDeviceSkus.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkDevices.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkFabricControllers.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkFabricSkus.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkFabrics.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkRackSkus.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkRacks.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/Operations.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/RoutePolicies.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/common.json
+```
 ### Tag: package-2023-02-01-preview
 
 These settings apply only when `--tag=package-2023-02-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-02-01-preview'
+``` yaml $(tag) == 'package-2023-02-01-preview'
 input-file:
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/AccessControlLists.json
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/IpCommunities.json
@@ -54,6 +77,7 @@ input-file:
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/RoutePolicies.json
   - Microsoft.ManagedNetworkFabric/preview/2023-02-01-preview/common.json
 ```
+
 ### Tag: package-2022-01-15-privatepreview
 
 These settings apply only when `--tag=package-2022-01-15-privatepreview` is specified on the command line.
