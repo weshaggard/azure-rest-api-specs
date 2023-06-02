@@ -23,11 +23,20 @@ model TestResult is ProxyResource<TestResultProperties> {
 
 @doc("Test results for a particular test case")
 model TestResultProperties is ResourceProperties {
-    @doc("The job name")
-    jobName: string;
+    @doc("The test result ID")
+    resultId: string; 
 
-    @doc("The test case")
-    caseName: string;
+    @doc("The test name")
+    testName: string;
+
+    @doc("The test category")
+    testCategory: string;
+
+    @doc("The test area")
+    testArea: string;
+
+    @doc("The test priority")
+    testPriority: integer;
 
     @doc("The test status")
     status: string;
