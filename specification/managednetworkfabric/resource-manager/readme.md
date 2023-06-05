@@ -43,6 +43,7 @@ input-file:
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpPrefixes.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/L2IsolationDomains.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/L3IsolationDomains.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NeighborGroups.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkDeviceSkus.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkDevices.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkFabricControllers.json
