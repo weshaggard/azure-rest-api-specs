@@ -170,7 +170,7 @@
             "name": "AdminResourceName",
             "in": "path",
             "required": true,
-            "description": "The Name of the employee.",
+            "description": "The Name of the rsource.",
             "type": "string"
           }
         ],
@@ -209,7 +209,7 @@
             "name": "AdminResourceName",
             "in": "path",
             "required": true,
-            "description": "The Name of the employee.",
+            "description": "The Name of the rsource.",
             "type": "string"
           },
           {
@@ -274,7 +274,7 @@
             "name": "AdminResourceName",
             "in": "path",
             "required": true,
-            "description": "The Name of the employee.",
+            "description": "The Name of the rsource.",
             "type": "string"
           },
           {
@@ -322,7 +322,7 @@
             "name": "AdminResourceName",
             "in": "path",
             "required": true,
-            "description": "The Name of the employee.",
+            "description": "The Name of the rsource.",
             "type": "string"
           }
         ],
@@ -355,9 +355,21 @@
             "read",
             "create"
           ]
+        },
+        "id": {
+          "type": "string",
+          "description": "The id of my resource."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of my resource."
         }
       },
-      "description": "A AdminGraphServices resource.",
+      "description": "AdminGraphServices resource.",
+      "required": [
+        "id",
+        "type"
+      ],
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
@@ -390,10 +402,34 @@
     "AdminResourceProperties": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "The name of my resource."
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The provisioning state of the last operation.",
+          "readOnly": true
         },
+        "tenantId": {
+          "type": "string",
+          "description": "Tenant Id."
+        },
+        "featureId": {
+          "type": "string",
+          "description": "Feature Id."
+        },
+        "appId": {
+          "type": "string",
+          "description": "Application Id."
+        }
+      },
+      "description": "Admin RP Azure resource properties",
+      "required": [
+        "tenantId",
+        "featureId",
+        "appId"
+      ]
+    },
+    "AdminResourceUpdate": {
+      "type": "object",
+      "properties": {
         "id": {
           "type": "string",
           "description": "The id of my resource."
@@ -402,27 +438,6 @@
           "type": "string",
           "description": "The type of my resource."
         },
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "The provisioning state of the last operation.",
-          "readOnly": true
-        },
-        "properties": {
-          "$ref": "#/definitions/Properties",
-          "description": "Properties."
-        }
-      },
-      "description": "Admin RP Azure resource properties",
-      "required": [
-        "name",
-        "id",
-        "type",
-        "properties"
-      ]
-    },
-    "AdminResourceUpdate": {
-      "type": "object",
-      "properties": {
         "tags": {
           "type": "object",
           "additionalProperties": {
@@ -441,59 +456,24 @@
     "AdminResourceUpdateProperties": {
       "type": "object",
       "properties": {
-        "name": {
+        "tenantId": {
           "type": "string",
-          "description": "The name of my resource."
+          "description": "Tenant Id."
         },
-        "id": {
+        "featureId": {
           "type": "string",
-          "description": "The id of my resource."
+          "description": "Feature Id."
         },
-        "type": {
+        "appId": {
           "type": "string",
-          "description": "The type of my resource."
-        },
-        "properties": {
-          "$ref": "#/definitions/PropertiesUpdate",
-          "description": "Properties."
+          "description": "Application Id."
         }
       },
       "description": "The updatable properties of the AdminResource."
     },
-    "Properties": {
-      "type": "object",
-      "properties": {
-        "tenantId": {
-          "type": "string",
-          "description": "Tenant Id."
-        },
-        "featureId": {
-          "type": "string",
-          "description": "Feature Id."
-        }
-      },
-      "description": "Properties.",
-      "required": [
-        "tenantId",
-        "featureId"
-      ]
-    },
-    "PropertiesUpdate": {
-      "type": "object",
-      "properties": {
-        "tenantId": {
-          "type": "string",
-          "description": "Tenant Id."
-        },
-        "featureId": {
-          "type": "string",
-          "description": "Feature Id."
-        }
-      },
-      "description": "Properties."
-    },
     "ProvisioningState": {
       "type": "string",
+      "description": "Properties.",
       "enum": [
         "Succeeded",
         "Failed",
@@ -505,11 +485,46 @@
       ],
       "x-ms-enum": {
         "name": "ProvisioningState",
-        "modelAsString": true
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Succeeded",
+            "value": "Succeeded"
+          },
+          {
+            "name": "Failed",
+            "value": "Failed"
+          },
+          {
+            "name": "Canceled",
+            "value": "Canceled"
+          },
+          {
+            "name": "Provisioning",
+            "value": "Provisioning",
+            "description": "Properties."
+          },
+          {
+            "name": "Updating",
+            "value": "Updating",
+            "description": "Properties."
+          },
+          {
+            "name": "Deleting",
+            "value": "Deleting",
+            "description": "Properties."
+          },
+          {
+            "name": "Accepted",
+            "value": "Accepted",
+            "description": "Properties."
+          }
+        ]
       }
     },
     "Versions": {
       "type": "string",
+      "description": "Properties.",
       "enum": [
         "2023-05-21-preview"
       ],
@@ -519,7 +534,8 @@
         "values": [
           {
             "name": "v2023_05_21",
-            "value": "2023-05-21-preview"
+            "value": "2023-05-21-preview",
+            "description": "Properties."
           }
         ]
       }
