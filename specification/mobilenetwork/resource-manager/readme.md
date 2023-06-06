@@ -40,8 +40,10 @@ input-file:
   - Microsoft.MobileNetwork/stable/2023-06-01/attachedDataNetwork.json
   - Microsoft.MobileNetwork/stable/2023-06-01/common.json
   - Microsoft.MobileNetwork/stable/2023-06-01/dataNetwork.json
+  - Microsoft.MobileNetwork/stable/2023-06-01/diagnosticsPackage.json
   - Microsoft.MobileNetwork/stable/2023-06-01/mobileNetwork.json
   - Microsoft.MobileNetwork/stable/2023-06-01/operation.json
+  - Microsoft.MobileNetwork/stable/2023-06-01/packetCapture.json
   - Microsoft.MobileNetwork/stable/2023-06-01/packetCoreControlPlane.json
   - Microsoft.MobileNetwork/stable/2023-06-01/packetCoreDataPlane.json
   - Microsoft.MobileNetwork/stable/2023-06-01/service.json
