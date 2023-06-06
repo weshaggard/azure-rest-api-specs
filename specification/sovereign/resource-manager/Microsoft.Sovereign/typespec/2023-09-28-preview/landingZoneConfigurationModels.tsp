@@ -1,15 +1,15 @@
 ﻿import "./common.tsp";
 using Azure.ResourceManager;
 
-@doc("The properties of Landing Zone Configuration resource type.")
+@doc("The properties of landing zone configuration resource type.")
 model LandingZoneConfigurationProperties {
 	@visibility("read")
-	@doc("The status of a user-initiated, control-plane operation on the Landing Zone Configuration.")
+	@doc("The status of a user-initiated, control-plane operation on the landing zone configuration.")
 	provisioningState?: ProvisioningState;
 
 	@visibility("read")
-	@doc("The state of Landing Zone Configuration.")
-	publishStatus?: PublishStatus;
+	@doc("The status for the landing zone configuration workflow.")
+	authoringStatus?: AuthoringStatus;
 
 	@doc("The prefix that will be added to all resources created by this deployment.")
 	@minLength(2)
@@ -21,13 +21,14 @@ model LandingZoneConfigurationProperties {
 	@maxLength(5)
 	deploymentSuffix?: string;
 
-	@doc("the top level management group name.")
-	topLevelManagementGroupName: string;
+	@doc("The top level management group display name.")
+	@maxLength(90)
+	topLevelMgDisplayName: string;
 
 	@doc("The name of the country/region or agency SLZ is being deployed for.")
 	organization: string;
 
-	@doc("yes to deploy DDoS, otherwise no. To provide an existing DDoS protection plan select existing.")
+	@doc("Yes to deploy DDoS, otherwise no. To provide an existing DDoS protection plan select existing.")
 	ddosProtection: ResourceCreationOptions;
 
 	@doc("Existing ddos protection plan id.")
@@ -66,9 +67,9 @@ model LandingZoneConfigurationProperties {
 	environment: Environment;
 
 	@doc("Set how long logs are retained for, in days. Minimum length is 30 and maximum is 730")
-	@minValue(30)
-	@maxValue(730)
-	logRetentionInDays: integer;
+	@minLength(30)
+	@maxLength(730)
+	logRetentionInDays: string;
 
 	@doc("Location to run deployment(s) from the list of Azure Regions")
 	deploymentLocation: string;
@@ -95,25 +96,25 @@ model LandingZoneConfigurationProperties {
 
 	@doc("landing zone management group properties")
 	@OpenAPI.extension("x-ms-identifiers", [])
-	landingZonesManagementGroups?: LandingZoneManagementGroupProperties[];
+	landingZonesMgChildren?: LandingZoneMgProperties[];
 
 	@doc("This will be applied to the deployment root of the landing zone")
-	rootMg?: ManagementGroupPolicyDetails;
+	rootMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the Landing Zones management group")
-	landingZonesMg?: ManagementGroupPolicyDetails;
+	landingZonesMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the Platform management group")
-	platformMg?: ManagementGroupPolicyDetails;
+	platformMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the Management management group under Platform")
-	platformManagementMg?: ManagementGroupPolicyDetails;
+	platformManagementMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the Connectivity management group under Platform")
-	platformConnectivityMg?: ManagementGroupPolicyDetails;
+	platformConnectivityMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the Identity management group under Platform")
-	platformIdentityMg?: ManagementGroupPolicyDetails;
+	platformIdentityMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the decommissioned management group.")
 	decommissionedMg?: DecommissionedMgProperties;
@@ -123,8 +124,8 @@ model LandingZoneConfigurationProperties {
 }
 
 @doc("Landing zone management group properties")
-model LandingZoneManagementGroupProperties {
-	...ManagementGroupPolicyDetails;
+model LandingZoneMgProperties {
+	...MgPolicyDetails;
 
 	@doc("Management group name.")
 	name: string;
@@ -137,10 +138,10 @@ model LandingZoneManagementGroupProperties {
 }
 
 @doc("Details of policy and initiatives associated with the management group.")
-model ManagementGroupPolicyDetails {
+model MgPolicyDetails {
 	@doc("Array of initiative assignments to be applied to the management group.")
 	@OpenAPI.extension("x-ms-identifiers", [])
-	policySets: PolicyAssignmentDetails[];
+	policyInitiatives: PolicyAssignmentDetails[];
 }
 
 @doc("Details of policy assignments")
@@ -155,7 +156,7 @@ model PolicyAssignmentDetails {
 
 @doc("Decommissioned managemenrt group properties")
 model DecommissionedMgProperties {
-	...ManagementGroupPolicyDetails;
+	...MgPolicyDetails;
 
 	@doc("when set to false this MG is not created")
 	create: boolean;
@@ -163,7 +164,7 @@ model DecommissionedMgProperties {
 
 @doc("sandbox management group properties")
 model SandboxMgProperties {
-	...ManagementGroupPolicyDetails;
+	...MgPolicyDetails;
 
 	@doc("when set to false this MG is not created")
 	create: boolean;
@@ -190,22 +191,28 @@ model GenerateLandingZoneRequest {
 	enrollmentAccountId?: string;
 }
 
-@doc("The request body to update the publish status.")
-model SetPublishStatusRequest {
-	@doc("The value of the publish status to be update")
-	publishStatus: PublishStatus;
+@doc("The request body to update the authoring status.")
+model SetAuthoringStatusRequest {
+	@doc("The value of the authoring status to be updated.")
+	authoringStatus: AuthoringStatus;
 }
 
-@doc("response URL for storage")
+@doc("The response for generate landing zone request.")
 model GenerateLandingZoneResponse {
-	@visibility("read")
+	@doc("The top level management group display name.")
+	topLevelMgDisplayName: string;
+
+	@doc("The name of the landing zone configuration resource.")
+	landingZoneConfigurationName: string;
+
 	@doc("The blob url where generated Landing Zone is stored")
-	blobUrl?: string;
+	blobUrl: string;
+
 }
 
-enum PublishStatus {
-	editable: "Editable",
-	readOnly: "Read-Only",
+enum AuthoringStatus {
+	authoring: "Authoring",
+	readyForUse: "ReadyForUse",
 	disabled: "Disabled",
 }
 

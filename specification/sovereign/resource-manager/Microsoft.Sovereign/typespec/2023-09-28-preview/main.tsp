@@ -34,21 +34,21 @@ enum Versions {
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
-// Landing Zone Configuration Resource Type
+// Landing zone configuration Resource Type
 @tenantResource
-@doc("A landing zone Configuration resource")
+@doc("The landing zone configuration resource type")
 model LandingZoneConfiguration
 	is ProxyResource<LandingZoneConfigurationProperties> {
-	@doc("The name of the Landing Zone configuration resource type")
+	@doc("The name of the Landing Zone resource type")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("landingzoneconfigurationname")
-	@segment("landingzoneconfigurations")
+	@key("landingZoneConfigurationName")
+	@segment("landingZoneConfigurations")
 	@path
 	name: string;
 }
 
 @armResourceOperations(LandingZoneConfiguration)
-interface LandingZoneConfigurations
+interface LandingZonesConfigurations
 	extends TenantResourceOperations<
 			LandingZoneConfiguration,
 			LandingZoneConfigurationProperties
@@ -62,22 +62,22 @@ interface LandingZoneConfigurations
 		GenerateLandingZoneResponse
 	>;
 
-	@action("setPublishingStatus")
-	@doc("Provides a mechanism to update the Publish Status")
+	@action("setAuthoringStatus")
+	@doc("Provides a mechanism to update the authoring status.")
 	@armResourceAction(LandingZoneConfiguration)
-	setPublishingStatus is ArmResourceActionNoContentSync<
+	setAuthoringStatus is ArmResourceActionNoContentSync<
 		LandingZoneConfiguration,
-		SetPublishStatusRequest
+		SetAuthoringStatusRequest
 	>;
 }
 
 @tenantResource
-@doc("A landing zone resource")
+@doc("The landing zone resource type")
 model LandingZone is ProxyResource<LandingZoneProperties> {
 	@doc("The name of the Landing Zone resource type")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("landingzonename")
-	@segment("landingzones")
+	@key("landingZoneName")
+	@segment("landingZones")
 	@path
 	name: string;
 }
@@ -86,7 +86,6 @@ model LandingZone is ProxyResource<LandingZoneProperties> {
 interface LandingZones
 	extends TenantResourceOperations<LandingZone, LandingZoneProperties> {}
 
-// Policy Monitor Resource Type
 /*
 @tenantResource
 @doc("A policy monitor resource")

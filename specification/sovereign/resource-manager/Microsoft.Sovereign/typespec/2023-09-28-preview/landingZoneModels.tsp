@@ -1,15 +1,17 @@
 import "./common.tsp";
 using Azure.ResourceManager;
 
-@doc("The properties of Landing Zone resource type.")
+@doc("The properties of landing zone resource type.")
 model LandingZoneProperties {
 	@visibility("read")
-	@doc("The status of a user-initiated, control-plane operation on the Landing Zone Configuration.")
+	@doc("The status of a user-initiated, control-plane operation on the landing zone resource type.")
 	provisioningState?: ProvisioningState;
 
-	@doc("The associated Landing Zone Configuration.")
-	landingZoneConfigurationId?: string;
+	@doc("The associated landing zone configuration resource.")
+	landingZoneConfigurationId: string;
 
-	@doc("The top level management group name.")
-	topLevelManagementGroupName?: string;
+	@doc("The top level management group id.")
+	@minLength(4)
+	@maxLength(10)
+	topLevelManagementGroupId: string;
 }
