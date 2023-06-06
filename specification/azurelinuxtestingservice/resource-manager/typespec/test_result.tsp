@@ -24,61 +24,61 @@ model TestResult is ProxyResource<TestResultProperties> {
 @doc("Test results for a particular test case")
 model TestResultProperties is ResourceProperties {
     @doc("The test result ID")
-    resultId: string; 
+    resultId?: string; 
 
     @doc("The test name")
-    testName: string;
+    testName?: string;
 
     @doc("The test category")
-    testCategory: string;
+    testCategory?: string;
 
     @doc("The test area")
-    testArea: string;
+    testArea?: string;
 
     @doc("The test priority")
-    testPriority: integer;
+    testPriority?: integer;
 
     @doc("The test status")
-    status: string;
+    status?: string;
 
     @doc("Test details")
-    message: string;
+    message?: string;
 
     @doc("Log URL")
-    logUrl: string;
+    logUrl?: string;
 
     @doc("Image name source string")
-    image: string;
+    image?: string;
 
     @doc("VM Size used")
-    vmSize: string;
+    vmSize?: string;
 
     @doc("Region test ran")
-    location: string;
+    location?: string;
 
     @doc("Kernel version used")
-    kernelVersion: string;
+    kernelVersion?: string;
 
     @doc("Distro version used")
-    distroVersion: string;
+    distroVersion?: string;
 
     @doc("VHD Generation")
-    vhdGeneration: string;
+    vhdGeneration?: VhdGeneration;
 
     @doc("Wala Version")
-    walaVersion: string;
+    walaVersion?: string;
 
     @doc("Extra fields")
-    extraFields: Record<string>;
+    extraFields?: Record<string>;
 
     @doc("Test duration")
-    duration: string;
+    duration?: string;
 
     @doc("Start time")
-    startTime: utcDateTime;
+    startTime?: string;
 
     @doc("End time")
-    endTime: utcDateTime;
+    endTime?: string;
 }
 
 
