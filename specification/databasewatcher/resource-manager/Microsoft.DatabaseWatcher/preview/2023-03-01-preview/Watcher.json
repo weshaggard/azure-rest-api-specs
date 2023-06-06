@@ -324,6 +324,20 @@
               "$ref": "#/definitions/Watcher"
             }
           },
+          "202": {
+            "description": "Resource update request accepted.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "Location": {
+                "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                "type": "string"
+              }
+            }
+          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -335,7 +349,11 @@
           "Watchers_Update": {
             "$ref": "./examples/Watchers_Update_200.json"
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       },
       "delete": {
         "tags": [
@@ -800,11 +818,8 @@
         "Succeeded",
         "Failed",
         "Canceled",
-        "Provisioning",
-        "Starting",
-        "Stopping",
-        "Deleting",
-        "Accepted"
+        "InProgress",
+        "Deleting"
       ],
       "x-ms-enum": {
         "name": "DatabaseWatcherProvisioningState",

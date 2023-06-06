@@ -58,8 +58,14 @@ model Datastore {
 }
 
 @armResourceOperations
-interface Watchers
-  extends TrackedResourceOperations<Watcher, WatcherProperties> {
+interface Watchers {
+  get is ArmResourceRead<Watcher>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<Watcher>;
+  update is ArmResourcePatchAsync<Watcher, WatcherProperties>;
+  delete is ArmResourceDeleteAsync<Watcher>;
+  listByResourceGroup is ArmResourceListByParent<Watcher>;
+  listBySubscription is ArmListBySubscription<Watcher>;
+
   @doc("Action to start monitoring all targets configured for a given database watcher.")
   @action
   @post
@@ -110,9 +116,6 @@ enum WatcherStatus {
 @doc("The status of the last provisioning operation performed on the resource.")
 enum DatabaseWatcherProvisioningState {
   ...ResourceProvisioningState,
-  Provisioning,
-  Starting,
-  Stopping,
+  InProgress,
   Deleting,
-  Accepted,
 }
