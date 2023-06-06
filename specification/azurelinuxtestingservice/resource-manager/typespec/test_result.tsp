@@ -63,7 +63,7 @@ model TestResultProperties is ResourceProperties {
     distroVersion?: string;
 
     @doc("VHD Generation")
-    vhdGeneration?: VhdGeneration;
+    vhdGeneration?: integer;
 
     @doc("Wala Version")
     walaVersion?: string;
