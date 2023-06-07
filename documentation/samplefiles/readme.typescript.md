@@ -9,5 +9,6 @@ typescript:
   package-name: "@azure/arm-[[ServiceName]]"
   output-folder: "$(typescript-sdks-folder)/sdk/[[ServiceName]]/arm-[[ServiceName]]"
   payload-flattening-threshold: 1
+  clear-output-folder: true
   generate-metadata: true
 ```
