@@ -34,8 +34,11 @@ interface Operations extends Azure.ResourceManager.Operations {
 @Azure.Core.lroStatus
 enum ProvisioningState {
   ...ResourceProvisioningState,
+  @doc("Resource being created")
   Creating,
+  @doc("Resource being updated")
   Updating,
+  @doc("Resource being deleted")
   Deleting
 }
 
@@ -150,7 +153,7 @@ model ThresholdProperties {
   @doc("Depth of the bucket")
   @minValue(0)
   @maxValue(16)
-  depth: int32; // TODO: use int8
+  depth: int32;
   
   @doc("Minimal decision duration")
   minDecisionDuration: duration;
