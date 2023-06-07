@@ -388,7 +388,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/CloudService"
             }
@@ -446,7 +446,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/CloudService"
             }
@@ -522,6 +522,12 @@
             "schema": {
               "$ref": "#/definitions/CanCreateResult"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -579,6 +585,12 @@
             "schema": {
               "$ref": "#/definitions/CanUpdateResult"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -620,6 +632,12 @@
             "description": "Successfully evaluated payload. Result may be Passed or Failed.",
             "schema": {
               "$ref": "#/definitions/CanCancelResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -675,44 +693,18 @@
             "schema": {
               "$ref": "#/definitions/CanMergeResult"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
           }
         }
       }
     }
   },
   "definitions": {
-    "TrackedResource": {
-      "title": "Tracked Resource",
-      "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
-      "type": "object",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": [
-            "read",
-            "create",
-            "update"
-          ],
-          "description": "Resource tags."
-        },
-        "location": {
-          "type": "string",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ],
-          "description": "The geo-location where the resource lives"
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
-        }
-      ]
-    },
     "ListCloudServicesResult": {
       "description": "The list of SaaSHub cloud service.",
       "type": "object",
@@ -735,18 +727,38 @@
     "CloudService": {
       "description": "A SaaSHub cloud service.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/TrackedResource"
-        }
-      ],
       "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ],
+          "description": "Resource tags. Optional."
+        },
+        "location": {
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
+          "description": "The geo-location where the resource lives"
+        },
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/CloudServiceProperties",
           "title": "SaaSHub cloud service properties"
         }
-      }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
+        }
+      ]
     },
     "CloudServiceProperties": {
       "description": "The properties of a SaaSHub cloud service.",
@@ -800,7 +812,7 @@
           "readOnly": true
         },
         "productCode": {
-          "description": "Product Universal Product Number of the product, which can be used to resolve product Id/sku Id/availability Id/term Id",
+          "description": "Product Universal Product Number of the product",
           "type": "string"
         },
         "provisioningState": {
@@ -936,12 +948,10 @@
       "type": "object",
       "properties": {
         "sourceResources": {
-          "description": "List of source resources to be merged into target resource. Key is the resource name, value is the quantity to be merged into",
-          "type": "object",
-          "additionalProperties": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 1
+          "description": "List of source resources to be merged into target resource.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MergeSourceCloudService"
           }
         }
       }
@@ -965,7 +975,7 @@
           }
         },
         "reasonCode": {
-          "description": "ReasonCode for why the request payload failed validation. Null when validation passed.",
+          "description": "ReasonCode for why the request payload failed validation. Null when validation passed. ",
           "type": "string",
           "readOnly": true
         },
@@ -1014,10 +1024,18 @@
                     "type": "string",
                     "readOnly": true
                   },
-                  "isCustomerEligible": {
+                  "isEligible": {
                     "description": "True if user is eligible for this promotion, false otherwise",
-                    "type": "boolean",
-                    "readOnly": true
+                    "type": "string",
+                    "readOnly": true,
+                    "enum": [
+                      "Ineligible",
+                      "Eligible"
+                    ],
+                    "x-ms-enum": {
+                      "name": "EligibilityResult",
+                      "modelAsString": true
+                    }
                   },
                   "ineligibilityReasons": {
                     "description": "Promotion ineligible reasons.",
@@ -1052,15 +1070,23 @@
                     "readOnly": true
                   },
                   "totalQuantity": {
-                    "description": "Total cumulative quantity of seats for resources in this group.",
+                    "description": "Total cumulative quantity of licenses for resources in this group.",
                     "type": "integer",
                     "format": "int64",
                     "readOnly": true
                   },
-                  "isEligibilitySatisfied": {
+                  "isEligible": {
                     "description": "Whether the future price concession eligibility is satisfied by subscriptions in this group",
-                    "type": "boolean",
-                    "readOnly": true
+                    "type": "string",
+                    "readOnly": true,
+                    "enum": [
+                      "Ineligible",
+                      "Eligible"
+                    ],
+                    "x-ms-enum": {
+                      "name": "EligibilityResult",
+                      "modelAsString": true
+                    }
                   },
                   "qualifyingResources": {
                     "description": "List of qualifying resources for the future price concession",
@@ -1151,10 +1177,18 @@
           "type": "string",
           "readOnly": true
         },
-        "isSatisfied": {
+        "isEligible": {
           "description": "true if eligibility is satisfied, false otherwise",
-          "type": "boolean",
-          "readOnly": true
+          "type": "string",
+          "readOnly": true,
+          "enum": [
+            "Ineligible",
+            "Eligible"
+          ],
+          "x-ms-enum": {
+            "name": "EligibilityResult",
+            "modelAsString": true
+          }
         }
       }
     },
@@ -1321,18 +1355,31 @@
         },
         "additionalInfo": {
           "description": "Additional information for failed validation.",
-          "type": "object",
           "readOnly": true,
-          "properties": {
-            "sourceResources": {
-              "description": "List of source resources that cannot be merged. Key is the resource name, value is the validation error it ran into.",
-              "type": "object",
-              "readOnly": true,
-              "additionalProperties": {
-                "type": "string"
-              }
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MergeSourceCloudService"
           }
+        }
+      }
+    },
+    "MergeSourceCloudService": {
+      "description": "Cloud service to be used in merge operation as source.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the cloud service",
+          "type": "string"
+        },
+        "quantity": {
+          "description": "The quantity of license to be merged",
+          "type": "integer",
+          "format": "int64"
+        },
+        "validationError": {
+          "description": "The validation error it ran into. Null when validation passed.",
+          "type": "string",
+          "readOnly": true
         }
       }
     }
