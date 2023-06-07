@@ -22,8 +22,8 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 These are the global settings for the azurestackhci.
 
 ``` yaml
-title: AzureStackHCIClient
-description: Azure Stack HCI management service
+title: EdgeMarketPlaceClient
+description: Edge marketplace extensions
 openapi-type: arm
 openapi-subtype: rpaas
 tag: package-2023-07
