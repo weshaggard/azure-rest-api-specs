@@ -6,7 +6,7 @@ import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 import "./policyMonitorModels.tsp";
 import "./landingZoneConfigurationModels.tsp";
-import "./landingZoneModels.tsp";
+import "./landingZoneRegistrationModels.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -36,10 +36,10 @@ interface Operations extends Azure.ResourceManager.Operations {}
 
 // Landing zone configuration Resource Type
 @tenantResource
-@doc("The landing zone configuration resource type")
+@doc("The landing zone configuration resource type.")
 model LandingZoneConfiguration
 	is ProxyResource<LandingZoneConfigurationProperties> {
-	@doc("The name of the Landing Zone resource type")
+	@doc("The name of the landing zone configuration resource type.")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
 	@key("landingZoneConfigurationName")
 	@segment("landingZoneConfigurations")
@@ -54,7 +54,7 @@ interface LandingZonesConfigurations
 			LandingZoneConfigurationProperties
 		> {
 	@action("GenerateLandingZone")
-	@doc("Generate the Sovereign Landing Zone")
+	@doc("Generate the landing zone.")
 	@armResourceAction(LandingZoneConfiguration)
 	generateLandingZone is ArmResourceActionAsync<
 		LandingZoneConfiguration,
@@ -72,19 +72,19 @@ interface LandingZonesConfigurations
 }
 
 @tenantResource
-@doc("The landing zone resource type")
-model LandingZone is ProxyResource<LandingZoneProperties> {
-	@doc("The name of the Landing Zone resource type")
+@doc("The landing zone registration resource type")
+model LandingZoneRegistration is ProxyResource<LandingZoneRegistrationProperties> {
+	@doc("The name of the landing zone registration resource type")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("landingZoneName")
-	@segment("landingZones")
+	@key("landingZoneRegistrationName")
+	@segment("landingZoneRegistrations")
 	@path
 	name: string;
 }
 
-@armResourceOperations(LandingZone)
-interface LandingZones
-	extends TenantResourceOperations<LandingZone, LandingZoneProperties> {}
+@armResourceOperations(LandingZoneRegistration)
+interface LandingZoneRegistrations
+	extends TenantResourceOperations<LandingZoneRegistration, LandingZoneRegistrationProperties> {}
 
 /*
 @tenantResource

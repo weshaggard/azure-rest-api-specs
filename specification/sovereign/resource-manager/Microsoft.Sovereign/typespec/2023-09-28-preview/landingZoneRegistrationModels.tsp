@@ -1,10 +1,10 @@
 import "./common.tsp";
 using Azure.ResourceManager;
 
-@doc("The properties of landing zone resource type.")
-model LandingZoneProperties {
+@doc("The properties of landing zone registration resource type.")
+model LandingZoneRegistrationProperties {
 	@visibility("read")
-	@doc("The status of a user-initiated, control-plane operation on the landing zone resource type.")
+	@doc("The status of a user-initiated, control-plane operation on the landing zone registration resource type.")
 	provisioningState?: ProvisioningState;
 
 	@doc("The associated landing zone configuration resource.")

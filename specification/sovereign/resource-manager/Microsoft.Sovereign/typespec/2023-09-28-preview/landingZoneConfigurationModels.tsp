@@ -50,21 +50,18 @@ model LandingZoneConfigurationProperties {
 	@doc("Existing Firewall Id")
 	firewallId?: string;
 
-	@doc("Azure Firewall subnet. IPv4 CIDR block.")
+	@doc("Azure firewall subnet. IPv4 CIDR block.")
 	//@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
 	firewallSubnet?: string;
 
-	@doc("Management Subscription Id.")
+	@doc("Management subscription Id.")
 	managementSubscriptionId?: string;
 
-	@doc("Identity Subscription Id.")
+	@doc("Identity subscription Id.")
 	identitySubscriptionId?: string;
 
-	@doc("Connectivity Subscription Id.")
+	@doc("Connectivity subscription Id.")
 	connectivitySubscriptionId?: string;
-
-	@doc("The type of environment being deployed.")
-	environment: Environment;
 
 	@doc("Set how long logs are retained for, in days. Minimum length is 30 and maximum is 730")
 	@minLength(30)
@@ -101,19 +98,19 @@ model LandingZoneConfigurationProperties {
 	@doc("This will be applied to the deployment root of the landing zone")
 	rootMg?: MgPolicyDetails;
 
-	@doc("This will be applied to the Landing Zones management group")
+	@doc("This will be applied to the landing zones management group")
 	landingZonesMg?: MgPolicyDetails;
 
-	@doc("This will be applied to the Platform management group")
+	@doc("This will be applied to the platform management group")
 	platformMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the Management management group under Platform")
 	platformManagementMg?: MgPolicyDetails;
 
-	@doc("This will be applied to the Connectivity management group under Platform")
+	@doc("This will be applied to the connectivity management group under Platform")
 	platformConnectivityMg?: MgPolicyDetails;
 
-	@doc("This will be applied to the Identity management group under Platform")
+	@doc("This will be applied to the identity management group under Platform")
 	platformIdentityMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the decommissioned management group.")
@@ -205,51 +202,55 @@ model GenerateLandingZoneResponse {
 	@doc("The name of the landing zone configuration resource.")
 	landingZoneConfigurationName: string;
 
-	@doc("The blob url where generated Landing Zone is stored")
+	@doc("The blob url where generated landing zone is stored")
 	blobUrl: string;
-
 }
 
+@doc("The authoring status for landing zone configuration workflow.")
 enum AuthoringStatus {
+	@doc("Default status set automatically on create request. In this status the landing zone configuration can be updated.")
 	authoring: "Authoring",
+
+	@doc("This status is set when the configuration changes are done and the configuration is ready for generating the landing zone code.")
 	readyForUse: "ReadyForUse",
+
+	@doc("This status is set when the landing zone configuration is no longer in use.")
 	disabled: "Disabled",
 }
 
+@doc("The format in which the landing zone code can be generated.")
 enum OutputFormat {
+	@doc("Value choosen when the customer wants to generate the code in bicep.")
 	bicep: "Bicep",
-	arm: "ARM",
-	terraform: "Terraform",
+
+	// values to be added in the future.
+	//arm: "ARM",
+	//terraform: "Terraform",
 }
 
+@doc("The input values for creating or using an existing firewall resource.")
 enum Firewall {
+	@doc("Value choosen when a user does not want to create a firewall resource.")
 	none: "None",
+
+	@doc("Value choosen when a user wants to create a firewall resource of standard SKU.")
 	standard: "Standard",
+
+	@doc("Value choosen when a user wants to create a firewall resource of premium SKU.")
 	premium: "Premium",
+
+	@doc("Value choosen when a user wants to use an existing firewall resource.")
 	existing: "Existing",
 }
 
-enum Environment {
-	dev: "Dev",
-	stage: "Stage",
-	ga: "GA",
-	prod: "Prod",
-	test: "Test",
-	demo: "Demo",
-}
-
+@doc("Represents options for resource creation.")
 enum ResourceCreationOptions {
+	@doc("This option indicates that a new resource should be created.")
 	yes: "Yes",
+
+	@doc("This option indicates that a new resource should not be created.")
 	no: "No",
+
+	@doc("This option indicates that an existing resource should be used.")
 	existing: "Existing",
-}
-
-enum ExemptionCategory {
-	mitigate: "Mitigated",
-	waiver: "Waiver",
-}
-
-enum AssignmentScopeValidation {
-	default: "Default",
-	doNotValidate: "DoNotValidate",
 }
