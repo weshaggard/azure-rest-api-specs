@@ -15,5 +15,5 @@ Please also specify `--go-sdks-folder=<path to the root directory of your azure-
 
 ```yaml $(tag) == 'package-2023-04-01-preview' && $(go)
 namespace: edgemarketplace
-output-folder: $(go-sdk-folder)/Private.EdgeMarketPlace/preview/2023-04-01-preview/$(namespace)
+output-folder: $(go-sdk-folder)/Microsoft.EdgeMarketPlace/preview/2023-04-01-preview/$(namespace)
 ```

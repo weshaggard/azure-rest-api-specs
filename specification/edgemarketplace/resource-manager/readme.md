@@ -38,8 +38,8 @@ These settings apply only when `--tag=package-2023-04` is specified on the comma
 
 ```yaml $(tag) == 'package-2023-04'
 input-file:
-  - Private.EdgeMarketPlace/preview/2023-04-01-preview/publishers.json
-  - Private.EdgeMarketPlace/preview/2023-04-01-preview/operations.json
+  - Microsoft.EdgeMarketPlace/preview/2023-04-01-preview/publishers.json
+  - Microsoft.EdgeMarketPlace/preview/2023-04-01-preview/operations.json
 ```
 
 ---
