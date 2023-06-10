@@ -537,18 +537,24 @@
             "description": "List of Proxies."
         },
         "Proxy": {
-            "description": "Proxy Model as ARM resource",
+            "description": "Proxy details.",
             "type": "object",
             "required": [
                 "kind"
             ],
+            "allOf": [
+                {
+                    "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+                }
+            ],
             "properties": {
                 "kind": {
-                    "type": "string",
+                    "description": "Type",
                     "enum": [
                         "ReverseProxy",
                         "ForwardProxy"
                     ],
+                    "type": "string",
                     "x-ms-enum": {
                         "name": "Types",
                         "modelAsString": true
@@ -558,105 +564,80 @@
                     "$ref": "#/definitions/ProxyProperties"
                 }
             },
-            "allOf": [
-                {
-                    "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
-                }
-            ],
             "discriminator": "kind"
         },
         "ProxyProperties": {
-            "description": "Defines the Proxy properties.",
+            "description": "Proxy properties.",
             "type": "object",
             "properties": {
-                "attributes": {
-                    "type": "object",
-                    "additionalProperties": {}
-                },
                 "provisioningState": {
-                    "description": "Provisioning state of the resource.",
+                    "description": "Provisioning state of the ArcSetting proxy resource.",
                     "type": "string",
-                    "readOnly": true
-                }
-            }
-        },
-        "ReverseProxy": {
-            "description": "Proxy Model as ARM resource",
-            "type": "object",
-            "required": [
-                "kind"
-            ],
-            "properties": {
-                "upstreamUrl": {
-                    "type": "string"
-                },
-                "upstreamPort": {
-                    "type": "integer"
-                },
-                "allOf": {
-                    "$ref": "#/definitions/ReverseProxyProperties"
-                }
-            },
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Proxy"
-                }
-            ],
-            "x-ms-discriminator-value": "ReverseProxy"
-        },
-        "ReverseProxyProperties": {
-            "description": "Defines the Proxy properties.",
-            "type": "object",
-            "properties": {
-                "attributes": {
-                    "type": "object",
-                    "additionalProperties": {}
-                },
-                "provisioningState": {
-                    "description": "Provisioning state of the resource.",
-                    "type": "string",
+                    "enum": [
+                        "NotSpecified",
+                        "Error",
+                        "Succeeded",
+                        "Failed",
+                        "Canceled",
+                        "Connected",
+                        "Disconnected",
+                        "Deleted",
+                        "Creating",
+                        "Updating",
+                        "Deleting",
+                        "Moving",
+                        "PartiallySucceeded",
+                        "PartiallyConnected",
+                        "InProgress",
+                        "Accepted",
+                        "Provisioning",
+                        "DisableInProgress"
+                    ],
+                    "x-ms-enum": {
+                        "name": "ProvisioningState",
+                        "modelAsString": true
+                    },
                     "readOnly": true
                 }
             }
         },
         "ForwardProxy": {
-            "description": "Proxy Model as ARM resource",
-            "type": "object",
+            "description": "ForwardProxy",
             "required": [
                 "kind"
             ],
-            "properties": {
-                "downstreamUrl": {
-                    "type": "string"
-                },
-                "downstreamPort": {
-                    "type": "integer"
-                },
-                "allOf": {
-                    "$ref": "#/definitions/ForwardProxyProperties"
-                }
-            },
+            "type": "object",
             "allOf": [
                 {
                     "$ref": "#/definitions/Proxy"
                 }
             ],
+            "properties": {
+                "forwardEndpoint": {
+                    "description": "forwardEndpoint",
+                    "type": "string"
+                }
+            },
             "x-ms-discriminator-value": "ForwardProxy"
         },
-        "ForwardProxyProperties": {
-            "description": "Defines the ForwardProxy properties.",
+        "ReverseProxy": {
+            "description": "ReverseProxy",
+            "required": [
+                "kind"
+            ],
             "type": "object",
-            "properties": {
-                "attributes": {
-                    "type": "object",
-                    "additionalProperties": {}
-                },
-                "provisioningState": {
-                    "description": "Provisioning state of the resource.",
-                    "type": "string",
-                    "readOnly": true
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Proxy"
                 }
-            }
+            ],
+            "properties": {
+                "upstreamEndpoint": {
+                    "description": "upstreamEndpoint",
+                    "type": "string"
+                }
+            },
+            "x-ms-discriminator-value": "ReverseProxy"
         },
         "TrackUpdatePayload": {
             "description": "Request payload used to update Track.",
