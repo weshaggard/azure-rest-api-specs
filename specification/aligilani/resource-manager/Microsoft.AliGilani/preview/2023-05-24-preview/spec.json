@@ -299,7 +299,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/Proxy"
+                            "$ref": "#/definitions/AbstractProxy"
                         }
                     }
                 }
@@ -332,7 +332,7 @@
                         "required": true,
                         "description": "Resource create parameters.",
                         "schema": {
-                            "$ref": "#/definitions/Proxy"
+                            "$ref": "#/definitions/AbstractProxy"
                         }
                     }
                 ],
@@ -341,14 +341,14 @@
                         "x-nullable": false,
                         "description": "Proxy is created successfully.",
                         "schema": {
-                            "$ref": "#/definitions/Proxy"
+                            "$ref": "#/definitions/AbstractProxy"
                         }
                     },
                     "201": {
                         "x-nullable": false,
                         "description": "Async operation to create or update the Proxy is created.",
                         "schema": {
-                            "$ref": "#/definitions/Proxy"
+                            "$ref": "#/definitions/AbstractProxy"
                         }
                     }
                 }
@@ -389,7 +389,7 @@
                     "200": {
                         "description": "Proxy is updated successfully.",
                         "schema": {
-                            "$ref": "#/definitions/Proxy"
+                            "$ref": "#/definitions/AbstractProxy"
                         }
                     },
                     "202": {
@@ -401,7 +401,7 @@
                             }
                         },
                         "schema": {
-                            "$ref": "#/definitions/Proxy"
+                            "$ref": "#/definitions/AbstractProxy"
                         }
                     }
                 }
@@ -527,7 +527,7 @@
                 "value": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/Proxy"
+                        "$ref": "#/definitions/AbstractProxy"
                     }
                 },
                 "nextLink": {
@@ -536,12 +536,9 @@
             },
             "description": "List of Proxies."
         },
-        "Proxy": {
+        "AbstractProxy": {
             "description": "Proxy details.",
             "type": "object",
-            "required": [
-                "kind"
-            ],
             "allOf": [
                 {
                     "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
@@ -549,25 +546,22 @@
             ],
             "properties": {
                 "kind": {
-                    "description": "Type",
-                    "enum": [
-                        "ReverseProxy",
-                        "ForwardProxy"
-                    ],
                     "type": "string",
-                    "x-ms-enum": {
-                        "name": "Types",
-                        "modelAsString": true
-                    }
-                },
-                "properties": {
-                    "$ref": "#/definitions/ProxyProperties"
+                    "description": "Specifies the kind of usage details.",
+                    "enum": [
+                        "ForwardProxy",
+                        "ReverseProxy",
+                        "DefaultProxy"
+                    ]
                 }
             },
+            "required": [
+                "kind"
+            ],
             "discriminator": "kind"
         },
-        "ProxyProperties": {
-            "description": "Proxy properties.",
+        "AbstractProxyProperties": {
+            "description": "Base Proxy properties.",
             "type": "object",
             "properties": {
                 "provisioningState": {
@@ -593,36 +587,63 @@
                         "Provisioning",
                         "DisableInProgress"
                     ],
-                    "x-ms-enum": {
-                        "name": "ProvisioningState",
-                        "modelAsString": true
-                    },
                     "readOnly": true
+                },
+                "attributes": {
+                    "type": "object",
+                    "additionalProperties": {}
                 }
             }
         },
-        "ForwardProxy": {
-            "description": "ForwardProxy",
-            "required": [
-                "kind"
-            ],
+        "DefaultProxy": {
             "type": "object",
             "allOf": [
                 {
-                    "$ref": "#/definitions/Proxy"
+                    "$ref": "#/definitions/AbstractProxy"
                 }
             ],
             "properties": {
                 "properties": {
-                    "$ref": "#/definitions/ForwardProxyProperties",
-                    "description": "Resource properties."
+                    "$ref": "#/definitions/DefaultProxyProperties"
                 }
             },
+            "required": [
+                "kind"
+            ],
+            "x-ms-discriminator-value": "DefaultProxy"
+        },
+        "DefaultProxyProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/AbstractProxyProperties"
+                }
+            ]
+        },
+        "ForwardProxy": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/AbstractProxy"
+                }
+            ],
+            "properties": {
+                "properties": {
+                    "$ref": "#/definitions/ForwardProxyProperties"
+                }
+            },
+            "required": [
+                "kind"
+            ],
             "x-ms-discriminator-value": "ForwardProxy"
         },
         "ForwardProxyProperties": {
-            "description": "ForwardProxy properties",
             "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/AbstractProxyProperties"
+                }
+            ],
             "properties": {
                 "downstreamEndpoint": {
                     "description": "downstreamEndpoint",
@@ -631,30 +652,32 @@
             }
         },
         "ReverseProxy": {
-            "description": "ReverseProxy",
-            "required": [
-                "kind"
-            ],
             "type": "object",
             "allOf": [
                 {
-                    "$ref": "#/definitions/Proxy"
+                    "$ref": "#/definitions/AbstractProxy"
                 }
             ],
             "properties": {
                 "properties": {
-                    "$ref": "#/definitions/ReverseProxyProperties",
-                    "description": "Resource properties."
+                    "$ref": "#/definitions/ReverseProxyProperties"
                 }
             },
+            "required": [
+                "kind"
+            ],
             "x-ms-discriminator-value": "ReverseProxy"
         },
         "ReverseProxyProperties": {
-            "description": "ReverseProxy properties",
             "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/AbstractProxyProperties"
+                }
+            ],
             "properties": {
                 "upstreamEndpoint": {
-                    "description": "upstreamEndpoint",
+                    "description": "downstreamEndpoint",
                     "type": "string"
                 }
             }
@@ -671,8 +694,7 @@
                     "description": "Resource tags."
                 },
                 "properties": {
-                    "$ref": "#/definitions/TrackUpdateProperties",
-                    "description": "Resource properties."
+                    "$ref": "#/definitions/TrackUpdateProperties"
                 }
             }
         },
@@ -711,8 +733,7 @@
                     "readOnly": true
                 },
                 "properties": {
-                    "$ref": "#/definitions/TrackProperties",
-                    "description": "Resource properties."
+                    "$ref": "#/definitions/TrackProperties"
                 }
             },
             "allOf": [
