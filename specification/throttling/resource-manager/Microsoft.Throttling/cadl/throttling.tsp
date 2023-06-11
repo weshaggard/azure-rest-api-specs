@@ -121,34 +121,10 @@ model CategoryProperties {
 
   @doc("Window duration")
   windowDuration: duration;
-}
 
-@doc("Throttling category")
-@parentResource(Category)
-model Threshold is ProxyResource<ThresholdProperties> {
-  @doc("Throttling threshold")
-  @key("thresholdName")
-  @segment("thresholds")
-  @visibility("read")
-  @path
-  name: string;
-}
-
-@armResourceOperations(Threshold)
-interface Thresholds extends TrackedResourceOperations<Threshold, ThresholdProperties> {}
-
-@doc("Threshold properties")
-model ThresholdProperties {
-  @doc("Provisioning state")
-  @visibility("read")
-  provisioningState?: ProvisioningState;
-
-  @doc("Threshold decision type, arbitrary string to be returned to the client")
-  @maxLength(128)
-  decisionType: string;
-
-  @doc("Value of the limit")
-  value: int32;
+  @doc("Threshold value")
+  @minValue(1)
+  threshold: int32;
 
   @doc("Depth of the bucket")
   @minValue(0)
