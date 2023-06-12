@@ -1,15 +1,19 @@
-﻿import "./common.tsp";
-using Azure.ResourceManager;
+﻿using Azure.ResourceManager;
+
+namespace Microsoft.Sovereign;
 
 @doc("The properties of landing zone configuration resource type.")
 model LandingZoneConfigurationProperties {
 	@visibility("read")
 	@doc("The status of a user-initiated, control-plane operation on the landing zone configuration.")
-	provisioningState?: ProvisioningState;
+	provisioningState?: ResourceProvisioningState;
 
 	@visibility("read")
 	@doc("The status for the landing zone configuration workflow.")
 	authoringStatus?: AuthoringStatus;
+
+	@doc("Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default, will deploy beneath tenant toot management group.")
+    topLevelMgParentId?: string;
 
 	@doc("The prefix that will be added to all resources created by this deployment.")
 	@minLength(2)
@@ -51,7 +55,7 @@ model LandingZoneConfigurationProperties {
 	firewallId?: string;
 
 	@doc("Azure firewall subnet. IPv4 CIDR block.")
-	//@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
+	@pattern("^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$")
 	firewallSubnet?: string;
 
 	@doc("Management subscription Id.")
@@ -64,9 +68,9 @@ model LandingZoneConfigurationProperties {
 	connectivitySubscriptionId?: string;
 
 	@doc("Set how long logs are retained for, in days. Minimum length is 30 and maximum is 730")
-	@minLength(30)
-	@maxLength(730)
-	logRetentionInDays: string;
+	@minValue(30)
+	@maxValue(730)
+	logRetentionInDays: int64;
 
 	@doc("Location to run deployment(s) from the list of Azure Regions")
 	deploymentLocation: string;
@@ -78,7 +82,7 @@ model LandingZoneConfigurationProperties {
 	allowedConfidentialComputingLocations: string[];
 
 	@doc("Hub network subnet. IPv4 CIDR")
-	//@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
+	@pattern("^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$")
 	hubNetworkSubnet: string;
 
 	@doc("To deploy the Bastion service choose the yes, no otherwise. For existing bastion service existing.")
@@ -88,7 +92,7 @@ model LandingZoneConfigurationProperties {
 	azureBastionId?: string;
 
 	@doc("Azure Bastion subnet. IP v4 CIDR block")
-	//@pattern("^((?:d{1,3}.){3}d{1,3})/([0-9]|[1-2]d|3[0-2])$")
+	@pattern("^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$")
 	azureBastionSubnet?: string;
 
 	@doc("landing zone management group properties")

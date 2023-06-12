@@ -24,11 +24,13 @@ using Azure.ResourceManager.Foundations;
 @versioned(Versions)
 namespace Microsoft.Sovereign;
 
+@doc("The versions of the Microsoft Sovereign resource provider")
 enum Versions {
 	@useDependency(
 		Azure.Core.Versions.v1_0_Preview_2,
 		Azure.ResourceManager.Versions.v1_0_Preview_1
 	)
+	@doc("Initial preview version of the Microsoft.Sovereign resource provider")
 	v2023_09_28_preview: "2023-09-28-preview",
 }
 
@@ -36,6 +38,7 @@ interface Operations extends Azure.ResourceManager.Operations {}
 
 // Landing zone configuration Resource Type
 @tenantResource
+@added(Versions.v2023_09_28_preview)
 @doc("The landing zone configuration resource type.")
 model LandingZoneConfiguration
 	is ProxyResource<LandingZoneConfigurationProperties> {
@@ -72,8 +75,10 @@ interface LandingZonesConfigurations
 }
 
 @tenantResource
+@added(Versions.v2023_09_28_preview)
 @doc("The landing zone registration resource type")
-model LandingZoneRegistration is ProxyResource<LandingZoneRegistrationProperties> {
+model LandingZoneRegistration
+	is ProxyResource<LandingZoneRegistrationProperties> {
 	@doc("The name of the landing zone registration resource type")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
 	@key("landingZoneRegistrationName")
@@ -84,8 +89,14 @@ model LandingZoneRegistration is ProxyResource<LandingZoneRegistrationProperties
 
 @armResourceOperations(LandingZoneRegistration)
 interface LandingZoneRegistrations
-	extends TenantResourceOperations<LandingZoneRegistration, LandingZoneRegistrationProperties> {}
+	extends TenantResourceOperations<
+			LandingZoneRegistration,
+			LandingZoneRegistrationProperties
+		> {}
 
+
+// The below typespec code will be removed in the future and brought back when policy monitor is ready to be implemented.
+// it is being kept here for reference purposes only until UI dependency is gone.
 /*
 @tenantResource
 @doc("A policy monitor resource")
