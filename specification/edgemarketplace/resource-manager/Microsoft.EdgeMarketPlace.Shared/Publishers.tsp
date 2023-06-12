@@ -24,7 +24,6 @@ namespace Microsoft.EdgeMarketPlace;
 @doc("A publisher who provides offers.")
 model Publisher is ExtensionResource<PublisherProperties> {
   @doc("Name of the publisher")
-  @format("^[a-zA-Z0-9-]{3,24}$")
   @key("publisherName")
   @path
   @segment("publishers")
@@ -34,6 +33,8 @@ model Publisher is ExtensionResource<PublisherProperties> {
 @doc("Publisher properties")
 model PublisherProperties {
   
+	@doc("The resource provisioning state")
+  provisioningState: ResourceProvisioningState;
 }
 
 @armResourceOperations
