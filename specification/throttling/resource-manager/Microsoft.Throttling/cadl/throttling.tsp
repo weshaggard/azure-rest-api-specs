@@ -89,19 +89,19 @@ model CertificateProperties {
 model AzureActiveDirectoryProperties {
   @doc("List of permitted user-assigned managed identities")
   @minItems(1)
-  userAssignedIdentities: UserAssignedManagedIdentityReference[]
+  userAssignedIdentities: UserAssignedManagedIdentityReference[];
 }
 
 @doc("User-assigned managed identity ARM resource id")
 scalar UserAssignedManagedIdentityReference extends ResourceIdentifier<[
     {
-      type: "Microsoft.ManagedIdentity/userAssignedIdentities";
+      type: "Microsoft.ManagedIdentity/userAssignedIdentities"
     }
   ]>;
 
 @doc("Throttling category")
 @parentResource(Account)
-model Category is ProxyResource<CategoryProperties> {
+model Category is TrackedResource<CategoryProperties> {
   @doc("Category name")
   @key("categoryName")
   @segment("categories")
@@ -122,6 +122,9 @@ model CategoryProperties {
   @doc("Window duration")
   windowDuration: duration;
 
+  @doc("Minimal decision duration")
+  minDecisionDuration: duration;
+
   @doc("Threshold value")
   @minValue(1)
   threshold: int32;
@@ -130,7 +133,4 @@ model CategoryProperties {
   @minValue(0)
   @maxValue(16)
   depth: int32;
-  
-  @doc("Minimal decision duration")
-  minDecisionDuration: duration;
 }
