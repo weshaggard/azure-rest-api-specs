@@ -115,7 +115,7 @@ model RegisterMicrosoftEdgeZoneRequest {
   organizationAzureResourceCapacityNeeded: string;
 
   @doc("Onboarding start date planned by organization of the Microsoft Edge Zone registration")
-  organizationOnboardingStartDate: plainDate;
+  organizationOnboardingStartDate: string;
 }
 
 @doc("A PublicMecEdgeZone register request body")
@@ -145,7 +145,7 @@ model RegisterPublicMecEdgeZoneRequest {
   organizationAzureResourceCapacityNeeded: string;
 
   @doc("Onboarding start date planned by organization of the Public MEC Edge Zone registration")
-  organizationOnboardingStartDate: plainDate;
+  organizationOnboardingStartDate: string;
 }
 
 @autoRoute
