@@ -1,8 +1,7 @@
 {
-  "x-generator": "NSwag v13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v12.0.0.0))",
   "swagger": "2.0",
   "info": {
-    "title": "IoT Workspace Assets Resource Provider",
+    "title": "IoT Workspaces Assets Resource Provider",
     "version": "2022-05-21-preview"
   },
   "host": "management.azure.com",
@@ -331,20 +330,23 @@
     "AssetProperties": {
       "description": "Defines the asset properties.",
       "type": "object",
+      "required": [
+        "connectivityProfileUri"
+      ],
       "properties": {
         "uuid": {
-          "description": "Globally unique, immutable, non-reusable id.",
           "type": "string",
+          "description": "Globally unique, immutable, non-reusable id.",
           "format": "uuid",
           "readOnly": true
         },
         "assetType": {
-          "description": "Resource path to asset type (model) definition.",
-          "type": "string"
+          "type": "string",
+          "description": "Resource path to asset type (model) definition."
         },
         "path": {
-          "description": "Asset path that identifies the asset within a namespace (Redmond/ElectricCars/Painting/LeftBack).",
-          "type": "string"
+          "type": "string",
+          "description": "Asset path that identifies the asset within a namespace (Redmond/ElectricCars/Painting/LeftBack)."
         },
         "enabled": {
           "type": "boolean",
@@ -368,11 +370,16 @@
         },
         "connectivityProfileUri": {
           "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ],
           "description": "A reference to the connectivity profile (connection information) used by brokers to connect to an endpoint that provides data points for this asset. Must have the format <ModuleCR.metadata.namespace>/<ModuleCR.metadata.name>."
         },
         "version": {
           "type": "integer",
-          "description": "An integer that is incremented each time the resource is modified."
+          "description": "An integer that is incremented each time the resource is modified.",
+          "readOnly": true
         },
         "manufacturer": {
           "type": "string",
@@ -424,6 +431,9 @@
           "type": "array",
           "items": {
             "type": "object",
+            "required": [
+              "dataSource"
+            ],
             "properties": {
               "dataSource": {
                 "type": "string",
@@ -436,10 +446,10 @@
               "observabilityMode": {
                 "type": "string",
                 "enum": [
-                  "none",
-                  "histogram",
+                  "counter",
                   "gauge",
-                  "counter"
+                  "histogram",
+                  "none"
                 ],
                 "description": "An indication of how the data point should be mapped to OpenTelemetry (none, histogram, gauge, counter, etc.)."
               },
@@ -462,6 +472,9 @@
           "type": "array",
           "items": {
             "type": "object",
+            "required": [
+              "eventSource"
+            ],
             "properties": {
               "eventSource": {
                 "type": "string",
@@ -474,10 +487,10 @@
               "observabilityMode": {
                 "type": "string",
                 "enum": [
-                  "none",
-                  "histogram",
+                  "counter",
                   "gauge",
-                  "counter"
+                  "histogram",
+                  "none"
                 ],
                 "description": "An indication of how the event should be mapped to OpenTelemetry (none, histogram, gauge, counter, etc.)."
               },
@@ -494,6 +507,7 @@
         },
         "status": {
           "type": "object",
+          "readOnly": true,
           "properties": {
             "errors": {
               "type": "array",
@@ -514,8 +528,7 @@
             },
             "version": {
               "type": "integer",
-              "description": "A read only incremental counter indicating the number of times the configuration has been modified from the perspective of the current actual (Edge) state of the Asset. Edge would be the only writer of this value and would sync back up to the cloud. In steady state, this should equal version.",
-              "readOnly": true
+              "description": "A read only incremental counter indicating the number of times the configuration has been modified from the perspective of the current actual (Edge) state of the Asset. Edge would be the only writer of this value and would sync back up to the cloud. In steady state, this should equal version."
             }
           },
           "description": "Read only object to reflect changes that have occurred on the Edge. Similar to Kubernetes status property for custom resources."
