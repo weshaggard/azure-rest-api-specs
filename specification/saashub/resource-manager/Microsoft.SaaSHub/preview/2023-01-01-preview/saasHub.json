@@ -466,9 +466,9 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SaaSHub/canCreate": {
       "post": {
         "tags": [
-          "CanCreate"
+          "ProviderLevelActions"
         ],
-        "operationId": "CanCreate",
+        "operationId": "ProviderLevelActions_CanCreate",
         "description": "Evaluates whether the request payload can create a new resource. Currently only supports CloudService resource type.",
         "x-ms-examples": {
           "NewPurchasePass": {
@@ -877,8 +877,8 @@
           "description": "Term details of the cloud service.",
           "$ref": "#/definitions/TermDetails"
         },
-        "originalResourceName": {
-          "description": "The original resource name, if the new resource will be created by splitting part of the licenses from an existing resource",
+        "originalResourceUri": {
+          "description": "The original resource uri, if the new resource will be created by splitting part of the licenses from an existing resource",
           "type": "string"
         }
       }
@@ -959,41 +959,19 @@
       "properties": {
         "name": {
           "description": "The name of the resource",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[-_0-9a-zA-Z]{3,50}$",
+          "minLength": 3,
+          "maxLength": 50
         },
         "type": {
-          "description": "The type of the resource",
+          "description": "The type of the resource, currently only support Microsoft.SaaSHub/cloudServices.",
           "type": "string"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "x-ms-mutability": [
-            "read",
-            "create",
-            "update"
-          ],
-          "description": "Resource tags. Optional."
-        },
-        "location": {
-          "type": "string",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ],
-          "description": "The geo-location where the resource lives"
-        },
-        "properties": {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/CloudServiceProperties",
-          "title": "SaaSHub cloud service properties"
         }
       },
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Resource"
+          "$ref": "#/definitions/CloudService"
         }
       ]
     },
@@ -1433,8 +1411,8 @@
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method",
-      "pattern": "^[-_0-9a-zA-Z]{1,50}$",
-      "minLength": 1,
+      "pattern": "^[-_0-9a-zA-Z]{3,50}$",
+      "minLength": 3,
       "maxLength": 50
     }
   },
