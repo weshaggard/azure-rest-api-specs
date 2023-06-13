@@ -31,6 +31,25 @@ tag: package-preview-2023-05
 ```
 
 
+### Tag: package-preview-2023-06
+
+These settings apply only when `--tag=package-preview-2023-06` is specified on the command line.
+
+```yaml $(tag) == 'package-preview-2023-06'
+input-file:
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/activeDirectoryConnectors.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/azurearcdata.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/common.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/dataControllers.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/failoverGroups.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/operations.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/postgresInstances.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlManagedInstances.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlServerDatabases.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlServerInstances.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/availabilityGroups.json
+```
+
 ### Tag: package-preview-2023-05
 
 These settings apply only when `--tag=package-preview-2023-05` is specified on the command line.
