@@ -38,6 +38,7 @@ These settings apply only when `--tag=package-2023-06-01` is specified on the co
 ```yaml $(tag) == 'package-2023-06-01'
 input-file:
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/AccessControlLists.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/InternetGateways.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpCommunities.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpExtendedCommunities.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpPrefixes.json
