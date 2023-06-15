@@ -11,9 +11,9 @@ using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 
-@armProviderNamespace("Microsoft.EdgeZonesV2")
+@armProviderNamespace("Microsoft.EdgeZones")
 @service({
-  title: "Microsoft.EdgeZonesV2",
+  title: "Microsoft.EdgeZones",
   version: "2021-08-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
