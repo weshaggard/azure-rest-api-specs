@@ -905,6 +905,68 @@
     }
   },
   "definitions": {
+    "AllocationEndpoint": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Discriminator property for AllocationEndpoint."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the endpoint"
+        },
+        "resourceId": {
+          "type": "string",
+          "description": "Resource id of the endpoint"
+        }
+      },
+      "description": "Endpoint",
+      "discriminator": "type",
+      "required": [
+        "type"
+      ]
+    },
+    "AllocationRule": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/AllocationType",
+          "description": "Type of the allocation rule"
+        },
+        "endpointType": {
+          "$ref": "#/definitions/EndpointType",
+          "description": "Type of endpoint"
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AllocationEndpoint"
+          },
+          "x-ms-identifiers": [],
+          "x-typespec-name": "AllocationEndpoint[]",
+          "description": "List of endpoints"
+        }
+      },
+      "required": [
+        "type",
+        "endpointType",
+        "endpoints"
+      ]
+    },
+    "AllocationType": {
+      "type": "string",
+      "description": "Type of allocation rule",
+      "enum": [
+        "GeoBased",
+        "Weighted",
+        "Default"
+      ],
+      "x-ms-enum": {
+        "name": "AllocationType",
+        "modelAsString": true
+      }
+    },
     "AttestationRule": {
       "type": "string",
       "description": "The attestation rule.",
@@ -1013,6 +1075,51 @@
         }
       },
       "description": "The updatable properties of the DiscoveryPolicy."
+    },
+    "EndpointType": {
+      "type": "string",
+      "description": "Type of the endpoint",
+      "enum": [
+        "AzureEventGridBroker",
+        "AzureStorage",
+        "None"
+      ],
+      "x-ms-enum": {
+        "name": "EndpointType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "AzureEventGridBroker",
+            "value": "AzureEventGridBroker",
+            "description": "Azure event grid broker"
+          },
+          {
+            "name": "AzureStorage",
+            "value": "AzureStorage",
+            "description": "Azure storage"
+          },
+          {
+            "name": "None",
+            "value": "None",
+            "description": "No endpoint"
+          }
+        ]
+      }
+    },
+    "GeoBasedEndpoint": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "description": "Region of the endpoint"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/AllocationEndpoint"
+        }
+      ],
+      "x-ms-discriminator-value": "GeoBased"
     },
     "ProvisioningPolicy": {
       "type": "object",
@@ -1144,6 +1251,14 @@
             "read",
             "create"
           ]
+        },
+        "allocations": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/AllocationRule"
+          },
+          "x-typespec-name": "Record<AllocationRule>",
+          "description": "Allocation rules"
         }
       },
       "description": "The provisioning template.",
@@ -1210,6 +1325,14 @@
     "ProvisioningTemplateUpdate": {
       "type": "object",
       "properties": {
+        "allocations": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/AllocationRule"
+          },
+          "x-typespec-name": "Record<AllocationRule>",
+          "description": "Allocation rules"
+        },
         "properties": {
           "$ref": "#/definitions/ProvisioningTemplateUpdateProperties",
           "x-ms-client-flatten": true
@@ -1239,6 +1362,22 @@
         }
       },
       "description": "The updatable properties of the ProvisioningTemplate."
+    },
+    "WeightedEndpoint": {
+      "type": "object",
+      "properties": {
+        "weight": {
+          "type": "number",
+          "format": "double",
+          "description": "Weight of the endpoint"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/AllocationEndpoint"
+        }
+      ],
+      "x-ms-discriminator-value": "Weighted"
     }
   },
   "parameters": {
