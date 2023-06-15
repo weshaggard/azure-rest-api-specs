@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.HealthcareDataAIServices
-  output-folder: $(csharp-sdks-folder)/healthcaredataaiservices/management/Microsoft.HealthcareDataAIServices/GeneratedProtocol
+  namespace: Microsoft.HealthDataAIServices
+  output-folder: $(csharp-sdks-folder)/healthdataaiservices/management/Microsoft.HealthDataAIServices/GeneratedProtocol
 ```

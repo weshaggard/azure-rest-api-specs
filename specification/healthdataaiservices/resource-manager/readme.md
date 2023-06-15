@@ -1,8 +1,8 @@
-# healthcaredataaiservices
+# healthdataaiservices
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for healthcaredataaiservices.
+This is the AutoRest configuration file for healthdataaiservices.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the healthcaredataaiservices.
+These are the global settings for the healthdataaiservices.
 
 ```yaml
 openapi-type: arm
@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2023-06-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2023-06-01-preview'
 input-file:
-  - Microsoft.HealthcareDataAIServices/preview/2023-06-01-preview/openapi.json
+  - Microsoft.HealthDataAIServices/preview/2023-06-01-preview/openapi.json
 ```
 
 ---
