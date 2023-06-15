@@ -10,19 +10,21 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
 
-@armProviderNamespace("Microsoft.HealthcareDataAiServices")
+@armProviderNamespace("Microsoft.HealthcareDataAIServices")
 @service({
-  title: "Microsoft.HealthcareDataAiServices",
-  version: "2021-08-01-preview",
+  title: "Microsoft.HealthcareDataAIServices",
+  version: "2023-06-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.HealthcareDataAiServices;
+namespace Microsoft.HealthcareDataAIServices;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
-@doc("A HealthcareDataAiServicesProviderHub resource")
+#suppress "@azure-tools/typespec-azure-core/casing-style" "Case-sensitive name"
+
+@doc("A HealthcareDataAIServicesProviderHub resource")
 model DeidService is TrackedResource<DeidServiceProperties> {
   @doc("The name of the deid service")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
@@ -42,15 +44,22 @@ enum ProvisioningState {
   Accepted,
 }
 
-@doc("Details of the HealthcareDataAiServices DeidService.")
+@doc("Details of the HealthcareDataAIServices DeidService.")
 model DeidServiceProperties {
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
   @visibility("read")
-  @doc("Deid service url")
-  serviceUrl?: string 
+  @doc("Deid service url.")
+  serviceUrl?: string;
 }
 
 @armResourceOperations
-interface DeidServices extends TrackedResourceOperations<DeidService, DeidServiceProperties> {}
+interface DeidServices {
+  get is ArmResourceRead<DeidService>;
+  create is ArmResourceCreateOrUpdateSync<DeidService>;
+  update is ArmResourcePatchSync<DeidService, DeidServiceProperties>;
+  delete is ArmResourceDeleteSync<DeidService>;
+  listByResourceGroup is ArmResourceListByParent<DeidService>;
+  listBySubscription is ArmListBySubscription<DeidService>;
+}
