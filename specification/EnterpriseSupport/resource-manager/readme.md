@@ -26,7 +26,7 @@ Global settings for the Enterprise Support Resource Provider API.
 
 ``` yaml
 openapi-type: arm
-
+openapi-subtype: rpaas
 tag: package-2023-05-01-preview
 ```
 
