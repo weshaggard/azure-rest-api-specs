@@ -11,5 +11,5 @@ csharp:
   clear-output-folder: true
   client-side-validation: false
   namespace: Microsoft.EdgeZonesV2
-  output-folder: $(csharp-sdks-folder)/edgezones/management/Microsoft.EdgeZonesV2/GeneratedProtocol
+  output-folder: $(csharp-sdks-folder)/edgezones/management/Microsoft.EdgeZones/GeneratedProtocol
 ```
