@@ -367,13 +367,24 @@
         }
       ],
       "properties": {
-        "networkRackSku": {
+        "networkRackType": {
           "type": "string",
-          "description": "Network Rack SKU name."
+          "description": "Network Rack SKU name.",
+          "minLength": 1,
+          "enum": [
+            "Aggregate",
+            "Compute",
+            "Combined"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NetworkRackType"
+          }
         },
         "networkFabricId": {
           "type": "string",
-          "description": "Network Fabric ARM resource id."
+          "description": "Network Fabric ARM resource id.",
+          "$ref": "./common.json#/definitions/NetworkFabricIdProperty"
         },
         "networkDevices": {
           "type": "array",
@@ -385,21 +396,15 @@
           "readOnly": true
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
         }
       },
       "required": [
-        "networkRackSku",
+        "networkRackType",
         "networkFabricId"
       ],
       "description": "NetworkRackProperties define the resource properties."
-    },
-    "NetworkRackPatchProperties": {
-      "type": "object",
-      "properties": {},
-      "description": "NetworkRackPatchProperties define the patch resource properties."
     },
     "NetworkRack": {
       "type": "object",
@@ -425,20 +430,7 @@
     "NetworkRackPatch": {
       "type": "object",
       "x-ms-azure-resource": true,
-      "properties": {
-        "properties": {
-          "x-ms-client-flatten": true,
-          "description": "Resource properties.",
-          "$ref": "#/definitions/NetworkRackPatchProperties"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
-        }
-      },
+      "$ref": "./common.json#/definitions/TagsUpdate",
       "description": "The NetworkRack patch resource definition."
     },
     "NetworkRacksListResult": {
