@@ -32,18 +32,27 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "List of Assets.",
             "schema": {
               "$ref": "#/definitions/AssetResponseList"
             }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
         }
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.IoTWorkspaces/assets": {
       "get": {
         "tags": [
-          "RootAsset"
+          "Assets"
         ],
         "operationId": "List_Assets_In_ResourceGroup",
         "description": "List all assets in a resource group.",
@@ -60,9 +69,15 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "List of Assets.",
             "schema": {
               "$ref": "#/definitions/AssetResponseList"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -74,10 +89,10 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.IoTWorkspaces/assets/{assetName}": {
       "put": {
         "tags": [
-          "RootAsset"
+          "Assets"
         ],
-        "operationId": "Create_Or_Replace_Asset",
-        "description": "Create a new asset or replace an existing asset.",
+        "operationId": "Create_Or_Update_Asset",
+        "description": "Create a new asset or update an existing asset.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -99,27 +114,34 @@
             "schema": {
               "$ref": "#/definitions/Asset"
             }
-          },
-          {
-            "name": "assetGroupId",
-            "in": "query",
-            "required": false,
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "x-nullable": false,
-            "description": "",
+            "description": "Created or updated Asset.",
             "schema": {
               "$ref": "#/definitions/Asset"
+            }
+          },
+          "201": {
+            "x-nullable": false,
+            "description": "Async operation to create or update the Asset.",
+            "schema": {
+              "$ref": "#/definitions/Asset"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
       },
       "patch": {
         "tags": [
-          "RootAsset"
+          "Assets"
         ],
         "operationId": "Update_Asset",
         "description": "Update specific asset properties.",
@@ -148,13 +170,29 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Patched Asset.",
+            "schema": {
+              "$ref": "#/definitions/Asset"
+            }
+          },
+          "201": {
+            "x-nullable": false,
+            "description": "Async operation to patch the Asset.",
+            "schema": {
+              "$ref": "#/definitions/Asset"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
           }
         }
       },
       "delete": {
         "tags": [
-          "RootAsset"
+          "Assets"
         ],
         "operationId": "Delete_Asset",
         "description": "Delete an asset.",
@@ -173,14 +211,23 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": ""
+          "202": {
+            "description": "Async operation to delete the Asset."
+          },
+          "204": {
+            "description": "Asset delete successful."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
           }
         }
       },
       "get": {
         "tags": [
-          "RootAsset"
+          "Assets"
         ],
         "operationId": "Read_Asset.",
         "description": "Retrieve a single asset.",
@@ -200,9 +247,15 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "A single Asset.",
             "schema": {
               "$ref": "#/definitions/Asset"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -211,7 +264,7 @@
     "/subscriptions/{subscriptionId}/providers/Microsoft.IoTWorkspaces/locations/{location}/operationStatuses/{operationId}": {
       "get": {
         "tags": [
-          "RootAsset"
+          "Assets"
         ],
         "operationId": "Get_Operation_Status",
         "description": "Returns the current status of an async operation.",
@@ -231,7 +284,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Requested operation status",
+            "description": "Requested operation status.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/OperationStatusResult"
             }
@@ -277,6 +330,7 @@
   "parameters": {
     "assetNameParameter": {
       "name": "assetName",
+      "description": "Asset name parameter.",
       "in": "path",
       "required": true,
       "type": "string",
@@ -302,10 +356,13 @@
     },
     "Asset": {
       "type": "object",
+      "required": [
+        "extendedLocation"
+      ],
       "properties": {
         "properties": {
           "$ref": "#/definitions/AssetProperties",
-          "description": "Resource properties."
+          "description": "Asset resource properties."
         },
         "extendedLocation": {
           "type": "object",
@@ -343,10 +400,6 @@
         "assetType": {
           "type": "string",
           "description": "Resource path to asset type (model) definition."
-        },
-        "path": {
-          "type": "string",
-          "description": "Asset path that identifies the asset within a namespace (Redmond/ElectricCars/Painting/LeftBack)."
         },
         "enabled": {
           "type": "boolean",
@@ -413,19 +466,15 @@
           "type": "string",
           "description": "Asset serial number."
         },
-        "attributes": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "A set of key-value pairs that contain custom attributes set by the customer."
-        },
         "defaultDataPointsConfiguration": {
           "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
+          "additionalProperties": { },
           "description": "Protocol-specific default configuration for all data points. Each data point can have its own configuration that overrides the default settings here. This assumes that each asset instance has one protocol."
+        },
+        "defaultEventsConfiguration": {
+          "type": "object",
+          "additionalProperties": { },
+          "description": "Protocol-specific default configuration for all events. Each event can have its own configuration that overrides the default settings here. This assumes that each asset instance has one protocol."
         },
         "dataPoints": {
           "type": "array",
@@ -446,23 +495,17 @@
               "observabilityMode": {
                 "type": "string",
                 "enum": [
+                  "none",
                   "counter",
                   "gauge",
-                  "histogram",
-                  "none"
+                  "histogram"
                 ],
                 "description": "An indication of how the data point should be mapped to OpenTelemetry (none, histogram, gauge, counter, etc.)."
               },
               "dataPointConfiguration": {
                 "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                },
+                "additionalProperties": { },
                 "description": "Protocol-specific configuration for the data point. For OPC UA, this could include configuration like, publishingInterval, samplingInterval, and queueSize."
-              },
-              "requestedValue": {
-                "type": "string",
-                "description": "For settable properties (e.g. temperature setpoint), the desired value to be set on the data point."
               }
             }
           },
@@ -487,18 +530,16 @@
               "observabilityMode": {
                 "type": "string",
                 "enum": [
+                  "none",
                   "counter",
                   "gauge",
-                  "histogram",
-                  "none"
+                  "histogram"
                 ],
                 "description": "An indication of how the event should be mapped to OpenTelemetry (none, histogram, gauge, counter, etc.)."
               },
               "eventConfiguration": {
                 "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                },
+                "additionalProperties": { },
                 "description": "Protocol-specific configuration for the event. For OPC UA, this could include configuration like, publishingInterval, samplingInterval, and queueSize."
               }
             }
