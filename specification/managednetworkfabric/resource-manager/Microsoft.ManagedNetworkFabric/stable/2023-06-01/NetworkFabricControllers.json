@@ -364,114 +364,6 @@
           "nextLinkName": "nextLink"
         }
       }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedNetworkFabric/networkFabricControllers/{networkFabricControllerName}/enableWorkloadManagementNetwork": {
-      "post": {
-        "tags": [
-          "NetworkFabricControllers"
-        ],
-        "operationId": "NetworkFabricControllers_enableWorkloadManagementNetwork",
-        "description": "Enables the workloadManagementNetwork (Tenant Network).",
-        "summary": "Implements the operation to the underlying resources.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "in": "path",
-            "name": "networkFabricControllerName",
-            "description": "Name of the networkFabricController.",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "description": "The URL to retrieve the status of the asynchronous operation.",
-                "type": "string"
-              }
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        },
-        "x-ms-examples": {
-          "NetworkFabricControllers_enableWorkloadManagementNetwork_MaximumSet_Gen": {
-            "$ref": "./examples/NetworkFabricControllers_enableWorkloadManagementNetwork_MaximumSet_Gen.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedNetworkFabric/networkFabricControllers/{networkFabricControllerName}/disableWorkloadManagementNetwork": {
-      "post": {
-        "tags": [
-          "NetworkFabricControllers"
-        ],
-        "operationId": "NetworkFabricControllers_disableWorkloadManagementNetwork",
-        "description": "Disables the workloadManagementNetwork (Tenant Network).",
-        "summary": "Implements the operation to the underlying resources.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "in": "path",
-            "name": "networkFabricControllerName",
-            "description": "Name of the networkFabricController.",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "description": "The URL to retrieve the status of the asynchronous operation.",
-                "type": "string"
-              }
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        },
-        "x-ms-examples": {
-          "NetworkFabricControllers_disableWorkloadManagementNetwork_MaximumSet_Gen": {
-            "$ref": "./examples/NetworkFabricControllers_disableWorkloadManagementNetwork_MaximumSet_Gen.json"
-          }
-        }
-      }
     }
   },
   "definitions": {
@@ -517,6 +409,7 @@
         "infrastructureServices": {
           "type": "object",
           "description": "InfrastructureServices IP ranges.",
+          "x-ms-client-flatten": true,
           "properties": {
             "ipv4AddressSpaces": {
               "type": "array",
@@ -539,6 +432,7 @@
         },
         "workloadServices": {
           "type": "object",
+          "x-ms-client-flatten": true,
           "description": "WorkloadServices IP ranges.",
           "properties": {
             "ipv4AddressSpaces": {
@@ -562,6 +456,7 @@
         },
         "managedResourceGroupConfiguration": {
           "type": "object",
+          "x-ms-client-flatten": true,
           "description": "Managed Resource Group configuration properties.",
           "properties": {
             "name": {
@@ -579,33 +474,65 @@
           "description": "The NF-ID will be an input parameter used by the NF to link and get associated with the parent NFC Service.",
           "items": {
             "description": "NetworkFabric ID (NF-ID) is a mandatory attribute, which will be consumed by Network Fabric.",
-            "type": "string"
+            "type": "string",
+            "$ref": "./common.json#/definitions/NetworkFabricIdProperty"
           },
           "readOnly": true
         },
         "workloadManagementNetwork": {
-          "type": "boolean",
           "description": "A workload management network is required for all the tenant (workload) traffic. This traffic is only dedicated for Tenant workloads which are required to access internet or any other MSFT/Public endpoints.",
-          "readOnly": true,
-          "default": true
+          "type": "string",
+          "default": "True",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "WorkloadManagementNetwork"
+          }
+        },
+        "tenantInternetGatewayIds": {
+          "type": "array",
+          "description": "List of tenant InternetGateway resource IDs",
+          "items": {
+            "description": "InternetGateways Azure resource ID",
+            "type": "string",
+            "$ref": "./common.json#/definitions/InternetGatewayIdProperty"
+          },
+          "readOnly": true
         },
         "ipv4AddressSpace": {
           "type": "string",
-          "description": "IPv4 Network Fabric Controller Address Space."
+          "description": "IPv4 Network Fabric Controller Address Space.",
+          "minLength": 1,
+          "default": "10.0.0.0/19",
+          "example": "10.10.10.10/17"
         },
         "ipv6AddressSpace": {
           "type": "string",
-          "description": "IPv6 Network Fabric Controller Address Space."
+          "description": "IPv6 Network Fabric Controller Address Space.",
+          "minLength": 1,
+          "default": "FC00::/59",
+          "example": "::/60"
         },
-        "operationalState": {
-          "description": "The Operational Status would always be NULL. Look only in to the Provisioning state for the latest status.",
-          "$ref": "#/definitions/NetworkFabricControllerOperationalState",
-          "readOnly": true
+        "nfcSku": {
+          "description": "Network Fabric Controller SKU.",
+          "type": "string",
+          "default": "Standard",
+          "enum": [
+            "Basic",
+            "Standard",
+            "HighPerformance"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NfcSku"
+          }
         },
         "provisioningState": {
           "description": "Provides you the latest status of the NFC service, whether it is Accepted, updating, Succeeded or Failed. During this process, the states keep changing based on the status of NFC provisioning.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
+          "$ref": "./common.json#/definitions/ProvisioningState"
         }
       },
       "description": "NetworkFabricControllerProperties define the resource properties."
@@ -615,7 +542,16 @@
       "properties": {
         "expressRouteCircuitId": {
           "type": "string",
-          "description": "The express route circuit Azure resource ID, must be of type Microsoft.Network/expressRouteCircuits/circuitName. The ExpressRoute Circuit is a mandatory attribute."
+          "description": "The express route circuit Azure resource ID, must be of type Microsoft.Network/expressRouteCircuits/circuitName. The ExpressRoute Circuit is a mandatory attribute.",
+          "format": "arm-id",
+          "x-ms-arm-id-details": {
+            "allowedResources": [
+              {
+                "type": "Microsoft.Network/expressRouteCircuits"
+              }
+            ]
+          }, 
+          "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourcegroups/example-rg/providers/Microsoft.Network/expressRouteCircuits/example-routecircuit" 
         },
         "expressRouteAuthorizationKey": {
           "type": "string",
@@ -629,46 +565,12 @@
       ],
       "description": "The ExpressRoute circuit ID and the Auth Key are required for you to successfully deploy NFC service."
     },
-    "ExpressRouteStatusDef": {
-      "type": "object",
-      "properties": {
-        "expressRouteCircuitId": {
-          "type": "string",
-          "description": "The express route circuit Azure resource ID, must be of type Microsoft.Network/expressRouteCircuits/circuitName."
-        },
-        "expressRouteStatus": {
-          "type": "string",
-          "description": "Express route connection state for the resource.",
-          "enum": [
-            "Connecting",
-            "Connected",
-            "Disconnected"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "expressRouteConnectionState"
-          }
-        }
-      },
-      "description": "ExpressRouteStatus defines the resource properties."
-    },
-    "NetworkFabricControllerOperationalState": {
-      "type": "string",
-      "description": "Operational state for the resource.",
-      "enum": [
-        "Configuring",
-        "Succeeded",
-        "Failed"
-      ],
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "networkFabricControllerOperationalState"
-      },
-      "readOnly": true
-    },
     "NetworkFabricController": {
       "type": "object",
       "x-ms-azure-resource": true,
+      "required": [
+        "properties"
+      ],
       "description": "The NetworkFabricController resource definition.",
       "properties": {
         "properties": {
@@ -692,15 +594,13 @@
           "description": "Network Fabric Controller patch properties.",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/NetworkFabricControllerPatchableProperties"
-        },
-        "tags": {
-          "description": "Azure resource tags that will replace the existing ones.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
         }
-      }
+      },
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/TagsUpdate"
+        }
+      ]
     },
     "NetworkFabricControllersListResult": {
       "type": "object",
