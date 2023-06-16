@@ -200,7 +200,7 @@
             "required": true,
             "description": "Network Fabric properties to update.",
             "schema": {
-              "$ref": "#/definitions/NetworkFabricPatchParameters"
+              "$ref": "#/definitions/NetworkFabricPatch"
             }
           }
         ],
@@ -612,6 +612,86 @@
           }
         }
       },
+      "patch": {
+        "tags": [
+          "NetworkToNetworkInterconnects"
+        ],
+        "operationId": "NetworkToNetworkInterconnects_Update",
+        "summary": "Updates a Network To NetworkInterconnects.",
+        "description": "Update certain properties of the Network To NetworkInterconnects resource.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "in": "path",
+            "name": "networkFabricName",
+            "description": "Name of the NetworkFabric.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "networkToNetworkInterconnectName",
+            "required": true,
+            "type": "string",
+            "description": "Name of the NetworkToNetworkInterconnect"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Network to Network Interconnect properties to update.",
+            "schema": {
+              "$ref": "#/definitions/NetworkToNetworkInterconnectPatch"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/NetworkToNetworkInterconnect"
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "description": "The URL to retrieve the status of the asynchronous operation.",
+                "type": "string"
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-examples": {
+          "NetworkToNetworkInterconnects_Update_MaximumSet_Gen": {
+            "$ref": "./examples/NetworkToNetworkInterconnects_Update_MaximumSet_Gen.json"
+          }
+        }
+      },
       "delete": {
         "tags": [
           "NetworkToNetworkInterconnects"
@@ -724,37 +804,100 @@
     }
   },
   "definitions": {
-    "TerminalServerPatchParameters": {
-      "title": "Terminal server patch parameters",
-      "type": "object",
-      "properties": {
-        "terminalServerConfiguration": {
-          "type": "object",
-          "description": "Network and credentials configuration already applied to terminal server.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/TerminalServerPatchableProperties"
-            }
-          ]
-        }
-      }
-    },
     "TerminalServerPatchableProperties": {
       "type": "object",
       "description": "Network and credential configuration currently applied on terminal server.",
       "properties": {
         "username": {
           "type": "string",
+          "minLength": 1,
           "description": "Username for the terminal server connection."
         },
         "password": {
           "type": "string",
+          "minLength": 1,
           "description": "Password for the terminal server connection.",
           "x-ms-secret": true
         },
         "serialNumber": {
           "type": "string",
+          "minLength": 1,
           "description": "Serial Number of Terminal server."
+        }
+      }
+    },
+    "VpnConfigurationProperties": {
+      "type": "object",
+      "x-ms-client-flatten": true,
+      "description": "Network and credential configuration currently applied on terminal server.",
+      "properties": {
+        "networkToNetworkInterconnectId": {
+          "description": "Network To network Inetrconnects ARM resource id.",
+          "$ref": "./common.json#/definitions/NetworkToNetworkInterconnectIdProperty"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
+        },
+        "peeringOption": {
+          "description": "Peering option list.",
+          "$ref": "./common.json#/definitions/PeeringOption"
+        },
+        "optionBProperties": {
+          "description": "option B properties",
+          "allOf": [
+            {
+              "$ref": "#/definitions/OptionBProperties"
+            }
+          ]
+        },
+        "optionAProperties": {
+          "description": "option A properties",
+          "allOf": [
+            {
+              "$ref": "#/definitions/OptionAProperties"
+            },
+            {
+              "$ref": "./common.json#/definitions/Layer3IpPrefixProperties"
+            }
+          ],
+          "required": [
+            "vlanId",
+            "peerASN"
+          ]
+        }
+      },
+      "required": [
+        "peeringOption"
+      ]
+    },
+    "VpnConfigurationPatchableProperties": {
+      "type": "object",
+      "x-ms-client-flatten": true,
+      "description": "Network and credential configuration currently applied on terminal server.",
+      "properties": {
+        "networkToNetworkInterconnectId": {
+          "description": "Network To network Inetrconnects ARM resource id.",
+          "$ref": "./common.json#/definitions/NetworkToNetworkInterconnectIdProperty"
+        },
+        "peeringOption": {
+          "description": "Peering option list.",
+          "$ref": "./common.json#/definitions/PeeringOption"
+        },
+        "optionBProperties": {
+          "description": "option B properties",
+          "$ref": "#/definitions/OptionBProperties"
+        },
+        "optionAProperties": {
+          "description": "option A properties",
+          "allOf": [
+            {
+              "$ref": "#/definitions/OptionAProperties"
+            },
+            {
+              "$ref": "./common.json#/definitions/Layer3IpPrefixProperties"
+            }
+          ]
         }
       }
     },
@@ -762,6 +905,178 @@
       "title": "Network Fabric updatable properties",
       "type": "object",
       "properties": {
+        "rackCount": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Number of compute racks associated to Network Fabric."
+        },
+        "serverCountPerRack": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 16,
+          "description": "Number of servers.Possible values are from 1-16."
+        },
+        "ipv4Prefix": {
+          "type": "string",
+          "description": "IPv4Prefix for Management Network. Example: 10.1.0.0/19.",
+          "minLength": 1
+        },
+        "ipv6Prefix": {
+          "type": "string",
+          "description": "IPv6Prefix for Management Network. Example: 3FFE:FFFF:0:CD40::/59.",
+          "minLength": 1
+        },
+        "fabricASN": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "ASN of CE devices for CE/PE connectivity."
+        },
+        "terminalServerConfiguration": {
+          "type": "object",
+          "description": "Network and credentials configuration already applied to terminal server.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/TerminalServerPatchableProperties"
+            },
+            {
+              "$ref": "./common.json#/definitions/Layer3IpPrefixProperties"
+            }
+          ]
+        },
+        "managementNetworkConfiguration": {
+          "description": "Configuration to be used to setup the management network.",
+          "type": "object",
+          "x-ms-client-flatten": true,
+          "properties": {
+            "infrastructureVpnConfiguration": {
+              "description": "VPN Configuration properties.",
+              "$ref": "#/definitions/VpnConfigurationPatchableProperties"
+            },
+            "workloadVpnConfiguration": {
+              "description": "VPN Configuration properties.",
+              "$ref": "#/definitions/VpnConfigurationPatchableProperties"
+            }
+          }
+        }
+      }
+    },
+    "NetworkFabricProperties": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/AnnotationResource",
+          "description": "Common properties for annotated type."
+        }
+      ],
+      "properties": {
+        "networkFabricSku": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Supported Network Fabric SKU.Example: Compute / Aggregate racks. Once the user chooses a particular SKU, only supported racks can be added to the Network Fabric. The SKU determines whether it is a single / multi rack Network Fabric.",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "fabricVersion": {
+          "type": "string",
+          "description": "The version of Network Fabric.",
+          "readOnly": true
+        },
+        "routerId": {
+          "type": "string",
+          "description": "Router Id of CE to be used for MP-BGP between PE and CE",
+          "readOnly": true
+        },
+        "networkFabricControllerId": {
+          "description": "Azure resource ID for the NetworkFabricController the NetworkFabric belongs.",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ],
+          "$ref": "./common.json#/definitions/NetworkFabricControllerIdProperty"
+        },
+        "rackCount": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Number of compute racks associated to Network Fabric."
+        },
+        "serverCountPerRack": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 16,
+          "description": "Number of servers.Possible values are from 1-16."
+        },
+        "ipv4Prefix": {
+          "type": "string",
+          "description": "IPv4Prefix for Management Network. Example: 10.1.0.0/19.",
+          "minLength": 1
+        },
+        "ipv6Prefix": {
+          "type": "string",
+          "description": "IPv6Prefix for Management Network. Example: 3FFE:FFFF:0:CD40::/59",
+          "minLength": 1
+        },
+        "fabricASN": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "ASN of CE devices for CE/PE connectivity."
+        },
+        "terminalServerConfiguration": {
+          "type": "object",
+          "description": "Network and credentials configuration currently applied to terminal server.",
+          "required": [
+            "username",
+            "password",
+            "primaryIpv4Prefix",
+            "secondaryIpv4Prefix"
+          ],
+          "x-ms-client-flatten": true,
+          "properties": {
+            "networkDeviceId": {
+              "type": "string",
+              "description": "ARM Resource ID used for the NetworkDevice.",
+              "readOnly": true
+            }
+          },
+          "allOf": [
+            {
+              "$ref": "#/definitions/TerminalServerPatchableProperties"
+            },
+            {
+              "$ref": "./common.json#/definitions/Layer3IpPrefixProperties"
+            }
+          ]
+        },
+        "managementNetworkConfiguration": {
+          "type": "object",
+          "description": "Configuration to be used to setup the management network.",
+          "required": [
+            "infrastructureVpnConfiguration",
+            "workloadVpnConfiguration"
+          ],
+          "x-ms-client-flatten": true,
+          "properties": {
+            "infrastructureVpnConfiguration": {
+              "description": "VPN Configuration properties.",
+              "$ref": "#/definitions/VpnConfigurationProperties"
+            },
+            "workloadVpnConfiguration": {
+              "description": "VPN Configuration properties.",
+              "$ref": "#/definitions/VpnConfigurationProperties"
+            }
+          }
+        },
         "racks": {
           "type": "array",
           "description": "List of NetworkRack resource IDs under the Network Fabric. The number of racks allowed depends on the Network Fabric SKU.",
@@ -773,209 +1088,40 @@
         },
         "l2IsolationDomains": {
           "type": "array",
-          "description": "List of L2IsolationDomain resource IDs under the Network Fabric.",
+          "description": "List of L2 Isolation Domain resource IDs under the Network Fabric.",
           "items": {
-            "description": "L2IsolationDomain Azure resource ID.",
+            "description": "L2 Isolation Domain Azure resource ID.",
             "type": "string"
           },
           "readOnly": true
         },
         "l3IsolationDomains": {
           "type": "array",
-          "description": "List of L3IsolationDomain resource IDs under the Network Fabric.",
+          "description": "List of L3 Isolation Domain resource IDs under the Network Fabric.",
           "items": {
-            "description": "L3IsolationDomain Azure resource ID.",
+            "description": "L3 Isolation Domain Azure resource ID.",
             "type": "string"
           },
           "readOnly": true
-        }
-      }
-    },
-    "NetworkFabricProperties": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "./common.json#/definitions/AnnotationResource",
-          "description": "Common properties for annotated type."
         },
-        {
-          "$ref": "#/definitions/NetworkFabricPatchableProperties",
-          "description": "Common patchable properties for Network Fabric."
-        }
-      ],
-      "properties": {
-        "networkFabricSku": {
-          "type": "string",
-          "description": "Supported Network Fabric SKU.Example: Compute / Aggregate racks. Once the user chooses a particular SKU, only supported racks can be added to the Network Fabric. The SKU determines whether it is a single / multi rack Network Fabric.",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
-        "rackCount": {
-          "type": "integer",
-          "format": "int32",
-          "minimum": 2,
-          "maximum": 8,
-          "description": "Number of racks associated to Network Fabric.Possible values are from 2-8.",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
-        "serverCountPerRack": {
-          "type": "integer",
-          "format": "int32",
-          "minimum": 1,
-          "maximum": 16,
-          "description": "Number of servers.Possible values are from 1-16.",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
-        "ipv4Prefix": {
-          "type": "string",
-          "description": "IPv4Prefix for Management Network. Example: 10.1.0.0/19.",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
-        "ipv6Prefix": {
-          "type": "string",
-          "description": "IPv6Prefix for Management Network. Example: 3FFE:FFFF:0:CD40::/59.",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
-        "routerId": {
-          "type": "string",
-          "description": "Router Id of CE to be used for MP-BGP between PE and CE",
-          "readOnly": true
-        },
-        "fabricASN": {
-          "type": "integer",
-          "format": "int32",
-          "minimum": 1,
-          "maximum": 65535,
-          "description": "ASN of CE devices for CE/PE connectivity."
-        },
-        "networkFabricControllerId": {
-          "type": "string",
-          "description": "Azure resource ID for the NetworkFabricController the NetworkFabric belongs.",
-          "x-ms-mutability": [
-            "create",
-            "read"
-          ]
-        },
-        "terminalServerConfiguration": {
-          "type": "object",
-          "description": "Network and credentials configuration currently applied to terminal server.",
-          "required": [
-            "username",
-            "password",
-            "primaryIpv4Prefix",
-            "secondaryIpv4Prefix"
-          ],
-          "properties": {
-            "networkDeviceId": {
-              "type": "string",
-              "description": "ARM Resource ID used for the NetworkDevice.",
-              "readOnly": true
-            }
-          },
-          "allOf": [
-            {
-              "$ref": "#/definitions/Layer3IpPrefixProperties"
-            },
-            {
-              "$ref": "#/definitions/TerminalServerPatchableProperties"
-            }
-          ]
-        },
-        "managementNetworkConfiguration": {
-          "type": "object",
-          "description": "Configuration to be used to setup the management network.",
-          "required": [
-            "infrastructureVpnConfiguration",
-            "workloadVpnConfiguration"
-          ],
-          "properties": {
-            "infrastructureVpnConfiguration": {
-              "type": "object",
-              "description": "Configuration for infrastructure vpn.",
-              "properties": {
-                "administrativeState": {
-                  "description": "Indicates configuration state. Example: Enabled | Disabled.",
-                  "$ref": "./common.json#/definitions/EnabledDisabledState"
-                },
-                "networkToNetworkInterconnectId": {
-                  "type": "string",
-                  "description": "Gets the networkToNetworkInterconnectId of the resource.",
-                  "readOnly": true
-                },
-                "peeringOption": {
-                  "$ref": "./common.json#/definitions/PeeringOption"
-                },
-                "optionBProperties": {
-                  "description": "option B properties",
-                  "$ref": "#/definitions/OptionBProperties"
-                },
-                "optionAProperties": {
-                  "description": "option A properties",
-                  "$ref": "#/definitions/OptionAProperties"
-                }
-              },
-              "required": [
-                "peeringOption"
-              ]
-            },
-            "workloadVpnConfiguration": {
-              "type": "object",
-              "description": "Configuration for workload vpn.",
-              "properties": {
-                "administrativeState": {
-                  "description": "Indicates configuration state. Example: enabled | disabled.",
-                  "$ref": "./common.json#/definitions/EnabledDisabledState"
-                },
-                "peeringOption": {
-                  "$ref": "./common.json#/definitions/PeeringOption"
-                },
-                "networkToNetworkInterconnectId": {
-                  "type": "string",
-                  "description": "Gets the networkToNetworkInterconnectId of the resource.",
-                  "readOnly": true
-                },
-                "optionAProperties": {
-                  "description": "option A properties object",
-                  "$ref": "#/definitions/OptionAProperties"
-                },
-                "optionBProperties": {
-                  "description": "option B properties object",
-                  "$ref": "#/definitions/OptionBProperties"
-                }
-              },
-              "required": [
-                "peeringOption"
-              ]
-            }
-          }
-        },
-        "operationalState": {
-          "description": "Gets the operational state of the resource.",
-          "$ref": "#/definitions/NetworkFabricOperationalState"
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
+          "description": "Provides you the latest status of the NFC service, whether it is Accepted, updating, Succeeded or Failed. During this process, the states keep changing based on the status of NFC provisioning.",
           "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
       "required": [
         "networkFabricSku",
         "rackCount",
         "serverCountPerRack",
+        "ipv4Prefix",
         "networkFabricControllerId",
         "fabricASN",
         "terminalServerConfiguration",
@@ -983,40 +1129,13 @@
       ],
       "description": "NetworkFabricProperties - define the resource properties."
     },
-    "TerminalServerConnectivityState": {
-      "type": "string",
-      "description": "TerminalServerConnectivity state for the resource.",
-      "enum": [
-        "Ipv4Reachable",
-        "Ipv4Unreachable"
-      ],
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "TerminalServerConnectivityState"
-      }
-    },
-    "NetworkFabricOperationalState": {
-      "type": "string",
-      "description": "Operational state for the resource.",
-      "readOnly": true,
-      "enum": [
-        "Provisioning",
-        "Provisioned",
-        "ErrorProvisioning",
-        "Deprovisioning",
-        "Deprovisioned",
-        "ErrorDeprovisioning",
-        "DeferredControl"
-      ],
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "networkFabricOperationalState"
-      }
-    },
     "NetworkFabric": {
       "type": "object",
       "x-ms-azure-resource": true,
       "description": "The NetworkFabric resource definition.",
+      "required": [
+        "properties"
+      ],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
@@ -1030,33 +1149,29 @@
         }
       ]
     },
-    "NetworkFabricPatchParameters": {
+    "NetworkFabricPatch": {
       "type": "object",
       "description": "The NetworkFabric resource definition.",
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
           "description": "Network Fabric Patch properties.",
+          "type": "object",
           "allOf": [
             {
               "$ref": "./common.json#/definitions/AnnotationResource"
             },
             {
-              "$ref": "#/definitions/TerminalServerPatchParameters"
-            },
-            {
               "$ref": "#/definitions/NetworkFabricPatchableProperties"
             }
           ]
-        },
-        "tags": {
-          "description": "Azure resource tags that will replace the existing ones.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
         }
-      }
+      },
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/TagsUpdate"
+        }
+      ]
     },
     "NetworkFabricsListResult": {
       "type": "object",
@@ -1090,6 +1205,26 @@
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
         }
+      ],
+      "required": [
+        "properties"
+      ]
+    },
+    "NetworkToNetworkInterconnectPatch": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "description": "The NetworkToNetworkInterconnect resource definition.",
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/NetworkToNetworkInterconnectPatchableProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
       ]
     },
     "NetworkToNetworkInterconnectProperties": {
@@ -1099,6 +1234,7 @@
         "nniType": {
           "type": "string",
           "description": "Type of NNI used. Example: CE | NPB",
+          "minLength": 1,
           "default": "CE",
           "enum": [
             "CE",
@@ -1109,13 +1245,19 @@
             "name": "nniType"
           }
         },
-        "administrativeState": {
-          "description": "Gets the administrativeState of the resource. Example -Enabled/Disabled",
-          "$ref": "./common.json#/definitions/EnabledDisabledState"
-        },
         "isManagementType": {
           "description": "Configuration to use NNI for Infrastructure Management. Example: True/False.",
-          "$ref": "./common.json#/definitions/BooleanEnumProperty"
+          "default": "True",
+          "minLength": 1,
+          "type": "string",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IsManagementType"
+          }
         },
         "useOptionB": {
           "description": "Based on this parameter the layer2/layer3 is made as mandatory. Example: True/False",
@@ -1131,20 +1273,199 @@
             }
           ]
         },
-        "layer3Configuration": {
+        "optionBLayer3Configuration": {
           "type": "object",
           "description": "Common properties for Layer3Configuration.",
-          "$ref": "#/definitions/Layer3Configuration"
+          "allOf": [
+            {
+              "$ref": "#/definitions/OptionBLayer3Configuration"
+            }
+          ],
+          "required": [
+            "vlanId",
+            "peerASN"
+          ]
+        },
+        "npbStaticRouteConfiguration": {
+          "type": "object",
+          "description": "NPB Static Route Configuration properties.",
+          "x-ms-client-flatten": true,
+          "properties": {
+            "bfdConfiguration": {
+              "description": "BFD Configuration properties.",
+              "$ref": "./common.json#/definitions/BfdConfiguration"
+            },
+            "ipv4Routes": {
+              "type": "array",
+              "description": "List of IPv4 Routes.",
+              "x-ms-identifiers": [
+                "prefix"
+              ],
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "description": "Static IPv4Route.",
+                "allOf": [
+                  {
+                    "$ref": "./common.json#/definitions/StaticRouteProperties"
+                  }
+                ],
+                "required": [
+                  "prefix",
+                  "nextHop"
+                ]
+              }
+            },
+            "ipv6Routes": {
+              "type": "array",
+              "description": "List with IPv6 Routes.",
+              "x-ms-identifiers": [
+                "prefix"
+              ],
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "description": "Static IPv6 Route properties.",
+                "allOf": [
+                  {
+                    "$ref": "./common.json#/definitions/StaticRouteProperties"
+                  }
+                ],
+                "required": [
+                  "prefix",
+                  "nextHop"
+                ]
+              }
+            }
+          }
+        },
+        "importRoutePolicyId": {
+          "type": "string",
+          "description": "ARM Resource ID of the RoutePolicy. This is for backward compatibility.",
+          "readOnly": true
+        },
+        "exportRoutePolicyId": {
+          "type": "string",
+          "description": "ARM Resource ID of the RoutePolicy. This is for backward compatibility.",
+          "readOnly": true
+        },
+        "importRoutePolicy": {
+          "description": "ImportRoutePolicy information",
+          "$ref": "./common.json#/definitions/ImportRoutePolicyInformation"
+        },
+        "exportRoutePolicy": {
+          "description": "ExportRoutePolicy information",
+          "$ref": "./common.json#/definitions/ExportRoutePolicyInformation"
+        },
+        "egressAcl": {
+          "description": "ARM Resource ID of the AccessControlLists.",
+          "$ref": "./common.json#/definitions/AccessControlListIdProperty"
+        },
+        "ingressAcl": {
+          "description": "ARM Resource ID of the AccessControlLists.",
+          "$ref": "./common.json#/definitions/AccessControlListIdProperty"
+        },
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
+          "description": "Gets the provisioningState of the resource.",
           "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
       "required": [
         "isManagementType",
         "useOptionB"
       ]
+    },
+    "NetworkToNetworkInterconnectPatchableProperties": {
+      "type": "object",
+      "description": "Network to Network Interconnect patchable properties.",
+      "properties": {
+        "layer2Configuration": {
+          "type": "object",
+          "description": "Common properties for Layer2Configuration.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Layer2Configuration",
+              "description": "Common properties for Layer2Configuration."
+            }
+          ]
+        },
+        "optionBLayer3Configuration": {
+          "type": "object",
+          "description": "Common properties for Layer3Configuration.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/OptionBLayer3Configuration"
+            }
+          ]
+        },
+        "npbStaticRouteConfiguration": {
+          "type": "object",
+          "description": "npb staticRouteConfiguration model.",
+          "x-ms-client-flatten": true,
+          "properties": {
+            "bfdConfiguration": {
+              "description": "BFD Configuration properties.",
+              "$ref": "./common.json#/definitions/BfdConfiguration"
+            },
+            "ipv4Routes": {
+              "type": "array",
+              "description": "List with object IPv4Routes.",
+              "x-ms-identifiers": [
+                "prefix"
+              ],
+              "items": {
+                "type": "object",
+                "description": "staticIpv4Route model.",
+                "allOf": [
+                  {
+                    "$ref": "./common.json#/definitions/StaticRouteProperties"
+                  }
+                ]
+              }
+            },
+            "ipv6Routes": {
+              "type": "array",
+              "description": "List with object IPv6Routes.",
+              "x-ms-identifiers": [
+                "prefix"
+              ],
+              "items": {
+                "type": "object",
+                "description": "staticIPv6Route model.",
+                "allOf": [
+                  {
+                    "$ref": "./common.json#/definitions/StaticRouteProperties"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "importRoutePolicy": {
+          "description": "Import Route Policy information.",
+          "$ref": "./common.json#/definitions/ImportRoutePolicyInformation"
+        },
+        "exportRoutePolicy": {
+          "description": "Export Route Policy information",
+          "$ref": "./common.json#/definitions/ExportRoutePolicyInformation"
+        },
+        "egressAcl": {
+          "description": "ARM Resource ID of the AccessControlLists.",
+          "$ref": "./common.json#/definitions/AccessControlListIdProperty"
+        },
+        "ingressAcl": {
+          "description": "ARM Resource ID of the AccessControlLists.",
+          "$ref": "./common.json#/definitions/AccessControlListIdProperty"
+        }
+      }
     },
     "NetworkToNetworkInterconnectsList": {
       "type": "object",
@@ -1165,12 +1486,12 @@
     },
     "OptionAProperties": {
       "type": "object",
-      "description": "Peering optionA properties",
+      "description": "Peering optionA propertie.s",
       "properties": {
         "mtu": {
           "type": "integer",
           "format": "int32",
-          "minimum": 1500,
+          "minimum": 64,
           "maximum": 9000,
           "default": 1500,
           "description": "MTU to use for option A peering."
@@ -1179,48 +1500,30 @@
           "type": "integer",
           "format": "int32",
           "minimum": 501,
-          "maximum": 4095,
+          "maximum": 4094,
           "description": "Vlan Id.Example : 501"
         },
         "peerASN": {
           "type": "integer",
-          "format": "int32",
+          "format": "int64",
           "minimum": 1,
-          "maximum": 65535,
+          "maximum": 4294967295,
           "description": "Peer ASN number.Example : 28"
         },
         "bfdConfiguration": {
-          "type": "object",
           "description": "BFD Configuration properties.",
-          "properties": {
-            "interval": {
-              "type": "integer",
-              "format": "int32",
-              "description": "interval in seconds. Example: 300.",
-              "readOnly": true
-            },
-            "multiplier": {
-              "type": "integer",
-              "format": "int32",
-              "description": "multiplier. Example: 3.",
-              "readOnly": true
-            }
-          }
+          "$ref": "./common.json#/definitions/BfdConfiguration"
         }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/Layer3IpPrefixProperties"
-        }
-      ]
+      }
     },
     "OptionBProperties": {
       "type": "object",
-      "description": "Option B configuration to be used for management vpn.",
+      "description": "Option B configuration to be used for Management VPN.",
       "properties": {
         "importRouteTargets": {
           "type": "array",
-          "description": "Route Targets to be applied for incoming routes into CE.",
+          "readOnly": true,
+          "description": "Route Targets to be applied for incoming routes into CE. This is for backward compatibility.",
           "items": {
             "type": "string",
             "description": "Import route target. Example: 65541:2001, 65542:2001."
@@ -1228,111 +1531,72 @@
         },
         "exportRouteTargets": {
           "type": "array",
-          "description": "Route Targets to be applied for outgoing routes from CE.",
+          "readOnly": true,
+          "description": "Route Targets to be applied for outgoing routes from CE. This is for backward compatibility.",
           "items": {
             "type": "string",
             "description": "Export route target. Example: 65531, 65532."
           }
+        },
+        "routeTargets": {
+          "description": "Route Targets to be applied.",
+          "$ref": "./common.json#/definitions/RouteTargetInformation"
         }
-      },
-      "required": [
-        "importRouteTargets",
-        "exportRouteTargets"
-      ]
+      }
     },
     "Layer2Configuration": {
       "type": "object",
-      "description": "layer2Configuration",
+      "description": "Common properties for Layer2 Configuration.",
       "properties": {
-        "portCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Number of ports connected between PE/CE. Maximum value depends on FabricSKU."
-        },
         "mtu": {
           "type": "integer",
           "format": "int32",
-          "minimum": 1500,
-          "maximum": 9000,
+          "minimum": 64,
+          "maximum": 9200,
           "default": 1500,
           "description": "MTU of the packets between PE & CE."
         },
         "interfaces": {
           "type": "array",
           "description": "List of network device interfaces resource IDs.",
+          "minItems": 1,
           "items": {
-            "type": "string",
-            "description": "Azure resource ID for the NetworkDevice/networkInterface."
-          },
-          "readOnly": true
+            "description": "Azure resource ID of the NetworkDevice/networkInterface.",
+            "$ref": "./common.json#/definitions/NetworkInterfaceIdProperty"
+          }
         }
-      },
-      "required": [
-        "mtu"
-      ]
+      }
     },
-    "Layer3Configuration": {
+    "OptionBLayer3Configuration": {
       "type": "object",
-      "description": "layer3Configuration",
+      "description": "OptionB Layer3 Configuration properties.",
       "properties": {
-        "importRoutePolicyId": {
-          "type": "string",
-          "description": "importRoutePolicyId"
-        },
-        "exportRoutePolicyId": {
-          "type": "string",
-          "description": "exportRoutePolicyId"
-        },
         "peerASN": {
           "type": "integer",
-          "format": "int32",
+          "format": "int64",
           "minimum": 1,
-          "maximum": 65535,
+          "maximum": 4294967295,
           "description": "ASN of PE devices for CE/PE connectivity.Example : 28"
         },
         "vlanId": {
           "type": "integer",
           "format": "int32",
-          "minimum": 501,
-          "maximum": 4095,
+          "minimum": 100,
+          "maximum": 4094,
           "description": "VLAN for CE/PE Layer 3 connectivity.Example : 501"
         },
         "fabricASN": {
           "type": "integer",
-          "format": "int32",
-          "minimum": 1,
-          "maximum": 65535,
+          "format": "int64",
           "readOnly": true,
           "description": "ASN of CE devices for CE/PE connectivity."
         }
       },
       "allOf": [
         {
-          "$ref": "#/definitions/Layer3IpPrefixProperties"
+          "$ref": "./common.json#/definitions/Layer3IpPrefixProperties"
         }
       ]
-    },
-    "Layer3IpPrefixProperties": {
-      "type": "object",
-      "description": "Layer 3 primary and secondary ip address prefixes.",
-      "properties": {
-        "primaryIpv4Prefix": {
-          "type": "string",
-          "description": "IPv4 Address Prefix of CE-PE interconnect links. Example: 172.31.0.0/31. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
-        },
-        "primaryIpv6Prefix": {
-          "type": "string",
-          "description": "IPv6 Address Prefix of CE-PE interconnect links. Example: 3FFE:FFFF:0:CD30::a0/126. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
-        },
-        "secondaryIpv4Prefix": {
-          "type": "string",
-          "description": "Secondary IPv4 Address Prefix of CE-PE interconnect links. Example: 172.31.0.20/31. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
-        },
-        "secondaryIpv6Prefix": {
-          "type": "string",
-          "description": "Secondary IPv6 Address Prefix of CE-PE interconnect links. Example: 3FFE:FFFF:0:CD30::a4/126. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
-        }
-      }
     }
   },
   "parameters": {}
