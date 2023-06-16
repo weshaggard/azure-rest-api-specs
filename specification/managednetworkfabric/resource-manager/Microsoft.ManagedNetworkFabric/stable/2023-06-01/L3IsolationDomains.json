@@ -2040,39 +2040,24 @@
       ],
       "properties": {
         "networkFabricId": {
-          "type": "string",
           "description": "Network Fabric ARM resource id.",
           "x-ms-mutability": [
             "create",
             "read"
-          ]
+          ],
+          "$ref": "./common.json#/definitions/NetworkFabricIdProperty"
         },
-        "disabledOnResources": {
-          "type": "array",
-          "description": "List of resources the L3 Isolation Domain is disabled on. Can be either entire NetworkFabric or NetworkRack.",
-          "items": {
-            "type": "string",
-            "description": "ARM resource Id of the resource"
-          },
-          "readOnly": true
-        },
-        "administrativeState": {
-          "description": "Administrative state of the IsolationDomain. Example: Enabled | Disabled.",
-          "$ref": "./common.json#/definitions/EnabledDisabledState"
-        },
-        "optionBDisabledOnResources": {
-          "type": "array",
-          "description": "List of resources the OptionB is disabled on. Can be either entire NetworkFabric or NetworkRack.",
-          "items": {
-            "type": "string",
-            "description": "ARM resource Id of the resource"
-          },
-          "readOnly": true
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
         }
       }
     },
@@ -2083,6 +2068,7 @@
           "type": "string",
           "description": "Advertise Connected Subnets. Ex: \"True\" | \"False\".",
           "default": "True",
+          "minLength": 1,
           "enum": [
             "True",
             "False"
@@ -2096,6 +2082,7 @@
           "type": "string",
           "description": "Advertise Static Routes. Ex: \"True\" | \"False\".",
           "default": "False",
+          "minLength": 1,
           "enum": [
             "True",
             "False"
@@ -2108,10 +2095,12 @@
         "aggregateRouteConfiguration": {
           "type": "object",
           "description": "List of Ipv4 and Ipv6 route configurations.",
+          "x-ms-client-flatten": true,
           "properties": {
             "ipv4Routes": {
               "type": "array",
               "description": "List of Ipv4Route prefixes.",
+              "minItems": 1,
               "x-ms-identifiers": [
                 "prefix"
               ],
@@ -2121,9 +2110,13 @@
                 "properties": {
                   "prefix": {
                     "type": "string",
+                    "minLength": 1,
                     "description": "IPv4 Prefix of the aggregate Ipv4Route."
                   }
-                }
+                },
+                "required": [
+                  "prefix"
+                ]
               }
             },
             "ipv6Routes": {
@@ -2132,34 +2125,53 @@
               "x-ms-identifiers": [
                 "prefix"
               ],
+              "minItems": 1,
               "items": {
                 "type": "object",
                 "description": "aggregateIpv6Route model.",
                 "properties": {
                   "prefix": {
                     "type": "string",
+                    "minLength": 1,
                     "description": "IPv6 Prefix of the aggregate IPv6 Route."
                   }
-                }
+                },
+                "required": [
+                  "prefix"
+                ]
               }
             }
           }
         },
-        "description": {
-          "type": "string",
-          "description": "L3 Isolation Domain description."
-        },
         "connectedSubnetRoutePolicy": {
           "type": "object",
           "description": "Connected Subnet RoutePolicy",
+          "x-ms-client-flatten": true,
           "properties": {
             "exportRoutePolicyId": {
               "type": "string",
-              "description": "exportRoutePolicyId value."
+              "description": "ARM Resource ID of the RoutePolicy. This is used for the backward compactability.",
+              "readOnly": true
+            },
+            "exportRoutePolicy": {
+              "x-ms-client-flatten": true,
+              "type": "object",
+              "description": "Array of ARM Resource ID of the RoutePolicies.",
+              "properties": {
+                "exportIpv4RoutePolicyId": {
+                  "description": "ARM Resource ID of the RoutePolicy.",
+                  "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
+                },
+                "exportIpv6RoutePolicyId": {
+                  "minLength": 1,
+                  "description": "ARM Resource ID of the RoutePolicy.",
+                  "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
+                }
+              }
             },
             "administrativeState": {
-              "$ref": "./common.json#/definitions/EnabledDisabledState",
-              "description": "Enabled/Disabled connected subnet route policy. Ex: Enabled | Disabled."
+              "description": "Gets the administrativeState of the resource.",
+              "$ref": "./common.json#/definitions/AdministrativeState"
             }
           }
         }
@@ -2169,6 +2181,9 @@
     "L3IsolationDomain": {
       "type": "object",
       "x-ms-azure-resource": true,
+      "required": [
+        "properties"
+      ],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
@@ -2190,16 +2205,21 @@
         "properties": {
           "x-ms-client-flatten": true,
           "description": "Resource properties.",
-          "$ref": "#/definitions/L3IsolationDomainPatchProperties"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
+          "allOf": [
+            {
+              "$ref": "./common.json#/definitions/AnnotationResource"
+            },
+            {
+              "$ref": "#/definitions/L3IsolationDomainPatchProperties"
+            }
+          ]
         }
       },
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/TagsUpdate"
+        }
+      ],
       "description": "The L3IsolationDomain patch resource definition."
     },
     "L3IsolationDomainsListResult": {
@@ -2240,6 +2260,372 @@
       },
       "x-ms-azure-resource": true
     },
+    "InternalNetworkProperties": {
+      "type": "object",
+      "description": "Internal Network Properties",
+      "required": [
+        "vlanId"
+      ],
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/AnnotationResource",
+          "description": "Common properties for annotated type."
+        },
+        {
+          "$ref": "#/definitions/InternalNetworkPatchableProperties"
+        }
+      ],
+      "properties": {
+        "vlanId": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 100,
+          "maximum": 4094,
+          "description": "Vlan identifier. Example: 1001."
+        },
+        "connectedIPv4Subnets": {
+          "type": "array",
+          "description": "List of Connected IPv4 Subnets.",
+          "x-ms-identifiers": [
+            "prefix"
+          ],
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "description": "Connected IPv4 Subnet properties.",
+            "allOf": [
+              {
+                "$ref": "./common.json#/definitions/AnnotationResource",
+                "description": "Common properties for annotated type."
+              }
+            ],
+            "properties": {
+              "prefix": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Ipv4 Prefix of the connectedIPv4Subnet."
+              }
+            },
+            "required": [
+              "prefix"
+            ]
+          }
+        },
+        "connectedIPv6Subnets": {
+          "type": "array",
+          "description": "List with object connectedIPv6Subnets.",
+          "x-ms-identifiers": [
+            "prefix"
+          ],
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "description": "connectedIPv6Subnet model.",
+            "allOf": [
+              {
+                "$ref": "./common.json#/definitions/AnnotationResource",
+                "description": "Common properties for annotated type."
+              }
+            ],
+            "properties": {
+              "prefix": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Ipv6 Prefix of the connectedIPv6Subnet."
+              }
+            },
+            "required": [
+              "prefix"
+            ]
+          }
+        },
+        "staticRouteConfiguration": {
+          "type": "object",
+          "x-ms-client-flatten": true,
+          "description": "Static Route Configuration properties..",
+          "properties": {
+            "bfdConfiguration": {
+              "description": "BFD configuration properties",
+              "$ref": "./common.json#/definitions/BfdConfiguration"
+            },
+            "ipv4Routes": {
+              "type": "array",
+              "description": "List of IPv4Routes.",
+              "minItems": 1,
+              "x-ms-identifiers": [
+                "prefix"
+              ],
+              "items": {
+                "type": "object",
+                "description": "Static IPv4 Route.",
+                "allOf": [
+                  {
+                    "$ref": "./common.json#/definitions/StaticRouteProperties"
+                  }
+                ],
+                "required": [
+                  "prefix",
+                  "nextHop"
+                ]
+              }
+            },
+            "ipv6Routes": {
+              "type": "array",
+              "description": "List of IPv6Routes.",
+              "x-ms-identifiers": [
+                "prefix"
+              ],
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "description": "Static IPv6 Route.",
+                "allOf": [
+                  {
+                    "$ref": "./common.json#/definitions/StaticRouteProperties"
+                  }
+                ],
+                "required": [
+                  "prefix",
+                  "nextHop"
+                ]
+              }
+            }
+          }
+        },
+        "bgpConfiguration": {
+          "type": "object",
+          "description": "BGP configuration properties.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BgpConfiguration"
+            }
+          ],
+          "required": [
+            "peerASN"
+          ]
+        },
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
+        },
+        "provisioningState": {
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
+        },
+        "importRoutePolicyId": {
+          "type": "string",
+          "description": "ARM Resource ID of the RoutePolicy. This is used for the backward compactability.",
+          "readOnly": true
+        },
+        "exportRoutePolicyId": {
+          "type": "string",
+          "description": "ARM Resource ID of the RoutePolicy. This is used for the backward compactability.",
+          "readOnly": true
+        }
+      }
+    },
+    "InternalNetworkPatch": {
+      "type": "object",
+      "description": "The InternalNetwork patch resource definition.",
+      "properties": {
+        "properties": {
+          "type": "object",
+          "x-ms-client-flatten": true,
+          "description": "InternalNetwork Patch properties.",
+          "properties": {
+            "connectedIPv4Subnets": {
+              "type": "array",
+              "description": "List of Connected IPv4 Subnets.",
+              "x-ms-identifiers": [
+                "prefix"
+              ],
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "description": "Connected IPv4 Subnet properties.",
+                "allOf": [
+                  {
+                    "$ref": "./common.json#/definitions/AnnotationResource",
+                    "description": "Common properties for annotated type."
+                  }
+                ],
+                "properties": {
+                  "prefix": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Ipv4 Prefix of the connectedIPv4Subnet."
+                  }
+                }
+              }
+            },
+            "connectedIPv6Subnets": {
+              "type": "array",
+              "description": "List of Connected IPv6 Subnets.",
+              "x-ms-identifiers": [
+                "prefix"
+              ],
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "description": "Connected IPv6 Subnet properties.",
+                "allOf": [
+                  {
+                    "$ref": "./common.json#/definitions/AnnotationResource",
+                    "description": "Common properties for annotated type."
+                  }
+                ],
+                "properties": {
+                  "prefix": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Ipv6 Prefix of the connectedIPv6Subnet."
+                  }
+                }
+              }
+            },
+            "staticRouteConfiguration": {
+              "type": "object",
+              "x-ms-client-flatten": true,
+              "description": "StaticRoute Configuration properties.",
+              "properties": {
+                "bfdConfiguration": {
+                  "description": "BFD configuration properties",
+                  "$ref": "./common.json#/definitions/BfdConfiguration"
+                },
+                "ipv4Routes": {
+                  "type": "array",
+                  "description": "List of IPv4Routes.",
+                  "minItems": 1,
+                  "x-ms-identifiers": [
+                    "prefix"
+                  ],
+                  "items": {
+                    "description": "Static IPv4Route.",
+                    "$ref": "./common.json#/definitions/StaticRouteProperties"
+                  }
+                },
+                "ipv6Routes": {
+                  "type": "array",
+                  "description": "List of IPv6Routes.",
+                  "x-ms-identifiers": [
+                    "prefix"
+                  ],
+                  "minItems": 1,
+                  "items": {
+                    "description": "Static IPv6 Route.",
+                    "$ref": "./common.json#/definitions/StaticRouteProperties"
+                  }
+                }
+              }
+            },
+            "bgpConfiguration": {
+              "type": "object",
+              "description": "BGP configuration properties.",
+              "allOf": [
+                {
+                  "$ref": "#/definitions/BgpConfiguration"
+                }
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "$ref": "./common.json#/definitions/AnnotationResource"
+            },
+            {
+              "$ref": "#/definitions/InternalNetworkPatchableProperties"
+            }
+          ]
+        }
+      }
+    },
+    "InternalNetworkPatchableProperties": {
+      "type": "object",
+      "description": "The InternalNetwork patchable properties.",
+      "properties": {
+        "mtu": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 64,
+          "maximum": 9000,
+          "default": 1500,
+          "description": "Maximum transmission unit. Default value is 1500."
+        },
+        "importRoutePolicy": {
+          "type": "object",
+          "x-ms-client-flatten": true,
+          "description": "Import Route Policiy either IPv4 or IPv6.",
+          "properties": {
+            "importIpv4RoutePolicyId": {
+              "description": "ARM resource ID of RoutePolicy.",
+              "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
+            },
+            "importIpv6RoutePolicyId": {
+              "description": "ARM resource ID of RoutePolicy.",
+              "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
+            }
+          }
+        },
+        "exportRoutePolicy": {
+          "type": "object",
+          "x-ms-client-flatten": true,
+          "description": "Export Route Policiy either IPv4 or IPv6.",
+          "properties": {
+            "exportIpv4RoutePolicyId": {
+              "description": "ARM resource ID of RoutePolicy.",
+              "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
+            },
+            "exportIpv6RoutePolicyId": {
+              "description": "ARM resource ID of RoutePolicy.",
+              "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
+            }
+          }
+        },
+        "ingressAcl": {
+          "description": "Ingress ACL. ARM resource ID of Access Control Lists.",
+          "$ref": "./common.json#/definitions/AccessControlListIdProperty"
+        },
+        "egressAcl": {
+          "description": "Egress ACL. ARM resource ID of Access Control Lists.",
+          "$ref": "./common.json#/definitions/AccessControlListIdProperty"
+        },
+        "isMonitoringEnabled": {
+          "description": "To check whether mointoring of internal network is enabled or not.",
+          "type": "string",
+          "default": "False",
+          "minLength": 1,
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IsMonitoringEnabled"
+          }
+        }
+      }
+    },
+    "InternalNetworksList": {
+      "type": "object",
+      "description": "List of InternalNetworks.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "List of InternalNetworks resources.",
+          "items": {
+            "$ref": "#/definitions/InternalNetwork"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
     "ExternalNetwork": {
       "description": "Defines the ExternalNetwork item.",
       "required": [
@@ -2278,30 +2664,36 @@
         }
       }
     },
-    "InternalNetworksList": {
-      "type": "object",
-      "description": "List of InternalNetworks.",
-      "properties": {
-        "value": {
-          "type": "array",
-          "description": "List of InternalNetworks resources.",
-          "items": {
-            "$ref": "#/definitions/InternalNetwork"
-          }
-        },
-        "nextLink": {
-          "type": "string",
-          "description": "Url to follow for getting next page of resources."
-        }
-      }
-    },
     "ExternalNetworkPatch": {
       "type": "object",
+      "x-ms-client-flatten": true,
       "description": "The ExternalNetwork patch resource definition.",
       "properties": {
         "properties": {
+          "type": "object",
           "x-ms-client-flatten": true,
           "description": "External Network Patch properties.",
+          "properties": {
+            "peeringOption": {
+              "description": "Peering option list.",
+              "$ref": "./common.json#/definitions/PeeringOption"
+            },
+            "optionBProperties": {
+              "description": "option B properties object",
+              "$ref": "#/definitions/L3OptionBProperties"
+            },
+            "optionAProperties": {
+              "description": "option A properties object",
+              "allOf": [
+                {
+                  "$ref": "./common.json#/definitions/Layer3IpPrefixProperties"
+                },
+                {
+                  "$ref": "#/definitions/L3OptionAProperties"
+                }
+              ]
+            }
+          },
           "allOf": [
             {
               "$ref": "./common.json#/definitions/AnnotationResource"
@@ -2316,294 +2708,156 @@
     "ExternalNetworkPatchableProperties": {
       "type": "object",
       "description": "The ExternalNetwork patchable properties.",
+      "x-ms-client-flatten": true,
       "properties": {
-        "peeringOption": {
-          "description": "Peering option list.",
-          "$ref": "./common.json#/definitions/PeeringOption"
-        },
-        "optionBProperties": {
-          "description": "option B properties object",
-          "$ref": "#/definitions/OptionBProperties"
-        },
-        "optionAProperties": {
-          "description": "option A properties object",
-          "$ref": "#/definitions/OptionAProperties"
-        },
-        "importRoutePolicyId": {
-          "type": "string",
-          "description": "ARM resource ID of importRoutePolicy."
-        },
-        "exportRoutePolicyId": {
-          "type": "string",
-          "description": "ARM resource ID of exportRoutePolicy."
-        }
-      }
-    },
-    "InternalNetworkPatch": {
-      "type": "object",
-      "description": "The InternalNetwork patch resource definition.",
-      "properties": {
-        "properties": {
-          "x-ms-client-flatten": true,
-          "description": "InternalNetwork Patch properties.",
-          "allOf": [
-            {
-              "$ref": "./common.json#/definitions/AnnotationResource"
+        "importRoutePolicy": {
+          "type": "object",
+          "description": "Import Route Policiy either IPv4 or IPv6.",
+          "properties": {
+            "importIpv4RoutePolicyId": {
+              "description": "ARM resource ID of RoutePolicy.",
+              "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
             },
-            {
-              "$ref": "#/definitions/InternalNetworkPatchableProperties"
+            "importIpv6RoutePolicyId": {
+              "description": "ARM resource ID of RoutePolicy.",
+              "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
             }
-          ]
+          }
+        },
+        "exportRoutePolicy": {
+          "type": "object",
+          "x-ms-client-flatten": true,
+          "description": "Export Route Policiy either IPv4 or IPv6.",
+          "properties": {
+            "exportIpv4RoutePolicyId": {
+              "description": "ARM resource ID of RoutePolicy.",
+              "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
+            },
+            "exportIpv6RoutePolicyId": {
+              "description": "ARM resource ID of RoutePolicy.",
+              "$ref": "./common.json#/definitions/RoutePolicyIdProperty"
+            }
+          }
         }
       }
     },
-    "InternalNetworkPatchableProperties": {
+    "BgpConfiguration": {
       "type": "object",
-      "description": "The ExternalNetwork patchable properties.",
+      "description": "BGP configuration properties",
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/AnnotationResource",
+          "description": "Common properties for annotated type."
+        }
+      ],
       "properties": {
-        "mtu": {
+        "bfdConfiguration": {
+          "description": "BFD configuration properties",
+          "$ref": "./common.json#/definitions/BfdConfiguration"
+        },
+        "defaultRouteOriginate": {
+          "description": "Originate a defaultRoute. Ex: \"True\" | \"False\".",
+          "$ref": "./common.json#/definitions/BooleanEnumProperty"
+        },
+        "allowAS": {
+          "description": "Allows for routes to be received and processed even if the router detects its own ASN in the AS-Path. 0 is disable, Possible values are 1-10, default is 2.",
           "type": "integer",
           "format": "int32",
-          "minimum": 1500,
-          "maximum": 9000,
-          "default": 1500,
-          "description": "Maximum transmission unit. Default value is 1500."
+          "minimum": 0,
+          "maximum": 10,
+          "default": 2
         },
-        "connectedIPv4Subnets": {
+        "allowASOverride": {
+          "type": "string",
+          "description": "Enable Or Disable state.",
+          "enum": [
+            "Enable",
+            "Disable"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "allowASOverride"
+          }
+        },
+        "fabricASN": {
+          "type": "integer",
+          "format": "int64",
+          "description": "ASN of Network Fabric. Example: 65048.",
+          "readOnly": true
+        },
+        "peerASN": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "Peer ASN. Example: 65047."
+        },
+        "ipv4ListenRangePrefixes": {
           "type": "array",
-          "description": "List with object connectedIPv4Subnets.",
+          "description": "BGP Ipv4 ListenRange.",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Ipv4 Listen Range Prefix. Example: 10.1.0.0/28."
+          }
+        },
+        "ipv6ListenRangePrefixes": {
+          "type": "array",
+          "minItems": 1,
+          "description": "BGP Ipv6 ListenRange.",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Ipv6 Listen Range Prefix. Example: 3FFE:FFFF:0:CD30::/126."
+          }
+        },
+        "ipv4NeighborAddress": {
+          "type": "array",
+          "description": "List with stringified ipv4NeighborAddresses.",
+          "minItems": 1,
+          "x-ms-client-flatten": true,
           "x-ms-identifiers": [
-            "prefix"
+            "address"
           ],
           "items": {
             "type": "object",
-            "description": "connectedIPv4Subnet model.",
-            "allOf": [
-              {
-                "$ref": "./common.json#/definitions/AnnotationResource",
-                "description": "Common properties for annotated type."
-              }
-            ],
+            "description": "ipv4NeighborAddress model.",
             "properties": {
-              "prefix": {
+              "address": {
                 "type": "string",
-                "description": "Ipv4 Prefix of the connectedIPv4Subnet."
+                "minLength": 1,
+                "description": "IP Address of the IPv4NeighborAddress."
+              },
+              "configurationState": {
+                "description": "Gets the configurationState of the resource.",
+                "$ref": "./common.json#/definitions/ConfigurationState"
               }
             }
           }
         },
-        "connectedIPv6Subnets": {
+        "ipv6NeighborAddress": {
           "type": "array",
-          "description": "List with object connectedIPv6Subnets.",
+          "description": "List with stringified ipv6NeighborAddress.",
+          "minItems": 1,
           "x-ms-identifiers": [
-            "prefix"
+            "address"
           ],
           "items": {
             "type": "object",
-            "description": "connectedIPv6Subnet model.",
-            "allOf": [
-              {
-                "$ref": "./common.json#/definitions/AnnotationResource",
-                "description": "Common properties for annotated type."
-              }
-            ],
+            "description": "ipv6NeighborAddress model.",
             "properties": {
-              "prefix": {
+              "address": {
                 "type": "string",
-                "description": "Ipv6 Prefix of the connectedIPv6Subnet."
+                "minLength": 1,
+                "description": "ip address of the ipv6NeighborAddress."
+              },
+              "configurationState": {
+                "description": "Gets the configurationState of the resource.",
+                "$ref": "./common.json#/definitions/ConfigurationState"
               }
             }
           }
-        },
-        "staticRouteConfiguration": {
-          "type": "object",
-          "description": "staticRouteConfiguration model.",
-          "properties": {
-            "bfdConfiguration": {
-              "$ref": "#/definitions/BfdConfiguration"
-            },
-            "ipv4Routes": {
-              "type": "array",
-              "description": "List with object IPv4Routes.",
-              "x-ms-identifiers": [
-                "prefix"
-              ],
-              "items": {
-                "type": "object",
-                "description": "staticIpv4Route model.",
-                "properties": {
-                  "prefix": {
-                    "type": "string",
-                    "description": "IPv4 prefix of the staticIpv4Route."
-                  },
-                  "nextHop": {
-                    "type": "array",
-                    "description": "List of next hop IPv4 addresses.",
-                    "items": {
-                      "type": "string",
-                      "description": "Next Hop IPv4 address."
-                    }
-                  }
-                },
-                "required": [
-                  "prefix",
-                  "nextHop"
-                ]
-              }
-            },
-            "ipv6Routes": {
-              "type": "array",
-              "description": "List with object IPv6Routes.",
-              "x-ms-identifiers": [
-                "prefix"
-              ],
-              "items": {
-                "type": "object",
-                "description": "staticIPv6Route model.",
-                "properties": {
-                  "prefix": {
-                    "type": "string",
-                    "description": "IPv6 prefix of the staticIPv6Route."
-                  },
-                  "nextHop": {
-                    "type": "array",
-                    "description": "List of next hop IPv6 addresses.",
-                    "items": {
-                      "type": "string",
-                      "description": "Next Hop IPv6 address."
-                    }
-                  }
-                },
-                "required": [
-                  "prefix",
-                  "nextHop"
-                ]
-              }
-            }
-          }
-        },
-        "bgpConfiguration": {
-          "type": "object",
-          "description": "BGP configuration properties",
-          "allOf": [
-            {
-              "$ref": "./common.json#/definitions/AnnotationResource",
-              "description": "Common properties for annotated type."
-            }
-          ],
-          "properties": {
-            "bfdConfiguration": {
-              "$ref": "#/definitions/BfdConfiguration"
-            },
-            "defaultRouteOriginate": {
-              "description": "Originate a defaultRoute. Ex: \"True\" | \"False\".",
-              "$ref": "./common.json#/definitions/BooleanEnumProperty"
-            },
-            "allowAS": {
-              "description": "Allows for routes to be received and processed even if the router detects its own ASN in the AS-Path. 0 is disable, Possible values are 1-10, default is 2.",
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0,
-              "maximum": 10,
-              "default": 2
-            },
-            "allowASOverride": {
-              "type": "string",
-              "description": "Enable Or Disable state.",
-              "enum": [
-                "Enable",
-                "Disable"
-              ],
-              "x-ms-enum": {
-                "modelAsString": true,
-                "name": "allowASOverride"
-              }
-            },
-            "fabricASN": {
-              "type": "integer",
-              "format": "int32",
-              "description": "ASN of Network Fabric. Example: 65048.",
-              "readOnly": true
-            },
-            "peerASN": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 1,
-              "maximum": 65535,
-              "description": "Peer ASN. Example: 65047."
-            },
-            "ipv4ListenRangePrefixes": {
-              "type": "array",
-              "description": "BGP Ipv4 ListenRange.",
-              "items": {
-                "type": "string",
-                "description": "Ipv4 Listen Range Prefix. Example: 10.1.0.0/28."
-              }
-            },
-            "ipv6ListenRangePrefixes": {
-              "type": "array",
-              "description": "BGP Ipv6 ListenRange.",
-              "items": {
-                "type": "string",
-                "description": "Ipv6 Listen Range Prefix. Example: 3FFE:FFFF:0:CD30::/126."
-              }
-            },
-            "ipv4NeighborAddress": {
-              "type": "array",
-              "description": "List with stringified ipv4NeighborAddresses.",
-              "x-ms-identifiers": [
-                "address"
-              ],
-              "items": {
-                "type": "object",
-                "description": "ipv4NeighborAddress model.",
-                "properties": {
-                  "address": {
-                    "type": "string",
-                    "description": "IP Address of the IPv4NeighborAddress."
-                  },
-                  "operationalState": {
-                    "type": "string",
-                    "description": "operationalState of the IPv4NeighborAddress.",
-                    "readOnly": true
-                  }
-                }
-              }
-            },
-            "ipv6NeighborAddress": {
-              "type": "array",
-              "description": "List with stringified ipv6NeighborAddress.",
-              "x-ms-identifiers": [
-                "address"
-              ],
-              "items": {
-                "type": "object",
-                "description": "ipv6NeighborAddress model.",
-                "properties": {
-                  "address": {
-                    "type": "string",
-                    "description": "ip address of the ipv6NeighborAddress."
-                  },
-                  "operationalState": {
-                    "type": "string",
-                    "description": "operationalState of the ipv6NeighborAddress.",
-                    "readOnly": true
-                  }
-                }
-              }
-            }
-          },
-          "required": [
-            "peerASN"
-          ]
-        },
-        "importRoutePolicyId": {
-          "type": "string",
-          "description": "ARM resource ID of importRoutePolicy."
-        },
-        "exportRoutePolicyId": {
-          "type": "string",
-          "description": "ARM resource ID of importRoutePolicy."
         }
       }
     },
@@ -2617,6 +2871,9 @@
         {
           "$ref": "./common.json#/definitions/AnnotationResource",
           "description": "Common properties for annotated type."
+        },
+        {
+          "$ref": "#/definitions/ExternalNetworkPatchableProperties"
         }
       ],
       "properties": {
@@ -2625,38 +2882,26 @@
           "description": "Gets the networkToNetworkInterconnectId of the resource.",
           "readOnly": true
         },
-        "disabledOnResources": {
-          "type": "array",
-          "description": "List of resources the externalNetwork is disabled on. Can be either entire NetworkFabric or NetworkRack.",
-          "items": {
-            "type": "string",
-            "description": "ARM resource Id of the resource"
-          },
-          "readOnly": true
-        },
-        "administrativeState": {
-          "description": "AdministrativeState of the externalNetwork. Example: Enabled | Disabled.",
-          "$ref": "./common.json#/definitions/EnabledDisabledState"
-        },
-        "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
-        },
         "peeringOption": {
           "description": "Peering option list.",
           "$ref": "./common.json#/definitions/PeeringOption"
         },
         "optionBProperties": {
           "description": "option B properties object",
-          "$ref": "#/definitions/OptionBProperties"
+          "allOf": [
+            {
+              "$ref": "#/definitions/L3OptionBProperties"
+            }
+          ]
         },
         "optionAProperties": {
           "description": "option A properties object",
-          "properties": {},
           "allOf": [
             {
-              "$ref": "#/definitions/OptionAProperties"
+              "$ref": "./common.json#/definitions/Layer3IpPrefixProperties"
+            },
+            {
+              "$ref": "#/definitions/L3OptionAProperties"
             }
           ],
           "required": [
@@ -2664,116 +2909,38 @@
             "peerASN"
           ]
         },
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
+        },
+        "provisioningState": {
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
+        },
         "importRoutePolicyId": {
           "type": "string",
-          "description": "ARM resource ID of importRoutePolicy."
+          "description": "ARM Resource ID of the RoutePolicy. This is used for the backward compactability.",
+          "readOnly": true
         },
         "exportRoutePolicyId": {
           "type": "string",
-          "description": "ARM resource ID of exportRoutePolicy."
+          "description": "ARM Resource ID of the RoutePolicy. This is used for the backward compactability.",
+          "readOnly": true
         }
       }
     },
-    "InternalNetworkProperties": {
-      "type": "object",
-      "description": "Internal Network Properties",
-      "required": [
-        "vlanId"
-      ],
-      "allOf": [
-        {
-          "$ref": "./common.json#/definitions/AnnotationResource",
-          "description": "Common properties for annotated type."
-        },
-        {
-          "$ref": "#/definitions/InternalNetworkPatchableProperties"
-        }
-      ],
-      "properties": {
-        "disabledOnResources": {
-          "type": "array",
-          "description": "List of resources the InternalNetwork is disabled on. Can be either entire NetworkFabric or NetworkRack.",
-          "items": {
-            "type": "string",
-            "description": "ARM resource Id of the resource"
-          },
-          "readOnly": true
-        },
-        "administrativeState": {
-          "description": "Administrative state of the InternalNetwork. Example: Enabled | Disabled.",
-          "$ref": "./common.json#/definitions/EnabledDisabledState"
-        },
-        "bgpDisabledOnResources": {
-          "type": "array",
-          "description": "List of resources the BGP is disabled on. Can be either entire NetworkFabric or NetworkRack.",
-          "items": {
-            "type": "string",
-            "description": "ARM resource Id of the resource"
-          },
-          "readOnly": true
-        },
-        "bfdDisabledOnResources": {
-          "type": "array",
-          "description": "List of resources the BFD for BGP is disabled on. Can be either entire NetworkFabric or NetworkRack.",
-          "items": {
-            "type": "string",
-            "description": "ARM resource Id of the resource"
-          },
-          "readOnly": true
-        },
-        "bfdForStaticRoutesDisabledOnResources": {
-          "type": "array",
-          "description": "List of resources the BFD of StaticRoutes is disabled on. Can be either entire NetworkFabric or NetworkRack.",
-          "items": {
-            "type": "string",
-            "description": "ARM resource Id of the resource"
-          },
-          "readOnly": true
-        },
-        "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
-        },
-        "vlanId": {
-          "type": "integer",
-          "format": "int32",
-          "minimum": 100,
-          "maximum": 4095,
-          "description": "Vlan identifier. Example: 1001."
-        }
-      }
-    },
-    "Layer3IpPrefixProperties": {
-      "type": "object",
-      "description": "Layer 3 primary and secondary ip address prefixes.",
-      "properties": {
-        "primaryIpv4Prefix": {
-          "type": "string",
-          "description": "IPv4 Address Prefix of CE-PE interconnect links. Default value is 172.23.1.0/31. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
-        },
-        "primaryIpv6Prefix": {
-          "type": "string",
-          "description": "IPv6 Address Prefix of CE-PE interconnect links. Default value is 3FFE:FFFF:0:CD30::a1/126. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
-        },
-        "secondaryIpv4Prefix": {
-          "type": "string",
-          "description": "Secondary IPv4 Address Prefix of CE-PE interconnect links. Default value is 172.23.1.2/31. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
-        },
-        "secondaryIpv6Prefix": {
-          "type": "string",
-          "description": "Secondary IPv6 Address Prefix of CE-PE interconnect links. Default value is 3FFE:FFFF:0:CD30::a1/126. The values can be specified at the time of creation or can be updated afterwards. Any update to the values post-provisioning may disrupt traffic. The 1st and 3rd IPs are to be configured on CE1 and CE2 for Option B interfaces. The 2nd and 4th IPs are to be configured on PE1 and PE2 for Option B interfaces."
-        }
-      }
-    },
-    "OptionAProperties": {
+    "L3OptionAProperties": {
       "type": "object",
       "description": "Peering optionA properties",
       "properties": {
         "mtu": {
           "type": "integer",
           "format": "int32",
-          "minimum": 1500,
+          "minimum": 64,
           "maximum": 9000,
           "default": 1500,
           "description": "MTU to use for option A peering."
@@ -2782,75 +2949,64 @@
           "type": "integer",
           "format": "int32",
           "minimum": 501,
-          "maximum": 4095,
+          "maximum": 4094,
           "description": "Vlan identifier. Example : 501"
         },
         "fabricASN": {
           "type": "integer",
-          "format": "int32",
+          "format": "int64",
           "minimum": 1,
-          "maximum": 65535,
+          "maximum": 4294967295,
           "description": "Fabric ASN number. Example 65001 ",
           "readOnly": true
         },
         "peerASN": {
           "type": "integer",
-          "format": "int32",
+          "format": "int64",
           "minimum": 1,
-          "maximum": 65535,
+          "maximum": 4294967295,
           "description": "Peer ASN number.Example : 28"
         },
         "bfdConfiguration": {
-          "$ref": "#/definitions/BfdConfiguration"
+          "description": "BFD configuration properties",
+          "$ref": "./common.json#/definitions/BfdConfiguration"
+        },
+        "ingressAcl": {
+          "description": "ARM resource ID of Access Control Lists.",
+          "$ref": "./common.json#/definitions/AccessControlListIdProperty"
+        },
+        "egressAcl": {
+          "description": "Egress ACLs.",
+          "$ref": "./common.json#/definitions/AccessControlListIdProperty"
         }
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/Layer3IpPrefixProperties"
-        }
-      ]
+      }
     },
-    "OptionBProperties": {
+    "L3OptionBProperties": {
       "type": "object",
       "description": "Option B configuration.",
+      "x-ms-client-flatten": true,
       "properties": {
         "importRouteTargets": {
           "type": "array",
-          "description": "Route Targets to be applied for incoming routes into CE.",
+          "description": "RouteTargets to be applied. This is used for the backward compactability.",
+          "readOnly": true,
           "items": {
             "type": "string",
-            "description": "Import route target. Example: 65541:2001, 65542:2001."
+            "description": "RouteTargets to be applied."
           }
         },
         "exportRouteTargets": {
           "type": "array",
-          "description": "Route Targets to be applied for outgoing routes from CE.",
+          "description": "RouteTargets to be applied. This is used for the backward compactability.",
+          "readOnly": true,
           "items": {
             "type": "string",
-            "description": "Export route target. Example: 65531, 65532."
+            "description": "RouteTargets to be applied."
           }
-        }
-      }
-    },
-    "BfdConfiguration": {
-      "type": "object",
-      "description": "BFD configuration properties",
-      "properties": {
-        "administrativeState": {
-          "description": "Administrative state of the BfdConfiguration. Example: Enabled | Disabled.",
-          "$ref": "./common.json#/definitions/EnabledDisabledState"
         },
-        "interval": {
-          "type": "integer",
-          "format": "int32",
-          "description": "interval in milliseconds. Example: 300.",
-          "readOnly": true
-        },
-        "multiplier": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Multiplier for the Bfd Configuration. Example: 3.",
-          "readOnly": true
+        "routeTargets": {
+          "description": "RouteTargets to be applied.",
+          "$ref": "./common.json#/definitions/RouteTargetInformation"
         }
       }
     }

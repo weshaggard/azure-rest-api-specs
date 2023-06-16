@@ -1,34 +1,53 @@
 {
   "parameters": {
-    "subscriptionId": "subscriptionId",
-    "resourceGroupName": "resourceGroupName",
+    "subscriptionId": "xxxxxxxx-xxxx-xxxx-xxxxxxxx",
+    "resourceGroupName": "example-rg",
     "api-version": "2023-06-01",
     "l3IsolationDomainName": "example-l3domain",
     "externalNetworkName": "example-externalnetwork",
     "body": {
       "properties": {
-        "annotation": "Lab 1",
         "peeringOption": "OptionA",
         "optionBProperties": {
-          "importRouteTargets": [
-            "65046:10039"
-          ],
-          "exportRouteTargets": [
-            "65046:10039"
-          ]
+          "routeTargets": {
+            "importIpv4RouteTargets": [
+              "65046:10039"
+            ],
+            "importIpv6RouteTargets": [
+              "65046:10039"
+            ],
+            "exportIpv4RouteTargets": [
+              "65046:10039"
+            ],
+            "exportIpv6RouteTargets": [
+              "65046:10039"
+            ]
+          }
         },
         "optionAProperties": {
-          "mtu": 1500,
-          "vlanId": 1001,
-          "peerASN": 65047,
-          "bfdConfiguration": {},
           "primaryIpv4Prefix": "10.1.1.0/30",
           "primaryIpv6Prefix": "3FFE:FFFF:0:CD30::a0/126",
           "secondaryIpv4Prefix": "10.1.1.4/30",
-          "secondaryIpv6Prefix": "3FFE:FFFF:0:CD30::a4/126"
+          "secondaryIpv6Prefix": "3FFE:FFFF:0:CD30::a4/126",
+          "mtu": 1500,
+          "vlanId": 1001,
+          "peerASN": 65047,
+          "bfdConfiguration": {
+            "intervalInMilliSeconds": 300,
+            "multiplier": 15
+          },
+          "ingressAcl": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/accessControlLists/example-aclName",
+          "egressAcl": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/accessControlLists/example-aclName"
         },
-        "importRoutePolicyId": "/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
-        "exportRoutePolicyId": "/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+        "annotation": "annotation1",
+        "importRoutePolicy": {
+          "importIpv4RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+          "importIpv6RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+        },
+        "exportRoutePolicy": {
+          "exportIpv4RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+          "exportIpv6RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+        }
       }
     }
   },
@@ -36,13 +55,7 @@
     "200": {
       "body": {
         "properties": {
-          "networkToNetworkInterconnectId": "/subscriptions/xxxxxx/resourceGroups/resourcegroupname/providers/Microsoft.ManagedNetworkFabric/networkFabrics/FabricName/networkToNetworkInterconnects/DefaultNNI",
-          "disabledOnResources": [
-            ""
-          ],
-          "administrativeState": "Enabled",
-          "provisioningState": "Succeeded",
-          "annotation": "lab1",
+          "networkToNetworkInterconnectId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/networkFabrics/example-fabric/networkToNetworkInterconnects/example-nni",
           "peeringOption": "OptionA",
           "optionBProperties": {
             "importRouteTargets": [
@@ -50,36 +63,64 @@
             ],
             "exportRouteTargets": [
               "65046:10039"
-            ]
+            ],
+            "routeTargets": {
+              "importIpv4RouteTargets": [
+                "65046:10039"
+              ],
+              "importIpv6RouteTargets": [
+                "65046:10039"
+              ],
+              "exportIpv4RouteTargets": [
+                "65046:10039"
+              ],
+              "exportIpv6RouteTargets": [
+                "65046:10039"
+              ]
+            }
           },
           "optionAProperties": {
-            "mtu": 1500,
-            "vlanId": 1001,
-            "fabricASN": 65048,
-            "peerASN": 65047,
-            "bfdConfiguration": {
-              "administrativeState": "Enabled",
-              "interval": 4,
-              "multiplier": 13
-            },
             "primaryIpv4Prefix": "10.1.1.0/30",
             "primaryIpv6Prefix": "3FFE:FFFF:0:CD30::a0/126",
             "secondaryIpv4Prefix": "10.1.1.4/30",
-            "secondaryIpv6Prefix": "3FFE:FFFF:0:CD30::a4/126"
+            "secondaryIpv6Prefix": "3FFE:FFFF:0:CD30::a4/126",
+            "mtu": 1500,
+            "vlanId": 1001,
+            "fabricASN": 1234,
+            "peerASN": 65047,
+            "bfdConfiguration": {
+              "administrativeState": "Enabled",
+              "intervalInMilliSeconds": 300,
+              "multiplier": 15
+            },
+            "ingressAcl": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/accessControlLists/example-aclName",
+            "egressAcl": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/accessControlLists/example-aclName"
           },
-          "importRoutePolicyId": "/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
-          "exportRoutePolicyId": "/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+          "configurationState": "Succeeded",
+          "provisioningState": "Accepted",
+          "administrativeState": "Enabled",
+          "importRoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+          "exportRoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+          "annotation": "annotation",
+          "importRoutePolicy": {
+            "importIpv4RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+            "importIpv6RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+          },
+          "exportRoutePolicy": {
+            "exportIpv4RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+            "exportIpv6RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+          }
         },
         "id": "/subscriptions/xxxxxx/resourceGroups/resourcegroupname/providers/Microsoft.ManagedNetworkFabric/example-l3domain/externalNetworks/example-externalnetwork",
         "name": "example-externalnetwork",
-        "type": "microsoft.managednetworkfabric/example-externalnetwork",
+        "type": "microsoft.managednetworkfabric/l3IsolationDomains/externalnetworks",
         "systemData": {
           "createdBy": "email@address.com",
           "createdByType": "User",
-          "createdAt": "2023-02-09T18:35:44.070Z",
+          "createdAt": "2023-06-09T04:51:41.251Z",
           "lastModifiedBy": "UserId",
           "lastModifiedByType": "User",
-          "lastModifiedAt": "2023-02-09T18:35:44.070Z"
+          "lastModifiedAt": "2023-06-09T04:51:41.251Z"
         }
       }
     },
@@ -89,13 +130,7 @@
       },
       "body": {
         "properties": {
-          "networkToNetworkInterconnectId": "/subscriptions/xxxxxx/resourceGroups/resourcegroupname/providers/Microsoft.ManagedNetworkFabric/networkFabrics/FabricName/networkToNetworkInterconnects/DefaultNNI",
-          "disabledOnResources": [
-            ""
-          ],
-          "administrativeState": "Enabled",
-          "provisioningState": "Succeeded",
-          "annotation": "lab1",
+          "networkToNetworkInterconnectId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/networkFabrics/example-fabric/networkToNetworkInterconnects/example-nni",
           "peeringOption": "OptionA",
           "optionBProperties": {
             "importRouteTargets": [
@@ -103,36 +138,64 @@
             ],
             "exportRouteTargets": [
               "65046:10039"
-            ]
+            ],
+            "routeTargets": {
+              "importIpv4RouteTargets": [
+                "65046:10039"
+              ],
+              "importIpv6RouteTargets": [
+                "65046:10039"
+              ],
+              "exportIpv4RouteTargets": [
+                "65046:10039"
+              ],
+              "exportIpv6RouteTargets": [
+                "65046:10039"
+              ]
+            }
           },
           "optionAProperties": {
-            "mtu": 1500,
-            "vlanId": 1001,
-            "fabricASN": 65048,
-            "peerASN": 65047,
-            "bfdConfiguration": {
-              "administrativeState": "Enabled",
-              "interval": 4,
-              "multiplier": 13
-            },
             "primaryIpv4Prefix": "10.1.1.0/30",
             "primaryIpv6Prefix": "3FFE:FFFF:0:CD30::a0/126",
             "secondaryIpv4Prefix": "10.1.1.4/30",
-            "secondaryIpv6Prefix": "3FFE:FFFF:0:CD30::a4/126"
+            "secondaryIpv6Prefix": "3FFE:FFFF:0:CD30::a4/126",
+            "mtu": 1500,
+            "vlanId": 1001,
+            "fabricASN": 1234,
+            "peerASN": 65047,
+            "bfdConfiguration": {
+              "administrativeState": "Enabled",
+              "intervalInMilliSeconds": 300,
+              "multiplier": 15
+            },
+            "ingressAcl": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/accessControlLists/example-aclName",
+            "egressAcl": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/accessControlLists/example-aclName"
           },
-          "importRoutePolicyId": "/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
-          "exportRoutePolicyId": "/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+          "configurationState": "Succeeded",
+          "provisioningState": "Accepted",
+          "administrativeState": "Enabled",
+          "importRoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+          "exportRoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+          "annotation": "annotation",
+          "importRoutePolicy": {
+            "importIpv4RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+            "importIpv6RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+          },
+          "exportRoutePolicy": {
+            "exportIpv4RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName",
+            "exportIpv6RoutePolicyId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/example-rg/providers/Microsoft.ManagedNetworkFabric/routePolicies/routePolicyName"
+          }
         },
         "id": "/subscriptions/xxxxxx/resourceGroups/resourcegroupname/providers/Microsoft.ManagedNetworkFabric/example-l3domain/externalNetworks/example-externalnetwork",
         "name": "example-externalnetwork",
-        "type": "microsoft.managednetworkfabric/example-externalnetwork",
+        "type": "microsoft.managednetworkfabric/l3IsolationDomains/externalnetworks",
         "systemData": {
-          "createdBy": "email@email.com",
+          "createdBy": "email@address.com",
           "createdByType": "User",
-          "createdAt": "2023-02-09T18:35:44.070Z",
+          "createdAt": "2023-06-09T04:51:41.251Z",
           "lastModifiedBy": "UserId",
           "lastModifiedByType": "User",
-          "lastModifiedAt": "2023-02-09T18:35:44.070Z"
+          "lastModifiedAt": "2023-06-09T04:51:41.251Z"
         }
       }
     }
