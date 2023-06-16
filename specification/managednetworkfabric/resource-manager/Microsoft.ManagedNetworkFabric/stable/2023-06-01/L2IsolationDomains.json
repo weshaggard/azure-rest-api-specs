@@ -621,37 +621,35 @@
       ],
       "properties": {
         "networkFabricId": {
-          "type": "string",
-          "description": "Network Fabric ARM resource id."
+          "description": "Network Fabric ARM resource id.",
+          "$ref": "./common.json#/definitions/NetworkFabricIdProperty"
         },
         "vlanId": {
           "type": "integer",
           "format": "int32",
+          "minimum": 100,
+          "maximum": 4094,
           "description": "vlanId. Example: 501."
         },
         "mtu": {
           "type": "integer",
           "format": "int32",
+          "minimum": 64,
+          "maximum": 9000,
+          "default": 1500,
           "description": "maximum transmission unit. Default value is 1500."
         },
-        "disabledOnResources": {
-          "type": "array",
-          "description": "List of resources the L2 Isolation Domain is disabled on. Can be either entire NetworkFabric or NetworkRack.",
-          "items": {
-            "type": "string",
-            "description": "ARM resource Id of the resource"
-          },
-          "readOnly": true
-        },
-        "administrativeState": {
-          "description": "state. Example: Enabled | Disabled. It indicates administrative state of the isolationDomain, whether it is enabled or disabled. If enabled, the configuration is applied on the devices. If disabled, the configuration is removed from the devices",
-          "readOnly": true,
-          "$ref": "./common.json#/definitions/EnabledDisabledState"
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
       "description": "L2IsolationDomainProperties define the resource properties."
@@ -668,6 +666,9 @@
         "mtu": {
           "type": "integer",
           "format": "int32",
+          "minimum": 64,
+          "maximum": 9000,
+          "default": 1500,
           "description": "maximum transmission unit. Default value is 1500."
         }
       },
@@ -698,15 +699,13 @@
           "x-ms-client-flatten": true,
           "description": "Resource properties.",
           "$ref": "#/definitions/L2IsolationDomainPatchProperties"
-        },
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
         }
       },
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/TagsUpdate"
+        }
+      ],
       "description": "The L2IsolationDomain patch resource definition."
     },
     "L2IsolationDomainsListResult": {
