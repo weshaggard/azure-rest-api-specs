@@ -1291,16 +1291,6 @@
           "description": "physicalIdentifier of the network interface.",
           "readOnly": true
         },
-        "administrativeState": {
-          "type": "string",
-          "description": "administrativeState of the network interface. Example: Enabled | Disabled.",
-          "$ref": "./common.json#/definitions/EnabledDisabledState"
-        },
-        "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
-        },
         "connectedTo": {
           "type": "string",
           "description": "The arm resource id of the interface or compute server its connected to.",
@@ -1319,15 +1309,13 @@
           },
           "readOnly": true
         },
-        "ipv4Address": {
-          "type": "string",
-          "description": "ipv4Address.",
-          "readOnly": true
+        "provisioningState": {
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
         },
-        "ipv6Address": {
-          "type": "string",
-          "description": "ipv6Address.",
-          "readOnly": true
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
       "description": "NetworkInterfaceProperties define the resource properties."
@@ -1338,11 +1326,14 @@
       "properties": {
         "hostName": {
           "type": "string",
+          "minLength": 1,
           "description": "The host Name of the device."
         },
         "serialNumber": {
           "type": "string",
-          "description": "serialNumber of the format Make;Model;HardwareRevisionId;SerialNumber. Example: Arista;DCS-7280DR3-24;12.05;JPE21116969"
+          "minLength": 1,
+          "description": "SerialNumber of the device. Format of serial Number - Make;Model;HardwareRevisionId;SerialNumber.",
+          "example": "Arista;DCS-7280DR3-24;12.05;JPE21116969"
         }
       }
     },
@@ -1391,26 +1382,57 @@
         },
         "networkDeviceSku": {
           "type": "string",
-          "description": "Network Device SKU name."
+          "description": "Network Device SKU name.",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
         },
         "networkDeviceRole": {
-          "$ref": "./common.json#/definitions/NetworkDeviceRoleTypes",
-          "description": "networkDeviceRole is the device role: Example: CE | ToR."
-        },
-        "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
+          "description": "NetworkDeviceRole is the device role: Example: CE | ToR.",
+          "type": "string",
+          "enum": [
+            "CE",
+            "ToR",
+            "NPB",
+            "TS",
+            "Management"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NetworkDeviceRole"
+          },
           "readOnly": true
         },
         "networkRackId": {
           "description": "Reference to network rack resource id.",
           "type": "string",
           "readOnly": true
+        },
+        "managementIpv4Address": {
+          "description": "Management IPv4 Address.",
+          "type": "string",
+          "readOnly": true
+        },
+        "managementIpv6Address": {
+          "description": "Management IPv6 Address.",
+          "type": "string",
+          "readOnly": true
+        },
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
+        },
+        "provisioningState": {
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
       "required": [
-        "networkDeviceSku",
-        "networkDeviceRole",
         "serialNumber"
       ],
       "description": "NetworkDeviceProperties define the resource properties."
@@ -1419,6 +1441,9 @@
       "type": "object",
       "x-ms-azure-resource": true,
       "description": "The NetworkDevice resource definition.",
+      "required": [
+        "properties"
+      ],
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
