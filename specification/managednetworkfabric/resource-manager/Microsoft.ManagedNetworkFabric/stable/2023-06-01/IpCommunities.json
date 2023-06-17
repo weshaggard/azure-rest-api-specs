@@ -379,6 +379,10 @@
         {
           "$ref": "./common.json#/definitions/AnnotationResource",
           "description": "Common properties for annotated type."
+        },
+        {
+          "description":"IP Community patchable properties.",
+          "$ref": "#/definitions/IpCommunityPatchableProperties"
         }
       ],
       "required": [
@@ -386,42 +390,17 @@
         "communityMembers"
       ],
       "properties": {
-        "action": {
-          "description": "Action to be taken on the configuration. Example: Permit | Deny.",
-          "$ref": "./common.json#/definitions/CommunityActionTypes"
-        },
-        "wellKnownCommunities": {
-          "type": "array",
-          "description": "Supported well known Community List.",
-          "uniqueItems": true,
-          "items": {
-            "description": "\n`Internet` - Advertise routes to internet community.\n `LocalAS` - Advertise routes to only localAS peers.\n `NoAdvertise` - Don't advertise routes to any peer.\n`NoExport` - Don't export to next AS.\n`GShut` - Graceful Shutdown (GSHUT) withdraw routes before terminating BGP connection.\n",
-            "type": "string",
-            "enum": [
-              "Internet",
-              "LocalAS",
-              "NoAdvertise",
-              "NoExport",
-              "GShut"
-            ],
-            "x-ms-enum": {
-              "modelAsString": true,
-              "name": "wellKnownCommunities"
-            }
-          }
-        },
-        "communityMembers": {
-          "type": "array",
-          "description": "List the communityMembers of IP Community .",
-          "items": {
-            "description": "communityMember of the IP Community. The expected formats are AA:NN >> example 65535:65535, <integer32> >> example 4294967040. The possible values of AA, NN are 0-65535 and <integer32> are 1-4294967040.",
-            "type": "string"
-          }
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
       "description": "IpCommunityProperties define the resource properties."
@@ -464,15 +443,67 @@
       "type": "object",
       "x-ms-azure-resource": true,
       "properties": {
-        "tags": {
+        "properties": {
           "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
+          "allOf": [
+            {
+              "description":"IP Community patchable properties.",
+              "$ref": "#/definitions/IpCommunityPatchableProperties"
+            }
+          ],
+          "required": [
+            "action",
+            "communityMembers"
+          ]
         }
       },
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/TagsUpdate"
+        }
+      ],
       "description": "The IPCommunity patch resource definition."
+    },
+    "IpCommunityPatchableProperties": {
+      "type": "object",
+      "description":"IP Community patchable properties.",
+      "properties": {
+        "action": {
+          "description": "Action to be taken on the configuration. Example: Permit | Deny.",
+          "$ref": "./common.json#/definitions/CommunityActionTypes"
+        },
+        "wellKnownCommunities": {
+          "type": "array",
+          "description": "Supported well known Community List.",
+          "uniqueItems": true,
+          "items": {
+            "description": "\n`Internet` - Advertise routes to internet community.\n `LocalAS` - Advertise routes to only localAS peers.\n `NoAdvertise` - Don't advertise routes to any peer.\n`NoExport` - Don't export to next AS.\n`GShut` - Graceful Shutdown (GSHUT) withdraw routes before terminating BGP connection.\n",
+            "type": "string",
+            "minLength": 1,
+            "enum": [
+              "Internet",
+              "LocalAS",
+              "NoAdvertise",
+              "NoExport",
+              "GShut"
+            ],
+            "x-ms-enum": {
+              "modelAsString": true,
+              "name": "wellKnownCommunities"
+            }
+          }
+        },
+        "communityMembers": {
+          "type": "array",
+          "minItems": 1,
+          "description": "List the communityMembers of IP Community .",
+          "items": {
+            "minLength": 1,
+            "description": "communityMember of the IP Community. The expected formats are AA:NN >> example 65535:65535, <integer32> >> example 4294967040. The possible values of AA, NN are 0-65535 and <integer32> are 1-4294967040.",
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "parameters": {}
