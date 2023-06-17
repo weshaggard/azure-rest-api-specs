@@ -41,7 +41,7 @@
         ],
         "operationId": "NetworkFabricSkus_Get",
         "summary": "Gets a Network Fabric Sku.",
-        "description": "Implements Network Fabric Sku GET method.",
+        "description": "Implements Network Fabric SKU GET method.",
         "produces": [
           "application/json"
         ],
@@ -57,7 +57,7 @@
             "name": "networkFabricSkuName",
             "required": true,
             "type": "string",
-            "description": "Name of the Network Fabric Sku"
+            "description": "Name of the Network Fabric SKU."
           }
         ],
         "responses": {
@@ -84,7 +84,7 @@
     "/subscriptions/{subscriptionId}/providers/Microsoft.ManagedNetworkFabric/networkFabricSkus": {
       "get": {
         "operationId": "NetworkFabricSkus_ListBySubscription",
-        "summary": "List NetworkFabricSkus by subscription.",
+        "summary": "List Network Fabric SKUs by subscription.",
         "description": "Implements NetworkFabricSkus list by subscription GET method.",
         "parameters": [
           {
@@ -96,7 +96,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lists all NetworkFabricSkus under the subscription.",
+            "description": "Lists all Network Fabric SKUs under the subscription.",
             "schema": {
               "$ref": "#/definitions/NetworkFabricSkusListResult"
             }
@@ -124,37 +124,48 @@
       "type": "object",
       "properties": {
         "type": {
+          "description": "Type of Network Fabric SKU.",
           "type": "string",
-          "description": "Type of Network Fabric Sku.",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Type"
+          },
           "readOnly": true
         },
         "maxComputeRacks": {
           "type": "integer",
           "format": "int32",
-          "description": "Maximum number of compute racks available for this Network Fabric SKU."
+          "description": "Maximum number of compute racks available for this Network Fabric SKU. The value of max count racks is 4 for 4 rack SKU and 8 for 8 rack SKU."
         },
-        "minSupportedVer": {
-          "type": "string",
-          "description": "Minimum supported version.",
+        "maximumServerCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Maximum number of servers available for this Network Fabric SKU."
+        },
+        "supportedVersions": {
+          "type": "array",
+          "description": "List of supported Network Fabric SKU versions.",
+          "items": {
+            "type": "string",
+            "description": "Supported version."
+          },
           "readOnly": true
         },
-        "maxSupportedVer": {
+        "details": {
           "type": "string",
-          "description": "Maximum supported version.",
-          "readOnly": true
-        },
-        "detailsUri": {
-          "type": "string",
-          "description": "The URI gives full details of sku.",
+          "description": "The URI or blob gives full details of SKU.",
           "readOnly": true
         },
         "provisioningState": {
           "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
+          "$ref": "./common.json#/definitions/ProvisioningState"
         }
       },
-      "description": "NetworkFabricSkuProperties define the resource properties."
+      "description": "Network Fabric SKU Properties define the resource properties."
     },
     "NetworkFabricSku": {
       "type": "object",
@@ -174,15 +185,15 @@
       "required": [
         "properties"
       ],
-      "description": "The NetworkFabricSku resource definition."
+      "description": "The Network Fabric SKU resource definition."
     },
     "NetworkFabricSkusListResult": {
       "type": "object",
-      "description": "List of NetworkFabricSkus.",
+      "description": "List of Network Fabric SKUs.",
       "properties": {
         "value": {
           "type": "array",
-          "description": "List of NetworkFabricSku resources.",
+          "description": "List of Network Fabric SKU resources.",
           "items": {
             "$ref": "#/definitions/NetworkFabricSku"
           }
