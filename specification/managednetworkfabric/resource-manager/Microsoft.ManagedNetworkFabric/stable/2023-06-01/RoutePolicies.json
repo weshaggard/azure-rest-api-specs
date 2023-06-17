@@ -367,8 +367,91 @@
         {
           "$ref": "./common.json#/definitions/AnnotationResource",
           "description": "Common properties for annotated type."
+        },
+        {
+          "description": "Route Policy patchable properties.",
+          "$ref": "#/definitions/RoutePolicyPatchableProperties"
         }
       ],
+      "properties": {
+        "networkFabricId": {
+          "description":"Arm Resource ID of NetworkFabric.",
+          "$ref": "./common.json#/definitions/NetworkFabricIdProperty"
+        },
+        "addressFamilyType": {
+          "type": "string",
+          "description": "AddressFamilyType. This parameter decides whether the given ipv4 or ipv6 route policy.",
+          "default": "IPv4",
+          "minLength": 1,
+          "enum": [
+            "IPv4",
+            "IPv6"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AddressFamilyType"
+          }
+        },
+        "configurationState": {
+          "description": "Gets the configurationState of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
+        },
+        "provisioningState": {
+          "description": "Gets the provisioningState of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrativeState of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
+        }
+      },
+      "required": [
+        "statements",
+        "networkFabricId",
+        "addressFamilyType"
+      ],
+      "description": "RoutePolicyProperties define the resource properties."
+    },
+    "RoutePolicy": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/RoutePolicyProperties"
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The RoutePolicy resource definition."
+    },
+    "RoutePolicyPatch": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "description": "The RoutePolicy patchable properties.",
+          "$ref": "#/definitions/RoutePolicyPatchableProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/TagsUpdate"
+        }
+      ],
+      "description": "The RoutePolicy patch resource definition."
+    },
+    "RoutePolicyPatchableProperties": {
+      "type": "object",
+      "description": "Route Policy patchable properties.",
       "properties": {
         "statements": {
           "type": "array",
@@ -400,32 +483,34 @@
               },
               "condition": {
                 "type": "object",
+                "x-ms-client-flatten": true,
                 "description": "Route policy condition properties.",
                 "properties": {
                   "ipCommunityIds": {
                     "type": "array",
                     "description": "List of IPCommunity resource IDs.",
                     "items": {
-                      "type": "string",
-                      "description": "Arm Resource Id of IPCommunity."
+                      "description": "Arm Resource ID of IPCommunity.",
+                      "$ref": "./common.json#/definitions/IpCommunityIdProperty"
                     }
                   },
                   "ipExtendedCommunityIds": {
                     "type": "array",
                     "description": "List of IPExtendedCommunity resource IDs.",
                     "items": {
-                      "type": "string",
-                      "description": "Arm Resource Id of IpExtendedCommunity."
+                      "description": "Arm Resource ID of IpExtendedCommunity.",
+                      "$ref": "./common.json#/definitions/IpExtendedCommunityIdProperty"
                     }
                   },
                   "ipPrefixId": {
-                    "type": "string",
-                    "description": "Arm Resource Id of IpPrefix."
+                    "description": "Arm Resource ID of IpPrefix.",
+                    "$ref": "./common.json#/definitions/IpPrefixIdProperty"
                   }
                 }
               },
               "action": {
                 "type": "object",
+                "x-ms-client-flatten": true,
                 "description": "Route policy action properties.",
                 "properties": {
                   "localPreference": {
@@ -436,23 +521,35 @@
                     "description": "localPreference of the route policy."
                   },
                   "actionType": {
-                    "description": "action. Example: Permit | Deny.",
-                    "$ref": "./common.json#/definitions/CommunityActionTypes"
+                    "type": "string",
+                    "description": "Action type. Example: Permit | Deny | Continue.",
+                    "minLength": 1,
+                    "enum": [
+                      "Permit",
+                      "Deny",
+                      "Continue"
+                    ],
+                    "x-ms-enum": {
+                      "modelAsString": true,
+                      "name": "ActionType"
+                    }
                   },
                   "ipCommunityProperties": {
                     "type": "object",
+                    "x-ms-client-flatten": true,
                     "description": "ipCommunity Properties.",
                     "properties": {
                       "add": {
                         "type": "object",
+                        "x-ms-client-flatten": true,
                         "description": "Route policy add manipulations.",
                         "properties": {
                           "ipCommunityIds": {
                             "type": "array",
                             "description": "List of IPCommunity resource IDs.",
                             "items": {
-                              "type": "string",
-                              "description": "Arm Resource Id of IPCommunity."
+                              "description": "Arm Resource ID of IPCommunity.",
+                              "$ref": "./common.json#/definitions/IpCommunityIdProperty"
                             }
                           }
                         }
@@ -460,27 +557,29 @@
                       "delete": {
                         "type": "object",
                         "description": "Route policy delete manipulations.",
+                        "x-ms-client-flatten": true,
                         "properties": {
                           "ipCommunityIds": {
                             "type": "array",
                             "description": "List of IPCommunity resource IDs.",
                             "items": {
-                              "type": "string",
-                              "description": "Arm Resource Id of IPCommunity."
+                              "description": "Arm Resource ID of IPCommunity.",
+                              "$ref": "./common.json#/definitions/IpCommunityIdProperty"
                             }
                           }
                         }
                       },
                       "set": {
                         "type": "object",
+                        "x-ms-client-flatten": true,
                         "description": "Route policy set manipulations.",
                         "properties": {
                           "ipCommunityIds": {
                             "type": "array",
                             "description": "List of IPCommunity resource IDs.",
                             "items": {
-                              "type": "string",
-                              "description": "Arm Resource Id of IPCommunity."
+                              "description": "Arm Resource ID of IPCommunity.",
+                              "$ref": "./common.json#/definitions/IpCommunityIdProperty"
                             }
                           }
                         }
@@ -489,18 +588,20 @@
                   },
                   "ipExtendedCommunityProperties": {
                     "type": "object",
+                    "x-ms-client-flatten": true,
                     "description": "IP Extended Community Properties.",
                     "properties": {
                       "add": {
                         "type": "object",
+                        "x-ms-client-flatten": true,
                         "description": "Route policy add manipulations.",
                         "properties": {
                           "ipExtendedCommunityIds": {
                             "type": "array",
                             "description": "List of IPExtendedCommunity resource IDs.",
                             "items": {
-                              "type": "string",
-                              "description": "Arm Resource Id of IPExtendedCommunity."
+                              "description": "Arm Resource ID of IPExtendedCommunity.",
+                              "$ref": "./common.json#/definitions/IpExtendedCommunityIdProperty"
                             }
                           }
                         }
@@ -508,86 +609,41 @@
                       "delete": {
                         "type": "object",
                         "description": "Route policy delete manipulations.",
+                        "x-ms-client-flatten": true,
                         "properties": {
                           "ipExtendedCommunityIds": {
                             "type": "array",
                             "description": "List of IPExtendedCommunity resource IDs.",
                             "items": {
-                              "type": "string",
-                              "description": "Arm Resource Id of IPExtendedCommunity."
+                              "description": "Arm Resource ID of IPExtendedCommunity.",
+                              "$ref": "./common.json#/definitions/IpExtendedCommunityIdProperty"
                             }
                           }
                         }
                       },
                       "set": {
                         "type": "object",
+                        "x-ms-client-flatten": true,
                         "description": "Route policy set manipulations.",
                         "properties": {
                           "ipExtendedCommunityIds": {
                             "type": "array",
                             "description": "List of IPExtendedCommunity resource IDs.",
                             "items": {
-                              "type": "string",
-                              "description": "Arm Resource Id of IPExtendedCommunity."
+                              "description": "Arm Resource ID of IPExtendedCommunity.",
+                              "$ref": "./common.json#/definitions/IpExtendedCommunityIdProperty"
                             }
                           }
                         }
                       }
                     }
                   }
-                },
-                "required": [
-                  "actionType"
-                ]
+                }
               }
             }
           }
-        },
-        "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
         }
-      },
-      "required": [
-        "statements"
-      ],
-      "description": "RoutePolicyProperties define the resource properties."
-    },
-    "RoutePolicy": {
-      "type": "object",
-      "x-ms-azure-resource": true,
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "x-ms-client-flatten": true,
-          "description": "Resource properties.",
-          "$ref": "#/definitions/RoutePolicyProperties"
-        }
-      },
-      "required": [
-        "location",
-        "properties"
-      ],
-      "description": "The RoutePolicy resource definition."
-    },
-    "RoutePolicyPatch": {
-      "type": "object",
-      "x-ms-azure-resource": true,
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
-        }
-      },
-      "description": "The RoutePolicy patch resource definition."
+      }
     },
     "RoutePoliciesListResult": {
       "type": "object",
