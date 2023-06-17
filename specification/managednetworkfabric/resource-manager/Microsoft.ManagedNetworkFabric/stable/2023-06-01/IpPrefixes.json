@@ -379,8 +379,80 @@
         {
           "$ref": "./common.json#/definitions/AnnotationResource",
           "description": "Common properties for annotated type."
+        },
+        {
+          "$ref": "#/definitions/IpPrefixPatchableProperties",
+          "description": "IP Prefix patchable properties."
         }
       ],
+      "properties": {
+        "configurationState": {
+          "description": "Gets the configuration state of the resource.",
+          "$ref": "./common.json#/definitions/ConfigurationState"
+        },
+        "provisioningState": {
+          "description": "Gets the provisioning state of the resource.",
+          "$ref": "./common.json#/definitions/ProvisioningState"
+        },
+        "administrativeState": {
+          "description": "Gets the administrative state of the resource.",
+          "$ref": "./common.json#/definitions/AdministrativeState"
+        }
+      },
+      "required": [
+        "ipPrefixRules"
+      ],
+      "description": "IP Prefix Properties define the resource properties."
+    },
+    "IpPrefix": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "description": "Resource properties.",
+          "$ref": "#/definitions/IpPrefixProperties"
+        }
+      },
+      "required": [
+        "location",
+        "properties"
+      ],
+      "description": "The IP Prefix resource definition."
+    },
+    "IpPrefixPatch": {
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "allOf": [
+            {
+              "$ref": "./common.json#/definitions/AnnotationResource",
+              "description": "Common properties for annotated type."
+            },
+            {
+              "$ref": "#/definitions/IpPrefixPatchableProperties",
+              "description": "IP Prefix patchable properties."
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "description": "Resource tags",
+          "$ref": "./common.json#/definitions/TagsUpdate"
+        }
+      ],
+      "description": "The IP Prefix patch resource definition."
+    },
+    "IpPrefixPatchableProperties": {
+      "type":"object",
+      "description": "IP Prefix patchable properties.",
       "properties": {
         "ipPrefixRules": {
           "type": "array",
@@ -409,7 +481,8 @@
                 "enum": [
                   "EqualTo",
                   "GreaterThanOrEqualTo",
-                  "LesserThanOrEqualTo"
+                  "LesserThanOrEqualTo",
+                  "Range"
                 ],
                 "x-ms-enum": {
                   "modelAsString": true,
@@ -417,11 +490,8 @@
                 }
               },
               "subnetMaskLength": {
-                "type": "integer",
-                "format": "int32",
-                "minimum": 1,
-                "maximum": 128,
-                "description": "SubnetMaskLength gives the minimum NetworkPrefix length to be matched.Possible values for IPv4 are 1 - 32. Possible values of IPv6 are 1 - 128."
+                "type": "string",
+                "description": "SubnetMaskLength gives the minimum NetworkPrefix length to be matched. Possible values for IPv4 are 1 - 32 . Possible values of IPv6 are 1 - 128."
               }
             },
             "required": [
@@ -430,60 +500,16 @@
               "networkPrefix"
             ]
           }
-        },
-        "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
-          "$ref": "./common.json#/definitions/ProvisioningState",
-          "readOnly": true
         }
-      },
-      "required": [
-        "ipPrefixRules"
-      ],
-      "description": "IpPrefixProperties define the resource properties."
-    },
-    "IpPrefix": {
-      "type": "object",
-      "x-ms-azure-resource": true,
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "x-ms-client-flatten": true,
-          "description": "Resource properties.",
-          "$ref": "#/definitions/IpPrefixProperties"
-        }
-      },
-      "required": [
-        "location",
-        "properties"
-      ],
-      "description": "The IPPrefix resource definition."
-    },
-    "IpPrefixPatch": {
-      "type": "object",
-      "x-ms-azure-resource": true,
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
-        }
-      },
-      "description": "The IPPrefix patch resource definition."
+      }
     },
     "IpPrefixesListResult": {
       "type": "object",
-      "description": "List of IpPrefixes.",
+      "description": "List of IP Prefixes.",
       "properties": {
         "value": {
           "type": "array",
-          "description": "List of IPPrefix resources.",
+          "description": "List of IP Prefix resources.",
           "items": {
             "$ref": "#/definitions/IpPrefix"
           }
