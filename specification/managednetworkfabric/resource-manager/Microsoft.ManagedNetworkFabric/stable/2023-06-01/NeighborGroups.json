@@ -380,14 +380,18 @@
     },
     "NeighborGroupProperties": {
       "type": "object",
-      "description": "NeighborGroupProperties define the resource properties.",
+      "description": "Neighbor Group Properties define the resource properties.",
       "required": [
-        "destinationIps"
+        "destination"
       ],
       "allOf": [
         {
           "$ref": "./common.json#/definitions/AnnotationResource",
           "description": "Common properties for annotated type."
+        },
+        {
+          "$ref": "#/definitions/NeighborGroupPatchableProperties",
+          "description": "Neighbor Group patchable properties."
         }
       ],
       "properties": {
@@ -396,17 +400,8 @@
           "description": "The list of NetworkTapIds.",
           "readOnly": true,
           "items": {
-            "type": "string",
             "description": "ARM resource Id of the NetworkTap Resource.",
-            "format": "arm-id",
-            "x-ms-arm-id-details": {
-              "allowedResources": [
-                {
-                  "type": "Microsoft.ManagedNetworkFabric/networkTaps"
-                }
-              ]
-            },
-            "example": "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ManagedNetworkFabric/networkTaps/{networkTapName}"
+            "$ref": "./common.json#/definitions/NetworkTapIdProperty"
           }
         },
         "networkTapRuleIds": {
@@ -414,27 +409,8 @@
           "description": "The list of NetworkTapRuleIds.",
           "readOnly": true,
           "items": {
-            "type": "string",
-            "description": "ARM resource Id of the NetworkTapRule Resource.",
-            "format": "arm-id",
-            "x-ms-arm-id-details": {
-              "allowedResources": [
-                {
-                  "type": "Microsoft.ManagedNetworkFabric/networkTapRules"
-                }
-              ]
-            },
-            "example": "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ManagedNetworkFabric/networkTapRules/{networkTapRuleName}"
-          }
-        },
-        "destinationIps": {
-          "type": "array",
-          "maxItems": 16,
-          "description": "List of IPv4 or IPv6 Ips. Maximum is 16 IPs.",
-          "items": {
-            "type": "string",
-            "description": "IPv4 Address or IPv6 Address.",
-            "minLength": 1
+            "description": "ARM resource Id of the Network Tap Rules.",
+            "$ref": "./common.json#/definitions/NetworkTapRuleIdProperty"
           }
         },
         "provisioningState": {
@@ -459,28 +435,42 @@
               "$ref": "#/definitions/NeighborGroupPatchableProperties"
             }
           ]
-        },
-        "tags": {
-          "description": "Azure resource tags that will replace the existing ones.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
         }
-      }
+      },
+      "allOf": [
+        {
+          "$ref": "./common.json#/definitions/TagsUpdate"
+        }
+      ]
     },
     "NeighborGroupPatchableProperties": {
       "type": "object",
       "description": "NeighborGroupPatchableProperties defines the patchable properties of resource.",
       "properties": {
-        "destinationIps": {
-          "type": "array",
-          "maxItems": 16,
-          "description": "List of IPv4 or IPv6 Ips. Maximum is 16 IPs.",
-          "items": {
-            "type": "string",
-            "description": "IPv4 or IPv6 Address.",
-            "minLength": 1
+        "destination": {
+          "type": "object",
+          "description": "Destination. It can be either IPv4 Address List or IPv6 Address List.",
+          "properties": {
+            "ipv4Addresses": {
+              "type": "array",
+              "maxItems": 16,
+              "description": "Array of IPv4 Addresses.",
+              "items": {
+                "type": "string",
+                "description": "IPv4 Address.",
+                "minLength": 1
+              }
+            },
+            "ipv6Addresses": {
+              "type": "array",
+              "maxItems": 16,
+              "description": "Array of IPv6 Addresses.",
+              "items": {
+                "type": "string",
+                "description": "IPv4 Address.",
+                "minLength": 1
+              }
+            }
           }
         }
       }

@@ -458,19 +458,43 @@
               "description": "Specify the protocol."
           }
         },
-        "encapsulationType": {
-          "type": "string",
-          "description": "Encapsualation Type.",
-          "default": "None",
-          "minLength": 1,
-          "enum": [
-            "None",
-            "GTPv1"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "EncapsulationType"
-          }                                        
+        "vlanMatchCondition": {
+          "type": "object",
+          "description": "The vlan match conditions that to be matched.",
+          "properties": {
+            "vlans": {
+              "type": "array",
+              "description": "The list of vlans that to be filtered.",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Vlan. It may be a single vlan or the range of vlans.",
+                "example": "10-20"
+              }
+            },
+            "innerVlans": {
+              "type": "array",
+              "description": "The list of inner vlans that to be filtered.",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Inner Vlans. It may be a single vlan or the range of vlans.",
+                "example": "20-30"
+              }
+            },
+            "vlanGroupNames": {
+              "type": "array",
+              "description": "List of vlan group names that to be matched.",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Vlan group name."
+              }
+            }
+          }
         },
         "ipCondition": {
           "type": "object",
@@ -503,7 +527,7 @@
                   "name": "PrefixType"
                 }                                        
             },
-            "ipList": {
+            "ipPrefixValues": {
                 "type": "array",
                 "description": "The list of IPPrefixes.",
                 "minItems": 1,
@@ -513,67 +537,57 @@
                     "description": "The valid IPPrefix."
                 }
             },
-            "ipv4GroupNames": {
+            "ipGroupNames": {
                 "type": "array",
-                "description": "The List of IPv4 Group Names that need to be matched.",
+                "description": "The List of IP Group Names that need to be matched.",
                 "minItems": 1,
                 "items": {
                     "type": "string",
                     "minLength": 1,
-                    "description": "IPv4 Group Name."
-                }
-            },
-            "ipv6GroupNames": {
-                "type": "array",
-                "description": "The List of IPv6 Group Name that need to be matched.",
-                "minItems": 1,
-                "items": {
-                    "type": "string",
-                    "minLength": 1,
-                    "description": "IPv6 Group Name."
+                    "description": "IP Group Name."
                 }
             }
           }
-        },                                    
-        "portCondition": {
-          "type": "object",
-          "x-ms-client-flatten": true,
-          "description": "Defines the match condition that can be filtered based on the selected Ports.",
-          "properties": {
-            "portType": {
+        }
+      }
+    },                                    
+    "PortCondition": {
+      "type": "object",
+      "x-ms-client-flatten": true,
+      "description": "Defines the match condition that can be filtered based on the selected Ports.",
+      "properties": {
+        "portType": {
+            "type": "string",
+            "description": "IP Address type.",
+            "minLength": 1,
+            "enum": [
+              "SourcePort",
+              "DestinationPort"
+            ],
+            "x-ms-enum": {
+              "modelAsString": true,
+              "name": "Type"
+            }                                        
+        },
+        "ports": {
+            "type": "array",
+            "description": "List of the Ports that to be matched.",
+            "minItems": 1,
+            "items": {
                 "type": "string",
-                "description": "IP Address type.",
                 "minLength": 1,
-                "enum": [
-                  "SourcePort",
-                  "DestinationPort"
-                ],
-                "x-ms-enum": {
-                  "modelAsString": true,
-                  "name": "Type"
-                }                                        
-            },
-            "ports": {
-                "type": "array",
-                "description": "List of the Ports that to be matched.",
-                "minItems": 1,
-                "items": {
-                    "type": "string",
-                    "minLength": 1,
-                    "description": "Port number or range of ports."
-                }
-            },
-            "portGroupNames": {
-                "type": "array",
-                "description": "List of the portGroupNames that to be matched.",
-                "minItems": 1,
-                "items": {
-                    "type": "string",
-                    "minLength": 1,
-                    "description": "Port Group Name."
-                }
+                "description": "Port number or range of ports."
             }
-          }
+        },
+        "portGroupNames": {
+            "type": "array",
+            "description": "List of the portGroupNames that to be matched.",
+            "minItems": 1,
+            "items": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Port Group Name."
+            }
         }
       }
     },

@@ -53,6 +53,7 @@ input-file:
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkFabrics.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkPacketBrokers.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkRacks.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkTapRules.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkTaps.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/Operations.json
   - Microsoft.ManagedNetworkFabric/stable/2023-06-01/RoutePolicies.json
