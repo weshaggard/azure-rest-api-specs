@@ -26,7 +26,7 @@ title: EdgeMarketPlaceClient
 description: Edge marketplace extensions
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2023-07
+tag: package-preview-2023-06
 ```
 
 ## Suppression
@@ -47,15 +47,34 @@ directive:
       - virtualMachines.json
       - virtualMachineInstances.json
       - virtualNetworks.json
+      - nodeConfiguration.json
     reason: Microsoft.AzureStackHCI is the correct name for our RP.
 ```
 
 
+### Tag: package-preview-2023-06
+
+These settings apply only when `--tag=package-preview-2023-06` is specified on the command line.
+
+```yaml $(tag) == 'package-preview-2023-06'
+input-file:
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/arcSettings.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/clusters.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/extensions.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/offers.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/operations.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/publishers.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/skus.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/updateRuns.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/updateSummaries.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/updates.json
+  - Microsoft.AzureStackHCI/preview/2023-06-15-preview/nodeConfiguration.json
+```
 ### Tag: package-2023-07
 
 These settings apply only when `--tag=package-2023-07` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-07'
+``` yaml $(tag) == 'package-2023-07'
 input-file:
   - Microsoft.AzureStackHCI/preview/2023-07-01-preview/galleryImages.json
   - Microsoft.AzureStackHCI/preview/2023-07-01-preview/marketplaceGalleryImages.json
@@ -70,7 +89,7 @@ input-file:
 
 These settings apply only when `--tag=package-2023-02` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-02'
+``` yaml $(tag) == 'package-2023-02'
 input-file:
   - Microsoft.AzureStackHCI/stable/2023-02-01/arcSettings.json
   - Microsoft.AzureStackHCI/stable/2023-02-01/clusters.json
