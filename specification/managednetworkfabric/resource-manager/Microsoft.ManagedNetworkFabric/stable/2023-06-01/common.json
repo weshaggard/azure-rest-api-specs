@@ -183,6 +183,16 @@
         }
       ]
     },
+    "UpdateVersion": {
+      "type": "object",
+      "description": "Update version properties.",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Version."
+        }
+      }
+    },
     "EnableDisableOnResources": {
       "type": "object",
       "description": "Update administrative state on list of resources.",
@@ -235,6 +245,74 @@
       "additionalProperties": {
         "$ref": "#/definitions/ARPProperties"
       }
+    },
+    "CommonPostActionResponseForDeviceUpdate": {
+      "type": "object",
+      "description": "Common response for device updates.",
+      "properties": {
+        "configurationState": {
+          "description": "Gets the configuration state.",
+          "$ref": "#/definitions/ConfigurationState"
+        },
+        "successfulDevices": {
+          "type": "array",
+          "description": "List of ARM Resource IDs for which the given action applied successfully.",
+          "items": {
+            "description": "ARM Resource ID.",
+            "type": "string"
+          }
+        },
+        "failedDevices":{
+          "type": "array",
+          "description": "List of ARM Resource IDs for which the given action failed to apply.",
+          "items": {
+            "description": "ARM Resource ID.",
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "description": "The error message.",
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+        }
+      ]
+    },
+    "CommonPostActionResponseForStateUpdate": {
+      "type": "object",
+      "description": "Common response for the state updates.",
+      "properties": {
+        "configurationState": {
+          "description": "Gets the configuration state.",
+          "$ref": "#/definitions/ConfigurationState"
+        }
+      },
+      "allOf": [
+        {
+          "description": "The error message.",
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+        }
+      ]
+    },
+    "ValidateConfigurationResponse": {
+      "type": "object",
+      "description": "The response of the action validate configuration.",
+      "properties": {
+        "configurationState": {
+          "description": "Gets the configuration state.",
+          "$ref": "#/definitions/ConfigurationState"
+        },
+        "url": {
+          "type": "string",
+          "description": "URL for the details of the response."
+        }
+      },
+      "allOf": [
+        {
+          "description": "The error message.",
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+        }
+      ]
     },
     "BooleanEnumProperty": {
       "type": "string",
@@ -444,6 +522,36 @@
         }
       }
     },
+    "IngressAclInformation": {
+      "type": "object",
+      "x-ms-client-flatten": true,
+      "description": "Ingress ACL Information.",
+      "properties": {
+        "ingressIpv4AclId": {
+          "description": "Ingress IPv4 ACL. ARM Resource ID of the AccessControlLists.",
+          "$ref": "#/definitions/AccessControlListIdProperty"
+        },
+        "ingressIpv6AclId": {
+          "description": "Ingress IPv6 ACL. ARM Resource ID of the AccessControlLists.",
+          "$ref": "#/definitions/AccessControlListIdProperty"
+        }
+      }
+    },
+    "EgressAclInformation": {
+      "type": "object",
+      "x-ms-client-flatten": true,
+      "description": "Egress ACL Information.",
+      "properties": {
+        "egressIpv4AclId": {
+          "description": "Egress IPv4 ACL. ARM Resource ID of the AccessControlLists.",
+          "$ref": "#/definitions/AccessControlListIdProperty"
+        },
+        "egressIpv6AclId": {
+          "description": "Egress IPv6 ACL. ARM Resource ID of the AccessControlLists.",
+          "$ref": "#/definitions/AccessControlListIdProperty"
+        }
+      }
+    },
     "CommonMatchConditions": {
       "type": "object",
       "description": "Defines the common match conditions of the ACL and NetworkTapRule.",
@@ -461,6 +569,7 @@
         "vlanMatchCondition": {
           "type": "object",
           "description": "The vlan match conditions that to be matched.",
+          "x-ms-client-flatten": true,
           "properties": {
             "vlans": {
               "type": "array",
