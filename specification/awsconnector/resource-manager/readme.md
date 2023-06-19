@@ -39,6 +39,16 @@ input-file:
   - Microsoft.awsconnector/preview/2023-12-01-preview/awsconnector.json
 ```
 
+## Suppression
+
+``` yaml
+directive:
+  - suppress: EnumInsteadOfBoolean
+    reason: booleans are only used in aws
+  - suppress: DefinitionsPropertiesNamesCamelCase
+    reason: Property is CamelCase in aws
+```
+
 ---
 
 # Code Generation
