@@ -1,7 +1,7 @@
-// https://cadlplayground.z22.web.core.windows.net/cadl-azure/
 import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/versioning";
+import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 
@@ -11,18 +11,19 @@ using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Azure.Core;
 
-@armProviderNamespace("Microsoft.AzureAccessPoint")
+@armProviderNamespace("Microsoft.AccessPoint")
 @service({
-  title: "Microsoft.AzureAccessPoint",
+  title: "Microsoft.AccessPoint",
   version: "2023-03-01-preview",
 })
 @doc("Azure Access Point Management API")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.AzureAccessPoint;
+namespace Microsoft.AccessPoint;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
 @Azure.Core.lroStatus
+@doc("The provisioning status of the resource")
 enum ProvisioningState {
   ...ResourceProvisioningState,
   Provisioning,
@@ -31,41 +32,44 @@ enum ProvisioningState {
   Accepted,
 }
 
-@doc("Access Point Gateway")
-model AccessPointGatewayResource
-  is TrackedResource<AccessPointGatewayResourceProperties> {
+@doc("An Azure Access Point Gateway")
+model GatewayResource is TrackedResource<GatewayResourceProperties> {
   @doc("The name of the Gateway")
-  @key("accessPointGatewayName")
-  @segment("accessPointGateways")
+  @key("gatewayName")
+  @segment("gateways")
+  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
   @path
   name: string;
 }
 
-@doc("Access Point Gateway Site")
-@parentResource(AccessPointGatewayResource)
+@doc("An Azure Access Point Gateway Site")
+@parentResource(GatewayResource)
 model SiteResource is TrackedResource<SiteResourceProperties> {
   @doc("The name of the Gateway Site")
   @key("siteName")
   @segment("sites")
+  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
   @path
   name: string;
 }
 
-@doc("Access Point Gateway Subnet")
+@doc("An Azure Access Point Gateway Subnet")
 @parentResource(SiteResource)
 model SubnetResource is TrackedResource<SubnetResourceProperties> {
   @doc("The name of the Gateway Subnet")
   @key("subnetName")
   @segment("subnets")
+  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
   @path
   name: string;
 }
 
-@doc("Access Point Resource")
+@doc("An Azure Access Point Device Resource")
 model AccessPointResource is TrackedResource<AccessPointResourceProperties> {
   @doc("The name of the Access Point")
   @key("accessPointName")
   @segment("accessPoints")
+  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
   @path
   name: string;
 }
@@ -75,11 +79,11 @@ enum ClassificationLevel {
   Collateral,
   Sar,
   Sci,
-  SciSar
+  SciSar,
 }
 
-@doc("Access Point Gateway Properties.")
-model AccessPointGatewayResourceProperties {
+@doc("Gateway Properties.")
+model GatewayResourceProperties {
   @doc("The Classification Level of the Access Point infrastructure.")
   @visibility("create", "read")
   classificationLevel: ClassificationLevel;
@@ -100,11 +104,11 @@ model SiteResourceProperties {
 model SubnetResourceProperties {
   @doc("The IP Range of the subnet")
   @visibility("read")
-  addressPrefix: string;
+  addressPrefix?: string;
 
   @doc("The size of the subnet you wish to create")
   @visibility("create")
-  subnetMask: string;
+  subnetMask: int32;
 
   @doc("The status of the last operation.")
   @visibility("read")
@@ -114,21 +118,14 @@ model SubnetResourceProperties {
 scalar GatewaySubnetId
   extends ResourceIdentifier<[
     {
-      type: "Microsoft.AzureAccessPoint/accessPointGateways/sites/subnets",
+      type: "Microsoft.AccessPoint/gateways/sites/subnets",
     }
   ]>;
 
-@doc("The Gateway Subnet the resource is attached to")
-model GatewaySubnetReference {
-  @doc("The id of the Gateway Subnet")
-  @visibility("create", "read")
-  id: GatewaySubnetId;
-}
-
+// This entire object must is read only
 @doc("Properties of TTC")
 model TtcProperties {
   @doc("The TTC device guid")
-  @visibility("read")
   guid: string;
 }
 
@@ -142,18 +139,18 @@ model AccessPointResourceProperties {
   @visibility("create", "read")
   macAddress: string;
 
-  @doc("The subnet the Access Point is attached to")
+  @doc("The id of the subnet that the Access Point is attached to")
   @visibility("create", "read")
-  gatewaySubnet: GatewaySubnetReference;
+  gatewaySubnetId: GatewaySubnetId;
 
   @doc("The IP address")
   @pattern("^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$")
   @visibility("read")
-  ipAddress: string;
+  ipAddress?: string;
 
   @doc("The properties from TTC")
   @visibility("read")
-  ttc: TtcProperties;
+  ttc?: TtcProperties;
 
   @doc("The status of the last operation.")
   @visibility("read")
@@ -162,12 +159,12 @@ model AccessPointResourceProperties {
 
 @armResourceOperations
 interface Gateway {
-  get is ArmResourceRead<AccessPointGatewayResource>;
-  create is ArmResourceCreateOrUpdateAsync<AccessPointGatewayResource>;
-  update is ArmTagsPatchSync<AccessPointGatewayResource>;
-  delete is ArmResourceDeleteAsync<AccessPointGatewayResource>;
-  listByResourceGroup is ArmResourceListByParent<AccessPointGatewayResource>;
-  listBySubscription is ArmListBySubscription<AccessPointGatewayResource>;
+  get is ArmResourceRead<GatewayResource>;
+  create is ArmResourceCreateOrUpdateAsync<GatewayResource>;
+  update is ArmTagsPatchSync<GatewayResource>;
+  delete is ArmResourceDeleteAsync<GatewayResource>;
+  listByResourceGroup is ArmResourceListByParent<GatewayResource>;
+  listBySubscription is ArmListBySubscription<GatewayResource>;
 }
 
 @armResourceOperations
