@@ -9,10 +9,12 @@ model LandingZoneRegistrationProperties {
 	provisioningState?: ResourceProvisioningState;
 
 	@doc("The associated landing zone configuration resource.")
+	@visibility("read", "create")
 	landingZoneConfigurationId: string;
 
 	@doc("The top level management group id.")
 	@minLength(4)
 	@maxLength(10)
+	@visibility("read", "create")
 	topLevelMgId: string;
 }
