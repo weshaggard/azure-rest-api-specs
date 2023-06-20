@@ -17,7 +17,7 @@ using Azure.ResourceManager.Foundations;
   version: "2021-08-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.EdgeZonesV2;
+namespace Microsoft.EdgeZones;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -47,7 +47,7 @@ enum RegistrationState {
 
 @doc("The properties of a MicrosoftEdgeZone Resource")
 model MicrosoftEdgeZoneProperties {
-  @visibility("readOnly")
+  @visibility("read")
   @doc("The status of the last operation. required property on a resource https://stackoverflow.microsoft.com/questions/327894")
   provisioningState?: ProvisioningState;
 
@@ -55,14 +55,13 @@ model MicrosoftEdgeZoneProperties {
   @doc("MicrosoftEdgeZone registration approved or not")
   registrationState?: RegistrationState;
 
-  @visibility("read")
   @doc("MicrosoftEdgeZone display name")
   displayName: string;
 }
 
 @doc("The properties of a PublicMecEdgeZone Resource")
 model PublicMecEdgeZoneProperties {
-  @visibility("readOnly")
+  @visibility("read")
   @doc("The status of the last operation. required property on a resource https://stackoverflow.microsoft.com/questions/327894")
   provisioningState?: ProvisioningState;
 
@@ -70,7 +69,6 @@ model PublicMecEdgeZoneProperties {
   @doc("PublicMecEdgeZone registration approved or not")
   registrationState?: RegistrationState;
 
-  @visibility("read")
   @doc("PublicMecEdgeZone display name")
   displayName: string;
 }
@@ -129,7 +127,7 @@ model RegisterPublicMecEdgeZoneRequest {
   @doc("Organization Contact Email Address for the Public MEC Edge Zone registration")
   organizationContactEmailAddress: string;
 
-  @doc("Organization telco partners and partners of interest")
+  @doc("Organization telecommunication partners and partners of interest")
   organizationPartners: string;
 
   @doc("Organization cloud ready application ready for onboarding")
@@ -162,7 +160,7 @@ op ArmResourceActionNoBodyNoContentSync<
  @doc("MicrosoftEdgeZone operations")
  @armResourceOperations
  interface MicrosoftEdgeZones {
-  @doc("Get a Microsoft Edge Zone in the ubscription")
+  @doc("Get a Microsoft Edge Zone in the subscription")
   get is ArmResourceRead<MicrosoftEdgeZone>;
 
   @doc("Lists the Microsoft Edge Zones for a subscription")
