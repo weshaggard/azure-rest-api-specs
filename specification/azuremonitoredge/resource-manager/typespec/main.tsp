@@ -5,4 +5,4 @@ import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 
-import "./otelCollector.tsp";
+import "./gateway.tsp";
