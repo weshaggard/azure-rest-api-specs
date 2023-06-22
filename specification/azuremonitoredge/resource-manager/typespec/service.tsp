@@ -14,10 +14,10 @@ using OpenAPI;
 
 @armProviderNamespace("Microsoft.AzureMonitorEdge")
 @service({
-    title: "Managed OpenTelemetry Collector Resource Provider",
+    title: "Azure Monitor Edge Resource Provider",
     version: "2023-06-21-privatepreview",
   })
-@doc("Resource provider for Managed instances of OpenTelemetry Collectors.")
+@doc("Azure Monitor Edge Resource Provider API")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureMonitorEdge;
 
