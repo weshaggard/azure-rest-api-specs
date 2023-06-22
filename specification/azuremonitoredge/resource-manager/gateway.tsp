@@ -12,13 +12,6 @@ using Azure.Core;
 using Azure.ResourceManager;
 using OpenAPI;
 
-@armProviderNamespace
-@service({
-    title: "Managed OpenTelemetry Collector Resource Provider",
-    version: "2023-06-21-privatepreview",
-  })
-@doc("Resource provider for Managed instances of OpenTelemetry Collectors.")
-@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureMonitorEdge;
 
 @doc("OpenTelemetry Collector Gateway resource")
@@ -40,26 +33,6 @@ model GatewayProperties {
     @doc("Gets and sets the property provisioningState. The status of the last operation.")
     provisioningState?: ProvisioningState;
 }
-
-@doc("The provisioning state of a resource.")
-@lroStatus
-enum ProvisioningState {
-    ...ResourceProvisioningState,
-
-    @doc("The resource is being provisioned")
-    Provisioning,
-
-    @doc("The resource is updating")
-    Updating,
-
-    @doc("The resource is being deleted")
-    Deleting,
-
-    @doc("The resource create request has been accepted")
-    Accepted,
-}
-
-interface Operations extends Azure.ResourceManager.Operations {}
 
 @armResourceOperations
 interface Gateways {
