@@ -36,7 +36,8 @@ These settings apply only when `--tag=package-2023-12-01-preview` is specified o
 
 ``` yaml $(tag) == 'package-2023-12-01-preview'
 input-file:
-  - Microsoft.awsconnector/preview/2023-12-01-preview/awsconnector.json
+  - Microsoft.awsconnector/preview/2023-12-01-preview/s3Bucket.json
+  - Microsoft.awsconnector/preview/2023-12-01-preview/operations.json
 ```
 
 ## Suppression
