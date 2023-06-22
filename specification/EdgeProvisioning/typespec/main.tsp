@@ -111,7 +111,7 @@ model ProvisioningPolicyProperties {
   bootstrapAuthentication: BootstrapAuthenticationRule;
 
   @doc("Allocation rules.")
-  allocations: Record<AllocationRule>;
+  allocations: Array<AllocationRule>;
 
   @doc("The device provisioning rule.")
   provisioning: ProvisioningRule;
@@ -222,6 +222,9 @@ enum AllocationType {
 }
 
 model AllocationRule {
+  @doc("Name of the allocation rule")
+  name: string;
+
   @doc("Type of the allocation rule")
   type: AllocationType; // TODO: confirm with PMs on the types to have
 
@@ -281,7 +284,7 @@ model ProvisioningRule {
   identityInfo?: IdentityInfo; 
 
   @doc("Resource metadata")
-  resourceMetadata: Record<object>; // TODO ask DP about usecase for this
+  resourceMetadata: object; // TODO ask DP about usecase for this
 }
 
 @armResourceOperations
@@ -318,7 +321,7 @@ model DeviceProvisioningStateProperties {
   provisioningPolicyResourceId?: ProvisioningPolicyResourceId;
 
   @doc("Allocation rules captured from the linked provisioningPolicyResourceId at the time of provisioning")
-  allocations: Record<AllocationRule>;
+  allocations: Array<AllocationRule>;
 }
 
 @doc("The current provisioning status.")
