@@ -1,0 +1,335 @@
+import "@typespec/http";
+import "@typespec/rest";
+import "@typespec/versioning";
+import "@azure-tools/typespec-providerhub";
+import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-azure-resource-manager";
+
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
+using Azure.ResourceManager;
+
+@armProviderNamespace("Microsoft.EdgeProvisioning")
+@service({
+  title: "Microsoft.EdgeProvisioning",
+  version: "2023-12-01-preview",
+})
+@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+namespace Microsoft.EdgeProvisioning;
+
+interface Operations extends Azure.ResourceManager.Operations {}
+
+// Root-level tracked resource: provisioning resource
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
+@doc("A provisioning resource")
+model ProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
+  @doc("The name of the employee")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("ProvisioningResourceName")
+  @segment("ProvisioningResources")
+  @path
+  name: string;
+
+  // TODO resource SKU @Jesus to define
+}
+
+@doc("The status of the current operation.")
+@Azure.Core.lroStatus
+enum ProvisioningState {
+  ...ResourceProvisioningState,
+  Activating,
+  Updating,
+  Deleting,
+}
+
+@doc("Details of the EdgeProvisioning ProvisioningResource.")
+model ProvisioningResourceProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+
+  @doc("The provisioning service endpoints")
+  deviceEndpoints?: DeviceEndpoints;
+}
+
+@doc("Device endpoints.")
+model DeviceEndpoints { // TODO: follow up with DP and PM on the definition of the endpoints for ignite
+  Default: DeviceEndpoint,
+}
+
+model DeviceEndpoint {
+  //@doc("Endpoint Name")
+  //name: string;// TODO: rename to type or remove this?
+
+  @doc("Description of the Endpoint")
+  @visibility("read")
+  description: string;
+
+  //@doc("Endpoint Type")
+  //endpointType: string;
+
+  @doc("Hostname of the Endpoint")
+  @visibility("read")
+  hostname: string;
+}
+
+@armResourceOperations
+interface ProvisioningResources extends TrackedResourceOperations<ProvisioningResource, ProvisioningResourceProperties> {}
+
+// Child resource: provisioning policy
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
+@doc("A provisioning policy resource")
+@parentResource(ProvisioningResource)
+model ProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
+  @doc("The name of the employee")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("provisioningPolicyName")
+  @segment("provisioningPolicies")
+  @path
+  name: string;
+}
+
+@doc("Details of the ProvisioningService ProvisioningPolicy.")
+model ProvisioningPolicyProperties {
+  //@visibility("read")
+  //@doc("The status of the last operation.")
+  //provisioningState?: ProvisioningState;
+
+  @doc("The priority of the policy. Should be greater than 0.")
+  priority: int32; 
+  // TODO: is priority required property. 
+  // can we avoid requirement for uniquenes
+  // how can the customer swap priority for policies 
+  // alternate option1: Consider Provisioning Policy properties as an array
+  // alternate option2: Keep the priority as separate concept outside of policy
+  // Investigate options from other resources
+
+  @doc("The bootstrap authentication rule.")
+  bootstrapAuthentication: BootstrapAuthenticationRule;
+
+  @doc("Allocation rules.")
+  allocations: Record<AllocationRule>;
+
+  @doc("The device provisioning rule.")
+  provisioning: ProvisioningRule;
+}
+
+@doc("The authentication type for bootstrap.")
+enum BootstrapAuthenticationType {
+  @doc("The X509 authentication type.")
+  X509,
+
+  @doc("The discovery authentication type.")
+  Discovery,
+}
+
+@doc("The authentication details for bootstrap")
+model BootstrapAuthenticationDetails {
+  @doc("The primary certificate")
+  @secret
+  primaryCert: string;
+
+  @doc("The secondary certificate")
+  @secret
+  secondaryCert?: string;
+}
+
+@doc("The authentication rule for bootstrap")
+model BootstrapAuthenticationRule {
+  type: BootstrapAuthenticationType;
+  details?: BootstrapAuthenticationDetails;
+}
+
+@doc("Type of resource being provisioned")
+enum ProvisioningResourceType {
+  @doc("Azure device registry device")
+  AzureIoTDevice,
+
+  @doc("Arc enabled device.")
+  ArcEnabledDevice,
+}
+
+@doc("The rule for Just-in-time connection")
+model JitRule {
+  @doc("The region")
+  region: string; // TODO: checkout the location resource and see if we can use it here
+
+  ...SubscriptionIdParameter;
+
+  ...ResourceGroupParameter;
+}
+
+@doc("Type of the endpoint")
+enum EndpointType {
+  @doc("Azure event grid broker")
+  AzureEventGridBroker,
+
+  //@doc("Azure storage")
+  //AzureStorage,
+}
+
+@doc("Endpoint")
+//@discriminator("type")
+model AllocationEndpoint {
+  @doc("Name of the endpoint")
+  name?: string;
+
+  @doc("Resource id of the endpoint")
+  resourceId?: string;
+
+  //@doc("Host name of the endpoint")
+  //hostName?: string;
+
+  @doc("Weight of the endpoint")
+  weight?: float64;
+
+  @doc("Region of the endpoint")
+  region?: string;
+}
+
+// backup option: TODO - follow up with RPAAS on stackoverflow
+//@doc("Geo-based endpoint")
+//model GeoBasedEndpoint extends AllocationEndpoint {
+//  @doc("Default value of discriminator")
+//  type: "GeoBased";
+
+//  @doc("Region of the endpoint")
+//  region: string;
+//}
+
+//@doc("Weighted endpoint")
+//model WeightedEndpoint extends AllocationEndpoint {
+//  @doc("Default value of discriminator")
+//  type: "Weighted";
+
+//  @doc("Weight of the endpoint")
+//  weight: float64;
+//}
+
+@doc("Type of allocation rule")
+enum AllocationType {
+  @doc("Static allocation of a single endpoint.")
+  Static,
+
+  @doc("Allocation based on geo-location.")
+  GeoBased,
+
+  @doc("Allocation based on weight.")
+  Weighted,
+}
+
+model AllocationRule {
+  @doc("Type of the allocation rule")
+  type: AllocationType; // TODO: confirm with PMs on the types to have
+
+  @doc("Type of endpoint")
+  endpointType: EndpointType;
+
+  @doc("List of endpoints")
+  endpoints: Array<AllocationEndpoint>;
+
+  // ARM question: optional approach: having "weightedEndpoints" and "geoBasedEndpoints" separately with solid types
+}
+
+@doc("The identity info to return to device")
+model DeviceIdentityInfo {
+  @doc("If uuid need to be returned")
+  uuid: boolean;
+
+  @doc("If accessTokenUrl need to be returned")
+  accessTokenUrl: boolean;
+
+  @doc("If externalDeviceId need to be returned")
+  externalDeviceId: boolean;
+}
+
+// TODO: Check with Krishna - Follow-up whether we want to expose this to the customer
+model CertIssuanceRule {
+  @doc("ICA name")
+  ica: string; // TODO: find out who would set up this info customer or rp
+
+  @doc("Cert renewal interval")
+  renewalInterval: int32; // TODO: findout the unit of the interval, findout if there is a default value
+}
+
+model IdentityInfo {
+  @doc("Certificate issuance settings")
+  certIssuance?: CertIssuanceRule; // For PKI
+
+  @doc("Device template id")
+  deviceTemplateId?: string;
+
+  @doc("AAD group name for static group")
+  staticGroup?: string;
+
+  @doc("The identity info to return to device")
+  identityInfoForDevice?: DeviceIdentityInfo; // TODO check with Adarsh,Sekhar if this supports both HCI and ADR scenario
+}
+
+@doc("The provisioning rule")
+model ProvisioningRule {
+  @doc("Type of the resource being provisioned")
+  type: ProvisioningResourceType;
+
+  @doc("Just-in-time rule to create the device resource.")
+  jit?: JitRule;
+
+  @doc("Identity information")
+  identityInfo?: IdentityInfo; 
+
+  @doc("Resource metadata")
+  resourceMetadata: Record<object>; // TODO ask DP about usecase for this
+}
+
+@armResourceOperations
+interface ProvisioningPolicies extends TrackedResourceOperations<ProvisioningPolicy, ProvisioningPolicyProperties> {}
+
+// Extension resource: device provisioning state
+@doc("The provisioning state of a device.")
+model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProperties> {
+  @doc("The registration id of the resource.")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("deviceProvisioningStateName")
+  @segment("deviceProvisioningStates")
+  @path
+  name: string;
+}
+
+scalar ProvisioningPolicyResourceId
+  extends ResourceIdentifier<[
+    {
+      type: "Microsoft.EdgeProvisioningService/ProvisioningResources/ProvisioningPolicies",
+    }
+  ]>;
+
+@doc("Details of the DeviceProvisioningState")
+model DeviceProvisioningStateProperties {
+  @visibility("read", "create", "update")
+  @doc("Provisioning status of the resource this DeviceProvisioningState extends")
+  status: ProvisioningStatus;
+
+  @doc("Indicates if the device is enabled for discovery")
+  discoveryEnabled: boolean;
+
+  @doc("The provisioning policy resource id")
+  provisioningPolicyResourceId?: ProvisioningPolicyResourceId;
+
+  @doc("Allocation rules captured from the linked provisioningPolicyResourceId at the time of provisioning")
+  allocations: Record<AllocationRule>;
+}
+
+@doc("The current provisioning status.")
+enum ProvisioningStatus {
+  @doc("Provisioning is still pending")
+  Pending,
+  @doc("The resource has been provisioned")
+  Provisioned,
+  @doc("Provisioning has failed")
+  Failed
+}
+
+@armResourceOperations
+interface DeviceProvisioningStates extends ExtensionResourceOperations<DeviceProvisioningState, DeviceProvisioningStateProperties> {}
