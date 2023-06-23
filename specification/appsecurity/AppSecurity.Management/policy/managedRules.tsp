@@ -2,15 +2,17 @@ using OpenAPI;
 
 namespace Microsoft.AppSecurity;
 
-/* *********************************
- * managedRules property definitions
- ********************************* */
-
+@doc("Supported action that can be applied if a rule matches")
 enum WafActionType {
+  @doc("Anomaly scoring action")
   AnomalyScoring,
+  @doc("Allow the request")
   Allow,
+  @doc("Block the request")
   Block,
+  @doc("Log the request and allow it")
   Log,
+  @doc("Redirect the request")
   Redirect, // TODO - this is not valid for appGW
 }
 
@@ -34,35 +36,52 @@ model RuleOverride {
 @doc("Defines a managed rule group override setting")
 model RuleGroupOverride {
   @doc("The managed rule group to override")
+  @minLength(1)
+  @maxLength(128)
   ruleGroupName: string;
 
   @doc("Group level override")
   groupOverride?: StateAndActionOverride;
 
   @doc("List of rule level overrides")
-  @extension("x-ms-identifiers", [])
+  @extension("x-ms-identifiers", ["ruleId"])
+  @maxItems(100)
   rules?: RuleOverride[];
 }
 
 @doc("Variable variants that can be excluded when defining an Exclusion")
 enum ExclusionMatchVariable {
+  @doc("The request header")
   RequestHeaderNames,
+  @doc("The request cookie")
   RequestCookieNames,
+  @doc("The request argument")
   RequestArgNames,
+  @doc("The request header keys")
   RequestHeaderKeys,
+  @doc("The request header value")
   RequestHeaderValues,
+  @doc("The request cookie keys")
   RequestCookieKeys,
+  @doc("The request cookie values")
   RequestCookieValues,
+  @doc("The request argument keys")
   RequestArgKeys,
+  @doc("The request argument values")
   RequestArgValues,
 }
 
 @doc("Comparison operators variants that can be used with Exclusion variables when defining an Exclusion")
 enum ExclusionSelectorMatchOperator {
+  @doc("Equals")
   Equals_: "Equals", // Changes the generated name and prevents error CS0108, in which Equal hides inherited member of 'ValueType.Equals(object?)'
+  @doc("Contains")
   Contains,
+  @doc("Starts with")
   StartsWith,
+  @doc("Ends with")
   EndsWith,
+  @doc("Equals any")
   EqualsAny,
 }
 
@@ -72,7 +91,7 @@ model RuleGroupScope {
   ruleGroupName: string;
 
   @doc("Relevant rules within the specified rule group. If not specified, the scope is the entire rule group.")
-  @minItems(1)
+  @maxItems(100)
   rules?: string[];
 }
 
@@ -88,8 +107,8 @@ model Exclusion {
   selector?: string;
 
   @doc("Exclusion scope. If not specified, then the exclusion is applied to the entire rule set")
-  @extension("x-ms-identifiers", [])
-  @minItems(1)
+  @extension("x-ms-identifiers", ["ruleGroupName"])
+  @maxItems(100)
   ruleGroups?: RuleGroupScope[];
 }
 
@@ -99,16 +118,22 @@ model ManagedRuleSet {
   state?: EnabledState = EnabledState.Enabled;
 
   @doc("Defines the rule set type to use")
+  @minLength(1)
+  @maxLength(30)
   ruleSetType: string;
 
   @doc("Defines the version of the rule set to use")
+  @minLength(1)
+  @maxLength(20)
   ruleSetVersion: string;
 
   @doc("Defines the rule group overrides to apply to the rule set")
-  @extension("x-ms-identifiers", [])
+  @extension("x-ms-identifiers", ["ruleGroupName"])
+  @maxItems(100)
   ruleGroupOverrides?: RuleGroupOverride[];
 
   @doc("The exclusions that are applied on the managed rule set")
   @extension("x-ms-identifiers", [])
+  @maxItems(100)
   exclusions?: Exclusion[];
 }

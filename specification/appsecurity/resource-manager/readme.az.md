@@ -6,9 +6,9 @@ For new Resource Provider. It is highly recommended to onboard Azure CLI extensi
 
 ```yaml $(az) && $(target-mode) != 'core'
 az:
-  extensions: appsecurity
-  namespace: azure.mgmt.appsecurity
-  package-name: azure-mgmt-cloudtransferservice
+    extensions: appsecurity
+    namespace: azure.mgmt.appsecurity
+    package-name: azure-mgmt-cloudtransferservice
 az-output-folder: $(azure-cli-extension-folder)/src/appsecurity
 python-sdk-output-folder: "$(az-output-folder)/azext_appsecurity/vendored_sdks/appsecurity"
 # add additional configuration here specific for Azure CLI
@@ -19,9 +19,9 @@ This is for command modules that already in azure cli main repo.
 
 ```yaml $(az) && $(target-mode) == 'core'
 az:
-  extensions: appsecurity
-  namespace: azure.mgmt.appsecurity
-  package-name: azure-mgmt-cloudtransferservice
+    extensions: appsecurity
+    namespace: azure.mgmt.appsecurity
+    package-name: azure-mgmt-cloudtransferservice
 az-output-folder: $(azure-cli-folder)/src/azure-cli/azure/cli/command_modules/appsecurity
 python-sdk-output-folder: "$(az-output-folder)/vendored_sdks/appsecurity"
 ```

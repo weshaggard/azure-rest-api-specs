@@ -16,43 +16,112 @@
         "location": "global",
         "properties": {
           "provisioningState": "Succeeded",
-          "protectedApps": [
+          "protectedEndpoints": [
             {
-              "appId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.Network/applicationGateways/ag",
-              "provisioningState": "Succeeded",
-              "protectionState": "Enabled"
+              "endpointId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.Network/applicationGateways/ag",
+              "attachmentState": "Succeeded"
             },
             {
-              "appId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.Network/applicationGateways/ag/httpListeners/hl",
-              "provisioningState": "Succeeded",
-              "protectionState": "Enabled"
+              "endpointId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.Network/applicationGateways/ag/httpListeners/hl",
+              "attachmentState": "Succeeded"
             },
             {
-              "appId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.Network/applicationGateways/ag/requestRoutingRules/rrr",
-              "provisioningState": "Succeeded",
-              "protectionState": "Enabled"
+              "endpointId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.Network/applicationGateways/ag/requestRoutingRules/rrr",
+              "attachmentState": "Succeeded"
             },
             {
-              "appId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.CDN/frontdoors/fd",
-              "provisioningState": "Succeeded",
-              "protectionState": "Enabled"
+              "endpointId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.CDN/frontdoors/fd",
+              "attachmentState": "Succeeded"
             },
             {
-              "appId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.CDN/frontdoors/fd/routingRules/rr",
-              "provisioningState": "Succeeded",
-              "protectionState": "Enabled"
+              "endpointId": "/subscriptions/sub1/resourceGroups/rg2/providers/Microsoft.CDN/frontdoors/fd/routingRules/rr",
+              "attachmentState": "Succeeded"
             }
           ],
-          "wafPolicy": {
+          "logScrubbing": {
             "state": "Enabled",
-            "policySettings": {
-              "mode": "Detection",
-              "redirectUrl": "http://bing.com",
-              "customBlockResponseStatusCode": 499,
-              "customBlockResponseBody": "SGVsbG8=",
-              "maxRequestBodySizeInKb": 128,
-              "fileUploadLimitInMb": 100
+            "scrubbingRules": [
+              {
+                "state": "Enabled",
+                "matchVariable": "RequestHeaderNames",
+                "selectorMatchOperator": "Equals",
+                "selector": "mySelector"
+              },
+              {
+                "state": "Enabled",
+                "matchVariable": "RequestHeaderNames",
+                "selectorMatchOperator": "Equals",
+                "selector": "mySelector"
+              }
+            ]
+          },
+          "policySettings": {
+            "state": "Enabled",
+            "mode": "Detection",
+            "redirectUrl": "http://bing.com",
+            "customBlockResponseStatusCode": 499,
+            "customBlockResponseBody": "SGVsbG8=",
+            "maxRequestBodySizeInKb": 128,
+            "fileUploadLimitInMb": 100
+          },
+          "customRules": [
+            {
+              "name": "Rule1",
+              "state": "Enabled",
+              "action": "Block",
+              "priority": 10,
+              "rateLimit": {
+                "limitType": "ClientIp",
+                "durationInMinutes": 1,
+                "maxRequestsPerSecond": 1000
+              },
+              "matchConditions": [
+                {
+                  "negationCondition": true,
+                  "conditionType": "Ip",
+                  "matchVariable": "ClientAddr",
+                  "matchValue": [
+                    "192.168.1.0/24",
+                    "10.0.0.0/24"
+                  ]
+                }
+              ]
             },
+            {
+              "name": "Rule2",
+              "action": "Redirect",
+              "priority": 20,
+              "matchConditions": [
+                {
+                  "conditionType": "Geo",
+                  "matchVariable": "ClientAddr",
+                  "matchValue": [
+                    "AR",
+                    "NZ"
+                  ]
+                },
+                {
+                  "negationCondition": false,
+                  "conditionType": "String",
+                  "operator": "Contains",
+                  "matchVariable": "RequestHeader",
+                  "selector": "UserAgent",
+                  "matchValue": [
+                    "windows"
+                  ],
+                  "transformations": [
+                    "Lowercase"
+                  ]
+                },
+                {
+                  "conditionType": "Exists",
+                  "matchVariable": "RequestHeader",
+                  "matchValue": "tasty_cookie"
+                }
+              ]
+            }
+          ],
+          "webProtection": {
             "managedRules": [
               {
                 "ruleSetType": "DRS",
@@ -108,80 +177,32 @@
                 ]
               },
               {
+                "ruleSetType": "WebProtection",
+                "ruleSetVersion": "1.0",
+                "ruleGroupOverrides": [],
+                "exclusions": []
+              }
+            ]
+          },
+          "apiProtection": {
+            "managedRules": [
+              {
+                "ruleSetType": "ApiProtection",
+                "ruleSetVersion": "1.0",
+                "ruleGroupOverrides": [],
+                "exclusions": []
+              }
+            ]
+          },
+          "botProtection": {
+            "managedRules": [
+              {
                 "ruleSetType": "BotProtection",
                 "ruleSetVersion": "1.0",
                 "ruleGroupOverrides": [],
                 "exclusions": []
               }
-            ],
-            "customRules": [
-              {
-                "name": "Rule1",
-                "state": "Enabled",
-                "action": "Block",
-                "priority": 10,
-                "rateLimit": {
-                  "limitType": "ClientIp",
-                  "durationInMinutes": 1,
-                  "maxRequestsPerSecond": 1000
-                },
-                "matchConditions": [
-                  {
-                    "negationCondition": true,
-                    "conditionType": "Ip",
-                    "matchVariable": "RemoteAddr",
-                    "matchValue": "/subscriptions/sub1/resourceGroups/rg1/providers/Microsoft.AppSecurity/ipLists/Ips1"
-                  }
-                ]
-              },
-              {
-                "name": "Rule2",
-                "action": "Redirect",
-                "priority": 20,
-                "matchConditions": [
-                  {
-                    "conditionType": "Geo",
-                    "matchVariable": "RemoteAddr",
-                    "matchValue": "/subscriptions/sub1/resourceGroups/rg1/providers/Microsoft.AppSecurity/geoLists/Geos1"
-                  },
-                  {
-                    "negationCondition": false,
-                    "conditionType": "String",
-                    "operator": "Contains",
-                    "matchVariable": "RequestHeader",
-                    "selector": "UserAgent",
-                    "matchValue": [
-                      "windows"
-                    ],
-                    "transformations": [
-                      "Lowercase"
-                    ]
-                  },
-                  {
-                    "conditionType": "Exists",
-                    "matchVariable": "RequestHeader",
-                    "matchValue": "tasty_cookie"
-                  }
-                ]
-              }
-            ],
-            "logScrubbing": {
-              "state": "Enabled",
-              "scrubbingRules": [
-                {
-                  "state": "Enabled",
-                  "matchVariable": "RequestHeaderNames",
-                  "selectorMatchOperator": "Equals",
-                  "selector": "mySelector"
-                },
-                {
-                  "state": "Enabled",
-                  "matchVariable": "RequestHeaderNames",
-                  "selectorMatchOperator": "Equals",
-                  "selector": "mySelector"
-                }
-              ]
-            }
+            ]
           }
         }
       }

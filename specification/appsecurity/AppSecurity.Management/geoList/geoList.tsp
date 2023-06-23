@@ -14,6 +14,8 @@ model GeoListProperties {
   provisioningState?: ProvisioningState;
 
   @doc("List of countries or regions")
+  @minItems(1)
+  @maxItems(100)
   geoList: string[]; // TODO - should we verify with the pattern decorator?
 
   @doc("The list of back references to policies that use this Geo list")
@@ -27,6 +29,8 @@ model GeoList is TrackedResource<GeoListProperties> {
   @key("listName")
   @segment("geoLists")
   @path
+  @minLength(1)
+  @maxLength(128)
   name: string;
 }
 

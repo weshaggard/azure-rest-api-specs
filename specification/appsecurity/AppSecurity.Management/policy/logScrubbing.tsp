@@ -2,21 +2,27 @@ using OpenAPI;
 
 namespace Microsoft.AppSecurity;
 
-/* *********************************
- * logScrubbing property definitions
- ********************************* */
-
+@doc("Supported variable types for scrubbing rules")
 enum ScrubbingRuleMatchVariable {
+  @doc("The request headers to be scrubbed")
   RequestHeaderNames,
+  @doc("The request cookies to be scrubbed")
   RequestCookieNames,
+  @doc("The request arguments to be scrubbed")
   RequestArgNames,
+  @doc("The request post arguments to be scrubbed")
   RequestPostArgNames,
+  @doc("The request JSON arguments to be scrubbed")
   RequestJSONArgNames,
+  @doc("The request IP address")
   RequestIPAddress,
 }
 
+@doc("Supported operators for scrubbing rules")
 enum ScrubbingRuleSelectorMatchOperator {
+  @doc("Equals operator")
   Equals_: "Equals", // Changes the generated name and prevents error CS0108, in which Equal hides inherited member of 'ValueType.Equals(object?)'
+  @doc("Equals any operator")
   EqualsAny,
 }
 
@@ -32,6 +38,8 @@ model ScrubbingRule {
   selectorMatchOperator: ScrubbingRuleSelectorMatchOperator;
 
   @doc("When matchVariable is a collection, operator used to specify which elements in the collection this rule applies to")
+  @minLength(1)
+  @maxLength(128)
   selector: string;
 }
 
@@ -42,5 +50,6 @@ model LogScrubbing {
 
   @doc("The rules that are applied to the logs for scrubbing")
   @extension("x-ms-identifiers", [])
+  @maxItems(100)
   scrubbingRules: ScrubbingRule[];
 }
