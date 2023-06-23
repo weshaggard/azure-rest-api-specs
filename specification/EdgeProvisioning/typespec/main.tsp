@@ -27,8 +27,8 @@ interface Operations extends Azure.ResourceManager.Operations {}
 model ProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
   @doc("The name of the employee")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("ProvisioningResourceName")
-  @segment("ProvisioningResources")
+  @key("provisioningResourceName")
+  @segment("provisioningResources")
   @path
   name: string;
 
@@ -56,7 +56,7 @@ model ProvisioningResourceProperties {
 
 @doc("Device endpoints.")
 model DeviceEndpoints { // TODO: follow up with DP and PM on the definition of the endpoints for ignite
-  Default: DeviceEndpoint,
+  default: DeviceEndpoint,
 }
 
 model DeviceEndpoint {
