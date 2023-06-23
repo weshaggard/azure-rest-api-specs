@@ -27,34 +27,37 @@ These are the global settings for the Managed Network Fabric.
 ``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2023-06-01
+tag: package-2023-06-15
 ```
 
 
-### Tag: package-2023-06-01
+### Tag: package-2023-06-15
 
-These settings apply only when `--tag=package-2023-06-01` is specified on the command line.
+These settings apply only when `--tag=package-2023-06-15` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-06-01'
+```yaml $(tag) == 'package-2023-06-15'
 input-file:
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/AccessControlLists.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpCommunities.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpExtendedCommunities.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/IpPrefixes.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/L2IsolationDomains.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/L3IsolationDomains.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NeighborGroups.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkDeviceSkus.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkDevices.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkFabricControllers.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkFabricSkus.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkFabrics.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkPacketBrokers.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkRackSkus.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/NetworkRacks.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/Operations.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/RoutePolicies.json
-  - Microsoft.ManagedNetworkFabric/stable/2023-06-01/common.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/AccessControlLists.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/InternetGateways.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/InternetGatewayRules.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/IpCommunities.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/IpExtendedCommunities.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/IpPrefixes.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/L2IsolationDomains.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/L3IsolationDomains.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NeighborGroups.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkDeviceSkus.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkDevices.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkFabricControllers.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkFabricSkus.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkFabrics.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkPacketBrokers.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkRacks.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkTapRules.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/NetworkTaps.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/Operations.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/RoutePolicies.json
+  - Microsoft.ManagedNetworkFabric/stable/2023-06-15/common.json
 ```
 ### Tag: package-2023-02-01-preview
 

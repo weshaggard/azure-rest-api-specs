@@ -282,13 +282,16 @@
             "$ref": "#/parameters/SkipTokenParameter"
           },
           {
-            "$ref": "#/parameters/SkipParameter"
-          },
-          {
             "$ref": "#/parameters/TopParameter"
           },
           {
             "$ref": "#/parameters/SelectParameter"
+          },
+          {
+            "$ref": "#/parameters/FilterParameter"
+          },
+          {
+            "$ref": "#/parameters/OrderByParameter"
           },
           {
             "$ref": "#/parameters/OfferGuidParameter"
@@ -581,6 +584,12 @@
           },
           {
             "$ref": "#/parameters/SelectParameter"
+          },
+          {
+            "$ref": "#/parameters/FilterParameter"
+          },
+          {
+            "$ref": "#/parameters/OrderByParameter"
           }
         ],
         "responses": {
@@ -805,6 +814,12 @@
             "$ref": "#/parameters/SelectParameter"
           },
           {
+            "$ref": "#/parameters/FilterParameter"
+          },
+          {
+            "$ref": "#/parameters/OrderByParameter"
+          },
+          {
             "$ref": "#/parameters/ReportCreatorTenantIdParameter"
           },
           {
@@ -960,6 +975,12 @@
           },
           {
             "$ref": "#/parameters/SelectParameter"
+          },
+          {
+            "$ref": "#/parameters/FilterParameter"
+          },
+          {
+            "$ref": "#/parameters/OrderByParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -1257,17 +1278,27 @@
         "passedCount": {
           "format": "int32",
           "type": "integer",
-          "description": "The count of all passed full automation control."
+          "description": "The count of all passed control."
         },
         "failedCount": {
           "format": "int32",
           "type": "integer",
-          "description": "The count of all failed full automation control."
+          "description": "The count of all failed control."
         },
         "manualCount": {
           "format": "int32",
           "type": "integer",
           "description": "The count of all manual control."
+        },
+        "notApplicableCount": {
+          "format": "int32",
+          "type": "integer",
+          "description": "The count of all not applicable control."
+        },
+        "pendingCount": {
+          "format": "int32",
+          "type": "integer",
+          "description": "The count of all pending for approval control."
         }
       }
     },
@@ -2452,6 +2483,16 @@
             "$ref": "#/definitions/ReportResource"
           }
         },
+        "reportCount": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Temp count to indicate records count number."
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Total records count number."
+        },
         "nextLink": {
           "description": "The URL the client should use to fetch the next page (per server side paging).\r\nIt's null for now, added for future use.",
           "type": "string"
@@ -2470,6 +2511,11 @@
             "$ref": "#/definitions/WebhookResource"
           }
         },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Total records count number."
+        },
         "nextLink": {
           "description": "The URL the client should use to fetch the next page (per server side paging).\r\nIt's null for now, added for future use.",
           "type": "string"
@@ -2487,6 +2533,11 @@
           "items": {
             "$ref": "#/definitions/SnapshotResource"
           }
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Total records count number."
         },
         "nextLink": {
           "description": "The URL the client should use to fetch the next page (per server side paging).\r\nIt's null for now, added for future use.",
@@ -2749,6 +2800,11 @@
             "$ref": "#/definitions/EvidenceResource"
           }
         },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Total records count number."
+        },
         "nextLink": {
           "description": "The URL the client should use to fetch the next page (per server side paging).\r\nIt's null for now, added for future use.",
           "type": "string"
@@ -2793,14 +2849,6 @@
     },
     "SkipTokenParameter": {
       "name": "$skipToken",
-      "description": "Skip over when retrieving results.",
-      "in": "query",
-      "required": false,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "SkipParameter": {
-      "name": "$skip",
       "description": "Skip over when retrieving results.",
       "in": "query",
       "required": false,
@@ -2860,6 +2908,24 @@
       "required": false,
       "type": "string",
       "description": "OData Select statement. Limits the properties on each entry to just those requested, e.g. ?$select=reportName,id.",
+      "x-ms-parameter-location": "method",
+      "minLength": 1
+    },
+    "OrderByParameter": {
+      "name": "$orderby",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "OData order by query option.",
+      "x-ms-parameter-location": "method",
+      "minLength": 1
+    },
+    "FilterParameter": {
+      "name": "$filter",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "The filter to apply on the operation.",
       "x-ms-parameter-location": "method",
       "minLength": 1
     }

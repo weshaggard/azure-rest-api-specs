@@ -952,7 +952,7 @@
           "200": {
             "description": "The get request was successful; response contains ispCacheNode",
             "schema": {
-              "$ref": "#/definitions/ConnectedCache"
+              "$ref": "#/definitions/MccCacheNodeResource"
             }
           },
           "default": {
@@ -1165,7 +1165,7 @@
           "200": {
             "description": "The get request was successful; response contains the list of ispCacheNode resources",
             "schema": {
-              "$ref": "#/definitions/ConnectedCacheList"
+              "$ref": "#/definitions/MccCacheNodeResourceList"
             }
           },
           "default": {
@@ -1770,6 +1770,38 @@
         }
       }
     },
+    "BgpConfiguration": {
+      "type": "object",
+      "description": "Bgp configuration of cache node",
+      "properties": {
+        "AsnToIpAddressMapping": {
+          "description": "Asn to ip address mapping",
+          "type": "string"
+        }
+      }
+    },
+    "CacheNodeDriveConfiguration": {
+      "type": "object",
+      "description": "Drive configuration for cache node",
+      "properties": {
+        "physicalPath": {
+          "description": "physical path location of the folder used for caching content",
+          "type": "string"
+        },
+        "sizeInGb": {
+          "description": "physical size of the drive used for caching content",
+          "type": "integer"
+        },
+        "cacheNumber": {
+          "description": "corresponding ngix cache number. Valid cache numbers are 1 - 10",
+          "type": "integer"
+        },
+        "nginxMapping": {
+          "description": "full binding for corresponding nginx cache drive",
+          "type": "string"
+        }
+      }
+    },
     "ErrorDefinition": {
       "type": "object",
       "description": "Error definition",
@@ -1794,6 +1826,23 @@
             "message"
           ],
           "readOnly": true
+        }
+      }
+    },
+    "MccCacheNodeResourceList": {
+      "description": "Object that includes an array of MccCacheNodeResource and a possible link for next set",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "List of MccCacheNodeResource resources",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MccCacheNodeResource"
+          }
+        },
+        "nextLink": {
+          "description": "The URL the client should use to fetch the next page (per server side paging)",
+          "type": "string"
         }
       }
     },
@@ -1842,6 +1891,7 @@
           }
         },
         "properties": {
+          "type": "object",
           "description": "Create or update customer response entity",
           "title": "Create or update customer response entity",
           "x-ms-client-flatten": true,
@@ -1885,6 +1935,7 @@
           }
         },
         "customer": {
+          "type": "object",
           "title": "MCC customer entity details",
           "x-ms-client-flatten": true,
           "allOf": [
@@ -1895,6 +1946,7 @@
           "description": " Mcc Customer entity"
         },
         "additionalCustomerProperties": {
+          "type": "object",
           "title": "Additional customer properties",
           "x-ms-client-flatten": true,
           "allOf": [
@@ -1939,48 +1991,48 @@
           "type": "string",
           "description": "last update timestamp of peering db update"
         },
-        "cacheEffeciency": {
-          "type": "string",
+        "CustomerProperties_Overview_CacheEffeciency": {
+          "type": "number",
           "description": "cache efficiency"
         },
-        "averageEgressMbps": {
-          "type": "string",
+        "CustomerProperties_Overview_AverageEgressMbps": {
+          "type": "integer",
           "description": "average egress in mbps"
         },
-        "averageMissMbps": {
-          "type": "string",
+        "CustomerProperties_Overview_AverageMissMbps": {
+          "type": "integer",
           "description": "average miss throughput in mbps"
         },
-        "egressMbpsMax": {
-          "type": "string",
+        "CustomerProperties_Overview_EgressMbpsMax": {
+          "type": "integer",
           "description": "max egress in mbps"
         },
-        "egressMbpsMaxDateTime": {
+        "CustomerProperties_Overview_EgressMbpsMaxDateTime": {
           "type": "string",
           "description": "timestamp of max egress"
         },
-        "missMbpsMax": {
-          "type": "string",
+        "CustomerProperties_Overview_MissMbpsMax": {
+          "type": "integer",
           "description": "max miss throughput"
         },
-        "missMbpsMaxDateTime": {
+        "CustomerProperties_Overview_MissMbpsMaxDateTime": {
           "type": "string",
           "description": "timestamp of miss max throughput"
         },
-        "cacheNodesHealthyCount": {
-          "type": "string",
+        "CustomerProperties_Overview_CacheNodesHealthyCount": {
+          "type": "integer",
           "description": "count of healthy cache nodes"
         },
-        "cacheNodesUnhealthyCount": {
-          "type": "string",
+        "CustomerProperties_Overview_CacheNodesUnhealthyCount": {
+          "type": "integer",
           "description": "count of unhealthy cache nodes"
         },
         "signupStatus": {
-          "type": "string",
+          "type": "boolean",
           "description": "status of signup"
         },
         "signupStatusCode": {
-          "type": "string",
+          "type": "integer",
           "description": "status of signup"
         },
         "signupStatusText": {
@@ -1988,7 +2040,7 @@
           "description": "status of signup"
         },
         "signupPhaseStatusCode": {
-          "type": "string",
+          "type": "integer",
           "description": "statusCode of signup phase"
         },
         "signupPhaseStatusText": {
@@ -2113,6 +2165,7 @@
           }
         },
         "cacheNode": {
+          "type": "object",
           "title": "MCC cache node entity details",
           "x-ms-client-flatten": true,
           "allOf": [
@@ -2123,6 +2176,7 @@
           "description": "Mcc cache node entity"
         },
         "additionalCacheNodeProperties": {
+          "type": "object",
           "title": "Additional cache node properties",
           "x-ms-client-flatten": true,
           "allOf": [
@@ -2163,49 +2217,69 @@
       "type": "object",
       "description": "Model representing cache node for connected cache resource",
       "properties": {
-        "detailsIssuesList": {
-          "type": "string",
+        "CacheNodeProperties_Details_IssuesList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "description": "issues list to return the issues as part of the additional cache node properties"
         },
-        "bgpCidrs": {
+        "BgpCidrs": {
           "type": "string",
           "description": "bgpCidrs as part of the additional cache node properties"
         },
-        "aggregatedStatusDetails": {
+        "AggregatedStatusDetails": {
           "type": "string",
           "description": "aggregated status details as part of additional cache node properties"
         },
-        "aggregatedStatusText": {
+        "AggregatedStatusText": {
           "type": "string",
           "description": "aggregated status text as part of additional cache node properties"
         },
-        "aggregatedStatusCode": {
-          "type": "string",
+        "AggregatedStatusCode": {
+          "type": "integer",
           "description": "aggregated status code as part of additonal cache enode properties"
         },
-        "productVersion": {
+        "ProductVersion": {
           "type": "string",
           "description": "product version as part of additonal cache enode properties"
         },
-        "isProvisioned": {
-          "type": "string",
+        "IsProvisioned": {
+          "type": "boolean",
           "description": "is provisioned flag as part of additonal cache enode properties"
         },
-        "cacheNodeStateDetailedText": {
+        "CacheNodeStateDetailedText": {
           "type": "string",
           "description": "detailed text for cache node state as part of additonal cache enode properties"
         },
-        "cacheNodeStateShortText": {
+        "CacheNodeStateShortText": {
           "type": "string",
           "description": "short text for cache node state as part of additonal cache enode properties"
         },
-        "cacheNodeState": {
-          "type": "string",
+        "CacheNodeState": {
+          "type": "integer",
           "description": "state of cache node state as part of additonal cache enode properties"
         },
-        "registrationKey": {
+        "RegistrationKey": {
           "type": "string",
           "description": "iot device registration temporary registration key"
+        },
+        "driveConfiguration": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CacheNodeDriveConfiguration"
+          },
+          "description": "drive configurations for the cache node"
+        },
+        "bgpConfiguration": {
+          "title": "bgp configuration of the cache node",
+          "x-ms-client-flatten": true,
+          "allOf": [
+            {
+              "$ref": "#/definitions/BgpConfiguration"
+            }
+          ],
+          "description": "bgp configuration of the cache node"
         },
         "optionalPropery1": {
           "type": "string",
@@ -2282,59 +2356,55 @@
       "type": "object",
       "description": "Model representing customer for ConnectedCache resource",
       "properties": {
-        "apiKey": {
-          "type": "string",
-          "description": "api key."
-        },
-        "customerName": {
+        "CustomerName": {
           "type": "string",
           "description": "name of the customer"
         },
-        "customerId": {
+        "CustomerId": {
           "type": "string",
           "description": "customer id of the customer"
         },
-        "contactEmail": {
+        "ContactEmail": {
           "type": "string",
           "description": "email of the customer contact"
         },
-        "contactPhone": {
+        "ContactPhone": {
           "type": "string",
           "description": "phone number of the customer contact"
         },
-        "contactName": {
+        "ContactName": {
           "type": "string",
           "description": "contact name of the customer"
         },
-        "isEntitled": {
+        "IsEntitled": {
           "type": "boolean",
           "description": "is the customer entitled"
         },
-        "shouldMigrate": {
+        "ShouldMigrate": {
           "type": "boolean",
           "description": "should the customer be migrated"
         },
-        "customerAsn": {
+        "CustomerAsn": {
           "type": "string",
           "description": "asn of the customer"
         },
-        "transitState": {
+        "TransitState": {
           "type": "string",
           "description": "transit state of the customer"
         },
-        "transitAsn": {
+        "TransitAsn": {
           "type": "string",
           "description": "transit asn for customer who provides transit"
         },
-        "resendSignupCode": {
+        "ResendSignupCode": {
           "type": "boolean",
           "description": "should the signup code be resent"
         },
-        "verifySignupCode": {
+        "VerifySignupCode": {
           "type": "boolean",
           "description": "should the code for signup be verified"
         },
-        "verifySignupPhrase": {
+        "VerifySignupPhrase": {
           "type": "string",
           "description": "phrase for verify signup"
         }
@@ -2392,49 +2462,105 @@
       "type": "object",
       "description": "Model representing customer for ConnectedCache resource",
       "properties": {
-        "apiKey": {
-          "type": "string",
-          "description": "api key."
+        "additionalCacheNodeProperties": {
+          "type": "object",
+          "title": "Additional cache node properties",
+          "x-ms-client-flatten": true,
+          "allOf": [
+            {
+              "$ref": "#/definitions/AdditionalCacheNodeProperties"
+            }
+          ],
+          "description": "Additional properties for cache node creation."
         },
-        "cacheNodeId": {
+        "CacheNodeId": {
           "type": "string",
           "description": "cache node Id of the cache node to be updated. It is acceptable to be empty for a new cache node"
         },
-        "customerId": {
+        "CustomerId": {
           "type": "string",
           "description": "customer id of the parent customer"
         },
-        "cacheNodeName": {
+        "CacheNodeName": {
           "type": "string",
           "description": "name of the cache node"
         },
-        "cidrCsv": {
+        "CidrCsv": {
           "type": "string",
           "description": "comma separated values of cidr"
         },
-        "ipAddress": {
+        "IpAddress": {
           "type": "string",
           "description": "ip address"
         },
-        "maxAllowableEgressInMbps": {
-          "type": "boolean",
+        "MaxAllowableEgressInMbps": {
+          "type": "integer",
           "description": "maximum allowable egress of the cache node in mbps"
         },
-        "shouldMigrate": {
+        "ShouldMigrate": {
           "type": "boolean",
           "description": "should the customer be migrated"
         },
-        "isEnabled": {
+        "IsEnabled": {
           "type": "boolean",
           "description": "is the cache node enabled"
         },
-        "isEnterprise": {
-          "type": "string",
+        "IsEnterpriseManaged": {
+          "type": "boolean",
           "description": "is the cache node an enterprise cache node"
         },
-        "cidrSelectionType": {
-          "type": "string",
+        "CidrSelectionType": {
+          "type": "integer",
           "description": "cidr selection type"
+        }
+      }
+    },
+    "MccCacheNodeResource": {
+      "type": "object",
+      "description": "Represents the high level Nodes needed to provision cache node resources",
+      "required": [
+        "location"
+      ],
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/Resource"
+        }
+      ],
+      "properties": {
+        "location": {
+          "description": "Region where the Azure resource is located",
+          "type": "string",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "description": "Additional tag configuration related properties",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "description": "Properties of mcc cache node resource.",
+          "title": "Properties of mcc cache node resource.",
+          "x-ms-client-flatten": true,
+          "allOf": [
+            {
+              "$ref": "#/definitions/CacheNode"
+            }
+          ]
+        },
+        "systemData": {
+          "readOnly": true,
+          "description": "The system meta data relating to this resource",
+          "allOf": [
+            {
+              "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
+            }
+          ]
         }
       }
     },
@@ -2466,6 +2592,7 @@
           }
         },
         "properties": {
+          "type": "object",
           "description": "Properties of mcc customer resource.",
           "title": "Properties of mcc customer resource.",
           "x-ms-client-flatten": true,
@@ -2483,6 +2610,77 @@
               "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
             }
           ]
+        }
+      }
+    },
+    "CacheNode": {
+      "type": "object",
+      "description": "Model representing customer for connectedCache resource",
+      "properties": {
+        "provisioningState": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The provisioned state of the resource",
+          "enum": [
+            "Unknown",
+            "Accepted",
+            "Succeeded",
+            "Failed",
+            "Cancelled",
+            "Upgrading",
+            "Deleting"
+          ],
+          "x-ms-enum": {
+            "name": "ProvisioningState",
+            "modelAsString": true
+          }
+        },
+        "cacheNode": {
+          "type": "object",
+          "title": "properties of customer entity",
+          "x-ms-client-flatten": true,
+          "allOf": [
+            {
+              "$ref": "#/definitions/CacheNodeEntity"
+            }
+          ],
+          "description": "Mcc Customer entity"
+        },
+        "additionalCacheNodeProperties": {
+          "type": "object",
+          "title": "Additional customer properties",
+          "x-ms-client-flatten": true,
+          "allOf": [
+            {
+              "$ref": "#/definitions/AdditionalCacheNodeProperties"
+            }
+          ],
+          "description": "Additional properties for Mcc Customer entity"
+        },
+        "statusCode": {
+          "type": "string",
+          "description": "statusCode used to get code details of MCC response object"
+        },
+        "statusText": {
+          "type": "string",
+          "description": "statusText used to get status details in string format of MCC response object"
+        },
+        "statusDetails": {
+          "type": "string",
+          "description": "statusDetails used to get inner details of MCC response object"
+        },
+        "status": {
+          "description": "status of the HTTP error code",
+          "type": "string",
+          "readOnly": true
+        },
+        "error": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ErrorDefinition"
+            }
+          ],
+          "description": "The error details"
         }
       }
     },
@@ -2509,6 +2707,7 @@
           }
         },
         "customer": {
+          "type": "object",
           "title": "properties of customer entity",
           "x-ms-client-flatten": true,
           "allOf": [
@@ -2516,111 +2715,18 @@
               "$ref": "#/definitions/CustomerEntity"
             }
           ],
-          "description": " Mcc Customer entity"
+          "description": "Mcc Customer entity"
         },
-        "peeringDbLastUpdateTime": {
-          "type": "string",
-          "description": "last update timestamp of peering db update"
-        },
-        "cacheEffeciency": {
-          "type": "string",
-          "description": "cache efficiency"
-        },
-        "averageEgressMbps": {
-          "type": "string",
-          "description": "average egress in mbps"
-        },
-        "averageMissMbps": {
-          "type": "string",
-          "description": "average miss throughput in mbps"
-        },
-        "egressMbpsMax": {
-          "type": "string",
-          "description": "max egress in mbps"
-        },
-        "egressMbpsMaxDateTime": {
-          "type": "string",
-          "description": "timestamp of max egress"
-        },
-        "missMbpsMax": {
-          "type": "string",
-          "description": "max miss throughput"
-        },
-        "missMbpsMaxDateTime": {
-          "type": "string",
-          "description": "timestamp of miss max throughput"
-        },
-        "cacheNodesHealthyCount": {
-          "type": "string",
-          "description": "count of healthy cache nodes"
-        },
-        "cacheNodesUnhealthyCount": {
-          "type": "string",
-          "description": "count of unhealthy cache nodes"
-        },
-        "signupStatus": {
-          "type": "string",
-          "description": "status of signup"
-        },
-        "signupStatusCode": {
-          "type": "string",
-          "description": "status of signup"
-        },
-        "signupStatusText": {
-          "type": "string",
-          "description": "status of signup"
-        },
-        "signupPhaseStatusCode": {
-          "type": "string",
-          "description": "statusCode of signup phase"
-        },
-        "signupPhaseStatusText": {
-          "type": "string",
-          "description": "status of signup phase"
-        },
-        "peeringDbLastUpdateDate": {
-          "type": "string",
-          "description": "timestamp of last update to peering db"
-        },
-        "customerOrgName": {
-          "type": "string",
-          "description": "name of organization of customer"
-        },
-        "customerEmail": {
-          "type": "string",
-          "description": "email of customer"
-        },
-        "customerTransitAsn": {
-          "type": "string",
-          "description": "transit asn of the customer who provides transit"
-        },
-        "customerTransitState": {
-          "type": "string",
-          "description": "transit state of the customer"
-        },
-        "customerAsn": {
-          "type": "string",
-          "description": "asn of the customer"
-        },
-        "optionalPropery1": {
-          "type": "string",
-          "description": "optional property#1 of MCC response object"
-        },
-        "optionalPropery2": {
-          "type": "string",
-          "description": "optional property#2 of MCC response object"
-        },
-        "optionalPropery3": {
-          "type": "string",
-          "description": "optional property#3 of MCC response object"
-        },
-        "optionalPropery4": {
-          "type": "string",
-          "description": "optional property#4 of MCC response object"
-        },
-        "optionalPropery5": {
-          "type": "string",
-          "description": "optional property#5 of MCC response object"
+        "additionalCustomerProperties": {
+          "type": "object",
+          "title": "Additional customer properties",
+          "x-ms-client-flatten": true,
+          "allOf": [
+            {
+              "$ref": "#/definitions/AdditionalCustomerProperties"
+            }
+          ],
+          "description": "Additional properties for Mcc Customer entity"
         },
         "statusCode": {
           "type": "string",
@@ -2646,6 +2752,52 @@
             }
           ],
           "description": "The error details"
+        }
+      }
+    },
+    "ResourceProviderOperationList": {
+      "title": "Result of the request to list REST API operations. It contains a list of operations and a URL nextLink to get the next set of results",
+      "description": "List containing this Resource Provider's available operations",
+      "properties": {
+        "value": {
+          "description": "Resource provider operations list",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceProviderOperationDefinition"
+          }
+        },
+        "nextLink": {
+          "description": "The URI that can be used to request the next page for list of Azure operations",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ResourceProviderOperationDefinition": {
+      "title": "A REST API operation",
+      "type": "object",
+      "description": "Describes the Resource Provider Operation",
+      "properties": {
+        "name": {
+          "title": "The operations name",
+          "description": "Resource provider operation name",
+          "type": "string"
+        },
+        "isDataAction": {
+          "description": "Indicates whether the operation is a data action",
+          "type": "string"
+        },
+        "display": {
+          "description": "Resource provider display properties",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ResourceProviderOperationDisplay"
+            }
+          ]
+        },
+        "origin": {
+          "description": "Origin of the operation",
+          "type": "string"
         }
       }
     },
@@ -2784,7 +2936,7 @@
           "description": "identifier of the cache node"
         },
         "CacheNodeName": {
-          "type": "boolean",
+          "type": "string",
           "description": "name of the cache node"
         },
         "Asn": {
@@ -3054,123 +3206,6 @@
         }
       }
     },
-    "CacheNode": {
-      "type": "object",
-      "description": "Model representing Cache Node for ConnectedCache resource",
-      "properties": {
-        "provisioningState": {
-          "type": "string",
-          "readOnly": true,
-          "description": "The provisioned state of the resource",
-          "enum": [
-            "Unknown",
-            "Accepted",
-            "Succeeded",
-            "Failed",
-            "Cancelled",
-            "Upgrading",
-            "Deleting"
-          ],
-          "x-ms-enum": {
-            "name": "ProvisioningState",
-            "modelAsString": true
-          }
-        },
-        "customer": {
-          "type": "object",
-          "description": " Mcc Customer Json response"
-        },
-        "additionalCustomerProperties": {
-          "type": "object",
-          "description": "additional Mcc Customer Json properties",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "cacheNode": {
-          "type": "object",
-          "description": " Mcc Cache Node Json response"
-        },
-        "additionalCacheNodeProperties": {
-          "type": "object",
-          "description": "additional Mcc cachenode Json properties for BGP and Update and IOT central",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "statusCode": {
-          "type": "string",
-          "description": "statusCode used to get code details of MCC response object"
-        },
-        "statusText": {
-          "type": "string",
-          "description": "statusText used to get status details in string format of MCC response object"
-        },
-        "statusDetails": {
-          "type": "string",
-          "description": "statusDetails used to get inner details of MCC response object"
-        },
-        "status": {
-          "description": "status of the HTTP error code",
-          "type": "string",
-          "readOnly": true
-        },
-        "error": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/ErrorDefinition"
-            }
-          ],
-          "description": "The error details"
-        }
-      }
-    },
-    "ResourceProviderOperationList": {
-      "title": "Result of the request to list REST API operations. It contains a list of operations and a URL nextLink to get the next set of results",
-      "description": "List containing this Resource Provider's available operations",
-      "properties": {
-        "value": {
-          "description": "Resource provider operations list",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResourceProviderOperationDefinition"
-          }
-        },
-        "nextLink": {
-          "description": "The URI that can be used to request the next page for list of Azure operations",
-          "type": "string",
-          "readOnly": true
-        }
-      }
-    },
-    "ResourceProviderOperationDefinition": {
-      "title": "A REST API operation",
-      "type": "object",
-      "description": "Describes the Resource Provider Operation",
-      "properties": {
-        "name": {
-          "title": "The operations name",
-          "description": "Resource provider operation name",
-          "type": "string"
-        },
-        "isDataAction": {
-          "description": "Indicates whether the operation is a data action",
-          "type": "string"
-        },
-        "display": {
-          "description": "Resource provider display properties",
-          "allOf": [
-            {
-              "$ref": "#/definitions/ResourceProviderOperationDisplay"
-            }
-          ]
-        },
-        "origin": {
-          "description": "Origin of the operation",
-          "type": "string"
-        }
-      }
-    },
     "ResourceProviderOperationDisplay": {
       "description": "Describes the properties of the Operation",
       "properties": {
@@ -3217,24 +3252,24 @@
       }
     }
   },
-  "parameters": {
-    "CacheNodeNameParameter": {
-      "name": "cacheNodeName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "Name of the ConnectedCache resource",
-      "pattern": "^[a-zA-Z0-9]",
-      "x-ms-parameter-location": "method"
-    },
-    "CustomerNameParameter": {
-      "name": "customerName",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "Name of the Customer resource",
-      "pattern": "^[a-zA-Z0-9]",
-      "x-ms-parameter-location": "method"
+    "parameters": {
+      "CacheNodeNameParameter": {
+        "name": "cacheNodeName",
+        "in": "path",
+        "required": true,
+        "type": "string",
+        "description": "Name of the ConnectedCache resource",
+        "pattern": "^[a-zA-Z0-9]",
+        "x-ms-parameter-location": "method"
+      },
+      "CustomerNameParameter": {
+        "name": "customerName",
+        "in": "path",
+        "required": true,
+        "type": "string",
+        "description": "Name of the Customer resource",
+        "pattern": "^[a-zA-Z0-9]",
+        "x-ms-parameter-location": "method"
+      }
     }
   }
-}

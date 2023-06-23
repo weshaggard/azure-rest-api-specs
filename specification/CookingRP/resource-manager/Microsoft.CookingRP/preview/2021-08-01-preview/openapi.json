@@ -236,14 +236,13 @@
           "201": {
             "description": "ARM create operation completed successfully.",
             "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
+              "Azure-AsyncOperation": {
+                "type": "string",
+                "description": "The URL to retrieve the status of the asynchronous operation."
               },
-              "location": {
-                "description": "URL to query for status of the operation.",
-                "type": "string"
+              "Location": {
+                "type": "string",
+                "description": "The URL to retrieve the status of the asynchronous operation."
               }
             },
             "schema": {
@@ -302,12 +301,32 @@
               "$ref": "#/definitions/RecipeRT"
             }
           },
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/RecipeRT"
+            },
+            "headers": {
+              "Azure-AsyncOperation": {
+                "type": "string",
+                "description": "The URL to retrieve the status of the asynchronous operation."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The URL to retrieve the status of the asynchronous operation."
+              }
+            }
+          },
           "default": {
             "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
         }
       },
       "delete": {
@@ -341,6 +360,14 @@
                 "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
                 "type": "integer",
                 "format": "int32"
+              },
+              "Azure-AsyncOperation": {
+                "type": "string",
+                "description": "The URL to retrieve the status of the asynchronous operation."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The URL to retrieve the status of the asynchronous operation."
               }
             }
           },
@@ -356,6 +383,76 @@
         },
         "x-ms-long-running-operation-options": {
           "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.CookingRP/RecipeRTs/{RecipeRTName}/shareRecipie": {
+      "post": {
+        "tags": [
+          "RecipeRTs"
+        ],
+        "operationId": "RecipeRTs_post",
+        "description": "Create a RecipeRT",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/RecipeRT.RecipeRTName"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "description": "Resource create parameters.",
+            "schema": {
+              "$ref": "#/definitions/shareRecipie"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/shareRecipie"
+            }
+          },
+          "202": {
+            "description": "ARM create operation completed successfully.",
+            "headers": {
+              "Azure-AsyncOperation": {
+                "type": "string",
+                "description": "The URL to retrieve the status of the asynchronous operation."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The URL to retrieve the status of the asynchronous operation."
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/shareRecipie"
+            }
+          },
+          "default": {
+            "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "CreateRecipeRT": {
+            "$ref": "./examples/RecipeRTs_CreateOrUpdate.json"
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
         },
         "x-ms-long-running-operation": true
       }
@@ -1077,6 +1174,16 @@
         "modelAsString": true
       }
     },
+    "shareRecipie": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-]{3,44}$",
+          "readOnly": true
+        }
+      }
+    },
     "RecipeRT": {
       "type": "object",
       "properties": {
@@ -1121,7 +1228,63 @@
       "description": "The response of a RecipeRT list operation."
     },
     "RecipeRTProperties": {
-
+      "properties": {
+        "recipeName": {
+          "type": "string",
+          "description": "Extension Resource full name.",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9-._]+$"
+        },
+        "origin": {
+          "type": "string",
+          "description": "Extension Resource name.",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9-._]+$"
+        },
+        "dishType": {
+          "type": "string",
+          "description": "Extension Resource name.",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9-._]+$"
+        },
+        "group": {
+          "type": "string",
+          "description": "group like Finance, HR etc...",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9-._]+$"
+        },
+        "ingredients": {
+          "type": "object",
+          "description": "group like Finance, HR etc...",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9-._]+$"
+        },
+        "provisioningState": {
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "RecipeRTUpdate": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string"
+            }
+          },
+          "description": "Resource tags."
+        },
+        "properties": {
+          "$ref": "#/definitions/RecipeRTUpdateProperties"
+        }
+      },
+      "description": "The type used for update operations of the RecipeRT."
+    },
+    "RecipeRTUpdateProperties": {
+      "type": "object",
       "properties": {
         "recipeName": {
           "type": "string",
@@ -1153,27 +1316,7 @@
           "minLength": 1,
           "pattern": "^[A-Za-z0-9-._]+$"
         }
-      }
-    },
-    "RecipeRTUpdate": {
-      "type": "object",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags."
-        },
-        "properties": {
-          "$ref": "#/definitions/RecipeRTUpdateProperties"
-        }
       },
-      "description": "The type used for update operations of the RecipeRT."
-    },
-    "RecipeRTUpdateProperties": {
-      "type": "object",
-      "properties": {},
       "description": "The updatable properties of the RecipeRT."
     },
     "MRGRT": {
@@ -1220,13 +1363,7 @@
       "description": "The response of a MRGRT list operation."
     },
     "MRGRTProperties": {
-
       "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/provisioningState",
-          "description": "The status of the last operation.",
-          "readOnly": true
-        },
         "recipeName": {
           "type": "string",
           "description": "Extension Resource full name.",
@@ -1257,6 +1394,10 @@
           "minLength": 1,
           "pattern": "^[A-Za-z0-9-._]+$"
         },
+        "provisioningState": {
+          "type": "string",
+          "readOnly": true
+        },
         "managedResourceGroupConfiguration": {
           "type": "object",
           "properties": {
@@ -1282,8 +1423,10 @@
       "properties": {
         "tags": {
           "type": "object",
-          "additionalProperties": {
-            "type": "string"
+          "properties": {
+            "model": {
+              "type": "string"
+            }
           },
           "description": "Resource tags."
         },
@@ -1365,13 +1508,7 @@
       "description": "The response of a RecipeMRGParentRT list operation."
     },
     "RecipeMRGParentRTProperties": {
-
       "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/provisioningState",
-          "description": "The status of the last operation.",
-          "readOnly": true
-        },
         "recipeName": {
           "type": "string",
           "description": "Extension Resource full name.",
@@ -1402,6 +1539,10 @@
           "minLength": 1,
           "pattern": "^[A-Za-z0-9-._]+$"
         },
+        "provisioningState": {
+          "type": "string",
+          "readOnly": true
+        },
         "managedResourceGroupConfiguration": {
           "type": "object",
           "properties": {
@@ -1427,8 +1568,10 @@
       "properties": {
         "tags": {
           "type": "object",
-          "additionalProperties": {
-            "type": "string"
+          "properties": {
+            "model": {
+              "type": "string"
+            }
           },
           "description": "Resource tags."
         },
@@ -1549,8 +1692,10 @@
       "properties": {
         "tags": {
           "type": "object",
-          "additionalProperties": {
-            "type": "string"
+          "properties": {
+            "model": {
+              "type": "string"
+            }
           },
           "description": "Resource tags."
         },

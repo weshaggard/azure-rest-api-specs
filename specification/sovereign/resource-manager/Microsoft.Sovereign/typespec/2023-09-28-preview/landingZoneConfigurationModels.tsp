@@ -13,7 +13,7 @@ model LandingZoneConfigurationProperties {
 	authoringStatus?: AuthoringStatus;
 
 	@doc("Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default, will deploy beneath tenant toot management group.")
-    topLevelMgParentId?: string;
+	topLevelMgParentId?: string;
 
 	@doc("The prefix that will be added to all resources created by this deployment.")
 	@minLength(2)
@@ -100,7 +100,7 @@ model LandingZoneConfigurationProperties {
 	landingZonesMgChildren?: LandingZoneMgProperties[];
 
 	@doc("This will be applied to the deployment root of the landing zone")
-	rootMg?: MgPolicyDetails;
+	topLevelMg?: MgPolicyDetails;
 
 	@doc("This will be applied to the landing zones management group")
 	landingZonesMg?: MgPolicyDetails;
@@ -207,7 +207,8 @@ model GenerateLandingZoneResponse {
 	landingZoneConfigurationName: string;
 
 	@doc("The blob url where generated landing zone is stored")
-	blobUrl: string;
+	@secret
+	blobUrl: url;
 }
 
 @doc("The authoring status for landing zone configuration workflow.")

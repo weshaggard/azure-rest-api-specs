@@ -59,23 +59,92 @@ model KdbInsightsEnterpriseProperties {
   @visibility("create")
   @doc("The password to use for KeyCloak")
   @pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])[a-zA-Z0-9!@#\\$%\\^&\\*]{14,320}$")
-  keyCloakPassword?: PasswordString;
+  keyCloakPassword: PasswordString;
 
   @visibility("create")
   @doc("The password to use for the UI")
   @pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])[a-zA-Z0-9!@#\\$%\\^&\\*]{14,320}$")
-  uiPassword?: PasswordString;
+  uiPassword: PasswordString;
 
   @visibility("read", "create")
   @doc("Email address for licensing and certificate registration")
   @pattern("^(?=.{1,320}$)(?=[^@]{1,64}@)\\w+([\\.\\-\\+\\w]*)@(?=.{1,255}$)\\w+([\\.\\-]?\\w+)*(\\.\\w{2,3})+$")
-  emailAddress?: string;
+  emailAddress: string;
 
   @visibility("read", "create")
   @doc("The UI user name")
   @pattern("^[A-Za-z0-9]{8,20}$")
-  uiUsername?: string;
+  uiUsername: string;  
+  
+  @visibility("read", "create")
+  @doc("AKS System node pool VM size")
+  systemNodePoolVmSize?: string = "Standard_D2d_v4";  
 
+  @visibility("read", "create")
+  @doc("AKS User node pool VM size")
+  userNodePoolVmSize?: string = "Standard_D8ds_v4";  
+
+  @visibility("read", "create")
+  @doc("Storage Class for ReadWriteMany volumes")
+  readWriteManyStorageClass?: string = "azurefile-premium-kxi-nfs";  
+
+  @visibility("read", "create")
+  @doc("Storage Class for ReadWriteOnce volumes derived from IsPremiumStorageEnabled")
+  readWriteOnceStorageClass?: string = "managed-csi";
+
+  @visibility("read", "create")
+  @doc("RT storage class value, derived from IsPremiumStorageEnabled")
+  rtStorageClass?: string = "managed-csi";
+
+  @visibility("read", "create")
+  @doc("Indicate whether to deploy a Ceph cluster into AKS and enable rook-cephfs storage class")
+  isRookCeph?: boolean = false;
+
+  @visibility("read", "create")
+  @doc("Indicate whether to enable Microsoft Defender for Containers")
+  securityMonitoringEnabled?: boolean = false;
+
+  @visibility("read", "create")
+  @doc("Indicate whether to use Premium Storage for ReadWriteOnce volumes")
+  isPremiumStorageEnabled?: boolean = false;
+
+  @visibility("read", "create")
+  @doc("Indicate whether to send notification emails to the client")
+  isNotificationsOn?: boolean = false;
+
+  @visibility("read", "create")
+  @doc("Email address for alert notifications")
+  @pattern("^(?=.{1,320}$)(?=[^@]{1,64}@)\\w+([\\.\\-\\+\\w]*)@(?=.{1,255}$)\\w+([\\.\\-]?\\w+)*(\\.\\w{2,3})+$")
+  clientNotificationAddress?: string;
+
+  @visibility("read", "create")
+  @doc("A custom *.*.0.0/16 Address space for the kdb Insights Enterprise cluster Virtual Network")
+  @pattern("\\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\\b/[0-9]+")
+  vnetAddressSpace?: string = "10.0.0.0/16";
+
+  @visibility("read", "create")
+  @doc("Indicate whether to secure access to the Kubernetes API server using authorized public IP address ranges")
+  isAuthorizedIpRanges?: boolean = false;
+
+  @visibility("read", "create")
+  @doc("A comma-separated list of public IP addresses or address ranges")
+  @pattern("^(?=.{1,320}$)\\b(?!(10\\.|172\\.(1[6-9]|2[0-9]|3[0-1])\\.|192\\.168))(((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([1-9]|1[0-9]|2[0-8]|3[0-2])){0,1}){0,1}((\\s*,\\s*)(?=[^,])){0,1})+$")
+  authorizedIpRanges?: string;
+
+  @visibility("read", "create")
+  @doc("AKS Container insights retention period in days")
+  @minValue(30)
+  @maxValue(730)
+  aksContainerInsightsRetentionDays?: int64 = 30;
+
+  @visibility("read", "create")
+  @doc("AKS Kubernetes audit log retention period in days. A value of 0 will retain the events indefinitely.")
+  aksLogRetentionDays?: int64 = 30;  
+  
+  @visibility("read", "create")
+  @doc("AKS Kubernetes metrics retention period in days. A value of 0 will retain the metrics indefinitely.")
+  aksMetricsRetentionDays?: int64 = 30;
+  
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;

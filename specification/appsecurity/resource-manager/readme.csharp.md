@@ -5,11 +5,11 @@ Please also specify `--csharp-sdks-folder=<path to "SDKs" directory of your azur
 
 ```yaml $(csharp)
 csharp:
-  azure-arm: true
-  license-header: MICROSOFT_MIT_NO_VERSION
-  payload-flattening-threshold: 1
-  clear-output-folder: true
-  client-side-validation: false
-  namespace: Microsoft.AppSecurityRP
-  output-folder: $(csharp-sdks-folder)/appsecurity/management/Microsoft.AppSecurityRP/GeneratedProtocol
+    azure-arm: true
+    license-header: MICROSOFT_MIT_NO_VERSION
+    payload-flattening-threshold: 1
+    clear-output-folder: true
+    client-side-validation: false
+    namespace: Microsoft.AppSecurityRP
+    output-folder: $(csharp-sdks-folder)/appsecurity/management/Microsoft.AppSecurityRP/GeneratedProtocol
 ```
