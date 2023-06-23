@@ -5,6 +5,7 @@
   import "@azure-tools/typespec-azure-core";
   import "@azure-tools/typespec-azure-resource-manager";
   import "@typespec/openapi";
+  import "../shared/main.tsp";
   
   using TypeSpec.Http;
   using TypeSpec.Rest;
@@ -12,7 +13,8 @@
   using Azure.Core;
   using Azure.ResourceManager;
   using OpenAPI;
-  
+
+  #suppress "@azure-tools/typespec-azure-resource-manager/missing-operations-endpoint" "Supress missing operations endpoint as the same is defined ../operations/main.tsp."
   @armProviderNamespace
   @service({
     title: "Microsoft.AwsConnector",
@@ -31,30 +33,6 @@
     @path
     @segment("s3Buckets")
     name: string;
-  }
-
-  #suppress "@azure-tools/typespec-azure-core/casing-style" "Supress casing style as the property name is defined in aws."
-  @doc("Definition of AwsCommon")
-  model AwsCommonProperties {
-    @doc("Gets and sets the property publicCloudConnectorsResourceId. ")
-    publicCloudConnectorsResourceId?: string;
-
-    @doc("Gets and sets the property awsAccountId. ")
-    awsAccountId?: string;
-
-    @doc("Gets and sets the property awsResourceName. ")
-    awsResourceName?: string;
-
-    @doc("Gets and sets the property awsSdkVersion. ")
-    awsSdkVersion?: string;
-
-    @doc("Gets and sets the property awsRegion. ")
-    awsRegion?: string;
-
-    @visibility("read")
-    @doc("Gets and sets the property provisioningState. The status of the last operation.")
-    provisioningState?: ProvisioningState;
-
   }
 
   @doc("Definition of S3Bucket")
@@ -84,22 +62,4 @@
     delete is ArmResourceDeleteAsync<S3Bucket>;
     listByResourceGroup is ArmResourceListByParent<S3Bucket>;
     listBySubscription is ArmListBySubscription<S3Bucket>;
-  }
-
-  @doc("The provisioning state of a resource.")
-  @lroStatus
-  enum ProvisioningState {
-    ...ResourceProvisioningState,
-
-    @doc("The resource is being provisioned")
-    Provisioning,
-
-    @doc("The resource is updating")
-    Updating,
-
-    @doc("The resource is being deleted")
-    Deleting,
-
-    @doc("The resource create request has been accepted")
-    Accepted,
   }
