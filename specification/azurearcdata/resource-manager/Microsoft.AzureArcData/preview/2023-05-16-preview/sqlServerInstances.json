@@ -200,9 +200,9 @@
           "description": "Failover Cluster Instance propeties.",
           "$ref": "#/definitions/FailoverCluster"
         },
-        "shortTermRetentionAutomaticSqlBackupProfile": {
+        "backupPolicy": {
           "description": "The backup profile for the SQL server.",
-          "$ref": "#/definitions/ShortTermRetentionAutomaticSqlBackupProfile"
+          "$ref": "#/definitions/BackupPolicy"
         }
       },
       "required": [
@@ -267,29 +267,39 @@
         }
       }
     },
-    "ShortTermRetentionAutomaticSqlBackupProfile": {
+    "BackupPolicy": {
       "description": "The backup profile for the SQL server.",
       "type": "object",
       "properties": {
-        "differentialBackupHours": {
-          "type": "string",
-          "description": "The value indicating the hours between differential backups."
+        "retentionPeriodDays": {
+          "type": "integer",
+          "description": "The retention period for all the daatbases in this managed instance.",
+          "minimum": 0,
+          "maximum": 35,
+          "format": "int32"
         },
         "fullBackupDays": {
-          "type": "string",
-          "description": "The value indicating days between full backups."
+          "type": "integer",
+          "description": "The value indicating days between full backups.",
+          "minimum": 0,
+          "maximum": 7,
+          "format": "int32"
         },
-        "TLogBackupMinutes": {
-          "type": "string",
-          "description": "The value indicating minutes between transaction log backups."
+        "differentialBackupHours": {
+          "type": "integer",
+          "description": "The value indicating the hours between differential backups.",
+          "enum": [
+            12,
+            24
+          ],
+          "format": "int32"
         },
-        "retentionPeriodInDays": {
-          "type": "string",
-          "description": "The retention period for all the daatbases in this managed instance."
-        },
-        "enabled": {
-          "type": "string",
-          "description": "A value indicating whether automatic backups are enabled."
+        "transactionLogBackupMinutes": {
+          "type": "integer",
+          "description": "The value indicating minutes between transaction log backups.",
+          "minimum": 0,
+          "maximum": 60,
+          "format": "int32"
         }
       },
       "additionalProperties": {}
