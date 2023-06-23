@@ -807,16 +807,62 @@
         }
       }
     },
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/orchestrators": {
-      "get": {
-        "operationId": "HybridContainerService_ListOrchestrators",
+    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/clusterMetadata/default": {
+      "put": {
+        "operationId": "ClusterMetadata_CreateOrUpdate",
         "x-ms-examples": {
-          "ListOrchestrators": {
-            "$ref": "./examples/ListOrchestrators.json"
+          "PutClusterMetadata":{
+            "$ref": "./examples/PutClusterMetadata.json"
           }
         },
-        "summary": "Lists the available orchestrators in a custom location",
-        "description": "Lists the available orchestrators in a custom location for HybridAKS",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "summary": "Creates the cluster metadata resource",
+        "description": "Creates the cluster metadata resource type that hold k8s version and vmsku information",
+        "parameters": [
+          {
+            "$ref": "#/parameters/customLocationResourceUriParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "ExtendedLocation",
+            "in": "body",
+            "required": true,
+            "schema":{
+              "$ref": "#/definitions/ExtendedLocation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202":{
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/clusterMetadata/default/kubernetesVersions": {
+      "post": {
+        "operationId": "ClusterMetadata_ListKubernetesVersion",
+        "x-ms-examples": {
+          "ListKubernetesVersion": {
+            "$ref": "./examples/ListKubernetesVersion.json"
+          }
+        },
+        "summary": "Lists the available kubernetes versions in a custom location",
+        "description": "Lists the available kubernetes versions in a custom location for HybridAKS",
         "parameters": [
           {
             "$ref": "#/parameters/customLocationResourceUriParameter"
@@ -827,9 +873,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Lists the available orchestrators in a custom location.",
+            "description": "Lists the available kubernetes versions in a custom location",
             "schema": {
-              "$ref": "#/definitions/OrchestratorVersionProfileListResult"
+              "$ref": "#/definitions/KubernetesVersionProfileListResult"
             }
           },
           "default": {
@@ -841,9 +887,9 @@
         }
       }
     },
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/vmSkus": {
-      "get": {
-        "operationId": "HybridContainerService_ListVMSkus",
+    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/clusterMetadata/default/vmSkus": {
+      "post": {
+        "operationId": "ClusterMetadata_ListVMSkus",
         "x-ms-examples": {
           "ListVMSkus": {
             "$ref": "./examples/ListVMSkus.json"
@@ -863,7 +909,7 @@
           "200": {
             "description": "Lists the available VM SKUs in a custom location.",
             "schema": {
-              "$ref": "#/definitions/VMSkuListResult"
+              "$ref": "#/definitions/VmSkuProfileListResult"
             }
           },
           "default": {
@@ -2055,15 +2101,15 @@
         "value"
       ]
     },
-    "OrchestratorVersionProfileListResult": {
+    "KubernetesVersionProfileListResult": {
       "type": "object",
-      "description": "The list of versions for supported orchestrators.",
+      "description": "The list of versions for supported kubernetes versions.",
       "properties": {
-        "orchestrators": {
+        "KubernetesVersion": {
           "type": "array",
-          "description": "Profile of the orchestrator versions",
+          "description": "Profile of the kubernetes verions",
           "items": {
-            "$ref": "#/definitions/OrchestratorVersionProfile"
+            "$ref": "#/definitions/KuberneteVersionProfile"
           },
           "x-ms-identifiers": []
         },
@@ -2084,73 +2130,55 @@
         }
       }
     },
-    "OrchestratorVersionProfile": {
+    "KubernetesVersionProfile": {
       "type": "object",
-      "description": "The profile of an orchestrator and its available versions.",
+      "description": "The profile of a kubernetes version and its available versions.",
       "properties": {
         "isPreview": {
           "type": "boolean",
           "readOnly": true,
-          "description": "Whether Kubernetes version is currently in preview."
+          "description": "Whether kubernetes version is currently in preview."
         },
         "default": {
           "type": "boolean",
           "readOnly": true,
           "description": "Installed by default if version is not specified."
         },
-        "orchestratorType": {
+        "kubernetesVersion": {
           "type": "string",
           "readOnly": true,
-          "description": "Orchestrator type."
-        },
-        "orchestratorVersion": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Orchestrator version major.minor.patch, for example 1.21.9"
+          "description": "Kubernetes version major.minor.patch, for example 1.22.11"
         },
         "upgrades": {
           "type": "array",
           "description": "The list of available upgrade versions.",
           "items": {
-            "$ref": "#/definitions/OrchestratorProfile"
+            "$ref": "#/definitions/KubernetesProfile"
           },
           "x-ms-identifiers": []
         }
       }
     },
-    "OrchestratorProfile": {
+    "KubernetesProfile": {
       "type": "object",
-      "description": "Contains information about orchestrator.",
+      "description": "Contains information about kubernetes.",
       "properties": {
         "isPreview": {
           "type": "boolean",
           "readOnly": true,
-          "description": "Whether Kubernetes version is currently in preview."
+          "description": "Whether kubernetes version is currently in preview."
         },
-        "orchestratorType": {
+        "kubernetesVersion": {
           "type": "string",
           "readOnly": true,
-          "description": "Orchestrator type."
-        },
-        "orchestratorVersion": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Orchestrator version (major, minor, patch)."
+          "description": "kubernetes version major.minor.patch, for example 1.22.11"
         }
       }
     },
-    "VMSkuListResult": {
+    "VmSkuProfileListResult": {
       "type": "object",
       "description": "The list of supported VM SKUs.",
       "properties": {
-        "vmSKUs": {
-          "type": "array",
-          "readOnly": true,
-          "description": "Supported VM SKUs.",
-          "items": {
-            "type": "string"
-          }
-        },
         "id": {
           "type": "string",
           "readOnly": true,
@@ -2165,6 +2193,60 @@
           "type": "string",
           "readOnly": true,
           "description": "Resource Type"
+        },
+        "vmSkuProfile":{
+          "type": "array",
+          "readOnly": true,
+          "description": "Supported VM SKUs.",
+          "items": {
+            "$ref": "#/definitions/VmSkuProfile"
+          }
+        }
+      }
+    },
+    "VmSkuProfile": {
+      "type": "object",
+      "description": "The profile for support vm skus",
+      "properties":{
+        "VmName": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Name of the vm sku shape like Standard_D4_v2"
+        },
+        "CpuCount": {
+          "type": "int32",
+          "readOnly": true,
+          "description": "Number of cpus available in the VM"
+        },
+        "MemoryMb": {
+          "type": "int32",
+          "readOnly": true,
+          "description": "Memory Size of the VM in mb"
+        },
+        "DiskSizeGib": {
+          "type": "int32",
+          "readOnly": true,
+          "description": "DiskSize of the VM in Gib"
+        },
+        "GpuCount": {
+          "type": "int32",
+          "readOnly": true,
+          "description": "Number of attached GPU to the VM"
+        },
+        "GpuName": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Name of the GPU shape like NVIDIA Tesla M60"
+        },
+        "GpuAssignMode": {
+          "type": "int32",
+          "readOnly": true,
+          "description": "assignemnt type of GPU"
+        },
+        "Provider": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The underlying provider"
         }
       }
     },
