@@ -77,7 +77,14 @@ model DeviceEndpoint {
 }
 
 @armResourceOperations
-interface ProvisioningResources extends TrackedResourceOperations<ProvisioningResource, ProvisioningResourceProperties> {}
+interface ProvisioningResources {
+  get is ArmResourceRead<ProvisioningResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<ProvisioningResource>;
+  delete is ArmResourceDeleteSync<ProvisioningResource>;
+  update is ArmResourcePatchSync<ProvisioningResource, ProvisioningResourceProperties>;
+  listByResourceGroup is ArmResourceListByParent<ProvisioningResource>;
+  listBySubscription is ArmListBySubscription<ProvisioningResource>;
+}
 
 // Child resource: provisioning policy
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
@@ -298,10 +305,13 @@ model ProvisioningRule {
 }
 
 @armResourceOperations
-interface ProvisioningPolicies extends ProxyResourceOperations<ProvisioningPolicy>,
-                                       ProxyResourceUpdate<ProvisioningPolicy, ProvisioningPolicyProperties>,
-                                       ResourceListBySubscription<ProvisioningPolicy>{}
-
+interface ProvisioningPolicies {
+  get is ArmResourceRead<ProvisioningPolicy>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<ProvisioningPolicy>;
+  delete is ArmResourceDeleteSync<ProvisioningPolicy>;
+  update is ArmResourcePatchSync<ProvisioningPolicy, ProvisioningPolicyProperties>;
+  listByParent is ArmResourceListByParent<ProvisioningPolicy>;
+}
 
 // Extension resource: device provisioning state
 @doc("The provisioning state of a device.")
@@ -348,4 +358,10 @@ enum ProvisioningStatus {
 }
 
 @armResourceOperations
-interface DeviceProvisioningStates extends ExtensionResourceOperations<DeviceProvisioningState, DeviceProvisioningStateProperties> {}
+interface DeviceProvisioningStates {
+  get is ArmResourceRead<DeviceProvisioningState>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<DeviceProvisioningState>;
+  delete is ArmResourceDeleteSync<DeviceProvisioningState>;
+  update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
+  listByParent is ArmResourceListByParent<DeviceProvisioningState>;
+}
