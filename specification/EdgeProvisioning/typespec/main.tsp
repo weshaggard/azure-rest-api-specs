@@ -286,13 +286,13 @@ model AllocationRule {
 @doc("The identity info to return to device")
 model DeviceIdentityInfo {
   @doc("If uuid need to be returned")
-  uuid: boolean;
+  returnUuid: boolean;
 
   @doc("If accessTokenUrl need to be returned")
-  accessTokenUrl: boolean;
+  returnAccessTokenUrl: boolean;
 
   @doc("If externalDeviceId need to be returned")
-  externalDeviceId: boolean;
+  returnExternalDeviceId: boolean;
 }
 
 // TODO: Check with Krishna - Follow-up whether we want to expose this to the customer
