@@ -189,9 +189,12 @@
             }
           },
           "202": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/NeighborGroup"
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "description": "The URL to retrieve the status of the asynchronous operation.",
+                "type": "string"
+              }
             }
           },
           "default": {
@@ -203,7 +206,7 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         },
         "x-ms-examples": {
           "NeighborGroups_Update_MaximumSet_Gen": {
@@ -364,7 +367,7 @@
     },
     "NeighborGroupProperties": {
       "type": "object",
-      "description": "Neighbor Group Properties define the properties of the resource.",
+      "description": "Neighbor Group Properties defines the properties of the resource.",
       "required": [
         "destination"
       ],
@@ -381,7 +384,7 @@
       "properties": {
         "networkTapIds": {
           "type": "array",
-          "description": "The list of NetworkTap IDs.",
+          "description": "List of NetworkTap IDs where neighbor group is associated.",
           "readOnly": true,
           "items": {
             "description": "ARM resource ID of the Network Tap Resource.",
@@ -390,7 +393,7 @@
         },
         "networkTapRuleIds": {
           "type": "array",
-          "description": "The list of Network Tap Rule IDs.",
+          "description": "List of Network Tap Rule IDs where neighbor group is associated.",
           "readOnly": true,
           "items": {
             "description": "ARM resource ID of the Network Tap Rules.",
@@ -398,7 +401,7 @@
           }
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
+          "description": "The provisioning state of the resource.",
           "$ref": "./common.json#/definitions/ProvisioningState",
           "readOnly": true
         }
@@ -409,6 +412,7 @@
       "description": "The Neighbor Group Patch definition.",
       "properties": {
         "properties": {
+          "type": "object",
           "x-ms-client-flatten": true,
           "description": "Neighbor Group Patch properties.",
           "allOf": [
@@ -430,33 +434,11 @@
     "NeighborGroupPatchableProperties": {
       "type": "object",
       "description": "Neighbor Group Patchable Properties defines the patchable properties of the resource.",
+      "x-ms-client-flatten": true,
       "properties": {
         "destination": {
-          "x-ms-client-flatten": true,
-          "type": "object",
-          "description": "Destination. It can be either array IPv4 Addresses or IPv6 Addresses.",
-          "properties": {
-            "ipv4Addresses": {
-              "type": "array",
-              "maxItems": 16,
-              "description": "Array of IPv4 Addresses.",
-              "items": {
-                "type": "string",
-                "description": "IPv4 Address.",
-                "minLength": 1
-              }
-            },
-            "ipv6Addresses": {
-              "type": "array",
-              "maxItems": 16,
-              "description": "Array of IPv6 Addresses.",
-              "items": {
-                "type": "string",
-                "description": "IPv6 Address.",
-                "minLength": 1
-              }
-            }
-          }
+          "description": "An array of destination IPv4 Addresses or IPv6 Addresses.",
+          "$ref": "#/definitions/NeighborGroupDestination"
         }
       }
     },
@@ -474,6 +456,32 @@
         "nextLink": {
           "type": "string",
           "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "NeighborGroupDestination": {
+      "type": "object",
+      "description": "An array of destination IPv4 Addresses or IPv6 Addresses.",
+      "properties": {
+        "ipv4Addresses": {
+          "type": "array",
+          "maxItems": 16,
+          "description": "Array of IPv4 Addresses.",
+          "items": {
+            "type": "string",
+            "description": "IPv4 Address.",
+            "minLength": 1
+          }
+        },
+        "ipv6Addresses": {
+          "type": "array",
+          "maxItems": 16,
+          "description": "Array of IPv6 Addresses.",
+          "items": {
+            "type": "string",
+            "description": "IPv6 Address.",
+            "minLength": 1
+          }
         }
       }
     }

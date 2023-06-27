@@ -41,7 +41,7 @@
         ],
         "operationId": "NetworkDeviceSkus_Get",
         "summary": "Gets a Network Device Sku.",
-        "description": "Get Network Device SKU details.",
+        "description": "Get a Network Device SKU details.",
         "produces": [
           "application/json"
         ],
@@ -53,11 +53,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "in": "path",
-            "name": "networkDeviceSkuName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the Network Device SKU."
+            "$ref": "#/parameters/NetworkDeviceSkuNameParameter"
           }
         ],
         "responses": {
@@ -84,7 +80,7 @@
     "/subscriptions/{subscriptionId}/providers/Microsoft.ManagedNetworkFabric/networkDeviceSkus": {
       "get": {
         "operationId": "NetworkDeviceSkus_ListBySubscription",
-        "summary": "List NetworkDeviceSkus by subscription.",
+        "summary": "List Network Device SKUs by subscription.",
         "description": "List Network Device SKUs for the given subscription.",
         "parameters": [
           {
@@ -139,25 +135,7 @@
           ],
           "items": {
             "description": "Supported version details of the network device.",
-            "type": "object",
-            "properties": {
-              "version": {
-                "type": "string",
-                "description": "Operating system and firmware combined versions."
-              },
-              "vendorOsVersion": {
-                "type": "string",
-                "description": "Operating system version."
-              },
-              "vendorFirmwareVersion": {
-                "type": "string",
-                "description": "Firmware version."
-              },
-              "isDefault": {
-                "description": "If true newly provisioned Fabric will use this device version by default to bootstrap the network devices for the first time.",
-                "$ref": "./common.json#/definitions/BooleanEnumProperty"
-              }
-            }
+            "$ref": "#/definitions/SupportedVersionProperties"
           }
         },
         "supportedRoleTypes": {
@@ -187,43 +165,11 @@
           ],
           "items": {
             "description": "Network device interface properties.",
-            "type": "object",
-            "properties": {
-              "identifier": {
-                "type": "string",
-                "description": "Interface identifier. Example: HundredGigE0/0."
-              },
-              "interfaceType": {
-                "type": "string",
-                "description": "Interface type."
-              },
-              "supportedConnectorTypes": {
-                "type": "array",
-                "description": "List of supported connector types.",
-                "x-ms-identifiers": [
-                  "connectorType"
-                ],
-                "items": {
-                  "description": "Supported connector properties.",
-                  "type": "object",
-                  "properties": {
-                    "connectorType": {
-                      "type": "string",
-                      "description": "Type of connector used. Example: Optical."
-                    },
-                    "maxSpeedInMbps": {
-                      "type": "integer",
-                      "format": "int32",
-                      "description": "Maximum speed of the connector in Mbps."
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/definitions/DeviceInterfaceProperties"
           }
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
+          "description": "Provisioning state of the resource.",
           "$ref": "./common.json#/definitions/ProvisioningState",
           "readOnly": true
         }
@@ -231,7 +177,7 @@
       "required": [
         "model"
       ],
-      "description": "Network Device SKU Properties define the properties of the resource."
+      "description": "Network Device SKU Properties defines the properties of the resource."
     },
     "NetworkDeviceSku": {
       "type": "object",
@@ -269,7 +215,78 @@
           "description": "Url to follow for getting next page of resources."
         }
       }
+    },
+    "SupportedVersionProperties": {
+      "description": "Supported version details of the network device.",
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Operating system and firmware combined versions."
+        },
+        "vendorOsVersion": {
+          "type": "string",
+          "description": "Operating system version."
+        },
+        "vendorFirmwareVersion": {
+          "type": "string",
+          "description": "Firmware version."
+        },
+        "isDefault": {
+          "description": "If true newly provisioned Fabric will use this device version by default to bootstrap the network devices for the first time.",
+          "$ref": "./common.json#/definitions/BooleanEnumProperty"
+        }
+      }
+    },
+    "DeviceInterfaceProperties": {
+      "description": "Network device interface properties.",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string",
+          "description": "Interface identifier. Example: HundredGigE0/0."
+        },
+        "interfaceType": {
+          "type": "string",
+          "description": "Interface type."
+        },
+        "supportedConnectorTypes": {
+          "type": "array",
+          "description": "List of supported connector types.",
+          "x-ms-identifiers": [
+            "connectorType"
+          ],
+          "items": {
+            "description": "Supported connector properties.",
+            "$ref": "#/definitions/SupportedConnectorProperties"
+          }
+        }
+      }
+    },
+    "SupportedConnectorProperties": {
+      "description": "Supported connector properties.",
+      "type": "object",
+      "properties": {
+        "connectorType": {
+          "type": "string",
+          "description": "Type of connector used. Example: Optical."
+        },
+        "maxSpeedInMbps": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Maximum speed of the connector in Mbps."
+        }
+      }
     }
   },
-  "parameters": {}
+  "parameters": {
+    "NetworkDeviceSkuNameParameter": {
+      "type": "string",
+      "description": "Name of the Network Device SKU.",
+      "in": "path",
+      "name": "networkDeviceSkuName",
+      "required": true,
+      "x-ms-parameter-location": "method"
+    }
+  }
 }

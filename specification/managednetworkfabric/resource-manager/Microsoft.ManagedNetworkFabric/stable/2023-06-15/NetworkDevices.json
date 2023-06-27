@@ -191,8 +191,8 @@
           "202": {
             "description": "Accepted",
             "headers": {
-              "Azure-AsyncOperation": {
-                "description": "Tracking URL for long running operation.",
+              "Location": {
+                "description": "The URL to retrieve the status of the asynchronous operation.",
                 "type": "string"
               }
             }
@@ -284,7 +284,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lists all NetworkDevices under the resource group.",
+            "description": "List all NetworkDevices under the resource group.",
             "schema": {
               "$ref": "#/definitions/NetworkDevicesListResult"
             }
@@ -321,7 +321,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lists all NetworkDevices under the subscription.",
+            "description": "List all NetworkDevices under the subscription.",
             "schema": {
               "$ref": "#/definitions/NetworkDevicesListResult"
             }
@@ -507,9 +507,12 @@
             }
           },
           "202": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/NetworkInterface"
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "description": "The URL to retrieve the status of the asynchronous operation.",
+                "type": "string"
+              }
             }
           },
           "default": {
@@ -521,7 +524,7 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
+          "final-state-via": "location"
         },
         "x-ms-examples": {
           "NetworkInterfaces_Update_MaximumSet_Gen": {
@@ -586,7 +589,7 @@
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedNetworkFabric/networkDevices/{networkDeviceName}/networkInterfaces": {
       "get": {
-        "operationId": "NetworkInterfaces_List",
+        "operationId": "NetworkInterfaces_ListByNetworkDevice",
         "summary": "List all Network Interfaces that are available using an Network Device.",
         "description": "List all the Network Interface resources in a given resource group.",
         "parameters": [
@@ -605,7 +608,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lists all NetworkInterfaces under the resource group.",
+            "description": "List all NetworkInterfaces under the resource group.",
             "schema": {
               "$ref": "#/definitions/NetworkInterfacesList"
             }
@@ -621,8 +624,8 @@
           "nextLinkName": "nextLink"
         },
         "x-ms-examples": {
-          "NetworkInterfaces_List_MaximumSet_Gen": {
-            "$ref": "./examples/NetworkInterfaces_List_MaximumSet_Gen.json"
+          "NetworkInterfaces_ListByNetworkDevice_MaximumSet_Gen": {
+            "$ref": "./examples/NetworkInterfaces_ListByNetworkDevice_MaximumSet_Gen.json"
           }
         }
       }
@@ -997,24 +1000,24 @@
         },
         "ipv4Address": {
           "type": "string",
-          "description": "ipv4Address.",
+          "description": "IPv4Address of the interface.",
           "readOnly": true
         },
         "ipv6Address": {
           "type": "string",
-          "description": "ipv6Address.",
+          "description": "IPv6Address of the interface.",
           "readOnly": true
         },
         "provisioningState": {
-          "description": "Gets the provisioningState of the resource.",
+          "description": "Provisioning state of the resource.",
           "$ref": "./common.json#/definitions/ProvisioningState"
         },
         "administrativeState": {
-          "description": "Gets the administrativeState of the resource.",
+          "description": "Administrative state of the resource.",
           "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
-      "description": "NetworkInterfaceProperties define the resource properties."
+      "description": "Network Interface Properties defines the properties of the resource."
     },
     "NetworkDevicePatchableProperties": {
       "title": "Network Device updatable properties.",
@@ -1029,7 +1032,7 @@
           "type": "string",
           "minLength": 1,
           "description": "Serial number of the device. Format of serial Number - Make;Model;HardwareRevisionId;SerialNumber.",
-          "example": "Arista;DCS-7280DR3-24;12.05;JPE21116969"
+          "example": "Vendor;DCS-7280XXX-24;12.05;JPE2111XXXX"
         }
       }
     },
@@ -1038,6 +1041,7 @@
       "description": "The Network Device Patch Parameters defines the patch parameters of the resource.",
       "properties": {
         "properties": {
+          "type": "object",
           "x-ms-client-flatten": true,
           "description": "Network Device Patch properties.",
           "allOf": [
@@ -1114,22 +1118,22 @@
           "readOnly": true
         },
         "configurationState": {
-          "description": "Gets the configuration state of the resource.",
+          "description": "Configuration state of the resource.",
           "$ref": "./common.json#/definitions/ConfigurationState"
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
+          "description": "Provisioning state of the resource.",
           "$ref": "./common.json#/definitions/ProvisioningState"
         },
         "administrativeState": {
-          "description": "Gets the administrative state of the resource.",
+          "description": "Administrative state of the resource.",
           "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
       "required": [
         "serialNumber"
       ],
-      "description": "Network Device Properties define the properties of the resource."
+      "description": "Network Device Properties defines the properties of the resource."
     },
     "NetworkDevice": {
       "type": "object",
@@ -1177,6 +1181,7 @@
       "description": "The NetworkInterfacePatch resource definition.",
       "properties": {
         "properties": {
+          "type": "object",
           "x-ms-client-flatten": true,
           "description": "Network Interface Patch properties.",
           "allOf": [
@@ -1227,7 +1232,7 @@
       "properties": {
         "rebootType": {
           "type": "string",
-          "description": "Type of reboot to be performed. Example: CE | NPB",
+          "description": "Type of reboot to be performed. Example: GracefulRebootWithZTP",
           "minLength": 1,
           "enum": [
             "GracefulRebootWithZTP",
@@ -1256,7 +1261,7 @@
             "Quarantine"
           ],
           "x-ms-enum": {
-            "name": "AdministrativeState",
+            "name": "DeviceAdministrativeState",
             "modelAsString": true
           }
         }

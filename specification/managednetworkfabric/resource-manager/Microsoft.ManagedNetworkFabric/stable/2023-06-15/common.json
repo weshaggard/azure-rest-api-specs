@@ -52,23 +52,6 @@
         "modelAsString": true
       }
     },
-    "OperationalState": {
-      "type": "string",
-      "description": "Operational state for the resource.",
-      "readOnly": true,
-      "enum": [
-        "Up",
-        "Updating",
-        "Down",
-        "Degraded",
-        "RMA",
-        "MAT"
-      ],
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "operationalState"
-      }
-    },
     "ConfigurationState": {
       "type": "string",
       "description": "Configuration state for the resource.",
@@ -123,43 +106,6 @@
         }
       }
     },
-    "ReachabilityState": {
-      "type": "string",
-      "description": "Generic network reachability state.",
-      "enum": [
-        "Reachable",
-        "Unreachable"
-      ],
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "reachabilityState"
-      }
-    },
-    "EnabledDisabledState": {
-      "type": "string",
-      "description": "EnabledDisabledState state for the resource.",
-      "readOnly": true,
-      "enum": [
-        "Enabled",
-        "Disabled"
-      ],
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "enabledDisabledState"
-      }
-    },
-    "FailedSucceededState": {
-      "type": "string",
-      "description": "Failed Succeeded state for the resource.",
-      "enum": [
-        "Succeeded",
-        "Failed"
-      ],
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "FailedSucceededState"
-      }
-    },
     "UpdateAdministrativeState": {
       "type": "object",
       "description": "Update administrative state on list of resources.",
@@ -189,7 +135,7 @@
       "properties": {
         "version": {
           "type": "string",
-          "description": "Version."
+          "description": "Specify the version."
         }
       }
     },
@@ -205,45 +151,6 @@
             "type": "string"
           }
         }
-      }
-    },
-    "ARPProperties": {
-      "type": "object",
-      "description": "Show ARP table entry properties",
-      "properties": {
-        "address": {
-          "type": "string",
-          "description": "Ipv4 or Ipv6 address"
-        },
-        "age": {
-          "type": "string",
-          "description": "Duration in seconds."
-        },
-        "macAddress": {
-          "type": "string",
-          "description": "Hardware address."
-        },
-        "interface": {
-          "type": "string",
-          "description": "Layer 2 interface name."
-        },
-        "state": {
-          "type": "string",
-          "description": "ARP status"
-        }
-      },
-      "required": [
-        "address",
-        "age",
-        "macAddress",
-        "interface"
-      ]
-    },
-    "GetARPResponse": {
-      "type": "object",
-      "description": "Show ARP entries response per network device",
-      "additionalProperties": {
-        "$ref": "#/definitions/ARPProperties"
       }
     },
     "CommonPostActionResponseForDeviceUpdate": {
@@ -338,21 +245,6 @@
         "name": "PeeringOption"
       }
     },
-    "NetworkDeviceRoleTypes": {
-      "type": "string",
-      "description": "Available roles for the network device.",
-      "enum": [
-        "CE",
-        "ToR",
-        "NPB",
-        "TS",
-        "Management"
-      ],
-      "x-ms-enum": {
-        "modelAsString": true,
-        "name": "NetworkDeviceRoleTypes"
-      }
-    },
     "CommunityActionTypes": {
       "type": "string",
       "description": "community action types. Example: Permit | Deny.",
@@ -383,10 +275,20 @@
       "description": "BFD configuration properties",
       "properties": {
         "administrativeState": {
+          "type": "string",
           "description": "Administrative state of the BfdConfiguration. Example: Enabled | Disabled.",
-          "default": "disabled",
-          "$ref": "#/definitions/AdministrativeState",
-          "readOnly": true
+          "default": "Disabled",
+          "enum": [
+            "Enabled",
+            "Disabled",
+            "MAT",
+            "RMA"
+          ],
+          "readOnly": true,
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "BfdAdministrativeState"
+          }
         },
         "intervalInMilliSeconds": {
           "type": "integer",
@@ -450,9 +352,8 @@
       }
     },
     "RouteTargetInformation": {
-      "description": "Import Route Target Information.",
+      "description": "Route Target Configuration.",
       "type": "object",
-      "x-ms-client-flatten": true,
       "properties": {
         "importIpv4RouteTargets": {
           "type": "array",
@@ -498,8 +399,7 @@
     },
     "ImportRoutePolicyInformation": {
       "type": "object",
-      "x-ms-client-flatten": true,
-      "description": "Import Route Policy Information.",
+      "description": "Import Route Policy Configuration.",
       "properties": {
         "importIpv4RoutePolicyId": {
           "description": "Import IPv4 Route Policy Id.",
@@ -513,8 +413,7 @@
     },
     "ExportRoutePolicyInformation": {
       "type": "object",
-      "description": "Export Route Policy Information.",
-      "x-ms-client-flatten": true,
+      "description": "Export Route Policy Configuration.",
       "properties": {
         "exportIpv4RoutePolicyId": {
           "description": "Export IPv4 Route Policy Id.",
@@ -528,7 +427,6 @@
     },
     "IngressAclInformation": {
       "type": "object",
-      "x-ms-client-flatten": true,
       "description": "Ingress ACL Information.",
       "properties": {
         "ingressIpv4AclId": {
@@ -543,7 +441,6 @@
     },
     "EgressAclInformation": {
       "type": "object",
-      "x-ms-client-flatten": true,
       "description": "Egress ACL Information.",
       "properties": {
         "egressIpv4AclId": {
@@ -558,36 +455,35 @@
     },
     "CommonMatchConditions": {
       "type": "object",
-      "description": "Defines the common match conditions of the ACL and NetworkTapRule.",
+      "description": "Defines the common match conditions of the ACL and Network Tap Rule.",
       "properties": {
         "protocolTypes": {
           "type": "array",
           "minItems": 1,
-          "description": "Type of Protocols used.",
+          "description": "List of the protocols that need to be matched.",
           "items": {
             "type": "string",
             "minLength": 1,
-            "description": "Specify the protocol."
+            "description": "Specify the protocol that to needs to matched. Inputs can be <protocol-name> or <protocol-number> or <range of protocol numbers>."
           }
         },
         "vlanMatchCondition": {
-          "description": "The vlan match conditions that to be matched.",
+          "description": "Vlan match condition that needs to be matched.",
           "$ref": "#/definitions/VlanMatchCondition"
         },
         "ipCondition": {
-          "description": "Defines the condition that can be filtered using the selected IPs.",
+          "description": "IP condition that needs to be matched.",
           "$ref": "#/definitions/IpMatchCondition"
         }
       }
     },
     "PortCondition": {
       "type": "object",
-      "x-ms-client-flatten": true,
-      "description": "Defines the match condition that can be filtered based on the selected Ports.",
+      "description": "Port condition that needs to be matched.",
       "properties": {
         "portType": {
           "type": "string",
-          "description": "IP Address type.",
+          "description": "Port type that needs to be matched.",
           "minLength": 1,
           "enum": [
             "SourcePort",
@@ -595,12 +491,12 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "Type"
+            "name": "PortType"
           }
         },
-        "l3Protocol": {
+        "l4Protocol": {
           "type": "string",
-          "description": "L3 protocol type.",
+          "description": "Layer4 protocol type that needs to be matched.",
           "minLength": 1,
           "enum": [
             "TCP",
@@ -608,22 +504,22 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "L3Protocol"
+            "name": "L4Protocol"
           }
         },
         "ports": {
           "type": "array",
-          "description": "List of the Ports that to be matched.",
+          "description": "List of the Ports that need to be matched.",
           "minItems": 1,
           "items": {
             "type": "string",
             "minLength": 1,
-            "description": "Port number or range of ports."
+            "description": "Port number that needs to be matched. Inputs can be <port-number> or <range-of-ports>"
           }
         },
         "portGroupNames": {
           "type": "array",
-          "description": "List of the portGroupNames that to be matched.",
+          "description": "List of the port Group Names that to be matched.",
           "minItems": 1,
           "items": {
             "type": "string",
@@ -633,33 +529,32 @@
         }
       },
       "required": [
-        "l3Protocol"
+        "l4Protocol"
       ]
     },
     "VlanMatchCondition": {
       "type": "object",
-      "description": "The vlan match conditions that to be matched.",
-      "x-ms-client-flatten": true,
+      "description": "The vlan match conditions that needs to be matched.",
       "properties": {
         "vlans": {
           "type": "array",
-          "description": "The list of vlans that to be filtered.",
+          "description": "List of vlans that needs to be matched.",
           "minItems": 1,
           "items": {
             "type": "string",
             "minLength": 1,
-            "description": "Vlan. It may be a single vlan or the range of vlans.",
+            "description": "Specify the Vlan. Inputs can be single vlan or the range of vlans.",
             "example": "10-20"
           }
         },
         "innerVlans": {
           "type": "array",
-          "description": "The list of inner vlans that to be filtered.",
+          "description": "List of inner vlans that needs to be matched.",
           "minItems": 1,
           "items": {
             "type": "string",
             "minLength": 1,
-            "description": "Inner Vlans. It may be a single vlan or the range of vlans.",
+            "description": "Specify the inner vlan. Inputs can be single vlan or the range of vlans.",
             "example": "20-30"
           }
         },
@@ -677,7 +572,6 @@
     },
     "IpMatchCondition": {
       "type": "object",
-      "x-ms-client-flatten": true,
       "description": "Defines the condition that can be filtered using the selected IPs.",
       "properties": {
         "type": {
@@ -690,7 +584,7 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "Type"
+            "name": "SourceDestinationType"
           }
         },
         "prefixType": {
@@ -708,12 +602,12 @@
         },
         "ipPrefixValues": {
           "type": "array",
-          "description": "The list of IPPrefixes.",
+          "description": "The list of IP Prefixes.",
           "minItems": 1,
           "items": {
             "type": "string",
             "minLength": 1,
-            "description": "The valid IPPrefix."
+            "description": "The valid IP Prefix."
           }
         },
         "ipGroupNames": {
@@ -728,9 +622,111 @@
         }
       }
     },
+    "CommonDynamicMatchConfiguration": {
+      "type": "object",
+      "description": "Dynamic match configuration object.",
+      "properties": {
+        "ipGroups": {
+          "type": "array",
+          "description": "List of IP Groups.",
+          "minItems": 1,
+          "items": {
+            "description": "IP Group",
+            "$ref": "#/definitions/IpGroupProperties"
+          }
+        },
+        "vlanGroups": {
+          "type": "array",
+          "description": "List of vlan groups.",
+          "minItems": 1,
+          "items": {
+            "description": "Vlan group",
+            "$ref": "#/definitions/VlanGroupProperties"
+          }
+        },
+        "portGroups": {
+          "type": "array",
+          "description": "List of the port group.",
+          "minItems": 1,
+          "items": {
+            "description": "Port Group",
+            "$ref": "#/definitions/PortGroupProperties"
+          }
+        }
+      }
+    },
+    "IpGroupProperties": {
+      "type": "object",
+      "description": "IP Group properties.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "IP Group name."
+        },
+        "ipAddressType": {
+          "description": "IP Address type.",
+          "$ref": "#/definitions/IPAddressTypeEnumProperty"
+        },
+        "ipPrefixes": {
+          "type": "array",
+          "description": "List of IP Prefixes.",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "IP Prefix."
+          }
+        }
+      }
+    },
+    "VlanGroupProperties": {
+      "type": "object",
+      "description": "Vlan group properties.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Vlan group name."
+        },
+        "vlans": {
+          "type": "array",
+          "description": "List of vlans.",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Vlan. It may be a single vlan or the range of the vlans.",
+            "example": "10-20"
+          }
+        }
+      }
+    },
+    "PortGroupProperties": {
+      "type": "object",
+      "description": "Port Group properties.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The name of the port group."
+        },
+        "ports": {
+          "type": "array",
+          "description": "List of the ports that needs to be matched.",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Port Number. Inputs can be single port or the range of ports.",
+            "example": "10-20"
+          }
+        }
+      }
+    },
     "NetworkFabricControllerIdProperty": {
       "type": "string",
-      "description": "Network Fabric Controller ARM resource id.",
+      "description": "ARM resource ID of the Network Fabric Controller.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -743,7 +739,7 @@
     },
     "NetworkFabricIdProperty": {
       "type": "string",
-      "description": "Network Fabric ARM resource id.",
+      "description": "ARM resource ID of the Network Fabric.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -756,7 +752,7 @@
     },
     "NetworkToNetworkInterconnectIdProperty": {
       "type": "string",
-      "description": "Network To network Interconnects ARM resource id.",
+      "description": "ARM resource ID of the Network To network Interconnects.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -769,7 +765,7 @@
     },
     "L3IsolationDomainIdProperty": {
       "type": "string",
-      "description": "L3IsolationDomain ARM resource id.",
+      "description": "ARM resource ID of the L3 Isolation Domain.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -782,7 +778,7 @@
     },
     "InternalNetworkIdProperty": {
       "type": "string",
-      "description": "Internal Networks ARM resource id.",
+      "description": "ARM resource ID of the Internal Networks.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -795,7 +791,7 @@
     },
     "ExternalNetworkIdProperty": {
       "type": "string",
-      "description": "External Networks ARM resource id.",
+      "description": "ARM resource ID of the External Networks.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -808,7 +804,7 @@
     },
     "NetworkDeviceIdProperty": {
       "type": "string",
-      "description": "Azure resource ID for the NetworkDevice.",
+      "description": "ARM resource ID of the NetworkDevice.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -821,7 +817,7 @@
     },
     "NetworkInterfaceIdProperty": {
       "type": "string",
-      "description": "Azure resource ID for the NetworkDevice/networkInterface.",
+      "description": "ARM resource ID of the NetworkDevice/networkInterface.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -834,7 +830,7 @@
     },
     "RoutePolicyIdProperty": {
       "type": "string",
-      "description": "ARM resource ID of importRoutePolicy.",
+      "description": "ARM resource ID of Route Policy.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -860,7 +856,7 @@
     },
     "IpExtendedCommunityIdProperty": {
       "type": "string",
-      "description": "ARM resource ID of ipExtendedCommunity.",
+      "description": "ARM resource ID of IP Extended Community.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [
@@ -904,7 +900,7 @@
       "x-ms-arm-id-details": {
         "allowedResources": [
           {
-            "type": "Microsoft.ManagedNetworkFabric/networkTap"
+            "type": "Microsoft.ManagedNetworkFabric/networkTaps"
           }
         ]
       },
@@ -925,7 +921,7 @@
     },
     "NeighborGroupIdProperty": {
       "type": "string",
-      "description": "ARM resource ID of NeighborGroup.",
+      "description": "ARM resource ID of Neighbor Group.",
       "format": "arm-id",
       "x-ms-arm-id-details": {
         "allowedResources": [

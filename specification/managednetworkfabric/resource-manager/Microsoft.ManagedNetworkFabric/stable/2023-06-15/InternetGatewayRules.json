@@ -194,8 +194,8 @@
           "202": {
             "description": "Accepted",
             "headers": {
-              "Azure-AsyncOperation": {
-                "description": "Tracking URL for long running operation.",
+              "Location": {
+                "description": "The URL to retrieve the status of the asynchronous operation.",
                 "type": "string"
               }
             }
@@ -356,6 +356,7 @@
   "definitions": {
     "InternetGatewayRuleProperties": {
       "type": "object",
+      "x-ms-client-flatten": true,
       "required": [
         "ruleProperties"
       ],
@@ -367,40 +368,8 @@
       ],
       "properties": {
         "ruleProperties": {
-          "x-ms-client-flatten": true,
-          "type": "object",
           "description": "Rules for the InternetGateways",
-          "required": [
-            "action",
-            "addressList"
-          ],
-          "properties": {
-            "action": {
-              "type": "string",
-              "description": "Specify action.",
-              "minLength": 1,
-              "enum": [
-                "Allow",
-                "Deny"
-              ],
-              "x-ms-enum": {
-                "modelAsString": true,
-                "name": "action"
-              },
-              "example": "Deny"
-            },
-            "addressList": {
-              "type": "array",
-              "description": "List of Addresses to be allowed or denied.",
-              "minItems": 1,
-              "items": {
-                "description": "Addresses to be allowed or denied.",
-                "type": "string",
-                "minLength": 1,
-                "example": "10.10.10.10:22 | www.foo.com"
-              }
-            }
-          }
+          "$ref": "#/definitions/RuleProperties"
         },
         "provisioningState": {
           "description": "Provisioning state of the resource.",
@@ -417,7 +386,7 @@
           "readOnly": true
         }
       },
-      "description": "Internet Gateway Rule Properties define the resource properties."
+      "description": "Internet Gateway Rule Properties defines the resource properties."
     },
     "InternetGatewayRule": {
       "type": "object",
@@ -464,6 +433,41 @@
         "nextLink": {
           "type": "string",
           "description": "Url to follow for getting next page of resources."
+        }
+      }
+    },
+    "RuleProperties": {
+      "type": "object",
+      "description": "Rules for the InternetGateways",
+      "required": [
+        "action",
+        "addressList"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "Specify action.",
+          "minLength": 1,
+          "enum": [
+            "Allow",
+            "Deny"
+          ],
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "action"
+          },
+          "example": "Deny"
+        },
+        "addressList": {
+          "type": "array",
+          "description": "List of Addresses to be allowed or denied.",
+          "minItems": 1,
+          "items": {
+            "description": "Addresses to be allowed or denied.",
+            "type": "string",
+            "minLength": 1,
+            "example": "10.10.10.10:22 | www.foo.com"
+          }
         }
       }
     }
