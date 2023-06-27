@@ -8,6 +8,8 @@ import "@azure-tools/typespec-azure-resource-manager";
 using TypeSpec.Http;
 using TypeSpec.Rest;
 using TypeSpec.Versioning;
+using OpenAPI;
+using Autorest;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 
@@ -76,10 +78,37 @@ model DeviceEndpoint {
   hostname: string;
 }
 
+@doc("Resource create or update operation completed successfully.")
+model ResourceUpdatedResponse<T> is ArmResponse<T> {
+}
+
+@autoRoute
+@doc("Create a {name}", TResource)
+@extension("x-ms-long-running-operation", true)
+@extension(
+  "x-ms-long-running-operation-options",
+  {
+    `final-state-via`: "azure-async-operation",
+  }
+)
+@doc("Create a {name}", TResource)
+@armResourceCreateOrUpdate(TResource)
+@put
+op EdgeProvisioningResourceCreateOrUpdateAsync<
+  TResource extends ArmResource,
+  TBaseParameters = BaseParameters<TResource>
+>(
+  ...ResourceInstanceParameters<TResource, TBaseParameters>,
+
+  @doc("Resource create parameters.")
+  @body
+  resource: TResource,
+): ResourceUpdatedResponse<TResource> | ArmCreatedResponse<TResource> | ErrorResponse;
+
 @armResourceOperations
 interface ProvisioningResources {
   get is ArmResourceRead<ProvisioningResource>;
-  createOrUpdate is ArmResourceCreateOrUpdateSync<ProvisioningResource>;
+  createOrUpdate is EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningResource>;
   delete is ArmResourceDeleteSync<ProvisioningResource>;
   update is ArmResourcePatchSync<ProvisioningResource, ProvisioningResourceProperties>;
   listByResourceGroup is ArmResourceListByParent<ProvisioningResource>;
@@ -307,7 +336,7 @@ model ProvisioningRule {
 @armResourceOperations
 interface ProvisioningPolicies {
   get is ArmResourceRead<ProvisioningPolicy>;
-  createOrUpdate is ArmResourceCreateOrUpdateSync<ProvisioningPolicy>;
+  createOrUpdate is EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningPolicy>;
   delete is ArmResourceDeleteSync<ProvisioningPolicy>;
   update is ArmResourcePatchSync<ProvisioningPolicy, ProvisioningPolicyProperties>;
   listByParent is ArmResourceListByParent<ProvisioningPolicy>;
@@ -360,7 +389,7 @@ enum ProvisioningStatus {
 @armResourceOperations
 interface DeviceProvisioningStates {
   get is ArmResourceRead<DeviceProvisioningState>;
-  createOrUpdate is ArmResourceCreateOrUpdateSync<DeviceProvisioningState>;
+  createOrUpdate is EdgeProvisioningResourceCreateOrUpdateAsync<DeviceProvisioningState>;
   delete is ArmResourceDeleteSync<DeviceProvisioningState>;
   update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
   listByParent is ArmResourceListByParent<DeviceProvisioningState>;
