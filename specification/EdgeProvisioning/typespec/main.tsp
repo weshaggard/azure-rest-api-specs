@@ -68,14 +68,14 @@ model DeviceEndpoint {
 
   @doc("Description of the Endpoint")
   @visibility("read")
-  description: string;
+  description?: string;
 
   //@doc("Endpoint Type")
   //endpointType: string;
 
   @doc("Hostname of the Endpoint")
   @visibility("read")
-  hostname: string;
+  hostname?: string;
 }
 
 @doc("Resource create or update operation completed successfully.")
@@ -362,6 +362,10 @@ scalar ProvisioningPolicyResourceId
 
 @doc("Details of the DeviceProvisioningState")
 model DeviceProvisioningStateProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+
   @visibility("read", "create", "update")
   @doc("Provisioning status of the resource this DeviceProvisioningState extends")
   status: ProvisioningStatus;
