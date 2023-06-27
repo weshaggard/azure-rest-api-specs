@@ -74,6 +74,7 @@ interface LandingZonesConfigurations
 	>;
 }
 
+#suppress "@azure-tools/typespec-azure-resource-manager/empty-updateable-properties" "No properties of Landing Zone Registration can be updated."
 @tenantResource
 @added(Versions.v2023_09_28_preview)
 @doc("The landing zone registration resource type")
@@ -93,7 +94,6 @@ interface LandingZoneRegistrations
 			LandingZoneRegistration,
 			LandingZoneRegistrationProperties
 		> {}
-
 
 // The below typespec code will be removed in the future and brought back when policy monitor is ready to be implemented.
 // it is being kept here for reference purposes only until UI dependency is gone.

@@ -14,6 +14,8 @@ model IpListProperties {
   provisioningState?: ProvisioningState;
 
   @doc("The list of IP addresses and ranges")
+  @minItems(1)
+  @maxItems(600)
   ipList: string[];
 
   @doc("The list of back references to policies that use this IP list")
@@ -27,6 +29,8 @@ model IpList is TrackedResource<IpListProperties> {
   @key("listName")
   @segment("ipLists")
   @path
+  @minLength(1)
+  @maxLength(128)
   name: string;
 }
 

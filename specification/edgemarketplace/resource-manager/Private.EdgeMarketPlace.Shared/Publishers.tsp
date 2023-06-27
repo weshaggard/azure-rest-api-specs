@@ -18,13 +18,12 @@ using Azure.ResourceManager;
 })
 @doc("Edge Market Place Resource Provider management API.")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Private.EdgeMarketPlace;
+namespace Microsoft.EdgeMarketPlace;
 
 
 @doc("A publisher who provides offers.")
 model Publisher is ExtensionResource<PublisherProperties> {
   @doc("Name of the publisher")
-  @format("^[a-zA-Z0-9-]{3,24}$")
   @key("publisherName")
   @path
   @segment("publishers")
@@ -34,11 +33,16 @@ model Publisher is ExtensionResource<PublisherProperties> {
 @doc("Publisher properties")
 model PublisherProperties {
   
+	@doc("The resource provisioning state")
+  provisioningState: ResourceProvisioningState;
 }
 
 @armResourceOperations
 interface Publishers
 {
-  list is ArmResourceListByParent<Publisher>;
+  list is ArmResourceListByParent<Publisher,Azure.ResourceManager.Foundations.BaseParameters<Publisher> &
+			Azure.Core.StandardListQueryParameters &
+			Azure.Core.FilterQueryParameter
+	>;
   get is ArmResourceRead<Publisher>;
 }

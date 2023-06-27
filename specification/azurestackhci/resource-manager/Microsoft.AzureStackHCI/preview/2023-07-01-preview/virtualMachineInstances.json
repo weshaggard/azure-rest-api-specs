@@ -733,7 +733,7 @@
     }
   },
   "definitions": {
-    "VirtualMachineInstanceProperties.": {
+    "VirtualMachineInstanceProperties": {
       "type": "object",
       "x-ms-client-flatten": true,
       "properties": {
@@ -855,13 +855,12 @@
                 },
                 "provisionVMAgent": {
                   "type": "boolean",
-                  "default": true,
-                  "description": "Used to indicate whether the VM agent should be installed during the virtual machine creation process."
-                },
-                "provisionAzureConnectedMachineAgent": {
-                  "type": "boolean",
-                  "default": false,
                   "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine instance creation process."
+                },
+                "provisionMOCGuestAgent": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Used to indicate whether the MOC Guest Agent should be installed during the virtual machine creation process."
                 }
               },
               "description": "LinuxConfiguration - linux specific configuration values for the virtual machine instance"
@@ -883,13 +882,12 @@
                 },
                 "provisionVMAgent": {
                   "type": "boolean",
-                  "default": true,
-                  "description": "Used to indicate whether the VM agent should be installed during the virtual machine creation process."
-                },
-                "provisionAzureConnectedMachineAgent": {
-                  "type": "boolean",
-                  "default": false,
                   "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine instance creation process."
+                },
+                "provisionMOCGuestAgent": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Used to indicate whether the MOC Guest Agent should be installed during the virtual machine creation process."
                 }
               },
               "description": "Windows Configuration for the virtual machine instance "
@@ -1001,12 +999,16 @@
         "status": {
           "$ref": "#/definitions/VirtualMachineInstanceStatus"
         },
+        "guestAgentInstallStatus": {
+          "description": "Guest agent install status.",
+          "$ref": "#/definitions/GuestAgentInstallStatus"
+        },
         "vmId": {
           "description": "Unique identifier for the vm resource.",
           "type": "string",
           "readOnly": true
         },
-        "arcVmId": {
+        "resourceUid": {
          "description": "Unique identifier defined by ARC to identify the guest of the VM.",
          "type": "string"
          }
@@ -1101,7 +1103,7 @@
       "properties": {
         "properties": {
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/VirtualMachineInstanceProperties."
+          "$ref": "#/definitions/VirtualMachineInstanceProperties"
         },
         "extendedLocation": {
           "$ref": "./common.json#/definitions/ExtendedLocation",
@@ -1121,61 +1123,61 @@
     "VirtualMachineInstanceView": {
       "properties": {
         "vmAgent": {
-          "$ref": "#/definitions/VirtualMachineAgentInstanceView",
-          "description": "The VM Agent running on the virtual machine."                         
+          "$ref": "#/definitions/VirtualMachineMOCGuestAgentInstanceView",
+          "description": "The MOC Guest Agent running on the virtual machine."                         
         }
       },
       "description": "The instance view of a virtual machine."
     },
-    "VirtualMachineAgentInstanceView": {
+    "VirtualMachineMOCGuestAgentInstanceView": {
       "properties": {
-      "vmAgentVersion": {
-        "type": "string",
-        "description": "The VM Agent full version."
-      },
-      "statuses": {
-        "type": "array",
-        "items": {
-        "$ref": "#/definitions/InstanceViewStatus"
+        "vmMOCGuestAgentVersion": {
+          "type": "string",
+          "description": "The VM MOC Guest Agent full version."
         },
-        "x-ms-identifiers": [],
-        "description": "The resource status information."
-      }
+        "statuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstanceViewStatus"
+          },
+          "x-ms-identifiers": [],
+          "description": "The resource status information."
+        }
       },
-      "description": "The instance view of the VM agent running on the virtual machine."
+      "description": "The instance view of the MOC Guest Agent running on the virtual machine."
     },
     "InstanceViewStatus": {
       "properties": {
-      "code": {
-        "type": "string",
-        "description": "The status code."
-      },
-      "level": {
-        "type": "string",
-        "description": "The level code.",
-        "enum": [
-        "Info",
-        "Warning",
-        "Error"
-        ],
-        "x-ms-enum": {
-        "name": "StatusLevelTypes",
-        "modelAsString": false
+        "code": {
+          "type": "string",
+          "description": "The status code."
+        },
+        "level": {
+          "type": "string",
+          "description": "The level code.",
+          "enum": [
+            "Info",
+            "Warning",
+            "Error"
+          ],
+          "x-ms-enum": {
+            "name": "StatusLevelTypes",
+            "modelAsString": false
+          }
+        },
+        "displayStatus": {
+          "type": "string",
+          "description": "The short localizable label for the status."
+        },
+        "message": {
+          "type": "string",
+          "description": "The detailed status message, including for alerts and error messages."
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time of the status."
         }
-      },
-      "displayStatus": {
-        "type": "string",
-        "description": "The short localizable label for the status."
-      },
-      "message": {
-        "type": "string",
-        "description": "The detailed status message, including for alerts and error messages."
-      },
-      "time": {
-        "type": "string",
-        "format": "date-time",
-        "description": "The time of the status."
-      }
       },
       "description": "Instance view status."
     },
@@ -1275,11 +1277,11 @@
           "properties": {
             "provisionVMAgent": {
               "type": "boolean",
-              "description": "Used to indicate whether the VM agent should be installed during the virtual machine creation process."
+              "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine instance creation process."
             },
-            "provisionAzureConnectedMachineAgent": {
+            "provisionMOCGuestAgent": {
               "type": "boolean",
-              "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine creation process."
+              "description": "Used to indicate whether the MOC Guest Agent should be installed during the virtual machine creation process."
             }
           }
         },
@@ -1287,11 +1289,11 @@
           "properties": {
             "provisionVMAgent": {
               "type": "boolean",
-              "description": "Used to indicate whether the VM agent should be installed during the virtual machine creation process."
+              "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine instance creation process."
             },
-            "provisionAzureConnectedMachineAgent": {
+            "provisionMOCGuestAgent": {
               "type": "boolean",
-              "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine creation process."
+              "description": "Used to indicate whether the MOC Guest Agent should be installed during the virtual machine creation process."
             }
           }
         }
@@ -1343,6 +1345,50 @@
         },
         "nextLink": {
           "type": "string"
+        }
+      }
+    },
+    "GuestAgentInstallStatus": {
+      "description": "Defines the status of a guest agent installation.",
+      "type": "object",
+      "properties": {
+        "vmUuid": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Specifies the VM's unique SMBIOS ID."
+        },
+        "status": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The installation status of the hybrid machine agent installation.",
+          "enum": [
+            "Succeeded",
+            "InProgress",
+            "Failed"
+          ],
+          "x-ms-enum": {
+            "name": "StatusTypes",
+            "modelAsString": true
+          }
+        },
+        "lastStatusChange": {
+          "readOnly": true,
+          "type": "string",
+          "format": "date-time",
+          "description": "The time of the last status change."
+        },
+        "agentVersion": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The hybrid machine agent full version."
+        },
+        "errorDetails": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorDetail"
+          },
+          "description": "Details about the error state."
         }
       }
     },

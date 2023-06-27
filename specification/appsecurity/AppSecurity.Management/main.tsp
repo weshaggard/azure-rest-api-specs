@@ -7,11 +7,14 @@ import "@azure-tools/typespec-azure-resource-manager";
 import "./common.tsp";
 import "./ipList/ipList.tsp";
 import "./geoList/geoList.tsp";
-import "./policy/wafPolicy/customRules.tsp";
-import "./policy/wafPolicy/logScrubbing.tsp";
-import "./policy/wafPolicy/managedRules.tsp";
-import "./policy/wafPolicy/policySettings.tsp";
-import "./policy/wafPolicy/wafPolicy.tsp";
+import "./policy/customRules.tsp";
+import "./policy/logScrubbing.tsp";
+import "./policy/managedRules.tsp";
+import "./policy/policySettings.tsp";
+import "./policy/webProtection.tsp";
+import "./policy/apiProtection.tsp";
+import "./policy/botProtection.tsp";
+import "./policy/ddosProtection.tsp";
 import "./policy/policy.tsp";
 
 using TypeSpec.Http;
@@ -31,7 +34,9 @@ namespace Microsoft.AppSecurity;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
+@doc("AppSecurity versions")
 enum Versions {
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+  @doc("Version 2023-02-06-preview")
   v2023_02_06_preview: "2023-02-06-preview",
 }
