@@ -790,7 +790,7 @@
             "required": true,
             "description": "Resource create parameters.",
             "schema": {
-              "$ref": "#/definitions/ProvisioningPolicyCreateOrUpdate"
+              "$ref": "#/definitions/ProvisioningPolicy"
             }
           }
         ],
@@ -825,63 +825,6 @@
           "final-state-via": "azure-async-operation"
         },
         "x-ms-long-running-operation": true
-      },
-      "patch": {
-        "tags": [
-          "ProvisioningPolicies"
-        ],
-        "operationId": "ProvisioningPolicies_Update",
-        "description": "Update a ProvisioningPolicy",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "name": "provisioningResourceName",
-            "in": "path",
-            "required": true,
-            "description": "The name of the employee",
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
-          },
-          {
-            "name": "provisioningPolicyName",
-            "in": "path",
-            "required": true,
-            "description": "The name of the employee",
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
-          },
-          {
-            "name": "properties",
-            "in": "body",
-            "required": true,
-            "description": "The resource properties to be updated.",
-            "schema": {
-              "$ref": "#/definitions/ProvisioningPolicyUpdate"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/ProvisioningPolicy"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        }
       },
       "delete": {
         "tags": [
@@ -948,6 +891,63 @@
           "final-state-via": "location"
         },
         "x-ms-long-running-operation": true
+      },
+      "patch": {
+        "tags": [
+          "ProvisioningPolicies"
+        ],
+        "operationId": "ProvisioningPolicies_Update",
+        "description": "Update a ProvisioningPolicy",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "provisioningResourceName",
+            "in": "path",
+            "required": true,
+            "description": "The name of the employee",
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "provisioningPolicyName",
+            "in": "path",
+            "required": true,
+            "description": "The name of the employee",
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "properties",
+            "in": "body",
+            "required": true,
+            "description": "The resource properties to be updated.",
+            "schema": {
+              "$ref": "#/definitions/ProvisioningPolicyUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/ProvisioningPolicy"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
       }
     }
   },
@@ -1431,7 +1431,8 @@
       "properties": {
         "region": {
           "type": "string",
-          "description": "The region"
+          "description": "The region",
+          "minLength": 1
         },
         "subscriptionId": {
           "type": "string",
@@ -1453,25 +1454,25 @@
         "resourceGroupName"
       ]
     },
-    "JitRuleCreateOrUpdate": {
-      "type": "object",
-      "properties": {
-        "region": {
-          "type": "string",
-          "description": "The region"
-        }
-      },
-      "description": "The rule for Just-in-time connection",
-      "required": [
-        "region"
-      ]
-    },
     "JitRuleUpdate": {
       "type": "object",
       "properties": {
         "region": {
           "type": "string",
-          "description": "The region"
+          "description": "The region",
+          "minLength": 1
+        },
+        "subscriptionId": {
+          "type": "string",
+          "description": "The ID of the target subscription.",
+          "minLength": 1
+        },
+        "resourceGroupName": {
+          "type": "string",
+          "description": "The name of the resource group. The name is case insensitive.",
+          "pattern": "^[-\\w\\._\\(\\)]+$",
+          "minLength": 1,
+          "maxLength": 90
         }
       },
       "description": "The rule for Just-in-time connection"
@@ -1492,27 +1493,7 @@
       "description": "A provisioning policy resource",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
-        }
-      ]
-    },
-    "ProvisioningPolicyCreateOrUpdate": {
-      "type": "object",
-      "properties": {
-        "properties": {
-          "$ref": "#/definitions/ProvisioningPolicyPropertiesCreateOrUpdate",
-          "description": "The resource-specific properties for this resource.",
-          "x-ms-client-flatten": true,
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        }
-      },
-      "description": "A provisioning policy resource",
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
         }
       ]
     },
@@ -1542,6 +1523,11 @@
     "ProvisioningPolicyProperties": {
       "type": "object",
       "properties": {
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The status of the last operation.",
+          "readOnly": true
+        },
         "priority": {
           "type": "integer",
           "format": "int32",
@@ -1573,40 +1559,6 @@
         "provisioning"
       ]
     },
-    "ProvisioningPolicyPropertiesCreateOrUpdate": {
-      "type": "object",
-      "properties": {
-        "priority": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The priority of the policy. Should be greater than 0."
-        },
-        "bootstrapAuthentication": {
-          "$ref": "#/definitions/BootstrapAuthenticationRule",
-          "description": "The bootstrap authentication rule."
-        },
-        "allocations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AllocationRule"
-          },
-          "x-ms-identifiers": [],
-          "description": "Allocation rules.",
-          "x-typespec-name": "AllocationRule[]"
-        },
-        "provisioning": {
-          "$ref": "#/definitions/ProvisioningRuleCreateOrUpdate",
-          "description": "The device provisioning rule."
-        }
-      },
-      "description": "Details of the ProvisioningService ProvisioningPolicy.",
-      "required": [
-        "priority",
-        "bootstrapAuthentication",
-        "allocations",
-        "provisioning"
-      ]
-    },
     "ProvisioningPolicyResourceId": {
       "type": "string",
       "description": "A type definition that refers the id to an ARM resource.",
@@ -1622,14 +1574,6 @@
     "ProvisioningPolicyUpdate": {
       "type": "object",
       "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags.",
-          "x-typespec-name": "Record<string>"
-        },
         "properties": {
           "$ref": "#/definitions/ProvisioningPolicyUpdateProperties",
           "x-ms-client-flatten": true
@@ -1784,32 +1728,6 @@
         },
         "jit": {
           "$ref": "#/definitions/JitRule",
-          "description": "Just-in-time rule to create the device resource."
-        },
-        "identityInfo": {
-          "$ref": "#/definitions/IdentityInfo",
-          "description": "Identity information"
-        },
-        "resourceMetadata": {
-          "$ref": "#/definitions/object",
-          "description": "Resource metadata"
-        }
-      },
-      "description": "The provisioning rule",
-      "required": [
-        "type",
-        "resourceMetadata"
-      ]
-    },
-    "ProvisioningRuleCreateOrUpdate": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "$ref": "#/definitions/ProvisioningResourceType",
-          "description": "Type of the resource being provisioned"
-        },
-        "jit": {
-          "$ref": "#/definitions/JitRuleCreateOrUpdate",
           "description": "Just-in-time rule to create the device resource."
         },
         "identityInfo": {

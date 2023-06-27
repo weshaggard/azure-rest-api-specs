@@ -9,6 +9,7 @@ using TypeSpec.Http;
 using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Foundations;
 
 @armProviderNamespace("Microsoft.EdgeProvisioning")
 @service({
@@ -83,7 +84,7 @@ interface ProvisioningResources extends TrackedResourceOperations<ProvisioningRe
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 @doc("A provisioning policy resource")
 @parentResource(ProvisioningResource)
-model ProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
+model ProvisioningPolicy is ProxyResource<ProvisioningPolicyProperties> {
   @doc("The name of the employee")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("provisioningPolicyName")
@@ -94,9 +95,9 @@ model ProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
 
 @doc("Details of the ProvisioningService ProvisioningPolicy.")
 model ProvisioningPolicyProperties {
-  //@visibility("read")
-  //@doc("The status of the last operation.")
-  //provisioningState?: ProvisioningState;
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
 
   @doc("The priority of the policy. Should be greater than 0.")
   priority: int32; 
@@ -154,12 +155,21 @@ enum ProvisioningResourceType {
 
 @doc("The rule for Just-in-time connection")
 model JitRule {
+  @minLength(1)
   @doc("The region")
   region: string; // TODO: checkout the location resource and see if we can use it here
 
-  ...SubscriptionIdParameter;
+  //...SubscriptionIdParameter;
+  @minLength(1)
+  @doc("The ID of the target subscription.")
+  subscriptionId: string;
 
-  ...ResourceGroupParameter;
+  //...ResourceGroupParameter;
+  @minLength(1)
+  @maxLength(90)
+  @pattern("^[-\\w\\._\\(\\)]+$")
+  @doc("The name of the resource group. The name is case insensitive.")
+  resourceGroupName: string;
 }
 
 @doc("Type of the endpoint")
@@ -288,7 +298,10 @@ model ProvisioningRule {
 }
 
 @armResourceOperations
-interface ProvisioningPolicies extends TrackedResourceOperations<ProvisioningPolicy, ProvisioningPolicyProperties> {}
+interface ProvisioningPolicies extends ProxyResourceOperations<ProvisioningPolicy>,
+                                       ProxyResourceUpdate<ProvisioningPolicy, ProvisioningPolicyProperties>,
+                                       ResourceListBySubscription<ProvisioningPolicy>{}
+
 
 // Extension resource: device provisioning state
 @doc("The provisioning state of a device.")
