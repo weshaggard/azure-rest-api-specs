@@ -41,7 +41,7 @@
         ],
         "operationId": "NetworkPacketBrokers_Create",
         "summary": "Create Network Packet Broker.",
-        "description": "",
+        "description": "Creates a Network Packet Broker.",
         "consumes": [
           "application/json"
         ],
@@ -59,11 +59,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "in": "path",
-            "name": "networkPacketBrokerName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the Network Packet Broker."
+            "$ref": "#/parameters/NetworkPacketBrokerNameParameter"
           },
           {
             "in": "body",
@@ -126,11 +122,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "in": "path",
-            "name": "networkPacketBrokerName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the Network Packet Broker."
+            "$ref": "#/parameters/NetworkPacketBrokerNameParameter"
           }
         ],
         "responses": {
@@ -158,7 +150,7 @@
           "NetworkPacketBrokers"
         ],
         "operationId": "NetworkPacketBrokers_Update",
-        "summary": "Updates NetworkPacketBrokers.",
+        "summary": "Updates the Network Packet Broker.",
         "description": "API to update certain properties of the Network Packet Broker resource.",
         "consumes": [
           "application/json"
@@ -177,11 +169,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "in": "path",
-            "name": "networkPacketBrokerName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the Network Packet Broker."
+            "$ref": "#/parameters/NetworkPacketBrokerNameParameter"
           },
           {
             "in": "body",
@@ -203,8 +191,8 @@
           "202": {
             "description": "Accepted",
             "headers": {
-              "Azure-AsyncOperation": {
-                "description": "Tracking URL for long running operation.",
+              "Location": {
+                "description": "The URL to retrieve the status of the asynchronous operation.",
                 "type": "string"
               }
             }
@@ -232,7 +220,7 @@
         ],
         "operationId": "NetworkPacketBrokers_Delete",
         "summary": "Deletes a Network Packet Broker.",
-        "description": "",
+        "description": "Deletes Network Packet Broker.",
         "produces": [
           "application/json"
         ],
@@ -247,11 +235,7 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "in": "path",
-            "name": "networkPacketBrokerName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the Network Packet Broker"
+            "$ref": "#/parameters/NetworkPacketBrokerNameParameter"
           }
         ],
         "responses": {
@@ -285,7 +269,7 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedNetworkFabric/networkPacketBrokers": {
       "get": {
         "operationId": "NetworkPacketBrokers_ListByResourceGroup",
-        "summary": "List NetworkPacketBrokers by resource group.",
+        "summary": "List all Network Packet Brokers under resource group.",
         "description": "Displays NetworkPacketBrokers list by resource group GET method.",
         "parameters": [
           {
@@ -325,8 +309,8 @@
     "/subscriptions/{subscriptionId}/providers/Microsoft.ManagedNetworkFabric/networkPacketBrokers": {
       "get": {
         "operationId": "NetworkPacketBrokers_ListBySubscription",
-        "summary": "List NetworkPacketBrokers by subscription.",
-        "description": "Displays NetworkPacketBrokers list by subscription GET method.",
+        "summary": "List Network Packet Brokers by subscription.",
+        "description": "Displays Network Packet Brokers list by subscription GET method.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
@@ -383,102 +367,57 @@
     },
     "NetworkPacketBrokerProperties": {
       "type": "object",
-      "description": "NetworkPacketBrokerProperties define the resource properties.",
+      "description": "Network Packet Broker Properties defines the properties of the resource.",
       "required": [
         "networkFabricId"
       ],
       "properties": {
         "networkFabricId": {
-          "type": "string",
-          "description": "Network Fabric ARM resource id.",
+          "description": "ARM resource ID of the Network Fabric.",
           "x-ms-mutability": [
             "create",
             "read"
           ],
-          "format": "arm-id",
-          "x-ms-arm-id-details": {
-            "allowedResources": [
-              {
-                "type": "Microsoft.ManagedNetworkFabric/networkFabrics"
-              }
-            ]
-          },
-          "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourcegroups/example-rg/providers/Microsoft.ManagedNetworkFabric/networkFabrics/example-networkFabric"
+          "$ref": "./common.json#/definitions/NetworkFabricIdProperty"
         },
         "networkDeviceIds": {
           "type": "array",
-          "description": "List of ARM resourceIds of Network Devices in the Fabric. Size of the list is based on Fabric SKU.",
+          "description": "List of ARM resource IDs of Network Devices [NPB].",
           "readOnly": true,
           "items": {
-            "type": "string",
-            "description": "Network Device ARM resource id.",
-            "format": "arm-id",
-            "x-ms-arm-id-details": {
-              "allowedResources": [
-                {
-                  "type": "Microsoft.ManagedNetworkFabric/networkDevices"
-                }
-              ]
-            },
-            "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourcegroups/example-rg/providers/Microsoft.ManagedNetworkFabric/networkDevices/example-networkDevice"
+            "description": "ARM resource ID of the Network Device.",
+            "$ref": "./common.json#/definitions/NetworkDeviceIdProperty"
           }
         },
         "sourceInterfaceIds": {
           "type": "array",
-          "description": "List of network interface across NPB devices that are configured for direct connection.",
+          "description": "List of network interfaces across NPB devices that are used to mirror source traffic.",
           "readOnly": true,
           "items": {
-            "type": "string",
-            "description": "Network Interface ARM resource id.",
-            "format": "arm-id",
-            "x-ms-arm-id-details": {
-              "allowedResources": [
-                {
-                  "type": "Microsoft.ManagedNetworkFabric/networkDevices/networkInterfaces"
-                }
-              ]
-            },
-            "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourcegroups/example-rg/providers/Microsoft.ManagedNetworkFabric/networkDevices/example-networkDevice/networkInterfaces/example-networkInterface"
+            "description": "ARM resource ID of the Network Interface.",
+            "$ref": "./common.json#/definitions/NetworkInterfaceIdProperty"
           }
         },
         "networkTapIds": {
           "type": "array",
           "readOnly": true,
-          "description": "List of network Tap Ids configured on NPB.",
+          "description": "List of network Tap IDs configured on NPB.",
           "items": {
-            "type": "string",
-            "description": "Network Tap ARM resource id.",
-            "format": "arm-id",
-            "x-ms-arm-id-details": {
-              "allowedResources": [
-                {
-                  "type": "Microsoft.ManagedNetworkFabric/networkTaps"
-                }
-              ]
-            },
-            "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourcegroups/example-rg/providers/Microsoft.ManagedNetworkFabric/networkTaps/example-networkTap"
+            "description": "ARM resource ID of the Network Tap.",
+            "$ref": "./common.json#/definitions/NetworkTapIdProperty"
           }
         },
         "neighborGroupIds": {
           "type": "array",
           "readOnly": true,
-          "description": "List of neighbor group Ids configured on NPB.",
+          "description": "List of neighbor group IDs configured on NPB.",
           "items": {
-            "type": "string",
-            "description": "Neighbor Group ARM resource id.",
-            "format": "arm-id",
-            "x-ms-arm-id-details": {
-              "allowedResources": [
-                {
-                  "type": "Microsoft.ManagedNetworkFabric/neighborGroups"
-                }
-              ]
-            },
-            "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourcegroups/example-rg/providers/Microsoft.ManagedNetworkFabric/neighborGroups/example-neighborGroup"
+            "description": "ARM resource ID of the Neighbor Group.",
+            "$ref": "./common.json#/definitions/NetworkTapIdProperty"
           }
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
+          "description": "Provisioning state of the resource.",
           "$ref": "./common.json#/definitions/ProvisioningState",
           "readOnly": true
         }
@@ -510,6 +449,16 @@
           "description": "Url to follow for getting next page of resources."
         }
       }
+    }
+  },
+  "parameters": {
+    "NetworkPacketBrokerNameParameter": {
+      "type": "string",
+      "description": "Name of the Network Packet Broker.",
+      "in": "path",
+      "name": "networkPacketBrokerName",
+      "required": true,
+      "x-ms-parameter-location": "method"
     }
   }
 }

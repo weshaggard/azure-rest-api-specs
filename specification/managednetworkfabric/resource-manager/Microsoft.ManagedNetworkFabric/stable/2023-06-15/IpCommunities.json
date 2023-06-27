@@ -197,8 +197,8 @@
           "202": {
             "description": "Accepted",
             "headers": {
-              "Azure-AsyncOperation": {
-                "description": "Tracking URL for long running operation.",
+              "Location": {
+                "description": "The URL to retrieve the status of the asynchronous operation.",
                 "type": "string"
               }
             }
@@ -370,24 +370,23 @@
         }
       ],
       "required": [
-        "action",
-        "communityMembers"
+        "ipCommunityRules"
       ],
       "properties": {
         "configurationState": {
-          "description": "Gets the configuration state of the resource.",
+          "description": "Configuration state of the resource.",
           "$ref": "./common.json#/definitions/ConfigurationState"
         },
         "provisioningState": {
-          "description": "Gets the provisioning state of the resource.",
+          "description": "Provisioning state of the resource.",
           "$ref": "./common.json#/definitions/ProvisioningState"
         },
         "administrativeState": {
-          "description": "Gets the administrative state of the resource.",
+          "description": "Administrative state of the resource.",
           "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
-      "description": "IP Community Properties define the resource properties."
+      "description": "IP Community Properties defines the resource properties."
     },
     "IpCommunity": {
       "type": "object",
@@ -431,17 +430,9 @@
       "x-ms-azure-resource": true,
       "properties": {
         "properties": {
-          "type": "object",
-          "allOf": [
-            {
-              "description": "IP Community patchable properties.",
-              "$ref": "#/definitions/IpCommunityPatchableProperties"
-            }
-          ],
-          "required": [
-            "action",
-            "communityMembers"
-          ]
+          "x-ms-client-flatten": true,
+          "description": "IP Community patchable properties.",
+          "$ref": "#/definitions/IpCommunityPatchableProperties"
         }
       },
       "allOf": [
@@ -455,9 +446,29 @@
       "type": "object",
       "description": "IP Community patchable properties.",
       "properties": {
+        "ipCommunityRules": {
+          "type": "array",
+          "description": "List of IP Community Rules.",
+          "items": {
+            "$ref": "#/definitions/IpCommunityRule"
+          }
+        }
+      }
+    },
+    "IpCommunityRule": {
+      "type": "object",
+      "description": "IP Community patchable properties.",
+      "properties": {
         "action": {
           "description": "Action to be taken on the configuration. Example: Permit | Deny.",
           "$ref": "./common.json#/definitions/CommunityActionTypes"
+        },
+        "sequenceNumber": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "Sequence to insert to/delete from existing route. Prefix lists are evaluated starting with the lowest sequence number and continue down the list until a match is made. Once a match is made, the permit or deny statement is applied to that network and the rest of the list is ignored."
         },
         "wellKnownCommunities": {
           "type": "array",
@@ -490,7 +501,12 @@
             "type": "string"
           }
         }
-      }
+      },
+      "required": [
+        "action",
+        "sequenceNumber",
+        "communityMembers"
+      ]
     }
   },
   "parameters": {
