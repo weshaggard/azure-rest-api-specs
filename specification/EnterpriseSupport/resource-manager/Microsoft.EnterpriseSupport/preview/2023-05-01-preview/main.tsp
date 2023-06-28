@@ -27,11 +27,11 @@ interface Operations extends Azure.ResourceManager.Operations {}
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 @doc("A ESRPProviderHub resource")
-model UnifiedEnterpriseSupport is TrackedResource<UnifiedEnterpriseSupportResponseProperties> {
-	@doc("The name of the Unified Enterprise Support")
+model EnterpriseSupports is TrackedResource<EnterpriseSupportsResponseProperties> {
+	@doc("The name of the  Enterprise Support")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("unifiedEnterpriseSupportName")
-	@segment("unifiedEnterpriseSupport")
+	@key("EnterpriseSupportName")
+	@segment("EnterpriseSupports")
 	@path
 	name: string;
 }
@@ -45,10 +45,11 @@ enum ProvisioningState {
 	Updating,
 	Deleting,
 	Accepted,
+	Deleted
 }
 
-@doc("Details of the ESRP UnifiedEnterpriseSupport.")
-model UnifiedEnterpriseSupportResponseProperties {
+@doc("Details of the ESRP EnterpriseSupport.")
+model EnterpriseSupportsResponseProperties {
 	@doc("Provisioning status")
 	provisioningState?: ProvisioningState;
 
@@ -76,24 +77,13 @@ model UnifiedEnterpriseSupportResponseProperties {
 	@doc("Quantity for the purchase")
 	quantity: integer;
 
-	@doc("Service start date for Unified Enterprise Support")
+	@doc("Service start date for  Enterprise Support")
 	serviceStartDate: utcDateTime;
 
-	@doc("CSAM for the Unified Enterprise Support")
+	@doc("CSAM for the  Enterprise Support")
 	csam: string;
 }
 
-alias ResultHeaders = {
-  @pollingLocation
-  @header("Operation-Location")
-  operationLocation: ResourceLocation<ResourceOperationStatus<UnifiedEnterpriseSupportResponseProperties>>;
-
-  @finalLocation
-  @header("location")
-  location: ResourceLocation<UnifiedEnterpriseSupportResponseProperties>;
-};
-
-
 @armResourceOperations
-interface UnifiedEnterpriseSupports extends TrackedResourceOperations<UnifiedEnterpriseSupport, UnifiedEnterpriseSupportResponseProperties> {
+interface EnterpriseSuportsResource extends TrackedResourceOperations<EnterpriseSupports, EnterpriseSupportsResponseProperties> {
 }
