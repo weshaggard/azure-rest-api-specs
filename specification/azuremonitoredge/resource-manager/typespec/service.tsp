@@ -39,5 +39,14 @@ enum ProvisioningState {
     Accepted,
 }
 
+@doc("extended location")
+model ExtendedLocation {
+    @doc("extended location resource id")
+    name: string;
+
+    @doc("extended location type: CustomLocation")
+    type?: string;
+}
+
 interface Operations extends Azure.ResourceManager.Operations {}
 
