@@ -178,6 +178,7 @@ model BootstrapAuthenticationDetails {
 model BootstrapAuthenticationRule {
   type: BootstrapAuthenticationType;
   details?: BootstrapAuthenticationDetails;
+  // TODO use discriminator for properties specific to a bootstrap auth type
 }
 
 @doc("Type of resource being provisioned")
@@ -221,10 +222,10 @@ enum EndpointType {
 //@discriminator("type")
 model AllocationEndpoint {
   @doc("Name of the endpoint")
-  name?: string;
+  name: string;
 
   @doc("Resource id of the endpoint")
-  resourceId?: string;
+  resourceId: string;
 
   //@doc("Host name of the endpoint")
   //hostName?: string;
@@ -267,6 +268,7 @@ enum AllocationType {
   Weighted,
 }
 
+// TODO x-ms-identifier to define the uniqueness constraint (i.e. name)
 model AllocationRule {
   @doc("Name of the allocation rule")
   name: string;
@@ -280,19 +282,23 @@ model AllocationRule {
   @doc("List of endpoints")
   endpoints: Array<AllocationEndpoint>;
 
+  // Option 1: use 2 arrays- Array<allocationProperties>, Array<endpointProperties>
+  // index based or something similar to allow customers to provide input for allocation & endpoint type
+  // Option 2: move the type inside the properties and enforce type restrictions for the array (homogenous)
+  // TOODO Roopesh to circle back
   // ARM question: optional approach: having "weightedEndpoints" and "geoBasedEndpoints" separately with solid types
 }
 
 @doc("The identity info to return to device")
 model DeviceIdentityInfo {
   @doc("If uuid need to be returned")
-  returnUuid: boolean;
+  uuid: boolean;
 
   @doc("If accessTokenUrl need to be returned")
-  returnAccessTokenUrl: boolean;
+  accessTokenUrl: boolean;
 
   @doc("If externalDeviceId need to be returned")
-  returnExternalDeviceId: boolean;
+  externalDeviceId: boolean;
 }
 
 // TODO: Check with Krishna - Follow-up whether we want to expose this to the customer
@@ -343,6 +349,9 @@ interface ProvisioningPolicies {
 }
 
 // Extension resource: device provisioning state
+
+// define extension resource scope in swagger via api path
+// Roopesh to share the link for sample swagger
 @doc("The provisioning state of a device.")
 model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProperties> {
   @doc("The registration id of the resource.")
