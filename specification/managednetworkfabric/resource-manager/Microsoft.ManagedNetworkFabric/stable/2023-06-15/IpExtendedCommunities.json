@@ -29,7 +29,7 @@
       "flow": "implicit",
       "description": "Azure Active Directory OAuth2 Flow.",
       "scopes": {
-        "user_impersonation": "Impersonate your user account."
+        "user_impersonation": "impersonate your user account"
       }
     }
   },
@@ -197,8 +197,8 @@
           "202": {
             "description": "Accepted",
             "headers": {
-              "Azure-AsyncOperation": {
-                "description": "Tracking URL for long running operation.",
+              "Location": {
+                "description": "The URL to retrieve the status of the asynchronous operation.",
                 "type": "string"
               }
             }
@@ -371,23 +371,19 @@
       ],
       "properties": {
         "configurationState": {
-          "description": "Gets the configurationState of the resource.",
+          "description": "Configuration state of the resource.",
           "$ref": "./common.json#/definitions/ConfigurationState"
         },
         "provisioningState": {
-          "description": "Gets the provisioningState of the resource.",
+          "description": "Provisioning state of the resource.",
           "$ref": "./common.json#/definitions/ProvisioningState"
         },
         "administrativeState": {
-          "description": "Gets the administrativeState of the resource.",
+          "description": "Administrative state of the resource.",
           "$ref": "./common.json#/definitions/AdministrativeState"
         }
       },
-      "required": [
-        "action",
-        "routeTargets"
-      ],
-      "description": "IP Extended Community Properties define the resource properties."
+      "description": "IP Extended Community Properties defines the resource properties."
     },
     "IpExtendedCommunity": {
       "type": "object",
@@ -431,6 +427,8 @@
       "x-ms-azure-resource": true,
       "properties": {
         "properties": {
+          "type": "object",
+          "x-ms-client-flatten": true,
           "description": "IP Extended Community patchable properties.",
           "allOf": [
             {
@@ -454,9 +452,32 @@
       "type": "object",
       "description": "IP Extended Community patchable properties.",
       "properties": {
+        "ipExtendedCommunityRules": {
+          "type": "array",
+          "description": "List of IP Extended Community Rules.",
+          "items": {
+            "$ref": "#/definitions/IpExtendedCommunityRule"
+          }
+        }
+      },
+      "required": [
+        "ipExtendedCommunityRules"
+      ]
+    },
+    "IpExtendedCommunityRule": {
+      "type": "object",
+      "description": "List of IP Extended Community Rules.",
+      "properties": {
         "action": {
           "description": "Action to be taken on the configuration. Example: Permit | Deny.",
           "$ref": "./common.json#/definitions/CommunityActionTypes"
+        },
+        "sequenceNumber": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 4294967295,
+          "description": "Sequence to insert to/delete from existing route. Prefix lists are evaluated starting with the lowest sequence number and continue down the list until a match is made. Once a match is made, the permit or deny statement is applied to that network and the rest of the list is ignored."
         },
         "routeTargets": {
           "type": "array",
@@ -468,7 +489,12 @@
             "type": "string"
           }
         }
-      }
+      },
+      "required": [
+        "action",
+        "sequenceNumber",
+        "routeTargets"
+      ]
     }
   },
   "parameters": {

@@ -193,8 +193,8 @@ model AccessPointResourceProperties {
 interface AccessPoint {
   get is ArmResourceRead<AccessPointResource>;
   create is ArmResourceCreateOrUpdateAsync<AccessPointResource>;
-  // update is ArmTagsPatchSync<AccessPointResource>;
+  update is ArmTagsPatchSync<AccessPointResource>;
   delete is ArmResourceDeleteAsync<AccessPointResource>;
-  // listByResourceGroup is ArmResourceListByParent<AccessPointResource>;
-  // listBySubscription is ArmListBySubscription<AccessPointResource>;
+  listByResourceGroup is ArmResourceListByParent<AccessPointResource>;
+  listBySubscription is ArmListBySubscription<AccessPointResource>;
 }
