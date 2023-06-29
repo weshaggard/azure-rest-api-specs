@@ -17,17 +17,21 @@ using Azure.ResourceManager;
 @versioned(Versions)
 namespace Microsoft.VoiceServices;
 
-
+@doc("API Versions")
 enum Versions {
+  @doc("2022-12-01-preview")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2022_12_01_preview: "2022-12-01-preview",
 
+  @doc("2023-01-31")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_01_31: "2023-01-31",
 
+  @doc("2023-03-01-preview")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_03_01_preview: "2023-03-01-preview",
 
+  @doc("2023-04-03")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_04_03: "2023-04-03",
 }
@@ -53,7 +57,7 @@ model ResourceProperties {
 // See https://github.com/Azure/azure-rest-api-specs-pr/pull/8707#discussion_r971363996 for context
 @doc("The type used for update operations of the {name}.", TResource)
 @friendlyName("{name}Update", TResource)
-model ResourceUpdateModelNoProperties<TResource extends object>
+model ResourceUpdateModelNoProperties<TResource extends {}>
   is OptionalProperties<UpdateableProperties<OmitProperties<
     TResource,
     "Name" | "name"
@@ -77,14 +81,14 @@ interface ResourceUpdateNoProperties<TResource extends Foundations.ArmResource> 
   ): ArmResponse<TResource> | ErrorResponse;
 }
 
-// These models should be provided by the common CADL infra, but currently they are not. See GitHub PR:
-// https://github.com/Azure/cadl-azure/pull/2311
+// These models and operation should be provided by the common TypeSpec infra, but the latest version of TypeSpec
+// has a bug which gives Local Name Availability the wrong path.
+// See https://github.com/Azure/typespec-azure/issues/3222
+
 // For now, these definitions are reimplementations of the common types from:
 // https://github.com/Azure/azure-rest-api-specs-pr/blob/66dc2c9a0243bc217a938583a53da052498ac39f/specification/common-types/resource-management/v3/types.json
 
-// Ideally all of these would be marked as @added(Versions.v2022_12_02_preview) but they can't be because of
-// https://github.com/microsoft/cadl/issues/1332
-
+@added(Versions.v2023_01_31)
 @doc("The check availability request body.")
 model CheckNameAvailabilityRequest {
   @doc("The name of the resource for which availability needs to be checked.")
@@ -94,12 +98,16 @@ model CheckNameAvailabilityRequest {
   type?: string;
 }
 
+@added(Versions.v2023_01_31)
 @doc("Possible reasons for a name not being available.")
 enum CheckNameAvailabilityReason {
+  #suppress "@azure-tools/typespec-azure-core/documentation-required" "The common CheckNameAvailabilityReason does not docs for enum variants in types.json"
   Invalid,
+  #suppress "@azure-tools/typespec-azure-core/documentation-required" "The common CheckNameAvailabilityReason does not docs for enum variants in types.json"
   AlreadyExists,
 }
 
+@added(Versions.v2023_01_31)
 @doc("The check availability result.")
 model CheckNameAvailabilityResponse {
   @doc("Indicates if the resource name is available.")
@@ -110,4 +118,25 @@ model CheckNameAvailabilityResponse {
 
   @doc("Detailed reason why the given name is not available.")
   message?: string;
+}
+
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-interface-requires-decorator" "CheckNameAvailability is not supported by typespec-azure-resource-manager."
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-interface-uses-templates" "CheckNameAvailability is not supported by typespec-azure-resource-manager."
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation-missing-decorator" "CheckNameAvailability is not supported by typespec-azure-resource-manager."
+@added(Versions.v2023_01_31)
+interface NameAvailability {
+  @doc("Check whether the resource name is available in the given region.")
+  @post
+  @route("/subscriptions/{subscriptionId}/providers/Microsoft.VoiceServices/locations/{location}/checkNameAvailability")
+  checkLocal(
+    @doc("The check availability request body.")
+    @body
+    body: CheckNameAvailabilityRequest,
+
+    @doc("The location in which uniqueness will be verified.")
+    @path
+    location: string,
+    ...SubscriptionIdParameter,
+    ...ApiVersionParameter
+  ): CheckNameAvailabilityResponse | ErrorResponse;
 }

@@ -14,6 +14,9 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
 
+#suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Added and removed in preview"
+@added(Versions.v2023_03_01_preview)
+@removed(Versions.v2023_04_03)
 @doc("A OperatorVoicemailInstance resource")
 model OperatorVoicemailInstance
   is TrackedResource<OperatorVoicemailInstanceProperties> {
@@ -27,6 +30,9 @@ model OperatorVoicemailInstance
   ...ResourceSku;
 }
 
+#suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Added and removed in preview"
+@added(Versions.v2023_03_01_preview)
+@removed(Versions.v2023_04_03)
 @doc("Details of SIP trunk.")
 model OperatorVoicemailVoipConnection {
   @doc("Domain name of the peer connecting to Azure Operator Voicemail over this SIP trunk. This must match the common name of the TLS certificate presented by the peer.")
@@ -42,6 +48,9 @@ model OperatorVoicemailVoipConnection {
   allowedMediaSourceAddressPrefixes: string[];
 }
 
+#suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Added and removed in preview"
+@added(Versions.v2023_03_01_preview)
+@removed(Versions.v2023_04_03)
 @doc("Details of the OperatorVoicemailInstance resource.")
 model OperatorVoicemailInstanceProperties is ResourceProperties {
   @doc("The set of SIP trunks to be configured on this deployment")
