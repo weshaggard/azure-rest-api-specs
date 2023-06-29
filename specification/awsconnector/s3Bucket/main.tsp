@@ -13,7 +13,7 @@
   using Azure.Core;
   using Azure.ResourceManager;
   using OpenAPI;
-
+  
   #suppress "@azure-tools/typespec-azure-resource-manager/missing-operations-endpoint" "Supress missing operations endpoint as the same is defined ../operations/main.tsp."
   @armProviderNamespace
   @service({
@@ -34,32 +34,37 @@
     @segment("s3Buckets")
     name: string;
   }
-
+  
   @doc("Definition of S3Bucket")
   model S3BucketProperties extends AwsCommonProperties{
     @doc("Gets and sets the property awsProperties. ")
     awsProperties?: AwsS3BucketProperties;
-
   }
-
+  
   #suppress "@azure-tools/typespec-azure-core/casing-style" "Supress casing style as the property name is defined in aws."
   @doc("Definition of awsS3Bucket")
   model AwsS3BucketProperties {
     @doc("Gets and sets the property creationDate. <p>Date the bucket was created. This date can change when making changes to your bucket, such as editing its bucket policy.</p>")
     creationDate?: utcDateTime;
-
-    @doc("Gets and sets the property name. <p>The name of the bucket.</p>")
-    name?: string;
-
+  
+    @doc("Gets and sets the property bucketName. <p>The name of the bucket.</p>")
+    bucketName?: string;
   }
-
+  
   @armResourceOperations
   interface S3Buckets
   {
     get is ArmResourceRead<S3Bucket>;
+    @doc ("Create a S3Bucket. Please note that end user resource creation is currently restricted, but it will be enabled in the future.")
     createOrUpdate is ArmResourceCreateOrUpdateAsync<S3Bucket>;
     update is ArmTagsPatchAsync<S3Bucket, S3BucketProperties>;
+    @doc ("Delete a S3Bucket. Please note that end user resource deletion is currently restricted, but it will be enabled in the future.")
     delete is ArmResourceDeleteAsync<S3Bucket>;
     listByResourceGroup is ArmResourceListByParent<S3Bucket>;
     listBySubscription is ArmListBySubscription<S3Bucket>;
   }
+    
+  //--------------------------------------------------------------------------------------------
+  // This TypeSpec was auto genrated by aws2TypeSpec.js tool
+  //--------------------------------------------------------------------------------------------
+  
