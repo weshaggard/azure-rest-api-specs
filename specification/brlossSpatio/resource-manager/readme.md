@@ -22,10 +22,11 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the manspatio.
+These are the global settings for the BrlossSpatio RP.
 
 ```yaml
 openapi-type: arm
+openapi-subtype: rpaas
 tag: package-2023-06-27-preview
 ```
 
