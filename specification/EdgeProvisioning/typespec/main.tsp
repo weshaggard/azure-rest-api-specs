@@ -53,6 +53,7 @@ model ProvisioningResourceProperties {
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
 
+  @visibility("read")
   @doc("The provisioning service endpoints")
   deviceEndpoints?: DeviceEndpoints;
 }
@@ -63,15 +64,9 @@ model DeviceEndpoints { // TODO: follow up with DP and PM on the definition of t
 }
 
 model DeviceEndpoint {
-  //@doc("Endpoint Name")
-  //name: string;// TODO: rename to type or remove this?
-
   @doc("Description of the Endpoint")
   @visibility("read")
   description?: string;
-
-  //@doc("Endpoint Type")
-  //endpointType: string;
 
   @doc("Hostname of the Endpoint")
   @visibility("read")
@@ -91,7 +86,6 @@ model ResourceUpdatedResponse<T> is ArmResponse<T> {
     `final-state-via`: "azure-async-operation",
   }
 )
-@doc("Create a {name}", TResource)
 @armResourceCreateOrUpdate(TResource)
 @put
 op EdgeProvisioningResourceCreateOrUpdateAsync<
