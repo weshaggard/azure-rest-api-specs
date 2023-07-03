@@ -416,30 +416,25 @@
             "$ref": "#/parameters/CustomParams.resourceGroupName"
           },
           {
-            "name": "body",
+            "name": "items",
             "in": "body",
             "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ValidateEnterpriseSupportRequestItem"
-              },
-              "x-ms-identifiers": [],
-              "x-typespec-name": "ValidateEnterpriseSupportRequestItem[]"
+              "$ref": "#/definitions/ValidateEnterpriseSupportRequestItem"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
+          "default": {
+            "description": "An unexpected error response.",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ValidateEnterpriseSupportResponseItem"
-              },
-              "x-ms-identifiers": [],
-              "x-typespec-name": "ValidateEnterpriseSupportResponseItem[]"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "ValidateEnterpriseSupport": {
+            "$ref": "./examples/ProviderLevelOperations_ValidateEnterpriseSupport.json"
           }
         }
       }
@@ -619,25 +614,7 @@
       },
       "description": "The updatable properties of the EnterpriseSupports."
     },
-    "ProvisioningState": {
-      "type": "string",
-      "description": "The status of the current operation.",
-      "enum": [
-        "Succeeded",
-        "Failed",
-        "Canceled",
-        "Provisioning",
-        "Updating",
-        "Deleting",
-        "Accepted",
-        "Deleted"
-      ],
-      "x-ms-enum": {
-        "name": "ProvisioningState",
-        "modelAsString": true
-      }
-    },
-    "ValidateEnterpriseSupportRequestItem": {
+    "ItemToValidate": {
       "type": "object",
       "properties": {
         "billingAccountId": {
@@ -660,13 +637,49 @@
           "description": "The quantity for this purchase"
         }
       },
-      "description": "The request for an eligibility check.",
+      "description": "The item to be validated.",
       "required": [
         "billingAccountId",
         "billingGroupId",
         "productId",
         "skuId",
         "quantity"
+      ]
+    },
+    "ProvisioningState": {
+      "type": "string",
+      "description": "The status of the current operation.",
+      "enum": [
+        "Succeeded",
+        "Failed",
+        "Canceled",
+        "Provisioning",
+        "Updating",
+        "Deleting",
+        "Accepted",
+        "Deleted"
+      ],
+      "x-ms-enum": {
+        "name": "ProvisioningState",
+        "modelAsString": true
+      }
+    },
+    "ValidateEnterpriseSupportRequestItem": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemToValidate"
+          },
+          "x-ms-identifiers": [],
+          "x-typespec-name": "ItemToValidate[]",
+          "description": "The array of items to be validated"
+        }
+      },
+      "description": "The request for an eligibility check.",
+      "required": [
+        "items"
       ]
     },
     "ValidateEnterpriseSupportResponseItem": {
