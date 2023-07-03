@@ -420,5 +420,5 @@ interface DeviceProvisioningStates {
   delete is ArmResourceDeleteSync<DeviceProvisioningState>;
   update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
   listByParent is ArmResourceListByParent<DeviceProvisioningState>;
-  listBySubscription is ArmListBySubscription<DeviceProvisioningState>;
+  //listBySubscription is ArmListBySubscription<DeviceProvisioningState>;
 }
