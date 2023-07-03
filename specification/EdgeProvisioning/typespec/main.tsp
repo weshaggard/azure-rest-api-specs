@@ -42,8 +42,14 @@ model ProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
 @Azure.Core.lroStatus
 enum ProvisioningState {
   ...ResourceProvisioningState,
+
+  @doc("The activating state")
   Activating,
+
+  @doc("The updating state")
   Updating,
+
+  @doc("The deleting state")
   Deleting,
 }
 
@@ -60,9 +66,11 @@ model ProvisioningResourceProperties {
 
 @doc("Device endpoints.")
 model DeviceEndpoints { // TODO: follow up with DP and PM on the definition of the endpoints for ignite
+  @doc("The default endpoint")
   default: DeviceEndpoint,
 }
 
+@doc("The device endpoint")
 model DeviceEndpoint {
   @doc("Description of the Endpoint")
   @visibility("read")
@@ -77,32 +85,35 @@ model DeviceEndpoint {
 model ResourceUpdatedResponse<T> is ArmResponse<T> {
 }
 
-@autoRoute
-@doc("Create a {name}", TResource)
-@extension("x-ms-long-running-operation", true)
-@extension(
-  "x-ms-long-running-operation-options",
-  {
-    `final-state-via`: "azure-async-operation",
-  }
-)
-@armResourceCreateOrUpdate(TResource)
-@put
-op EdgeProvisioningResourceCreateOrUpdateAsync<
-  TResource extends ArmResource,
-  TBaseParameters = BaseParameters<TResource>
->(
-  ...ResourceInstanceParameters<TResource, TBaseParameters>,
+@armResourceOperations
+interface EdgeProvisioningOpeartions {
+  @autoRoute
+  @doc("Create a {name}", TResource)
+  @extension("x-ms-long-running-operation", true)
+  @extension(
+    "x-ms-long-running-operation-options",
+    {
+      `final-state-via`: "azure-async-operation",
+    }
+  )
+  @armResourceCreateOrUpdate(TResource)
+  @put
+  op EdgeProvisioningResourceCreateOrUpdateAsync<
+    TResource extends ArmResource,
+    TBaseParameters = BaseParameters<TResource>
+  >(
+    ...ResourceInstanceParameters<TResource, TBaseParameters>,
 
-  @doc("Resource create parameters.")
-  @body
-  resource: TResource,
-): ResourceUpdatedResponse<TResource> | ArmCreatedResponse<TResource> | ErrorResponse;
+    @doc("Resource create parameters.")
+    @body
+    resource: TResource,
+  ): ResourceUpdatedResponse<TResource> | ArmCreatedResponse<TResource> | ErrorResponse;
+}
 
 @armResourceOperations
 interface ProvisioningResources {
   get is ArmResourceRead<ProvisioningResource>;
-  createOrUpdate is EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningResource>;
+  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningResource>;
   delete is ArmResourceDeleteSync<ProvisioningResource>;
   update is ArmResourcePatchSync<ProvisioningResource, ProvisioningResourceProperties>;
   listByResourceGroup is ArmResourceListByParent<ProvisioningResource>;
@@ -142,7 +153,8 @@ model ProvisioningPolicyProperties {
   bootstrapAuthentication: BootstrapAuthenticationRule;
 
   @doc("Allocation rules.")
-  allocations: Array<AllocationRule>;
+  @extension("x-ms-identifiers", ["name"])
+  allocations?: Array<AllocationRule>;
 
   @doc("The device provisioning rule.")
   provisioning: ProvisioningRule;
@@ -170,7 +182,10 @@ model BootstrapAuthenticationDetails {
 
 @doc("The authentication rule for bootstrap")
 model BootstrapAuthenticationRule {
+  @doc("The type of authentication rule")
   type: BootstrapAuthenticationType;
+
+  @doc("The authentication details")
   details?: BootstrapAuthenticationDetails;
   // TODO use discriminator for properties specific to a bootstrap auth type
 }
@@ -262,7 +277,7 @@ enum AllocationType {
   Weighted,
 }
 
-// TODO x-ms-identifier to define the uniqueness constraint (i.e. name)
+@doc("The allocation rule")
 model AllocationRule {
   @doc("Name of the allocation rule")
   name: string;
@@ -274,7 +289,8 @@ model AllocationRule {
   endpointType: EndpointType;
 
   @doc("List of endpoints")
-  endpoints: Array<AllocationEndpoint>;
+  @extension("x-ms-identifiers", ["name"])
+  endpoints?: Array<AllocationEndpoint>;
 
   // Option 1: use 2 arrays- Array<allocationProperties>, Array<endpointProperties>
   // index based or something similar to allow customers to provide input for allocation & endpoint type
@@ -296,6 +312,7 @@ model DeviceIdentityInfo {
 }
 
 // TODO: Check with Krishna - Follow-up whether we want to expose this to the customer
+@doc("Certificate issuance configurations")
 model CertIssuanceRule {
   @doc("ICA name")
   ica: string; // TODO: find out who would set up this info customer or rp
@@ -304,6 +321,7 @@ model CertIssuanceRule {
   renewalInterval: int32; // TODO: findout the unit of the interval, findout if there is a default value
 }
 
+@doc("The information related to device identity")
 model IdentityInfo {
   @doc("Certificate issuance settings")
   certIssuance?: CertIssuanceRule; // For PKI
@@ -330,13 +348,14 @@ model ProvisioningRule {
   identityInfo?: IdentityInfo; 
 
   @doc("Resource metadata")
-  resourceMetadata: object; // TODO ask DP about usecase for this
+  @maxLength(200)
+  resourceMetadata?: string; // for customer to label the devices
 }
 
 @armResourceOperations
 interface ProvisioningPolicies {
   get is ArmResourceRead<ProvisioningPolicy>;
-  createOrUpdate is EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningPolicy>;
+  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningPolicy>;
   delete is ArmResourceDeleteSync<ProvisioningPolicy>;
   update is ArmResourcePatchSync<ProvisioningPolicy, ProvisioningPolicyProperties>;
   listByParent is ArmResourceListByParent<ProvisioningPolicy>;
@@ -380,6 +399,7 @@ model DeviceProvisioningStateProperties {
   provisioningPolicyResourceId?: ProvisioningPolicyResourceId;
 
   @doc("Allocation rules captured from the linked provisioningPolicyResourceId at the time of provisioning")
+  @extension("x-ms-identifiers", ["name"])
   allocations: Array<AllocationRule>;
 }
 
@@ -396,7 +416,7 @@ enum ProvisioningStatus {
 @armResourceOperations
 interface DeviceProvisioningStates {
   get is ArmResourceRead<DeviceProvisioningState>;
-  createOrUpdate is EdgeProvisioningResourceCreateOrUpdateAsync<DeviceProvisioningState>;
+  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<DeviceProvisioningState>;
   delete is ArmResourceDeleteSync<DeviceProvisioningState>;
   update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
   listByParent is ArmResourceListByParent<DeviceProvisioningState>;
