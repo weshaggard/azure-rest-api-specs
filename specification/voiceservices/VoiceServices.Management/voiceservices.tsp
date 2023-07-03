@@ -19,18 +19,6 @@ namespace Microsoft.VoiceServices;
 
 @doc("API Versions")
 enum Versions {
-  @doc("2022-12-01-preview")
-  @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-  v2022_12_01_preview: "2022-12-01-preview",
-
-  @doc("2023-01-31")
-  @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-  v2023_01_31: "2023-01-31",
-
-  @doc("2023-03-01-preview")
-  @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-  v2023_03_01_preview: "2023-03-01-preview",
-
   @doc("2023-04-03")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_04_03: "2023-04-03",
@@ -88,7 +76,6 @@ interface ResourceUpdateNoProperties<TResource extends Foundations.ArmResource> 
 // For now, these definitions are reimplementations of the common types from:
 // https://github.com/Azure/azure-rest-api-specs-pr/blob/66dc2c9a0243bc217a938583a53da052498ac39f/specification/common-types/resource-management/v3/types.json
 
-@added(Versions.v2023_01_31)
 @doc("The check availability request body.")
 model CheckNameAvailabilityRequest {
   @doc("The name of the resource for which availability needs to be checked.")
@@ -98,7 +85,6 @@ model CheckNameAvailabilityRequest {
   type?: string;
 }
 
-@added(Versions.v2023_01_31)
 @doc("Possible reasons for a name not being available.")
 enum CheckNameAvailabilityReason {
   #suppress "@azure-tools/typespec-azure-core/documentation-required" "The common CheckNameAvailabilityReason does not docs for enum variants in types.json"
@@ -107,7 +93,6 @@ enum CheckNameAvailabilityReason {
   AlreadyExists,
 }
 
-@added(Versions.v2023_01_31)
 @doc("The check availability result.")
 model CheckNameAvailabilityResponse {
   @doc("Indicates if the resource name is available.")
@@ -123,7 +108,6 @@ model CheckNameAvailabilityResponse {
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-interface-requires-decorator" "CheckNameAvailability is not supported by typespec-azure-resource-manager."
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-interface-uses-templates" "CheckNameAvailability is not supported by typespec-azure-resource-manager."
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation-missing-decorator" "CheckNameAvailability is not supported by typespec-azure-resource-manager."
-@added(Versions.v2023_01_31)
 interface NameAvailability {
   @doc("Check whether the resource name is available in the given region.")
   @post

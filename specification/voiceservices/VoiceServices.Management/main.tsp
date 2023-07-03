@@ -3,4 +3,3 @@ import "./voiceservices.tsp";
 
 // Then import the resource API definitions
 import "./communicationsgateway.tsp";
-import "./operatorvoicemail.tsp";
