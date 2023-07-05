@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Microsoft.Sovereign",
+    "title": "Cloud for Sovereignty Resource Provider.",
     "version": "2023-09-28-preview",
     "x-typespec-generated": [
       {
@@ -689,17 +689,17 @@
         "modelAsString": true,
         "values": [
           {
-            "name": "authoring",
+            "name": "Authoring",
             "value": "Authoring",
             "description": "Default status set automatically on create request. In this status the landing zone configuration can be updated."
           },
           {
-            "name": "readyForUse",
+            "name": "ReadyForUse",
             "value": "ReadyForUse",
             "description": "This status is set when the configuration changes are done and the configuration is ready for generating the landing zone code."
           },
           {
-            "name": "disabled",
+            "name": "Disabled",
             "value": "Disabled",
             "description": "This status is set when the landing zone configuration is no longer in use."
           }
@@ -739,14 +739,14 @@
     "DecommissionedMgProperties": {
       "type": "object",
       "properties": {
-        "policyInitiatives": {
+        "policyInitiativesAssignmentProperties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PolicyAssignmentDetails"
+            "$ref": "#/definitions/PolicyInitiativeAssignmentProperties"
           },
+          "x-ms-identifiers": [],
           "description": "Array of initiative assignments to be applied to the management group.",
-          "x-typespec-name": "PolicyAssignmentDetails[]",
-          "x-ms-identifiers": []
+          "x-typespec-name": "PolicyInitiativeAssignmentProperties[]"
         },
         "create": {
           "type": "boolean",
@@ -755,21 +755,21 @@
       },
       "description": "Decommissioned managemenrt group properties",
       "required": [
-        "policyInitiatives",
+        "policyInitiativesAssignmentProperties",
         "create"
       ]
     },
     "DecommissionedMgPropertiesUpdate": {
       "type": "object",
       "properties": {
-        "policyInitiatives": {
+        "policyInitiativesAssignmentProperties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PolicyAssignmentDetails"
+            "$ref": "#/definitions/PolicyInitiativeAssignmentProperties"
           },
+          "x-ms-identifiers": [],
           "description": "Array of initiative assignments to be applied to the management group.",
-          "x-typespec-name": "PolicyAssignmentDetails[]",
-          "x-ms-identifiers": []
+          "x-typespec-name": "PolicyInitiativeAssignmentProperties[]"
         },
         "create": {
           "type": "boolean",
@@ -778,37 +778,37 @@
       },
       "description": "Decommissioned managemenrt group properties"
     },
-    "Firewall": {
+    "FirewallCreationOptions": {
       "type": "string",
       "description": "The input values for creating or using an existing firewall resource.",
       "enum": [
         "None",
         "Standard",
         "Premium",
-        "Existing"
+        "UseExisting"
       ],
       "x-ms-enum": {
-        "name": "Firewall",
+        "name": "FirewallCreationOptions",
         "modelAsString": true,
         "values": [
           {
-            "name": "none",
+            "name": "None",
             "value": "None",
             "description": "Value choosen when a user does not want to create a firewall resource."
           },
           {
-            "name": "standard",
+            "name": "Standard",
             "value": "Standard",
             "description": "Value choosen when a user wants to create a firewall resource of standard SKU."
           },
           {
-            "name": "premium",
+            "name": "Premium",
             "value": "Premium",
             "description": "Value choosen when a user wants to create a firewall resource of premium SKU."
           },
           {
-            "name": "existing",
-            "value": "Existing",
+            "name": "UseExisting",
+            "value": "UseExisting",
             "description": "Value choosen when a user wants to use an existing firewall resource."
           }
         ]
@@ -817,22 +817,22 @@
     "GenerateLandingZoneRequest": {
       "type": "object",
       "properties": {
-        "outputFormat": {
-          "$ref": "#/definitions/OutputFormat",
+        "iacOutputOption": {
+          "$ref": "#/definitions/IaCOutputOptions",
           "description": "The options that code can be generated in"
         },
         "billingScopeAccountId": {
           "type": "string",
-          "description": "Billing scope account ID"
+          "description": "Billing scope account Id"
         },
         "enrollmentAccountId": {
           "type": "string",
-          "description": "Enrollment iD"
+          "description": "Enrollment Id"
         }
       },
       "description": "The request body to generate a Landing Zone.",
       "required": [
-        "outputFormat"
+        "iacOutputOption"
       ]
     },
     "GenerateLandingZoneResponse": {
@@ -859,6 +859,24 @@
         "landingZoneConfigurationName",
         "blobUrl"
       ]
+    },
+    "IaCOutputOptions": {
+      "type": "string",
+      "description": "The format in which the landing zone code can be generated.",
+      "enum": [
+        "Bicep"
+      ],
+      "x-ms-enum": {
+        "name": "IaCOutputOptions",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Bicep",
+            "value": "Bicep",
+            "description": "Value choosen when the customer wants to generate the code in bicep."
+          }
+        ]
+      }
     },
     "LandingZoneConfiguration": {
       "type": "object",
@@ -916,7 +934,7 @@
           "description": "The status for the landing zone configuration workflow.",
           "readOnly": true
         },
-        "topLevelMgParentId": {
+        "existingTopLevelMgParentId": {
           "type": "string",
           "description": "Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default, will deploy beneath tenant toot management group."
         },
@@ -941,19 +959,19 @@
           "type": "string",
           "description": "The name of the country/region or agency SLZ is being deployed for."
         },
-        "ddosProtection": {
+        "ddosProtectionCreationOption": {
           "$ref": "#/definitions/ResourceCreationOptions",
           "description": "Yes to deploy DDoS, otherwise no. To provide an existing DDoS protection plan select existing."
         },
-        "ddosProtectionId": {
+        "existingDdosProtectionId": {
           "type": "string",
           "description": "Existing ddos protection plan id."
         },
-        "logAnalyticsWorkspace": {
+        "logAnalyticsWorkspaceCreationOption": {
           "$ref": "#/definitions/ResourceCreationOptions",
           "description": "yes to deploy log Analytics workspace, otherwise no. To provide an existing log Analytics workspace select existing."
         },
-        "logAnalyticsWorkspaceId": {
+        "existingLogAnalyticsWorkspaceId": {
           "type": "string",
           "description": "The ID for the Log Analytics workspace that was created to centralize log ingest."
         },
@@ -966,28 +984,33 @@
           "description": "Array of tag objects in format of {'name':'a tag name', 'value':'a tag value'}",
           "x-typespec-name": "Tags[]"
         },
-        "firewall": {
-          "$ref": "#/definitions/Firewall",
+        "firewallCreationOption": {
+          "$ref": "#/definitions/FirewallCreationOptions",
           "description": "To deploy firewall choose the standard/premium based on the desired SKU. None for no firewall and existing to choose a pre existing one."
         },
-        "firewallId": {
+        "existingFirewallId": {
           "type": "string",
           "description": "Existing Firewall Id"
         },
-        "firewallSubnet": {
+        "firewallSubnetCidrBlock": {
           "type": "string",
           "description": "Azure firewall subnet. IPv4 CIDR block.",
           "pattern": "^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$"
         },
-        "managementSubscriptionId": {
+        "gatewaySubnetCidrBlock": {
+          "type": "string",
+          "description": "Gateway subnet. IPv4 CIDR block.",
+          "pattern": "^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$"
+        },
+        "existingManagementSubscriptionId": {
           "type": "string",
           "description": "Management subscription Id."
         },
-        "identitySubscriptionId": {
+        "existingIdentitySubscriptionId": {
           "type": "string",
           "description": "Identity subscription Id."
         },
-        "connectivitySubscriptionId": {
+        "existingConnectivitySubscriptionId": {
           "type": "string",
           "description": "Connectivity subscription Id."
         },
@@ -1002,36 +1025,20 @@
           "type": "string",
           "description": "Location to run deployment(s) from the list of Azure Regions"
         },
-        "allowedLocations": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The allowed Azure regions where resources are allowed to be deployed",
-          "x-typespec-name": "string[]"
-        },
-        "allowedConfidentialComputingLocations": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The allowed Azure regions where confidential computing resources are allowed to be deployed",
-          "x-typespec-name": "string[]"
-        },
-        "hubNetworkSubnet": {
+        "hubNetworkCidrBlock": {
           "type": "string",
-          "description": "Hub network subnet. IPv4 CIDR",
+          "description": "The address space for the VNET. IPv4 CIDR.",
           "pattern": "^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$"
         },
-        "azureBastion": {
+        "azureBastionCreationOption": {
           "$ref": "#/definitions/ResourceCreationOptions",
           "description": "To deploy the Bastion service choose the yes, no otherwise. For existing bastion service existing."
         },
-        "azureBastionId": {
+        "existingAzureBastionId": {
           "type": "string",
           "description": "Existing azure bastion Id."
         },
-        "azureBastionSubnet": {
+        "azureBastionSubnetCidrBlock": {
           "type": "string",
           "description": "Azure Bastion subnet. IP v4 CIDR block",
           "pattern": "^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$"
@@ -1045,35 +1052,35 @@
           "description": "landing zone management group properties",
           "x-typespec-name": "LandingZoneMgProperties[]"
         },
-        "topLevelMg": {
-          "$ref": "#/definitions/MgPolicyDetails",
+        "topLevelMgMetadata": {
+          "$ref": "#/definitions/MgProperties",
           "description": "This will be applied to the deployment root of the landing zone"
         },
-        "landingZonesMg": {
-          "$ref": "#/definitions/MgPolicyDetails",
+        "landingZonesMgMetadata": {
+          "$ref": "#/definitions/MgProperties",
           "description": "This will be applied to the landing zones management group"
         },
-        "platformMg": {
-          "$ref": "#/definitions/MgPolicyDetails",
+        "platformMgMetadata": {
+          "$ref": "#/definitions/MgProperties",
           "description": "This will be applied to the platform management group"
         },
-        "platformManagementMg": {
-          "$ref": "#/definitions/MgPolicyDetails",
+        "platformManagementMgMetadata": {
+          "$ref": "#/definitions/MgProperties",
           "description": "This will be applied to the Management management group under Platform"
         },
-        "platformConnectivityMg": {
-          "$ref": "#/definitions/MgPolicyDetails",
+        "platformConnectivityMgMetadata": {
+          "$ref": "#/definitions/MgProperties",
           "description": "This will be applied to the connectivity management group under Platform"
         },
-        "platformIdentityMg": {
-          "$ref": "#/definitions/MgPolicyDetails",
+        "platformIdentityMgMetadata": {
+          "$ref": "#/definitions/MgProperties",
           "description": "This will be applied to the identity management group under Platform"
         },
-        "decommissionedMg": {
+        "decommissionedMgMetadata": {
           "$ref": "#/definitions/DecommissionedMgProperties",
           "description": "This will be applied to the decommissioned management group."
         },
-        "sandboxMg": {
+        "sandboxMgMetadata": {
           "$ref": "#/definitions/SandboxMgProperties",
           "description": "This will be applied to the sandbox management group."
         }
@@ -1083,15 +1090,13 @@
         "deploymentPrefix",
         "topLevelMgDisplayName",
         "organization",
-        "ddosProtection",
-        "logAnalyticsWorkspace",
-        "firewall",
+        "ddosProtectionCreationOption",
+        "logAnalyticsWorkspaceCreationOption",
+        "firewallCreationOption",
         "logRetentionInDays",
         "deploymentLocation",
-        "allowedLocations",
-        "allowedConfidentialComputingLocations",
-        "hubNetworkSubnet",
-        "azureBastion"
+        "hubNetworkCidrBlock",
+        "azureBastionCreationOption"
       ]
     },
     "LandingZoneConfigurationUpdate": {
@@ -1107,7 +1112,7 @@
     "LandingZoneConfigurationUpdateProperties": {
       "type": "object",
       "properties": {
-        "topLevelMgParentId": {
+        "existingTopLevelMgParentId": {
           "type": "string",
           "description": "Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default, will deploy beneath tenant toot management group."
         },
@@ -1132,19 +1137,19 @@
           "type": "string",
           "description": "The name of the country/region or agency SLZ is being deployed for."
         },
-        "ddosProtection": {
+        "ddosProtectionCreationOption": {
           "$ref": "#/definitions/ResourceCreationOptions",
           "description": "Yes to deploy DDoS, otherwise no. To provide an existing DDoS protection plan select existing."
         },
-        "ddosProtectionId": {
+        "existingDdosProtectionId": {
           "type": "string",
           "description": "Existing ddos protection plan id."
         },
-        "logAnalyticsWorkspace": {
+        "logAnalyticsWorkspaceCreationOption": {
           "$ref": "#/definitions/ResourceCreationOptions",
           "description": "yes to deploy log Analytics workspace, otherwise no. To provide an existing log Analytics workspace select existing."
         },
-        "logAnalyticsWorkspaceId": {
+        "existingLogAnalyticsWorkspaceId": {
           "type": "string",
           "description": "The ID for the Log Analytics workspace that was created to centralize log ingest."
         },
@@ -1157,28 +1162,33 @@
           "description": "Array of tag objects in format of {'name':'a tag name', 'value':'a tag value'}",
           "x-typespec-name": "Tags[]"
         },
-        "firewall": {
-          "$ref": "#/definitions/Firewall",
+        "firewallCreationOption": {
+          "$ref": "#/definitions/FirewallCreationOptions",
           "description": "To deploy firewall choose the standard/premium based on the desired SKU. None for no firewall and existing to choose a pre existing one."
         },
-        "firewallId": {
+        "existingFirewallId": {
           "type": "string",
           "description": "Existing Firewall Id"
         },
-        "firewallSubnet": {
+        "firewallSubnetCidrBlock": {
           "type": "string",
           "description": "Azure firewall subnet. IPv4 CIDR block.",
           "pattern": "^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$"
         },
-        "managementSubscriptionId": {
+        "gatewaySubnetCidrBlock": {
+          "type": "string",
+          "description": "Gateway subnet. IPv4 CIDR block.",
+          "pattern": "^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$"
+        },
+        "existingManagementSubscriptionId": {
           "type": "string",
           "description": "Management subscription Id."
         },
-        "identitySubscriptionId": {
+        "existingIdentitySubscriptionId": {
           "type": "string",
           "description": "Identity subscription Id."
         },
-        "connectivitySubscriptionId": {
+        "existingConnectivitySubscriptionId": {
           "type": "string",
           "description": "Connectivity subscription Id."
         },
@@ -1193,36 +1203,20 @@
           "type": "string",
           "description": "Location to run deployment(s) from the list of Azure Regions"
         },
-        "allowedLocations": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The allowed Azure regions where resources are allowed to be deployed",
-          "x-typespec-name": "string[]"
-        },
-        "allowedConfidentialComputingLocations": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The allowed Azure regions where confidential computing resources are allowed to be deployed",
-          "x-typespec-name": "string[]"
-        },
-        "hubNetworkSubnet": {
+        "hubNetworkCidrBlock": {
           "type": "string",
-          "description": "Hub network subnet. IPv4 CIDR",
+          "description": "The address space for the VNET. IPv4 CIDR.",
           "pattern": "^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$"
         },
-        "azureBastion": {
+        "azureBastionCreationOption": {
           "$ref": "#/definitions/ResourceCreationOptions",
           "description": "To deploy the Bastion service choose the yes, no otherwise. For existing bastion service existing."
         },
-        "azureBastionId": {
+        "existingAzureBastionId": {
           "type": "string",
           "description": "Existing azure bastion Id."
         },
-        "azureBastionSubnet": {
+        "azureBastionSubnetCidrBlock": {
           "type": "string",
           "description": "Azure Bastion subnet. IP v4 CIDR block",
           "pattern": "^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$"
@@ -1236,35 +1230,35 @@
           "description": "landing zone management group properties",
           "x-typespec-name": "LandingZoneMgProperties[]"
         },
-        "topLevelMg": {
-          "$ref": "#/definitions/MgPolicyDetailsUpdate",
+        "topLevelMgMetadata": {
+          "$ref": "#/definitions/MgPropertiesUpdate",
           "description": "This will be applied to the deployment root of the landing zone"
         },
-        "landingZonesMg": {
-          "$ref": "#/definitions/MgPolicyDetailsUpdate",
+        "landingZonesMgMetadata": {
+          "$ref": "#/definitions/MgPropertiesUpdate",
           "description": "This will be applied to the landing zones management group"
         },
-        "platformMg": {
-          "$ref": "#/definitions/MgPolicyDetailsUpdate",
+        "platformMgMetadata": {
+          "$ref": "#/definitions/MgPropertiesUpdate",
           "description": "This will be applied to the platform management group"
         },
-        "platformManagementMg": {
-          "$ref": "#/definitions/MgPolicyDetailsUpdate",
+        "platformManagementMgMetadata": {
+          "$ref": "#/definitions/MgPropertiesUpdate",
           "description": "This will be applied to the Management management group under Platform"
         },
-        "platformConnectivityMg": {
-          "$ref": "#/definitions/MgPolicyDetailsUpdate",
+        "platformConnectivityMgMetadata": {
+          "$ref": "#/definitions/MgPropertiesUpdate",
           "description": "This will be applied to the connectivity management group under Platform"
         },
-        "platformIdentityMg": {
-          "$ref": "#/definitions/MgPolicyDetailsUpdate",
+        "platformIdentityMgMetadata": {
+          "$ref": "#/definitions/MgPropertiesUpdate",
           "description": "This will be applied to the identity management group under Platform"
         },
-        "decommissionedMg": {
+        "decommissionedMgMetadata": {
           "$ref": "#/definitions/DecommissionedMgPropertiesUpdate",
           "description": "This will be applied to the decommissioned management group."
         },
-        "sandboxMg": {
+        "sandboxMgMetadata": {
           "$ref": "#/definitions/SandboxMgPropertiesUpdate",
           "description": "This will be applied to the sandbox management group."
         }
@@ -1274,14 +1268,14 @@
     "LandingZoneMgProperties": {
       "type": "object",
       "properties": {
-        "policyInitiatives": {
+        "policyInitiativesAssignmentProperties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PolicyAssignmentDetails"
+            "$ref": "#/definitions/PolicyInitiativeAssignmentProperties"
           },
+          "x-ms-identifiers": [],
           "description": "Array of initiative assignments to be applied to the management group.",
-          "x-typespec-name": "PolicyAssignmentDetails[]",
-          "x-ms-identifiers": []
+          "x-typespec-name": "PolicyInitiativeAssignmentProperties[]"
         },
         "name": {
           "type": "string",
@@ -1298,7 +1292,7 @@
       },
       "description": "Landing zone management group properties",
       "required": [
-        "policyInitiatives",
+        "policyInitiativesAssignmentProperties",
         "name",
         "isConfidential",
         "isVisibleToInternet"
@@ -1355,19 +1349,17 @@
           "description": "The status of a user-initiated, control-plane operation on the landing zone registration resource type.",
           "readOnly": true
         },
-        "landingZoneConfigurationId": {
+        "topLevelMgId": {
           "type": "string",
-          "description": "The associated landing zone configuration resource.",
+          "description": "The top level management group id.",
           "x-ms-mutability": [
             "read",
             "create"
           ]
         },
-        "topLevelMgId": {
+        "landingZoneConfigurationId": {
           "type": "string",
-          "description": "The top level management group id.",
-          "minLength": 4,
-          "maxLength": 10,
+          "description": "The associated landing zone configuration resource.",
           "x-ms-mutability": [
             "read",
             "create"
@@ -1376,8 +1368,8 @@
       },
       "description": "The properties of landing zone registration resource type.",
       "required": [
-        "landingZoneConfigurationId",
-        "topLevelMgId"
+        "topLevelMgId",
+        "landingZoneConfigurationId"
       ]
     },
     "LandingZoneRegistrationUpdate": {
@@ -1385,65 +1377,47 @@
       "properties": {},
       "description": "The type used for update operations of the LandingZoneRegistration."
     },
-    "MgPolicyDetails": {
+    "MgProperties": {
       "type": "object",
       "properties": {
-        "policyInitiatives": {
+        "policyInitiativesAssignmentProperties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PolicyAssignmentDetails"
+            "$ref": "#/definitions/PolicyInitiativeAssignmentProperties"
           },
+          "x-ms-identifiers": [],
           "description": "Array of initiative assignments to be applied to the management group.",
-          "x-typespec-name": "PolicyAssignmentDetails[]",
-          "x-ms-identifiers": []
+          "x-typespec-name": "PolicyInitiativeAssignmentProperties[]"
         }
       },
       "description": "Details of policy and initiatives associated with the management group.",
       "required": [
-        "policyInitiatives"
+        "policyInitiativesAssignmentProperties"
       ]
     },
-    "MgPolicyDetailsUpdate": {
+    "MgPropertiesUpdate": {
       "type": "object",
       "properties": {
-        "policyInitiatives": {
+        "policyInitiativesAssignmentProperties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PolicyAssignmentDetails"
+            "$ref": "#/definitions/PolicyInitiativeAssignmentProperties"
           },
+          "x-ms-identifiers": [],
           "description": "Array of initiative assignments to be applied to the management group.",
-          "x-typespec-name": "PolicyAssignmentDetails[]",
-          "x-ms-identifiers": []
+          "x-typespec-name": "PolicyInitiativeAssignmentProperties[]"
         }
       },
       "description": "Details of policy and initiatives associated with the management group."
     },
-    "OutputFormat": {
-      "type": "string",
-      "description": "The format in which the landing zone code can be generated.",
-      "enum": [
-        "Bicep"
-      ],
-      "x-ms-enum": {
-        "name": "OutputFormat",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "bicep",
-            "value": "Bicep",
-            "description": "Value choosen when the customer wants to generate the code in bicep."
-          }
-        ]
-      }
-    },
-    "PolicyAssignmentDetails": {
+    "PolicyInitiativeAssignmentProperties": {
       "type": "object",
       "properties": {
-        "id": {
+        "policyInitiativeId": {
           "type": "string",
-          "description": "The id of the policy or initiatives."
+          "description": "The id of the policy initiatives."
         },
-        "parameters": {
+        "assignmentParameters": {
           "type": "object",
           "additionalProperties": true,
           "description": "The parameters for the policy or initiatives.",
@@ -1452,8 +1426,8 @@
       },
       "description": "Details of policy assignments",
       "required": [
-        "id",
-        "parameters"
+        "policyInitiativeId",
+        "assignmentParameters"
       ]
     },
     "ResourceCreationOptions": {
@@ -1462,25 +1436,25 @@
       "enum": [
         "Yes",
         "No",
-        "Existing"
+        "UseExisting"
       ],
       "x-ms-enum": {
         "name": "ResourceCreationOptions",
         "modelAsString": true,
         "values": [
           {
-            "name": "yes",
+            "name": "Yes",
             "value": "Yes",
             "description": "This option indicates that a new resource should be created."
           },
           {
-            "name": "no",
+            "name": "No",
             "value": "No",
             "description": "This option indicates that a new resource should not be created."
           },
           {
-            "name": "existing",
-            "value": "Existing",
+            "name": "UseExisting",
+            "value": "UseExisting",
             "description": "This option indicates that an existing resource should be used."
           }
         ]
@@ -1489,44 +1463,44 @@
     "SandboxMgProperties": {
       "type": "object",
       "properties": {
-        "policyInitiatives": {
+        "policyInitiativesAssignmentProperties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PolicyAssignmentDetails"
+            "$ref": "#/definitions/PolicyInitiativeAssignmentProperties"
           },
+          "x-ms-identifiers": [],
           "description": "Array of initiative assignments to be applied to the management group.",
-          "x-typespec-name": "PolicyAssignmentDetails[]",
-          "x-ms-identifiers": []
+          "x-typespec-name": "PolicyInitiativeAssignmentProperties[]"
         },
         "create": {
           "type": "boolean",
-          "description": "when set to false this MG is not created"
+          "description": "When set to false this management group is not created."
         }
       },
-      "description": "sandbox management group properties",
+      "description": "Sandbox management group properties",
       "required": [
-        "policyInitiatives",
+        "policyInitiativesAssignmentProperties",
         "create"
       ]
     },
     "SandboxMgPropertiesUpdate": {
       "type": "object",
       "properties": {
-        "policyInitiatives": {
+        "policyInitiativesAssignmentProperties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PolicyAssignmentDetails"
+            "$ref": "#/definitions/PolicyInitiativeAssignmentProperties"
           },
+          "x-ms-identifiers": [],
           "description": "Array of initiative assignments to be applied to the management group.",
-          "x-typespec-name": "PolicyAssignmentDetails[]",
-          "x-ms-identifiers": []
+          "x-typespec-name": "PolicyInitiativeAssignmentProperties[]"
         },
         "create": {
           "type": "boolean",
-          "description": "when set to false this MG is not created"
+          "description": "When set to false this management group is not created."
         }
       },
-      "description": "sandbox management group properties"
+      "description": "Sandbox management group properties"
     },
     "SetAuthoringStatusRequest": {
       "type": "object",
@@ -1561,18 +1535,24 @@
     },
     "Versions": {
       "type": "string",
-      "description": "The versions of the Microsoft Sovereign resource provider",
+      "description": "The Microsoft Sovereign Provider version.",
       "enum": [
-        "2023-09-28-preview"
+        "2023-09-28-preview",
+        "2024-03-29"
       ],
       "x-ms-enum": {
         "name": "Versions",
         "modelAsString": true,
         "values": [
           {
-            "name": "v2023_09_28_preview",
+            "name": "Preview20230928",
             "value": "2023-09-28-preview",
-            "description": "Initial preview version of the Microsoft.Sovereign resource provider"
+            "description": "Preview version."
+          },
+          {
+            "name": "GA20240329",
+            "value": "2024-03-29",
+            "description": "General availability version."
           }
         ]
       }

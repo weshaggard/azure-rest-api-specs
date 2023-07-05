@@ -8,13 +8,11 @@ model LandingZoneRegistrationProperties {
 	@doc("The status of a user-initiated, control-plane operation on the landing zone registration resource type.")
 	provisioningState?: ResourceProvisioningState;
 
+	@doc("The top level management group id.")
+	@visibility("read", "create")
+	topLevelMgId: string;
+
 	@doc("The associated landing zone configuration resource.")
 	@visibility("read", "create")
 	landingZoneConfigurationId: string;
-
-	@doc("The top level management group id.")
-	@minLength(4)
-	@maxLength(10)
-	@visibility("read", "create")
-	topLevelMgId: string;
 }
