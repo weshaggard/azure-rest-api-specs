@@ -983,7 +983,7 @@
         }
       }
     },
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/provisionedClustersMetadata/default/vmSkus": {
+    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/provisionedClustersMetadata/default/skus": {
       "post": {
         "operationId": "ClusterMetadata_ListVMSkus",
         "x-ms-examples": {
@@ -2217,7 +2217,8 @@
       "properties": {
         "version":{
           "type": "string",
-          "description": "major.minor version of Kubernetes release"
+          "description": "major.minor version of Kubernetes release",
+          "readOnly": true
         },
         "capabilities":{
           "$ref":"#/definitions/KubernetesVersionCapabilities",
@@ -2225,7 +2226,8 @@
         },
         "isPreview": {
           "type": "string",
-          "description": "WHether this version is in preview mode"
+          "description": "WHether this version is in preview mode",
+          "readOnly": true
         },
         "patchVersions": {
           "type": "object",
@@ -2283,28 +2285,13 @@
       "type": "object",
       "description": "The list of supported VM SKUs.",
       "properties": {
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Id"
-        },
-        "name": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Name"
-        },
-        "type": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Type"
-        },
-        "vmSkuProfile":{
+        "values":{
           "type": "array",
-          "readOnly": true,
-          "description": "Supported VM SKUs.",
-          "items": {
-            "$ref": "#/definitions/VmSkuProfile"
-          }
+          "description": "Array of HybridAKS Support VM Skus",
+          "items":{
+            "$ref":"#/definitions/vmSkuProfile"
+          },
+          "x-ms-identifiers": []
         }
       }
     },
@@ -2312,51 +2299,54 @@
       "type": "object",
       "description": "The profile for support vm skus",
       "properties":{
-        "VmName": {
-          "type": "integer",
-          "format": "int32",
-          "readOnly": true,
-          "description": "Name of the vm sku shape like Standard_D4_v2"
+        "resourceType": {
+          "type": "string",
+          "description": "The resoruce type of the vm",
+          "readOnly": true
         },
-        "CpuCount": {
-          "type": "integer",
-          "format": "int32",
-          "readOnly": true,
-          "description": "Number of cpus available in the VM"
+        "location": {
+          "type": "string",
+          "description": "The extended location name",
+          "readOnly": true
         },
-        "MemoryMb": {
-          "type": "integer",
-          "format": "int32",
-          "readOnly": true,
-          "description": "Memory Size of the VM in mb"
+        "capabilities":{
+          "type": "array",
+          "readonly": true,
+          "description": "A name value pair to describe the specific vm's capability",
+          "items":{
+            "$ref": "#/definitions/VmSkuCapabilities"
+          },
+          "x-ms-identifiers": []
         },
-        "DiskSizeGib": {
-          "type": "integer",
-          "format": "int32",
-          "readOnly": true,
-          "description": "DiskSize of the VM in Gib"
-        },
-        "GpuCount": {
-          "type": "integer",
-          "format": "int32",
-          "readOnly": true,
-          "description": "Number of attached GPU to the VM"
-        },
-        "GpuName": {
+        "name":{
           "type": "string",
           "readOnly": true,
-          "description": "Name of the GPU shape like NVIDIA Tesla M60"
+          "description": "The name of the VM Family"
         },
-        "GpuAssignMode": {
-          "type": "integer",
-          "format": "int32",
-          "readOnly": true,
-          "description": "assignemnt type of GPU"
-        },
-        "Provider": {
+        "tier":{
           "type": "string",
           "readOnly": true,
-          "description": "The underlying provider"
+          "description": "The tier of the VM Family"
+        },
+        "size":{
+          "type": "string",
+          "readOnly": true,
+          "description": "The size of the VM Family"
+        }
+      }
+    },
+    "VmSkuCapabilities":{
+      "description": "describes the vm sku capabilities object",
+      "properties":{
+        "name":{
+          "type": "string",
+          "readOnly": true,
+          "description": "An invriant to describe the feature"
+        },
+        "value":{
+          "type": "string",
+          "readOnly": true,
+          "description": "An invariant if the feature is measured by quantity"
         }
       }
     },
