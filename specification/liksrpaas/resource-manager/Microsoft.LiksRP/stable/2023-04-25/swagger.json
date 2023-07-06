@@ -281,6 +281,59 @@
           },
           "description": "Resource tags"
         },
+        "identity": {
+          "type": "object",
+          "properties": {
+            "principalId": {
+              "readOnly": true,
+              "type": "string",
+              "description": "The principal id of the Batch account. This property will only be provided for a system assigned identity."
+            },
+            "tenantId": {
+              "readOnly": true,
+              "type": "string",
+              "description": "The tenant id associated with the Batch account. This property will only be provided for a system assigned identity."
+            },
+            "type": {
+              "type": "string",
+              "description": "The type of identity used for the Batch account.",
+              "enum": [
+                "SystemAssigned",
+                "UserAssigned",
+                "None"
+              ],
+              "x-ms-enum": {
+                "name": "ResourceIdentityType",
+                "modelAsString": false,
+                "values": [
+                  {
+                    "value": "SystemAssigned",
+                    "description": "Batch account has a system assigned identity with it."
+                  },
+                  {
+                    "value": "UserAssigned",
+                    "description": "Batch account has user assigned identities with it."
+                  },
+                  {
+                    "value": "None",
+                    "description": "Batch account has no identity associated with it. Setting `None` in update account will remove existing identities."
+                  }
+                ]
+              }
+            },
+            "userAssignedIdentities": {
+              "type": "object",
+              "description": "The list of user identities associated with the Batch account.",
+              "additionalProperties": {
+                "$ref": "#/definitions/UserAssignedIdentities"
+              }
+            }
+          },
+          "description": "The identity of the Batch account, if configured. This is used when the user specifies 'Microsoft.KeyVault' as their Batch account encryption configuration or when `ManagedIdentity` is selected as the auto-storage authentication mode.",
+          "required": [
+            "type"
+          ]
+        },
         "extendedLocation": {
           "type": "object",
           "properties": {
@@ -299,6 +352,22 @@
         "location"
       ],
       "description": "The poppopret resource definition."
+    },
+    "UserAssignedIdentities": {
+      "type": "object",
+      "description": "The list of associated user identities.",
+      "properties": {
+        "principalId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The principal id of user assigned identity."
+        },
+        "clientId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The client id of user assigned identity."
+        }
+      }
     },
     "poppopretPatch": {
       "type": "object",
