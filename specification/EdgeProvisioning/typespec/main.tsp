@@ -125,7 +125,7 @@ interface ProvisioningResources {
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 @doc("A provisioning policy resource")
 @parentResource(ProvisioningResource)
-model ProvisioningPolicy is ProxyResource<ProvisioningPolicyProperties> {
+model ProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
   @doc("The name of the employee")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("provisioningPolicyName")
@@ -420,5 +420,5 @@ interface DeviceProvisioningStates {
   delete is ArmResourceDeleteSync<DeviceProvisioningState>;
   update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
   listByParent is ArmResourceListByParent<DeviceProvisioningState>;
-  //listBySubscription is ArmListBySubscription<DeviceProvisioningState>;
+  listBySubscription is ArmListBySubscription<DeviceProvisioningState>;
 }
