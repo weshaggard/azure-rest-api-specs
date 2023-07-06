@@ -26,7 +26,7 @@ title: EdgeMarketPlaceClient
 description: Edge marketplace extensions
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-preview-2023-06
+tag: package-2023-09
 ```
 
 ## Suppression
@@ -51,7 +51,20 @@ directive:
     reason: Microsoft.AzureStackHCI is the correct name for our RP.
 ```
 
+### Tag: package-2023-09
 
+These settings apply only when `--tag=package-2023-09` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-09'
+input-file:
+  - Microsoft.AzureStackHCI/preview/2023-09-01/galleryImages.json
+  - Microsoft.AzureStackHCI/preview/2023-09-01/marketplaceGalleryImages.json
+  - Microsoft.AzureStackHCI/preview/2023-09-01/networkInterfaces.json
+  - Microsoft.AzureStackHCI/preview/2023-09-01/storageContainers.json
+  - Microsoft.AzureStackHCI/preview/2023-09-01/virtualHardDisks.json
+  - Microsoft.AzureStackHCI/preview/2023-09-01/virtualMachineInstances.json
+  - Microsoft.AzureStackHCI/preview/2023-09-01/virtualNetworks.json
+```
 ### Tag: package-preview-2023-06
 
 These settings apply only when `--tag=package-preview-2023-06` is specified on the command line.
