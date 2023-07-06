@@ -2201,74 +2201,82 @@
       "type": "object",
       "description": "The list of versions for supported kubernetes versions.",
       "properties": {
-        "KubernetesVersion": {
+        "values": {
           "type": "array",
-          "description": "Profile of the kubernetes verions",
+          "description": "Array of HybridAKS Supported Kubernetes Versions",
           "items": {
             "$ref": "#/definitions/KuberneteVersionProfile"
           },
           "x-ms-identifiers": []
-        },
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Id"
-        },
-        "name": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Name"
-        },
-        "type": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Type"
         }
       }
     },
     "KuberneteVersionProfile": {
       "type": "object",
-      "description": "The profile of a kubernetes version and its available versions.",
+      "description": "Kubernetes version profile for given major.minor release",
       "properties": {
-        "isPreview": {
-          "type": "boolean",
-          "readOnly": true,
-          "description": "Whether kubernetes version is currently in preview."
-        },
-        "default": {
-          "type": "boolean",
-          "readOnly": true,
-          "description": "Installed by default if version is not specified."
-        },
-        "kubernetesVersion": {
+        "version":{
           "type": "string",
-          "readOnly": true,
-          "description": "Kubernetes version major.minor.patch, for example 1.22.11"
+          "description": "major.minor version of Kubernetes release"
         },
-        "upgrades": {
-          "type": "array",
-          "description": "The list of available upgrade versions.",
-          "items": {
-            "$ref": "#/definitions/KubernetesProfile"
+        "capabilities":{
+          "$ref":"#/definitions/KubernetesVersionCapabilities",
+          "description": "Capabilities on this kubernetes version"
+        },
+        "isPreview": {
+          "type": "string",
+          "description": "WHether this version is in preview mode"
+        },
+        "patchVersions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/KubernetesPatchVersions"
           },
-          "x-ms-identifiers": []
+          "description": "Patch versions of a Kubernetes release"
         }
       }
     },
-    "KubernetesProfile": {
+    "KubernetesVersionCapabilities":{
       "type": "object",
-      "description": "Contains information about kubernetes.",
+      "description0": "Capabilities on this kubernetes version",
       "properties": {
-        "isPreview": {
-          "type": "boolean",
-          "readOnly": true,
-          "description": "Whether kubernetes version is currently in preview."
-        },
-        "kubernetesVersion": {
-          "type": "string",
-          "readOnly": true,
-          "description": "kubernetes version major.minor.patch, for example 1.22.11"
+        "supportPlan":{
+          "type": "array",
+          "x-ms-identifiers":[],
+          "items":{
+            "$ref": "#/definitions/KubernetesSupportPlan"
+          }
         }
+      }
+    },
+    "KubernetesPatchVersions":{
+      "type": "object",
+      "description": "Kubernetes Patch Version profile",
+      "properties": {
+        "upgrades":{
+          "type": "array",
+          "description": "Possible upgrade path for given patch version",
+          "x-ms-identifiers":[],
+          "items":{
+            "type":"string"
+          }
+        }
+      }
+    },
+    "KubernetesSupportPlan":{
+      "type": "string",
+      "description": "Different support tiers for AKS managed clusters",
+      "enum": [
+        "KubernetesOfficial"
+      ],
+      "x-ms-enum":{
+        "name": "KubernetesSupportPlan",
+        "values": [
+          {
+            "value": "KubernetesOfficial",
+            "description": "Support for the version is the same as for the open source Kubernetes offering. Official Kubernetes open source community support versions for 1 year after release."
+          }
+        ]
       }
     },
     "VmSkuProfileListResult": {
@@ -2474,18 +2482,6 @@
         "provisioningState":{
           "type": "string",
           "readOnly": true
-        },
-        "id":{
-          "type": "string",
-          "description": "The arm resource id for the Provisioned clusters metadata response"
-        },
-        "name": {
-          "type": "string",
-          "description": "The name of the provisioned clusters metadata response0"
-        },
-        "type": {
-          "type": "string",
-          "description": "The resource type for provisioend cluster metadata"
         }
       }
     }
