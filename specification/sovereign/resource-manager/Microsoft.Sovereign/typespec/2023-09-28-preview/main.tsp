@@ -60,9 +60,10 @@ interface LandingZonesConfigurations
 	@doc("Provides a mechanism to update the authoring status.")
 	@added(Versions.Preview20230928)
 	@armResourceAction(LandingZoneConfiguration)
-	setAuthoringStatus is ArmResourceActionNoContentSync<
+	setAuthoringStatus is ArmResourceActionSync<
 		LandingZoneConfiguration,
-		SetAuthoringStatusRequest
+		SetAuthoringStatusRequest,
+		SetAuthoringStatusResponse
 	>;
 }
 
