@@ -13,13 +13,13 @@ using Autorest;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 
-@armProviderNamespace("Microsoft.EdgeProvisioning")
+@armProviderNamespace("Microsoft.EdgeTest")
 @service({
-  title: "Microsoft.EdgeProvisioning",
-  version: "2023-12-01-preview",
+  title: "Microsoft.EdgeTest",
+  version: "2021-08-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.EdgeProvisioning;
+namespace Microsoft.EdgeTest;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
