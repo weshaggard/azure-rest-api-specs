@@ -2,7 +2,7 @@
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for [[Provisioning Policy Provider]].
+This is the AutoRest configuration file for [[Edge Test Provider]].
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the [[Provisioning Policy Provider]].
+These are the global settings for the [[Edge Test Provider]].
 
 ```yaml
 openapi-type: [[OpenApiType]]
