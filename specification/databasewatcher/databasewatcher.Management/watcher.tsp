@@ -41,6 +41,7 @@ model WatcherProperties {
   datastore?: Datastore;
 
   @doc("The monitoring collection status of the watcher.")
+  @visibility("read")
   status?: WatcherStatus;
 
   @visibility("read")
@@ -109,8 +110,11 @@ model Target is ProxyResource<TargetProperties> {
 
 @doc("The monitoring collection status of the watcher.")
 enum WatcherStatus {
+  Starting,
   Running,
+  Stopping,
   Stopped,
+  Deleting,
 }
 
 @doc("The status of the last provisioning operation performed on the resource.")
