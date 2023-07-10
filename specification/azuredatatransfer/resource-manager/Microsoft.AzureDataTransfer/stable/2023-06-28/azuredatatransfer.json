@@ -1243,6 +1243,72 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureDataTransfer/pipelines/{pipelineName}/generateSchemas": {
+      "post": {
+        "description": "Generates the schemas for the specified connection in a pipeline.",
+        "x-ms-examples": {
+          "Approves the specified connection in a pipeline": {
+            "$ref": "examples/generateSchemas.json"
+          }
+        },
+        "operationId": "Pipelines_GenerateSchemas",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/pipelineNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "schema",
+            "description": "Schema(s) to retrieve",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Approves a connection.",
+            "schema": {
+              "description": "The schemas for this connection",
+              "$ref": "#/definitions/schemasListResult"
+            }
+          },
+          "202": {
+            "description": "Approves a connection.",
+            "headers": {
+              "location": {
+                "description": "Location response header",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "description": "The schemas for this connection",
+              "$ref": "#/definitions/schemasListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureDataTransfer/pipelines": {
       "get": {
         "description": "Gets pipelines in a resource group.",
@@ -1480,6 +1546,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "schema": {
+          "$ref": "#/definitions/schema",
+          "description": "The selected schema for this flow"
         }
       },
       "description": "Properties of flow"
@@ -1684,12 +1754,8 @@
           }
         },
         "schemas": {
-          "type": "array",
-          "description": "The XSD schemas for this connection",
-          "items": {
-            "type": "string",
-            "format": "byte"
-          }
+          "description": "The schemas for this connection",
+          "$ref": "#/definitions/schemas"
         }
       },
       "required": [
@@ -2043,6 +2109,36 @@
         }
       }
     },
+    "schemas": {
+      "type": "array",
+      "description": "The schemas for this connection",
+      "items": {
+        "$ref": "#/definitions/schema"
+      }
+    },
+    "schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the schema"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the schema"
+        }
+      }
+    },
+    "schemasListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Schemas array.",
+          "$ref": "#/definitions/schemas"
+        }
+      },
+      "description": "The schemas list result."
+    },
     "flowTypes": {
       "type": "array",
       "description": "The flow types that are allowed for this resource",
@@ -2082,6 +2178,23 @@
         "id"
       ],
       "description": "The resource to reference."
+    },
+    "schemaRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "ID of the resource."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the schema to retrieve"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "description": "The schema request object."
     }
   },
   "parameters": {
