@@ -34,7 +34,6 @@ enum ProvisioningState {
   Updating,
   Deleting,
   Accepted,
-  RollingBack,
 }
 
 @subscriptionResource
@@ -59,7 +58,7 @@ model DeploymentProperties {
   @visibility("read")
   @extension("x-ms-identifiers", [])
   @doc("The deployment status history")
-  statusHistory: DeploymentStatus[];
+  statusHistory?: DeploymentStatus[];
 }
 
 @doc("Deployment status")
@@ -80,13 +79,32 @@ enum DeploymentStatusLevel {
   Error,
 }
 
-@doc("Rollback parameters")
-model RollbackParameters {
+@armResourceOperations
+interface Deployments extends ProxyResourceOperations<Deployment> {
+}
+
+@doc("A rollback of a deployment")
+@parentResource(Deployment)
+model DeploymentRollback is ProxyResource<DeploymentRollbackProperties> {
+  @doc("The name of the standard deployment")
+  @pattern("^[A-Za-z0-9][A-Za-z0-9_-]*$")
+  @key("rollbackName")
+  @segment("rollbacks")
+  @path
+  name: string;
+}
+
+@doc("Deployment rollback details")
+model DeploymentRollbackProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
+  @visibility("read")
+  @extension("x-ms-identifiers", [])
+  @doc("The deployment status history")
+  statusHistory?: DeploymentStatus[];
 }
 
 @armResourceOperations
-interface Deployments extends ProxyResourceOperations<Deployment> {
-  @doc("Start a rollback of all regions in this deployment")
-  @action("rollback")
-  rollback is ArmResourceActionNoContentSync<Deployment, RollbackParameters>;
+interface DeploymentRollbacks extends ProxyResourceOperations<DeploymentRollback> {
 }
