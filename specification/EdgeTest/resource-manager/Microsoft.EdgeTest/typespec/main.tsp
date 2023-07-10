@@ -10,6 +10,7 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using OpenAPI;
 using Autorest;
+using Azure.Core;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 
@@ -161,6 +162,7 @@ model ProvisioningPolicyProperties {
 }
 
 @doc("The authentication type for bootstrap.")
+@fixed
 enum BootstrapAuthenticationType {
   @doc("The X509 authentication type.")
   X509,
@@ -191,6 +193,7 @@ model BootstrapAuthenticationRule {
 }
 
 @doc("Type of resource being provisioned")
+@fixed
 enum ProvisioningResourceType {
   @doc("Azure device registry device")
   AzureIoTDevice,
@@ -219,6 +222,7 @@ model JitRule {
 }
 
 @doc("Type of the endpoint")
+@fixed
 enum EndpointType {
   @doc("Azure event grid broker")
   AzureEventGridBroker,
@@ -266,6 +270,7 @@ model AllocationEndpoint {
 //}
 
 @doc("Type of allocation rule")
+@fixed
 enum AllocationType {
   @doc("Static allocation of a single endpoint.")
   Static,
@@ -288,6 +293,9 @@ model AllocationRule {
 
   @doc("Type of endpoint")
   endpointType: EndpointType;
+
+  @doc("Validate if this is up-to-date")
+  time0918: string;
 
   // @doc("List of endpoints")
   // @extension("x-ms-identifiers", ["name"])
