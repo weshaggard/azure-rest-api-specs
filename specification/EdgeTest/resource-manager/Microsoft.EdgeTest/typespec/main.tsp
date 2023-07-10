@@ -10,6 +10,7 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using OpenAPI;
 using Autorest;
+using Azure.Core;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 
@@ -266,6 +267,7 @@ model AllocationEndpoint {
 //}
 
 @doc("Type of allocation rule")
+@fixed
 enum AllocationType {
   @doc("Static allocation of a single endpoint.")
   Static,
