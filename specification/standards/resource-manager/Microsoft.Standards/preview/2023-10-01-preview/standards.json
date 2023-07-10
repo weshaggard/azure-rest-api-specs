@@ -55,20 +55,20 @@
         "description": "List the operations for the provider",
         "parameters": [
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
+              "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
             }
           },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -86,10 +86,10 @@
         "description": "List Deployment resources by subscription",
         "parameters": [
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           }
         ],
         "responses": {
@@ -102,7 +102,7 @@
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -120,18 +120,18 @@
         "description": "Get a Deployment",
         "parameters": [
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "name": "deploymentName",
             "in": "path",
             "required": true,
             "description": "The name of the standard deployment",
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9]*$"
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+            "type": "string"
           }
         ],
         "responses": {
@@ -144,7 +144,7 @@
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -157,18 +157,18 @@
         "description": "Create a Deployment",
         "parameters": [
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "name": "deploymentName",
             "in": "path",
             "required": true,
             "description": "The name of the standard deployment",
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9]*$"
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+            "type": "string"
           },
           {
             "name": "resource",
@@ -182,7 +182,7 @@
         ],
         "responses": {
           "200": {
-            "description": "ARM update operation completed successfully.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/Deployment"
             }
@@ -203,7 +203,7 @@
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -220,21 +220,24 @@
         "description": "Delete a Deployment",
         "parameters": [
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "name": "deploymentName",
             "in": "path",
             "required": true,
             "description": "The name of the standard deployment",
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9]*$"
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+            "type": "string"
           }
         ],
         "responses": {
+          "200": {
+            "description": "Resource deleted successfully."
+          },
           "202": {
             "description": "Resource deletion accepted.",
             "headers": {
@@ -255,7 +258,7 @@
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+              "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -263,6 +266,51 @@
           "final-state-via": "location"
         },
         "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Standards/deployments/{deploymentName}/rollback": {
+      "post": {
+        "tags": [
+          "Deployments"
+        ],
+        "operationId": "Deployments_Rollback",
+        "description": "Start a rollback of all regions in this deployment",
+        "parameters": [
+          {
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "name": "deploymentName",
+            "in": "path",
+            "required": true,
+            "description": "The name of the standard deployment",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "The content of the action request",
+            "schema": {
+              "$ref": "#/definitions/RollbackParameters"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Action completed successfully."
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
       }
     }
   },
@@ -283,7 +331,7 @@
       "description": "Concrete proxy resource types can be created by aliasing this type using a specific property type.",
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+          "$ref": "../../../../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
         }
       ]
     },
@@ -318,15 +366,71 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
+        "region": {
+          "type": "string",
+          "description": "The region of the deployment"
+        },
         "data": {
           "type": "string",
-          "description": "Data for the deployment."
+          "description": "Signed data blob."
+        },
+        "statusHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeploymentStatus"
+          },
+          "x-ms-identifiers": [],
+          "x-typespec-name": "DeploymentStatus[]",
+          "description": "The deployment status history",
+          "readOnly": true
         }
       },
       "description": "Details of the Standard deployment.",
       "required": [
-        "data"
+        "region",
+        "data",
+        "statusHistory"
       ]
+    },
+    "DeploymentStatus": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp"
+        },
+        "level": {
+          "$ref": "#/definitions/DeploymentStatusLevel",
+          "description": "Status level"
+        },
+        "code": {
+          "type": "string",
+          "description": "Status code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Status message"
+        }
+      },
+      "description": "Deployment status",
+      "required": [
+        "timestamp",
+        "level",
+        "code",
+        "message"
+      ]
+    },
+    "DeploymentStatusLevel": {
+      "type": "string",
+      "description": "The deployment status level",
+      "enum": [
+        "Info",
+        "Error"
+      ],
+      "x-ms-enum": {
+        "name": "DeploymentStatusLevel",
+        "modelAsString": true
+      }
     },
     "ProvisioningState": {
       "type": "string",
@@ -338,12 +442,18 @@
         "Provisioning",
         "Updating",
         "Deleting",
-        "Accepted"
+        "Accepted",
+        "RollingBack"
       ],
       "x-ms-enum": {
         "name": "ProvisioningState",
         "modelAsString": true
       }
+    },
+    "RollbackParameters": {
+      "type": "object",
+      "properties": {},
+      "description": "Rollback parameters"
     },
     "Versions": {
       "type": "string",
