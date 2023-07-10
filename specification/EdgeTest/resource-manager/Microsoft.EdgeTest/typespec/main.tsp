@@ -162,6 +162,7 @@ model ProvisioningPolicyProperties {
 }
 
 @doc("The authentication type for bootstrap.")
+@fixed
 enum BootstrapAuthenticationType {
   @doc("The X509 authentication type.")
   X509,
@@ -192,6 +193,7 @@ model BootstrapAuthenticationRule {
 }
 
 @doc("Type of resource being provisioned")
+@fixed
 enum ProvisioningResourceType {
   @doc("Azure device registry device")
   AzureIoTDevice,
@@ -220,6 +222,7 @@ model JitRule {
 }
 
 @doc("Type of the endpoint")
+@fixed
 enum EndpointType {
   @doc("Azure event grid broker")
   AzureEventGridBroker,
@@ -290,6 +293,9 @@ model AllocationRule {
 
   @doc("Type of endpoint")
   endpointType: EndpointType;
+
+  @doc("Validate if this is up-to-date")
+  time0918: string;
 
   // @doc("List of endpoints")
   // @extension("x-ms-identifiers", ["name"])
