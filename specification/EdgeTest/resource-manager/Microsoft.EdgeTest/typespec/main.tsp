@@ -288,14 +288,14 @@ model AllocationRule {
   @doc("Name of the allocation rule")
   name: string;
 
-  // @doc("Type of the allocation rule")
-  // type: AllocationType; // TODO: confirm with PMs on the types to have
+  @doc("Type of the allocation rule")
+  type: AllocationType;
 
   @doc("Type of endpoint")
   endpointType: EndpointType;
 
   @doc("Validate if this is up-to-date")
-  time0918: string;
+  time1200: string;
 
   // @doc("List of endpoints")
   // @extension("x-ms-identifiers", ["name"])
