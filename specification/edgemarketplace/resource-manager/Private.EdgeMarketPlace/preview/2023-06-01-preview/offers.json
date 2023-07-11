@@ -213,12 +213,79 @@
         },
         "x-ms-long-running-operation": true
       }
+    },
+    "/{resourceUri}/providers/Private.EdgeMarketPlace/offers/search": {
+      "post": {
+        "tags": [
+          "Offers"
+        ],
+        "operationId": "Offers_Search",
+        "x-ms-examples": {
+          "Search offers": {
+            "$ref": "./examples/OffersSearch.json"
+          }
+        },
+        "description": "A synchronous resource action.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.Core.TopQueryParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.Core.SkipQueryParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.Core.MaxPageSizeQueryParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.Core.FilterQueryParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.Core.SkipTokenParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "The content of the action request",
+            "schema": {
+              "$ref": "#/definitions/OfferSearchRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/OfferListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
     }
   },
   "definitions": {
     "AccessTokenRequest": {
       "type": "object",
       "properties": {
+        "publisherName": {
+          "type": "string",
+          "description": "The name of the publisher."
+        },
         "edgeMarketPlaceRegion": {
           "type": "string",
           "description": "The region where the disk will be created."
@@ -250,13 +317,8 @@
       },
       "description": "Access token request object",
       "required": [
-        "edgeMarketPlaceRegion",
-        "egeMarketPlaceResourceId",
-        "hypervGeneration",
-        "marketPlaceSku",
-        "marketPlaceSkuVersion",
-        "deviceSku",
-        "deviceVersion"
+        "publisherName",
+        "edgeMarketPlaceRegion"
       ]
     },
     "Azure.ResourceManager.ResourceProvisioningState": {
@@ -370,6 +432,15 @@
         "description": {
           "type": "string",
           "description": "The description"
+        },
+        "generation": {
+          "type": "string",
+          "description": "The generation"
+        },
+        "displayRank": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The display rank of the sku"
         },
         "operatingSystem": {
           "$ref": "#/definitions/SkuOperatingSystem",
@@ -725,7 +796,7 @@
   },
   "parameters": {
     "Azure.Core.FilterQueryParameter": {
-      "name": "filter",
+      "name": "$filter",
       "in": "query",
       "required": false,
       "description": "Filter the result list using the given expression.",
@@ -752,7 +823,7 @@
       "x-ms-parameter-location": "method"
     },
     "Azure.Core.TopQueryParameter": {
-      "name": "top",
+      "name": "$top",
       "in": "query",
       "required": false,
       "description": "The number of result items to return.",
@@ -761,7 +832,7 @@
       "x-ms-parameter-location": "method"
     },
     "Azure.Core.SkipTokenParameter": {
-      "name": "skipToken",
+      "name": "$skipToken",
       "in": "query",
       "required": false,
       "description": "Skip over when retrieving results.",
