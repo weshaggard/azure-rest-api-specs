@@ -144,12 +144,12 @@
         }
       }
     },
-    "/{resourceUri}/providers/Private.EdgeMarketPlace/offers/{offerId}/getAccessToken": {
+    "/{resourceUri}/providers/Private.EdgeMarketPlace/offers/{offerId}/generateAccessToken": {
       "post": {
         "tags": [
           "Offers"
         ],
-        "operationId": "Offers_GetAccessToken",
+        "operationId": "Offers_GenerateAccessToken",
         "x-ms-examples": {
           "Get AccessToken": {
             "$ref": "./examples/GetAccessToken.json"
@@ -212,6 +212,58 @@
           "final-state-via": "location"
         },
         "x-ms-long-running-operation": true
+      }
+    },
+	"/{resourceUri}/providers/Private.EdgeMarketPlace/offers/{offerId}/getAccessToken": {
+      "post": {
+        "tags": [
+          "Offers"
+        ],
+        "operationId": "Offers_GetAccessToken",
+        "x-ms-examples": {
+          "Get AccessToken": {
+            "$ref": "./examples/GetAccessToken.json"
+          }
+        },
+        "description": "get access token.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
+          },
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the offer",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "The content of the action request",
+            "schema": {
+              "$ref": "#/definitions/AccessTokenReadRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/DiskAccessToken"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
       }
     },
     "/{resourceUri}/providers/Private.EdgeMarketPlace/offers/search": {
@@ -279,6 +331,20 @@
     }
   },
   "definitions": {
+	
+    "AccessTokenReadRequest": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "description": "The name of the publisher."
+        }
+      },
+      "description": "Access token request object",
+      "required": [
+        "requestId"
+      ]
+    },
     "AccessTokenRequest": {
       "type": "object",
       "properties": {
@@ -369,8 +435,6 @@
       },
       "description": "The disk access token",
       "required": [
-        "diskId",
-        "status",
         "accessToken"
       ]
     },
@@ -394,13 +458,7 @@
           "description": "uri of large icon"
         }
       },
-      "description": "Icon files",
-      "required": [
-        "small",
-        "medium",
-        "wide",
-        "large"
-      ]
+      "description": "Icon files"
     },
     "MarketplaceSku": {
       "type": "object",
@@ -459,10 +517,7 @@
       "description": "The marketplace sku",
       "required": [
         "catalogPlanId",
-        "marketplaceSkuId",
-        "displayName",
-        "operatingSystem",
-        "marketplaceSkuVersions"
+        "marketplaceSkuId"
       ]
     },
     "MarketplaceSkuVersion": {
@@ -673,10 +728,7 @@
       },
       "description": "The offer properties",
       "required": [
-        "contentVersion",
-        "offerContent",
-        "provisioningState",
-        "marketplaceSkus"
+	  "offerContent"
       ]
     },
     "OfferPublisher": {
@@ -765,8 +817,6 @@
       },
       "description": "The sku operating system",
       "required": [
-        "family",
-        "type",
         "name"
       ]
     },
@@ -786,12 +836,7 @@
           "description": "The privacy policy uri"
         }
       },
-      "description": "Terms and conditions",
-      "required": [
-        "legalTermsUri",
-        "legalTermsType",
-        "privacyPolicyUri"
-      ]
+      "description": "Terms and conditions"
     }
   },
   "parameters": {
