@@ -971,6 +971,11 @@
           "type": "string",
           "description": "The type of the agent pool upgrade profile."
         },
+        "location": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The location of the agent pool upgrade profile."
+        },
         "properties": {
           "$ref": "#/definitions/AgentPoolUpgradeProfileProperties",
           "description": "The properties of the agent pool upgrade profile.",
@@ -1199,7 +1204,7 @@
       "properties": {
         "managed": {
           "type": "boolean",
-          "description": "Whether to enable managed AAD."
+          "description": "Whether to enable managed AAD. Should always be true as hybridaks only support managed AAD scenario."
         },
         "enableAzureRBAC": {
           "type": "boolean",
@@ -1212,18 +1217,6 @@
           },
           "description": "The list of AAD group object IDs that will have admin role of the cluster."
         },
-        "clientAppID": {
-          "type": "string",
-          "description": "(DEPRECATED) The client AAD application ID. Learn more at https://aka.ms/aks/aad-legacy."
-        },
-        "serverAppID": {
-          "type": "string",
-          "description": "(DEPRECATED) The server AAD application ID. Learn more at https://aka.ms/aks/aad-legacy."
-        },
-        "serverAppSecret": {
-          "type": "string",
-          "description": "(DEPRECATED) The server AAD application secret. Learn more at https://aka.ms/aks/aad-legacy."
-        },
         "tenantID": {
           "type": "string",
           "description": "The AAD tenant ID to use for authentication. If not specified, will use the tenant of the deployment subscription."
@@ -1231,6 +1224,41 @@
       },
       "title": "AADProfile specifies attributes for Azure Active Directory integration.",
       "description": "For more details see [managed AAD on AKS](https://docs.microsoft.com/azure/aks/managed-aad)."
+    },
+    "ProvisionedClusterSecurityProfile": {
+      "type": "object",
+      "properties": {
+        "workloadIdentity": {
+          "$ref": "#/definitions/ProvisionedClusterSecurityProfileWorkloadIdentity",
+          "description": "Workload identity settings for the security profile. Workload identity enables Kubernetes applications to access Azure cloud resources securely with Azure AD."
+        }
+      },
+      "description": "Security profile for the hybrid container service cluster."
+    },
+    "ProvisionedClusterSecurityProfileWorkloadIdentity": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the workload identity is enabled."
+        }
+      },
+      "description": "Workload identity profile of the Provisioned Cluster."
+    },
+    "ProvisionedClusterOIDCIssuerProfile": {
+      "type": "object",
+      "properties": {
+        "issuerURL": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The OIDC issuer url of the Provisioned Cluster."
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the OIDC issuer is enabled."
+        }
+      },
+      "description": "The OIDC issuer profile of the Provisioned Cluster."
     },
     "ProvisionedClusterWindowsProfile": {
       "type": "object",
@@ -1409,10 +1437,6 @@
     "ProvisionedCluster": {
       "type": "object",
       "properties": {
-        "identity": {
-          "$ref": "#/definitions/ManagedClusterIdentity",
-          "description": "The identity of the provisioned cluster, if configured."
-        },
         "properties": {
           "description": "Properties of a provisioned cluster.",
           "$ref": "#/definitions/ProvisionedClusterProperties",
@@ -1426,9 +1450,40 @@
       ],
       "description": "Provisioned cluster."
     },
+    "ArcAgentProfile": {
+      "description": "Defines the Arc Agent properties for the Provisioned clusters.",
+      "type": "object",
+      "properties": {
+        "agentVersion": {
+          "type": "string",
+          "description": "Version of the Arc agents to be installed on the provisioned Provisioned cluster resource"
+        },
+        "agentAutoUpgrade": {
+          "type": "string",
+          "description": "Indicates whether the Arc agents on the provisioned clusters be upgraded automatically to the latest version. Defaults to Enabled.",
+          "default": "Enabled",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "x-ms-enum": {
+            "name": "AutoUpgradeOptions",
+            "modelAsString": true
+          }
+        }
+      }
+    },
     "ProvisionedClusterProperties": {
       "type": "object",
       "properties": {
+        "arcAgentProfile": {
+          "description": "Arc agentry configuration for the provisioned cluster.",
+          "$ref": "#/definitions/ArcAgentProfile"
+        },
+        "identity": {
+          "$ref": "#/definitions/ManagedClusterIdentity",
+          "description": "The identity of the provisioned cluster, if configured."
+        },
         "infraResourceId": {
           "type": "string",
           "description": "The resource ID of the infrastructure."
@@ -1610,6 +1665,14 @@
         "aadProfile": {
           "$ref": "#/definitions/ProvisionedClusterAADProfile",
           "description": "The Azure Active Directory configuration."
+        },
+        "securityProfile": {
+          "$ref": "#/definitions/ProvisionedClusterSecurityProfile",
+          "description": "Security profile for the provisioned cluster."
+        },
+        "oidcIssuerProfile": {
+          "$ref": "#/definitions/ProvisionedClusterOIDCIssuerProfile",
+          "description": "The OIDC issuer profile of the Provisioned Cluster."
         },
         "azureHybridBenefit": {
           "type": "string",
@@ -1801,6 +1864,11 @@
           "readOnly": true,
           "type": "string",
           "description": "Resource type"
+        },
+        "location": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource location."
         }
       },
       "description": "Reference to another subresource.",
@@ -1839,6 +1907,11 @@
           "readOnly": true,
           "type": "string",
           "description": "Type of the agent pool version list."
+        },
+        "location": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The location of the agent pool version list."
         },
         "properties": {
           "$ref": "#/definitions/AgentPoolAvailableVersionsProperties",
@@ -1980,6 +2053,11 @@
           "readOnly": true,
           "type": "string",
           "description": "The type of the upgrade profile."
+        },
+        "location": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The location of the upgrade profile."
         },
         "properties": {
           "$ref": "#/definitions/ProvisionedClusterUpgradeProfileProperties",

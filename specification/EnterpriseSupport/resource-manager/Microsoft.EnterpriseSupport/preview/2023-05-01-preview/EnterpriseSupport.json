@@ -43,6 +43,9 @@
     },
     {
       "name": "EnterpriseSuportsResource"
+    },
+    {
+      "name": "ProviderLevelOperations"
     }
   ],
   "paths": {
@@ -397,6 +400,44 @@
         },
         "x-ms-long-running-operation": true
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EnterpriseSupport/ValidateEnterpriseSupport": {
+      "post": {
+        "tags": [
+          "ProviderLevelOperations"
+        ],
+        "operationId": "ProviderLevelOperations_ValidateEnterpriseSupport",
+        "description": "ProviderLevel operation to check eligibility to create EnterpriseSupport instance",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CustomParams.subscriptionId"
+          },
+          {
+            "$ref": "#/parameters/CustomParams.resourceGroupName"
+          },
+          {
+            "name": "items",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ValidateEnterpriseSupportRequestItem"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "ValidateEnterpriseSupport": {
+            "$ref": "./examples/ProviderLevelOperations_ValidateEnterpriseSupport.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -573,6 +614,38 @@
       },
       "description": "The updatable properties of the EnterpriseSupports."
     },
+    "ItemToValidate": {
+      "type": "object",
+      "properties": {
+        "billingAccountId": {
+          "type": "string",
+          "description": "The billing account ID"
+        },
+        "billingGroupId": {
+          "type": "string",
+          "description": "The billing group ID"
+        },
+        "productId": {
+          "type": "string",
+          "description": "The product ID."
+        },
+        "skuId": {
+          "type": "string",
+          "description": "The product SKU ID."
+        },
+        "quantity": {
+          "description": "The quantity for this purchase"
+        }
+      },
+      "description": "The item to be validated.",
+      "required": [
+        "billingAccountId",
+        "billingGroupId",
+        "productId",
+        "skuId",
+        "quantity"
+      ]
+    },
     "ProvisioningState": {
       "type": "string",
       "description": "The status of the current operation.",
@@ -590,7 +663,88 @@
         "name": "ProvisioningState",
         "modelAsString": true
       }
+    },
+    "ValidateEnterpriseSupportRequestItem": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemToValidate"
+          },
+          "x-ms-identifiers": [],
+          "x-typespec-name": "ItemToValidate[]",
+          "description": "The array of items to be validated"
+        }
+      },
+      "description": "The request for an eligibility check.",
+      "required": [
+        "items"
+      ]
+    },
+    "ValidateEnterpriseSupportResponseItem": {
+      "type": "object",
+      "properties": {
+        "billingAccountId": {
+          "type": "string",
+          "description": "The billing account ID"
+        },
+        "billingGroupId": {
+          "type": "string",
+          "description": "The billing group ID"
+        },
+        "productId": {
+          "type": "string",
+          "description": "The product ID."
+        },
+        "skuId": {
+          "type": "string",
+          "description": "The product SKU ID."
+        },
+        "quantity": {
+          "description": "The quantity for this purchase"
+        },
+        "isEligible": {
+          "type": "boolean",
+          "description": "Bolean value to determine if purchase is eligible"
+        },
+        "reason": {
+          "type": "string",
+          "description": "String reason for isEligible"
+        },
+        "reasonCode": {
+          "description": "Code reason for isEligible"
+        }
+      },
+      "description": "The response for an eligibility check.",
+      "required": [
+        "billingAccountId",
+        "billingGroupId",
+        "productId",
+        "skuId",
+        "quantity",
+        "isEligible",
+        "reason",
+        "reasonCode"
+      ]
     }
   },
-  "parameters": {}
+  "parameters": {
+    "CustomParams.resourceGroupName": {
+      "name": "resourceGroupName",
+      "in": "path",
+      "required": true,
+      "description": "Resource Group Name",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "CustomParams.subscriptionId": {
+      "name": "subscriptionId",
+      "in": "path",
+      "required": true,
+      "description": "Subscription ID",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    }
+  }
 }

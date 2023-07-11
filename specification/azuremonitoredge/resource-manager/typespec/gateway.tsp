@@ -21,7 +21,12 @@ model Gateway is TrackedResource<GatewayProperties> {
     @key("instanceName")
     @path
     @segment("gateways")
-    name: string
+    name: string;
+
+    // Extended location is not included in TrackedResource yet
+    @doc("Edge location of the resource")
+    @visibility("read","create")
+    extendedLocation?: ExtendedLocation;
 }
 
 @doc("OtelCollector properties")

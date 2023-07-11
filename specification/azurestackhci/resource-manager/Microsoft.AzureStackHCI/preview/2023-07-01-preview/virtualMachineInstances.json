@@ -81,6 +81,9 @@
           },
           "PutVirtualMachineInstanceWithOsDisk": {
             "$ref": "./examples/PutVirtualMachineInstanceWithOsDisk.json"
+          },
+          "PutVirtualMachineInstanceWithVMConfigAgent": {
+            "$ref": "./examples/PutVirtualMachineInstanceWithVMConfigAgent.json"
           }
         },
         "x-ms-long-running-operation": true,
@@ -356,7 +359,7 @@
         }
       }
     },
-    "/{resourceUri}/providers/Microsoft.AzureStackHCI/virtualMachineInstances/default/hybridIdentityMetadata/{metadataName}": {
+    "/{resourceUri}/providers/Microsoft.AzureStackHCI/virtualMachineInstances/default/hybridIdentityMetadata/default": {
       "put": {
         "tags": [
           "HybridIdentityMetadata"
@@ -378,13 +381,6 @@
         "parameters": [
           {
             "$ref": "#/parameters/ResourceUriParameter"
-          },
-          {
-            "in": "path",
-            "name": "metadataName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the hybridIdentityMetadata."
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -433,13 +429,6 @@
             "$ref": "#/parameters/ResourceUriParameter"
           },
           {
-            "in": "path",
-            "name": "metadataName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the HybridIdentityMetadata."
-          },
-          {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
@@ -476,13 +465,6 @@
         "parameters": [
           {
             "$ref": "#/parameters/ResourceUriParameter"
-          },
-          {
-            "in": "path",
-            "name": "metadataName",
-            "required": true,
-            "type": "string",
-            "description": "Name of the HybridIdentityMetadata."
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -857,10 +839,10 @@
                   "type": "boolean",
                   "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine instance creation process."
                 },
-                "provisionMOCGuestAgent": {
+                "provisionVMConfigAgent": {
                   "type": "boolean",
                   "default": true,
-                  "description": "Used to indicate whether the MOC Guest Agent should be installed during the virtual machine creation process."
+                  "description": "Used to indicate whether the VM Config Agent should be installed during the virtual machine creation process."
                 }
               },
               "description": "LinuxConfiguration - linux specific configuration values for the virtual machine instance"
@@ -884,10 +866,10 @@
                   "type": "boolean",
                   "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine instance creation process."
                 },
-                "provisionMOCGuestAgent": {
+                "provisionVMConfigAgent": {
                   "type": "boolean",
                   "default": true,
-                  "description": "Used to indicate whether the MOC Guest Agent should be installed during the virtual machine creation process."
+                  "description": "Used to indicate whether the VM Config Agent should be installed during the virtual machine creation process."
                 }
               },
               "description": "Windows Configuration for the virtual machine instance "
@@ -914,7 +896,7 @@
             },
             "securityType": {
               "type": "string",
-              "description": "Specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. <br><br> Default: UefiSettings will not be enabled unless this property is set.",
+              "description": "Specifies the SecurityType of the virtual machine. EnableTPM and SecureBootEnabled must be set to true for SecurityType to function.",
               "enum": [
                 "TrustedLaunch",
                 "ConfidentialVM"
@@ -1021,9 +1003,9 @@
           "readOnly": true
         },
         "resourceUid": {
-         "description": "Unique identifier defined by ARC to identify the guest of the VM.",
-         "type": "string"
-         }
+          "description": "Unique identifier defined by ARC to identify the guest of the VM.",
+          "type": "string"
+        }
       },
       "description": "Properties under the virtual machine instance resource"
     },
@@ -1135,17 +1117,17 @@
     "VirtualMachineInstanceView": {
       "properties": {
         "vmAgent": {
-          "$ref": "#/definitions/VirtualMachineMOCGuestAgentInstanceView",
-          "description": "The MOC Guest Agent running on the virtual machine."                         
+          "$ref": "#/definitions/VirtualMachineVMConfigAgentInstanceView",
+          "description": "The VM Config Agent running on the virtual machine."
         }
       },
       "description": "The instance view of a virtual machine."
     },
-    "VirtualMachineMOCGuestAgentInstanceView": {
+    "VirtualMachineVMConfigAgentInstanceView": {
       "properties": {
-        "vmMOCGuestAgentVersion": {
+        "vmVMConfigAgentVersion": {
           "type": "string",
-          "description": "The VM MOC Guest Agent full version."
+          "description": "The VM Config Agent full version."
         },
         "statuses": {
           "type": "array",
@@ -1156,7 +1138,7 @@
           "description": "The resource status information."
         }
       },
-      "description": "The instance view of the MOC Guest Agent running on the virtual machine."
+      "description": "The instance view of the VM Config Agent running on the virtual machine."
     },
     "InstanceViewStatus": {
       "properties": {
@@ -1291,9 +1273,9 @@
               "type": "boolean",
               "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine instance creation process."
             },
-            "provisionMOCGuestAgent": {
+            "provisionVMConfigAgent": {
               "type": "boolean",
-              "description": "Used to indicate whether the MOC Guest Agent should be installed during the virtual machine creation process."
+              "description": "Used to indicate whether the VM Config Agent should be installed during the virtual machine creation process."
             }
           }
         },
@@ -1303,9 +1285,9 @@
               "type": "boolean",
               "description": "Used to indicate whether Arc for Servers agent onboarding should be triggered during the virtual machine instance creation process."
             },
-            "provisionMOCGuestAgent": {
+            "provisionVMConfigAgent": {
               "type": "boolean",
-              "description": "Used to indicate whether the MOC Guest Agent should be installed during the virtual machine creation process."
+              "description": "Used to indicate whether the VM Config Agent should be installed during the virtual machine creation process."
             }
           }
         }
@@ -1816,7 +1798,6 @@
       "description": "The fully qualified Azure Resource manager identifier of the Hybrid Compute machine resource to be extended.",
       "required": true,
       "type": "string",
-      "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-._a-zA-Z0-9]{0,62}[a-zA-Z0-9]$",
       "x-ms-skip-url-encoding": true,
       "x-ms-parameter-location": "method"
     }
