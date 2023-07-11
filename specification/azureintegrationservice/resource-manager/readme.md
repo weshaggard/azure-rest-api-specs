@@ -36,7 +36,7 @@ These settings apply only when `--tag=package-2023-06-01-preview` is specified o
 
 ```yaml $(tag) == 'package-2023-06-01-preview'
 input-file:
-  - Microsoft.IntegrationService/preview/2023-06-01-preview/azureintegrationservice.json
+  - Private.IntegrationService/preview/2023-06-01-preview/openapi.json
 ```
 
 ---
