@@ -384,9 +384,8 @@ scalar ProvisioningPolicyResourceId
 
 @doc("Details of the DeviceProvisioningState")
 model DeviceProvisioningStateProperties {
-  @visibility("read")
-  @doc("The status of the last operation.")
-  provisioningState?: ProvisioningState;
+  @doc("Unique identifier for the device")
+  registrationId: string;
 
   @visibility("read", "create", "update")
   @doc("Provisioning status of the resource this DeviceProvisioningState extends")
@@ -401,6 +400,10 @@ model DeviceProvisioningStateProperties {
   @doc("Allocation rules captured from the linked provisioningPolicyResourceId at the time of provisioning")
   @extension("x-ms-identifiers", ["name"])
   allocations: Array<AllocationRule>;
+
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
 }
 
 @doc("The current provisioning status.")
