@@ -20,7 +20,7 @@ namespace Private.IntegrationService;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
-@doc("The status of current operation.")
+@doc("The status of the current operation.")
 @Azure.Core.lroStatus
 enum ProvisioningState {
 	...ResourceProvisioningState,
@@ -131,7 +131,7 @@ model Space is TrackedResource<SpaceResourceProperties> {
 @doc("The operations of space.")
 interface Spaces {
 	get is ArmResourceRead<Space>;
-	create is ArmResourceCreateOrUpdateAsync<Space>;
+	create is ArmResourceCreateOrUpdateSync<Space>;
 	update is ArmResourcePatchSync<Space, SpaceResourceProperties>;
 	delete is ArmResourceDeleteSync<Space>;
 	listBySubscription is ArmListBySubscription<Space>;
@@ -162,7 +162,7 @@ model InfrastructureResource is ProxyResource<InfrastructureResourceProperties> 
 @doc("The operations of the infrastructure resource.")
 interface InfrastructureResources {
 	get is ArmResourceRead<InfrastructureResource>;
-	create is ArmResourceCreateOrUpdateAsync<InfrastructureResource>;
+	create is ArmResourceCreateOrUpdateSync<InfrastructureResource>;
 	update is ArmResourcePatchSync<
 		InfrastructureResource,
 		InfrastructureResourceProperties
@@ -194,7 +194,7 @@ model Application is TrackedResource<ApplicationProperties> {
 @armResourceOperations
 interface Applications {
 	get is ArmResourceRead<Application>;
-	create is ArmResourceCreateOrUpdateAsync<Application>;
+	create is ArmResourceCreateOrUpdateSync<Application>;
 	update is ArmResourcePatchSync<Application, ApplicationProperties>;
 	delete is ArmResourceDeleteSync<Application>;
 	listBySpace is ArmResourceListByParent<
@@ -223,7 +223,7 @@ model ApplicationResource is ProxyResource<ApplicationResourceProperties> {
 @armResourceOperations
 interface ApplicationResources {
 	get is ArmResourceRead<ApplicationResource>;
-	create is ArmResourceCreateOrUpdateAsync<ApplicationResource>;
+	create is ArmResourceCreateOrUpdateSync<ApplicationResource>;
 	update is ArmResourcePatchSync<
 		ApplicationResource,
 		ApplicationResourceProperties
@@ -255,7 +255,7 @@ model BusinessProcess is ProxyResource<BusinessProcessProperties> {
 @armResourceOperations
 interface BusinessProcesses {
 	get is ArmResourceRead<BusinessProcess>;
-	create is ArmResourceCreateOrUpdateAsync<BusinessProcess>;
+	create is ArmResourceCreateOrUpdateSync<BusinessProcess>;
 	update is ArmResourcePatchSync<BusinessProcess, BusinessProcessProperties>;
 	delete is ArmResourceDeleteSync<BusinessProcess>;
 	listByApplication is ArmResourceListByParent<
