@@ -34,12 +34,12 @@
     }
   },
   "paths": {
-    "/providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}/invoiceSections/{invoiceSectionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}": {
       "put": {
         "tags": [
           "PartnerManagedConsumerRecurrence"
         ],
-        "summary": "Creates a new partner managed subscription request process.Eligibility checks, conversions/cancellations, entitlement and recurrence records will be completed in the online path.Charge will be on an async path with only the call to PAv2 done in the online path.Callers can query based on the operation id or the publisher id to get the latest status of the transaction.Any retry, failure management is the responsibility of the Publisher Compensation mechanism henceforth.",
+        "summary": "Creates a new partner managed subscription request process. Eligibility checks, conversions/cancellations, entitlement and recurrence records will be completed in the online path. Charge will be on an async path with only the call to PAv2 done in the online path. Callers can query based on the operation id or the publisher id to get the latest status of the transaction. Any retry, failure management is the responsibility of the Publisher Compensation mechanism henceforth.",
         "operationId": "PartnerManagedConsumerRecurrence_Create",
         "consumes": [
           "application/json"
@@ -51,19 +51,13 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/billingAccountIdParameter"
-          },
-          {
-            "$ref": "#/parameters/billingProfileIdParameter"
-          },
-          {
-            "$ref": "#/parameters/invoiceSectionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "$ref": "#/parameters/externalRecurrenceIdParameter"
           },
           {
-            "$ref": "#/parameters/apiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "name": "request",
@@ -76,10 +70,10 @@
           }
         ],
         "responses": {
-          "202": {
+          "201": {
             "description": "Accepted. The operation is ongoing.",
             "headers": {
-              "Location": {
+              "Azure-AsyncOperation": {
                 "description": "The URL to check the result of the asynchronous operation.",
                 "type": "string"
               },
@@ -101,69 +95,11 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-long-running-operation": true
-      },
-      "patch": {
-        "tags": [
-          "PartnerManagedConsumerRecurrence"
-        ],
-        "summary": "Toggles the auto renew flag on the subscription.Recurrence, asset, and entitlement operation will all be done in the online path.And/Or Put a partner managed subscription on hold (partner dunning).",
-        "operationId": "PartnerManagedConsumerRecurrence_UpdateSubscription",
-        "consumes": [
-          "application/json"
-        ],
-        "x-ms-examples": {
-          "HoldSubscription": {
-            "$ref": "./examples/UpdateSubscription_Hold.json"
-          },
-          "AutoRenewSubscription": {
-            "$ref": "./examples/UpdateSubscription_AutoRenew.json"
-          }
-        },
-        "parameters": [
-          {
-            "$ref": "#/parameters/billingAccountIdParameter"
-          },
-          {
-            "$ref": "#/parameters/billingProfileIdParameter"
-          },
-          {
-            "$ref": "#/parameters/invoiceSectionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/externalRecurrenceIdParameter"
-          },
-          {
-            "$ref": "#/parameters/apiVersionParameter"
-          },
-          {
-            "name": "request",
-            "in": "body",
-            "required": true,
-            "description": "The request body for the api endpoint.",
-            "schema": {
-              "$ref": "#/definitions/UpdateRecurrenceRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A response containing recurrence and operation summary.",
-            "schema": {
-              "$ref": "#/definitions/PartnerManagedConsumerRecurrenceResponse"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
       },
       "get": {
         "tags": [
@@ -178,19 +114,13 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/billingAccountIdParameter"
-          },
-          {
-            "$ref": "#/parameters/billingProfileIdParameter"
-          },
-          {
-            "$ref": "#/parameters/invoiceSectionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "$ref": "#/parameters/externalRecurrenceIdParameter"
           },
           {
-            "$ref": "#/parameters/apiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -203,13 +133,106 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}/invoiceSections/{invoiceSectionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/cancel": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/toggleAutoRenew": {
+      "post": {
+        "tags": [
+          "PartnerManagedConsumerRecurrence"
+        ],
+        "summary": "Toggles the auto renew flag on the subscription.Recurrence, asset, and entitlement operation will all be done in the online path.",
+        "operationId": "PartnerManagedConsumerRecurrence_toggleAutoRenew",
+        "consumes": [
+          "application/json"
+        ],
+        "x-ms-examples": {
+          "AutoRenewSubscription": {
+            "$ref": "./examples/UpdateSubscription_AutoRenew.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/externalRecurrenceIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "description": "The request body for the api endpoint.",
+            "schema": {
+              "$ref": "#/definitions/ToggleAutoRenewRecurrenceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A response containing recurrence and operation summary.",
+            "schema": {
+              "$ref": "#/definitions/PartnerManagedConsumerRecurrenceResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/hold": {
+      "post": {
+        "tags": [
+          "PartnerManagedConsumerRecurrence"
+        ],
+        "summary": "Places the subscription into a hold state. Recurrence, asset, and entitlement operation will all be done in the online path.",
+        "operationId": "PartnerManagedConsumerRecurrence_HoldSubscription",
+        "consumes": [
+          "application/json"
+        ],
+        "x-ms-examples": {
+          "AutoRenewSubscription": {
+            "$ref": "./examples/UpdateSubscription_Hold.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/externalRecurrenceIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A response containing recurrence and operation summary.",
+            "schema": {
+              "$ref": "#/definitions/PartnerManagedConsumerRecurrenceResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/cancel": {
       "post": {
         "tags": [
           "PartnerManagedConsumerRecurrence"
@@ -223,19 +246,13 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/billingAccountIdParameter"
-          },
-          {
-            "$ref": "#/parameters/billingProfileIdParameter"
-          },
-          {
-            "$ref": "#/parameters/invoiceSectionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "$ref": "#/parameters/externalRecurrenceIdParameter"
           },
           {
-            "$ref": "#/parameters/apiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -264,14 +281,14 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-long-running-operation": true
       }
     },
-    "/providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}/invoiceSections/{invoiceSectionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/renew": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/renew": {
       "post": {
         "tags": [
           "PartnerManagedConsumerRecurrence"
@@ -288,19 +305,13 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/billingAccountIdParameter"
-          },
-          {
-            "$ref": "#/parameters/billingProfileIdParameter"
-          },
-          {
-            "$ref": "#/parameters/invoiceSectionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "$ref": "#/parameters/externalRecurrenceIdParameter"
           },
           {
-            "$ref": "#/parameters/apiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "name": "request",
@@ -338,14 +349,82 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
         "x-ms-long-running-operation": true
       }
     },
-    "/providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}/invoiceSections/{invoiceSectionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/operationResult/{operationId}": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/resume": {
+      "post": {
+        "tags": [
+          "PartnerManagedConsumerRecurrence"
+        ],
+        "summary": "Resumes a partner managed subscription.Like the new purchase path, the sync path will be responsible for all recurrence and entitlement operations while the async path will be responsible for billing.",
+        "operationId": "PartnerManagedConsumerRecurrence_Resume",
+        "consumes": [
+          "application/json"
+        ],
+        "x-ms-examples": {
+          "RenewSubscription": {
+            "$ref": "./examples/ResumeSubscription.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/externalRecurrenceIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "description": "The request body for the api endpoint.",
+            "schema": {
+              "$ref": "#/definitions/RenewRecurrenceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted. The operation is ongoing.",
+            "headers": {
+              "Location": {
+                "description": "The URL to check the result of the asynchronous operation.",
+                "type": "string"
+              },
+              "Retry-After": {
+                "description": "The amount of delay to use while the status of the operation is checked. The value is expressed in seconds.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/PartnerManagedConsumerRecurrenceResponse"
+            }
+          },
+          "200": {
+            "description": "A response containing recurrence and operation summary.",
+            "schema": {
+              "$ref": "#/definitions/PartnerManagedConsumerRecurrenceResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/operationResult/{operationId}": {
       "get": {
         "tags": [
           "PartnerManagedConsumerRecurrence"
@@ -359,22 +438,16 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/billingAccountIdParameter"
-          },
-          {
-            "$ref": "#/parameters/billingProfileIdParameter"
-          },
-          {
-            "$ref": "#/parameters/invoiceSectionIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
             "$ref": "#/parameters/externalRecurrenceIdParameter"
           },
           {
-            "$ref": "#/parameters/operationIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/OperationIdParameter"
           },
           {
-            "$ref": "#/parameters/apiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -387,13 +460,13 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}/invoiceSections/{invoiceSectionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/checkEligibility": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/checkEligibility": {
       "post": {
         "tags": [
           "PartnerManagedConsumerRecurrence"
@@ -410,16 +483,13 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/billingAccountIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/billingProfileIdParameter"
+            "$ref": "#/parameters/externalRecurrenceIdParameter"
           },
           {
-            "$ref": "#/parameters/invoiceSectionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/apiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "name": "request",
@@ -441,13 +511,13 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/providers/Microsoft.Billing/billingAccounts/{billingAccountId}/billingProfiles/{billingProfileId}/invoiceSections/{invoiceSectionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/operations": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.PartnerManagedConsumerRecurrence/recurrences/{externalRecurrenceId}/operations": {
       "get": {
         "tags": [
           "PartnerManagedConsumerRecurrence"
@@ -464,16 +534,13 @@
         },
         "parameters": [
           {
-            "$ref": "#/parameters/billingAccountIdParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "#/parameters/billingProfileIdParameter"
+            "$ref": "#/parameters/externalRecurrenceIdParameter"
           },
           {
-            "$ref": "#/parameters/invoiceSectionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/apiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
@@ -486,7 +553,7 @@
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
@@ -497,63 +564,15 @@
     }
   },
   "definitions": {
-    "systemData": {
-      "description": "Metadata pertaining to creation and last modification of the resource.",
-      "type": "object",
-      "readOnly": true,
-      "properties": {
-        "createdBy": {
-          "type": "string",
-          "description": "The identity that created the resource."
-        },
-        "createdByType": {
-          "type": "string",
-          "description": "The type of identity that created the resource.",
-          "enum": [
-            "User",
-            "Application",
-            "ManagedIdentity",
-            "Key"
-          ],
-          "x-ms-enum": {
-            "name": "createdByType",
-            "modelAsString": true
-          }
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp of resource creation (UTC)."
-        },
-        "lastModifiedBy": {
-          "type": "string",
-          "description": "The identity that last modified the resource."
-        },
-        "lastModifiedByType": {
-          "type": "string",
-          "description": "The type of identity that last modified the resource.",
-          "enum": [
-            "User",
-            "Application",
-            "ManagedIdentity",
-            "Key"
-          ],
-          "x-ms-enum": {
-            "name": "createdByType",
-            "modelAsString": true
-          }
-        },
-        "lastModifiedAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The type of identity that last modified the resource."
-        }
-      }
-    },
     "PartnerManagedConsumerRecurrenceResponseProperties": {
       "type": "object",
       "description": "The Partner Managed Consumer Recurrence Response properties.",
       "properties": {
+        "provisioningState": {
+          "description": "Gets or sets the state of the provisioning.",
+          "type": "string",
+          "readOnly": true
+        },
         "recurrenceSummary": {
           "description": "Gets or sets the recurrence summary for the subscription.",
           "$ref": "#/definitions/RecurrenceSummary"
@@ -568,33 +587,16 @@
       "type": "object",
       "description": "Publisher Response object.",
       "x-ms-azure-resource": true,
-      "required": [
-        "properties"
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
       ],
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "Partner Managed Consumer Recurrence Response name.",
-          "readOnly": true
-        },
-        "id": {
-          "type": "string",
-          "description": "Partner Managed Consumer Recurrence Response id.",
-          "readOnly": true
-        },
-        "type": {
-          "type": "string",
-          "description": "Partner Managed Consumer Recurrence Response type.",
-          "readOnly": true
-        },
         "properties": {
           "description": "the subscription definition properties",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/PartnerManagedConsumerRecurrenceResponseProperties"
-        },
-        "systemData": {
-          "$ref": "#/definitions/systemData",
-          "readOnly": true
         }
       }
     },
@@ -604,7 +606,6 @@
       "required": [
         "autoRenew",
         "externalRecurrenceId",
-        "holdState",
         "productId",
         "recurrenceState",
         "skuId",
@@ -624,10 +625,6 @@
           "type": "string",
           "description": "The external ID if this recurrence is managed by a third party. The value formatted as: namespace:id"
         },
-        "holdState": {
-          "description": "Gets or sets the hold state for the subscription.",
-          "$ref": "#/definitions/HoldState"
-        },
         "partnerAccountHoldPeriodEndDate": {
           "type": "string",
           "description": "The hold period end date. Introduced to support google account on hold feature. For first party subs this is null.",
@@ -646,23 +643,43 @@
           "description": "Gets or sets the recurrence state for the subscription.",
           "$ref": "#/definitions/RecurrenceState"
         },
+        "secondaryPartnerId": {
+          "type": "string",
+          "description": "Gets or sets the secondary partner Id."
+        },
         "skuId": {
           "type": "string",
-          "description": "Gets or sets the sku's id to renew into."
+          "description": "Gets or sets the SKU's id to renew into."
         },
         "conversionType": {
           "description": "Gets or sets the recurrence plan conversion type for the subscription.",
           "$ref": "#/definitions/ConversionType"
         },
-        "secondaryResellerId": {
+        "beneficiary": {
           "type": "string",
-          "description": "Gets or sets the secondary reseller id for the subscription."
+          "description": "Gets or sets the beneficiary of the subscription"
+        },
+        "market": {
+          "type": "string",
+          "description": "Gets or sets the market of the subscription"
+        },
+        "language": {
+          "type": "string",
+          "description": "Gets or sets the language of the subscription"
+        },
+        "partnerProofOfPurchase": {
+          "type": "string",
+          "$ref": "#/definitions/ProofOfPurchase"
+        },
+        "upn": {
+          "type": "string",
+          "description": "Gets or sets the UPN of the subscription"
         }
       }
     },
     "AutoRenewState": {
       "type": "string",
-      "description": "The Auto Renew enum.",
+      "description": "The Auto Renew enum. Indicates whether or not recurrence will be automatically renewed.",
       "x-enumNames": [
         "Off",
         "On"
@@ -710,16 +727,16 @@
         "PartnerHold"
       ],
       "enum": [
-        "none",
-        "active",
-        "inactive",
-        "canceled",
-        "takedown",
-        "failed",
-        "indunning",
-        "migrated",
-        "converting",
-        "partnerhold"
+        "None",
+        "Active",
+        "Inactive",
+        "Canceled",
+        "TakenDown",
+        "Failed",
+        "InDunning",
+        "Migrated",
+        "Converting",
+        "PartnerHold"
       ],
       "x-ms-enum": {
         "name": "RecurrenceStateEnum",
@@ -737,7 +754,7 @@
       "enum": [
         "upgrade",
         "downgrade",
-        "nochange"
+        "NoChange"
       ],
       "x-ms-enum": {
         "name": "ConversionTypeEnum",
@@ -750,7 +767,7 @@
       "required": [
         "id",
         "operationType",
-        "operationState"
+        "state"
       ],
       "properties": {
         "id": {
@@ -761,7 +778,7 @@
           "description": "Gets or sets the operation type of the operation summary.",
           "$ref": "#/definitions/OperationType"
         },
-        "operationState": {
+        "state": {
           "description": "Gets or sets the operation state of the operation summary.",
           "$ref": "#/definitions/OperationState"
         },
@@ -776,16 +793,22 @@
       "type": "string",
       "description": "The Operation Type enum.",
       "x-enumNames": [
-        "Create",
+        "Purchase",
         "Renew",
-        "Update",
-        "Cancel"
+        "Resume",
+        "ToggleAR",
+        "Hold",
+        "Cancel",
+        "CheckEligibility"
       ],
       "enum": [
-        "create",
+        "purchase",
         "renew",
-        "update",
-        "cancel"
+        "resume",
+        "toggleAR",
+        "hold",
+        "cancel",
+        "checkEligibility"
       ],
       "x-ms-enum": {
         "name": "OperationTypeEnum",
@@ -815,8 +838,7 @@
       "description": "New Purchase Request object.",
       "required": [
         "autoRenew",
-        "beneficiaryId",
-        "clientTransactionId",
+        "beneficiary",
         "productInfo",
         "partnerProofOfPurchase"
       ],
@@ -825,13 +847,9 @@
           "description": "Gets or sets a value indicating whether the auto renew is on for the subscription.",
           "$ref": "#/definitions/AutoRenewState"
         },
-        "beneficiaryId": {
+        "beneficiary": {
           "type": "string",
           "description": "Gets or sets the beneficiary id for the subscription."
-        },
-        "clientTransactionId": {
-          "type": "string",
-          "description": "Gets or sets the client transaction id for the subscription."
         },
         "secondaryResellerId": {
           "type": "string",
@@ -844,6 +862,10 @@
         "partnerProofOfPurchase": {
           "description": "Gets or sets the partner proof of purchase for the subscription.",
           "$ref": "#/definitions/ProofOfPurchase"
+        },
+        "secondaryPartnerId": {
+          "type": "string",
+          "description": "Gets or sets the secondary partner Id for the subscription"
         }
       }
     },
@@ -851,42 +873,22 @@
       "type": "object",
       "description": "The Product Information object.",
       "required": [
-        "productId",
-        "skuId",
-        "termId",
-        "availabilityId",
+        "upn",
         "languages",
-        "market",
-        "termDuration"
+        "market"
       ],
       "properties": {
-        "productId": {
+        "upn": {
           "type": "string",
-          "description": "Gets or sets the product id for the product information."
-        },
-        "skuId": {
-          "type": "string",
-          "description": "Gets or sets the sku's id for the product information."
-        },
-        "termId": {
-          "type": "string",
-          "description": "Gets or sets the term id for the product information."
-        },
-        "availabilityId": {
-          "type": "string",
-          "description": "Gets or sets the availability id for the product information."
+          "description": "Gets or sets the UPN for the product information."
         },
         "languages": {
           "type": "string",
-          "description": "Gets or sets the languages for the product information."
+          "description": "Gets or sets the languages for the product information. Example format: en-us"
         },
         "market": {
           "type": "string",
           "description": "Gets or sets the market for the product information."
-        },
-        "termDuration": {
-          "type": "string",
-          "description": "Gets or sets the term duration for the product."
         }
       }
     },
@@ -928,8 +930,7 @@
       "description": "Renew Subscription Request object.",
       "required": [
         "autoRenew",
-        "renewalId",
-        "clientTransactionId",
+        "beneficiary",
         "productInfo",
         "partnerProofOfPurchase"
       ],
@@ -938,13 +939,9 @@
           "description": "Gets or sets the auto renew status of the subscription.",
           "$ref": "#/definitions/AutoRenewState"
         },
-        "renewalId": {
+        "beneficiary": {
           "type": "string",
-          "description": "Gets or sets the renewal ID of the subscription."
-        },
-        "clientTransactionId": {
-          "type": "string",
-          "description": "Gets or sets the client transaction id of the subscription."
+          "description": "Gets or sets the beneficiary id for the subscription."
         },
         "productInfo": {
           "description": "Gets or sets the product information for the subscription.",
@@ -956,30 +953,13 @@
         }
       }
     },
-    "UpdateRecurrenceRequest": {
+    "ToggleAutoRenewRecurrenceRequest": {
       "type": "object",
-      "description": "Hold Subscription Request object.",
+      "description": "Toggle Auto Renew Subscription Request object.",
       "properties": {
-        "holdState": {
-          "description": "Gets or sets the hold state for the subscription.",
-          "$ref": "#/definitions/HoldState"
-        },
         "autoRenew": {
           "description": "Gets or sets a value indicating whether the auto renew is on for the subscription.",
           "$ref": "#/definitions/AutoRenewState"
-        }
-      }
-    },
-    "ErrorResponse": {
-      "type": "object",
-      "description": "Error response indicates that the service is not able to process the incoming request. The reason is provided in the error message.",
-      "required": [
-        "error"
-      ],
-      "properties": {
-        "error": {
-          "description": "Gets or sets the error details of the error.",
-          "$ref": "#/definitions/ErrorDetails"
         }
       }
     },
@@ -998,7 +978,7 @@
         },
         "inEligibilityReason": {
           "description": "Gets or sets the ineligibility reason as error details.",
-          "$ref": "#/definitions/ErrorDetails"
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorDetail"
         },
         "existingSubscriptionInfo": {
           "description": "Gets or sets the recurrence summary for the existing subscription.",
@@ -1026,34 +1006,16 @@
         "modelAsString": false
       }
     },
-    "ErrorDetails": {
-      "type": "object",
-      "description": "The Error Details object if check eligibility fails or any unknown error.",
-      "required": [
-        "code",
-        "message"
-      ],
-      "properties": {
-        "code": {
-          "type": "string",
-          "description": "Gets or sets the code for the failure reason."
-        },
-        "message": {
-          "type": "string",
-          "description": "Gets or sets the message for the failure reason."
-        }
-      }
-    },
     "CheckEligibilityRequest": {
       "type": "object",
       "description": "Check Eligibility Request object.",
       "required": [
-        "beneficiaryId",
+        "beneficiary",
         "productInfo",
         "partnerIdentifier"
       ],
       "properties": {
-        "beneficiaryId": {
+        "beneficiary": {
           "type": "string",
           "description": "Gets or sets the beneficiary id for the subscription."
         },
@@ -1082,7 +1044,7 @@
         },
         "nextLink": {
           "type": "string",
-          "description": "Gets or sets theURL to get the next set of operation list results if there are any.",
+          "description": "Gets or sets the URL to get the next set of operation list results if there are any.",
           "readOnly": true
         }
       }
@@ -1094,85 +1056,18 @@
         "name",
         "display"
       ],
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Gets or sets the Operation name: {provider}/{resource}/{operation}"
-        },
-        "display": {
-          "description": "Gets or sets the object that represents the operation.",
-          "$ref": "#/definitions/DisplayDefinition"
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/Operation"
         }
-      }
-    },
-    "DisplayDefinition": {
-      "type": "object",
-      "description": "The object that represents the operation.",
-      "required": [
-        "provider",
-        "resource",
-        "operation"
-      ],
-      "properties": {
-        "provider": {
-          "type": "string",
-          "description": "Gets or sets the Service provider."
-        },
-        "resource": {
-          "type": "string",
-          "description": "Gets or sets the Resource on which the operation is performed."
-        },
-        "operation": {
-          "type": "string",
-          "description": "Gets or sets the Operation type: Read, write, delete, etc."
-        }
-      }
+      ]
     }
   },
   "parameters": {
-    "apiVersionParameter": {
-      "name": "api-version",
-      "in": "query",
-      "required": true,
-      "type": "string",
-      "description": "Version of the API to be used with the client request."
-    },
-    "billingAccountIdParameter": {
-      "name": "billingAccountId",
-      "in": "path",
-      "description": "The billing account id.",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "billingProfileIdParameter": {
-      "name": "billingProfileId",
-      "in": "path",
-      "description": "The billing profile id.",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "invoiceSectionIdParameter": {
-      "name": "invoiceSectionId",
-      "in": "path",
-      "description": "The invoice section id.",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
     "externalRecurrenceIdParameter": {
       "name": "externalRecurrenceId",
       "in": "path",
       "description": "The external recurrence id.",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "operationIdParameter": {
-      "name": "operationId",
-      "in": "path",
-      "description": "The operation id",
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method"
