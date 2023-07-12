@@ -13,13 +13,13 @@ using Autorest;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 
-@armProviderNamespace("Microsoft.EdgeProvisioning")
+@armProviderNamespace("Private.BBeeDev3")
 @service({
-  title: "Microsoft.EdgeProvisioning",
+  title: "Private.BBeeDev3",
   version: "2023-12-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.EdgeProvisioning;
+namespace Private.BBeeDev3;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -378,7 +378,7 @@ model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProper
 scalar ProvisioningPolicyResourceId
   extends ResourceIdentifier<[
     {
-      type: "Microsoft.EdgeProvisioningService/ProvisioningResources/ProvisioningPolicies",
+      type: "Private.BBeeDev3/ProvisioningResources/ProvisioningPolicies",
     }
   ]>;
 
