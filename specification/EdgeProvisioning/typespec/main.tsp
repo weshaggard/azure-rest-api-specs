@@ -313,9 +313,9 @@ model DeviceIdentityInfo {
 
 // TODO: Check with Krishna - Follow-up whether we want to expose this to the customer
 @doc("Certificate issuance configurations")
-model CertIssuanceRule {
-  @doc("ICA name")
-  ica: string; // TODO: find out who would set up this info customer or rp
+model CertificateIssuanceRule {
+  @doc("ICA - IntermediateCertificateAuthority name")
+  intermediateCertificateAuthority: string; // TODO: find out who would set up this info customer or rp
 
   @doc("Cert renewal interval")
   renewalInterval: int32; // TODO: findout the unit of the interval, findout if there is a default value
@@ -324,7 +324,7 @@ model CertIssuanceRule {
 @doc("The information related to device identity")
 model IdentityInfo {
   @doc("Certificate issuance settings")
-  certIssuance?: CertIssuanceRule; // For PKI
+  certificateIssuance?: CertificateIssuanceRule; // For PKI
 
   @doc("Device template id")
   deviceTemplateId?: string;
@@ -367,7 +367,7 @@ interface ProvisioningPolicies {
 // Roopesh to share the link for sample swagger
 @doc("The provisioning state of a device.")
 model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProperties> {
-  @doc("The registration id of the resource.")
+  @doc("Singleton pattern using name: current.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("deviceProvisioningStateName")
   @segment("deviceProvisioningStates")
@@ -396,10 +396,6 @@ model DeviceProvisioningStateProperties {
 
   @doc("The provisioning policy resource id")
   provisioningPolicyResourceId?: ProvisioningPolicyResourceId;
-
-  @doc("Allocation rules captured from the linked provisioningPolicyResourceId at the time of provisioning")
-  @extension("x-ms-identifiers", ["name"])
-  allocations: Array<AllocationRule>;
 
   @visibility("read")
   @doc("The status of the last operation.")
