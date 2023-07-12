@@ -47,7 +47,7 @@ input-file:
   - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlManagedInstances.json
   - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlServerDatabases.json
   - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlServerInstances.json
-  - Microsoft.AzureArcData/preview/2023-06-13-alpha/availabilityGroups.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlServerAvailabilityGroups.json
 ```
 
 ### Tag: package-preview-2023-05
@@ -66,7 +66,7 @@ input-file:
   - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlManagedInstances.json
   - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerDatabases.json
   - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerInstances.json
-  - Microsoft.AzureArcData/preview/2023-05-16-preview/availabilityGroups.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerAvailabilityGroups.json
 ```
 
 ### Tag: package-2021-11-01
