@@ -718,9 +718,6 @@
         "x-ms-examples": {
           "RolloutGet": {
             "$ref": "./examples/GCA/RolloutGet.json"
-          },
-          "RolloutGetWithDetailedState": {
-            "$ref": "./examples/GCA/RolloutGetWithDetailedState.json"
           }
         }
       },
@@ -1133,7 +1130,7 @@
           "final-state-via": "location"
         }
       }
-    },    
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridNetwork/serviceManagementContainers/{serviceManagementContainerName}/updateSpecs/{updateSpecName}/rollouts": {
       "get": {
         "parameters": [
@@ -1451,7 +1448,9 @@
             }
           }
         },
-        "tags": ["ServiceManagementContainer"],
+        "tags": [
+          "ServiceManagementContainer"
+        ],
         "operationId": "ServiceManagementContainer_ListBySubscription",
         "summary": "Lists all the Service Management Containers in a subscription.",
         "x-ms-examples": {
@@ -1674,27 +1673,137 @@
           }
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridNetwork/serviceManagementContainers/{serviceManagementContainerName}/updateSpecs/{updateSpecName}/rollouts/{rolloutName}/statuses/default": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "./common.json#/parameters/ServiceManagementContainerNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/UpdateSpecNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/RolloutNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RolloutStatus"
+            }
+          },
+          "400": {
+            "description": "Invalid resourceId"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": [
+          "RolloutStatus"
+        ],
+        "operationId": "RolloutStatuses_Get",
+        "summary": "Get the Rollout object with status",
+        "x-ms-examples": {
+          "RolloutStatusesGet": {
+            "$ref": "./examples/GCA/RolloutStatusGet.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridNetwork/serviceManagementContainers/{serviceManagementContainerName}/updateSpecs/{updateSpecName}/rollouts/{rolloutName}/statuses": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "./common.json#/parameters/ServiceManagementContainerNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/UpdateSpecNameParameter"
+          },
+          {
+            "$ref": "./common.json#/parameters/RolloutNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RolloutStatusListResult"
+            }
+          },
+          "400": {
+            "description": "Invalid resourceId"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": [
+          "RolloutStatus"
+        ],
+        "operationId": "RolloutStatuses_ListByRollout",
+        "summary": "Lists all the Rollouts in an UpdateSpecification",
+        "x-ms-examples": {
+          "RolloutListByRollout": {
+            "$ref": "./examples/GCA/RolloutStatusListByRollout.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
     }
   },
   "definitions": {
     "GateAction": {
       "type": "object",
       "properties": {
-        "preActions": {
-          "type": "array",
-          "items": {
-            "$ref": "./common.json#/definitions/PreAction"
-          },
+        "preCheck": {
+          "$ref": "#/definitions/PreCheck",
+          "description": "Pre-action to be applied to rollout tiers.",
           "x-ms-mutability": [
             "read",
             "create",
             "update"
           ]
         },
-        "postActions": {
+        "gates": {
           "type": "array",
+          "description": "Post-actions to be applied to rollout tiers.",
           "items": {
-            "$ref": "./common.json#/definitions/PostAction"
+            "$ref": "#/definitions/Gate"
           },
           "x-ms-mutability": [
             "read",
@@ -1702,7 +1811,8 @@
             "update"
           ]
         }
-      }
+      },
+      "description": "Actions to be associated with an individual rollout site."
     },
     "RolloutListResult": {
       "type": "object",
@@ -1761,17 +1871,156 @@
             "create"
           ]
         },
-        "rolloutState": {
-          "$ref": "./common.json#/definitions/RolloutState",
+        "rolloutTiers": {
+          "items": {
+            "$ref": "#/definitions/RolloutTierSnapshot"
+          },
+          "description": "Rollout tier snapshots.",
+          "type": "array",
           "x-ms-mutability": [
-            "read"
+            "read",
+            "update"
           ]
         },
-        "rolloutDetailedState": {
-          "$ref": "#/definitions/RolloutDetailedState",
+        "configurationGroupValueChanges": {
+          "additionalProperties": {
+            "$ref": "#/definitions/ConfigurationGroupValueChange"
+          },
+          "description": "Configuration group value changes.",
+          "type": "object",
+          "x-ms-mutability": [
+            "read",
+            "update"
+          ]
+        },
+        "networkServiceDesignVersionChange": {
+          "$ref": "#/definitions/NetworkServiceDesignVersionChange",
+          "description": "Network service design version change.",
+          "x-ms-mutability": [
+            "read",
+            "update"
+          ]
+        },
+        "restrictions": {
+          "description": "List of Tiers/SiteNetworkServices that should be excluded from this UpdateSpecification",
+          "items": {
+            "$ref": "./common.json#/definitions/ReferencedResource"
+          },
+          "type": "array",
           "x-ms-mutability": [
             "read"
           ]
+        }
+      }
+    },
+    "RolloutTierSnapshot": {
+      "type": "object",
+      "required": [
+        "siteNetworkServices"
+      ],
+      "description": "Representation of a rollout tier progress.",
+      "properties": {
+        "siteNetworkServices": {
+          "items": {
+            "$ref": "#/definitions/SiteNetworkServiceSnapshot"
+          },
+          "type": "array",
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ]
+        },
+        "excludedSiteNetworkServices": {
+          "items": {
+            "$ref": "./common.json#/definitions/ReferencedResource"
+          },
+          "type": "array",
+          "description": "List of excluded SiteNetworkServices from the tier.",
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ]
+        }
+      }
+    },
+    "SiteNetworkServiceSnapshot": {
+      "type": "object",
+      "description": "Representation of an individual site's rollout progress, including its SNS, pre-action and post-action",
+      "properties": {
+        "siteNetworkServiceReference": {
+          "$ref": "./common.json#/definitions/ReferencedResource",
+          "description": "Reference to an individual SiteNetworkService."
+        },
+        "preCheck": {
+          "$ref": "#/definitions/PreCheckSnapshot",
+          "description": "The pre-action associated with the site."
+        },
+        "gates": {
+          "items": {
+            "$ref": "#/definitions/GateSnapshot"
+          },
+          "type": "array",
+          "description": "The post-actions associated with the site."
+        }
+      }
+    },
+    "PreCheckSnapshot": {
+      "type": "object",
+      "description": "State of an PreCheck.",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/PreCheck",
+          "readOnly": true
+        }
+      }
+    },
+    "GateSnapshot": {
+      "type": "object",
+      "description": "State of an Gate.",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/Gate",
+          "readOnly": true
+        }
+      }
+    },
+    "PreCheck": {
+      "description": "Behavior modifiers or pre-actions executed before convergence on the SiteNetworkService begins.",
+      "enum": [
+        "FailOnUnexpected",
+        "ProceedOnUnexpected"
+      ],
+      "type": "string",
+      "x-ms-enum": {
+        "name": "PreCheck",
+        "modelAsString": true
+      }
+    },
+    "Gate": {
+      "description": "Action to be performed after a SiteNetworkService is converged.",
+      "type": "object",
+      "required": [
+        "actionType"
+      ],
+      "properties": {
+        "actionType": {
+          "description": "Type of the Gate; one of WaitingGate or ManualGate.",
+          "enum": [
+            "WaitingGate",
+            "ManualGate"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "Gate",
+            "modelAsString": true
+          }
+        },
+        "durationInMinutes": {
+          "description": "Time in minutes AOSM should wait before proceeding to the next SiteNetworkService, only applicable when Gate is a WaitingGate.",
+          "type": "integer",
+          "example": "10"
         }
       }
     },
@@ -1900,15 +2149,6 @@
             "update"
           ]
         },
-        "tierTag": {
-          "type": "string",
-          "description": "Talking name of the tier.",
-          "x-ms-mutability": [
-            "read",
-            "create",
-            "update"
-          ]
-        },
         "orderedSiteNetworkServices": {
           "description": "An ordered list of SiteNetworkServices",
           "items": {
@@ -1934,8 +2174,8 @@
             "update"
           ]
         },
-        "intraTierActions": {
-          "description": "SDP stays the same between SiteNetWorkServices whithin RolloutTiers.",
+        "inTierActions": {
+          "description": "Actions to perform between SiteNetworkServices within a RolloutTier.",
           "$ref": "#/definitions/GateAction",
           "x-ms-mutability": [
             "read",
@@ -1943,14 +2183,12 @@
             "update"
           ]
         },
-        "interTierActions": {
-          "description": "SDP may vary from Tier to Tier",
-          "$ref": "#/definitions/GateAction",
-          "x-ms-mutability": [
-            "read",
-            "create",
-            "update"
-          ]
+        "betweenTierActions": {
+          "description": "Actions to perform between tiers.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Gate"
+          }
         }
       }
     },
@@ -2073,29 +2311,45 @@
     "NetworkServiceDesignVersionChange": {
       "type": "object",
       "required": [
-        "existingNetworkServiceDesignReference",
-        "newNetworkServiceDesignReference"
+        "publisherName",
+        "publisherScope",
+        "newNetworkServiceDesignGroupName",
+        "newNetworkServiceDesignVersionName",
+        "networkServiceDesignVersionOfferingLocation"
       ],
       "properties": {
-        "existingNetworkServiceDesignReference": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "The network service design version details",
-          "x-ms-mutability": [
-            "read",
-            "create",
-            "update"
-          ]
+        "publisherName": {
+          "type": "string",
+          "description": "The publisher name for the site network service."
         },
-        "newNetworkServiceDesignReference": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
-          "description": "The network service design version details",
-          "x-ms-mutability": [
-            "read",
-            "create",
-            "update"
-          ]
+        "publisherScope": {
+          "$ref": "./common.json#/definitions/PublisherScope",
+          "description": "The scope of the publisher."
+        },
+        "existingNetworkServiceDesignGroupName": {
+          "type": "string",
+          "description": "The current network service design group name for the site network service."
+        },
+        "newNetworkServiceDesignGroupName": {
+          "type": "string",
+          "description": "The desired network service design group name for the site network service."
+        },
+        "existingNetworkServiceDesignVersionName": {
+          "type": "string",
+          "description": "The current network service design version for the site network service.",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "newNetworkServiceDesignVersionName": {
+          "type": "string",
+          "description": "The desired network service design version for the site network service.",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "networkServiceDesignVersionOfferingLocation": {
+          "type": "string",
+          "description": "The location of the network service design offering."
         }
-      }
+      },
+      "description": "Change to network service design version."
     },
     "ConfigurationGroupValueChange": {
       "type": "object",
@@ -2132,7 +2386,7 @@
           "$ref": "#/definitions/rolloutInfo"
         },
         "rolloutTiers": {
-          "items" : {
+          "items": {
             "$ref": "#/definitions/RolloutTierRolloutState"
           },
           "type": "array",
@@ -2148,7 +2402,7 @@
         "rolloutTierReference": {
           "$ref": "./common.json#/definitions/ReferencedResource",
           "x-ms-mutability": [
-            "read"         
+            "read"
           ]
         },
         "rolloutInfo": {
@@ -2165,7 +2419,7 @@
             "$ref": "#/definitions/SiteNetworkServiceRolloutState"
           },
           "x-ms-mutability": [
-            "read"         
+            "read"
           ]
         }
       }
@@ -2232,30 +2486,219 @@
         }
       }
     },
-
     "rolloutInfo": {
+      "description": "An object containing status and metadata of a rollout.",
       "type": "object",
       "properties": {
         "status": {
-          "type": "string"
+          "enum": [
+            "Ready",
+            "Queued",
+            "Running",
+            "Canceling",
+            "Canceled",
+            "Suspending",
+            "Suspended",
+            "Completed",
+            "Failed",
+            "WaitingForUserInput"
+          ],
+          "description": "Status of an individual rollout action.",
+          "type": "string",
+          "x-ms-enum": {
+            "name": "status",
+            "modelAsString": true
+          }
         },
         "startTime": {
           "type": "string",
+          "description": "Start time of the rollout action.",
           "format": "date-time"
         },
         "endTime": {
           "type": "string",
+          "description": "End time of the rollout action.",
           "format": "date-time"
         },
         "lastUpdatedTime": {
           "type": "string",
+          "description": "Last updated time of the rollout action.",
           "format": "date-time"
         },
         "errorInfo": {
-          "type": "string"
+          "type": "string",
+          "description": "Error message."
         }
       },
       "readOnly": true
+    },
+    "RolloutStatus": {
+      "description": "Status of a rollout.",
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/RolloutStatusProperties",
+          "description": "Rollout progress status properties."
+        }
+      },
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "RolloutStatusProperties": {
+      "description": "Rollout properties.",
+      "type": "object",
+      "properties": {
+        "rolloutTiers": {
+          "items": {
+            "$ref": "#/definitions/RolloutTierStatus"
+          },
+          "type": "array",
+          "x-ms-mutability": [
+            "read"
+          ]
+        },
+        "configurationGroupValueChanges": {
+          "additionalProperties": {
+            "$ref": "#/definitions/ConfigurationGroupValueChange"
+          },
+          "type": "object",
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ]
+        },
+        "networkServiceDesignVersionChange": {
+          "$ref": "#/definitions/NetworkServiceDesignVersionChange",
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ]
+        },
+        "restrictions": {
+          "description": "List of Tiers/SiteNetworkServices that should be excluded from this UpdateSpecification",
+          "items": {
+            "$ref": "./common.json#/definitions/ReferencedResource"
+          },
+          "type": "array",
+          "x-ms-mutability": [
+            "read"
+          ]
+        },
+        "rolloutInfo": {
+          "$ref": "#/definitions/rolloutInfo",
+          "description": "Overall state and metadata of the rollout.",
+          "readOnly": true
+        }
+      }
+    },
+    "RolloutTierStatus": {
+      "type": "object",
+      "description": "Representation of a rollout tier's status.",
+      "properties": {
+        "siteNetworkServices": {
+          "items": {
+            "$ref": "#/definitions/SiteNetworkServiceStatus"
+          },
+          "type": "array",
+          "x-ms-mutability": [
+            "read"
+          ]
+        },
+        "excludedSiteNetworkServices": {
+          "items": {
+            "$ref": "./common.json#/definitions/ReferencedResource"
+          },
+          "type": "array",
+          "description": "List of excluded SiteNetworkServices from the tier.",
+          "x-ms-mutability": [
+            "read"
+          ]
+        },
+        "rolloutInfo": {
+          "$ref": "#/definitions/rolloutInfo",
+          "description": "State and metadata of the tier.",
+          "readOnly": true
+        }
+      }
+    },
+    "SiteNetworkServiceStatus": {
+      "type": "object",
+      "description": "Representation of an individual site's rollout status, including its SNS, pre-action and post-action and their statuses",
+      "properties": {
+        "siteNetworkServiceReference": {
+          "$ref": "./common.json#/definitions/ReferencedResource",
+          "description": "Reference to an individual SiteNetworkService.",
+          "readOnly": true
+        },
+        "rolloutInfo": {
+          "$ref": "#/definitions/rolloutInfo",
+          "description": "State and metadata of the Rollout action.",
+          "readOnly": true
+        },
+        "preCheck": {
+          "$ref": "#/definitions/PreCheckRolloutState",
+          "description": "Status of the pre-action associated with the site."
+        },
+        "gates": {
+          "items": {
+            "$ref": "#/definitions/GateRolloutState"
+          },
+          "type": "array",
+          "description": "Statuses of the post-actions associated with the site."
+        }
+      }
+    },
+    "PreCheckRolloutState": {
+      "type": "object",
+      "description": "State of an PreCheck.",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/PreCheck",
+          "readOnly": true
+        },
+        "rolloutInfo": {
+          "$ref": "#/definitions/rolloutInfo",
+          "readOnly": true
+        }
+      }
+    },
+    "GateRolloutState": {
+      "type": "object",
+      "description": "State of an Gate.",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/Gate",
+          "readOnly": true
+        },
+        "rolloutInfo": {
+          "$ref": "#/definitions/rolloutInfo",
+          "readOnly": true
+        }
+      }
+    },
+    "RolloutStatusListResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RolloutStatus"
+          },
+          "description": "A list of Rollout statuses."
+        },
+        "nextLink": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The URL to get the next set of results."
+        }
+      },
+      "description": "A list of Rollout statuses."
     }
   }
 }

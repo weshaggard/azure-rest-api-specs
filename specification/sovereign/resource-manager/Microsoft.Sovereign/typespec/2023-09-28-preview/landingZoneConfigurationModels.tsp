@@ -194,12 +194,6 @@ model GenerateLandingZoneRequest {
 	enrollmentAccountId?: string;
 }
 
-@doc("The request body to update the authoring status.")
-model SetAuthoringStatusRequest {
-	@doc("The value of the authoring status to be updated.")
-	authoringStatus: AuthoringStatus;
-}
-
 @doc("The response for generate landing zone request.")
 model GenerateLandingZoneResponse {
 	@doc("The top level management group display name.")
@@ -211,6 +205,24 @@ model GenerateLandingZoneResponse {
 	@doc("The blob url where generated landing zone is stored")
 	@secret
 	blobUrl: url;
+}
+
+@doc("The request body to update the authoring status.")
+model SetAuthoringStatusRequest {
+	@doc("The value of the authoring status to be updated.")
+	authoringStatus: AuthoringStatus;
+}
+
+@doc("The response body for the set authoring status request")
+model SetAuthoringStatusResponse {
+	@doc("The top level management group display name.")
+	topLevelMgDisplayName: string;
+
+	@doc("The name of the landing zone configuration resource.")
+	landingZoneConfigurationName: string;
+
+	@doc("The value of the authoring status to be updated.")
+	authoringStatus: AuthoringStatus;
 }
 
 @doc("The authoring status for landing zone configuration workflow.")
