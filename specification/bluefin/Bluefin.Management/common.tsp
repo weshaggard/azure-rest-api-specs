@@ -23,7 +23,7 @@ model ExtendedLocation {
 }
 
 @lroStatus
-@doc("The provisioning status of the resource")
+@doc("The provisioning status of the resource.")
 enum ProvisioningState {
   ...ResourceProvisioningState,
 
