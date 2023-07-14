@@ -21,22 +21,37 @@ using OpenAPI;
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureStackHCI;
 
+@doc("A Cluster")
+model Clusters is TrackedResource<ClusterProperties> {
+  @key("clusterName")
+  @doc("Name of Cluster")
+  @segment("clusters")
+  name: string;
+}
+
+@doc("A ClusterProperties")
+model ClusterProperties {
+}
+
 @doc("Edge device resource")
-@resource("DeploymentSettings")
+@parentResource(Clusters)
 model DeploymentSetting is ProxyResource<DeploymentSettingProperties> {
   @doc("Name of Deployment Setting")
+  @segment("deploymentSettings")
   @key("default")
-  @segment("DeploymentSettings")
-  // Todo: Make default name as const
+  @path
   name: string
 }
 
 @doc("DeploymentSetting properties")
 model DeploymentSettingProperties {
   @doc("Todo")
+  provisioningState: ProvisioningState,
+  @doc("Todo")
   deploymentData: DeploymentData,
   @doc("Todo")
-  deploymentMetaData: DeploymentMetaData
+  deploymentMetaData: DeploymentMetaData;
+  
 }
 
 @doc("The DeploymentData of AzureStackHCI Cluster.")
@@ -450,11 +465,8 @@ interface DeploymentSettings {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DeploymentSetting>;
   update is ArmResourcePatchAsync<DeploymentSetting, DeploymentSettingProperties>;
   delete is ArmResourceDeleteWithoutOkAsync<DeploymentSetting>;
-  listByResourceGroup is ArmResourceListByParent<DeploymentSetting>;
-  listBySubscription is ArmListBySubscription<DeploymentSetting>;
+  listByParent is ArmResourceListByParent<DeploymentSetting>;
   deploy is ArmResourceActionAsync<DeploymentSetting, DeployRequest, DeployResponse>;
-  //deploy is ArmResourceActionAsync(provider: Microsoft.AzureStackHCI, body: TRequest): Azure.ResourceManager.ArmAcceptedLroResponse<Resource operation accepted.> | Azure.ResourceManager.ArmResponse<T> | Azure.ResourceManager.ErrorResponse
-  
 }
 
 @doc("The deployRequest of a cluster.")
