@@ -16,7 +16,7 @@ using Azure.ResourceManager.Foundations;
 @armProviderNamespace("Microsoft.EdgeTest")
 @service({
   title: "Microsoft.EdgeTest",
-  version: "2023-12-01-preview",
+  version: "2021-08-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.EdgeTest;
