@@ -38,6 +38,7 @@ model EdgeDeviceProperties {
   @doc("Device Metadata")
   deviceMetadata: string;
   @doc("Provisioning state of resource")
+  @visibility("read")
   provisioningState: ProvisioningState
 }
 

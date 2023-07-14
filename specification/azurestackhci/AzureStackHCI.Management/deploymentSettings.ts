@@ -46,6 +46,7 @@ model DeploymentSetting is ProxyResource<DeploymentSettingsProperties> {
 @doc("DeploymentSetting properties")
 model DeploymentSettingsProperties {
   @doc("DeploymentSetting provisioning state")
+  @visibility("read")
   provisioningState: ProvisioningState,
   @doc("Deployment Data to deploy AzureStackHCI Cluster.")
   deploymentData: DeploymentData,
@@ -84,7 +85,7 @@ model DeploymentData {
   "adouPath" : string,
   @doc("The URI to the keyvault / secret store.")
   @extension("x-ms-secret", true)
-  secretsLocation : url,
+  secretsLocation : string,
   @doc("OptionalServices config to deploy AzureStackHCI Cluster.")
   optionalServices?: OptionalServices
 }
