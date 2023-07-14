@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Microsoft.EdgeTest",
-    "version": "2021-08-01-preview",
+    "version": "2023-12-01-preview",
     "x-typespec-generated": [
       {
         "emitter": "@azure-tools/typespec-autorest"
@@ -104,7 +104,7 @@
             "name": "deviceProvisioningStateName",
             "in": "path",
             "required": true,
-            "description": "The registration id of the resource.",
+            "description": "Singleton pattern using name: current.",
             "type": "string",
             "pattern": "^[a-zA-Z0-9-]{3,24}$"
           }
@@ -141,7 +141,7 @@
             "name": "deviceProvisioningStateName",
             "in": "path",
             "required": true,
-            "description": "The registration id of the resource.",
+            "description": "Singleton pattern using name: current.",
             "type": "string",
             "pattern": "^[a-zA-Z0-9-]{3,24}$"
           },
@@ -204,7 +204,7 @@
             "name": "deviceProvisioningStateName",
             "in": "path",
             "required": true,
-            "description": "The registration id of the resource.",
+            "description": "Singleton pattern using name: current.",
             "type": "string",
             "pattern": "^[a-zA-Z0-9-]{3,24}$"
           }
@@ -241,7 +241,7 @@
             "name": "deviceProvisioningStateName",
             "in": "path",
             "required": true,
-            "description": "The registration id of the resource.",
+            "description": "Singleton pattern using name: current.",
             "type": "string",
             "pattern": "^[a-zA-Z0-9-]{3,24}$"
           },
@@ -927,23 +927,13 @@
         "type": {
           "$ref": "#/definitions/AllocationType",
           "description": "Type of the allocation rule"
-        },
-        "endpointType": {
-          "$ref": "#/definitions/EndpointType",
-          "description": "Type of endpoint"
-        },
-        "time1200": {
-          "type": "string",
-          "description": "Validate if this is up-to-date"
         }
       },
       "description": "The allocation rule",
       "discriminator": "type",
       "required": [
         "name",
-        "type",
-        "endpointType",
-        "time1200"
+        "type"
       ]
     },
     "AllocationType": {
@@ -956,7 +946,7 @@
       ],
       "x-ms-enum": {
         "name": "AllocationType",
-        "modelAsString": false,
+        "modelAsString": true,
         "values": [
           {
             "name": "Static",
@@ -979,13 +969,13 @@
     "BootstrapAuthenticationDetails": {
       "type": "object",
       "properties": {
-        "primaryCert": {
+        "primaryCertificate": {
           "type": "string",
           "description": "The primary certificate",
           "format": "password",
           "x-ms-secret": true
         },
-        "secondaryCert": {
+        "secondaryCertificate": {
           "type": "string",
           "description": "The secondary certificate",
           "format": "password",
@@ -994,19 +984,19 @@
       },
       "description": "The authentication details for bootstrap",
       "required": [
-        "primaryCert"
+        "primaryCertificate"
       ]
     },
     "BootstrapAuthenticationDetailsUpdate": {
       "type": "object",
       "properties": {
-        "primaryCert": {
+        "primaryCertificate": {
           "type": "string",
           "description": "The primary certificate",
           "format": "password",
           "x-ms-secret": true
         },
-        "secondaryCert": {
+        "secondaryCertificate": {
           "type": "string",
           "description": "The secondary certificate",
           "format": "password",
@@ -1055,7 +1045,7 @@
       ],
       "x-ms-enum": {
         "name": "BootstrapAuthenticationType",
-        "modelAsString": false,
+        "modelAsString": true,
         "values": [
           {
             "name": "X509",
@@ -1220,10 +1210,9 @@
     "DeviceProvisioningStateProperties": {
       "type": "object",
       "properties": {
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "The status of the last operation.",
-          "readOnly": true
+        "registrationId": {
+          "type": "string",
+          "description": "Unique identifier for the device"
         },
         "status": {
           "$ref": "#/definitions/ProvisioningStatus",
@@ -1242,23 +1231,17 @@
           "$ref": "#/definitions/ProvisioningPolicyResourceId",
           "description": "The provisioning policy resource id"
         },
-        "allocations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AllocationRule"
-          },
-          "x-ms-identifiers": [
-            "name"
-          ],
-          "description": "Allocation rules captured from the linked provisioningPolicyResourceId at the time of provisioning",
-          "x-typespec-name": "AllocationRule[]"
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The status of the last operation.",
+          "readOnly": true
         }
       },
       "description": "Details of the DeviceProvisioningState",
       "required": [
+        "registrationId",
         "status",
-        "discoveryEnabled",
-        "allocations"
+        "discoveryEnabled"
       ]
     },
     "DeviceProvisioningStateUpdate": {
@@ -1274,6 +1257,10 @@
     "DeviceProvisioningStateUpdateProperties": {
       "type": "object",
       "properties": {
+        "registrationId": {
+          "type": "string",
+          "description": "Unique identifier for the device"
+        },
         "status": {
           "$ref": "#/definitions/ProvisioningStatus",
           "description": "Provisioning status of the resource this DeviceProvisioningState extends",
@@ -1290,17 +1277,6 @@
         "provisioningPolicyResourceId": {
           "$ref": "#/definitions/ProvisioningPolicyResourceId",
           "description": "The provisioning policy resource id"
-        },
-        "allocations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AllocationRule"
-          },
-          "x-ms-identifiers": [
-            "name"
-          ],
-          "description": "Allocation rules captured from the linked provisioningPolicyResourceId at the time of provisioning",
-          "x-typespec-name": "AllocationRule[]"
         }
       },
       "description": "The updatable properties of the DeviceProvisioningState."
@@ -1313,7 +1289,7 @@
       ],
       "x-ms-enum": {
         "name": "EndpointType",
-        "modelAsString": false,
+        "modelAsString": true,
         "values": [
           {
             "name": "AzureEventGridBroker",
@@ -1674,7 +1650,7 @@
       ],
       "x-ms-enum": {
         "name": "ProvisioningResourceType",
-        "modelAsString": false,
+        "modelAsString": true,
         "values": [
           {
             "name": "AzureIoTDevice",
