@@ -19,8 +19,8 @@ model Instance is TrackedResource<InstanceProperties> {
   @doc("Name of instance.")
   @key("instanceName")
   @segment("instances")
+  @pattern("^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$")
   @path
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
   name: string;
 
   // Extended location is not included in TrackedResource yet
@@ -35,9 +35,6 @@ model InstanceProperties {
   @doc("User-friendly name for the Instance.")
   displayName: string;
 
-  @doc("Location of the Open Telemetry collector that logs, traces and metrics are sent to.")
-  otelCollectorAddress: string;
-
   @doc("The status of the last operation.")
   @visibility("read")
   provisioningState?: ProvisioningState;
@@ -47,7 +44,7 @@ model InstanceProperties {
 interface Instances {
   get is ArmResourceRead<Instance>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<Instance>;
-  update is ArmResourcePatchAsync<Instance, InstanceProperties>; // This needs to be async
+  update is ArmResourcePatchSync<Instance, InstanceProperties>;
   delete is ArmResourceDeleteAsync<Instance>;
   listByResourceGroup is ArmResourceListByParent<Instance>;
   listBySubscription is ArmListBySubscription<Instance>;

@@ -17,12 +17,12 @@ namespace Microsoft.Bluefin;
 
 @doc("A Pipeline resource belonging to an Instance resource.")
 @parentResource(Instance)
-model Pipeline is ProxyResource<PipelineProperties> {
+model Pipeline is TrackedResource<PipelineProperties> {
   @doc("Name of pipeline")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("pipelineName")
-  @path
   @segment("pipelines")
+  @pattern("^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$")
+  @path
   name: string;
 
   // Extended location is not included in TrackedResource yet
@@ -66,7 +66,7 @@ model PipelineStages {
 interface Pipelines {
   get is ArmResourceRead<Pipeline>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<Pipeline>;
-  update is ArmResourcePatchAsync<Pipeline, PipelineProperties>;
+  update is ArmResourcePatchSync<Pipeline, PipelineProperties>;
   delete is ArmResourceDeleteAsync<Pipeline>;
   listByInstance is ArmResourceListByParent<Pipeline>;
 }

@@ -17,12 +17,12 @@ namespace Microsoft.Bluefin;
 
 @doc("A Dataset resource belonging to an Instance resource.")
 @parentResource(Instance)
-model Dataset is ProxyResource<DatasetProperties> {
+model Dataset is TrackedResource<DatasetProperties> {
   @doc("Name of dataset.")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("datasetName")
-  @path
   @segment("datasets")
+  @pattern("^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$")
+  @path
   name: string;
 
   // Extended location is not included in TrackedResource yet
@@ -61,7 +61,7 @@ model DatasetPropertyKeys {}
 interface Datasets {
   get is ArmResourceRead<Dataset>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<Dataset>;
-  update is ArmResourcePatchAsync<Dataset, DatasetProperties>;
+  update is ArmResourcePatchSync<Dataset, DatasetProperties>;
   delete is ArmResourceDeleteAsync<Dataset>;
   listByInstance is ArmResourceListByParent<Dataset>;
 }

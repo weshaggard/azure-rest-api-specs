@@ -36,6 +36,6 @@ enum ProvisioningState {
   @doc("The resource is being deleted.")
   Deleting,
 
-  @doc("The resource is being moved.")
+  @doc("The resource is was accepted by the server.")
   Accepted,
 }
