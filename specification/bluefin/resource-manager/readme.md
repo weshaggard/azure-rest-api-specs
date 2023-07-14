@@ -1,8 +1,8 @@
-# Bluefin
+# bluefin
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for Bluefin.
+This is the AutoRest configuration file for bluefin.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the Bluefin.
+These are the global settings for the bluefin.
 
 ```yaml
 openapi-type: arm
@@ -35,7 +35,7 @@ These settings apply only when `--tag=package-2023-06-26-preview` is specified o
 
 ```yaml $(tag) == 'package-2023-06-26-preview'
 input-file:
-  - Microsoft.Bluefin/preview/2023-06-26-preview/openapi.json
+  - Microsoft.bluefin/preview/2023-06-26-preview/openapi.json
 ```
 
 ---
