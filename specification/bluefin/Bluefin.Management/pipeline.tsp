@@ -24,6 +24,11 @@ model Pipeline is ProxyResource<PipelineProperties> {
   @path
   @segment("pipelines")
   name: string;
+
+  // Extended location is not included in TrackedResource yet
+  @doc("Edge location of the resource.")
+  @visibility("read","create")
+  extendedLocation?: ExtendedLocation;
 }
 
 @doc("The properties of a Pipeline resource.")

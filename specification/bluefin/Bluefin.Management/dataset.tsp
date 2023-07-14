@@ -24,6 +24,11 @@ model Dataset is ProxyResource<DatasetProperties> {
   @path
   @segment("datasets")
   name: string;
+
+  // Extended location is not included in TrackedResource yet
+  @doc("Edge location of the resource.")
+  @visibility("read","create")
+  extendedLocation?: ExtendedLocation;
 }
 
 @doc("The properties of a Dataset resource.")
