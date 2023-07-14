@@ -50,8 +50,8 @@ model InstanceProperties {
 interface Instances {
   get is ArmResourceRead<Instance>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<Instance>;
-  update is ArmResourcePatchSync<Instance, InstanceProperties>; // This needs to be async
-  delete is ArmResourceDeleteSync<Instance>;
+  update is ArmResourcePatchAsync<Instance, InstanceProperties>; // This needs to be async
+  delete is ArmResourceDeleteAsync<Instance>;
   listByResourceGroup is ArmResourceListByParent<Instance>;
   listBySubscription is ArmListBySubscription<Instance>;
 }
@@ -95,8 +95,8 @@ model PipelineProperties {
 interface Pipelines {
   get is ArmResourceRead<Pipeline>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<Pipeline>;
-  update is ArmResourcePatchSync<Pipeline, PipelineProperties>;
-  delete is ArmResourceDeleteSync<Pipeline>;
+  update is ArmResourcePatchAsync<Pipeline, PipelineProperties>;
+  delete is ArmResourceDeleteAsync<Pipeline>;
   listByInstance is ArmResourceListByParent<Pipeline>;
 }
 
@@ -143,8 +143,8 @@ model DatasetPropertyKeys {
 interface Datasets {
   get is ArmResourceRead<Dataset>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<Dataset>;
-  update is ArmResourcePatchSync<Dataset, DatasetProperties>;
-  delete is ArmResourceDeleteSync<Dataset>;
+  update is ArmResourcePatchAsync<Dataset, DatasetProperties>;
+  delete is ArmResourceDeleteAsync<Dataset>;
   listByInstance is ArmResourceListByParent<Dataset>;
 }
 
