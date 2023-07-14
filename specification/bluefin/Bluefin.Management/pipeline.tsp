@@ -26,10 +26,6 @@ model Pipeline is ProxyResource<PipelineProperties> {
   name: string;
 }
 
-@doc("The input of a Pipeline resource.")
-model PipelineInput {
-}
-
 @doc("The properties of a Pipeline resource.")
 model PipelineProperties {
   @doc("User-friendly name for the pipeline.")
@@ -41,12 +37,23 @@ model PipelineProperties {
   @doc("Flag indicating whether the pipeline should be running or not.")
   enabled: boolean;
 
-  @doc("The input of a Pipeline resource.")
+  @doc("Information about where to pull input data from.")
   input: PipelineInput;
   
+  @doc("Map of stage ids to stage configurations for all pipeline processing and output stages.")
+  stages: PipelineStages;
+
   @doc("The status of the last operation.")
   @visibility("read")
   provisioningState?: ProvisioningState;
+}
+
+@doc("Information about where to pull input data from.")
+model PipelineInput {
+}
+
+@doc("Stage configurations for all Pipeline processing and output stages.")
+model PipelineStages {
 }
 
 @armResourceOperations
