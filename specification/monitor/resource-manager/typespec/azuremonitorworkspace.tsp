@@ -74,9 +74,8 @@ model IngestionSettings {
 }
 
 @armCommonDefinition("PrivateEndpointConnection")
-@doc("this is extended")
+@doc("PrivateEndpointConnection from the common objects")
 model PrivateEndpointConnection {
-
 }
 
 @doc("State of the public network access.")
