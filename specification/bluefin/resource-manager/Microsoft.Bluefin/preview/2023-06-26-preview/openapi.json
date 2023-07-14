@@ -47,6 +47,9 @@
     },
     {
       "name": "Pipelines"
+    },
+    {
+      "name": "Datasets"
     }
   ],
   "paths": {
@@ -74,6 +77,11 @@
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "Operations_List": {
+            "$ref": "./examples/Operations_List.json"
           }
         },
         "x-ms-pageable": {
@@ -328,6 +336,280 @@
             "name": "instanceName",
             "in": "path",
             "description": "Name of instance",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource deleted successfully."
+          },
+          "204": {
+            "description": "Resource deleted successfully."
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Bluefin/instances/{instanceName}/datasets": {
+      "get": {
+        "operationId": "Datasets_ListByInstance",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "List Dataset resources by Instance",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "instanceName",
+            "in": "path",
+            "description": "Name of instance",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/DatasetListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Bluefin/instances/{instanceName}/datasets/{datasetName}": {
+      "get": {
+        "operationId": "Datasets_Get",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Get a Dataset",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "instanceName",
+            "in": "path",
+            "description": "Name of instance",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "datasetName",
+            "in": "path",
+            "description": "Name of dataset",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/Dataset"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "Datasets_CreateOrUpdate",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Create a Dataset",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "instanceName",
+            "in": "path",
+            "description": "Name of instance",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "datasetName",
+            "in": "path",
+            "description": "Name of dataset",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "description": "Resource create parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Dataset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/Dataset"
+            }
+          },
+          "201": {
+            "description": "ARM create operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/Dataset"
+            },
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
+      },
+      "patch": {
+        "operationId": "Datasets_Update",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Update a Dataset",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "instanceName",
+            "in": "path",
+            "description": "Name of instance",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "datasetName",
+            "in": "path",
+            "description": "Name of dataset",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "properties",
+            "in": "body",
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DatasetUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/Dataset"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Datasets_Delete",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Delete a Dataset",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "instanceName",
+            "in": "path",
+            "description": "Name of instance",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "datasetName",
+            "in": "path",
+            "description": "Name of dataset",
             "required": true,
             "type": "string",
             "pattern": "^[a-zA-Z0-9-]{3,24}$"
@@ -625,6 +907,122 @@
     }
   },
   "definitions": {
+    "Dataset": {
+      "type": "object",
+      "description": "A dataset resource belonging to a instance resource.",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/DatasetProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "DatasetListResult": {
+      "type": "object",
+      "description": "The response of a Dataset list operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The Dataset items on this page",
+          "items": {
+            "$ref": "#/definitions/Dataset"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "DatasetProperties": {
+      "type": "object",
+      "description": "The properties of a Dataset resource.",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "User-friendly name for the Dataset."
+        },
+        "payload": {
+          "type": "string",
+          "description": "Path to the payload in the message. Enrich will add only the payload to the enriched message, other fields will not be kept except for in the indexes."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Path to an RFC3339 timestamp. If no path is provided, the ingestion time of the record is used for time-based joins."
+        },
+        "ttl": {
+          "type": "string",
+          "description": "Time to live."
+        },
+        "keys": {
+          "$ref": "#/definitions/DatasetPropertyKeys",
+          "description": "List of keys that can be used for joining on enrich"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The status of the last operation.",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "displayName"
+      ]
+    },
+    "DatasetPropertyKeys": {
+      "type": "object",
+      "description": "List of keys that can be used for joining on enrich.",
+      "properties": {}
+    },
+    "DatasetUpdate": {
+      "type": "object",
+      "description": "The type used for update operations of the Dataset.",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/DatasetUpdateProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "DatasetUpdateProperties": {
+      "type": "object",
+      "description": "The updatable properties of the Dataset.",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "User-friendly name for the Dataset."
+        },
+        "payload": {
+          "type": "string",
+          "description": "Path to the payload in the message. Enrich will add only the payload to the enriched message, other fields will not be kept except for in the indexes."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Path to an RFC3339 timestamp. If no path is provided, the ingestion time of the record is used for time-based joins."
+        },
+        "ttl": {
+          "type": "string",
+          "description": "Time to live."
+        },
+        "keys": {
+          "$ref": "#/definitions/DatasetPropertyKeys",
+          "description": "List of keys that can be used for joining on enrich"
+        }
+      }
+    },
     "Instance": {
       "type": "object",
       "description": "Instance resource",
