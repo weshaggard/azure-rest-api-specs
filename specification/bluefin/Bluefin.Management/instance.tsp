@@ -22,6 +22,11 @@ model Instance is TrackedResource<InstanceProperties> {
   @path
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   name: string;
+
+  // Extended location is not included in TrackedResource yet
+  @doc("Edge location of the resource")
+  @visibility("read","create")
+  extendedLocation?: ExtendedLocation;
 }
 
 @doc("Instance properties")

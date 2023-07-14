@@ -13,6 +13,15 @@ using Azure.ResourceManager;
 
 namespace Microsoft.Bluefin;
 
+@doc("Extended location is an extension of Azure locations. They provide a way to use their Azure ARC enabled Kubernetes clusters as target locations for deploying Azure services instances.")
+model ExtendedLocation {
+    @doc("The name of the extended location.")
+    name: string;
+
+    @doc("The type of the extended location.")
+    type?: string;
+}
+
 @lroStatus
 @doc("The provisioning status of the resource")
 enum ProvisioningState {
