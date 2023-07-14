@@ -15,10 +15,10 @@ using Azure.ResourceManager;
 
 namespace Microsoft.Bluefin;
 
-@doc("A dataset resource belonging to a instance resource.")
+@doc("A Dataset resource belonging to an Instance resource.")
 @parentResource(Instance)
 model Dataset is ProxyResource<DatasetProperties> {
-  @doc("Name of dataset")
+  @doc("Name of dataset.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("datasetName")
   @path
@@ -34,13 +34,13 @@ model DatasetProperties {
   @doc("Path to the payload in the message. Enrich will add only the payload to the enriched message, other fields will not be kept except for in the indexes.")
   payload?: string;
 
-  @doc("Path to an RFC3339 timestamp. If no path is provided, the ingestion time of the record is used for time-based joins.")
+  @doc("Path to an RFC3339 timestamp in the message. If no path is provided, the ingestion time of the record is used for time-based joins.")
   timestamp?: string;
 
-  @doc("Time to live.")
+  @doc("Time to live for individual records.")
   ttl?: string;
 
-  @doc("List of keys that can be used for joining on enrich")
+  @doc("List of keys that can be used for joining on enrich.")
   keys?: DatasetPropertyKeys;
 
   @doc("The status of the last operation.")

@@ -15,7 +15,7 @@ using Azure.ResourceManager;
 
 namespace Microsoft.Bluefin;
 
-@doc("A pipeline resource belonging to a instance resource.")
+@doc("A Pipeline resource belonging to an Instance resource.")
 @parentResource(Instance)
 model Pipeline is ProxyResource<PipelineProperties> {
   @doc("Name of pipeline")

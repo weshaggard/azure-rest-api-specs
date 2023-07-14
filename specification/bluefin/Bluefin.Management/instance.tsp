@@ -14,9 +14,9 @@ using Azure.ResourceManager;
 
 namespace Microsoft.Bluefin;
 
-@doc("Instance resource")
+@doc("A Instance resource is a logical container for a set of child resources.")
 model Instance is TrackedResource<InstanceProperties> {
-  @doc("Name of instance")
+  @doc("Name of instance.")
   @key("instanceName")
   @segment("instances")
   @path
@@ -24,17 +24,17 @@ model Instance is TrackedResource<InstanceProperties> {
   name: string;
 
   // Extended location is not included in TrackedResource yet
-  @doc("Edge location of the resource")
+  @doc("Edge location of the resource.")
   @visibility("read","create")
   extendedLocation?: ExtendedLocation;
 }
 
-@doc("Instance properties")
+@doc("The properties of a Instance resource.")
 model InstanceProperties {
-  @doc("User-friendly name for the instance.")
+  @doc("User-friendly name for the Instance.")
   displayName: string;
 
-  @doc("Location of the Openn Telemetry collector that logs, traces and metrics are sent to.")
+  @doc("Location of the Open Telemetry collector that logs, traces and metrics are sent to.")
   otelCollectorAddress: string;
 
   @doc("The status of the last operation.")
