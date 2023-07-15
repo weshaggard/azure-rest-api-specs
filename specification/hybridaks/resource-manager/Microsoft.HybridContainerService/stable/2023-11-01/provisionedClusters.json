@@ -985,7 +985,7 @@
       "properties": {
         "aadProfile": {
           "description": "AAD profile for the provisioned cluster.",
-          "$ref": "#/definitions/AADProfileResponse"
+          "$ref": "#/definitions/AADProfile"
         },
         "windowsProfile": {
           "description": "WindowsProfile - Profile for Windows VMs in the Provisioned Cluster.",
@@ -1125,6 +1125,18 @@
             }
           },
           "description": "HybridAKSClusterStatus defines the observed state of HybridAKSCluster"
+        },
+        "securityProfile": {
+          "$ref": "#/definitions/ProvisionedClusterSecurityProfile",
+          "description": "The security profile for the provisioned cluster."
+        },
+        "oidcIssuerProfile": {
+          "$ref": "#/definitions/ProvisionedClusterOIDCIssuerProfile",
+          "description": "The OIDC issuer profile of the provisioned cluster."
+        },
+        "licenseProfile": {
+          "$ref": "#/definitions/ProvisionedClusterLicenseProfile",
+          "description": "The license profile of the provisioned cluster."
         }
       },
       "description": "HybridAKSClusterSpec defines the desired state of HybridAKSCluster"
@@ -1614,18 +1626,7 @@
       },
       "description": "Results of the request to list operations."
     },
-    "AADProfileSecret": {
-      "type": "object",
-      "description": "The server AAD application secret.",
-      "properties": {
-        "serverAppSecret": {
-          "type": "string",
-          "x-ms-secret": true,
-          "description": "The server AAD application secret."
-        }
-      }
-    },
-    "AADProfileResponse": {
+    "AADProfile": {
       "type": "object",
       "description": "AAD Profile specifies attributes for Azure Active Directory integration.",
       "properties": {
@@ -1636,10 +1637,6 @@
           },
           "description": "The list of AAD group object IDs that will have admin role of the cluster."
         },
-        "clientAppID": {
-          "type": "string",
-          "description": "The client AAD application ID."
-        },
         "enableAzureRbac": {
           "type": "boolean",
           "description": "Whether to enable Azure RBAC for Kubernetes authorization."
@@ -1648,28 +1645,83 @@
           "type": "boolean",
           "description": "Whether to enable managed AAD."
         },
-        "serverAppID": {
-          "type": "string",
-          "description": "The server AAD application ID."
-        },
         "tenantID": {
           "type": "string",
           "description": "The AAD tenant ID to use for authentication. If not specified, will use the tenant of the deployment subscription."
         }
       }
     },
-    "AADProfile": {
-      "description": "AAD Profile specifies attributes for Azure Active Directory integration.",
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/AADProfileSecret"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/AADProfileResponse"
+    "ProvisionedClusterSecurityProfile": {
+      "type": "object",
+      "properties": {
+        "workloadIdentity": {
+          "$ref": "#/definitions/ProvisionedClusterSecurityProfileWorkloadIdentity",
+          "description": "Workload identity settings for the security profile. Workload identity enables Kubernetes applications to access Azure cloud resources securely with Azure AD."
         }
-      ]
+      },
+      "description": "The security profile for the provisioned cluster."
+    },
+    "ProvisionedClusterSecurityProfileWorkloadIdentity": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the workload identity is enabled.",
+          "default": false
+        }
+      },
+      "description": "The workload identity profile of the provisioned cluster."
+    },
+    "ProvisionedClusterOIDCIssuerProfile": {
+      "type": "object",
+      "properties": {
+        "issuerURL": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The OIDC issuer url of the provisioned cluster."
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the OIDC issuer is enabled.",
+          "default": false
+        }
+      },
+      "description": "The OIDC issuer profile of the provisioned cluster."
+    },
+    "ProvisionedClusterLicenseProfile": {
+      "type": "object",
+      "properties": {
+        "azureHybridBenefit": {
+          "type": "string",
+          "description": "Indicates whether Azure Hybrid Benefit is opted in",
+          "enum": [
+            "True",
+            "False",
+            "NotApplicable"
+          ],
+          "default": "NotApplicable",
+          "x-ms-enum": {
+            "name": "AzureHybridBenefit",
+            "modelAsString": true
+          }
+        },
+        "oemLicensing": {
+          "type": "string",
+          "description": "Indicates whether infrastructure which provisioned cluster is running on, is OEM licensing activated",
+          "readOnly": true,
+          "enum": [
+            "True",
+            "False",
+            "NotApplicable"
+          ],
+          "default": "NotApplicable",
+          "x-ms-enum": {
+            "name": "OEMLicensing",
+            "modelAsString": true
+          }
+        }
+      },
+      "description": "The license profile of the provisioned cluster."
     },
     "LinuxProfile": {
       "type": "object",
