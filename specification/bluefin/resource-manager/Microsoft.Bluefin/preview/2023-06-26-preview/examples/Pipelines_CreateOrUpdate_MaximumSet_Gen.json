@@ -3,56 +3,159 @@
   "operationId": "Pipelines_CreateOrUpdate",
   "parameters": {
     "api-version": "2023-06-26-preview",
-    "subscriptionId": "E0AAA3DF-E9A4-456A-9824-3C3B5C438110",
-    "resourceGroupName": "rgopenapi",
-    "instanceName": "e7-f3e-i-v---fv7-2c82r23-38--jq51-648oq8-10c70018682",
-    "pipelineName": "u--37-m183n3q-2831806-2e5iv-3-r2--30-lb-4d--28t-216vk69-m6--851",
+    "subscriptionId": "e0aaa3df-e9a4-456a-9824-3c3b5c438110",
+    "resourceGroupName": "bluefin-rg",
+    "instanceName": "bluefin-instance-name",
+    "pipelineName": "bluefin-pipeline-name",
     "resource": {
       "properties": {
-        "displayName": "gfcjgcfaivezuwvdc",
-        "description": "ipobeuvjjtxrnjyxekk",
+        "displayName": "Sample Pipeline",
+        "description": "This is a sample pipeline.",
         "enabled": true,
-        "input": {},
-        "stages": {},
-        "provisioningState": "Succeeded"
+        "input": {
+            "displayName": "MQTT Input Example",
+            "description": "Sample MQTT input stage",
+            "type": "input/mqtt@v1",
+            "broker": "mqtt://azedge-dmqtt-frontend:1883",
+            "qos": 1,
+            "topics": [
+                "assets/a/#",
+                "assets/b/#"
+            ],
+            "authentication": {
+                "type": "usernamePassword",
+                "username": "client1",
+                "password": "<redacted>"
+            },
+            "format": {
+                "type": "json"
+            },
+            "partitionCount": 4,
+            "partitionStrategy": {
+                "type": "key",
+                "expression": ".topic | split(\"/\") | .[2]"
+            },
+            "next": ["sample-transform"]
+        },
+        "stages": {
+            "sample-transform": {
+                "displayName": "Transform Example",
+                "description": "Sample transform stage",
+                "type": "processor/transform@v1",
+                "expression": ".payload.temperature |= ((.-32) * (5/9))",
+                "next": ["sample-output"]
+            },
+            "sample-output": {
+                "displayName": "MQTT Output Example",
+                "description": "Sample MQTT output stage",
+                "type": "output/mqtt@v1",
+                "broker": "mqtt://azedge-dmqtt-frontend:1883",
+                "qos": 1,
+                "topic": {
+                    "type": "static",
+                    "value": "assets/normalized"
+                },
+                "authentication": {
+                    "type": "usernamePassword",
+                    "username": "client1",
+                    "password": "<redacted>"
+                },
+                "format": {
+                    "type": "json",
+                    "path": ".payload"
+                }
+            }
+        }
       },
       "extendedLocation": {
-        "name": "ydemrajjcwlnwzgnvcyjzvqcr",
-        "type": "limzwrwllvnclzwqxsueoxkg"
+				"name": "/subscriptions/e0aaa3df-e9a4-456a-9824-3c3b5c438110/resourceGroups/bluefin-rg/providers/Microsoft.ExtendedLocation/customLocations/dev-space",
+				"type": "CustomLocation"
       },
       "tags": {
-        "key1770": "mhzztoxzoisjpkqvtabnjocyqvuxts"
+        "tag1": "value1"
       },
-      "location": "bblkjiktopxnvxrdvwuri"
+      "location": "westus"
     }
   },
   "responses": {
     "200": {
       "body": {
         "properties": {
-          "displayName": "gfcjgcfaivezuwvdc",
-          "description": "ipobeuvjjtxrnjyxekk",
+          "displayName": "Sample Pipeline",
+          "description": "This is a sample pipeline.",
           "enabled": true,
-          "input": {},
-          "stages": {},
+          "input": {
+              "displayName": "MQTT Input Example",
+              "description": "Sample MQTT input stage",
+              "type": "input/mqtt@v1",
+              "broker": "mqtt://azedge-dmqtt-frontend:1883",
+              "qos": 1,
+              "topics": [
+                  "assets/a/#",
+                  "assets/b/#"
+              ],
+              "authentication": {
+                  "type": "usernamePassword",
+                  "username": "client1",
+                  "password": "<redacted>"
+              },
+              "format": {
+                  "type": "json"
+              },
+              "partitionCount": 4,
+              "partitionStrategy": {
+                  "type": "key",
+                  "expression": ".topic | split(\"/\") | .[2]"
+              },
+              "next": ["sample-transform"]
+          },
+          "stages": {
+              "sample-transform": {
+                  "displayName": "Transform Example",
+                  "description": "Sample transform stage",
+                  "type": "processor/transform@v1",
+                  "expression": ".payload.temperature |= ((.-32) * (5/9))",
+                  "next": ["sample-output"]
+              },
+              "sample-output": {
+                  "displayName": "MQTT Output Example",
+                  "description": "Sample MQTT output stage",
+                  "type": "output/mqtt@v1",
+                  "broker": "mqtt://azedge-dmqtt-frontend:1883",
+                  "qos": 1,
+                  "topic": {
+                      "type": "static",
+                      "value": "assets/normalized"
+                  },
+                  "authentication": {
+                      "type": "usernamePassword",
+                      "username": "client1",
+                      "password": "<redacted>"
+                  },
+                  "format": {
+                      "type": "json",
+                      "path": ".payload"
+                  }
+              }
+          },
           "provisioningState": "Succeeded"
         },
         "extendedLocation": {
-          "name": "ydemrajjcwlnwzgnvcyjzvqcr",
-          "type": "limzwrwllvnclzwqxsueoxkg"
+          "name": "/subscriptions/e0aaa3df-e9a4-456a-9824-3c3b5c438110/resourceGroups/bluefin-rg/providers/Microsoft.ExtendedLocation/customLocations/dev-space",
+          "type": "CustomLocation"
         },
         "tags": {
-          "key1770": "mhzztoxzoisjpkqvtabnjocyqvuxts"
+          "tag1": "value1"
         },
-        "location": "bblkjiktopxnvxrdvwuri",
-        "id": "emwmmgfslfbdpgtrdxpqwpygfuegeh",
-        "name": "wjvckywrnlxavbhvy",
-        "type": "zfycqgqthvjwujobniapuelixeb",
+        "location": "westus",
+        "id": "/subscriptions/e0aaa3df-e9a4-456a-9824-3c3b5c438110/resourceGroups/bluefin-rg/providers/Microsoft.Bluefin/instances/bluefin-instance-name/pipelines/bluefin-pipeline-name",
+        "name": "bluefin-pipeline-name",
+        "type": "Microsoft.Bluefin/instances/pipelines",
         "systemData": {
-          "createdBy": "rpkwwftgiprehjxycptqasbkkan",
+          "createdBy": "bluefin@contoso.com",
           "createdByType": "User",
           "createdAt": "2023-07-14T23:18:33.262Z",
-          "lastModifiedBy": "vcfdstnoyiwyts",
+          "lastModifiedBy": "bluefin@contoso.com",
           "lastModifiedByType": "User",
           "lastModifiedAt": "2023-07-14T23:18:33.262Z"
         }
@@ -64,29 +167,81 @@
       },
       "body": {
         "properties": {
-          "displayName": "gfcjgcfaivezuwvdc",
-          "description": "ipobeuvjjtxrnjyxekk",
+          "displayName": "Sample Pipeline",
+          "description": "This is a sample pipeline.",
           "enabled": true,
-          "input": {},
-          "stages": {},
-          "provisioningState": "Succeeded"
+          "input": {
+              "displayName": "MQTT Input Example",
+              "description": "Sample MQTT input stage",
+              "type": "input/mqtt@v1",
+              "broker": "mqtt://azedge-dmqtt-frontend:1883",
+              "qos": 1,
+              "topics": [
+                  "assets/a/#",
+                  "assets/b/#"
+              ],
+              "authentication": {
+                  "type": "usernamePassword",
+                  "username": "client1",
+                  "password": "<redacted>"
+              },
+              "format": {
+                  "type": "json"
+              },
+              "partitionCount": 4,
+              "partitionStrategy": {
+                  "type": "key",
+                  "expression": ".topic | split(\"/\") | .[2]"
+              },
+              "next": ["sample-transform"]
+          },
+          "stages": {
+              "sample-transform": {
+                  "displayName": "Transform Example",
+                  "description": "Sample transform stage",
+                  "type": "processor/transform@v1",
+                  "expression": ".payload.temperature |= ((.-32) * (5/9))",
+                  "next": ["sample-output"]
+              },
+              "sample-output": {
+                  "displayName": "MQTT Output Example",
+                  "description": "Sample MQTT output stage",
+                  "type": "output/mqtt@v1",
+                  "broker": "mqtt://azedge-dmqtt-frontend:1883",
+                  "qos": 1,
+                  "topic": {
+                      "type": "static",
+                      "value": "assets/normalized"
+                  },
+                  "authentication": {
+                      "type": "usernamePassword",
+                      "username": "client1",
+                      "password": "<redacted>"
+                  },
+                  "format": {
+                      "type": "json",
+                      "path": ".payload"
+                  }
+              }
+          },
+          "provisioningState": "Provisioning"
         },
         "extendedLocation": {
-          "name": "ydemrajjcwlnwzgnvcyjzvqcr",
-          "type": "limzwrwllvnclzwqxsueoxkg"
+          "name": "/subscriptions/e0aaa3df-e9a4-456a-9824-3c3b5c438110/resourceGroups/bluefin-rg/providers/Microsoft.ExtendedLocation/customLocations/dev-space",
+          "type": "CustomLocation"
         },
         "tags": {
-          "key1770": "mhzztoxzoisjpkqvtabnjocyqvuxts"
+          "tag1": "value1"
         },
-        "location": "bblkjiktopxnvxrdvwuri",
-        "id": "emwmmgfslfbdpgtrdxpqwpygfuegeh",
-        "name": "wjvckywrnlxavbhvy",
-        "type": "zfycqgqthvjwujobniapuelixeb",
+        "location": "westus",
+        "id": "/subscriptions/e0aaa3df-e9a4-456a-9824-3c3b5c438110/resourceGroups/bluefin-rg/providers/Microsoft.Bluefin/instances/bluefin-instance-name/pipelines/bluefin-pipeline-name",
+        "name": "bluefin-pipeline-name",
+        "type": "Microsoft.Bluefin/instances/pipelines",
         "systemData": {
-          "createdBy": "rpkwwftgiprehjxycptqasbkkan",
+          "createdBy": "bluefin@contoso.com",
           "createdByType": "User",
           "createdAt": "2023-07-14T23:18:33.262Z",
-          "lastModifiedBy": "vcfdstnoyiwyts",
+          "lastModifiedBy": "bluefin@contoso.com",
           "lastModifiedByType": "User",
           "lastModifiedAt": "2023-07-14T23:18:33.262Z"
         }
