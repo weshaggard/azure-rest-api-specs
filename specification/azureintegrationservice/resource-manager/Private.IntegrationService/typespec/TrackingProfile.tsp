@@ -1,0 +1,56 @@
+namespace Private.IntegrationService;
+
+@doc("The status of the current operation.")
+enum FlowOperationType {
+    trigger,
+    action,
+}
+
+@doc("The tracking profile for the business process")
+model TrackingProfileDefinition {
+    #suppress "@azure-tools/typespec-azure-core/casing-style"
+    @doc("The tracking definition schema uri.")
+    $schema: string;
+
+    @doc("The business process name.")
+    businessProcessName: string;
+
+    @doc("The tracking definitions.")
+    trackingDefinitions: Record<FlowTrackingDefinition>;
+}
+
+@doc("The workflow tracking definition.")
+model FlowTrackingDefinition {
+    @doc("The tracking correlation context.")
+    correlationContext: TrackingCorrelationContext;
+
+    @doc("The tracking events.")
+    events: Record<TrackingEventDefinition>;
+}
+
+@doc("The tracking correlation context.")
+model TrackingCorrelationContext {
+    @doc("The operation type for correlation context.")
+    operationType: FlowOperationType;
+
+    @doc("The operation name for correlation context.")
+    operationName: string;
+
+    @doc("The name of the correlation property.")
+    propertyName: string;
+
+    @doc("The template expression for correlation context property valu.")
+    value: string;
+}
+
+@doc("The tracking event definition.")
+model TrackingEventDefinition {
+    @doc("The operation type.")
+    operationType: FlowOperationType;
+
+    @doc("The operation name.")
+    operationName: string;
+
+    @doc("The properties to be collected for event.")
+    properties?: Record<object>
+}
