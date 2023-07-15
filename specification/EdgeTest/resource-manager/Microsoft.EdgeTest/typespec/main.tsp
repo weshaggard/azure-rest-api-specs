@@ -10,7 +10,6 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using OpenAPI;
 using Autorest;
-using Azure.Core;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 
@@ -162,7 +161,6 @@ model ProvisioningPolicyProperties {
 }
 
 @doc("The authentication type for bootstrap.")
-@fixed
 enum BootstrapAuthenticationType {
   @doc("The X509 authentication type.")
   X509,
@@ -175,11 +173,11 @@ enum BootstrapAuthenticationType {
 model BootstrapAuthenticationDetails {
   @doc("The primary certificate")
   @secret
-  primaryCert: string;
+  primaryCertificate: string;
 
   @doc("The secondary certificate")
   @secret
-  secondaryCert?: string;
+  secondaryCertificate?: string;
 }
 
 @doc("The authentication rule for bootstrap")
@@ -193,7 +191,6 @@ model BootstrapAuthenticationRule {
 }
 
 @doc("Type of resource being provisioned")
-@fixed
 enum ProvisioningResourceType {
   @doc("Azure device registry device")
   AzureIoTDevice,
@@ -222,7 +219,6 @@ model JitRule {
 }
 
 @doc("Type of the endpoint")
-@fixed
 enum EndpointType {
   @doc("Azure event grid broker")
   AzureEventGridBroker,
@@ -270,7 +266,6 @@ model AllocationEndpoint {
 //}
 
 @doc("Type of allocation rule")
-@fixed
 enum AllocationType {
   @doc("Static allocation of a single endpoint.")
   Static,
@@ -290,22 +285,6 @@ model AllocationRule {
 
   @doc("Type of the allocation rule")
   type: AllocationType;
-
-  @doc("Type of endpoint")
-  endpointType: EndpointType;
-
-  @doc("Validate if this is up-to-date")
-  time1200: string;
-
-  // @doc("List of endpoints")
-  // @extension("x-ms-identifiers", ["name"])
-  // endpoints?: Array<AllocationEndpoint>;
-
-  // Option 1: use 2 arrays- Array<allocationProperties>, Array<endpointProperties>
-  // index based or something similar to allow customers to provide input for allocation & endpoint type
-  // Option 2: move the type inside the properties and enforce type restrictions for the array (homogenous)
-  // TOODO Roopesh to circle back
-  // ARM question: optional approach: having "weightedEndpoints" and "geoBasedEndpoints" separately with solid types
 }
 
 @doc("GeoBased allocation endpoint")
@@ -420,7 +399,7 @@ interface ProvisioningPolicies {
 // Roopesh to share the link for sample swagger
 @doc("The provisioning state of a device.")
 model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProperties> {
-  @doc("The registration id of the resource.")
+  @doc("Singleton pattern using name: current.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("deviceProvisioningStateName")
   @segment("deviceProvisioningStates")
@@ -437,9 +416,8 @@ scalar ProvisioningPolicyResourceId
 
 @doc("Details of the DeviceProvisioningState")
 model DeviceProvisioningStateProperties {
-  @visibility("read")
-  @doc("The status of the last operation.")
-  provisioningState?: ProvisioningState;
+  @doc("Unique identifier for the device")
+  registrationId: string;
 
   @visibility("read", "create", "update")
   @doc("Provisioning status of the resource this DeviceProvisioningState extends")
@@ -451,9 +429,9 @@ model DeviceProvisioningStateProperties {
   @doc("The provisioning policy resource id")
   provisioningPolicyResourceId?: ProvisioningPolicyResourceId;
 
-  @doc("Allocation rules captured from the linked provisioningPolicyResourceId at the time of provisioning")
-  @extension("x-ms-identifiers", ["name"])
-  allocations: Array<AllocationRule>;
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
 }
 
 @doc("The current provisioning status.")
