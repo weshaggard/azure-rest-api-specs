@@ -370,7 +370,7 @@ model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProper
   @doc("Singleton pattern using name: current.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("deviceProvisioningStateName")
-  @segment("deviceProvisioningStates")
+  @segment("deviceProvisioningState")
   @path
   name: string;
 }
