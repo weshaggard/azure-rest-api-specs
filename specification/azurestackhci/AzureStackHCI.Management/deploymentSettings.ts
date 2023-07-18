@@ -37,10 +37,11 @@ model ClusterProperties {
 @parentResource(Clusters)
 model DeploymentSetting is ProxyResource<DeploymentSettingsProperties> {
   @doc("Name of Deployment Setting")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
   @segment("deploymentSettings")
-  @key("default")
+  @key("deploymentSettingsName")
   @path
-  name: string
+  name: string = "default"
 }
 
 @doc("DeploymentSetting properties")
@@ -51,8 +52,10 @@ model DeploymentSettingsProperties {
 
   @doc("Deployment Data to deploy AzureStackHCI Cluster.")
   deploymentData: DeploymentData,
-  @doc("Deployment Data to deploy AzureStackHCI Cluster. Use it pass additional config.")
-  deploymentMetaData?: DeploymentMetaData,
+
+  @doc("Deployment metatdata to pass additional config.")
+  deploymentMetaData?: string,
+
   @doc("Deployment Status reported from cluster.")
   @visibility("read")
   reportedProperties?: ReportedProperties
@@ -71,6 +74,7 @@ model DeploymentData {
   @doc("Storage config to deploy AzureStackHCI Cluster.")
   storage: Storage,
   @doc("naming prefix to deploy cluster.")
+  @pattern("^[a-zA-Z0-9-]{1,8}$")
   namingPrefix : string,
   @doc("FQDN to deploy cluster")
   domainFqdn: string,
@@ -94,9 +98,7 @@ model DeploymentData {
   optionalServices?: OptionalServices
 }
 
-@doc("The DeploymentMetaData of AzureStackHCI Cluster.")
-model DeploymentMetaData {
-}
+
 
 @doc("The DeploymentStatus of AzureStackHCI Cluster.")
 model ReportedProperties {
@@ -153,10 +155,10 @@ model Step {
   @doc("Description of step.")
   @visibility("read")
   description: string,
-  @doc("Index of step.?")
+  @doc("Index of step.")
   @visibility("read")
   index?: integer,
-   @doc("FullStepIndex of step.??")
+   @doc("FullStepIndex of step.")
    @visibility("read")
   fullStepIndex?: string,
   @doc("List of tasks performed for step.")
@@ -171,10 +173,7 @@ model Step {
   endTime: utcDateTime,
     @doc("Status of step. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
-  status: string,
-  @doc("Inner action if required.")
-  @visibility("read")
-  innerAction?: Action,
+  status: string
 }
 
 @doc("The Step of AzureStackHCI Cluster.")
@@ -199,7 +198,10 @@ model Task {
   endTime: utcDateTime,
   @doc("Status of task. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
-  status: string
+  status: string,
+  @doc("action if required.")
+  @visibility("read")
+  action?: Action
 }
 
 @doc("The Exception of AzureStackHCI Cluster.")
@@ -258,13 +260,8 @@ model Observability {
 
 @doc("The OptionalServices of AzureStackHCI Cluster.")
 model OptionalServices {
-
-  @doc("This value is not used during deployment and will be removed in future releases.")
-  virtualSwitchName?: string,
-  @doc("This value is not used during deployment and will be removed in future releases.")
-  csvPath?: string,
-  @doc("This value is not used during deployment and will be removed in future releases.")
-  arbRegion?: string,
+  @doc("The name of custom location.")
+  customLocation?: string
 }
 
 @doc("AzureStackHCI Cluster deployment properties.")
@@ -283,7 +280,7 @@ model Cluster {
 
 @doc("The Storage config of AzureStackHCI Cluster.")
 model Storage {
-  @doc("By default, this mode is set to Express and your storage is configured as per best practices based on the number of nodes in the cluster. ")
+  @doc("By default, this mode is set to Express and your storage is configured as per best practices based on the number of nodes in the cluster. Allowed values are 'Express','InfraOnly', 'KeepStorage'")
   "configurationMode": string = "Express"
 }
 
@@ -381,7 +378,7 @@ model AdapterPropertyOverrides {
   jumboPacket?: string,
   @doc("This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation.")
   networkDirect?: string,
-  @doc("This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation.")
+  @doc("This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation. Expected values are 'iWARP', 'RoCEv2', 'RoCE'")
   networkDirectTechnology?: string
 }
 
@@ -439,40 +436,39 @@ enum ProvisioningState {
 }
 
 @doc("The deployment request for Azure Stack HCI Cluster.")
-model DeploymentChangeRequest{
-  @doc("deploy request type")
-  deploymentRequest: DeploymentRequest
+model DeploymentRequest{
+  @doc("deploy request type, allowed values 'ValidateOnly', Deploy', 'ValidateAndDeployIfSuccess'")
+  deploymentRequestType: string
 }
 
 @doc("An Accepted response with an Operation-Location header.")
-model DeploymentChangeResponse{
+model DeploymentResponse{
   @doc("The status code.")
   @statusCode
   statusCode: 202;
 }
 
-@doc("deployment request type.")
-enum DeploymentRequest {
-  @doc("ValidateOnly")
-  ValidateOnly,
+// @doc("deployment request type.")
+// enum DeploymentRequest {
+//   @doc("ValidateOnly")
+//   ValidateOnly,
 
-  @doc("Deploy")
-  Deploy,
+//   @doc("Deploy")
+//   Deploy,
 
-  @doc("ValidateAndDeployIfSuccess")
-  ValidateAndDeployIfSuccess,
-}
+//   @doc("ValidateAndDeployIfSuccess")
+//   ValidateAndDeployIfSuccess,
+// }
 
-interface Operations extends Azure.ResourceManager.Operations {}
+// interface Operations extends Azure.ResourceManager.Operations {}
 
 @armResourceOperations
 interface DeploymentSettings {
   get is ArmResourceRead<DeploymentSetting>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DeploymentSetting>;
-  update is ArmResourcePatchAsync<DeploymentSetting, DeploymentSettingsProperties>;
   delete is ArmResourceDeleteWithoutOkAsync<DeploymentSetting>;
   listByParent is ArmResourceListByParent<DeploymentSetting>;
-  deploy is ArmResourceActionAsync<DeploymentSetting, DeploymentChangeRequest, DeploymentChangeResponse>;
+  deploy is ArmResourceActionAsync<DeploymentSetting, DeploymentRequest, DeploymentResponse>;
 }
 
 

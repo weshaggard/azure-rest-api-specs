@@ -25,19 +25,19 @@ namespace Microsoft.AzureStackHCI;
 model EdgeDevice is ExtensionResource<EdgeDeviceProperties> {
   @doc("Name of Device")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("default")
+  @key("edgeDeviceName")
   @path
   @segment("edgeDevices")
-  name: string;
+  name: string = "default"
 }
 
 @doc("Edge Device properties")
 model EdgeDeviceProperties {
   @doc("Device Configuration")
   deviceConfiguration: DeviceConfiguration;
-  @doc("Device Metadata")
+  @doc("Device metadata")
   deviceMetadata?: string;
-  @doc("Provisioning state of resource")
+  @doc("Provisioning state of edgeDevice resource")
   @visibility("read")
   provisioningState?: ProvisioningState
 }
@@ -76,6 +76,8 @@ model NicDetail {
   subnetMask: string;
   @doc("Default Gateway of NIC")
   defaultGateway: string;
+  @doc("DNS Servers for NIC")
+  dnsServers?: string[];
 }
 
 @doc("The ProxyConfiguration of a device.")
@@ -128,13 +130,12 @@ model ValidateEdgeDeviceResponse{
   statusCode: 202;
 }
 
-interface Operations extends Azure.ResourceManager.Operations {}
+// interface Operations extends Azure.ResourceManager.Operations {}
 
 @armResourceOperations
 interface EdgeDevices {
   get is ArmResourceRead<EdgeDevice>;
-  createOrUpdate is ArmResourceCreateOrUpdateAsync<EdgeDevice>;
-  update is ArmResourcePatchSync<EdgeDevice, EdgeDeviceProperties>;
-  delete is ArmResourceDeleteSync<EdgeDevice>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<EdgeDevice>;
+  delete is ArmResourceDeleteAsync<EdgeDevice>;
   validate is ArmResourceActionAsync<EdgeDevice, ValidateEdgeDeviceRequest, ValidateEdgeDeviceResponse>;
 }
