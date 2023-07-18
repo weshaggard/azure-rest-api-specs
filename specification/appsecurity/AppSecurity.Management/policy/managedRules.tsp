@@ -6,12 +6,16 @@ namespace Microsoft.AppSecurity;
 enum WafActionType {
   @doc("Anomaly scoring action")
   AnomalyScoring,
+
   @doc("Allow the request")
   Allow,
+
   @doc("Block the request")
   Block,
+
   @doc("Log the request and allow it")
   Log,
+
   @doc("Redirect the request")
   Redirect, // TODO - this is not valid for appGW
 }
@@ -29,6 +33,7 @@ model StateAndActionOverride {
 model RuleOverride {
   @doc("Identifier for the managed rule")
   ruleId: string;
+
   ...StateAndActionOverride;
 }
 
@@ -53,20 +58,28 @@ model RuleGroupOverride {
 enum ExclusionMatchVariable {
   @doc("The request header")
   RequestHeaderNames,
+
   @doc("The request cookie")
   RequestCookieNames,
+
   @doc("The request argument")
   RequestArgNames,
+
   @doc("The request header keys")
   RequestHeaderKeys,
+
   @doc("The request header value")
   RequestHeaderValues,
+
   @doc("The request cookie keys")
   RequestCookieKeys,
+
   @doc("The request cookie values")
   RequestCookieValues,
+
   @doc("The request argument keys")
   RequestArgKeys,
+
   @doc("The request argument values")
   RequestArgValues,
 }
@@ -75,12 +88,16 @@ enum ExclusionMatchVariable {
 enum ExclusionSelectorMatchOperator {
   @doc("Equals")
   Equals_: "Equals", // Changes the generated name and prevents error CS0108, in which Equal hides inherited member of 'ValueType.Equals(object?)'
+
   @doc("Contains")
   Contains,
+
   @doc("Starts with")
   StartsWith,
+
   @doc("Ends with")
   EndsWith,
+
   @doc("Equals any")
   EqualsAny,
 }

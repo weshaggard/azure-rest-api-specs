@@ -31,23 +31,10 @@ enum ProvisioningState {
 enum EnabledState {
   @doc("The object is enabled")
   Enabled,
+
   @doc("The object is disabled")
   Disabled,
 }
-
-scalar IpListResourceId
-  extends Azure.ResourceManager.ResourceIdentifier<[
-    {
-      type: "Microsoft.AppSecurity/IpLists",
-    }
-  ]>;
-
-scalar GeoListResourceId
-  extends Azure.ResourceManager.ResourceIdentifier<[
-    {
-      type: "Microsoft.AppSecurity/GeoLists",
-    }
-  ]>;
 
 scalar ProtectedEndpointId
   extends Azure.ResourceManager.ResourceIdentifier<[

@@ -26,8 +26,10 @@ enum GeoOperatorVariable {
 enum WithSelectorOperatorVariable {
   @doc("Request header")
   RequestHeader,
+
   @doc("Post arguments")
   PostArgs,
+
   @doc("Request cookies")
   RequestCookies,
 }
@@ -36,10 +38,13 @@ enum WithSelectorOperatorVariable {
 enum StringSizeNumberOperatorVariable {
   @doc("Query string")
   QueryString,
+
   @doc("Request method")
   RequestMethod,
+
   @doc("Request URI")
   RequestUri,
+
   @doc("Request body")
   RequestBody,
   ...WithSelectorOperatorVariable,
@@ -76,14 +81,19 @@ enum ExistsOperatorVariable {
 enum StringOperator {
   @doc("Equals")
   Equals_: "Equals", // Changes the generated name and prevents error CS0108, in which Equal hides inherited member of 'ValueType.Equals(object?)'
+
   @doc("Contains")
   Contains,
+
   @doc("Starts with")
   BeginsWith, // TODO - change to StartsWith so it would be consistent with managedRules.tsp ExclusionSelectorMatchOperator
+
   @doc("Ends with")
   EndsWith,
+
   @doc("Regex match")
   Regex,
+
   @doc("Geographic match")
   GeoMatch,
 }
@@ -92,12 +102,16 @@ enum StringOperator {
 enum CustomRuleActionType {
   @doc("Allow the request")
   Allow,
+
   @doc("Deny the request")
   Deny,
+
   @doc("Allow the request and log it")
   Log,
+
   @doc("Redirect the request")
   Redirect, // Assuming AppGW supports this
+
   @doc("Use Anomaly Scoring to decide wether to allow or deny")
   AnomalyScoring,
 }
@@ -106,16 +120,22 @@ enum CustomRuleActionType {
 enum TransformType {
   @doc("Converts the string to uppercase")
   Uppercase,
+
   @doc("Converts the string to lowercase")
   Lowercase,
+
   @doc("Trims the string")
   Trim,
+
   @doc("Performs URL decoding")
   UrlDecode,
+
   @doc("Performs URL encoding")
   UrlEncode,
+
   @doc("Removes nulls")
   RemoveNulls,
+
   @doc("Performs HTML entity decoding")
   HtmlEntityDecode,
 }
@@ -158,10 +178,10 @@ model IpMatchCondition extends CustomRuleCondition {
 
   @doc("Variable to match against")
   matchVariable: IpOperatorVariable;
+
   // As for now, we only support explicit IpLists
   // @doc("IP list fully qualified resource ID")
   // matchValue: IpListResourceId;
-
 
   @doc("A list of mutually disjoint IP addresses or CIDR ranges (IPv4 or IPv6)")
   @minItems(1)
@@ -176,14 +196,14 @@ model GeoMatchCondition extends CustomRuleCondition {
 
   @doc("Variable to match against")
   matchVariable: GeoOperatorVariable;
+
   // TODO - needed only if RequestHeader is a possible match variable
   // @doc("Match against a specific key from RequestHeader. Default is null")
-  // selector?: string;
+  // matchVariableSelector?: string;
 
   // As for now, we only support explicit GeoLists
   // @doc("Geo list fully qualified resource ID")
   // matchValue: GeoListResourceId;
-
 
   @doc("List of countries or regions")
   @minItems(1)
@@ -205,7 +225,7 @@ model StringMatchCondition extends CustomRuleCondition {
   @doc("Match against a specific key from RequestHeader, PostArgs and RequestCookies. Default is Null") // TODO - generate this doc according to WithSelectorOperatorVariable
   @minLength(1)
   @maxLength(128)
-  selector?: string;
+  matchVariableSelector?: string;
 
   @doc("The condition is met if any of the values match the variable with the given operator")
   @minItems(1)
@@ -231,7 +251,7 @@ model StringMatchCondition extends CustomRuleCondition {
 //   matchVariable: SizeOperatorVariable;
 
 //   @doc("Match against a specific key from RequestHeader, PostArgs and RequestCookies. Default is Null")
-//   selector?: string;
+//   matchVariableSelector?: string;
 
 //   @doc("If this value match the variable with the given operator, this condition is met")
 //   @minValue(0)
@@ -260,8 +280,10 @@ model ExistsMatchCondition extends CustomRuleCondition {
 enum RateLimitType {
   @doc("Rate limiting is done based on the client IP")
   ClientIp,
+
   @doc("Rate limiting is done based on the geographic location of the request")
   Geo,
+
   @doc("Rate limiting is done based on the destination IP")
   DestinationIp,
 }
