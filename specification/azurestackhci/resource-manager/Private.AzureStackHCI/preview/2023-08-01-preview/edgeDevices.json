@@ -232,7 +232,73 @@
         }
       }
     },
-    "/providers/Private.AzureStackHCI/operations": {
+    "/{resourceUri}/providers/Microsoft.AzureStackHCI/edgeDevices/{default}/validate": {
+      "post": {
+        "operationId": "EdgeDevices_Validate",
+        "tags": [
+          "EdgeDevices"
+        ],
+        "description": "A long-running resource action.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
+          },
+          {
+            "name": "default",
+            "in": "path",
+            "description": "Name of Device",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The content of the action request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ValidateEdgeDeviceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/ValidateEdgeDeviceResponse"
+            }
+          },
+          "202": {
+            "description": "Resource operation accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/providers/Microsoft.AzureStackHCI/operations": {
       "get": {
         "operationId": "Operations_List",
         "tags": [
@@ -395,9 +461,7 @@
         }
       },
       "required": [
-        "deviceConfiguration",
-        "deviceMetadata",
-        "provisioningState"
+        "deviceConfiguration"
       ]
     },
     "EdgeDeviceUpdate": {
@@ -564,6 +628,24 @@
         "url",
         "port"
       ]
+    },
+    "ValidateEdgeDeviceRequest": {
+      "type": "object",
+      "description": "The validate request for Edge Device.",
+      "properties": {
+        "payload": {
+          "type": "string",
+          "description": "validate request payload"
+        }
+      },
+      "required": [
+        "payload"
+      ]
+    },
+    "ValidateEdgeDeviceResponse": {
+      "type": "object",
+      "description": "An Accepted response with an Operation-Location header.",
+      "properties": {}
     }
   },
   "parameters": {

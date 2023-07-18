@@ -47,11 +47,15 @@ model DeploymentSetting is ProxyResource<DeploymentSettingsProperties> {
 model DeploymentSettingsProperties {
   @doc("DeploymentSetting provisioning state")
   @visibility("read")
-  provisioningState: ProvisioningState,
+  provisioningState?: ProvisioningState,
+
   @doc("Deployment Data to deploy AzureStackHCI Cluster.")
   deploymentData: DeploymentData,
   @doc("Deployment Data to deploy AzureStackHCI Cluster. Use it pass additional config.")
-  deploymentMetaData?: DeploymentMetaData;
+  deploymentMetaData?: DeploymentMetaData,
+  @doc("Deployment Status reported from cluster.")
+  @visibility("read")
+  reportedProperties?: ReportedProperties
 }
 
 @doc("The DeploymentData of AzureStackHCI Cluster.")
@@ -85,7 +89,7 @@ model DeploymentData {
   "adouPath" : string,
   @doc("The URI to the keyvault / secret store.")
   @extension("x-ms-secret", true)
-  secretsLocation : string,
+  secretsLocation? : string,
   @doc("OptionalServices config to deploy AzureStackHCI Cluster.")
   optionalServices?: OptionalServices
 }
@@ -95,7 +99,7 @@ model DeploymentMetaData {
 }
 
 @doc("The DeploymentStatus of AzureStackHCI Cluster.")
-model RepoertedProperties {
+model ReportedProperties {
   @doc("validaton status of AzureStackHCI Cluster Deployment.")
   @visibility("read")
   validatonStatus?: ValidationStatus,
@@ -136,9 +140,9 @@ model Action {
   @doc("End time of action.")
   @visibility("read")
   endTime: utcDateTime,
-  @doc("Status of action.")
+   @doc("Status of action. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
-  status: Status,
+  status: string,
 }
 
 @doc("The Step of AzureStackHCI Cluster.")
@@ -162,12 +166,15 @@ model Step {
  @doc("Start time of action.")
   @visibility("read")
   startTime: utcDateTime,
-  @doc("End time of action.")
+  @doc("End time of step.")
   @visibility("read")
   endTime: utcDateTime,
-  @doc("Status of action.")
+    @doc("Status of step. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
-  status: Status,
+  status: string,
+  @doc("Inner action if required.")
+  @visibility("read")
+  innerAction?: Action,
 }
 
 @doc("The Step of AzureStackHCI Cluster.")
@@ -190,9 +197,9 @@ model Task {
   @doc("End time of task.")
   @visibility("read")
   endTime: utcDateTime,
-  @doc("Status of task.")
+  @doc("Status of task. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
-  status: Status,
+  status: string
 }
 
 @doc("The Exception of AzureStackHCI Cluster.")
@@ -264,8 +271,8 @@ model OptionalServices {
 model Cluster {
   @doc("The cluster name provided when preparing Active Directory.")
   name: string,
-  @doc("Use a cloud witness if you have internet access and if you use an Azure Storage account to provide a vote on cluster quorum. A cloud witness uses Azure Blob Storage to read or write a blob file and then uses it to arbitrate in split-brain resolution. ")
-  witnessType: WitnessType,
+  @doc("Use a cloud witness if you have internet access and if you use an Azure Storage account to provide a vote on cluster quorum. A cloud witness uses Azure Blob Storage to read or write a blob file and then uses it to arbitrate in split-brain resolution. Only allowed values are 'Cloud', 'FileShare'. ")
+  witnessType: string,
   @doc("Specify the fileshare path for the local witness for your Azure Stack HCI cluster.")
   witnessPath: string,
   @doc("Specify the Azure Storage account name for cloud witness for your Azure Stack HCI cluster.")
@@ -322,8 +329,8 @@ model HostNetwork {
 model Intents {
   @doc("Name of the network intent you wish to create.")
   name: string,
-  @doc("Type of network traffic. Examples include compute, storage, and management traffic.")
-  trafficType: TrafficType[],
+  @doc("List of network traffic types. Only allowed values are 'Compute', 'Storage', 'Management'.")
+  trafficType: string[],
   @doc("Array of network interfaces used for the network intent.")
   adapter: string[],
   @doc("This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation.")
@@ -384,34 +391,34 @@ model AdapterPropertyOverrides {
 //   Express,
 // }
 
-@doc("The TrafficType of a resource.")
-enum Status {
-  @doc("Error")
-  Error,
-  @doc("Success")
-  Success,
-  @doc("InProgress")
-  InProgress
-}
+// @doc("The TrafficType of a resource.")
+// enum Status {
+//   @doc("Error")
+//   Error,
+//   @doc("Success")
+//   Success,
+//   @doc("InProgress")
+//   InProgress
+// }
 
-@doc("The TrafficType of a resource.")
-enum TrafficType {
-  @doc("Compute")
-  Compute,
-  @doc("Management")
-  Management,
-  @doc("Storage")
-  Storage
-}
+// @doc("The TrafficType of a resource.")
+// enum TrafficType {
+//   @doc("Compute")
+//   Compute,
+//   @doc("Management")
+//   Management,
+//   @doc("Storage")
+//   Storage
+// }
 
-@doc("The WitnessType of a resource.")
-enum WitnessType {
-  @doc("Cloud")
-  Cloud,
+// @doc("The WitnessType of a resource.")
+// enum WitnessType {
+//   @doc("Cloud")
+//   Cloud,
 
-  @doc("FileShare")
-  FileShare,
-}
+//   @doc("FileShare")
+//   FileShare,
+// }
 
 @doc("The provisioning state of a resource.")
 @lroStatus
@@ -431,8 +438,21 @@ enum ProvisioningState {
   Accepted,
 }
 
-@doc("The DeploymentChangeRequest of a resource.")
-enum DeploymentChangeRequest {
+@doc("The deployment request for Azure Stack HCI Cluster.")
+model DeploymentChangeRequest{
+  @doc("deploy request type")
+  deploymentRequest: DeploymentRequest
+}
+
+@doc("An Accepted response with an Operation-Location header.")
+model DeploymentChangeResponse{
+  @doc("The status code.")
+  @statusCode
+  statusCode: 202;
+}
+
+@doc("deployment request type.")
+enum DeploymentRequest {
   @doc("ValidateOnly")
   ValidateOnly,
 
@@ -452,18 +472,7 @@ interface DeploymentSettings {
   update is ArmResourcePatchAsync<DeploymentSetting, DeploymentSettingsProperties>;
   delete is ArmResourceDeleteWithoutOkAsync<DeploymentSetting>;
   listByParent is ArmResourceListByParent<DeploymentSetting>;
-  deploy is ArmResourceActionAsync<DeploymentSetting, DeployRequest, DeployResponse>;
+  deploy is ArmResourceActionAsync<DeploymentSetting, DeploymentChangeRequest, DeploymentChangeResponse>;
 }
 
-@doc("The deployRequest of a cluster.")
-model DeployRequest{
-  @doc("Options to pass while invoking deploy API")
-  deploymentChangeRequest: DeploymentChangeRequest
-}
 
-@doc("An Accepted response with an Operation-Location header.")
-model DeployResponse{
-  @doc("The status code.")
-  @statusCode
-  statusCode: 202;
-}

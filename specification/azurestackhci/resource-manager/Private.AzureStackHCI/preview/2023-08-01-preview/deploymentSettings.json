@@ -413,7 +413,7 @@
             "description": "The content of the action request",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeployRequest"
+              "$ref": "#/definitions/DeploymentChangeRequest"
             }
           }
         ],
@@ -421,7 +421,7 @@
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/DeployResponse"
+              "$ref": "#/definitions/DeploymentChangeResponse"
             }
           },
           "202": {
@@ -484,8 +484,8 @@
           "readOnly": true
         },
         "status": {
-          "$ref": "#/definitions/Status",
-          "description": "Status of action.",
+          "type": "string",
+          "description": "Status of action. Allowed values are 'Error', 'Success', 'InProgress'",
           "readOnly": true
         }
       },
@@ -524,8 +524,8 @@
           "description": "The cluster name provided when preparing Active Directory."
         },
         "witnessType": {
-          "$ref": "#/definitions/WitnessType",
-          "description": "Use a cloud witness if you have internet access and if you use an Azure Storage account to provide a vote on cluster quorum. A cloud witness uses Azure Blob Storage to read or write a blob file and then uses it to arbitrate in split-brain resolution. "
+          "type": "string",
+          "description": "Use a cloud witness if you have internet access and if you use an Azure Storage account to provide a vote on cluster quorum. A cloud witness uses Azure Blob Storage to read or write a blob file and then uses it to arbitrate in split-brain resolution. Only allowed values are 'Cloud', 'FileShare'. "
         },
         "witnessPath": {
           "type": "string",
@@ -558,8 +558,8 @@
           "description": "The cluster name provided when preparing Active Directory."
         },
         "witnessType": {
-          "$ref": "#/definitions/WitnessType",
-          "description": "Use a cloud witness if you have internet access and if you use an Azure Storage account to provide a vote on cluster quorum. A cloud witness uses Azure Blob Storage to read or write a blob file and then uses it to arbitrate in split-brain resolution. "
+          "type": "string",
+          "description": "Use a cloud witness if you have internet access and if you use an Azure Storage account to provide a vote on cluster quorum. A cloud witness uses Azure Blob Storage to read or write a blob file and then uses it to arbitrate in split-brain resolution. Only allowed values are 'Cloud', 'FileShare'. "
         },
         "witnessPath": {
           "type": "string",
@@ -574,56 +574,24 @@
           "description": "For Azure blob service endpoint type, select either Default or Custom domain. If you selected **Custom domain, enter the domain for the blob service in this format core.windows.net."
         }
       }
-    
     },
-    
-    "DeployRequest": {
+    "DeploymentChangeRequest": {
       "type": "object",
-      "description": "The deployRequest of a cluster.",
+      "description": "The deployment request for Azure Stack HCI Cluster.",
       "properties": {
-        "deploymentChangeRequest": {
-          "$ref": "#/definitions/DeploymentChangeRequest",
-          "description": "Options to pass while invoking deploy API"
+        "deploymentRequest": {
+          "$ref": "#/definitions/DeploymentRequest",
+          "description": "deploy request type"
         }
       },
       "required": [
-        "deploymentChangeRequest"
+        "deploymentRequest"
       ]
     },
-    "DeployResponse": {
+    "DeploymentChangeResponse": {
       "type": "object",
       "description": "An Accepted response with an Operation-Location header.",
       "properties": {}
-    },
-    "DeploymentChangeRequest": {
-      "type": "string",
-      "description": "The DeploymentChangeRequest of a resource.",
-      "enum": [
-        "ValidateOnly",
-        "Deploy",
-        "ValidateAndDeployIfSuccess"
-      ],
-      "x-ms-enum": {
-        "name": "DeploymentChangeRequest",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "ValidateOnly",
-            "value": "ValidateOnly",
-            "description": "ValidateOnly"
-          },
-          {
-            "name": "Deploy",
-            "value": "Deploy",
-            "description": "Deploy"
-          },
-          {
-            "name": "ValidateAndDeployIfSuccess",
-            "value": "ValidateAndDeployIfSuccess",
-            "description": "ValidateAndDeployIfSuccess"
-          }
-        ]
-      }
     },
     "DeploymentData": {
       "type": "object",
@@ -706,8 +674,7 @@
         "physicalNodes",
         "hostNetwork",
         "storageNetworks",
-        "adouPath",
-        "secretsLocation"
+        "adouPath"
       ],
       "externalDocs": {
         "description": "Deploy Azure Stack HCI using an existing configuration file",
@@ -794,6 +761,36 @@
       "description": "The DeploymentMetaData of AzureStackHCI Cluster.",
       "properties": {}
     },
+    "DeploymentRequest": {
+      "type": "string",
+      "description": "deployment request type.",
+      "enum": [
+        "ValidateOnly",
+        "Deploy",
+        "ValidateAndDeployIfSuccess"
+      ],
+      "x-ms-enum": {
+        "name": "DeploymentRequest",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "ValidateOnly",
+            "value": "ValidateOnly",
+            "description": "ValidateOnly"
+          },
+          {
+            "name": "Deploy",
+            "value": "Deploy",
+            "description": "Deploy"
+          },
+          {
+            "name": "ValidateAndDeployIfSuccess",
+            "value": "ValidateAndDeployIfSuccess",
+            "description": "ValidateAndDeployIfSuccess"
+          }
+        ]
+      }
+    },
     "DeploymentSetting": {
       "type": "object",
       "description": "Edge device resource",
@@ -875,10 +872,14 @@
         "deploymentMetaData": {
           "$ref": "#/definitions/DeploymentMetaData",
           "description": "Deployment Data to deploy AzureStackHCI Cluster. Use it pass additional config."
+        },
+        "reportedProperties": {
+          "$ref": "#/definitions/ReportedProperties",
+          "description": "Deployment Status reported from cluster.",
+          "readOnly": true
         }
       },
       "required": [
-        "provisioningState",
         "deploymentData"
       ]
     },
@@ -1015,9 +1016,9 @@
         },
         "trafficType": {
           "type": "array",
-          "description": "Type of network traffic. Examples include compute, storage, and management traffic.",
+          "description": "List of network traffic types. Only allowed values are 'Compute', 'Storage', 'Management'.",
           "items": {
-            "$ref": "#/definitions/TrafficType"
+            "type": "string"
           }
         },
         "adapter": {
@@ -1237,7 +1238,7 @@
         }
       }
     },
-    "RepoertedProperties": {
+    "ReportedProperties": {
       "type": "object",
       "description": "The DeploymentStatus of AzureStackHCI Cluster.",
       "properties": {
@@ -1377,36 +1378,6 @@
         }
       }
     },
-    "Status": {
-      "type": "string",
-      "description": "The TrafficType of a resource.",
-      "enum": [
-        "Error",
-        "Success",
-        "InProgress"
-      ],
-      "x-ms-enum": {
-        "name": "Status",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Error",
-            "value": "Error",
-            "description": "Error"
-          },
-          {
-            "name": "Success",
-            "value": "Success",
-            "description": "Success"
-          },
-          {
-            "name": "InProgress",
-            "value": "InProgress",
-            "description": "InProgress"
-          }
-        ]
-      }
-    },
     "Step": {
       "type": "object",
       "description": "The Step of AzureStackHCI Cluster.",
@@ -1450,12 +1421,17 @@
         "endTime": {
           "type": "string",
           "format": "date-time",
-          "description": "End time of action.",
+          "description": "End time of step.",
           "readOnly": true
         },
         "status": {
-          "$ref": "#/definitions/Status",
-          "description": "Status of action.",
+          "type": "string",
+          "description": "Status of step. Allowed values are 'Error', 'Success', 'InProgress'",
+          "readOnly": true
+        },
+        "innerAction": {
+          "$ref": "#/definitions/Action",
+          "description": "Inner action if required.",
           "readOnly": true
         }
       },
@@ -1553,8 +1529,8 @@
           "readOnly": true
         },
         "status": {
-          "$ref": "#/definitions/Status",
-          "description": "Status of task.",
+          "type": "string",
+          "description": "Status of task. Allowed values are 'Error', 'Success', 'InProgress'",
           "readOnly": true
         }
       },
@@ -1566,36 +1542,6 @@
         "endTime",
         "status"
       ]
-    },
-    "TrafficType": {
-      "type": "string",
-      "description": "The TrafficType of a resource.",
-      "enum": [
-        "Compute",
-        "Management",
-        "Storage"
-      ],
-      "x-ms-enum": {
-        "name": "TrafficType",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Compute",
-            "value": "Compute",
-            "description": "Compute"
-          },
-          {
-            "name": "Management",
-            "value": "Management",
-            "description": "Management"
-          },
-          {
-            "name": "Storage",
-            "value": "Storage",
-            "description": "Storage"
-          }
-        ]
-      }
     },
     "ValidationStatus": {
       "type": "object",
@@ -1627,30 +1573,6 @@
           "type": "string",
           "description": "Load Balancing Algorithm for Virtual Switch"
         }
-      }
-    },
-    "WitnessType": {
-      "type": "string",
-      "description": "The WitnessType of a resource.",
-      "enum": [
-        "Cloud",
-        "FileShare"
-      ],
-      "x-ms-enum": {
-        "name": "WitnessType",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Cloud",
-            "value": "Cloud",
-            "description": "Cloud"
-          },
-          {
-            "name": "FileShare",
-            "value": "FileShare",
-            "description": "FileShare"
-          }
-        ]
       }
     }
   },

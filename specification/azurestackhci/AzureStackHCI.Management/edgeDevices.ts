@@ -36,10 +36,10 @@ model EdgeDeviceProperties {
   @doc("Device Configuration")
   deviceConfiguration: DeviceConfiguration;
   @doc("Device Metadata")
-  deviceMetadata: string;
+  deviceMetadata?: string;
   @doc("Provisioning state of resource")
   @visibility("read")
-  provisioningState: ProvisioningState
+  provisioningState?: ProvisioningState
 }
 
 @doc("The device Configuration of a device.")
@@ -114,6 +114,20 @@ enum ProvisioningState {
   Accepted,
 }
 
+
+@doc("The validate request for Edge Device.")
+model ValidateEdgeDeviceRequest{
+  @doc("validate request payload")
+  payload : string
+}
+
+@doc("An Accepted response with an Operation-Location header.")
+model ValidateEdgeDeviceResponse{
+  @doc("The status code.")
+  @statusCode
+  statusCode: 202;
+}
+
 interface Operations extends Azure.ResourceManager.Operations {}
 
 @armResourceOperations
@@ -122,4 +136,5 @@ interface EdgeDevices {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<EdgeDevice>;
   update is ArmResourcePatchSync<EdgeDevice, EdgeDeviceProperties>;
   delete is ArmResourceDeleteSync<EdgeDevice>;
+  validate is ArmResourceActionAsync<EdgeDevice, ValidateEdgeDeviceRequest, ValidateEdgeDeviceResponse>;
 }
