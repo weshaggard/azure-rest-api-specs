@@ -6,6 +6,7 @@ import "./customRules.tsp";
 using TypeSpec.Http;
 using TypeSpec.Rest;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Foundations;
 using OpenAPI;
 
 namespace Microsoft.AppSecurity;
@@ -18,6 +19,10 @@ model ProtectedEndpoint {
   @doc("The status of the last attachment operation between the policy and the endpoint")
   @visibility("read")
   attachmentState?: ProvisioningState;
+
+  @doc("Azure Resource Manager metadata containing createdBy and modifiedBy information")
+  @visibility("read")
+  systemData?: SystemData;
 }
 
 @doc("The Policy properties")

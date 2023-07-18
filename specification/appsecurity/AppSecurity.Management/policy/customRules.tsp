@@ -310,7 +310,7 @@ model CustomRule {
   @minLength(1)
   @maxLength(128)
   @pattern("^[a-zA-Z][a-zA-Z0-9]*$")
-  name?: string;
+  name: string;
 
   @doc("The state of the custom rule. Default is Enabled")
   state?: EnabledState = EnabledState.Enabled;

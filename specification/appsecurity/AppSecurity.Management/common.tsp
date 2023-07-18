@@ -48,7 +48,15 @@ scalar ProtectedEndpointId
       type: "Microsoft.Network/applicationGateways/requestRoutingRules",
     },
     {
-      type: "Microsoft.CDN/frontdoors",
+      type: "Microsoft.Cdn/profiles ",
+    },
+    {
+      type: "Microsoft.Cdn/profiles/afdEndpoints",
+    },
+    {
+      type: "Microsoft.Cdn/profiles/afdEndpoints/customDomains",
+    },
+    {
+      type: "Microsoft.Cdn/profiles/afdEndpoints/routes",
     }
-    // TODO - add frontdoors/routingrules and all others
   ]>;
