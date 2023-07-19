@@ -418,4 +418,5 @@ interface DeviceProvisioningStates {
   createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<DeviceProvisioningState>;
   delete is ArmResourceDeleteSync<DeviceProvisioningState>;
   update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
+  listByParent is ArmResourceListByParent<DeviceProvisioningState>;
 }
