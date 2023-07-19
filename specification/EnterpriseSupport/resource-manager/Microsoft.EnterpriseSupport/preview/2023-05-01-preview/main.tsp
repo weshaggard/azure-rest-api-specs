@@ -111,13 +111,13 @@ model LineItem {
 }
 
 @doc("The response for an eligibility check.")
+model ValidateEnterpriseSupportResponse {
+	@doc("The array of line item validations.")
+	lineItemValidations: Array<ValidateEnterpriseSupportResponseItem>;
+}
+
+@doc("The item for an eligibility check.")
 model ValidateEnterpriseSupportResponseItem {
-	@doc("The billing account ID")
-	billingAccountId: string;
-
-	@doc("The billing group ID")
-	billingGroupId: string;
-
 	@doc("The product ID.")
 	productId: string;
 
@@ -160,5 +160,6 @@ interface ProviderLevelOperations {
     @post
 	@doc("ProviderLevel operation to check eligibility to create EnterpriseSupport instance")
     @segment("providers/Microsoft.EnterpriseSupport/ValidateEnterpriseSupport")
-    validateEnterpriseSupport(...CustomParams, @body body: ValidateEnterpriseSupportRequestItem): ArmResponse<Array<ValidateEnterpriseSupportResponseItem>>;
+    validateEnterpriseSupport(...CustomParams, @body body: ValidateEnterpriseSupportRequestItem): ArmResponse<ValidateEnterpriseSupportResponse>;
 }
+
