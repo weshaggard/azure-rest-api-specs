@@ -62,7 +62,7 @@
           "200": {
             "description": "Gets the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "default": {
@@ -112,13 +112,13 @@
           "200": {
             "description": "Updates the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "201": {
             "description": "Creates the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "default": {
@@ -213,13 +213,13 @@
           "200": {
             "description": "Success. Updated the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "202": {
             "description": "Updates the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "default": {
@@ -256,7 +256,7 @@
           "200": {
             "description": "Lists all provisionedClusters under the resource group.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponseListResult"
+              "$ref": "#/definitions/provisionedClustersListResult"
             }
           },
           "default": {
@@ -293,7 +293,7 @@
           "200": {
             "description": "Lists all provisionedClusters under the subscription.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponseListResult"
+              "$ref": "#/definitions/provisionedClustersListResult"
             }
           },
           "default": {
@@ -1050,72 +1050,13 @@
     }
   },
   "definitions": {
-    "provisionedClustersAllProperties": {
+    "provisionedClustersProperties": {
       "type": "object",
-      "description": "All properties of the provisioned cluster",
-      "x-ms-client-flatten": true,
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/provisionedClustersPropertiesWithSecrets"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/provisionedClustersCommonProperties"
-        }
-      ]
-    },
-    "provisionedClustersResponseProperties": {
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/provisionedClustersPropertiesWithoutSecrets"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/provisionedClustersCommonProperties"
-        }
-      ]
-    },
-    "provisionedClustersPropertiesWithSecrets": {
-      "type": "object",
-      "description": "Properties of provisioned clusters that contain secrets",
       "properties": {
         "aadProfile": {
           "description": "AAD profile for the provisioned cluster.",
           "$ref": "#/definitions/AADProfile"
         },
-        "windowsProfile": {
-          "description": "WindowsProfile - Profile for Windows VMs in the Provisioned Cluster.",
-          "$ref": "#/definitions/WindowsProfile"
-        },
-        "httpProxyConfig": {
-          "description": "HttpProxyConfig - Configurations for provisioning the cluster with HTTP proxy servers.",
-          "$ref": "#/definitions/httpProxyConfig"
-        }
-      }
-    },
-    "provisionedClustersPropertiesWithoutSecrets": {
-      "type": "object",
-      "description": "Properties of provisioned clusters without the corresponding secrets",
-      "properties": {
-        "aadProfile": {
-          "description": "AAD profile for the provisioned cluster.",
-          "$ref": "#/definitions/AADProfile"
-        },
-        "windowsProfile": {
-          "description": "WindowsProfile - Profile for Windows VMs in the Provisioned Cluster.",
-          "$ref": "#/definitions/WindowsProfileResponse"
-        },
-        "httpProxyConfig": {
-          "description": "HttpProxyConfig - Configurations for provisioning the cluster with HTTP proxy servers.",
-          "$ref": "#/definitions/httpProxyConfigResponse"
-        }
-      }
-    },
-    "provisionedClustersCommonProperties": {
-      "type": "object",
-      "properties": {
         "enableRbac": {
           "type": "boolean",
           "description": "EnableRBAC - Whether to enable Kubernetes Role-Based Access Control."
@@ -1134,13 +1075,6 @@
             }
           }
         },
-        "addonProfiles": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/AddonProfiles"
-          },
-          "description": "AddonProfiles - Profile of managed cluster add-on."
-        },
         "controlPlane": {
           "$ref": "#/definitions/ControlPlaneProfile",
           "description": "ControlPlane - ControlPlane Configuration"
@@ -1152,10 +1086,6 @@
         "networkProfile": {
           "description": "NetworkProfile - Profile of network configuration.",
           "$ref": "#/definitions/NetworkProfile"
-        },
-        "nodeResourceGroup": {
-          "type": "string",
-          "description": "NodeResourceGroup - Name of the resource group containing agent pool nodes."
         },
         "agentPoolProfiles": {
           "type": "array",
@@ -1255,42 +1185,7 @@
           "description": "The license profile of the provisioned cluster."
         }
       },
-      "description": "HybridAKSClusterSpec defines the desired state of HybridAKSCluster"
-    },
-    "provisionedClustersResponse": {
-      "type": "object",
-      "x-ms-azure-resource": true,
-      "readOnly": true,
-      "properties": {
-        "identity": {
-          "$ref": "#/definitions/provisionedClusterIdentity"
-        },
-        "properties": {
-          "$ref": "#/definitions/provisionedClustersResponseProperties"
-        },
-        "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
-        },
-        "extendedLocation": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "description": "The extended location type."
-            },
-            "name": {
-              "type": "string",
-              "description": "The extended location name."
-            }
-          }
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
-        }
-      ],
-      "description": "The provisionedClusters resource definition."
+      "description": "All properties of the provisioned cluster"
     },
     "provisionedClusters": {
       "type": "object",
@@ -1300,7 +1195,7 @@
           "$ref": "#/definitions/provisionedClusterIdentity"
         },
         "properties": {
-          "$ref": "#/definitions/provisionedClustersAllProperties"
+          "$ref": "#/definitions/provisionedClustersProperties"
         },
         "systemData": {
           "readOnly": true,
@@ -1340,13 +1235,13 @@
       },
       "description": "The provisionedClusters resource patch definition."
     },
-    "provisionedClustersResponseListResult": {
+    "provisionedClustersListResult": {
       "type": "object",
       "properties": {
         "value": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/provisionedClustersResponse"
+            "$ref": "#/definitions/provisionedClusters"
           }
         },
         "nextLink": {
@@ -1354,23 +1249,6 @@
         }
       },
       "x-ms-identifiers": []
-    },
-    "AddonProfiles": {
-      "properties": {
-        "config": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Config - Key-value pairs for configuring an add-on.",
-          "type": "object"
-        },
-        "enabled": {
-          "description": "Enabled - Whether the add-on is enabled or not.",
-          "type": "boolean"
-        }
-      },
-      "type": "object",
-      "description": "Addon configurations"
     },
     "AddonStatus": {
       "properties": {
@@ -1389,58 +1267,6 @@
       "type": "object",
       "description": "Status of the addon"
     },
-    "httpProxyConfigPassword": {
-      "type": "object",
-      "properties": {
-        "password": {
-          "type": "string",
-          "x-ms-secret": true,
-          "description": "Password to use for connecting to proxy server"
-        }
-      }
-    },
-    "httpProxyConfigResponse": {
-      "type": "object",
-      "description": "Configurations for provisioning the cluster with HTTP proxy servers.",
-      "properties": {
-        "httpProxy": {
-          "type": "string",
-          "description": "The HTTP proxy server endpoint to use."
-        },
-        "httpsProxy": {
-          "type": "string",
-          "description": "The HTTPS proxy server endpoint to use."
-        },
-        "noProxy": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The endpoints that should not go through proxy."
-        },
-        "trustedCa": {
-          "type": "string",
-          "description": "Alternative CA cert to use for connecting to proxy servers."
-        },
-        "username": {
-          "type": "string",
-          "description": "Username to use for connecting to proxy server"
-        }
-      }
-    },
-    "httpProxyConfig": {
-      "description": "Configurations for provisioning the cluster with HTTP proxy servers.",
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/httpProxyConfigResponse"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/httpProxyConfigPassword"
-        }
-      ]
-    },
     "AgentPoolProfile": {
       "type": "object",
       "description": "NodePool configuration",
@@ -1458,49 +1284,6 @@
           },
           "description": "AvailabilityZones - The list of Availability zones to use for nodes. Datacenter racks modelled as zones"
         },
-        "maxCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The maximum number of nodes for auto-scaling"
-        },
-        "maxPods": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The maximum number of pods that can run on a node."
-        },
-        "minCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The minimum number of nodes for auto-scaling"
-        },
-        "mode": {
-          "type": "string",
-          "description": "Mode - AgentPoolMode represents mode of an agent pool. Possible values include: 'System', 'LB', 'User'. Default is 'User'",
-          "enum": [
-            "System",
-            "LB",
-            "User"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "mode"
-          },
-          "default": "User"
-        },
-        "nodeLabels": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "NodeLabels - Agent pool node labels to be persisted across all nodes in agent pool."
-        },
-        "nodeTaints": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "NodeTaints - Taints added to new nodes during node pool create and scale. For example, key=value:NoSchedule."
-        },
         "osType": {
           "$ref": "#/definitions/OSType"
         },
@@ -1514,10 +1297,6 @@
         "vmSize": {
           "type": "string",
           "description": "VmSize - The size of the agent pool VMs."
-        },
-        "cloudProviderProfile": {
-          "description": "The underlying cloud infra provider properties.",
-          "$ref": "#/definitions/CloudProviderProfile"
         }
       }
     },
@@ -1855,10 +1634,6 @@
     "LinuxProfileProperties": {
       "type": "object",
       "properties": {
-        "adminUsername": {
-          "type": "string",
-          "description": "AdminUsername - The administrator username to use for Linux VMs."
-        },
         "ssh": {
           "type": "object",
           "properties": {
@@ -1882,56 +1657,6 @@
       },
       "description": "LinuxProfile - Profile for Linux VMs in the container service cluster."
     },
-    "WindowsProfile": {
-      "description": "WindowsProfile - Profile for Windows VMs in the container service cluster.",
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/WindowsProfileResponse"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/WindowsProfilePassword"
-        }
-      ]
-    },
-    "WindowsProfileResponse": {
-      "type": "object",
-      "description": "Profile for Windows VMs in the container service cluster.",
-      "properties": {
-        "adminUsername": {
-          "type": "string",
-          "description": "AdminUsername - Specifies the name of the administrator account. <br><br> **restriction:** Cannot end in \".\" <br><br> **Disallowed values:** \"administrator\", \"admin\", \"user\", \"user1\", \"test\", \"user2\", \"test1\", \"user3\", \"admin1\", \"1\", \"123\", \"a\", \"actuser\", \"adm\", \"admin2\", \"aspnet\", \"backup\", \"console\", \"david\", \"guest\", \"john\", \"owner\", \"root\", \"server\", \"sql\", \"support\", \"support_388945a0\", \"sys\", \"test2\", \"test3\", \"user4\", \"user5\". <br><br> **Minimum-length:** 1 character <br><br> **Max-length:** 20 characters"
-        },
-        "enableCsiProxy": {
-          "type": "boolean",
-          "description": "EnableCSIProxy - Whether to enable CSI proxy."
-        },
-        "licenseType": {
-          "type": "string",
-          "description": "LicenseType - The licenseType to use for Windows VMs. Windows_Server is used to enable Azure Hybrid User Benefits for Windows VMs. Possible values include: 'None', 'Windows_Server'",
-          "enum": [
-            "Windows_Server",
-            "None"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "licenseType"
-          }
-        }
-      }
-    },
-    "WindowsProfilePassword": {
-      "type": "object",
-      "description": "Password for the Windows Profile to be used by the Windows VMs in the cluster",
-      "properties": {
-        "adminPassword": {
-          "type": "string",
-          "x-ms-secret": true,
-          "description": "AdminPassword - Specifies the password of the administrator account. <br><br> **Minimum-length:** 8 characters <br><br> **Max-length:** 123 characters <br><br> **Complexity requirements:** 3 out of 4 conditions below need to be fulfilled <br> Has lower characters <br>Has upper characters <br> Has a digit <br> Has a special character (Regex match [\\W_]) <br><br> **Disallowed values:** \"abc@123\", \"P@$$w0rd\", \"P@ssw0rd\", \"P@ssword123\", \"Pa$$word\", \"pass@word1\", \"Password!\", \"Password1\", \"Password22\", \"iloveyou!\""
-        }
-      }
-    },
     "NetworkProfile": {
       "type": "object",
       "properties": {
@@ -1954,10 +1679,6 @@
             "name": "loadBalancerSku"
           }
         },
-        "dnsServiceIP": {
-          "type": "string",
-          "description": "DNSServiceIP - An IP address assigned to the Kubernetes DNS service. It must be within the Kubernetes service address range specified in serviceCidr."
-        },
         "networkPolicy": {
           "type": "string",
           "description": "NetworkPolicy - Network policy used for building Kubernetes network. Possible values include: 'calico', 'flannel'. Default is 'calico'",
@@ -1974,24 +1695,6 @@
         "podCidr": {
           "type": "string",
           "description": "PodCidr - A CIDR notation IP range from which to assign pod IPs when kubenet is used."
-        },
-        "podCidrs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The CIDR notation IP ranges from which to assign pod IPs. One IPv4 CIDR is expected for single-stack networking. Two CIDRs, one for each IP family (IPv4/IPv6), is expected for dual-stack networking."
-        },
-        "serviceCidr": {
-          "type": "string",
-          "description": "ServiceCidr - A CIDR notation IP range from which to assign service cluster IPs. It must not overlap with any Subnet IP ranges."
-        },
-        "serviceCidrs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The CIDR notation IP ranges from which to assign service cluster IPs. One IPv4 CIDR is expected for single-stack networking. Two CIDRs, one for each IP family (IPv4/IPv6), is expected for dual-stack networking. They must not overlap with any Subnet IP ranges."
         }
       },
       "description": "NetworkProfile - Profile of network configuration."
@@ -2023,7 +1726,8 @@
               "description": "Host IP address for API server"
             },
             "port": {
-              "type": "string",
+              "type": "integer",
+              "format": "int32",
               "description": "Port for the API server"
             }
           }
@@ -2070,19 +1774,6 @@
                 }
               },
               "description": "Array of references to azure resource corresponding to the Network object e.g. /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/logicalNetworks/{logicalNetworkName}"
-            }
-          }
-        },
-        "infraStorageProfile": {
-          "type": "object",
-          "description": "InfraStorageProfile - List of infra storage profiles for the provisioned cluster",
-          "properties": {
-            "storageSpaceIds": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Reference to azure resource corresponding to the new HybridAKSStorage object e.g. /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridContainerService/storageSpaces/{storageSpaceName}"
             }
           }
         }
@@ -2185,6 +1876,7 @@
             "None",
             "SystemAssigned"
           ],
+          "default": "SystemAssigned",
           "x-ms-enum": {
             "name": "ResourceIdentityType",
             "modelAsString": false
