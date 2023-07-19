@@ -15,7 +15,6 @@ model LandingZoneConfigurationProperties {
 	@doc("The status for the landing zone configuration workflow.")
 	authoringStatus?: AuthoringStatus;
 
-	#suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Handled in code."
 	@doc("Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default, will deploy beneath tenant toot management group.")
 	existingTopLevelMgParentId?: string;
 
@@ -65,15 +64,6 @@ model LandingZoneConfigurationProperties {
 	@doc("Gateway subnet. IPv4 CIDR block.")
 	@pattern("^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$")
 	gatewaySubnetCidrBlock?: string;
-
-	@doc("Management subscription Id.")
-	existingManagementSubscriptionId?: string;
-
-	@doc("Identity subscription Id.")
-	existingIdentitySubscriptionId?: string;
-
-	@doc("Connectivity subscription Id.")
-	existingConnectivitySubscriptionId?: string;
 
 	@doc("Set how long logs are retained for, in days. Minimum length is 30 and maximum is 730")
 	@minValue(30)
@@ -186,6 +176,15 @@ model Tags {
 model GenerateLandingZoneRequest {
 	@doc("The options that code can be generated in")
 	iacOutputOption: IaCOutputOptions;
+
+	@doc("Management subscription Id.")
+	existingManagementSubscriptionId?: string;
+
+	@doc("Identity subscription Id.")
+	existingIdentitySubscriptionId?: string;
+
+	@doc("Connectivity subscription Id.")
+	existingConnectivitySubscriptionId?: string;
 
 	@doc("Billing scope account Id")
 	billingScopeAccountId?: string;
