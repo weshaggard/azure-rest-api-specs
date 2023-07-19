@@ -35,28 +35,3 @@ enum EnabledState {
   @doc("The object is disabled")
   Disabled,
 }
-
-scalar ProtectedEndpointId
-  extends Azure.ResourceManager.ResourceIdentifier<[
-    {
-      type: "Microsoft.Network/applicationGateways",
-    },
-    {
-      type: "Microsoft.Network/applicationGateways/httpListeners",
-    },
-    {
-      type: "Microsoft.Network/applicationGateways/requestRoutingRules",
-    },
-    {
-      type: "Microsoft.Cdn/profiles ",
-    },
-    {
-      type: "Microsoft.Cdn/profiles/afdEndpoints",
-    },
-    {
-      type: "Microsoft.Cdn/profiles/afdEndpoints/customDomains",
-    },
-    {
-      type: "Microsoft.Cdn/profiles/afdEndpoints/routes",
-    }
-  ]>;

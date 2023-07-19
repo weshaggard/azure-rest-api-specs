@@ -1,6 +1,7 @@
 import "./webProtection.tsp";
 import "./botProtection.tsp";
 import "./policySettings.tsp";
+import "./protectedEndpoint.tsp";
 import "./customRules.tsp";
 
 using TypeSpec.Http;
@@ -10,20 +11,6 @@ using Azure.ResourceManager.Foundations;
 using OpenAPI;
 
 namespace Microsoft.AppSecurity;
-
-@doc("Protected endpoint definition")
-model ProtectedEndpoint {
-  @doc("Fully qualified ARM ID of the endpoint to protect")
-  endpointId: ProtectedEndpointId;
-
-  @doc("The status of the last attachment operation between the policy and the endpoint")
-  @visibility("read")
-  attachmentState?: ProvisioningState;
-
-  @doc("Azure Resource Manager metadata containing createdBy and modifiedBy information")
-  @visibility("read")
-  systemData?: SystemData;
-}
 
 @doc("The Policy properties")
 model PolicyProperties {

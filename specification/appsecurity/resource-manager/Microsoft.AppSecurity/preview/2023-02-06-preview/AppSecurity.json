@@ -423,6 +423,17 @@
     }
   },
   "definitions": {
+    "ApplicationGatewayProtectedEndpoint": {
+      "type": "object",
+      "description": "Defines a custom rule condition of type Ip",
+      "properties": {},
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProtectedEndpoint"
+        }
+      ],
+      "x-ms-discriminator-value": "ApplicationGateway"
+    },
     "BotProtection": {
       "type": "object",
       "description": "Bot protection policy definition",
@@ -794,6 +805,17 @@
           }
         ]
       }
+    },
+    "FrontDoorProtectedEndpoint": {
+      "type": "object",
+      "description": "Defines a custom rule condition of type Ip",
+      "properties": {},
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProtectedEndpoint"
+        }
+      ],
+      "x-ms-discriminator-value": "FrontDoor"
     },
     "GeoMatchCondition": {
       "type": "object",
@@ -1213,6 +1235,10 @@
       "type": "object",
       "description": "Protected endpoint definition",
       "properties": {
+        "applicationType": {
+          "type": "string",
+          "description": "Discriminator property for ProtectedEndpoint."
+        },
         "endpointId": {
           "$ref": "#/definitions/ProtectedEndpointId",
           "description": "Fully qualified ARM ID of the endpoint to protect"
@@ -1228,7 +1254,9 @@
           "readOnly": true
         }
       },
+      "discriminator": "applicationType",
       "required": [
+        "applicationType",
         "endpointId"
       ]
     },
@@ -1248,7 +1276,7 @@
             "type": "Microsoft.Network/applicationGateways/requestRoutingRules"
           },
           {
-            "type": "Microsoft.Cdn/profiles "
+            "type": "Microsoft.Cdn/profiles"
           },
           {
             "type": "Microsoft.Cdn/profiles/afdEndpoints"

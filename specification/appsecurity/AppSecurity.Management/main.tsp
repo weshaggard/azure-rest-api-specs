@@ -11,6 +11,7 @@ import "./policy/managedRules.tsp";
 import "./policy/policySettings.tsp";
 import "./policy/webProtection.tsp";
 import "./policy/botProtection.tsp";
+import "./policy/protectedEndpoint.tsp";
 import "./policy/policy.tsp";
 
 using TypeSpec.Http;
