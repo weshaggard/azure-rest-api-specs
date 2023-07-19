@@ -73,7 +73,7 @@ model IngestionSettings {
   dataCollectionEndpointResourceId: string,
 }
 
-@armCommonDefinition("PrivateEndpointConnection")
+@armCommonDefinition("PrivateEndpointConnection", "v4", "privatelinks.json")
 @doc("PrivateEndpointConnection from the common objects")
 model PrivateEndpointConnection {
 }
