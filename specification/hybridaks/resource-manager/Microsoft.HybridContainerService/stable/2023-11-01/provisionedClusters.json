@@ -832,6 +832,54 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridContainerService/provisionedClusters/{resourceName}/listClusterUserCredential": {
+      "post": {
+        "tags": [
+          "ProvisionedClusters"
+        ],
+        "operationId": "ProvisionedClusters_ListClusterUserCredentials",
+        "summary": "Listing the AAD user credentials of a provisioned cluster used only in direct mode.",
+        "description": "Lists the AAD user credentials of a provisioned cluster used only in direct mode.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location",
+          "final-state-schema" : "#/definitions/CredentialResults"
+        },
+        "x-ms-examples": {
+          "ListClusterUserCredentials": {
+            "$ref": "./examples/ProvisionedClustersListClusterUserCredentials.json"
+          }
+        }
+      }
+    },
     "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/kubernetesVersions/default":{
       "get":{
         "operationId": "GetKubernetesVersions",
@@ -920,7 +968,7 @@
             "schema":{
               "$ref":"../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
-          } 
+          }
         }
       }
     },
@@ -1012,7 +1060,7 @@
             "schema":{
               "$ref":"../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
-          } 
+          }
         }
       }
     },
@@ -1050,6 +1098,38 @@
     }
   },
   "definitions": {
+    "CredentialResults": {
+      "type": "object",
+      "properties": {
+        "kubeconfigs": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/CredentialResult"
+          },
+          "x-ms-identifiers": [],
+          "description": "Base64-encoded Kubernetes configuration file."
+        }
+      },
+      "description": "The list credential result response."
+    },
+    "CredentialResult": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The name of the credential."
+        },
+        "value": {
+          "type": "string",
+          "format": "byte",
+          "readOnly": true,
+          "description": "Base64-encoded Kubernetes configuration file."
+        }
+      },
+      "description": "The credential result response."
+    },
     "provisionedClustersProperties": {
       "type": "object",
       "properties": {
