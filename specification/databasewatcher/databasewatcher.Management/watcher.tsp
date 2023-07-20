@@ -3,7 +3,6 @@ import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 import "@azure-tools/typespec-providerhub";
-import "@azure-tools/typespec-providerhub-controller";
 import "./sqlDbSingleDatabaseTarget.tsp";
 import "./sqlDbElasticPoolTarget.tsp";
 import "./sqlMiTarget.tsp";
@@ -110,16 +109,23 @@ model Target is ProxyResource<TargetProperties> {
 
 @doc("The monitoring collection status of the watcher.")
 enum WatcherStatus {
+  @doc("Denotes the watcher is in a starting state.")
   Starting,
+
+  @doc("Denotes the watcher is in a running state.")
   Running,
+
+  @doc("Denotes the watcher is in a stopping state.")
   Stopping,
+
+  @doc("Denotes the watcher is in a stopped state.")
   Stopped,
+
+  @doc("Denotes the watcher is in a deleting state.")
   Deleting,
 }
 
 @doc("The status of the last provisioning operation performed on the resource.")
 enum DatabaseWatcherProvisioningState {
   ...ResourceProvisioningState,
-  InProgress,
-  Deleting,
 }
