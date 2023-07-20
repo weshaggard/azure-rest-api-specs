@@ -44,7 +44,7 @@
     }
   ],
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/deploymentSettings": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.AzureStackHCI/clusters/{clusterName}/deploymentSettings": {
       "get": {
         "operationId": "DeploymentSettings_ListByClusters",
         "tags": [
@@ -93,7 +93,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/clusters/{clusterName}/deploymentSettings/{deploymentSettingsName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.AzureStackHCI/clusters/{clusterName}/deploymentSettings/{deploymentSettingsName}": {
       "get": {
         "operationId": "DeploymentSettings_Get",
         "tags": [
@@ -553,23 +553,19 @@
         "hostNetwork",
         "storageNetworks",
         "adouPath"
-      ],
-      "externalDocs": {
-        "description": "Deploy Azure Stack HCI using an existing configuration file",
-        "url": "https://learn.microsoft.com/en-us/azure-stack/hci/deploy/deployment-tool-existing-file"
-      }
+      ]
     },
     "DeploymentRequest": {
       "type": "object",
       "description": "The deployment request for Azure Stack HCI Cluster.",
       "properties": {
-        "deploymentRequestType": {
+        "requestType": {
           "type": "string",
-          "description": "deploy request type, allowed values 'ValidateOnly', Deploy', 'ValidateAndDeployIfSuccess'"
+          "description": "deployment request type, allowed values 'ValidateOnly', Deploy', 'ValidateAndDeployIfSuccess'"
         }
       },
       "required": [
-        "deploymentRequestType"
+        "requestType"
       ]
     },
     "DeploymentResponse": {
@@ -627,13 +623,13 @@
           "description": "DeploymentSetting provisioning state",
           "readOnly": true
         },
-        "deploymentData": {
-          "$ref": "#/definitions/DeploymentData",
-          "description": "Deployment Data to deploy AzureStackHCI Cluster."
-        },
-        "deploymentMetaData": {
-          "type": "string",
-          "description": "Deployment metatdata to pass additional config."
+        "scaleUnits": {
+          "type": "array",
+          "description": "Scale units will contains list of deploymentdata",
+          "items": {
+            "$ref": "#/definitions/ScaleUnits"
+          },
+          "x-ms-identifiers": []
         },
         "reportedProperties": {
           "$ref": "#/definitions/ReportedProperties",
@@ -642,7 +638,7 @@
         }
       },
       "required": [
-        "deploymentData"
+        "scaleUnits"
       ]
     },
     "DeploymentStatus": {
@@ -892,6 +888,7 @@
         "Succeeded",
         "Failed",
         "Canceled",
+        "NotSpecified",
         "Provisioning",
         "Updating",
         "Deleting",
@@ -915,6 +912,11 @@
             "name": "Canceled",
             "value": "Canceled",
             "description": "Resource creation was canceled."
+          },
+          {
+            "name": "NotSpecified",
+            "value": "NotSpecified",
+            "description": "The resource provision state is not specified"
           },
           {
             "name": "Provisioning",
@@ -971,6 +973,23 @@
           "description": "Deployment status of AzureStackHCI Cluster Deployment.",
           "readOnly": true
         }
+      }
+    },
+    "ScaleUnits": {
+      "type": "object",
+      "description": "Scale units will contains list of deploymentdata",
+      "properties": {
+        "deploymentData": {
+          "$ref": "#/definitions/DeploymentData",
+          "description": "Deployment Data to deploy AzureStackHCI Cluster."
+        }
+      },
+      "required": [
+        "deploymentData"
+      ],
+      "externalDocs": {
+        "description": "Deploy Azure Stack HCI using an existing configuration file",
+        "url": "https://learn.microsoft.com/en-us/azure-stack/hci/deploy/deployment-tool-existing-file"
       }
     },
     "SecuritySettings": {

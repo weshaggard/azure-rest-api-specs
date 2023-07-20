@@ -35,8 +35,8 @@ model EdgeDevice is ExtensionResource<EdgeDeviceProperties> {
 model EdgeDeviceProperties {
   @doc("Device Configuration")
   deviceConfiguration: DeviceConfiguration;
-  @doc("Device metadata")
-  deviceMetadata?: string;
+  // @doc("Device metadata")
+  // deviceMetadata?: string;
   @doc("Provisioning state of edgeDevice resource")
   @visibility("read")
   provisioningState?: ProvisioningState
@@ -46,62 +46,47 @@ model EdgeDeviceProperties {
 model DeviceConfiguration {
   @doc("NIC Details of device")
   @extension("x-ms-identifiers", [])
-  nicDetails: NicDetail[];
-  @doc("DNS Server Details of device")
-  @extension("x-ms-identifiers", [])
-  dnsServers: string[];
-  @doc("ProxyConfiguration Details of device")
-  @extension("x-ms-identifiers", [])
-  proxyConfiguration: ProxyConfiguration[];
-  @doc("OS Version of device")
-  osVersion: string;
-  @doc("Management NIC Details of device")
-  @extension("x-ms-identifiers", [])
-  managementNicDetails: ManagementNicDetail[];
+  nicDetails: NicDetail[],
+
+  @doc("Default Isolation of Management NIC")
+  defaultIsolationId?: string;
 }
 
 @doc("The NIC Detail of a device.")
 model NicDetail {
   @doc("Adapter Name of NIC")
   adapterName: string;
-  @doc("Component Id of NIC")
-  componentId: string;
-  @doc("Driver Version of NIC")
-  driverVersion: string;
+
   @doc("Interface Description of NIC")
   interfaceDescription: string;
+
+  @doc("Component Id of NIC")
+  componentId: string;
+  
+  @doc("Driver Version of NIC")
+  driverVersion: string;
+  
   @doc("Subnet Mask of NIC")
   ip4Address: string;
+
   @doc("Subnet Mask of NIC")
   subnetMask: string;
+
   @doc("Default Gateway of NIC")
   defaultGateway: string;
+
   @doc("DNS Servers for NIC")
+  @extension("x-ms-identifiers", [])
   dnsServers?: string[];
-}
-
-@doc("The ProxyConfiguration of a device.")
-model ProxyConfiguration {
-  @doc("Proxy URL of device")
-  url: string;
-  @doc("Proxy Port of device")
-  port: string;
-}
-
-@doc("The Management NIC Detail of a device.")
-model ManagementNicDetail {
-   @doc("Adapter Name of Management NIC")
-  adapterName: string;
-  @doc("Default Isolation of Management NIC")
-  defaultIsolationId: string;
-  @doc("DNS Servers of Management NIC")
-  dnsServers: string[];
 }
 
 @doc("The provisioning state of a resource.")
 @lroStatus
 enum ProvisioningState {
   ...ResourceProvisioningState,
+
+  @doc("The resource provision state is not specified")
+  NotSpecified,
 
   @doc("The resource is being provisioned")
   Provisioning,
@@ -118,13 +103,15 @@ enum ProvisioningState {
 
 
 @doc("The validate request for Edge Device.")
-model ValidateEdgeDeviceRequest{
-  @doc("validate request payload")
-  payload : string
+model ValidateRequest{
+  @doc("Node Ids against which, current node has to be validated.")
+  edgeDeviceIds : string[],
+  @doc("additional Info required for validation")
+  additionalInfo : string
 }
 
 @doc("An Accepted response with an Operation-Location header.")
-model ValidateEdgeDeviceResponse{
+model ValidateResponse{
   @doc("The status code.")
   @statusCode
   statusCode: 202;
@@ -137,5 +124,5 @@ interface EdgeDevices {
   get is ArmResourceRead<EdgeDevice>;
   createOrUpdate is ArmResourceCreateOrUpdateSync<EdgeDevice>;
   delete is ArmResourceDeleteAsync<EdgeDevice>;
-  validate is ArmResourceActionAsync<EdgeDevice, ValidateEdgeDeviceRequest, ValidateEdgeDeviceResponse>;
+  validate is ArmResourceActionAsync<EdgeDevice, ValidateRequest, ValidateResponse>;
 }

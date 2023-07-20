@@ -19,7 +19,7 @@ using OpenAPI;
 })
 @doc("Azure Stack HCI Deployment Settings.")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.AzureStackHCI;
+namespace Private.AzureStackHCI;
 
 @doc("A Cluster")
 model Clusters is TrackedResource<ClusterProperties> {
@@ -50,20 +50,43 @@ model DeploymentSettingsProperties {
   @visibility("read")
   provisioningState?: ProvisioningState,
 
-  @doc("Deployment Data to deploy AzureStackHCI Cluster.")
-  deploymentData: DeploymentData,
-
-  @doc("Deployment metatdata to pass additional config.")
-  deploymentMetaData?: string,
+  @doc("Scale units will contains list of deploymentdata")
+  @extension("x-ms-identifiers", [])
+  scaleUnits : ScaleUnits[],
 
   @doc("Deployment Status reported from cluster.")
   @visibility("read")
   reportedProperties?: ReportedProperties
 }
 
-@doc("The DeploymentData of AzureStackHCI Cluster.")
+@doc("Scale units will contains list of deploymentdata")
 @externalDocs("https://learn.microsoft.com/en-us/azure-stack/hci/deploy/deployment-tool-existing-file", 
 "Deploy Azure Stack HCI using an existing configuration file")
+model ScaleUnits {
+ @doc("Deployment Data to deploy AzureStackHCI Cluster.")
+  deploymentData: DeploymentData,
+  // @doc("Deployment metatdata to pass additional config.")
+  // deploymentMetaData?: string,
+}
+
+// @doc("DeploymentSetting properties")
+// model DeploymentSettingsProperties {
+//   @doc("DeploymentSetting provisioning state")
+//   @visibility("read")
+//   provisioningState?: ProvisioningState,
+
+//   @doc("Deployment Data to deploy AzureStackHCI Cluster.")
+//   deploymentData: DeploymentData,
+
+//   @doc("Deployment metatdata to pass additional config.")
+//   deploymentMetaData?: string,
+
+//   @doc("Deployment Status reported from cluster.")
+//   @visibility("read")
+//   reportedProperties?: ReportedProperties
+// }
+
+@doc("The DeploymentData of AzureStackHCI Cluster.")
 model DeploymentData {
   @doc("SecuritySettings to deploy AzureStackHCI Cluster.")
   securitySettings: SecuritySettings,
@@ -422,6 +445,9 @@ model AdapterPropertyOverrides {
 enum ProvisioningState {
   ...ResourceProvisioningState,
 
+  @doc("The resource provision state is not specified")
+  NotSpecified,
+
   @doc("The resource is being provisioned")
   Provisioning,
 
@@ -437,8 +463,8 @@ enum ProvisioningState {
 
 @doc("The deployment request for Azure Stack HCI Cluster.")
 model DeploymentRequest{
-  @doc("deploy request type, allowed values 'ValidateOnly', Deploy', 'ValidateAndDeployIfSuccess'")
-  deploymentRequestType: string
+  @doc("deployment request type, allowed values 'ValidateOnly', Deploy', 'ValidateAndDeployIfSuccess'")
+  requestType: string
 }
 
 @doc("An Accepted response with an Operation-Location header.")

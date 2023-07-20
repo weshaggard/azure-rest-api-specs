@@ -231,7 +231,7 @@
             "description": "The content of the action request",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ValidateEdgeDeviceRequest"
+              "$ref": "#/definitions/ValidateRequest"
             }
           }
         ],
@@ -239,7 +239,7 @@
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/ValidateEdgeDeviceResponse"
+              "$ref": "#/definitions/ValidateResponse"
             }
           },
           "202": {
@@ -288,41 +288,13 @@
           },
           "x-ms-identifiers": []
         },
-        "dnsServers": {
-          "type": "array",
-          "description": "DNS Server Details of device",
-          "items": {
-            "type": "string"
-          },
-          "x-ms-identifiers": []
-        },
-        "proxyConfiguration": {
-          "type": "array",
-          "description": "ProxyConfiguration Details of device",
-          "items": {
-            "$ref": "#/definitions/ProxyConfiguration"
-          },
-          "x-ms-identifiers": []
-        },
-        "osVersion": {
+        "defaultIsolationId": {
           "type": "string",
-          "description": "OS Version of device"
-        },
-        "managementNicDetails": {
-          "type": "array",
-          "description": "Management NIC Details of device",
-          "items": {
-            "$ref": "#/definitions/ManagementNicDetail"
-          },
-          "x-ms-identifiers": []
+          "description": "Default Isolation of Management NIC"
         }
       },
       "required": [
-        "nicDetails",
-        "dnsServers",
-        "proxyConfiguration",
-        "osVersion",
-        "managementNicDetails"
+        "nicDetails"
       ]
     },
     "EdgeDevice": {
@@ -353,10 +325,6 @@
           "$ref": "#/definitions/DeviceConfiguration",
           "description": "Device Configuration"
         },
-        "deviceMetadata": {
-          "type": "string",
-          "description": "Device metadata"
-        },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
           "description": "Provisioning state of edgeDevice resource",
@@ -367,32 +335,6 @@
         "deviceConfiguration"
       ]
     },
-    "ManagementNicDetail": {
-      "type": "object",
-      "description": "The Management NIC Detail of a device.",
-      "properties": {
-        "adapterName": {
-          "type": "string",
-          "description": "Adapter Name of Management NIC"
-        },
-        "defaultIsolationId": {
-          "type": "string",
-          "description": "Default Isolation of Management NIC"
-        },
-        "dnsServers": {
-          "type": "array",
-          "description": "DNS Servers of Management NIC",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "adapterName",
-        "defaultIsolationId",
-        "dnsServers"
-      ]
-    },
     "NicDetail": {
       "type": "object",
       "description": "The NIC Detail of a device.",
@@ -401,6 +343,10 @@
           "type": "string",
           "description": "Adapter Name of NIC"
         },
+        "interfaceDescription": {
+          "type": "string",
+          "description": "Interface Description of NIC"
+        },
         "componentId": {
           "type": "string",
           "description": "Component Id of NIC"
@@ -408,10 +354,6 @@
         "driverVersion": {
           "type": "string",
           "description": "Driver Version of NIC"
-        },
-        "interfaceDescription": {
-          "type": "string",
-          "description": "Interface Description of NIC"
         },
         "ip4Address": {
           "type": "string",
@@ -430,14 +372,15 @@
           "description": "DNS Servers for NIC",
           "items": {
             "type": "string"
-          }
+          },
+          "x-ms-identifiers": []
         }
       },
       "required": [
         "adapterName",
+        "interfaceDescription",
         "componentId",
         "driverVersion",
-        "interfaceDescription",
         "ip4Address",
         "subnetMask",
         "defaultGateway"
@@ -450,6 +393,7 @@
         "Succeeded",
         "Failed",
         "Canceled",
+        "NotSpecified",
         "Provisioning",
         "Updating",
         "Deleting",
@@ -475,6 +419,11 @@
             "description": "Resource creation was canceled."
           },
           {
+            "name": "NotSpecified",
+            "value": "NotSpecified",
+            "description": "The resource provision state is not specified"
+          },
+          {
             "name": "Provisioning",
             "value": "Provisioning",
             "description": "The resource is being provisioned"
@@ -497,38 +446,28 @@
         ]
       }
     },
-    "ProxyConfiguration": {
-      "type": "object",
-      "description": "The ProxyConfiguration of a device.",
-      "properties": {
-        "url": {
-          "type": "string",
-          "description": "Proxy URL of device"
-        },
-        "port": {
-          "type": "string",
-          "description": "Proxy Port of device"
-        }
-      },
-      "required": [
-        "url",
-        "port"
-      ]
-    },
-    "ValidateEdgeDeviceRequest": {
+    "ValidateRequest": {
       "type": "object",
       "description": "The validate request for Edge Device.",
       "properties": {
-        "payload": {
+        "edgeDeviceIds": {
+          "type": "array",
+          "description": "Node Ids against which, current node has to be validated.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "additionalInfo": {
           "type": "string",
-          "description": "validate request payload"
+          "description": "additional Info required for validation"
         }
       },
       "required": [
-        "payload"
+        "edgeDeviceIds",
+        "additionalInfo"
       ]
     },
-    "ValidateEdgeDeviceResponse": {
+    "ValidateResponse": {
       "type": "object",
       "description": "An Accepted response with an Operation-Location header.",
       "properties": {}
