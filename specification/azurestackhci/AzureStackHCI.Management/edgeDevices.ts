@@ -19,7 +19,7 @@ using OpenAPI;
 })
 @doc("Azure Arc-enabled Edge Device.")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.AzureStackHCI;
+namespace Private.AzureStackHCI;
 
 @doc("Edge device resource")
 model EdgeDevice is ExtensionResource<EdgeDeviceProperties> {
@@ -47,9 +47,6 @@ model DeviceConfiguration {
   @doc("NIC Details of device")
   @extension("x-ms-identifiers", [])
   nicDetails: NicDetail[],
-
-  @doc("Default Isolation of Management NIC")
-  defaultIsolationId?: string;
 }
 
 @doc("The NIC Detail of a device.")
@@ -58,26 +55,29 @@ model NicDetail {
   adapterName: string;
 
   @doc("Interface Description of NIC")
-  interfaceDescription: string;
+  interfaceDescription?: string;
 
   @doc("Component Id of NIC")
-  componentId: string;
+  componentId?: string;
   
   @doc("Driver Version of NIC")
-  driverVersion: string;
+  driverVersion?: string;
   
   @doc("Subnet Mask of NIC")
-  ip4Address: string;
+  ip4Address?: string;
 
   @doc("Subnet Mask of NIC")
-  subnetMask: string;
+  subnetMask?: string;
 
   @doc("Default Gateway of NIC")
-  defaultGateway: string;
+  defaultGateway?: string;
 
   @doc("DNS Servers for NIC")
   @extension("x-ms-identifiers", [])
   dnsServers?: string[];
+
+  @doc("Default Isolation of Management NIC")
+  defaultIsolationId?: string;
 }
 
 @doc("The provisioning state of a resource.")
@@ -112,8 +112,13 @@ model ValidateRequest{
 
 @doc("An Accepted response with an Operation-Location header.")
 model ValidateResponse{
+  @doc("edge device validation status")
+  @visibility("read")
+  status: string, 
+
   @doc("The status code.")
   @statusCode
+  @visibility("read")
   statusCode: 202;
 }
 
