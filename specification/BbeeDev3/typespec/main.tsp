@@ -373,6 +373,7 @@ model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProper
   name: string;
 }
 
+@pattern("^/subscriptions/(.+?)/resourceGroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$")
 scalar ProvisioningPolicyResourceId
   extends ResourceIdentifier<[
     {
@@ -395,7 +396,6 @@ model DeviceProvisioningStateProperties {
   discoveryEnabled: boolean;
 
   @doc("The provisioning policy resource id")
-  @pattern("^/subscriptions/(.+?)/resourceGroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$")
   provisioningPolicyResourceId?: ProvisioningPolicyResourceId;
 
   @visibility("read")
