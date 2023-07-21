@@ -107,14 +107,14 @@ model ValidateRequest{
   @doc("Node Ids against which, current node has to be validated.")
   edgeDeviceIds : string[],
   @doc("additional Info required for validation")
-  additionalInfo : string
+  additionalInfo?: string
 }
 
 @doc("An Accepted response with an Operation-Location header.")
 model ValidateResponse{
   @doc("edge device validation status")
   @visibility("read")
-  status: string, 
+  status?: string, 
 
   @doc("The status code.")
   @statusCode
