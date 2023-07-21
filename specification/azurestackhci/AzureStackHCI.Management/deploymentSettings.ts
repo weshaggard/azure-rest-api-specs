@@ -52,12 +52,23 @@ model DeploymentSettingsProperties {
 
   @doc("Scale units will contains list of deploymentdata")
   @extension("x-ms-identifiers", [])
-  scaleUnits : ScaleUnits[],
+  deploymentConfiguration : DeploymentConfiguration,
 
   @doc("Deployment Status reported from cluster.")
   @visibility("read")
   reportedProperties?: ReportedProperties
 }
+
+@doc("Deployment Configuration")
+model DeploymentConfiguration {
+  @doc("deployment template version ")
+  version?: string,
+
+  @doc("Scale units will contains list of deploymentdata")
+  @extension("x-ms-identifiers", [])
+  scaleUnits : ScaleUnits[]
+}
+
 
 @doc("Scale units will contains list of deploymentdata")
 @externalDocs("https://learn.microsoft.com/en-us/azure-stack/hci/deploy/deployment-tool-existing-file", 
@@ -109,9 +120,7 @@ model DeploymentData {
   physicalNodes : PhysicalNodes[],
   @doc("HostNetwork config to deploy AzureStackHCI Cluster.")
   "hostNetwork" : HostNetwork,
-  @doc("List of StorageNetworks config to deploy AzureStackHCI Cluster.")
-  @extension("x-ms-identifiers", [])
-  "storageNetworks": StorageNetworks[],
+
   @doc("The path to the Active Directory Organizational Unit (ADOU) container object prepared for the deployment. ")
   "adouPath" : string,
   @doc("The URI to the keyvault / secret store.")
@@ -342,7 +351,11 @@ model IpPools {
 model HostNetwork {
   @doc("The network intents assigned to the network reference pattern used for the deployment. Each intent will define its own name, traffic type, adapter names, and overrides as recommended by your OEM.")
   @extension("x-ms-identifiers", [])
-  intents: Intents[]
+  intents: Intents[],
+
+  @doc("List of StorageNetworks config to deploy AzureStackHCI Cluster.")
+  @extension("x-ms-identifiers", [])
+  "storageNetworks": StorageNetworks[]
 }
 
 @doc("The Intents of a cluster.")
