@@ -19,8 +19,8 @@ model BaseResourceProperties {
 }
 
 @doc("Properties for a linkable resource.")
-model LinkableResourceProperties extends BaseResourceProperties {
+model LinkableResourceProperties {
   @doc("The Entry Links attached to this resource.")
   @visibility("read")
-  entryLinkIds?: EntryLinkId[]; 
+  entryLinkIds?: EntryLinkId[];
 }
