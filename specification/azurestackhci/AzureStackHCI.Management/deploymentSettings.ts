@@ -139,7 +139,7 @@ model ValidationStatus {
   @doc("List of actions of AzureStackHCI Cluster Deployment.")
   @extension("x-ms-identifiers", [])
   @visibility("read")
-  action: Action[]
+  action?: Action[]
 }
 
 @doc("The DeploymentStatus of AzureStackHCI Cluster.")
@@ -147,7 +147,7 @@ model DeploymentStatus {
   @doc("List of actions of AzureStackHCI Cluster Deployment.")
   @extension("x-ms-identifiers", [])
   @visibility("read")
-  action: Action[]
+  action?: Action[]
 }
 
 @doc("The Action of AzureStackHCI Cluster.")
@@ -155,29 +155,29 @@ model Action {
   @doc("List of steps of AzureStackHCI Cluster Deployment.")
   @extension("x-ms-identifiers", [])
   @visibility("read")
-  steps: Step[],
+  steps?: Step[],
   @doc("type of action.")
   @visibility("read")
-  type: string,
+  type?: string,
   @doc("Start time of action.")
   @visibility("read")
-  startTime: utcDateTime,
+  startTime?: utcDateTime,
   @doc("End time of action.")
   @visibility("read")
-  endTime: utcDateTime,
+  endTime?: utcDateTime,
    @doc("Status of action. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
-  status: string,
+  status?: string,
 }
 
 @doc("The Step of AzureStackHCI Cluster.")
 model Step {
   @doc("Name of step.")
   @visibility("read")
-  name: string,
+  name?: string,
   @doc("Description of step.")
   @visibility("read")
-  description: string,
+  description?: string,
   @doc("Index of step.")
   @visibility("read")
   index?: integer,
@@ -187,41 +187,41 @@ model Step {
   @doc("List of tasks performed for step.")
   @extension("x-ms-identifiers", [])
   @visibility("read")
-  task: Task[],
+  task?: Task[],
  @doc("Start time of action.")
   @visibility("read")
-  startTime: utcDateTime,
+  startTime?: utcDateTime,
   @doc("End time of step.")
   @visibility("read")
-  endTime: utcDateTime,
+  endTime?: utcDateTime,
     @doc("Status of step. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
-  status: string
+  status?: string
 }
 
 @doc("The Step of AzureStackHCI Cluster.")
 model Task {
   @doc("Evaluaton status of task.")
   @visibility("read")
-  evaluation: Evaluation,
+  evaluation?: Evaluation,
   @doc("Exception status of task.")
   @visibility("read")
   exception?: Exception,
   @doc("Rolepath of task.")
   @visibility("read")
-  rolePath: string,
+  rolePath?: string,
   @doc("Interface Type of task.")
   @visibility("read")
-  interfaceType: string,
+  interfaceType?: string,
   @doc("Start time of task.")
   @visibility("read")
-  startTime: utcDateTime,
+  startTime?: utcDateTime,
   @doc("End time of task.")
   @visibility("read")
-  endTime: utcDateTime,
+  endTime?: utcDateTime,
   @doc("Status of task. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
-  status: string,
+  status?: string,
   @doc("action if required.")
   @visibility("read")
   action?: Action
@@ -231,17 +231,17 @@ model Task {
 model Exception {
   @doc("Exception message")
   @visibility("read")
-  message: string,
+  message?: string,
   @doc("exception raised for machine name.")
   @visibility("read")
-  machineName: string
+  machineName?: string
 }
 
 @doc("The Evaluation of AzureStackHCI Cluster.")
 model Evaluation {
   @doc("Evaluation message")
   @visibility("read")
-  message: string
+  message?: string
 }
 
 
