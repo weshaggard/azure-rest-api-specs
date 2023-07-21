@@ -395,7 +395,7 @@ model DeviceProvisioningStateProperties {
   discoveryEnabled: boolean;
 
   @doc("The provisioning policy resource id")
-  @pattern("^/subscriptions/(.+?)/resourcegroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$")
+  @pattern("^(?i)/subscriptions/(.+?)/resourcegroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$")
   provisioningPolicyResourceId?: string;
 
   @visibility("read")
