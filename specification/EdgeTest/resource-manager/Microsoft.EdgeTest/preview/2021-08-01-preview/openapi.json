@@ -890,39 +890,16 @@
     }
   },
   "definitions": {
-    "AllocationEndpoint": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the endpoint"
-        },
-        "resourceId": {
-          "type": "string",
-          "description": "Resource id of the endpoint"
-        },
-        "weight": {
-          "type": "number",
-          "format": "double",
-          "description": "Weight of the endpoint"
-        },
-        "region": {
-          "type": "string",
-          "description": "Region of the endpoint"
-        }
-      },
-      "description": "Endpoint",
-      "required": [
-        "name",
-        "resourceId"
-      ]
-    },
     "AllocationRule": {
       "type": "object",
       "properties": {
         "name": {
           "type": "string",
           "description": "Name of the allocation rule"
+        },
+        "endpointType": {
+          "$ref": "#/definitions/EndpointType",
+          "description": "Type of endpoint"
         },
         "type": {
           "$ref": "#/definitions/AllocationType",
@@ -933,6 +910,7 @@
       "discriminator": "type",
       "required": [
         "name",
+        "endpointType",
         "type"
       ]
     },
@@ -1060,12 +1038,75 @@
         ]
       }
     },
+    "CaConfig": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the CA"
+        },
+        "properties": {
+          "$ref": "#/definitions/CertificateProperties",
+          "description": "Certificate properties"
+        }
+      },
+      "description": "The configuration for setting up a CA",
+      "required": [
+        "name",
+        "properties"
+      ]
+    },
+    "CaConfigUpdate": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the CA"
+        },
+        "properties": {
+          "$ref": "#/definitions/CertificatePropertiesUpdate",
+          "description": "Certificate properties"
+        }
+      },
+      "description": "The configuration for setting up a CA"
+    },
+    "CertPolicyConfig": {
+      "type": "object",
+      "properties": {
+        "validityPeriod": {
+          "$ref": "#/definitions/ValidityPeriod",
+          "description": "The validity period"
+        }
+      },
+      "description": "The configuration for setting up a policy",
+      "required": [
+        "validityPeriod"
+      ]
+    },
+    "CertPolicyConfigUpdate": {
+      "type": "object",
+      "properties": {
+        "validityPeriod": {
+          "$ref": "#/definitions/ValidityPeriodUpdate",
+          "description": "The validity period"
+        }
+      },
+      "description": "The configuration for setting up a policy"
+    },
     "CertificateIssuanceRule": {
       "type": "object",
       "properties": {
-        "intermediateCertificateAuthority": {
-          "type": "string",
-          "description": "ICA - IntermediateCertificateAuthority name"
+        "issuingAuthority": {
+          "$ref": "#/definitions/SupportedIssuingAuthority",
+          "description": "The type of authority for cert issuance"
+        },
+        "certificateAuthorityConfiguration": {
+          "$ref": "#/definitions/CaConfig",
+          "description": "The configuration to set up an ICA"
+        },
+        "certificatePolicyConfiguration": {
+          "$ref": "#/definitions/CertPolicyConfig",
+          "description": "The enrollment policy configuration"
         },
         "renewalInterval": {
           "type": "integer",
@@ -1075,16 +1116,26 @@
       },
       "description": "Certificate issuance configurations",
       "required": [
-        "intermediateCertificateAuthority",
+        "issuingAuthority",
+        "certificateAuthorityConfiguration",
+        "certificatePolicyConfiguration",
         "renewalInterval"
       ]
     },
     "CertificateIssuanceRuleUpdate": {
       "type": "object",
       "properties": {
-        "intermediateCertificateAuthority": {
-          "type": "string",
-          "description": "ICA - IntermediateCertificateAuthority name"
+        "issuingAuthority": {
+          "$ref": "#/definitions/SupportedIssuingAuthority",
+          "description": "The type of authority for cert issuance"
+        },
+        "certificateAuthorityConfiguration": {
+          "$ref": "#/definitions/CaConfigUpdate",
+          "description": "The configuration to set up an ICA"
+        },
+        "certificatePolicyConfiguration": {
+          "$ref": "#/definitions/CertPolicyConfigUpdate",
+          "description": "The enrollment policy configuration"
         },
         "renewalInterval": {
           "type": "integer",
@@ -1093,6 +1144,146 @@
         }
       },
       "description": "Certificate issuance configurations"
+    },
+    "CertificateProperties": {
+      "type": "object",
+      "properties": {
+        "keyType": {
+          "$ref": "#/definitions/SupportedKeyType",
+          "description": "Key type: RSA or EC"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Certificate subject"
+        },
+        "validityNotBefore": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Certificate is valid not before this date"
+        },
+        "validityNotAfter": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Certificate is valid not after this date"
+        },
+        "extendedKeyUsage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SupportedExtendedKeyUsage"
+          },
+          "description": "Extended key usage",
+          "x-typespec-name": "SupportedExtendedKeyUsage[]"
+        }
+      },
+      "description": "Certificate properties",
+      "discriminator": "keyType",
+      "required": [
+        "keyType",
+        "subject",
+        "validityNotBefore",
+        "validityNotAfter"
+      ]
+    },
+    "CertificatePropertiesEC": {
+      "type": "object",
+      "properties": {
+        "curveType": {
+          "$ref": "#/definitions/SupportedCurveType",
+          "description": "Curve type of EC"
+        }
+      },
+      "description": "Certificate properties for EC",
+      "required": [
+        "curveType"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/CertificateProperties"
+        }
+      ]
+    },
+    "CertificatePropertiesECUpdate": {
+      "type": "object",
+      "properties": {
+        "curveType": {
+          "$ref": "#/definitions/SupportedCurveType",
+          "description": "Curve type of EC"
+        }
+      },
+      "description": "Certificate properties for EC",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CertificatePropertiesUpdate"
+        }
+      ]
+    },
+    "CertificatePropertiesRSA": {
+      "type": "object",
+      "properties": {
+        "keySize": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Key size for RSA key type"
+        }
+      },
+      "description": "Certificate properties for RSA",
+      "required": [
+        "keySize"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/CertificateProperties"
+        }
+      ]
+    },
+    "CertificatePropertiesRSAUpdate": {
+      "type": "object",
+      "properties": {
+        "keySize": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Key size for RSA key type"
+        }
+      },
+      "description": "Certificate properties for RSA",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CertificatePropertiesUpdate"
+        }
+      ]
+    },
+    "CertificatePropertiesUpdate": {
+      "type": "object",
+      "properties": {
+        "keyType": {
+          "$ref": "#/definitions/SupportedKeyType",
+          "description": "Key type: RSA or EC"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Certificate subject"
+        },
+        "validityNotBefore": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Certificate is valid not before this date"
+        },
+        "validityNotAfter": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Certificate is valid not after this date"
+        },
+        "extendedKeyUsage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SupportedExtendedKeyUsage"
+          },
+          "description": "Extended key usage",
+          "x-typespec-name": "SupportedExtendedKeyUsage[]"
+        }
+      },
+      "description": "Certificate properties",
+      "discriminator": "keyType"
     },
     "DeviceEndpoint": {
       "type": "object",
@@ -1334,7 +1525,8 @@
             "name"
           ],
           "description": "List of endpoints for geoBased allocation type",
-          "x-typespec-name": "GeoBasedAllocationEndpoint[]"
+          "x-typespec-name": "GeoBasedAllocationEndpoint[]",
+          "maxItems": 50
         }
       },
       "description": "The allocation rule for geoBased allocation type",
@@ -1342,8 +1534,7 @@
         {
           "$ref": "#/definitions/AllocationRule"
         }
-      ],
-      "x-ms-discriminator-value": "GeoBased"
+      ]
     },
     "IdentityInfo": {
       "type": "object",
@@ -1691,7 +1882,7 @@
           "$ref": "#/definitions/JitRule",
           "description": "Just-in-time rule to create the device resource."
         },
-        "identityInfo": {
+        "operationalIdentityInfo": {
           "$ref": "#/definitions/IdentityInfo",
           "description": "Identity information"
         },
@@ -1717,7 +1908,7 @@
           "$ref": "#/definitions/JitRuleUpdate",
           "description": "Just-in-time rule to create the device resource."
         },
-        "identityInfo": {
+        "operationalIdentityInfo": {
           "$ref": "#/definitions/IdentityInfoUpdate",
           "description": "Identity information"
         },
@@ -1807,6 +1998,307 @@
         ]
       }
     },
+    "SourceType": {
+      "type": "string",
+      "description": "Potential sources for cert issuance config",
+      "enum": [
+        "CSR",
+        "Policy",
+        "Substitute"
+      ],
+      "x-ms-enum": {
+        "name": "SourceType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "CSR",
+            "value": "CSR",
+            "description": "From certificate signing request"
+          },
+          {
+            "name": "Policy",
+            "value": "Policy",
+            "description": "From the enrollment policy"
+          },
+          {
+            "name": "Substitute",
+            "value": "Substitute",
+            "description": "From the substitute"
+          }
+        ]
+      }
+    },
+    "StaticAllocationEndpoint": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the endpoint"
+        },
+        "resourceId": {
+          "type": "string",
+          "description": "Resource id of the endpoint"
+        }
+      },
+      "description": "Static allocation endpoint",
+      "required": [
+        "name",
+        "resourceId"
+      ]
+    },
+    "StaticAllocationRule": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StaticAllocationEndpoint"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ],
+          "description": "List of endpoints for static allocation type",
+          "x-typespec-name": "StaticAllocationEndpoint[]",
+          "maxItems": 50
+        }
+      },
+      "description": "The allocation rule for static allocation type",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AllocationRule"
+        }
+      ]
+    },
+    "SupportedCurveType": {
+      "type": "string",
+      "description": "Supported curve types",
+      "enum": [
+        "NistP256",
+        "NistP384",
+        "NistP521",
+        "Secp256K1"
+      ],
+      "x-ms-enum": {
+        "name": "SupportedCurveType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "NistP256",
+            "value": "NistP256",
+            "description": "NistP256"
+          },
+          {
+            "name": "NistP384",
+            "value": "NistP384",
+            "description": "NistP384"
+          },
+          {
+            "name": "NistP521",
+            "value": "NistP521",
+            "description": "NistP521"
+          },
+          {
+            "name": "Secp256K1",
+            "value": "Secp256K1",
+            "description": "Secp256K1"
+          }
+        ]
+      }
+    },
+    "SupportedExtendedKeyUsage": {
+      "type": "string",
+      "description": "Supported extended key usages",
+      "enum": [
+        "ClientAuth",
+        "CodeSigning",
+        "EmailProtection",
+        "IpsecEndSystem",
+        "IpsecTunnel",
+        "IpsecUser",
+        "MacAddress",
+        "OcspSigning",
+        "ServerAuth",
+        "SmartcardLogon",
+        "TimeStamping"
+      ],
+      "x-ms-enum": {
+        "name": "SupportedExtendedKeyUsage",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "ClientAuth",
+            "value": "ClientAuth",
+            "description": "Client auth"
+          },
+          {
+            "name": "CodeSigning",
+            "value": "CodeSigning",
+            "description": "Code signing"
+          },
+          {
+            "name": "EmailProtection",
+            "value": "EmailProtection",
+            "description": "Email protection"
+          },
+          {
+            "name": "IpsecEndSystem",
+            "value": "IpsecEndSystem",
+            "description": "Ipsec end system"
+          },
+          {
+            "name": "IpsecTunnel",
+            "value": "IpsecTunnel",
+            "description": "Ipsec tunnel"
+          },
+          {
+            "name": "IpsecUser",
+            "value": "IpsecUser",
+            "description": "Ipsec user"
+          },
+          {
+            "name": "MacAddress",
+            "value": "MacAddress",
+            "description": "Mac address"
+          },
+          {
+            "name": "OcspSigning",
+            "value": "OcspSigning",
+            "description": "Ocsp signing"
+          },
+          {
+            "name": "ServerAuth",
+            "value": "ServerAuth",
+            "description": "Server auth"
+          },
+          {
+            "name": "SmartcardLogon",
+            "value": "SmartcardLogon",
+            "description": "Smartcard logon"
+          },
+          {
+            "name": "TimeStamping",
+            "value": "TimeStamping",
+            "description": "Time stamping"
+          }
+        ]
+      }
+    },
+    "SupportedIssuingAuthority": {
+      "type": "string",
+      "description": "Supported issusing authority",
+      "enum": [
+        "FirstParty"
+      ],
+      "x-ms-enum": {
+        "name": "SupportedIssuingAuthority",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "FirstParty",
+            "value": "FirstParty",
+            "description": "First party cert issuance"
+          }
+        ]
+      }
+    },
+    "SupportedKeyType": {
+      "type": "string",
+      "description": "Supported key types",
+      "enum": [
+        "RSA",
+        "EC"
+      ],
+      "x-ms-enum": {
+        "name": "SupportedKeyType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "RSA",
+            "value": "RSA",
+            "description": "RSA"
+          },
+          {
+            "name": "EC",
+            "value": "EC",
+            "description": "EC"
+          }
+        ]
+      }
+    },
+    "ValidityPeriod": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/SourceType",
+          "description": "Source of the value"
+        },
+        "notBeforeSkewMinutes": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Skew in minutes to account for the time on different computers not being in sync"
+        },
+        "valueNotBeforeOffSetDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "For calculation of the NotBefore date"
+        },
+        "valueValidityPeriodDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "For calculation of the NotAfter date"
+        },
+        "allowedNotBeforeOffSetDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Allowed not before offset in days"
+        },
+        "allowedValidityPeriodDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Allowed validity period in days"
+        }
+      },
+      "description": "The validity period for an enrollment policy",
+      "required": [
+        "source",
+        "notBeforeSkewMinutes"
+      ]
+    },
+    "ValidityPeriodUpdate": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/SourceType",
+          "description": "Source of the value"
+        },
+        "notBeforeSkewMinutes": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Skew in minutes to account for the time on different computers not being in sync"
+        },
+        "valueNotBeforeOffSetDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "For calculation of the NotBefore date"
+        },
+        "valueValidityPeriodDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "For calculation of the NotAfter date"
+        },
+        "allowedNotBeforeOffSetDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Allowed not before offset in days"
+        },
+        "allowedValidityPeriodDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Allowed validity period in days"
+        }
+      },
+      "description": "The validity period for an enrollment policy"
+    },
     "WeightedAllocationEndpoint": {
       "type": "object",
       "properties": {
@@ -1843,7 +2335,8 @@
             "name"
           ],
           "description": "List of endpoints for weighted allocation type",
-          "x-typespec-name": "WeightedAllocationEndpoint[]"
+          "x-typespec-name": "WeightedAllocationEndpoint[]",
+          "maxItems": 50
         }
       },
       "description": "The allocation rule for weighted allocation type",
@@ -1851,8 +2344,7 @@
         {
           "$ref": "#/definitions/AllocationRule"
         }
-      ],
-      "x-ms-discriminator-value": "Weighted"
+      ]
     }
   },
   "parameters": {
