@@ -27,11 +27,11 @@ interface Operations extends Azure.ResourceManager.Operations {}
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 @doc("A provisioning resource.")
-model SelekenaProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
+model AnushrProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
   @doc("The name of the Provisioning Resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("selekenaProvisioningResourceName")
-  @segment("provisioningResources")
+  @key("anushrProvisioningResourceName")
+  @segment("anushrProvisioningResources")
   @path
   name: string;
 
@@ -94,24 +94,24 @@ interface EdgeProvisioningOpeartions {
 
 @armResourceOperations
 interface ProvisioningResources {
-  get is ArmResourceRead<SelekenaProvisioningResource>;
-  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<SelekenaProvisioningResource>;
-  delete is ArmResourceDeleteSync<SelekenaProvisioningResource>;
-  update is ArmResourcePatchSync<SelekenaProvisioningResource, ProvisioningResourceProperties>;
-  listByResourceGroup is ArmResourceListByParent<SelekenaProvisioningResource>;
-  listBySubscription is ArmListBySubscription<SelekenaProvisioningResource>;
+  get is ArmResourceRead<AnushrProvisioningResource>;
+  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrProvisioningResource>;
+  delete is ArmResourceDeleteSync<AnushrProvisioningResource>;
+  update is ArmResourcePatchSync<AnushrProvisioningResource, ProvisioningResourceProperties>;
+  listByResourceGroup is ArmResourceListByParent<AnushrProvisioningResource>;
+  listBySubscription is ArmListBySubscription<AnushrProvisioningResource>;
 }
 
 // Child resource: provisioning policy
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 @doc("A provisioning policy resource.")
-@parentResource(SelekenaProvisioningResource)
-model SelekenaProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
+@parentResource(AnushrProvisioningResource)
+model AnushrProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
   @doc("The name of the Provisioning Policy tracked resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("selekenaProvisioningPolicyName")
-  @segment("provisioningPolicies")
+  @key("anushrProvisioningPolicyName")
+  @segment("anushrProvisioningPolicies")
   @path
   name: string;
 }
@@ -555,20 +555,20 @@ model ProvisioningRule {
 
 @armResourceOperations
 interface ProvisioningPolicies {
-  get is ArmResourceRead<SelekenaProvisioningPolicy>;
-  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<SelekenaProvisioningPolicy>;
-  delete is ArmResourceDeleteSync<SelekenaProvisioningPolicy>;
-  update is ArmResourcePatchSync<SelekenaProvisioningPolicy, ProvisioningPolicyProperties>;
-  listByParent is ArmResourceListByParent<SelekenaProvisioningPolicy>;
+  get is ArmResourceRead<AnushrProvisioningPolicy>;
+  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrProvisioningPolicy>;
+  delete is ArmResourceDeleteSync<AnushrProvisioningPolicy>;
+  update is ArmResourcePatchSync<AnushrProvisioningPolicy, ProvisioningPolicyProperties>;
+  listByParent is ArmResourceListByParent<AnushrProvisioningPolicy>;
 }
 
 // Extension resource: device provisioning state
 
 @singleton
 @doc("The provisioning state of a device.")
-model SelekenaDeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProperties> {
+model AnushrDeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProperties> {
   @doc("The default DeviceProvisioningState, singleton extension resource used to represent the state of the device it extends.")
-  @segment("selekenaDeviceProvisioningStates")
+  @segment("anushrDeviceProvisioningStates")
   @key
   @path
   name: string;
@@ -616,9 +616,9 @@ enum OnboardingStatus {
 
 @armResourceOperations
 interface DeviceProvisioningStates {
-  get is ArmResourceRead<SelekenaDeviceProvisioningState>;
-  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<SelekenaDeviceProvisioningState>;
-  delete is ArmResourceDeleteSync<SelekenaDeviceProvisioningState>;
-  update is ArmResourcePatchSync<SelekenaDeviceProvisioningState, DeviceProvisioningStateProperties>;
-  listByParent is ArmResourceListByParent<SelekenaDeviceProvisioningState>;
+  get is ArmResourceRead<AnushrDeviceProvisioningState>;
+  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrDeviceProvisioningState>;
+  delete is ArmResourceDeleteSync<AnushrDeviceProvisioningState>;
+  update is ArmResourcePatchSync<AnushrDeviceProvisioningState, DeviceProvisioningStateProperties>;
+  listByParent is ArmResourceListByParent<AnushrDeviceProvisioningState>;
 }
