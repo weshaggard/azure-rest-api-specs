@@ -416,6 +416,125 @@
         "x-ms-long-running-operation": true
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Search/indexes/{name}/listKeys": {
+      "post": {
+        "tags": [
+          "IndexOperations"
+        ],
+        "operationId": "IndexOperations_ListKeys",
+        "description": "List ApiKeys used to access the dataplane.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The name of the index resource.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/IndexKeys"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "IndexOperations_ListKeys": {
+            "$ref": "./examples/IndexOperations_ListKeys.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.CognitiveSearch/indexes/{name}/regenerateKey": {
+      "post": {
+        "tags": [
+          "IndexOperations"
+        ],
+        "operationId": "IndexOperations_RegenerateKey",
+        "description": "Regenerates an ApiKey.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The name of the index resource.",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "The content of the action request",
+            "schema": {
+              "$ref": "#/definitions/RegenerateKeyParameters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/IndexKeys"
+            }
+          },
+          "202": {
+            "description": "Resource operation accepted.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "Location": {
+                "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                "type": "string"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "IndexOperations_RegenerateKey": {
+            "$ref": "./examples/IndexOperations_RegenerateKey.json"
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Search/indexes/{name}/indexers/{indexerName}": {
       "put": {
         "tags": [
@@ -688,6 +807,17 @@
         "AzureStorage/Table"
       ]
     },
+    "AuthOption": {
+      "type": "string",
+      "enum": [
+        "AadOnly",
+        "AadAndApiKeys"
+      ],
+      "x-ms-enum": {
+        "name": "AuthOption",
+        "modelAsString": true
+      }
+    },
     "Capacity": {
       "type": "object",
       "properties": {
@@ -945,6 +1075,34 @@
         }
       ]
     },
+    "IndexKeys": {
+      "type": "object",
+      "properties": {
+        "primaryReadWriteKey": {
+          "type": "string",
+          "description": "Primary read-write ApiKey."
+        },
+        "secondaryReadWriteKey": {
+          "type": "string",
+          "description": "Secondary read-write ApiKey."
+        },
+        "primaryReadOnlyKey": {
+          "type": "string",
+          "description": "Primary read-only ApiKey."
+        },
+        "secondaryReadOnlyKey": {
+          "type": "string",
+          "description": "Secondary read-only ApiKey."
+        }
+      },
+      "description": "The list of all ApiKeys used to access the dataplane.",
+      "required": [
+        "primaryReadWriteKey",
+        "secondaryReadWriteKey",
+        "primaryReadOnlyKey",
+        "secondaryReadOnlyKey"
+      ]
+    },
     "IndexListResult": {
       "type": "object",
       "properties": {
@@ -988,6 +1146,10 @@
         "indexingCapacity": {
           "$ref": "#/definitions/Capacity",
           "description": "The capacity allocated to the index for indexing documents."
+        },
+        "authOption": {
+          "$ref": "#/definitions/AuthOption",
+          "description": "Authentication option to be used when accessing the dataplane"
         }
       },
       "description": "The properties of the index.",
@@ -1024,6 +1186,10 @@
         "indexingCapacity": {
           "$ref": "#/definitions/CapacityUpdate",
           "description": "The capacity allocated to the index for indexing documents."
+        },
+        "authOption": {
+          "$ref": "#/definitions/AuthOption",
+          "description": "Authentication option to be used when accessing the dataplane"
         }
       },
       "description": "The updatable properties of the Index."
@@ -1111,6 +1277,19 @@
       },
       "description": "The updatable properties of the Indexer."
     },
+    "KeyKind": {
+      "type": "string",
+      "enum": [
+        "PrimaryReadWriteKey",
+        "SecondaryReadWriteKey",
+        "PrimaryReadOnlyKey",
+        "SecondaryReadOnlyKey"
+      ],
+      "x-ms-enum": {
+        "name": "KeyKind",
+        "modelAsString": true
+      }
+    },
     "NonePause": {
       "type": "object",
       "properties": {},
@@ -1150,6 +1329,19 @@
         "name": "ProvisioningState",
         "modelAsString": true
       }
+    },
+    "RegenerateKeyParameters": {
+      "type": "object",
+      "properties": {
+        "keyKind": {
+          "$ref": "#/definitions/KeyKind",
+          "description": "The kind of ApiKey to regenerate."
+        }
+      },
+      "description": "Regenerates a specific kind of ApiKey.",
+      "required": [
+        "keyKind"
+      ]
     },
     "SystemAssignedIdentity": {
       "type": "object",
