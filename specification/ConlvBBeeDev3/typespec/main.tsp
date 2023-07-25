@@ -31,7 +31,7 @@ model ProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
   @doc("The name of the employee")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("provisioningResourceName")
-  @segment("conlvProvisioiningResources")
+  @segment("conlvProvisioningResources")
   @path
   name: string;
 
@@ -111,7 +111,7 @@ interface EdgeProvisioningOpeartions {
 }
 
 @armResourceOperations
-interface ConlvProvisioiningResources {
+interface ConlvProvisioningResources {
   get is ArmResourceRead<ProvisioningResource>;
   createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningResource>;
   delete is ArmResourceDeleteSync<ProvisioningResource>;
