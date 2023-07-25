@@ -16,33 +16,41 @@ using Azure.ResourceManager;
 enum IpProtocol {
   @doc("Transmission Control Protocol")
   TCP,
+
   @doc("User Datagram Protocol")
   UDP,
+
   @doc("Internet Control Message Protocol")
   ICMP,
+
   @doc("Any protocol")
-  Any
+  Any,
 }
 
-@doc("Global Entry Profile Rule Properties.")
-model EntryProfileRuleProperties extends BaseResourceProperties {
+@doc("Global Entry Profile Policy Rule Properties.")
+model EntryProfilePolicyRule {
+  @doc("The name of the rule.")
+  name: ResourceName;
+
   @doc("The source addresses.")
-  @visibility("create", "read", "update")
   sourceAddresses: IpRule[];
-  
+
   @doc("The port that the traffic enters on at the edge of the Global Entry Manager.")
-  @visibility("create", "read", "update")
-  destinationPorts: string[];
+  destinationPort: Port;
 
   @doc("The protocol of the source.")
-  @visibility("create", "read", "update")
   ipProtocols: IpProtocol[];
 
   @doc("The address in the exit virtual network that the Global Entry Manager is forwarding traffic to.")
-  @visibility("create", "read", "update")
   translatedAddress: IpAddress;
-  
-  @doc("The port of the address in the exit virtual network that the Global Entry Manager is forwarding traffic to.")
-  @visibility("create", "read", "update")
-  translatedPort: string;
+
+  @doc("The port of the translated address that the Global Entry Manager is forwarding traffic to.")
+  translatedPort: Port;
+}
+
+@doc("Entry Profile Policy properties.")
+model EntryProfilePolicyProperties extends BaseResourceProperties {
+  @doc("The rules of the Global Entry Profile Policy.")
+  @OpenAPI.extension("x-ms-identifiers", ["name"])
+  rules: EntryProfilePolicyRule[];
 }

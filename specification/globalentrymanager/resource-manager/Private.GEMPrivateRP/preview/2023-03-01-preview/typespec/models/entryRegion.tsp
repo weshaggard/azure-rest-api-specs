@@ -13,5 +13,6 @@ using Azure.Core;
 using Azure.ResourceManager;
 
 @doc("Entry Region Properties.")
-model EntryRegionProperties extends LinkableResourceProperties {
+model EntryRegionProperties extends BaseResourceProperties {
+  ...LinkableResourceProperties;
 }

@@ -170,10 +170,10 @@ model Action {
   type?: string,
   @doc("Start time of action.")
   @visibility("read")
-  startTime?: utcDateTime,
+  startTimeUtc?: utcDateTime,
   @doc("End time of action.")
   @visibility("read")
-  endTime?: utcDateTime,
+  endTimeUtc?: utcDateTime,
    @doc("Status of action. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
   status?: string,
@@ -186,10 +186,10 @@ model Step {
   name?: string,
   @doc("Description of step.")
   @visibility("read")
-  description?: string,
+  descriptions?: string,
   @doc("Index of step.")
   @visibility("read")
-  index?: integer,
+  index?: string,
    @doc("FullStepIndex of step.")
    @visibility("read")
   fullStepIndex?: string,
@@ -199,10 +199,10 @@ model Step {
   task?: Task[],
  @doc("Start time of action.")
   @visibility("read")
-  startTime?: utcDateTime,
+  startTimeUtc?: utcDateTime,
   @doc("End time of step.")
   @visibility("read")
-  endTime?: utcDateTime,
+  endTimeUtc?: utcDateTime,
     @doc("Status of step. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
   status?: string
@@ -224,16 +224,19 @@ model Task {
   interfaceType?: string,
   @doc("Start time of task.")
   @visibility("read")
-  startTime?: utcDateTime,
+  startTimeUtc?: utcDateTime,
   @doc("End time of task.")
   @visibility("read")
-  endTime?: utcDateTime,
+  endTimeUtc?: utcDateTime,
   @doc("Status of task. Allowed values are 'Error', 'Success', 'InProgress'")
   @visibility("read")
   status?: string,
   @doc("action if required.")
   @visibility("read")
-  action?: Action
+  action?: Action,
+  @doc("retry attempts.")
+  @visibility("read")
+  retryAttempt?: string
 }
 
 @doc("The Exception of AzureStackHCI Cluster.")
@@ -243,7 +246,13 @@ model Exception {
   message?: string,
   @doc("exception raised for machine name.")
   @visibility("read")
-  machineName?: string
+  machineName?: string,
+  @doc("stack trace for exception.")
+  @visibility("read")
+  stackTrace?: string,
+  @doc("raw exception details.")
+  @visibility("read")
+  raw?: string
 }
 
 @doc("The Evaluation of AzureStackHCI Cluster.")

@@ -227,44 +227,6 @@ enum EndpointType {
   //AzureStorage,
 }
 
-@doc("Endpoint")
-//@discriminator("type")
-model AllocationEndpoint {
-  @doc("Name of the endpoint")
-  name: string;
-
-  @doc("Resource id of the endpoint")
-  resourceId: string;
-
-  //@doc("Host name of the endpoint")
-  //hostName?: string;
-
-  @doc("Weight of the endpoint")
-  weight?: float64;
-
-  @doc("Region of the endpoint")
-  region?: string;
-}
-
-// backup option: TODO - follow up with RPAAS on stackoverflow
-//@doc("Geo-based endpoint")
-//model GeoBasedEndpoint extends AllocationEndpoint {
-//  @doc("Default value of discriminator")
-//  type: "GeoBased";
-
-//  @doc("Region of the endpoint")
-//  region: string;
-//}
-
-//@doc("Weighted endpoint")
-//model WeightedEndpoint extends AllocationEndpoint {
-//  @doc("Default value of discriminator")
-//  type: "Weighted";
-
-//  @doc("Weight of the endpoint")
-//  weight: float64;
-//}
-
 @doc("Type of allocation rule")
 enum AllocationType {
   @doc("Static allocation of a single endpoint.")
@@ -282,6 +244,9 @@ enum AllocationType {
 model AllocationRule {
   @doc("Name of the allocation rule")
   name: string;
+
+  @doc("Type of endpoint")
+  endpointType: EndpointType;
 
   @doc("Type of the allocation rule")
   type: AllocationType;
@@ -311,12 +276,22 @@ model WeightedAllocationEndpoint {
   weight: float64;
 }
 
+@doc("Static allocation endpoint")
+model StaticAllocationEndpoint {
+  @doc("Name of the endpoint")
+  name: string;
+
+  @doc("Resource id of the endpoint")
+  resourceId: string;
+}
+
 @doc("The allocation rule for geoBased allocation type")
 model GeoBasedAllocationRule extends AllocationRule {
   @doc("GeoBased allocation type")
   type: AllocationType.GeoBased;
 
   @doc("List of endpoints for geoBased allocation type")
+  @maxItems(50)
   @extension("x-ms-identifiers", ["name"])
   endpoints?: Array<GeoBasedAllocationEndpoint>;
 }
@@ -327,8 +302,20 @@ model WeightedAllocationRule extends AllocationRule {
   type: AllocationType.Weighted;
 
   @doc("List of endpoints for weighted allocation type")
+  @maxItems(50)
   @extension("x-ms-identifiers", ["name"])
   endpoints?: Array<WeightedAllocationEndpoint>;
+}
+
+@doc("The allocation rule for static allocation type")
+model StaticAllocationRule extends AllocationRule {
+  @doc("Static allocation type")
+  type: AllocationType.Static;
+
+  @doc("List of endpoints for static allocation type")
+  @maxItems(50)
+  @extension("x-ms-identifiers", ["name"])
+  endpoints?: Array<StaticAllocationEndpoint>;
 }
 
 @doc("The identity info to return to device")
@@ -343,14 +330,176 @@ model DeviceIdentityInfo {
   externalDeviceId: boolean;
 }
 
-// TODO: Check with Krishna - Follow-up whether we want to expose this to the customer
+@doc("Potential sources for cert issuance config")
+enum SourceType {
+  @doc("From certificate signing request")
+  CSR,
+
+  @doc("From the enrollment policy")
+  Policy,
+
+  @doc("From the substitute")
+  Substitute
+}
+
+@doc("Supported key types")
+enum SupportedKeyType {
+  @doc("RSA")
+  RSA,
+
+  @doc("EC")
+  EC,
+}
+
+@doc("Supported extended key usages")
+enum SupportedExtendedKeyUsage {
+  @doc("Client auth")
+  ClientAuth,
+
+  @doc("Code signing")
+  CodeSigning,
+
+  @doc("Email protection")
+  EmailProtection,
+
+  @doc("Ipsec end system")
+  IpsecEndSystem,
+
+  @doc("Ipsec tunnel")
+  IpsecTunnel,
+
+  @doc("Ipsec user")
+  IpsecUser,
+
+  @doc("Mac address")
+  MacAddress,
+
+  @doc("Ocsp signing")
+  OcspSigning,
+
+  @doc("Server auth")
+  ServerAuth,
+
+  @doc("Smartcard logon")
+  SmartcardLogon,
+
+  @doc("Time stamping")
+  TimeStamping
+}
+
+@doc("Supported curve types")
+enum SupportedCurveType {
+  @doc("NistP256")
+  NistP256,
+
+  @doc("NistP384")
+  NistP384,
+
+  @doc("NistP521")
+  NistP521,
+
+  @doc("Secp256K1")
+  Secp256K1,
+}
+
+@doc("Supported issusing authority")
+enum SupportedIssuingAuthority {
+  @doc("First party cert issuance")
+  FirstParty
+}
+
+@doc("The configuration for setting up a CA")
+model CaConfig
+{
+  @doc("Name of the CA")
+  name: string;
+
+  @doc("Certificate properties")
+  properties: CertificateProperties;
+}
+
+@doc("Certificate properties")
+@discriminator("keyType")
+model CertificateProperties
+{
+  @doc("Key type: RSA or EC")
+  keyType: SupportedKeyType;
+
+  @doc("Certificate subject")
+  subject: string;
+
+  @doc("Certificate is valid not before this date")
+  validityNotBefore: utcDateTime;
+
+  @doc("Certificate is valid not after this date")
+  validityNotAfter: utcDateTime;
+
+  @doc("Extended key usage")
+  extendedKeyUsage?: Array<SupportedExtendedKeyUsage>;
+}
+
+@doc("Certificate properties for RSA")
+model CertificatePropertiesRSA extends CertificateProperties
+{
+  @doc("RSA Key type")
+  keyType: SupportedKeyType.RSA;
+
+  @doc("Key size for RSA key type")
+  keySize: int32;
+}
+
+@doc("Certificate properties for EC")
+model CertificatePropertiesEC extends CertificateProperties
+{
+  @doc("EC Key type")
+  keyType: SupportedKeyType.EC;
+
+  @doc("Curve type of EC")
+  curveType: SupportedCurveType;
+}
+
+@doc("The configuration for setting up a policy")
+model CertPolicyConfig
+{
+  @doc("The validity period")
+  validityPeriod: ValidityPeriod;
+}
+
+@doc("The validity period for an enrollment policy")
+model ValidityPeriod
+{
+  @doc("Source of the value")
+  source: SourceType;
+
+  @doc("Skew in minutes to account for the time on different computers not being in sync")
+  notBeforeSkewMinutes: int32;
+
+  @doc("For calculation of the NotBefore date")
+  valueNotBeforeOffSetDays?: int32;
+
+  @doc("For calculation of the NotAfter date")
+  valueValidityPeriodDays?: int32,
+
+  @doc("Allowed not before offset in days")
+  allowedNotBeforeOffSetDays?: int32;
+
+  @doc("Allowed validity period in days")
+  allowedValidityPeriodDays?: int32;
+}
+
 @doc("Certificate issuance configurations")
 model CertificateIssuanceRule {
-  @doc("ICA - IntermediateCertificateAuthority name")
-  intermediateCertificateAuthority: string; // TODO: find out who would set up this info customer or rp
+  @doc("The type of authority for cert issuance")
+  issuingAuthority: SupportedIssuingAuthority; //enum, FirstPartyPKI, BYO
+
+  @doc("The configuration to set up an ICA")
+  certificateAuthorityConfiguration: CaConfig; // set by the customers
+
+  @doc("The enrollment policy configuration")
+  certificatePolicyConfiguration: CertPolicyConfig; // same type as the ica config
 
   @doc("Cert renewal interval")
-  renewalInterval: int32; // TODO: findout the unit of the interval, findout if there is a default value
+  renewalInterval: int32; // A number of percentage. An example for renewal interval is - renew at 80%
 }
 
 @doc("The information related to device identity")
@@ -377,7 +526,7 @@ model ProvisioningRule {
   jit?: JitRule;
 
   @doc("Identity information")
-  identityInfo?: IdentityInfo; 
+  operationalIdentityInfo?: IdentityInfo; 
 
   @doc("Resource metadata")
   @maxLength(200)

@@ -15,16 +15,15 @@ using Azure.ResourceManager;
 @doc("Managed Resource Group Properties.")
 model ManagedResourceGroupProperties {
   @doc("The Name of the Managed Resource Group.")
-  @visibility("create", "read")
-  name: string;
+  name?: string;
 
   @doc("The Managed Resource Group Region is associated to.")
-  @visibility("create", "read")
-  location: string;
+  location?: string;
 }
 
 @doc("Global Entry Manager Properties.")
 model GlobalEntryManagerProperties extends BaseResourceProperties {
   @doc("The Managed Resource Group for the Global Entry Manager.")
-  managedResourceGroupConfiguration: ManagedResourceGroupProperties;
+  @visibility("create", "read")
+  managedResourceGroupConfiguration?: ManagedResourceGroupProperties;
 }

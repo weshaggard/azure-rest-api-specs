@@ -24,13 +24,14 @@ namespace Private.GEMPrivateRP;
 interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("A Global Entry Manager Resource")
-model GlobalEntryManagerResource is TrackedResource<GlobalEntryManagerProperties> {
+model GlobalEntryManagerResource
+  is TrackedResource<GlobalEntryManagerProperties> {
   @doc("The name of the Global Entry Manager")
   @key("globalEntryManagerName")
   @segment("globalEntryManagers")
-  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
   @path
-  name: string;
+  name: ResourceName;
+
   ...EntityTag;
 }
 
@@ -40,21 +41,22 @@ model EntryProfileResource is TrackedResource<EntryProfileProperties> {
   @doc("The name of the Global Entry Profile")
   @key("entryProfileName")
   @segment("entryProfiles")
-  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
   @path
-  name: string;
+  name: ResourceName;
+
   ...EntityTag;
 }
 
-@doc("A Global Entry Profile Rule Resource")
+@doc("A Global Entry Profile Policy Resource")
 @parentResource(EntryProfileResource)
-model EntryProfileRuleResource is TrackedResource<EntryProfileRuleProperties> {
-  @doc("The name of the Global Entry Profile Rule")
-  @key("entryProfileRuleName")
-  @segment("entryProfileRules")
-  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
+model EntryProfilePolicyResource
+  is TrackedResource<EntryProfilePolicyProperties> {
+  @doc("The name of the Global Entry Profile Policy")
+  @key("entryProfilePolicyName")
+  @segment("entryProfilePolicies")
   @path
-  name: string;
+  name: ResourceName;
+
   ...EntityTag;
 }
 
@@ -64,9 +66,9 @@ model EntryRegionResource is TrackedResource<EntryRegionProperties> {
   @doc("The name of the Global Entry Region")
   @key("entryRegionName")
   @segment("entryRegions")
-  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
   @path
-  name: string;
+  name: ResourceName;
+
   ...EntityTag;
 }
 
@@ -76,9 +78,9 @@ model EntryLinkResource is TrackedResource<EntryLinkProperties> {
   @doc("The name of the Global Entry Link")
   @key("entryLinkName")
   @segment("entryLinks")
-  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]{1,62}[a-zA-Z0-9]$")
   @path
-  name: string;
+  name: ResourceName;
+
   ...EntityTag;
 }
 
@@ -86,7 +88,7 @@ model EntryLinkResource is TrackedResource<EntryLinkProperties> {
 interface GlobalEntryManager {
   get is ArmResourceRead<GlobalEntryManagerResource>;
   create is ArmResourceCreateOrUpdateAsync<GlobalEntryManagerResource>;
-  update is ArmResourcePatchAsync<GlobalEntryManagerResource, GlobalEntryManagerProperties>;
+  update is ArmTagsPatchSync<GlobalEntryManagerResource>;
   delete is ArmResourceDeleteAsync<GlobalEntryManagerResource>;
   listByResourceGroup is ArmResourceListByParent<GlobalEntryManagerResource>;
   listBySubscription is ArmListBySubscription<GlobalEntryManagerResource>;
@@ -103,21 +105,23 @@ interface EntryProfile {
 }
 
 @armResourceOperations
-interface EntryProfileRule {
-  get is ArmResourceRead<EntryProfileRuleResource>;
-  create is ArmResourceCreateOrUpdateAsync<EntryProfileRuleResource>;
-  update is ArmResourcePatchAsync<EntryProfileRuleResource, EntryProfileRuleProperties>;
-  delete is ArmResourceDeleteAsync<EntryProfileRuleResource>;
-  listByResourceGroup is ArmResourceListByParent<EntryProfileRuleResource>;
-  listBySubscription is ArmListBySubscription<EntryProfileRuleResource>;
+interface EntryProfilePolicy {
+  get is ArmResourceRead<EntryProfilePolicyResource>;
+  create is ArmResourceCreateOrUpdateAsync<EntryProfilePolicyResource>;
+  update is ArmResourcePatchAsync<
+    EntryProfilePolicyResource,
+    EntryProfilePolicyProperties
+  >;
+  delete is ArmResourceDeleteAsync<EntryProfilePolicyResource>;
+  listByResourceGroup is ArmResourceListByParent<EntryProfilePolicyResource>;
+  listBySubscription is ArmListBySubscription<EntryProfilePolicyResource>;
 }
-
 
 @armResourceOperations
 interface EntryRegion {
   get is ArmResourceRead<EntryRegionResource>;
   create is ArmResourceCreateOrUpdateAsync<EntryRegionResource>;
-  update is ArmResourcePatchAsync<EntryRegionResource, EntryRegionProperties>;
+  update is ArmTagsPatchSync<EntryRegionResource>;
   delete is ArmResourceDeleteAsync<EntryRegionResource>;
   listByResourceGroup is ArmResourceListByParent<EntryRegionResource>;
   listBySubscription is ArmListBySubscription<EntryRegionResource>;

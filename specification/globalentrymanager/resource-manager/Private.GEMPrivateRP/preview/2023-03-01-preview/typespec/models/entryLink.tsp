@@ -14,11 +14,11 @@ using Azure.ResourceManager;
 
 @doc("Global Entry Domain Properties.")
 model EntryLinkProperties extends BaseResourceProperties {
-  @doc("The Id of the entry profile resource that the entry link is attatched to.")
+  @doc("The Id of the entry profile resource that the entry link is attached to.")
   @visibility("create", "read")
   entryProfileId: EntryProfileId;
 
-  @doc("The Id of the entry region resource that the entry link is attatched to.")
+  @doc("The Id of the entry region resource that the entry link is attached to.")
   @visibility("create", "read")
   entryRegionId: EntryRegionId;
 

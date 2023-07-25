@@ -393,13 +393,13 @@
           "description": "type of action.",
           "readOnly": true
         },
-        "startTime": {
+        "startTimeUtc": {
           "type": "string",
           "format": "date-time",
           "description": "Start time of action.",
           "readOnly": true
         },
-        "endTime": {
+        "endTimeUtc": {
           "type": "string",
           "format": "date-time",
           "description": "End time of action.",
@@ -410,14 +410,7 @@
           "description": "Status of action. Allowed values are 'Error', 'Success', 'InProgress'",
           "readOnly": true
         }
-      },
-      "required": [
-        "steps",
-        "type",
-        "startTime",
-        "endTime",
-        "status"
-      ]
+      }
     },
     "AdapterPropertyOverrides": {
       "type": "object",
@@ -470,6 +463,27 @@
         "azureServiceEndpoint"
       ]
     },
+    "DeploymentConfiguration": {
+      "type": "object",
+      "description": "Deployment Configuration",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "deployment template version "
+        },
+        "scaleUnits": {
+          "type": "array",
+          "description": "Scale units will contains list of deploymentdata",
+          "items": {
+            "$ref": "#/definitions/ScaleUnits"
+          },
+          "x-ms-identifiers": []
+        }
+      },
+      "required": [
+        "scaleUnits"
+      ]
+    },
     "DeploymentData": {
       "type": "object",
       "description": "The DeploymentData of AzureStackHCI Cluster.",
@@ -519,14 +533,6 @@
           "$ref": "#/definitions/HostNetwork",
           "description": "HostNetwork config to deploy AzureStackHCI Cluster."
         },
-        "storageNetworks": {
-          "type": "array",
-          "description": "List of StorageNetworks config to deploy AzureStackHCI Cluster.",
-          "items": {
-            "$ref": "#/definitions/StorageNetworks"
-          },
-          "x-ms-identifiers": []
-        },
         "adouPath": {
           "type": "string",
           "description": "The path to the Active Directory Organizational Unit (ADOU) container object prepared for the deployment. "
@@ -551,7 +557,6 @@
         "infrastructureNetwork",
         "physicalNodes",
         "hostNetwork",
-        "storageNetworks",
         "adouPath"
       ]
     },
@@ -623,12 +628,9 @@
           "description": "DeploymentSetting provisioning state",
           "readOnly": true
         },
-        "scaleUnits": {
-          "type": "array",
+        "deploymentConfiguration": {
+          "$ref": "#/definitions/DeploymentConfiguration",
           "description": "Scale units will contains list of deploymentdata",
-          "items": {
-            "$ref": "#/definitions/ScaleUnits"
-          },
           "x-ms-identifiers": []
         },
         "reportedProperties": {
@@ -638,7 +640,7 @@
         }
       },
       "required": [
-        "scaleUnits"
+        "deploymentConfiguration"
       ]
     },
     "DeploymentStatus": {
@@ -654,10 +656,7 @@
           "readOnly": true,
           "x-ms-identifiers": []
         }
-      },
-      "required": [
-        "action"
-      ]
+      }
     },
     "Evaluation": {
       "type": "object",
@@ -668,10 +667,7 @@
           "description": "Evaluation message",
           "readOnly": true
         }
-      },
-      "required": [
-        "message"
-      ]
+      }
     },
     "Exception": {
       "type": "object",
@@ -686,12 +682,18 @@
           "type": "string",
           "description": "exception raised for machine name.",
           "readOnly": true
+        },
+        "stackTrace": {
+          "type": "string",
+          "description": "stack trace for exception.",
+          "readOnly": true
+        },
+        "raw": {
+          "type": "string",
+          "description": "raw exception details.",
+          "readOnly": true
         }
-      },
-      "required": [
-        "message",
-        "machineName"
-      ]
+      }
     },
     "HostNetwork": {
       "type": "object",
@@ -704,10 +706,19 @@
             "$ref": "#/definitions/Intents"
           },
           "x-ms-identifiers": []
+        },
+        "storageNetworks": {
+          "type": "array",
+          "description": "List of StorageNetworks config to deploy AzureStackHCI Cluster.",
+          "items": {
+            "$ref": "#/definitions/StorageNetworks"
+          },
+          "x-ms-identifiers": []
         }
       },
       "required": [
-        "intents"
+        "intents",
+        "storageNetworks"
       ]
     },
     "InfrastructureNetwork": {
@@ -1069,14 +1080,13 @@
           "description": "Name of step.",
           "readOnly": true
         },
-        "description": {
+        "descriptions": {
           "type": "string",
           "description": "Description of step.",
           "readOnly": true
         },
         "index": {
-          "type": "integer",
-          "format": "int64",
+          "type": "string",
           "description": "Index of step.",
           "readOnly": true
         },
@@ -1094,13 +1104,13 @@
           "readOnly": true,
           "x-ms-identifiers": []
         },
-        "startTime": {
+        "startTimeUtc": {
           "type": "string",
           "format": "date-time",
           "description": "Start time of action.",
           "readOnly": true
         },
-        "endTime": {
+        "endTimeUtc": {
           "type": "string",
           "format": "date-time",
           "description": "End time of step.",
@@ -1111,15 +1121,7 @@
           "description": "Status of step. Allowed values are 'Error', 'Success', 'InProgress'",
           "readOnly": true
         }
-      },
-      "required": [
-        "name",
-        "description",
-        "task",
-        "startTime",
-        "endTime",
-        "status"
-      ]
+      }
     },
     "Storage": {
       "type": "object",
@@ -1182,13 +1184,13 @@
           "description": "Interface Type of task.",
           "readOnly": true
         },
-        "startTime": {
+        "startTimeUtc": {
           "type": "string",
           "format": "date-time",
           "description": "Start time of task.",
           "readOnly": true
         },
-        "endTime": {
+        "endTimeUtc": {
           "type": "string",
           "format": "date-time",
           "description": "End time of task.",
@@ -1203,16 +1205,13 @@
           "$ref": "#/definitions/Action",
           "description": "action if required.",
           "readOnly": true
+        },
+        "retryAttempt": {
+          "type": "string",
+          "description": "retry attempts.",
+          "readOnly": true
         }
-      },
-      "required": [
-        "evaluation",
-        "rolePath",
-        "interfaceType",
-        "startTime",
-        "endTime",
-        "status"
-      ]
+      }
     },
     "ValidationStatus": {
       "type": "object",
@@ -1227,10 +1226,7 @@
           "readOnly": true,
           "x-ms-identifiers": []
         }
-      },
-      "required": [
-        "action"
-      ]
+      }
     },
     "VirtualSwitchConfigurationOverrides": {
       "type": "object",
