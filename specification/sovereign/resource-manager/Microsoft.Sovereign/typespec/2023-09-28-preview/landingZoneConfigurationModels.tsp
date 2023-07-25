@@ -21,6 +21,7 @@ model LandingZoneConfigurationProperties {
 	@doc("The prefix that will be added to all resources created by this deployment.")
 	@minLength(2)
 	@maxLength(5)
+	@pattern("^([a-zA-Z0-9-]*)$")
 	deploymentPrefix: string;
 
 	@doc("The suffix that will be added to management group name.")
@@ -29,7 +30,9 @@ model LandingZoneConfigurationProperties {
 	deploymentSuffix?: string;
 
 	@doc("The top level management group display name.")
+	@minLength(1)
 	@maxLength(90)
+	@pattern("^(?! )(?!.* $)[^\\s].*$")
 	topLevelMgDisplayName: string;
 
 	@doc("The name of the country/region or agency SLZ is being deployed for.")
@@ -38,13 +41,13 @@ model LandingZoneConfigurationProperties {
 	@doc("Yes to deploy DDoS, otherwise no. To provide an existing DDoS protection plan select existing.")
 	ddosProtectionCreationOption: ResourceCreationOptions;
 
-	@doc("Existing ddos protection plan id.")
+	@doc("Existing ddos protection fully qualified plan id.")
 	existingDdosProtectionId?: string;
 
 	@doc("yes to deploy log Analytics workspace, otherwise no. To provide an existing log Analytics workspace select existing.")
 	logAnalyticsWorkspaceCreationOption: ResourceCreationOptions;
 
-	@doc("The ID for the Log Analytics workspace that was created to centralize log ingest.")
+	@doc("The fully qualified id for the Log Analytics workspace that was created to centralize log ingest.")
 	existingLogAnalyticsWorkspaceId?: string;
 
 	@doc("Array of tag objects in format of {'name':'a tag name', 'value':'a tag value'}")
@@ -54,15 +57,13 @@ model LandingZoneConfigurationProperties {
 	@doc("To deploy firewall choose the standard/premium based on the desired SKU. None for no firewall and existing to choose a pre existing one.")
 	firewallCreationOption: FirewallCreationOptions;
 
-	@doc("Existing Firewall Id")
+	@doc("Existing fully qualified firewall Id")
 	existingFirewallId?: string;
 
 	@doc("Azure firewall subnet. IPv4 CIDR block.")
-	@pattern("^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$")
 	firewallSubnetCidrBlock?: string;
 
 	@doc("Gateway subnet. IPv4 CIDR block.")
-	@pattern("^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$")
 	gatewaySubnetCidrBlock?: string;
 
 	@doc("Set how long logs are retained for, in days. Minimum length is 30 and maximum is 730")
@@ -71,23 +72,22 @@ model LandingZoneConfigurationProperties {
 	logRetentionInDays: int64;
 
 	@doc("Location to run deployment(s) from the list of Azure Regions")
+	@pattern("^([a-zA-Z0-9]*)$")
 	deploymentLocation: string;
 
 	@doc("The address space for the VNET. IPv4 CIDR.")
-	@pattern("^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$")
 	hubNetworkCidrBlock: string;
 
 	@doc("To deploy the Bastion service choose the yes, no otherwise. For existing bastion service existing.")
 	azureBastionCreationOption: ResourceCreationOptions;
 
-	@doc("Existing azure bastion Id.")
+	@doc("Existing azure bastion fully qualified id.")
 	existingAzureBastionId?: string;
 
-	@doc("Azure Bastion subnet. IP v4 CIDR block")
-	@pattern("^(?:\\d{1,3}\\.){3}\\d{1,3}/(?:[1-9]|[1-2]\\d|3[0-2])$")
+	@doc("Azure bastion subnet. IP v4 CIDR block")
 	azureBastionSubnetCidrBlock?: string;
 
-	@doc("landing zone management group properties")
+	@doc("Landing zone management group properties")
 	@OpenAPI.extension("x-ms-identifiers", [])
 	landingZonesMgChildren?: LandingZoneMgProperties[];
 
@@ -177,13 +177,13 @@ model GenerateLandingZoneRequest {
 	@doc("The options that code can be generated in")
 	iacOutputOption: IaCOutputOptions;
 
-	@doc("Management subscription Id.")
+	@doc("Management subscription fully qualified id.")
 	existingManagementSubscriptionId?: string;
 
-	@doc("Identity subscription Id.")
+	@doc("Identity subscription fully qualified id.")
 	existingIdentitySubscriptionId?: string;
 
-	@doc("Connectivity subscription Id.")
+	@doc("Connectivity subscription fully qualified id.")
 	existingConnectivitySubscriptionId?: string;
 
 	@doc("Billing scope account Id")
