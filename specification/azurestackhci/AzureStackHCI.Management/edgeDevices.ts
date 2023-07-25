@@ -19,86 +19,74 @@ using OpenAPI;
 })
 @doc("Azure Arc-enabled Edge Device.")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.AzureStackHCI;
+namespace Private.AzureStackHCI;
 
 @doc("Edge device resource")
 model EdgeDevice is ExtensionResource<EdgeDeviceProperties> {
   @doc("Name of Device")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("default")
+  @key("edgeDeviceName")
   @path
   @segment("edgeDevices")
-  name: string;
+  name: string = "default"
 }
 
 @doc("Edge Device properties")
 model EdgeDeviceProperties {
   @doc("Device Configuration")
   deviceConfiguration: DeviceConfiguration;
-  @doc("Device Metadata")
-  deviceMetadata: string;
-  @doc("Provisioning state of resource")
-  provisioningState: ProvisioningState
+  // @doc("Device metadata")
+  // deviceMetadata?: string;
+  @doc("Provisioning state of edgeDevice resource")
+  @visibility("read")
+  provisioningState?: ProvisioningState
 }
 
 @doc("The device Configuration of a device.")
 model DeviceConfiguration {
   @doc("NIC Details of device")
   @extension("x-ms-identifiers", [])
-  nicDetails: NicDetail[];
-  @doc("DNS Server Details of device")
-  @extension("x-ms-identifiers", [])
-  dnsServers: string[];
-  @doc("ProxyConfiguration Details of device")
-  @extension("x-ms-identifiers", [])
-  proxyConfiguration: ProxyConfiguration[];
-  @doc("OS Version of device")
-  osVersion: string;
-  @doc("Management NIC Details of device")
-  @extension("x-ms-identifiers", [])
-  managementNicDetails: ManagementNicDetail[];
+  nicDetails: NicDetail[],
 }
 
 @doc("The NIC Detail of a device.")
 model NicDetail {
   @doc("Adapter Name of NIC")
   adapterName: string;
-  @doc("Component Id of NIC")
-  componentId: string;
-  @doc("Driver Version of NIC")
-  driverVersion: string;
+
   @doc("Interface Description of NIC")
-  interfaceDescription: string;
+  interfaceDescription?: string;
+
+  @doc("Component Id of NIC")
+  componentId?: string;
+  
+  @doc("Driver Version of NIC")
+  driverVersion?: string;
+  
   @doc("Subnet Mask of NIC")
-  ip4Address: string;
+  ip4Address?: string;
+
   @doc("Subnet Mask of NIC")
-  subnetMask: string;
+  subnetMask?: string;
+
   @doc("Default Gateway of NIC")
-  defaultGateway: string;
-}
+  defaultGateway?: string;
 
-@doc("The ProxyConfiguration of a device.")
-model ProxyConfiguration {
-  @doc("Proxy URL of device")
-  url: string;
-  @doc("Proxy Port of device")
-  port: string;
-}
+  @doc("DNS Servers for NIC")
+  @extension("x-ms-identifiers", [])
+  dnsServers?: string[];
 
-@doc("The Management NIC Detail of a device.")
-model ManagementNicDetail {
-   @doc("Adapter Name of Management NIC")
-  adapterName: string;
   @doc("Default Isolation of Management NIC")
-  defaultIsolationId: string;
-  @doc("DNS Servers of Management NIC")
-  dnsServers: string[];
+  defaultIsolationId?: string;
 }
 
 @doc("The provisioning state of a resource.")
 @lroStatus
 enum ProvisioningState {
   ...ResourceProvisioningState,
+
+  @doc("The resource provision state is not specified")
+  NotSpecified,
 
   @doc("The resource is being provisioned")
   Provisioning,
@@ -113,12 +101,33 @@ enum ProvisioningState {
   Accepted,
 }
 
-interface Operations extends Azure.ResourceManager.Operations {}
+
+@doc("The validate request for Edge Device.")
+model ValidateRequest{
+  @doc("Node Ids against which, current node has to be validated.")
+  edgeDeviceIds : string[],
+  @doc("additional Info required for validation")
+  additionalInfo?: string
+}
+
+@doc("An Accepted response with an Operation-Location header.")
+model ValidateResponse{
+  @doc("edge device validation status")
+  @visibility("read")
+  status?: string, 
+
+  @doc("The status code.")
+  @statusCode
+  @visibility("read")
+  statusCode: 202;
+}
+
+// interface Operations extends Azure.ResourceManager.Operations {}
 
 @armResourceOperations
 interface EdgeDevices {
   get is ArmResourceRead<EdgeDevice>;
-  createOrUpdate is ArmResourceCreateOrUpdateAsync<EdgeDevice>;
-  update is ArmResourcePatchSync<EdgeDevice, EdgeDeviceProperties>;
-  delete is ArmResourceDeleteSync<EdgeDevice>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<EdgeDevice>;
+  delete is ArmResourceDeleteAsync<EdgeDevice>;
+  validate is ArmResourceActionAsync<EdgeDevice, ValidateRequest, ValidateResponse>;
 }

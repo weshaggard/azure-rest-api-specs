@@ -62,7 +62,7 @@
           "200": {
             "description": "Gets the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "default": {
@@ -112,13 +112,13 @@
           "200": {
             "description": "Updates the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "201": {
             "description": "Creates the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "default": {
@@ -160,7 +160,7 @@
           "200": {
             "description": "Deletes the provisionedClusters resource."
           },
-          "202":{
+          "202": {
             "description": "Accepted"
           },
           "204": {
@@ -213,13 +213,13 @@
           "200": {
             "description": "Success. Updated the provisionedClusters resource.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponse"
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
-          "202":{
+          "202": {
             "description": "Updates the provisionedClusters resource.",
-            "schema":{
-              "$ref": "#/definitions/provisionedClustersResponse"
+            "schema": {
+              "$ref": "#/definitions/provisionedClusters"
             }
           },
           "default": {
@@ -256,7 +256,7 @@
           "200": {
             "description": "Lists all provisionedClusters under the resource group.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponseListResult"
+              "$ref": "#/definitions/provisionedClustersListResult"
             }
           },
           "default": {
@@ -293,7 +293,7 @@
           "200": {
             "description": "Lists all provisionedClusters under the subscription.",
             "schema": {
-              "$ref": "#/definitions/provisionedClustersResponseListResult"
+              "$ref": "#/definitions/provisionedClustersListResult"
             }
           },
           "default": {
@@ -475,7 +475,7 @@
           "200": {
             "description": "Delete the hybridIdentityMetadata resource"
           },
-          "202":{
+          "202": {
             "description": "Accepted"
           },
           "204": {
@@ -671,7 +671,7 @@
           "200": {
             "description": "Deletes the agent pool in the provisionedClusters resource."
           },
-          "202":{
+          "202": {
             "description": "Accepted"
           },
           "204": {
@@ -832,69 +832,233 @@
         }
       }
     },
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/orchestrators": {
-      "get": {
-        "operationId": "HybridContainerService_ListOrchestrators",
-        "x-ms-examples": {
-          "ListOrchestrators": {
-            "$ref": "./examples/ListOrchestrators.json"
-          }
-        },
-        "summary": "Lists the available orchestrators in a custom location",
-        "description": "Lists the available orchestrators in a custom location for HybridAKS",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridContainerService/provisionedClusters/{resourceName}/listClusterUserCredential": {
+      "post": {
+        "tags": [
+          "ProvisionedClusters"
+        ],
+        "operationId": "ProvisionedClusters_ListClusterUserCredentials",
+        "summary": "Listing the AAD user credentials of a provisioned cluster used only in direct mode.",
+        "description": "Lists the AAD user credentials of a provisioned cluster used only in direct mode.",
         "parameters": [
           {
-            "$ref": "#/parameters/customLocationResourceUriParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceNameParameter"
           }
         ],
         "responses": {
           "200": {
-            "description": "Lists the available orchestrators in a custom location.",
-            "schema": {
-              "$ref": "#/definitions/OrchestratorVersionProfileListResult"
-            }
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location",
+          "final-state-schema" : "#/definitions/CredentialResults"
+        },
+        "x-ms-examples": {
+          "ListClusterUserCredentials": {
+            "$ref": "./examples/ProvisionedClustersListClusterUserCredentials.json"
+          }
+        }
+      }
+    },
+    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/kubernetesVersions/default":{
+      "get":{
+        "operationId": "GetKubernetesVersions",
+        "x-ms-examples":{
+          "GetKubernetesVersions":{
+            "$ref": "./examples/GetKubernetesVersions.json"
+          }
+        },
+        "summary": "Gets the supported kubernetes versions from the underlying custom location",
+        "description": "Gets the supported kubernetes versions from the underlying custom location",
+        "parameters":[
+          {
+            "$ref": "#/parameters/customLocationResourceUriParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "ExtendedLocation",
+            "in": "body",
+            "required": true,
+            "schema":{
+              "$ref": "#/definitions/ExtendedLocation"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description": "Gets the supported kubernetes versions from the underlying custom location",
+            "schema":{
+              "$ref": "#/definitions/KubernetesVersionProfileResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema":{
+              "$ref":"../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put":{
+        "operationId": "PutKubernetesVersions",
+        "x-ms-examples":{
+          "PutKubernetesVersions":{
+            "$ref": "./examples/PutKubernetesVersions.json"
+          }
+        },
+        "summary": "Puts the kubernetes version resource type",
+        "description": "Puts the kubernetes version resource type",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters":[
+          {
+            "$ref": "#/parameters/customLocationResourceUriParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "ExtendedLocation",
+            "in": "body",
+            "required": true,
+            "schema":{
+              "$ref": "#/definitions/ExtendedLocation"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description": "Creates the kubernetes version resource",
+            "schema":{
+              "$ref": "#/definitions/KubernetesVersionProfileResponse"
+            }
+          },
+          "201":{
+            "description": "Creates the kubernetes version resoruce",
+            "schema":{
+              "$ref": "#/definitions/KubernetesVersionProfileResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema":{
+              "$ref":"../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/vmSkus": {
-      "get": {
-        "operationId": "HybridContainerService_ListVMSkus",
-        "x-ms-examples": {
-          "ListVMSkus": {
-            "$ref": "./examples/ListVMSkus.json"
+    "/{customLocationResourceUri}/providers/Microsoft.HybridContainerService/skus/default":{
+      "get":{
+        "operationId": "GetVMSkus",
+        "x-ms-examples":{
+          "GetKubernetesVersions":{
+            "$ref": "./examples/GetVmSkus.json"
           }
         },
-        "summary": "Lists the available VM SKUs in a custom location",
-        "description": "Lists the available VM SKUs in a custom location for HybridAKS",
-        "parameters": [
+        "summary": "Gets the supported VM skus from the underlying custom location",
+        "description": "Gets the supported custom location VM skus from the underlying custom location",
+        "parameters":[
           {
             "$ref": "#/parameters/customLocationResourceUriParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "ExtendedLocation",
+            "in": "body",
+            "required": true,
+            "schema":{
+              "$ref": "#/definitions/ExtendedLocation"
+            }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Lists the available VM SKUs in a custom location.",
-            "schema": {
-              "$ref": "#/definitions/VMSkuListResult"
+        "responses":{
+          "200":{
+            "description": "Gets the supported Vm Skus from the underlying appliance",
+            "schema":{
+              "$ref": "#/definitions/VmSkuProfileResponse"
             }
           },
           "default": {
             "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            "schema":{
+              "$ref":"../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put":{
+        "operationId": "PutVMSkus",
+        "x-ms-examples":{
+          "PutKubernetesVersions":{
+            "$ref": "./examples/PutVmSkus.json"
+          }
+        },
+        "summary": "Puts the Vm Sku resoruce type",
+        "description": "Puts the Vm Sku resource type",
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "parameters":[
+          {
+            "$ref": "#/parameters/customLocationResourceUriParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "ExtendedLocation",
+            "in": "body",
+            "required": true,
+            "schema":{
+              "$ref": "#/definitions/ExtendedLocation"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description": "Creates the Vm Skus resource",
+            "schema":{
+              "$ref": "#/definitions/VmSkuProfileResponse"
+            }
+          },
+          "201":{
+            "description": "Creates the Vm Skus resource",
+            "schema":{
+              "$ref": "#/definitions/VmSkuProfileResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema":{
+              "$ref":"../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
             }
           }
         }
@@ -934,72 +1098,45 @@
     }
   },
   "definitions": {
-    "provisionedClustersAllProperties": {
+    "CredentialResults": {
       "type": "object",
-      "description": "All properties of the provisioned cluster",
-      "x-ms-client-flatten": true,
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/provisionedClustersPropertiesWithSecrets"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/provisionedClustersCommonProperties"
+      "properties": {
+        "kubeconfigs": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/CredentialResult"
+          },
+          "x-ms-identifiers": [],
+          "description": "Base64-encoded Kubernetes configuration file."
         }
-      ]
+      },
+      "description": "The list credential result response."
     },
-    "provisionedClustersResponseProperties": {
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/provisionedClustersPropertiesWithoutSecrets"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/provisionedClustersCommonProperties"
-        }
-      ]
-    },
-    "provisionedClustersPropertiesWithSecrets": {
+    "CredentialResult": {
       "type": "object",
-      "description": "Properties of provisioned clusters that contain secrets",
+      "properties": {
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The name of the credential."
+        },
+        "value": {
+          "type": "string",
+          "format": "byte",
+          "readOnly": true,
+          "description": "Base64-encoded Kubernetes configuration file."
+        }
+      },
+      "description": "The credential result response."
+    },
+    "provisionedClustersProperties": {
+      "type": "object",
       "properties": {
         "aadProfile": {
           "description": "AAD profile for the provisioned cluster.",
           "$ref": "#/definitions/AADProfile"
         },
-        "windowsProfile": {
-          "description": "WindowsProfile - Profile for Windows VMs in the Provisioned Cluster.",
-          "$ref": "#/definitions/WindowsProfile"
-        },
-        "httpProxyConfig": {
-          "description": "HttpProxyConfig - Configurations for provisioning the cluster with HTTP proxy servers.",
-          "$ref": "#/definitions/httpProxyConfig"
-        }
-      }
-    },
-    "provisionedClustersPropertiesWithoutSecrets": {
-      "type": "object",
-      "description": "Properties of provisioned clusters without the corresponding secrets",
-      "properties": {
-        "aadProfile": {
-          "description": "AAD profile for the provisioned cluster.",
-          "$ref": "#/definitions/AADProfileResponse"
-        },
-        "windowsProfile": {
-          "description": "WindowsProfile - Profile for Windows VMs in the Provisioned Cluster.",
-          "$ref": "#/definitions/WindowsProfileResponse"
-        },
-        "httpProxyConfig": {
-          "description": "HttpProxyConfig - Configurations for provisioning the cluster with HTTP proxy servers.",
-          "$ref": "#/definitions/httpProxyConfigResponse"
-        }
-      }
-    },
-    "provisionedClustersCommonProperties": {
-      "type": "object",
-      "properties": {
         "enableRbac": {
           "type": "boolean",
           "description": "EnableRBAC - Whether to enable Kubernetes Role-Based Access Control."
@@ -1018,13 +1155,6 @@
             }
           }
         },
-        "addonProfiles": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/AddonProfiles"
-          },
-          "description": "AddonProfiles - Profile of managed cluster add-on."
-        },
         "controlPlane": {
           "$ref": "#/definitions/ControlPlaneProfile",
           "description": "ControlPlane - ControlPlane Configuration"
@@ -1036,10 +1166,6 @@
         "networkProfile": {
           "description": "NetworkProfile - Profile of network configuration.",
           "$ref": "#/definitions/NetworkProfile"
-        },
-        "nodeResourceGroup": {
-          "type": "string",
-          "description": "NodeResourceGroup - Name of the resource group containing agent pool nodes."
         },
         "agentPoolProfiles": {
           "type": "array",
@@ -1125,44 +1251,21 @@
             }
           },
           "description": "HybridAKSClusterStatus defines the observed state of HybridAKSCluster"
+        },
+        "securityProfile": {
+          "$ref": "#/definitions/ProvisionedClusterSecurityProfile",
+          "description": "The security profile for the provisioned cluster."
+        },
+        "oidcIssuerProfile": {
+          "$ref": "#/definitions/ProvisionedClusterOIDCIssuerProfile",
+          "description": "The OIDC issuer profile of the provisioned cluster."
+        },
+        "licenseProfile": {
+          "$ref": "#/definitions/ProvisionedClusterLicenseProfile",
+          "description": "The license profile of the provisioned cluster."
         }
       },
-      "description": "HybridAKSClusterSpec defines the desired state of HybridAKSCluster"
-    },
-    "provisionedClustersResponse": {
-      "type": "object",
-      "x-ms-azure-resource": true,
-      "readOnly": true,
-      "properties": {
-        "identity": {
-          "$ref": "#/definitions/provisionedClusterIdentity"
-        },
-        "properties": {
-          "$ref": "#/definitions/provisionedClustersResponseProperties"
-        },
-        "systemData": {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/systemData"
-        },
-        "extendedLocation": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "description": "The extended location type."
-            },
-            "name": {
-              "type": "string",
-              "description": "The extended location name."
-            }
-          }
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/TrackedResource"
-        }
-      ],
-      "description": "The provisionedClusters resource definition."
+      "description": "All properties of the provisioned cluster"
     },
     "provisionedClusters": {
       "type": "object",
@@ -1172,7 +1275,7 @@
           "$ref": "#/definitions/provisionedClusterIdentity"
         },
         "properties": {
-          "$ref": "#/definitions/provisionedClustersAllProperties"
+          "$ref": "#/definitions/provisionedClustersProperties"
         },
         "systemData": {
           "readOnly": true,
@@ -1212,13 +1315,13 @@
       },
       "description": "The provisionedClusters resource patch definition."
     },
-    "provisionedClustersResponseListResult": {
+    "provisionedClustersListResult": {
       "type": "object",
       "properties": {
         "value": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/provisionedClustersResponse"
+            "$ref": "#/definitions/provisionedClusters"
           }
         },
         "nextLink": {
@@ -1226,23 +1329,6 @@
         }
       },
       "x-ms-identifiers": []
-    },
-    "AddonProfiles": {
-      "properties": {
-        "config": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Config - Key-value pairs for configuring an add-on.",
-          "type": "object"
-        },
-        "enabled": {
-          "description": "Enabled - Whether the add-on is enabled or not.",
-          "type": "boolean"
-        }
-      },
-      "type": "object",
-      "description": "Addon configurations"
     },
     "AddonStatus": {
       "properties": {
@@ -1261,58 +1347,6 @@
       "type": "object",
       "description": "Status of the addon"
     },
-    "httpProxyConfigPassword": {
-      "type": "object",
-      "properties": {
-        "password": {
-          "type": "string",
-          "x-ms-secret": true,
-          "description": "Password to use for connecting to proxy server"
-        }
-      }
-    },
-    "httpProxyConfigResponse": {
-      "type": "object",
-      "description": "Configurations for provisioning the cluster with HTTP proxy servers.",
-      "properties": {
-        "httpProxy": {
-          "type": "string",
-          "description": "The HTTP proxy server endpoint to use."
-        },
-        "httpsProxy": {
-          "type": "string",
-          "description": "The HTTPS proxy server endpoint to use."
-        },
-        "noProxy": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The endpoints that should not go through proxy."
-        },
-        "trustedCa": {
-          "type": "string",
-          "description": "Alternative CA cert to use for connecting to proxy servers."
-        },
-        "username": {
-          "type": "string",
-          "description": "Username to use for connecting to proxy server"
-        }
-      }
-    },
-    "httpProxyConfig": {
-      "description": "Configurations for provisioning the cluster with HTTP proxy servers.",
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/httpProxyConfigResponse"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/httpProxyConfigPassword"
-        }
-      ]
-    },
     "AgentPoolProfile": {
       "type": "object",
       "description": "NodePool configuration",
@@ -1330,51 +1364,11 @@
           },
           "description": "AvailabilityZones - The list of Availability zones to use for nodes. Datacenter racks modelled as zones"
         },
-        "maxCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The maximum number of nodes for auto-scaling"
-        },
-        "maxPods": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The maximum number of pods that can run on a node."
-        },
-        "minCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The minimum number of nodes for auto-scaling"
-        },
-        "mode": {
-          "type": "string",
-          "description": "Mode - AgentPoolMode represents mode of an agent pool. Possible values include: 'System', 'LB', 'User'. Default is 'User'",
-          "enum": [
-            "System",
-            "LB",
-            "User"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "mode"
-          },
-          "default": "User"
-        },
-        "nodeLabels": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "NodeLabels - Agent pool node labels to be persisted across all nodes in agent pool."
-        },
-        "nodeTaints": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "NodeTaints - Taints added to new nodes during node pool create and scale. For example, key=value:NoSchedule."
-        },
         "osType": {
           "$ref": "#/definitions/OSType"
+        },
+        "osSKU": {
+          "$ref": "#/definitions/OSSKU"
         },
         "nodeImageVersion": {
           "type": "string",
@@ -1383,10 +1377,6 @@
         "vmSize": {
           "type": "string",
           "description": "VmSize - The size of the agent pool VMs."
-        },
-        "cloudProviderProfile": {
-          "description": "The underlying cloud infra provider properties.",
-          "$ref": "#/definitions/CloudProviderProfile"
         }
       }
     },
@@ -1614,18 +1604,7 @@
       },
       "description": "Results of the request to list operations."
     },
-    "AADProfileSecret": {
-      "type": "object",
-      "description": "The server AAD application secret.",
-      "properties": {
-        "serverAppSecret": {
-          "type": "string",
-          "x-ms-secret": true,
-          "description": "The server AAD application secret."
-        }
-      }
-    },
-    "AADProfileResponse": {
+    "AADProfile": {
       "type": "object",
       "description": "AAD Profile specifies attributes for Azure Active Directory integration.",
       "properties": {
@@ -1636,10 +1615,6 @@
           },
           "description": "The list of AAD group object IDs that will have admin role of the cluster."
         },
-        "clientAppID": {
-          "type": "string",
-          "description": "The client AAD application ID."
-        },
         "enableAzureRbac": {
           "type": "boolean",
           "description": "Whether to enable Azure RBAC for Kubernetes authorization."
@@ -1648,28 +1623,68 @@
           "type": "boolean",
           "description": "Whether to enable managed AAD."
         },
-        "serverAppID": {
-          "type": "string",
-          "description": "The server AAD application ID."
-        },
         "tenantID": {
           "type": "string",
           "description": "The AAD tenant ID to use for authentication. If not specified, will use the tenant of the deployment subscription."
         }
       }
     },
-    "AADProfile": {
-      "description": "AAD Profile specifies attributes for Azure Active Directory integration.",
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/AADProfileSecret"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/AADProfileResponse"
+    "ProvisionedClusterSecurityProfile": {
+      "type": "object",
+      "properties": {
+        "workloadIdentity": {
+          "$ref": "#/definitions/ProvisionedClusterSecurityProfileWorkloadIdentity",
+          "description": "Workload identity settings for the security profile. Workload identity enables Kubernetes applications to access Azure cloud resources securely with Azure AD."
         }
-      ]
+      },
+      "description": "The security profile for the provisioned cluster."
+    },
+    "ProvisionedClusterSecurityProfileWorkloadIdentity": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the workload identity is enabled.",
+          "default": false
+        }
+      },
+      "description": "The workload identity profile of the provisioned cluster."
+    },
+    "ProvisionedClusterOIDCIssuerProfile": {
+      "type": "object",
+      "properties": {
+        "issuerURL": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The OIDC issuer url of the provisioned cluster."
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the OIDC issuer is enabled.",
+          "default": false
+        }
+      },
+      "description": "The OIDC issuer profile of the provisioned cluster."
+    },
+    "ProvisionedClusterLicenseProfile": {
+      "type": "object",
+      "properties": {
+        "azureHybridBenefit": {
+          "type": "string",
+          "description": "Indicates whether Azure Hybrid Benefit is opted in",
+          "enum": [
+            "True",
+            "False",
+            "NotApplicable"
+          ],
+          "default": "NotApplicable",
+          "x-ms-enum": {
+            "name": "AzureHybridBenefit",
+            "modelAsString": true
+          }
+        }
+      },
+      "description": "The license profile of the provisioned cluster."
     },
     "LinuxProfile": {
       "type": "object",
@@ -1684,10 +1699,6 @@
     "LinuxProfileProperties": {
       "type": "object",
       "properties": {
-        "adminUsername": {
-          "type": "string",
-          "description": "AdminUsername - The administrator username to use for Linux VMs."
-        },
         "ssh": {
           "type": "object",
           "properties": {
@@ -1711,56 +1722,6 @@
       },
       "description": "LinuxProfile - Profile for Linux VMs in the container service cluster."
     },
-    "WindowsProfile": {
-      "description": "WindowsProfile - Profile for Windows VMs in the container service cluster.",
-      "allOf": [
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/WindowsProfileResponse"
-        },
-        {
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/WindowsProfilePassword"
-        }
-      ]
-    },
-    "WindowsProfileResponse": {
-      "type": "object",
-      "description": "Profile for Windows VMs in the container service cluster.",
-      "properties": {
-        "adminUsername": {
-          "type": "string",
-          "description": "AdminUsername - Specifies the name of the administrator account. <br><br> **restriction:** Cannot end in \".\" <br><br> **Disallowed values:** \"administrator\", \"admin\", \"user\", \"user1\", \"test\", \"user2\", \"test1\", \"user3\", \"admin1\", \"1\", \"123\", \"a\", \"actuser\", \"adm\", \"admin2\", \"aspnet\", \"backup\", \"console\", \"david\", \"guest\", \"john\", \"owner\", \"root\", \"server\", \"sql\", \"support\", \"support_388945a0\", \"sys\", \"test2\", \"test3\", \"user4\", \"user5\". <br><br> **Minimum-length:** 1 character <br><br> **Max-length:** 20 characters"
-        },
-        "enableCsiProxy": {
-          "type": "boolean",
-          "description": "EnableCSIProxy - Whether to enable CSI proxy."
-        },
-        "licenseType": {
-          "type": "string",
-          "description": "LicenseType - The licenseType to use for Windows VMs. Windows_Server is used to enable Azure Hybrid User Benefits for Windows VMs. Possible values include: 'None', 'Windows_Server'",
-          "enum": [
-            "Windows_Server",
-            "None"
-          ],
-          "x-ms-enum": {
-            "modelAsString": true,
-            "name": "licenseType"
-          }
-        }
-      }
-    },
-    "WindowsProfilePassword": {
-      "type": "object",
-      "description": "Password for the Windows Profile to be used by the Windows VMs in the cluster",
-      "properties": {
-        "adminPassword": {
-          "type": "string",
-          "x-ms-secret": true,
-          "description": "AdminPassword - Specifies the password of the administrator account. <br><br> **Minimum-length:** 8 characters <br><br> **Max-length:** 123 characters <br><br> **Complexity requirements:** 3 out of 4 conditions below need to be fulfilled <br> Has lower characters <br>Has upper characters <br> Has a digit <br> Has a special character (Regex match [\\W_]) <br><br> **Disallowed values:** \"abc@123\", \"P@$$w0rd\", \"P@ssw0rd\", \"P@ssword123\", \"Pa$$word\", \"pass@word1\", \"Password!\", \"Password1\", \"Password22\", \"iloveyou!\""
-        }
-      }
-    },
     "NetworkProfile": {
       "type": "object",
       "properties": {
@@ -1783,10 +1744,6 @@
             "name": "loadBalancerSku"
           }
         },
-        "dnsServiceIP": {
-          "type": "string",
-          "description": "DNSServiceIP - An IP address assigned to the Kubernetes DNS service. It must be within the Kubernetes service address range specified in serviceCidr."
-        },
         "networkPolicy": {
           "type": "string",
           "description": "NetworkPolicy - Network policy used for building Kubernetes network. Possible values include: 'calico', 'flannel'. Default is 'calico'",
@@ -1803,24 +1760,6 @@
         "podCidr": {
           "type": "string",
           "description": "PodCidr - A CIDR notation IP range from which to assign pod IPs when kubenet is used."
-        },
-        "podCidrs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The CIDR notation IP ranges from which to assign pod IPs. One IPv4 CIDR is expected for single-stack networking. Two CIDRs, one for each IP family (IPv4/IPv6), is expected for dual-stack networking."
-        },
-        "serviceCidr": {
-          "type": "string",
-          "description": "ServiceCidr - A CIDR notation IP range from which to assign service cluster IPs. It must not overlap with any Subnet IP ranges."
-        },
-        "serviceCidrs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The CIDR notation IP ranges from which to assign service cluster IPs. One IPv4 CIDR is expected for single-stack networking. Two CIDRs, one for each IP family (IPv4/IPv6), is expected for dual-stack networking. They must not overlap with any Subnet IP ranges."
         }
       },
       "description": "NetworkProfile - Profile of network configuration."
@@ -1852,7 +1791,8 @@
               "description": "Host IP address for API server"
             },
             "port": {
-              "type": "string",
+              "type": "integer",
+              "format": "int32",
               "description": "Port for the API server"
             }
           }
@@ -1888,22 +1828,17 @@
             "vnetSubnetIds": {
               "type": "array",
               "items": {
-                "type": "string"
+                "type": "string",
+                "format": "arm-id",
+                "x-ms-arm-id-details": {
+                  "allowedResources": [
+                    {
+                      "type": "Microsoft.AzureStackHCI/logicalNetworks"
+                    }
+                  ]
+                }
               },
-              "description": "Array of references to azure resource corresponding to the new HybridAKSNetwork object e.g. /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridContainerService/virtualNetworks/{virtualNetworkName}"
-            }
-          }
-        },
-        "infraStorageProfile": {
-          "type": "object",
-          "description": "InfraStorageProfile - List of infra storage profiles for the provisioned cluster",
-          "properties": {
-            "storageSpaceIds": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Reference to azure resource corresponding to the new HybridAKSStorage object e.g. /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HybridContainerService/storageSpaces/{storageSpaceName}"
+              "description": "Array of references to azure resource corresponding to the Network object e.g. /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/logicalNetworks/{logicalNetworkName}"
             }
           }
         }
@@ -1938,10 +1873,12 @@
       "properties": {
         "deploymentState": {
           "type": "string",
-          "description": "Observed deployment state of the Arc Agents on the target cluster. Possible values include: 'pending', 'provisioning', 'provisioned', 'deleting', 'failed', 'upgrading'",
+          "description": "Observed deployment state of the Arc Agents on the target cluster. Possible values include: 'pending', 'provisioning', 'provisioning {HelmChartInstalled}', 'provisioning {MSICertificateDownloaded}', 'provisioned', 'deleting', 'failed', 'upgrading'",
           "enum": [
             "pending",
             "provisioning",
+            "provisioning {HelmChartInstalled}",
+            "provisioning {MSICertificateDownloaded}",
             "provisioned",
             "deleting",
             "failed",
@@ -2004,6 +1941,7 @@
             "None",
             "SystemAssigned"
           ],
+          "default": "SystemAssigned",
           "x-ms-enum": {
             "name": "ResourceIdentityType",
             "modelAsString": false
@@ -2080,116 +2018,185 @@
         "value"
       ]
     },
-    "OrchestratorVersionProfileListResult": {
+    "KubernetesVersionProfileResponse": {
       "type": "object",
-      "description": "The list of versions for supported orchestrators.",
-      "properties": {
-        "orchestrators": {
-          "type": "array",
-          "description": "Profile of the orchestrator versions",
-          "items": {
-            "$ref": "#/definitions/OrchestratorVersionProfile"
-          },
-          "x-ms-identifiers": []
-        },
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Id"
-        },
-        "name": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Name"
-        },
-        "type": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Resource Type"
+      "description": "The list of versions for supported kubernetes versions.",
+      "allOf":[
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
+          "description": "The resource model definition for an Azure Resource Manager proxy resource. It will have everything other than required location and tags."
+        }
+      ],
+      "properties":{
+        "properties":{
+          "type": "object",
+          "properties":{
+            "provisioningState":{
+              "type": "string",
+              "readOnly": true
+            },
+            "values": {
+              "type": "array",
+              "description": "List of supported Kubernetes versions",
+              "items": {
+                "$ref": "#/definitions/KubernetesVersionProfile"
+              },
+              "x-ms-identifiers": []
+            }
+          }
         }
       }
     },
-    "OrchestratorVersionProfile": {
+    "KubernetesVersionProfile": {
       "type": "object",
-      "description": "The profile of an orchestrator and its available versions.",
+      "description": "Kubernetes version profile for given major.minor release",
       "properties": {
+        "version":{
+          "type": "string",
+          "description": "major.minor version of Kubernetes release",
+          "readOnly": true
+        },
+        "capabilities":{
+          "$ref":"#/definitions/KubernetesVersionCapabilities",
+          "description": "Capabilities on this kubernetes version"
+        },
         "isPreview": {
-          "type": "boolean",
-          "readOnly": true,
-          "description": "Whether Kubernetes version is currently in preview."
-        },
-        "default": {
-          "type": "boolean",
-          "readOnly": true,
-          "description": "Installed by default if version is not specified."
-        },
-        "orchestratorType": {
           "type": "string",
-          "readOnly": true,
-          "description": "Orchestrator type."
+          "description": "WHether this version is in preview mode",
+          "readOnly": true
         },
-        "orchestratorVersion": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Orchestrator version major.minor.patch, for example 1.21.9"
-        },
-        "upgrades": {
-          "type": "array",
-          "description": "The list of available upgrade versions.",
-          "items": {
-            "$ref": "#/definitions/OrchestratorProfile"
+        "patchVersions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/KubernetesPatchVersions"
           },
-          "x-ms-identifiers": []
+          "description": "Patch versions of a Kubernetes release"
         }
       }
     },
-    "OrchestratorProfile": {
+    "KubernetesVersionCapabilities":{
       "type": "object",
-      "description": "Contains information about orchestrator.",
+      "description": "Capabilities on this kubernetes version",
       "properties": {
-        "isPreview": {
-          "type": "boolean",
-          "readOnly": true,
-          "description": "Whether Kubernetes version is currently in preview."
-        },
-        "orchestratorType": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Orchestrator type."
-        },
-        "orchestratorVersion": {
-          "type": "string",
-          "readOnly": true,
-          "description": "Orchestrator version (major, minor, patch)."
+        "supportPlan":{
+          "type": "array",
+          "x-ms-identifiers":[],
+          "items":{
+            "$ref": "#/definitions/KubernetesSupportPlan"
+          }
         }
       }
     },
-    "VMSkuListResult": {
+    "KubernetesPatchVersions":{
+      "type": "object",
+      "description": "Kubernetes Patch Version profile",
+      "properties": {
+        "upgrades":{
+          "type": "array",
+          "description": "Possible upgrade path for given patch version",
+          "x-ms-identifiers":[],
+          "items":{
+            "type":"string"
+          }
+        }
+      }
+    },
+    "KubernetesSupportPlan":{
+      "type": "string",
+      "description": "Different support tiers for AKS managed clusters",
+      "enum": [
+        "KubernetesOfficial"
+      ],
+      "x-ms-enum":{
+        "name": "KubernetesSupportPlan",
+        "values": [
+          {
+            "value": "KubernetesOfficial",
+            "description": "Support for the version is the same as for the open source Kubernetes offering. Official Kubernetes open source community support versions for 1 year after release."
+          }
+        ]
+      }
+    },
+    "VmSkuProfileResponse": {
       "type": "object",
       "description": "The list of supported VM SKUs.",
-      "properties": {
-        "vmSKUs": {
+      "allOf":[
+        {
+          "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ProxyResource",
+          "description": "The resource model definition for an Azure Resource Manager proxy resource. It will have everything other than required location and tags."
+        }
+      ],
+      "properties":{
+        "properties":{
+          "type":"object",
+          "properties":{
+            "provisioningState":{
+              "type": "string",
+              "readOnly": true
+            },
+            "values":{
+              "type": "array",
+              "description": "Array of HybridAKS Support VM Skus",
+              "items":{
+                "$ref":"#/definitions/VmSkuProfile"
+              },
+              "x-ms-identifiers": []
+            }
+          }
+        }
+      }
+    },
+    "VmSkuProfile": {
+      "type": "object",
+      "description": "The profile for supported VM skus",
+      "properties":{
+        "resourceType": {
+          "type": "string",
+          "description": "The resoruce type of the vm",
+          "readOnly": true
+        },
+        "capabilities":{
           "type": "array",
           "readOnly": true,
-          "description": "Supported VM SKUs.",
-          "items": {
-            "type": "string"
-          }
+          "description": "A name value pair to describe the specific vm's capability",
+          "items":{
+            "$ref": "#/definitions/VmSkuCapabilities"
+          },
+          "x-ms-identifiers": []
         },
-        "id": {
+        "locationInfo":{
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location information"
+        },
+        "name":{
           "type": "string",
           "readOnly": true,
-          "description": "Resource Id"
+          "description": "The name of the VM Family"
         },
-        "name": {
+        "tier":{
           "type": "string",
           "readOnly": true,
-          "description": "Resource Name"
+          "description": "The tier of the VM Family"
         },
-        "type": {
+        "size":{
           "type": "string",
           "readOnly": true,
-          "description": "Resource Type"
+          "description": "The size of the VM Family"
+        }
+      }
+    },
+    "VmSkuCapabilities":{
+      "description": "describes the vm sku capabilities object",
+      "properties":{
+        "name":{
+          "type": "string",
+          "readOnly": true,
+          "description": "An invriant to describe the feature"
+        },
+        "value":{
+          "type": "string",
+          "readOnly": true,
+          "description": "An invariant if the feature is measured by quantity"
         }
       }
     },
@@ -2295,6 +2302,46 @@
         "name": "osType"
       },
       "default": "Linux"
+    },
+    "ExtendedLocation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The extended location type."
+        },
+        "name": {
+          "type": "string",
+          "description": "The extended location name."
+        }
+      }
+    },
+    "OSSKU": {
+      "type": "string",
+      "enum": [
+        "CBLMariner",
+        "Windows2019",
+        "Windows2022"
+      ],
+      "x-ms-enum": {
+        "name": "OSSKU",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "CBLMariner",
+            "description": "Use Mariner as the OS for node images."
+          },
+          {
+            "value": "Windows2019",
+            "description": "Use Windows2019 as the OS for node images."
+          },
+          {
+            "value": "Windows2022",
+            "description": "Use Windows2022 as the OS for node images."
+          }
+        ]
+      },
+      "description": "Specifies the OS SKU used by the agent pool. The default is CBLMariner if OSType is Linux. The default is Windows2019 when OSType is Windows."
     }
   },
   "parameters": {

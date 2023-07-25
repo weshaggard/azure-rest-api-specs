@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Deployment Settings",
-    "version": "2023-07-15-privatepreview",
+    "version": "2023-08-01-preview",
     "description": "Azure Stack HCI Deployment Settings.",
     "x-typespec-generated": [
       {
@@ -40,85 +40,17 @@
   },
   "tags": [
     {
-      "name": "Operations"
-    },
-    {
       "name": "DeploymentSettings"
     }
   ],
   "paths": {
-    "/providers/Private.AzureStackHCI/operations": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.AzureStackHCI/clusters/{clusterName}/deploymentSettings": {
       "get": {
-        "operationId": "Operations_List",
-        "tags": [
-          "Operations"
-        ],
-        "description": "List the operations for the provider",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/providers/Private.AzureStackHCI/DeploymentSettings": {
-      "get": {
-        "operationId": "DeploymentSettings_ListBySubscription",
+        "operationId": "DeploymentSettings_ListByClusters",
         "tags": [
           "DeploymentSettings"
         ],
-        "description": "List DeploymentSetting resources by subscription ID",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/DeploymentSettingListResult"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.AzureStackHCI/DeploymentSettings": {
-      "get": {
-        "operationId": "DeploymentSettings_ListByResourceGroup",
-        "tags": [
-          "DeploymentSettings"
-        ],
-        "description": "List DeploymentSetting resources by resource group",
+        "description": "List DeploymentSetting resources by Clusters",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -128,6 +60,13 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "clusterName",
+            "in": "path",
+            "description": "Name of Cluster",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -144,12 +83,17 @@
             }
           }
         },
+        "x-ms-examples": {
+          "Get DeploymentSetting": {
+            "$ref": "./examples/GetDeploymentSettings.json"
+          }
+        },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.AzureStackHCI/DeploymentSettings/{default}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.AzureStackHCI/clusters/{clusterName}/deploymentSettings/{deploymentSettingsName}": {
       "get": {
         "operationId": "DeploymentSettings_Get",
         "tags": [
@@ -167,11 +111,20 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "name": "default",
+            "name": "clusterName",
+            "in": "path",
+            "description": "Name of Cluster",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "deploymentSettingsName",
             "in": "path",
             "description": "Name of Deployment Setting",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default": "default",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
           }
         ],
         "responses": {
@@ -206,11 +159,20 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "name": "default",
+            "name": "clusterName",
+            "in": "path",
+            "description": "Name of Cluster",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "deploymentSettingsName",
             "in": "path",
             "description": "Name of Deployment Setting",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default": "default",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
           },
           {
             "name": "resource",
@@ -229,73 +191,8 @@
               "$ref": "#/definitions/DeploymentSetting"
             }
           },
-          "201": {
-            "description": "ARM create operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/DeploymentSetting"
-            },
-            "headers": {
-              "Retry-After": {
-                "type": "integer",
-                "format": "int32",
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
-              }
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
-      },
-      "patch": {
-        "operationId": "DeploymentSettings_Update",
-        "tags": [
-          "DeploymentSettings"
-        ],
-        "description": "Update a DeploymentSetting",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "name": "default",
-            "in": "path",
-            "description": "Name of Deployment Setting",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "properties",
-            "in": "body",
-            "description": "The resource properties to be updated.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeploymentSettingUpdate"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/DeploymentSetting"
-            }
-          },
           "202": {
-            "description": "Resource update request accepted.",
+            "description": "Resource operation accepted.",
             "headers": {
               "Retry-After": {
                 "type": "integer",
@@ -315,8 +212,13 @@
             }
           }
         },
+        "x-ms-examples": {
+          "Create DeploymentSetting": {
+            "$ref": "./examples/PutDeploymentSettings.json"
+          }
+        },
         "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
+          "final-state-via": "azure-async-operation"
         },
         "x-ms-long-running-operation": true
       },
@@ -337,11 +239,20 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "name": "default",
+            "name": "clusterName",
+            "in": "path",
+            "description": "Name of Cluster",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "deploymentSettingsName",
             "in": "path",
             "description": "Name of Deployment Setting",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default": "default",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
           }
         ],
         "responses": {
@@ -369,13 +280,18 @@
             }
           }
         },
+        "x-ms-examples": {
+          "Delete DeploymentSetting": {
+            "$ref": "./examples/DeleteDeploymentSettings.json"
+          }
+        },
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
         },
         "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.AzureStackHCI/DeploymentSettings/{default}/deploy": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.AzureStackHCI/clusters/{clusterName}/deploymentSettings/{deploymentSettingsName}/deploy": {
       "post": {
         "operationId": "DeploymentSettings_Deploy",
         "tags": [
@@ -393,11 +309,20 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "name": "default",
+            "name": "clusterName",
+            "in": "path",
+            "description": "Name of Cluster",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "deploymentSettingsName",
             "in": "path",
             "description": "Name of Deployment Setting",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default": "default",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
           },
           {
             "name": "body",
@@ -405,7 +330,7 @@
             "description": "The content of the action request",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeployRequest"
+              "$ref": "#/definitions/DeploymentRequest"
             }
           }
         ],
@@ -413,7 +338,7 @@
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/DeployResponse"
+              "$ref": "#/definitions/DeploymentResponse"
             }
           },
           "202": {
@@ -437,6 +362,11 @@
             }
           }
         },
+        "x-ms-examples": {
+          "Deploy Azure Stack HCI Cluster": {
+            "$ref": "./examples/DeployCluster.json"
+          }
+        },
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
         },
@@ -451,43 +381,31 @@
       "properties": {
         "steps": {
           "type": "array",
-          "description": "ToDo",
+          "description": "List of steps of AzureStackHCI Cluster Deployment.",
           "items": {
             "$ref": "#/definitions/Step"
           },
-          "readOnly": true,
           "x-ms-identifiers": []
         },
         "type": {
           "type": "string",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "type of action."
         },
         "startTime": {
           "type": "string",
           "format": "date-time",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Start time of action."
         },
         "endTime": {
           "type": "string",
           "format": "date-time",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "End time of action."
         },
         "status": {
-          "$ref": "#/definitions/Status",
-          "description": "ToDo",
-          "readOnly": true
+          "type": "string",
+          "description": "Status of action. Allowed values are 'Error', 'Success', 'InProgress'"
         }
-      },
-      "required": [
-        "steps",
-        "type",
-        "startTime",
-        "endTime",
-        "status"
-      ]
+      }
     },
     "AdapterPropertyOverrides": {
       "type": "object",
@@ -495,46 +413,41 @@
       "properties": {
         "jumboPacket": {
           "type": "string",
-          "description": "ToDo"
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation."
         },
         "networkDirect": {
           "type": "string",
-          "description": "ToDo"
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation."
         },
         "networkDirectTechnology": {
           "type": "string",
-          "description": "ToDo"
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation. Expected values are 'iWARP', 'RoCEv2', 'RoCE'"
         }
-      },
-      "required": [
-        "jumboPacket",
-        "networkDirect",
-        "networkDirectTechnology"
-      ]
+      }
     },
     "Cluster": {
       "type": "object",
-      "description": "The Cluster of AzureStackHCI Cluster.",
+      "description": "AzureStackHCI Cluster deployment properties.",
       "properties": {
         "name": {
           "type": "string",
-          "description": "ToDo"
+          "description": "The cluster name provided when preparing Active Directory."
         },
         "witnessType": {
-          "$ref": "#/definitions/WitnessType",
-          "description": "ToDo"
+          "type": "string",
+          "description": "Use a cloud witness if you have internet access and if you use an Azure Storage account to provide a vote on cluster quorum. A cloud witness uses Azure Blob Storage to read or write a blob file and then uses it to arbitrate in split-brain resolution. Only allowed values are 'Cloud', 'FileShare'. "
         },
         "witnessPath": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Specify the fileshare path for the local witness for your Azure Stack HCI cluster."
         },
         "cloudAccountName": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Specify the Azure Storage account name for cloud witness for your Azure Stack HCI cluster."
         },
         "azureServiceEndpoint": {
           "type": "string",
-          "description": "ToDo"
+          "description": "For Azure blob service endpoint type, select either Default or Custom domain. If you selected **Custom domain, enter the domain for the blob service in this format core.windows.net."
         }
       },
       "required": [
@@ -545,97 +458,26 @@
         "azureServiceEndpoint"
       ]
     },
-    "ClusterUpdate": {
+    "DeploymentConfiguration": {
       "type": "object",
-      "description": "The Cluster of AzureStackHCI Cluster.",
+      "description": "Deployment Configuration",
       "properties": {
-        "name": {
+        "version": {
           "type": "string",
-          "description": "ToDo"
+          "description": "deployment template version "
         },
-        "witnessType": {
-          "$ref": "#/definitions/WitnessType",
-          "description": "ToDo"
-        },
-        "witnessPath": {
-          "type": "string",
-          "description": "ToDo"
-        },
-        "cloudAccountName": {
-          "type": "string",
-          "description": "ToDo"
-        },
-        "azureServiceEndpoint": {
-          "type": "string",
-          "description": "ToDo"
-        }
-      }
-    },
-    "ConfigurationMode": {
-      "type": "string",
-      "description": "The ConfigurationMode of a resource.",
-      "enum": [
-        "Express"
-      ],
-      "x-ms-enum": {
-        "name": "ConfigurationMode",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Express",
-            "value": "Express",
-            "description": "Todo"
-          }
-        ]
-      }
-    },
-    "DeployRequest": {
-      "type": "object",
-      "description": "The deployRequest of a cluster.",
-      "properties": {
-        "deploymentChangeRequest": {
-          "$ref": "#/definitions/DeploymentChangeRequest",
-          "description": "ToDo"
+        "scaleUnits": {
+          "type": "array",
+          "description": "Scale units will contains list of deploymentdata",
+          "items": {
+            "$ref": "#/definitions/ScaleUnits"
+          },
+          "x-ms-identifiers": []
         }
       },
       "required": [
-        "deploymentChangeRequest"
+        "scaleUnits"
       ]
-    },
-    "DeployResponse": {
-      "type": "object",
-      "description": "An Accepted response with an Operation-Location header.",
-      "properties": {}
-    },
-    "DeploymentChangeRequest": {
-      "type": "string",
-      "description": "The DeploymentChangeRequest of a resource.",
-      "enum": [
-        "ValidateOnly",
-        "Deploy",
-        "ValidateAndDeployIfSuccess"
-      ],
-      "x-ms-enum": {
-        "name": "DeploymentChangeRequest",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "ValidateOnly",
-            "value": "ValidateOnly",
-            "description": "ValidateOnly"
-          },
-          {
-            "name": "Deploy",
-            "value": "Deploy",
-            "description": "Deploy"
-          },
-          {
-            "name": "ValidateAndDeployIfSuccess",
-            "value": "ValidateAndDeployIfSuccess",
-            "description": "ValidateAndDeployIfSuccess"
-          }
-        ]
-      }
     },
     "DeploymentData": {
       "type": "object",
@@ -643,31 +485,32 @@
       "properties": {
         "securitySettings": {
           "$ref": "#/definitions/SecuritySettings",
-          "description": "ToDo"
+          "description": "SecuritySettings to deploy AzureStackHCI Cluster."
         },
         "observability": {
           "$ref": "#/definitions/Observability",
-          "description": "ToDo"
+          "description": "Observability config to deploy AzureStackHCI Cluster."
         },
         "cluster": {
           "$ref": "#/definitions/Cluster",
-          "description": "ToDo"
+          "description": "Observability config to deploy AzureStackHCI Cluster."
         },
         "storage": {
           "$ref": "#/definitions/Storage",
-          "description": "ToDo"
+          "description": "Storage config to deploy AzureStackHCI Cluster."
         },
         "namingPrefix": {
           "type": "string",
-          "description": "ToDo"
+          "description": "naming prefix to deploy cluster.",
+          "pattern": "^[a-zA-Z0-9-]{1,8}$"
         },
-        "domainFQDN": {
+        "domainFqdn": {
           "type": "string",
-          "description": "ToDo"
+          "description": "FQDN to deploy cluster"
         },
         "infrastructureNetwork": {
           "type": "array",
-          "description": "ToDo",
+          "description": "InfrastructureNetwork config to deploy AzureStackHCI Cluster.",
           "items": {
             "$ref": "#/definitions/InfrastructureNetwork"
           },
@@ -675,7 +518,7 @@
         },
         "physicalNodes": {
           "type": "array",
-          "description": "ToDo",
+          "description": "list of perhysicalNodes config to deploy AzureStackHCI Cluster.",
           "items": {
             "$ref": "#/definitions/PhysicalNodes"
           },
@@ -683,29 +526,20 @@
         },
         "hostNetwork": {
           "$ref": "#/definitions/HostNetwork",
-          "description": "ToDo"
-        },
-        "storageNetworks": {
-          "type": "array",
-          "description": "ToDo",
-          "items": {
-            "$ref": "#/definitions/StorageNetworks"
-          },
-          "x-ms-identifiers": []
+          "description": "HostNetwork config to deploy AzureStackHCI Cluster."
         },
         "adouPath": {
           "type": "string",
-          "description": "ToDo"
+          "description": "The path to the Active Directory Organizational Unit (ADOU) container object prepared for the deployment. "
         },
         "secretsLocation": {
           "type": "string",
-          "format": "uri",
-          "description": "ToDo",
+          "description": "The URI to the keyvault / secret store.",
           "x-ms-secret": true
         },
         "optionalServices": {
           "$ref": "#/definitions/OptionalServices",
-          "description": "ToDo"
+          "description": "OptionalServices config to deploy AzureStackHCI Cluster."
         }
       },
       "required": [
@@ -714,99 +548,29 @@
         "cluster",
         "storage",
         "namingPrefix",
-        "domainFQDN",
+        "domainFqdn",
         "infrastructureNetwork",
         "physicalNodes",
         "hostNetwork",
-        "storageNetworks",
-        "adouPath",
-        "secretsLocation",
-        "optionalServices"
-      ],
-      "externalDocs": {
-        "description": "Deploy Azure Stack HCI using an existing configuration file",
-        "url": "https://learn.microsoft.com/en-us/azure-stack/hci/deploy/deployment-tool-existing-file"
-      }
+        "adouPath"
+      ]
     },
-    "DeploymentDataUpdate": {
+    "DeploymentRequest": {
       "type": "object",
-      "description": "The DeploymentData of AzureStackHCI Cluster.",
+      "description": "The deployment request for Azure Stack HCI Cluster.",
       "properties": {
-        "securitySettings": {
-          "$ref": "#/definitions/SecuritySettingsUpdate",
-          "description": "ToDo"
-        },
-        "observability": {
-          "$ref": "#/definitions/ObservabilityUpdate",
-          "description": "ToDo"
-        },
-        "cluster": {
-          "$ref": "#/definitions/ClusterUpdate",
-          "description": "ToDo"
-        },
-        "storage": {
-          "$ref": "#/definitions/StorageUpdate",
-          "description": "ToDo"
-        },
-        "namingPrefix": {
+        "requestType": {
           "type": "string",
-          "description": "ToDo"
-        },
-        "domainFQDN": {
-          "type": "string",
-          "description": "ToDo"
-        },
-        "infrastructureNetwork": {
-          "type": "array",
-          "description": "ToDo",
-          "items": {
-            "$ref": "#/definitions/InfrastructureNetwork"
-          },
-          "x-ms-identifiers": []
-        },
-        "physicalNodes": {
-          "type": "array",
-          "description": "ToDo",
-          "items": {
-            "$ref": "#/definitions/PhysicalNodes"
-          },
-          "x-ms-identifiers": []
-        },
-        "hostNetwork": {
-          "$ref": "#/definitions/HostNetworkUpdate",
-          "description": "ToDo"
-        },
-        "storageNetworks": {
-          "type": "array",
-          "description": "ToDo",
-          "items": {
-            "$ref": "#/definitions/StorageNetworks"
-          },
-          "x-ms-identifiers": []
-        },
-        "adouPath": {
-          "type": "string",
-          "description": "ToDo"
-        },
-        "secretsLocation": {
-          "type": "string",
-          "format": "uri",
-          "description": "ToDo",
-          "x-ms-secret": true
-        },
-        "optionalServices": {
-          "$ref": "#/definitions/OptionalServicesUpdate",
-          "description": "ToDo"
+          "description": "deployment request type, allowed values 'ValidateOnly', Deploy', 'ValidateAndDeployIfSuccess'"
         }
       },
-      "externalDocs": {
-        "description": "Deploy Azure Stack HCI using an existing configuration file",
-        "url": "https://learn.microsoft.com/en-us/azure-stack/hci/deploy/deployment-tool-existing-file"
-      }
+      "required": [
+        "requestType"
+      ]
     },
-    "DeploymentMetaData": {
+    "DeploymentResponse": {
       "type": "object",
-      "description": "The DeploymentMetaData of AzureStackHCI Cluster.",
+      "description": "An Accepted response with an Operation-Location header.",
       "properties": {}
     },
     "DeploymentSetting": {
@@ -814,23 +578,15 @@
       "description": "Edge device resource",
       "properties": {
         "properties": {
-          "$ref": "#/definitions/DeploymentSettingProperties",
+          "$ref": "#/definitions/DeploymentSettingsProperties",
           "description": "The resource-specific properties for this resource.",
           "x-ms-client-flatten": true,
           "x-ms-mutability": [
             "read",
             "create"
           ]
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of Deployment Setting",
-          "readOnly": true
         }
       },
-      "required": [
-        "name"
-      ],
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
@@ -858,47 +614,27 @@
         "value"
       ]
     },
-    "DeploymentSettingProperties": {
+    "DeploymentSettingsProperties": {
       "type": "object",
       "description": "DeploymentSetting properties",
       "properties": {
-        "deploymentData": {
-          "$ref": "#/definitions/DeploymentData",
-          "description": "Todo"
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "DeploymentSetting provisioning state"
         },
-        "deploymentMetaData": {
-          "$ref": "#/definitions/DeploymentMetaData",
-          "description": "Todo"
+        "deploymentConfiguration": {
+          "$ref": "#/definitions/DeploymentConfiguration",
+          "description": "Scale units will contains list of deploymentdata",
+          "x-ms-identifiers": []
+        },
+        "reportedProperties": {
+          "$ref": "#/definitions/ReportedProperties",
+          "description": "Deployment Status reported from cluster."
         }
       },
       "required": [
-        "deploymentData",
-        "deploymentMetaData"
+        "deploymentConfiguration"
       ]
-    },
-    "DeploymentSettingUpdate": {
-      "type": "object",
-      "description": "The type used for update operations of the DeploymentSetting.",
-      "properties": {
-        "properties": {
-          "$ref": "#/definitions/DeploymentSettingUpdateProperties",
-          "x-ms-client-flatten": true
-        }
-      }
-    },
-    "DeploymentSettingUpdateProperties": {
-      "type": "object",
-      "description": "The updatable properties of the DeploymentSetting.",
-      "properties": {
-        "deploymentData": {
-          "$ref": "#/definitions/DeploymentDataUpdate",
-          "description": "Todo"
-        },
-        "deploymentMetaData": {
-          "$ref": "#/definitions/DeploymentMetaData",
-          "description": "Todo"
-        }
-      }
     },
     "DeploymentStatus": {
       "type": "object",
@@ -906,17 +642,13 @@
       "properties": {
         "action": {
           "type": "array",
-          "description": "ToDo",
+          "description": "List of actions of AzureStackHCI Cluster Deployment.",
           "items": {
             "$ref": "#/definitions/Action"
           },
-          "readOnly": true,
           "x-ms-identifiers": []
         }
-      },
-      "required": [
-        "action"
-      ]
+      }
     },
     "Evaluation": {
       "type": "object",
@@ -924,13 +656,9 @@
       "properties": {
         "message": {
           "type": "string",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Evaluation message"
         }
-      },
-      "required": [
-        "message"
-      ]
+      }
     },
     "Exception": {
       "type": "object",
@@ -938,19 +666,13 @@
       "properties": {
         "message": {
           "type": "string",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Exception message"
         },
         "machineName": {
           "type": "string",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "exception raised for machine name."
         }
-      },
-      "required": [
-        "message",
-        "machineName"
-      ]
+      }
     },
     "HostNetwork": {
       "type": "object",
@@ -958,50 +680,45 @@
       "properties": {
         "intents": {
           "type": "array",
-          "description": "ToDo",
+          "description": "The network intents assigned to the network reference pattern used for the deployment. Each intent will define its own name, traffic type, adapter names, and overrides as recommended by your OEM.",
           "items": {
             "$ref": "#/definitions/Intents"
+          },
+          "x-ms-identifiers": []
+        },
+        "storageNetworks": {
+          "type": "array",
+          "description": "List of StorageNetworks config to deploy AzureStackHCI Cluster.",
+          "items": {
+            "$ref": "#/definitions/StorageNetworks"
           },
           "x-ms-identifiers": []
         }
       },
       "required": [
-        "intents"
+        "intents",
+        "storageNetworks"
       ]
-    },
-    "HostNetworkUpdate": {
-      "type": "object",
-      "description": "The HostNetwork of a cluster.",
-      "properties": {
-        "intents": {
-          "type": "array",
-          "description": "ToDo",
-          "items": {
-            "$ref": "#/definitions/Intents"
-          },
-          "x-ms-identifiers": []
-        }
-      }
     },
     "InfrastructureNetwork": {
       "type": "object",
-      "description": "The InfrastructureNetwork of a cluster.",
+      "description": "The InfrastructureNetwork of a AzureStackHCI Cluster.",
       "properties": {
         "vlanId": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Only supported value in version 2210 is 0."
         },
         "subnetMask": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Subnet mask that matches the provided IP address space."
         },
         "gateway": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Default gateway that should be used for the provided IP address space."
         },
         "ipPools": {
           "type": "array",
-          "description": "ToDo",
+          "description": "Range of IP addresses from which addresses are allocated for nodes within a subnet.",
           "items": {
             "$ref": "#/definitions/IpPools"
           },
@@ -1009,7 +726,7 @@
         },
         "dnsServers": {
           "type": "array",
-          "description": "ToDo",
+          "description": "IPv4 address of the DNS servers in your environment.",
           "items": {
             "type": "string"
           }
@@ -1029,48 +746,48 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Name of the network intent you wish to create."
         },
         "trafficType": {
           "type": "array",
-          "description": "ToDo",
+          "description": "List of network traffic types. Only allowed values are 'Compute', 'Storage', 'Management'.",
           "items": {
-            "$ref": "#/definitions/TrafficType"
+            "type": "string"
           }
         },
         "adapter": {
           "type": "array",
-          "description": "ToDo",
+          "description": "Array of network interfaces used for the network intent.",
           "items": {
             "type": "string"
           }
         },
         "overrideVirtualSwitchConfiguration": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation.",
           "default": false
         },
         "virtualSwitchConfigurationOverrides": {
           "$ref": "#/definitions/VirtualSwitchConfigurationOverrides",
-          "description": "ToDo"
+          "description": "Set virtualSwitch ConfigurationOverrides for cluster."
         },
         "overrideQosPolicy": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation.",
           "default": false
         },
         "qosPolicyOverrides": {
           "$ref": "#/definitions/QosPolicyOverrides",
-          "description": "ToDo"
+          "description": "Set QoS PolicyOverrides for cluster."
         },
         "overrideAdapterProperty": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation.",
           "default": false
         },
         "adapterPropertyOverrides": {
           "$ref": "#/definitions/AdapterPropertyOverrides",
-          "description": "ToDo"
+          "description": "Set Adapter PropertyOverrides for cluster."
         }
       },
       "required": [
@@ -1078,11 +795,8 @@
         "trafficType",
         "adapter",
         "overrideVirtualSwitchConfiguration",
-        "virtualSwitchConfigurationOverrides",
         "overrideQosPolicy",
-        "qosPolicyOverrides",
-        "overrideAdapterProperty",
-        "adapterPropertyOverrides"
+        "overrideAdapterProperty"
       ]
     },
     "IpPools": {
@@ -1091,11 +805,11 @@
       "properties": {
         "startingAddress": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Starting IP address for the management network. A minimum of six free, contiguous IPv4 addresses (excluding your host IPs) are needed for infrastructure services such as clustering."
         },
         "endingAddress": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Ending IP address for the management network. A minimum of six free, contiguous IPv4 addresses (excluding your host IPs) are needed for infrastructure services such as clustering."
         }
       },
       "required": [
@@ -1109,17 +823,17 @@
       "properties": {
         "streamingDataClient": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "Enables telemetry data to be sent to Microsoft",
           "default": true
         },
         "euLocation": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "Location of your cluster. The log and diagnostic data is sent to the appropriate diagnostics servers depending upon where your cluster resides. Setting this to false results in all data sent to Microsoft to be stored outside of the EU.",
           "default": false
         },
         "episodicDataUpload": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "When set to true, collects log data to facilitate quicker issue resolution.",
           "default": true
         }
       },
@@ -1129,65 +843,13 @@
         "episodicDataUpload"
       ]
     },
-    "ObservabilityUpdate": {
-      "type": "object",
-      "description": "The Observability of AzureStackHCI Cluster.",
-      "properties": {
-        "streamingDataClient": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        },
-        "euLocation": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": false
-        },
-        "episodicDataUpload": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        }
-      }
-    },
     "OptionalServices": {
       "type": "object",
       "description": "The OptionalServices of AzureStackHCI Cluster.",
       "properties": {
-        "virtualSwitchName": {
+        "customLocation": {
           "type": "string",
-          "description": "ToDo"
-        },
-        "csvPath": {
-          "type": "string",
-          "description": "ToDo"
-        },
-        "arbRegion": {
-          "type": "string",
-          "description": "ToDo"
-        }
-      },
-      "required": [
-        "virtualSwitchName",
-        "csvPath",
-        "arbRegion"
-      ]
-    },
-    "OptionalServicesUpdate": {
-      "type": "object",
-      "description": "The OptionalServices of AzureStackHCI Cluster.",
-      "properties": {
-        "virtualSwitchName": {
-          "type": "string",
-          "description": "ToDo"
-        },
-        "csvPath": {
-          "type": "string",
-          "description": "ToDo"
-        },
-        "arbRegion": {
-          "type": "string",
-          "description": "ToDo"
+          "description": "The name of custom location."
         }
       }
     },
@@ -1197,11 +859,11 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "ToDo"
+          "description": "NETBIOS name of each physical server on your Azure Stack HCI cluster."
         },
         "ipv4Address": {
           "type": "string",
-          "description": "ToDo"
+          "description": "The IPv4 address assigned to each physical server on your Azure Stack HCI cluster."
         }
       },
       "required": [
@@ -1216,6 +878,7 @@
         "Succeeded",
         "Failed",
         "Canceled",
+        "NotSpecified",
         "Provisioning",
         "Updating",
         "Deleting",
@@ -1239,6 +902,11 @@
             "name": "Canceled",
             "value": "Canceled",
             "description": "Resource creation was canceled."
+          },
+          {
+            "name": "NotSpecified",
+            "value": "NotSpecified",
+            "description": "The resource provision state is not specified"
           },
           {
             "name": "Provisioning",
@@ -1269,42 +937,48 @@
       "properties": {
         "priorityValue8021Action_Cluster": {
           "type": "string",
-          "description": "ToDo"
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation."
         },
         "priorityValue8021Action_SMB": {
           "type": "string",
-          "description": "ToDo"
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation."
         },
         "bandwidthPercentage_SMB": {
           "type": "string",
-          "description": "ToDo"
+          "description": "This parameter should only be modified based on your OEM guidance. Do not modify this parameter without OEM validation."
         }
-      },
-      "required": [
-        "priorityValue8021Action_Cluster",
-        "priorityValue8021Action_SMB",
-        "bandwidthPercentage_SMB"
-      ]
+      }
     },
-    "RepoertedProperties": {
+    "ReportedProperties": {
       "type": "object",
       "description": "The DeploymentStatus of AzureStackHCI Cluster.",
       "properties": {
         "validatonStatus": {
           "$ref": "#/definitions/ValidationStatus",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "validaton status of AzureStackHCI Cluster Deployment."
         },
         "deploymentStatus": {
           "$ref": "#/definitions/DeploymentStatus",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Deployment status of AzureStackHCI Cluster Deployment."
+        }
+      }
+    },
+    "ScaleUnits": {
+      "type": "object",
+      "description": "Scale units will contains list of deploymentdata",
+      "properties": {
+        "deploymentData": {
+          "$ref": "#/definitions/DeploymentData",
+          "description": "Deployment Data to deploy AzureStackHCI Cluster."
         }
       },
       "required": [
-        "validatonStatus",
-        "deploymentStatus"
-      ]
+        "deploymentData"
+      ],
+      "externalDocs": {
+        "description": "Deploy Azure Stack HCI using an existing configuration file",
+        "url": "https://learn.microsoft.com/en-us/azure-stack/hci/deploy/deployment-tool-existing-file"
+      }
     },
     "SecuritySettings": {
       "type": "object",
@@ -1312,52 +986,52 @@
       "properties": {
         "hvciProtection": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "By default, Hypervisor-protected Code Integrity (HVCI) is enabled on your Azure HCI cluster.",
           "default": true
         },
         "drtmProtection": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "By default, Secure Boot is enabled on your Azure HCI cluster. This setting is hardware dependent.",
           "default": true
         },
         "driftControlEnforced": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "When set to true, the security baseline is re-applied regularly.",
           "default": true
         },
         "credentialGuardEnforced": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "When set to true, Credential Guard is enabled.",
           "default": false
         },
         "smbSigningEnforced": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "When set to true, the SMB default instance requires sign in for the client and server services.",
           "default": true
         },
         "smbClusterEncryption": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "When set to true, cluster east-west traffic is encrypted.",
           "default": false
         },
         "sideChannelMitigationEnforced": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "When set to true, all the side channel mitigations are enabled",
           "default": true
         },
         "bitlockerBootVolume": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "When set to true, BitLocker XTS_AES 256-bit encryption is enabled for all data-at-rest on the OS volume of your Azure Stack HCI cluster. This setting is TPM-hardware dependent. ",
           "default": true
         },
         "bitlockerDataVolumes": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "When set to true, BitLocker XTS-AES 256-bit encryption is enabled for all data-at-rest on your Azure Stack HCI cluster shared volumes.",
           "default": true
         },
         "wdacEnforced": {
           "type": "boolean",
-          "description": "ToDo",
+          "description": "WDAC is enabled by default and limits the applications and the code that you can run on your Azure Stack HCI cluster.",
           "default": true
         }
       },
@@ -1374,162 +1048,58 @@
         "wdacEnforced"
       ]
     },
-    "SecuritySettingsUpdate": {
-      "type": "object",
-      "description": "The SecuritySettings of AzureStackHCI Cluster.",
-      "properties": {
-        "hvciProtection": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        },
-        "drtmProtection": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        },
-        "driftControlEnforced": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        },
-        "credentialGuardEnforced": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": false
-        },
-        "smbSigningEnforced": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        },
-        "smbClusterEncryption": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": false
-        },
-        "sideChannelMitigationEnforced": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        },
-        "bitlockerBootVolume": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        },
-        "bitlockerDataVolumes": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        },
-        "wdacEnforced": {
-          "type": "boolean",
-          "description": "ToDo",
-          "default": true
-        }
-      }
-    },
-    "Status": {
-      "type": "string",
-      "description": "The TrafficType of a resource.",
-      "enum": [
-        "Error",
-        "Success",
-        "InProgress"
-      ],
-      "x-ms-enum": {
-        "name": "Status",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Error",
-            "value": "Error",
-            "description": "Error"
-          },
-          {
-            "name": "Success",
-            "value": "Success",
-            "description": "Success"
-          },
-          {
-            "name": "InProgress",
-            "value": "InProgress",
-            "description": "InProgress"
-          }
-        ]
-      }
-    },
     "Step": {
       "type": "object",
       "description": "The Step of AzureStackHCI Cluster.",
       "properties": {
         "name": {
           "type": "string",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Name of step."
         },
         "description": {
           "type": "string",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Description of step."
         },
         "index": {
           "type": "integer",
           "format": "int64",
-          "description": "isRequired?",
-          "readOnly": true
+          "description": "Index of step."
         },
         "fullStepIndex": {
           "type": "string",
-          "description": "isRequired?",
-          "readOnly": true
+          "description": "FullStepIndex of step."
         },
         "task": {
           "type": "array",
-          "description": "ToDo",
+          "description": "List of tasks performed for step.",
           "items": {
             "$ref": "#/definitions/Task"
           },
-          "readOnly": true,
           "x-ms-identifiers": []
         },
         "startTime": {
           "type": "string",
           "format": "date-time",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Start time of action."
         },
         "endTime": {
           "type": "string",
           "format": "date-time",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "End time of step."
         },
         "status": {
-          "$ref": "#/definitions/Status",
-          "description": "ToDo",
-          "readOnly": true
+          "type": "string",
+          "description": "Status of step. Allowed values are 'Error', 'Success', 'InProgress'"
         }
-      },
-      "required": [
-        "name",
-        "description",
-        "index",
-        "fullStepIndex",
-        "task",
-        "startTime",
-        "endTime",
-        "status"
-      ]
+      }
     },
     "Storage": {
       "type": "object",
-      "description": "The Cluster of AzureStackHCI Cluster.",
+      "description": "The Storage config of AzureStackHCI Cluster.",
       "properties": {
         "configurationMode": {
-          "$ref": "#/definitions/ConfigurationMode",
-          "description": "ToDo",
+          "type": "string",
+          "description": "By default, this mode is set to Express and your storage is configured as per best practices based on the number of nodes in the cluster. Allowed values are 'Express','InfraOnly', 'KeepStorage'",
           "default": "Express"
         }
       },
@@ -1543,15 +1113,15 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Name of the storage network."
         },
         "networkAdapterName": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Name of the storage network adapter."
         },
         "vlanId": {
           "type": "string",
-          "description": "ToDo"
+          "description": "ID specified for the VLAN storage network. This setting is applied to the network interfaces that route the storage and VM migration traffic. "
         }
       },
       "required": [
@@ -1560,97 +1130,44 @@
         "vlanId"
       ]
     },
-    "StorageUpdate": {
-      "type": "object",
-      "description": "The Cluster of AzureStackHCI Cluster.",
-      "properties": {
-        "configurationMode": {
-          "$ref": "#/definitions/ConfigurationMode",
-          "description": "ToDo",
-          "default": "Express"
-        }
-      }
-    },
     "Task": {
       "type": "object",
       "description": "The Step of AzureStackHCI Cluster.",
       "properties": {
         "evaluation": {
           "$ref": "#/definitions/Evaluation",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Evaluaton status of task."
         },
         "exception": {
           "$ref": "#/definitions/Exception",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Exception status of task."
         },
         "rolePath": {
           "type": "string",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Rolepath of task."
         },
         "interfaceType": {
           "type": "string",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Interface Type of task."
         },
         "startTime": {
           "type": "string",
           "format": "date-time",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "Start time of task."
         },
         "endTime": {
           "type": "string",
           "format": "date-time",
-          "description": "ToDo",
-          "readOnly": true
+          "description": "End time of task."
         },
         "status": {
-          "$ref": "#/definitions/Status",
-          "description": "ToDo",
-          "readOnly": true
+          "type": "string",
+          "description": "Status of task. Allowed values are 'Error', 'Success', 'InProgress'"
+        },
+        "action": {
+          "$ref": "#/definitions/Action",
+          "description": "action if required."
         }
-      },
-      "required": [
-        "evaluation",
-        "exception",
-        "rolePath",
-        "interfaceType",
-        "startTime",
-        "endTime",
-        "status"
-      ]
-    },
-    "TrafficType": {
-      "type": "string",
-      "description": "The TrafficType of a resource.",
-      "enum": [
-        "Compute",
-        "Management",
-        "Storage"
-      ],
-      "x-ms-enum": {
-        "name": "TrafficType",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Compute",
-            "value": "Compute",
-            "description": "Compute"
-          },
-          {
-            "name": "Management",
-            "value": "Management",
-            "description": "Management"
-          },
-          {
-            "name": "Storage",
-            "value": "Storage",
-            "description": "Storage"
-          }
-        ]
       }
     },
     "ValidationStatus": {
@@ -1659,17 +1176,13 @@
       "properties": {
         "action": {
           "type": "array",
-          "description": "ToDo",
+          "description": "List of actions of AzureStackHCI Cluster Deployment.",
           "items": {
             "$ref": "#/definitions/Action"
           },
-          "readOnly": true,
           "x-ms-identifiers": []
         }
-      },
-      "required": [
-        "action"
-      ]
+      }
     },
     "VirtualSwitchConfigurationOverrides": {
       "type": "object",
@@ -1677,40 +1190,12 @@
       "properties": {
         "enableIov": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Enable IoV for Virtual Switch"
         },
         "loadBalancingAlgorithm": {
           "type": "string",
-          "description": "ToDo"
+          "description": "Load Balancing Algorithm for Virtual Switch"
         }
-      },
-      "required": [
-        "enableIov",
-        "loadBalancingAlgorithm"
-      ]
-    },
-    "WitnessType": {
-      "type": "string",
-      "description": "The WitnessType of a resource.",
-      "enum": [
-        "Cloud",
-        "FileShare"
-      ],
-      "x-ms-enum": {
-        "name": "WitnessType",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Cloud",
-            "value": "Cloud",
-            "description": "Cloud"
-          },
-          {
-            "name": "FileShare",
-            "value": "FileShare",
-            "description": "FileShare"
-          }
-        ]
       }
     }
   },

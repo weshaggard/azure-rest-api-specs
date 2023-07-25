@@ -4,8 +4,9 @@ namespace Microsoft.AppSecurity;
 
 @doc("Supported policy modes")
 enum PolicyMode {
-  @doc("The policy is in prevention mode. Requests are inspected and not blocked accordingly")
+  @doc("The policy is in prevention mode. Requests are inspected and blocked accordingly")
   Prevention,
+
   @doc("The policy is in detection mode. Requests are inspected but not blocked")
   Detection,
 }

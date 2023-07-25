@@ -13,13 +13,13 @@ using Autorest;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Foundations;
 
-@armProviderNamespace("Private.BBeeDev3")
+@armProviderNamespace("Private.BbeeDev3")
 @service({
-  title: "Private.BBeeDev3",
+  title: "Private.BbeeDev3",
   version: "2023-12-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Private.BBeeDev3;
+namespace Private.BbeeDev3;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -363,14 +363,12 @@ interface ProvisioningPolicies {
 
 // Extension resource: device provisioning state
 
-// define extension resource scope in swagger via api path
-// Roopesh to share the link for sample swagger
+@singleton
 @doc("The provisioning state of a device.")
 model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProperties> {
-  @doc("Singleton pattern using name: current.")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("deviceProvisioningStateName")
+  @doc("The default DeviceProvisioningState, singleton extension resource used to represent the state of the device it extends.")
   @segment("deviceProvisioningStates")
+  @key
   @path
   name: string;
 }
@@ -378,13 +376,15 @@ model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProper
 scalar ProvisioningPolicyResourceId
   extends ResourceIdentifier<[
     {
-      type: "Private.BBeeDev3/ProvisioningResources/ProvisioningPolicies",
+      type: "Private.BbeeDev3/ProvisioningResources/ProvisioningPolicies",
     }
   ]>;
 
 @doc("Details of the DeviceProvisioningState")
 model DeviceProvisioningStateProperties {
-  @doc("Unique identifier for the device")
+  @doc("Unique identifier for the device. Allow alphanumeric and '-', '.', '_', ':' only. Last character can only be alphanumeric and '-'")
+  @maxLength(128)
+  @pattern("^([a-z0-9-._:]{0,127}[a-z0-9-])$")
   registrationId: string;
 
   @visibility("read", "create", "update")
@@ -395,7 +395,8 @@ model DeviceProvisioningStateProperties {
   discoveryEnabled: boolean;
 
   @doc("The provisioning policy resource id")
-  provisioningPolicyResourceId?: ProvisioningPolicyResourceId;
+  @pattern("^/subscriptions/(.+?)/resourcegroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$")
+  provisioningPolicyResourceId: string;
 
   @visibility("read")
   @doc("The status of the last operation.")
@@ -419,5 +420,4 @@ interface DeviceProvisioningStates {
   delete is ArmResourceDeleteSync<DeviceProvisioningState>;
   update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
   listByParent is ArmResourceListByParent<DeviceProvisioningState>;
-  listBySubscription is ArmListBySubscription<DeviceProvisioningState>;
 }

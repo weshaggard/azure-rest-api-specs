@@ -66,6 +66,11 @@ model CommunicationsGateway
   @visibility("Read")
   @path
   name: string;
+
+  #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-invalid-envelope-property" "Add property for versioning"
+  @added(Versions.v2023_07_13_preview)
+  @doc("The SKU (Stock Keeping Unit) assigned to this resource.")
+  sku?: Azure.ResourceManager.Foundations.ResourceSkuType;
 }
 
 @doc("The status of the current CommunicationsGateway resource.")

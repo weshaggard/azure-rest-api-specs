@@ -1,25 +1,16 @@
 import "./webProtection.tsp";
-import "./apiProtection.tsp";
 import "./botProtection.tsp";
 import "./policySettings.tsp";
+import "./protectedEndpoint.tsp";
 import "./customRules.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Foundations;
 using OpenAPI;
 
 namespace Microsoft.AppSecurity;
-
-@doc("Protected endpoint definition")
-model ProtectedEndpoint {
-  @doc("Fully qualified ARM ID of the endpoint to protect")
-  endpointId: ProtectedEndpointId;
-
-  @doc("The status of the last attachment operation between the policy and the endpoint")
-  @visibility("read")
-  attachmentState?: ProvisioningState;
-}
 
 @doc("The Policy properties")
 model PolicyProperties {
@@ -27,31 +18,27 @@ model PolicyProperties {
   @visibility("read")
   provisioningState?: ProvisioningState;
 
-  @doc("Describes settings for the policy")
+  @doc("Global settings for the policy")
   policySettings: PolicySettings;
 
   @doc("The list of endpoints this policy protects")
   @extension("x-ms-identifiers", ["endpointId"])
   @maxItems(100)
-  @visibility("read")
   protectedEndpoints?: ProtectedEndpoint[];
 
   @doc("Rules for scrubbing sensitive log fields")
   logScrubbing?: LogScrubbing;
 
-  @doc("The custom rules inside the policy")
+  @doc("User defined rules")
   @extension("x-ms-identifiers", ["name"])
   @maxItems(100) // AppGW custom rules limitation is 100
-  customRules: CustomRule[];
+  customRules?: CustomRule[];
 
   @doc("Describes the web protection policy")
-  webProtection: WebProtection;
-
-  @doc("Describes the API protection policy")
-  apiProtection: ApiProtection;
+  webProtection?: WebProtection;
 
   @doc("Describes the bot protection policy")
-  botProtection: BotProtection;
+  botProtection?: BotProtection;
 }
 
 @doc("Policy resource definition")
@@ -81,21 +68,6 @@ interface Policies {
   listByParent is ArmResourceListByParent<Policy>;
   listBySubscription is ArmListBySubscription<Policy>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<Policy>;
+  update is ArmResourcePatchAsync<Policy, PolicyProperties>;
   delete is ArmResourceDeleteAsync<Policy>;
-  tagsUpdate is ArmTagsPatchSync<Policy>;
-  // TODO add update for individual properties.
-  // e.g., update is ArmResourcePatchAsync<Policy, PolicyProperties>;
-  // If we use ResourceSku, we must support update for sku property as well
-  @doc("Attach the policy to a list of endpoints")
-  attach is ArmResourceActionAsync<
-    Policy,
-    ProtectedEndpointList,
-    ProtectedEndpointList
-  >;
-  @doc("Detach the policy from a list of endpoints")
-  detach is ArmResourceActionAsync<
-    Policy,
-    ProtectedEndpointList,
-    ProtectedEndpointList
-  >;
 }

@@ -10,9 +10,9 @@ model LandingZoneRegistrationProperties {
 
 	@doc("The top level management group id.")
 	@visibility("read", "create")
-	topLevelMgId: string;
+	existingTopLevelMgId: string;
 
 	@doc("The associated landing zone configuration resource.")
 	@visibility("read", "create")
-	landingZoneConfigurationId: string;
+	existingLandingZoneConfigurationId: string;
 }

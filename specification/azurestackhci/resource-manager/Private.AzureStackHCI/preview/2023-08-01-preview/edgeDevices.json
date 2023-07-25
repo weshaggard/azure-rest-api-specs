@@ -40,14 +40,11 @@
   },
   "tags": [
     {
-      "name": "Operations"
-    },
-    {
       "name": "EdgeDevices"
     }
   ],
   "paths": {
-    "/{resourceUri}/providers/Private.AzureStackHCI/edgeDevices/{default}": {
+    "/{resourceUri}/providers/Private.AzureStackHCI/edgeDevices/{edgeDeviceName}": {
       "get": {
         "operationId": "EdgeDevices_Get",
         "tags": [
@@ -62,11 +59,12 @@
             "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
           },
           {
-            "name": "default",
+            "name": "edgeDeviceName",
             "in": "path",
             "description": "Name of Device",
             "required": true,
             "type": "string",
+            "default": "default",
             "pattern": "^[a-zA-Z0-9-]{3,24}$"
           }
         ],
@@ -82,6 +80,11 @@
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
+          }
+        },
+        "x-ms-examples": {
+          "Get Edge Device": {
+            "$ref": "./examples/GetEdgeDevices.json"
           }
         }
       },
@@ -99,11 +102,12 @@
             "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
           },
           {
-            "name": "default",
+            "name": "edgeDeviceName",
             "in": "path",
             "description": "Name of Device",
             "required": true,
             "type": "string",
+            "default": "default",
             "pattern": "^[a-zA-Z0-9-]{3,24}$"
           },
           {
@@ -123,19 +127,6 @@
               "$ref": "#/definitions/EdgeDevice"
             }
           },
-          "201": {
-            "description": "ARM create operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/EdgeDevice"
-            },
-            "headers": {
-              "Retry-After": {
-                "type": "integer",
-                "format": "int32",
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
-              }
-            }
-          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -143,54 +134,9 @@
             }
           }
         },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
-      },
-      "patch": {
-        "operationId": "EdgeDevices_Update",
-        "tags": [
-          "EdgeDevices"
-        ],
-        "description": "Update a EdgeDevice",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
-          },
-          {
-            "name": "default",
-            "in": "path",
-            "description": "Name of Device",
-            "required": true,
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
-          },
-          {
-            "name": "properties",
-            "in": "body",
-            "description": "The resource properties to be updated.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/EdgeDeviceUpdate"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/EdgeDevice"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
+        "x-ms-examples": {
+          "Create Edge Device": {
+            "$ref": "./examples/PutEdgeDevices.json"
           }
         }
       },
@@ -208,17 +154,32 @@
             "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
           },
           {
-            "name": "default",
+            "name": "edgeDeviceName",
             "in": "path",
             "description": "Name of Device",
             "required": true,
             "type": "string",
+            "default": "default",
             "pattern": "^[a-zA-Z0-9-]{3,24}$"
           }
         ],
         "responses": {
           "200": {
             "description": "Resource deleted successfully."
+          },
+          "202": {
+            "description": "Resource deletion accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
           },
           "204": {
             "description": "Resource deleted successfully."
@@ -229,26 +190,70 @@
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-examples": {
+          "Delete Edge Devices": {
+            "$ref": "./examples/DeleteEdgeDevices.json"
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       }
     },
-    "/providers/Private.AzureStackHCI/operations": {
-      "get": {
-        "operationId": "Operations_List",
+    "/{resourceUri}/providers/Private.AzureStackHCI/edgeDevices/{edgeDeviceName}/validate": {
+      "post": {
+        "operationId": "EdgeDevices_Validate",
         "tags": [
-          "Operations"
+          "EdgeDevices"
         ],
-        "description": "List the operations for the provider",
+        "description": "A long-running resource action.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
+          },
+          {
+            "name": "edgeDeviceName",
+            "in": "path",
+            "description": "Name of Device",
+            "required": true,
+            "type": "string",
+            "default": "default",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The content of the action request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ValidateRequest"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/OperationListResult"
+              "$ref": "#/definitions/ValidateResponse"
+            }
+          },
+          "202": {
+            "description": "Resource operation accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
             }
           },
           "default": {
@@ -258,9 +263,15 @@
             }
           }
         },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        }
+        "x-ms-examples": {
+          "Validate Edge Devices": {
+            "$ref": "./examples/ValidateEdgeDevices.json"
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       }
     }
   },
@@ -276,85 +287,11 @@
             "$ref": "#/definitions/NicDetail"
           },
           "x-ms-identifiers": []
-        },
-        "dnsServers": {
-          "type": "array",
-          "description": "DNS Server Details of device",
-          "items": {
-            "type": "string"
-          },
-          "x-ms-identifiers": []
-        },
-        "proxyConfiguration": {
-          "type": "array",
-          "description": "ProxyConfiguration Details of device",
-          "items": {
-            "$ref": "#/definitions/ProxyConfiguration"
-          },
-          "x-ms-identifiers": []
-        },
-        "osVersion": {
-          "type": "string",
-          "description": "OS Version of device"
-        },
-        "managementNicDetails": {
-          "type": "array",
-          "description": "Management NIC Details of device",
-          "items": {
-            "$ref": "#/definitions/ManagementNicDetail"
-          },
-          "x-ms-identifiers": []
         }
       },
       "required": [
-        "nicDetails",
-        "dnsServers",
-        "proxyConfiguration",
-        "osVersion",
-        "managementNicDetails"
+        "nicDetails"
       ]
-    },
-    "DeviceConfigurationUpdate": {
-      "type": "object",
-      "description": "The device Configuration of a device.",
-      "properties": {
-        "nicDetails": {
-          "type": "array",
-          "description": "NIC Details of device",
-          "items": {
-            "$ref": "#/definitions/NicDetail"
-          },
-          "x-ms-identifiers": []
-        },
-        "dnsServers": {
-          "type": "array",
-          "description": "DNS Server Details of device",
-          "items": {
-            "type": "string"
-          },
-          "x-ms-identifiers": []
-        },
-        "proxyConfiguration": {
-          "type": "array",
-          "description": "ProxyConfiguration Details of device",
-          "items": {
-            "$ref": "#/definitions/ProxyConfiguration"
-          },
-          "x-ms-identifiers": []
-        },
-        "osVersion": {
-          "type": "string",
-          "description": "OS Version of device"
-        },
-        "managementNicDetails": {
-          "type": "array",
-          "description": "Management NIC Details of device",
-          "items": {
-            "$ref": "#/definitions/ManagementNicDetail"
-          },
-          "x-ms-identifiers": []
-        }
-      }
     },
     "EdgeDevice": {
       "type": "object",
@@ -384,73 +321,14 @@
           "$ref": "#/definitions/DeviceConfiguration",
           "description": "Device Configuration"
         },
-        "deviceMetadata": {
-          "type": "string",
-          "description": "Device Metadata"
-        },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
-          "description": "Provisioning state of resource"
+          "description": "Provisioning state of edgeDevice resource",
+          "readOnly": true
         }
       },
       "required": [
-        "deviceConfiguration",
-        "deviceMetadata",
-        "provisioningState"
-      ]
-    },
-    "EdgeDeviceUpdate": {
-      "type": "object",
-      "description": "The type used for update operations of the EdgeDevice.",
-      "properties": {
-        "properties": {
-          "$ref": "#/definitions/EdgeDeviceUpdateProperties",
-          "x-ms-client-flatten": true
-        }
-      }
-    },
-    "EdgeDeviceUpdateProperties": {
-      "type": "object",
-      "description": "The updatable properties of the EdgeDevice.",
-      "properties": {
-        "deviceConfiguration": {
-          "$ref": "#/definitions/DeviceConfigurationUpdate",
-          "description": "Device Configuration"
-        },
-        "deviceMetadata": {
-          "type": "string",
-          "description": "Device Metadata"
-        },
-        "provisioningState": {
-          "$ref": "#/definitions/ProvisioningState",
-          "description": "Provisioning state of resource"
-        }
-      }
-    },
-    "ManagementNicDetail": {
-      "type": "object",
-      "description": "The Management NIC Detail of a device.",
-      "properties": {
-        "adapterName": {
-          "type": "string",
-          "description": "Adapter Name of Management NIC"
-        },
-        "defaultIsolationId": {
-          "type": "string",
-          "description": "Default Isolation of Management NIC"
-        },
-        "dnsServers": {
-          "type": "array",
-          "description": "DNS Servers of Management NIC",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "adapterName",
-        "defaultIsolationId",
-        "dnsServers"
+        "deviceConfiguration"
       ]
     },
     "NicDetail": {
@@ -461,6 +339,10 @@
           "type": "string",
           "description": "Adapter Name of NIC"
         },
+        "interfaceDescription": {
+          "type": "string",
+          "description": "Interface Description of NIC"
+        },
         "componentId": {
           "type": "string",
           "description": "Component Id of NIC"
@@ -468,10 +350,6 @@
         "driverVersion": {
           "type": "string",
           "description": "Driver Version of NIC"
-        },
-        "interfaceDescription": {
-          "type": "string",
-          "description": "Interface Description of NIC"
         },
         "ip4Address": {
           "type": "string",
@@ -484,16 +362,22 @@
         "defaultGateway": {
           "type": "string",
           "description": "Default Gateway of NIC"
+        },
+        "dnsServers": {
+          "type": "array",
+          "description": "DNS Servers for NIC",
+          "items": {
+            "type": "string"
+          },
+          "x-ms-identifiers": []
+        },
+        "defaultIsolationId": {
+          "type": "string",
+          "description": "Default Isolation of Management NIC"
         }
       },
       "required": [
-        "adapterName",
-        "componentId",
-        "driverVersion",
-        "interfaceDescription",
-        "ip4Address",
-        "subnetMask",
-        "defaultGateway"
+        "adapterName"
       ]
     },
     "ProvisioningState": {
@@ -503,6 +387,7 @@
         "Succeeded",
         "Failed",
         "Canceled",
+        "NotSpecified",
         "Provisioning",
         "Updating",
         "Deleting",
@@ -528,6 +413,11 @@
             "description": "Resource creation was canceled."
           },
           {
+            "name": "NotSpecified",
+            "value": "NotSpecified",
+            "description": "The resource provision state is not specified"
+          },
+          {
             "name": "Provisioning",
             "value": "Provisioning",
             "description": "The resource is being provisioned"
@@ -550,23 +440,36 @@
         ]
       }
     },
-    "ProxyConfiguration": {
+    "ValidateRequest": {
       "type": "object",
-      "description": "The ProxyConfiguration of a device.",
+      "description": "The validate request for Edge Device.",
       "properties": {
-        "url": {
-          "type": "string",
-          "description": "Proxy URL of device"
+        "edgeDeviceIds": {
+          "type": "array",
+          "description": "Node Ids against which, current node has to be validated.",
+          "items": {
+            "type": "string"
+          }
         },
-        "port": {
+        "additionalInfo": {
           "type": "string",
-          "description": "Proxy Port of device"
+          "description": "additional Info required for validation"
         }
       },
       "required": [
-        "url",
-        "port"
+        "edgeDeviceIds"
       ]
+    },
+    "ValidateResponse": {
+      "type": "object",
+      "description": "An Accepted response with an Operation-Location header.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "edge device validation status",
+          "readOnly": true
+        }
+      }
     }
   },
   "parameters": {
