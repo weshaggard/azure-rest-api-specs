@@ -17,14 +17,14 @@ model ExitVirtualNetworkProperties {
   @doc("The ID of the virtual network where traffic from the Global Entry Manager will land.")
   @visibility("create", "read")
   virtualNetworkId: VirtualNetworkId;
-  
+
   @doc("The flag of whether to use the Transport Gateway in the Exit Virtual Network.")
   @visibility("create", "read", "update")
   useRemoteGateways: boolean;
 }
 
 @doc("Global Entry Profile Properties.")
-model EntryProfileProperties extends LinkableResourceProperties {
+model EntryProfileProperties extends BaseResourceProperties {
   @doc("The DNS Name for the Global Entry Profile.")
   @visibility("create", "read")
   @pattern("^[a-zA-Z0-9][a-zA-Z0-9-\\.]{1,62}[a-zA-Z0-9]$")
@@ -32,4 +32,6 @@ model EntryProfileProperties extends LinkableResourceProperties {
 
   @doc("The Exit Virtual Network the Global Entry Profile is providing access to.")
   exitVirtualNetwork: ExitVirtualNetworkProperties;
+
+  ...LinkableResourceProperties;
 }

@@ -1165,9 +1165,9 @@
           "pattern": "^([a-z0-9-._:]{0,127}[a-z0-9-])$",
           "maxLength": 128
         },
-        "status": {
-          "$ref": "#/definitions/ProvisioningStatus",
-          "description": "Provisioning status of the resource this DeviceProvisioningState extends",
+        "onboardingStatus": {
+          "$ref": "#/definitions/OnboardingStatus",
+          "description": "Onboarding status of the resource this DeviceProvisioningState extends",
           "x-ms-mutability": [
             "read",
             "update",
@@ -1176,12 +1176,12 @@
         },
         "discoveryEnabled": {
           "type": "boolean",
-          "description": "Indicates if the device is enabled for discovery"
+          "description": "Indicates if the device is enabled for discovery",
+          "default": false
         },
         "provisioningPolicyResourceId": {
-          "type": "string",
-          "description": "The provisioning policy resource id",
-          "pattern": "^/subscriptions/(.+?)/resourcegroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$"
+          "$ref": "#/definitions/ProvisioningPolicyResourceId",
+          "description": "The provisioning policy resource id"
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -1192,8 +1192,7 @@
       "description": "Details of the DeviceProvisioningState",
       "required": [
         "registrationId",
-        "status",
-        "discoveryEnabled",
+        "onboardingStatus",
         "provisioningPolicyResourceId"
       ]
     },
@@ -1216,9 +1215,9 @@
           "pattern": "^([a-z0-9-._:]{0,127}[a-z0-9-])$",
           "maxLength": 128
         },
-        "status": {
-          "$ref": "#/definitions/ProvisioningStatus",
-          "description": "Provisioning status of the resource this DeviceProvisioningState extends",
+        "onboardingStatus": {
+          "$ref": "#/definitions/OnboardingStatus",
+          "description": "Onboarding status of the resource this DeviceProvisioningState extends",
           "x-ms-mutability": [
             "read",
             "update",
@@ -1227,12 +1226,12 @@
         },
         "discoveryEnabled": {
           "type": "boolean",
-          "description": "Indicates if the device is enabled for discovery"
+          "description": "Indicates if the device is enabled for discovery",
+          "default": false
         },
         "provisioningPolicyResourceId": {
-          "type": "string",
-          "description": "The provisioning policy resource id",
-          "pattern": "^/subscriptions/(.+?)/resourcegroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$"
+          "$ref": "#/definitions/ProvisioningPolicyResourceId",
+          "description": "The provisioning policy resource id"
         }
       },
       "description": "The updatable properties of the DeviceProvisioningState."
@@ -1350,6 +1349,36 @@
       },
       "description": "The rule for Just-in-time connection"
     },
+    "OnboardingStatus": {
+      "type": "string",
+      "description": "The current onboarding status.",
+      "enum": [
+        "Pending",
+        "Provisioned",
+        "Failed"
+      ],
+      "x-ms-enum": {
+        "name": "OnboardingStatus",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Pending",
+            "value": "Pending",
+            "description": "Onboarding is still pending"
+          },
+          {
+            "name": "Provisioned",
+            "value": "Provisioned",
+            "description": "The resource has been onboarded"
+          },
+          {
+            "name": "Failed",
+            "value": "Failed",
+            "description": "Onboarding has failed"
+          }
+        ]
+      }
+    },
     "ProvisioningPolicy": {
       "type": "object",
       "properties": {
@@ -1443,7 +1472,8 @@
             "type": "Private.BbeeDev3/ProvisioningResources/ProvisioningPolicies"
           }
         ]
-      }
+      },
+      "pattern": "^/subscriptions/(.+?)/resourceGroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$"
     },
     "ProvisioningPolicyUpdate": {
       "type": "object",
@@ -1683,36 +1713,6 @@
             "name": "Deleting",
             "value": "Deleting",
             "description": "The deleting state"
-          }
-        ]
-      }
-    },
-    "ProvisioningStatus": {
-      "type": "string",
-      "description": "The current provisioning status.",
-      "enum": [
-        "Pending",
-        "Provisioned",
-        "Failed"
-      ],
-      "x-ms-enum": {
-        "name": "ProvisioningStatus",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Pending",
-            "value": "Pending",
-            "description": "Provisioning is still pending"
-          },
-          {
-            "name": "Provisioned",
-            "value": "Provisioned",
-            "description": "The resource has been provisioned"
-          },
-          {
-            "name": "Failed",
-            "value": "Failed",
-            "description": "Provisioning has failed"
           }
         ]
       }

@@ -373,6 +373,7 @@ model DeviceProvisioningState is ExtensionResource<DeviceProvisioningStateProper
   name: string;
 }
 
+@pattern("^/subscriptions/(.+?)/resourceGroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$")
 scalar ProvisioningPolicyResourceId
   extends ResourceIdentifier<[
     {
@@ -388,28 +389,27 @@ model DeviceProvisioningStateProperties {
   registrationId: string;
 
   @visibility("read", "create", "update")
-  @doc("Provisioning status of the resource this DeviceProvisioningState extends")
-  status: ProvisioningStatus;
+  @doc("Onboarding status of the resource this DeviceProvisioningState extends")
+  onboardingStatus: OnboardingStatus;
 
   @doc("Indicates if the device is enabled for discovery")
-  discoveryEnabled: boolean;
+  discoveryEnabled?: boolean = false;
 
   @doc("The provisioning policy resource id")
-  @pattern("^/subscriptions/(.+?)/resourcegroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$")
-  provisioningPolicyResourceId: string;
+  provisioningPolicyResourceId: ProvisioningPolicyResourceId;
 
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
 }
 
-@doc("The current provisioning status.")
-enum ProvisioningStatus {
-  @doc("Provisioning is still pending")
+@doc("The current onboarding status.")
+enum OnboardingStatus {
+  @doc("Onboarding is still pending")
   Pending,
-  @doc("The resource has been provisioned")
+  @doc("The resource has been onboarded")
   Provisioned,
-  @doc("Provisioning has failed")
+  @doc("Onboarding has failed")
   Failed
 }
 
