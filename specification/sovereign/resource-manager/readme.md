@@ -25,7 +25,9 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 These are the global settings for the sovereign.
 
 ```yaml
+title: Microsoft.Sovereign
 openapi-type: arm
+openapi-subtype: rpaas
 tag: package-2023-04-01-privatepreview
 ```
 

@@ -32,7 +32,6 @@ model LandingZoneConfigurationProperties {
 	@doc("The top level management group display name.")
 	@minLength(1)
 	@maxLength(90)
-	@pattern("^(?! )(?!.* $)[^\\s].*$")
 	topLevelMgDisplayName: string;
 
 	@doc("The name of the country/region or agency SLZ is being deployed for.")
@@ -57,14 +56,11 @@ model LandingZoneConfigurationProperties {
 	@doc("To deploy firewall choose the standard/premium based on the desired SKU. None for no firewall and existing to choose a pre existing one.")
 	firewallCreationOption: FirewallCreationOptions;
 
-	@doc("Existing fully qualified firewall Id")
-	existingFirewallId?: string;
-
 	@doc("Azure firewall subnet. IPv4 CIDR block.")
 	firewallSubnetCidrBlock?: string;
 
 	@doc("Gateway subnet. IPv4 CIDR block.")
-	gatewaySubnetCidrBlock?: string;
+	gatewaySubnetCidrBlock: string;
 
 	@doc("Set how long logs are retained for, in days. Minimum length is 30 and maximum is 730")
 	@minValue(30)
@@ -122,12 +118,6 @@ model LandingZoneMgProperties {
 
 	@doc("Management group name.")
 	name: string;
-
-	@doc("Is the management group Confidential?")
-	isConfidential: boolean;
-
-	@doc("is it open to internet?")
-	isVisibleToInternet: boolean;
 }
 
 @doc("Details of policy and initiatives associated with the management group.")
@@ -256,9 +246,6 @@ enum FirewallCreationOptions {
 
 	@doc("Value choosen when a user wants to create a firewall resource of premium SKU.")
 	Premium: "Premium",
-
-	@doc("Value choosen when a user wants to use an existing firewall resource.")
-	UseExisting: "UseExisting",
 }
 
 @doc("Represents options for resource creation.")
