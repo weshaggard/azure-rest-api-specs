@@ -43,7 +43,6 @@ model ProvisioningResourceProperties {
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ResourceProvisioningState;
-  // todo: remove custom status DONE
 
   @visibility("read")
   @doc("The provisioning service endpoints.")
@@ -68,7 +67,7 @@ model ResourceUpdatedResponse<T> is ArmResponse<T> {
 }
 
 @armResourceOperations
-interface EdgeProvisioningOpeartions {
+interface EdgeProvisioningOperations {
   @autoRoute
   @doc("Create a {name}", TResource)
   @extension("x-ms-long-running-operation", true)
@@ -95,7 +94,7 @@ interface EdgeProvisioningOpeartions {
 @armResourceOperations
 interface ProvisioningResources {
   get is ArmResourceRead<AnushrProvisioningResource>;
-  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrProvisioningResource>;
+  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrProvisioningResource>;
   delete is ArmResourceDeleteSync<AnushrProvisioningResource>;
   update is ArmResourcePatchSync<AnushrProvisioningResource, ProvisioningResourceProperties>;
   listByResourceGroup is ArmResourceListByParent<AnushrProvisioningResource>;
@@ -133,8 +132,21 @@ model ProvisioningPolicyProperties {
   @doc("Just-in-time rule to create the device resource.")
   jit?: JitRule;
 
+  @doc("Further details about the policy resource")
+  resourceDetails: ProvisioningPolicyResourceDetails;
+}
+
+@doc("Common further details about the policy resource")
+@discriminator("resourceType")
+model ProvisioningPolicyResourceDetails {
   @doc("Type of the resource being provisioned.")
-  resourceType: ProvisioningResourceType;  
+  resourceType: ProvisioningResourceType;
+}
+
+@doc("Details of the ProvisioningService Device Registry ProvisioningPolicy.")
+model DeviceRegistryProvisioningPolicyResourceDetails extends ProvisioningPolicyResourceDetails {
+  @doc("The policy resource type for device registry devices.")
+  resourceType: ProvisioningResourceType.DeviceRegistryDevice;  
 
   @doc("Identity information.")
   operationalIdentityInfo?: IdentityInfo; 
@@ -145,6 +157,12 @@ model ProvisioningPolicyProperties {
   @doc("Resource metadata.")
   @maxLength(200)
   resourceMetadata?: string; // for customer to label the devices
+}
+
+@doc("Details of the ProvisioningService Discovery ProvisioningPolicy.")
+model DiscoveryProvisioningPolicyResourceDetails extends ProvisioningPolicyResourceDetails {
+  @doc("The policy resource type for device registry devices.")
+  resourceType: ProvisioningResourceType.HybridComputeMachine;
 }
 
 @doc("The authentication type for bootstrap.")
@@ -159,26 +177,11 @@ enum BootstrapAuthenticationType {
 
 }
 
-@doc("The authentication details for bootstrap.")
-model BootstrapAuthenticationDetails {
-  @doc("The primary certificate.")
-  @secret
-  primaryCertificate: string;
-  // TODO Tim - on any additional properties needed from user. example: root, chain, etc
-  // Todo Adarsh/Tim, are there more details for x509s
-  @doc("The secondary certificate.")
-  @secret
-  secondaryCertificate?: string;
-}
-
 @doc("The authentication rule for bootstrap.")
 @discriminator("type")
 model BootstrapAuthenticationRule {
   @doc("The type of authentication rule.")
   type: BootstrapAuthenticationType;
-
-  // TODO use discriminator for properties specific to a bootstrap auth type (Done)
-  // this property will be part of X509 type
 }
 
 @doc("The x509-based authentication rule for bootstrapping.")
@@ -186,9 +189,15 @@ model X509BootstrapAuthenticationRule extends BootstrapAuthenticationRule {
   @doc("The type of authentication rule.")
   type: BootstrapAuthenticationType.X509;
 
-  @doc("The authentication details.")
-  details?: BootstrapAuthenticationDetails;
-  // Todo do we want to unwrap/expose this variable here - unwrap
+  @doc("The primary certificate. B64 x509 cert")
+  //@secret todo
+  primaryCertificate: string;
+  // TODO Tim - on any additional properties needed from user. example: root, chain, etc
+  // Todo Adarsh/Tim, are there more details for x509s
+
+  @doc("The secondary certificate.")
+  //@secret todo
+  secondaryCertificate?: string;
 }
 
 @doc("The Discovery-based authentication rule for bootstrapping.")
@@ -465,10 +474,10 @@ model CertificateProperties
   @doc("Certificate subject.")
   subject: string;
 
-  @doc("Certificate is valid not before this date.")
+  @doc("Certificate is valid not before this date. Format ISO8601")
   validityNotBefore: utcDateTime;
 
-  @doc("Certificate is valid not after this date.")
+  @doc("Certificate is valid not after this date. Format ISO8601")
   validityNotAfter: utcDateTime;
 
   @doc("Extended key usage.")
@@ -524,8 +533,8 @@ model CertificateIssuanceRule {
 
 @doc("The information related to device identity.")
 model IdentityInfo {
-  @doc("Certificate issuance settings.")
-  certificateIssuance?: CertificateIssuanceRule; // For PKI
+  //@doc("Certificate issuance settings.")
+  //certificateIssuance?: CertificateIssuanceRule; // For PKI
 
   @doc("Device template id.")
   deviceTemplateId?: string;
@@ -533,8 +542,9 @@ model IdentityInfo {
   @doc("AAD group name for static group.")
   staticGroup?: string;
 
-  @doc("The identity info to return to device.")
-  identityInfoForDevice?: DeviceIdentityInfo; // TODO check with Adarsh,Sekhar if this supports both HCI and ADR scenario
+  deviceTenantId: string;
+  //@doc("The identity info to return to device.")
+  //identityInfoForDevice?: DeviceIdentityInfo; // TODO check with Adarsh,Sekhar if this supports both HCI and ADR scenario
 }
 
 @doc("The provisioning rule.")
@@ -556,7 +566,7 @@ model ProvisioningRule {
 @armResourceOperations
 interface ProvisioningPolicies {
   get is ArmResourceRead<AnushrProvisioningPolicy>;
-  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrProvisioningPolicy>;
+  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrProvisioningPolicy>;
   delete is ArmResourceDeleteSync<AnushrProvisioningPolicy>;
   update is ArmResourcePatchSync<AnushrProvisioningPolicy, ProvisioningPolicyProperties>;
   listByParent is ArmResourceListByParent<AnushrProvisioningPolicy>;
@@ -617,7 +627,7 @@ enum OnboardingStatus {
 @armResourceOperations
 interface DeviceProvisioningStates {
   get is ArmResourceRead<AnushrDeviceProvisioningState>;
-  createOrUpdate is EdgeProvisioningOpeartions.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrDeviceProvisioningState>;
+  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<AnushrDeviceProvisioningState>;
   delete is ArmResourceDeleteSync<AnushrDeviceProvisioningState>;
   update is ArmResourcePatchSync<AnushrDeviceProvisioningState, DeviceProvisioningStateProperties>;
   listByParent is ArmResourceListByParent<AnushrDeviceProvisioningState>;
