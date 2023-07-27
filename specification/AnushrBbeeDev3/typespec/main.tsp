@@ -588,7 +588,7 @@ model AnushrDeviceProvisioningState is ExtensionResource<DeviceProvisioningState
 scalar ProvisioningPolicyResourceId
   extends ResourceIdentifier<[
     {
-      type: "Microsoft.EdgeProvisioningService/ProvisioningResources/ProvisioningPolicies",
+      type: "Microsoft.EdgeProvisioningService/AnushrProvisioningResources/AnushrProvisioningPolicies",
     }
   ]>;
 
