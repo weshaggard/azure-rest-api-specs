@@ -584,7 +584,7 @@ model AnushrDeviceProvisioningState is ExtensionResource<DeviceProvisioningState
   name: string;
 }
 
-@pattern("^/subscriptions/(.+?)/resourceGroups/(.+?)/providers/(.+?)/provisioningResources/(.+?)/provisioningPolicies/(.+)$")
+@pattern("^/subscriptions/(.+?)/resourceGroups/(.+?)/providers/(.+?)/anushrProvisioningResources/(.+?)/anushrProvisioningPolicies/(.+)$")
 scalar ProvisioningPolicyResourceId
   extends ResourceIdentifier<[
     {
