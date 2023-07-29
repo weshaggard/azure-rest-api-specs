@@ -208,12 +208,14 @@ model DiscoveryBootstrapAuthenticationRule extends BootstrapAuthenticationRule {
 
 @doc("Type of resource being provisioned.")
 enum ProvisioningResourceType {
-  @doc("Azure device registry device.")
-  DeviceRegistryDevice:"Microsoft.DeviceRegistry/devices",
+  @doc("Azure device registry device. Microsoft.DeviceRegistry/devices")
+  //DeviceRegistryDevice:"Microsoft.DeviceRegistry/devices",
+  DeviceRegistryDevice,
   // TODO another option is use value in double quotes. Try in ARM RPaas to finalize (Testing)
 
-  @doc("Arc enabled device.")
-  HybridComputeMachine:"Microsoft.HybridCompute/machines",
+  @doc("Arc enabled device. Microsoft.HybridCompute/machines")
+  //HybridComputeMachine:"Microsoft.HybridCompute/machines",
+  HybridComputeMachine,
 }
 
 @doc("The rule for Just-in-time connection.")
@@ -331,9 +333,8 @@ model GeoBasedAllocationRule extends AllocationRule {
   @doc("List of endpoints for geoBased allocation type.")
   @maxItems(10)
   @minItems(1)
- @extension("x-ms-identifiers", ["name"])
+  @extension("x-ms-identifiers", ["name"])
   endpoints: Array<GeoBasedAllocationEndpoint>;
-  // TODO can it be not optional Done (to be tested)
 }
 
 @doc("The allocation rule for weighted allocation type.")
@@ -357,9 +358,8 @@ model StaticAllocationRule extends AllocationRule {
   @doc("List of endpoints for static allocation type.")
   @maxItems(1)
   @minItems(1)
- @extension("x-ms-identifiers", ["name"])
+  @extension("x-ms-identifiers", ["name"])
   endpoints: Array<StaticAllocationEndpoint>;
-// todo not optional (to be tested)
 }
 
 @doc("The identity info to return to device.")
