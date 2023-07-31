@@ -18,12 +18,12 @@ using Azure.ResourceManager;
 
 @armProviderNamespace
 @service({
-  title: "Microsoft.AlicespringsDataplane management service",
+  title: "Private.E4K management service",
   version: "2023-07-17-preview",
 })
-@doc("Microsoft.AlicespringsDataplane Resource Provider management API.")
+@doc("Private.E4K Resource Provider management API.")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.AlicespringsDataplane;
+namespace Private.E4K;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
