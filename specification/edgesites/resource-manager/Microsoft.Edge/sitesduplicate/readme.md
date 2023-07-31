@@ -26,16 +26,17 @@ These are the global settings for the edgesites.
 
 ```yaml
 openapi-type: arm
-tag: package-2023-06-01-privatepreview
+openapi-subtype: providerHub
+tag: package-2023-06-01-preview
 ```
 
-### Tag: package-2023-06-01-privatepreview
+### Tag: package-2023-06-01-preview
 
-These settings apply only when `--tag=package-2023-06-01-privatepreview` is specified on the command line.
+These settings apply only when `--tag=package-2023-06-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-06-01-privatepreview'
+```yaml $(tag) == 'package-2023-06-01-preview'
 input-file:
-  - Microsoft.Edge/preview/2023-06-01-privatepreview/edgesites.json
+  - preview/2023-06-01-preview/edgesites.json
 ```
 
 ---
@@ -56,6 +57,8 @@ swagger-to-sdk:
   - repo: azure-resource-manager-schemas
   - repo: azure-cli-extensions
   - repo: azure-powershell
+  - repo: azure-sdk-for-net
+  - repo: azure-sdk-for-net-track2
 ```
 ## Az
 
