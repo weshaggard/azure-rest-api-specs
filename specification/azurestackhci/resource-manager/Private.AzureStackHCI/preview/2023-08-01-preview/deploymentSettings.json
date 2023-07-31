@@ -186,22 +186,21 @@
         ],
         "responses": {
           "200": {
-            "description": "ARM operation completed successfully.",
+            "description": "Resource 'DeploymentSetting' update operation succeeded",
             "schema": {
               "$ref": "#/definitions/DeploymentSetting"
             }
           },
-          "202": {
-            "description": "Resource operation accepted.",
+          "201": {
+            "description": "Resource 'DeploymentSetting' create operation succeeded",
+            "schema": {
+              "$ref": "#/definitions/DeploymentSetting"
+            },
             "headers": {
               "Retry-After": {
                 "type": "integer",
                 "format": "int32",
                 "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
-              },
-              "Location": {
-                "type": "string",
-                "description": "The Location header contains the URL where the status of the long running operation can be checked."
               }
             }
           },
@@ -375,38 +374,6 @@
     }
   },
   "definitions": {
-    "Action": {
-      "type": "object",
-      "description": "The Action of AzureStackHCI Cluster.",
-      "properties": {
-        "steps": {
-          "type": "array",
-          "description": "List of steps of AzureStackHCI Cluster Deployment.",
-          "items": {
-            "$ref": "#/definitions/Step"
-          },
-          "x-ms-identifiers": []
-        },
-        "type": {
-          "type": "string",
-          "description": "type of action."
-        },
-        "startTimeUtc": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Start time of action."
-        },
-        "endTimeUtc": {
-          "type": "string",
-          "format": "date-time",
-          "description": "End time of action."
-        },
-        "status": {
-          "type": "string",
-          "description": "Status of action. Allowed values are 'Error', 'Success', 'InProgress'"
-        }
-      }
-    },
     "AdapterPropertyOverrides": {
       "type": "object",
       "description": "The AdapterPropertyOverrides of a cluster.",
@@ -640,11 +607,15 @@
       "type": "object",
       "description": "The DeploymentStatus of AzureStackHCI Cluster.",
       "properties": {
-        "action": {
+        "status": {
+          "type": "string",
+          "description": "Status of AzureStackHCI Cluster Deployment."
+        },
+        "steps": {
           "type": "array",
-          "description": "List of actions of AzureStackHCI Cluster Deployment.",
+          "description": "List of steps of AzureStackHCI Cluster Deployment.",
           "items": {
-            "$ref": "#/definitions/Action"
+            "$ref": "#/definitions/Step"
           },
           "x-ms-identifiers": []
         }
@@ -657,28 +628,6 @@
         "message": {
           "type": "string",
           "description": "Evaluation message"
-        }
-      }
-    },
-    "Exception": {
-      "type": "object",
-      "description": "The Exception of AzureStackHCI Cluster.",
-      "properties": {
-        "message": {
-          "type": "string",
-          "description": "Exception message"
-        },
-        "machineName": {
-          "type": "string",
-          "description": "exception raised for machine name."
-        },
-        "stackTrace": {
-          "type": "string",
-          "description": "stack trace for exception."
-        },
-        "raw": {
-          "type": "string",
-          "description": "raw exception details."
         }
       }
     },
@@ -701,21 +650,22 @@
             "$ref": "#/definitions/StorageNetworks"
           },
           "x-ms-identifiers": []
+        },
+        "storageConnectivitySwitchless": {
+          "type": "boolean",
+          "description": "storageConnectivitySwitchless for AzureStackHCI Cluster."
         }
       },
       "required": [
         "intents",
-        "storageNetworks"
+        "storageNetworks",
+        "storageConnectivitySwitchless"
       ]
     },
     "InfrastructureNetwork": {
       "type": "object",
       "description": "The InfrastructureNetwork of a AzureStackHCI Cluster.",
       "properties": {
-        "vlanId": {
-          "type": "string",
-          "description": "Only supported value in version 2210 is 0."
-        },
         "subnetMask": {
           "type": "string",
           "description": "Subnet mask that matches the provided IP address space."
@@ -741,7 +691,6 @@
         }
       },
       "required": [
-        "vlanId",
         "subnetMask",
         "gateway",
         "ipPools",
@@ -1064,39 +1013,41 @@
           "type": "string",
           "description": "Name of step."
         },
-        "descriptions": {
+        "description": {
           "type": "string",
           "description": "Description of step."
-        },
-        "index": {
-          "type": "string",
-          "description": "Index of step."
         },
         "fullStepIndex": {
           "type": "string",
           "description": "FullStepIndex of step."
         },
-        "task": {
-          "type": "array",
-          "description": "List of tasks performed for step.",
-          "items": {
-            "$ref": "#/definitions/Task"
-          },
-          "x-ms-identifiers": []
-        },
         "startTimeUtc": {
           "type": "string",
-          "format": "date-time",
-          "description": "Start time of action."
+          "description": "Start time of step."
         },
         "endTimeUtc": {
           "type": "string",
-          "format": "date-time",
           "description": "End time of step."
         },
         "status": {
           "type": "string",
           "description": "Status of step. Allowed values are 'Error', 'Success', 'InProgress'"
+        },
+        "steps": {
+          "type": "array",
+          "description": "List of nested steps of AzureStackHCI Cluster Deployment.",
+          "items": {
+            "$ref": "#/definitions/Step"
+          },
+          "x-ms-identifiers": []
+        },
+        "exception": {
+          "type": "array",
+          "description": "List of exceptions in AzureStackHCI Cluster Deployment.",
+          "items": {
+            "type": "string"
+          },
+          "x-ms-identifiers": []
         }
       }
     },
@@ -1137,59 +1088,19 @@
         "vlanId"
       ]
     },
-    "Task": {
-      "type": "object",
-      "description": "The Step of AzureStackHCI Cluster.",
-      "properties": {
-        "evaluation": {
-          "$ref": "#/definitions/Evaluation",
-          "description": "Evaluaton status of task."
-        },
-        "exception": {
-          "$ref": "#/definitions/Exception",
-          "description": "Exception status of task."
-        },
-        "rolePath": {
-          "type": "string",
-          "description": "Rolepath of task."
-        },
-        "interfaceType": {
-          "type": "string",
-          "description": "Interface Type of task."
-        },
-        "startTimeUtc": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Start time of task."
-        },
-        "endTimeUtc": {
-          "type": "string",
-          "format": "date-time",
-          "description": "End time of task."
-        },
-        "status": {
-          "type": "string",
-          "description": "Status of task. Allowed values are 'Error', 'Success', 'InProgress'"
-        },
-        "action": {
-          "$ref": "#/definitions/Action",
-          "description": "action if required."
-        },
-        "retryAttempt": {
-          "type": "string",
-          "description": "retry attempts."
-        }
-      }
-    },
     "ValidationStatus": {
       "type": "object",
       "description": "The ValidationStatus of AzureStackHCI Cluster.",
       "properties": {
-        "action": {
+        "status": {
+          "type": "string",
+          "description": "Status of AzureStackHCI Cluster Deployment."
+        },
+        "steps": {
           "type": "array",
-          "description": "List of actions of AzureStackHCI Cluster Deployment.",
+          "description": "List of steps of AzureStackHCI Cluster Deployment.",
           "items": {
-            "$ref": "#/definitions/Action"
+            "$ref": "#/definitions/Step"
           },
           "x-ms-identifiers": []
         }
