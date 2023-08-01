@@ -52,6 +52,7 @@ model ProvisioningResourceProperties {
 @doc("Device endpoints.")
 model DeviceEndpoints { // TODO: follow up with DP and PM on the definition of the endpoints for ignite
   @doc("The default endpoint.")
+  @visibility("read")
   default: DeviceEndpoint,
 }
 
