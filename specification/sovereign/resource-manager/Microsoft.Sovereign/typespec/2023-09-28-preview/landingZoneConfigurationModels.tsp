@@ -68,7 +68,7 @@ model LandingZoneConfigurationProperties {
 	logRetentionInDays: int64;
 
 	@doc("Location to run deployment(s) from the list of Azure Regions")
-	@pattern("^([a-zA-Z0-9]*)$")
+	@pattern("^([a-zA-Z0-9]+)$")
 	deploymentLocation: string;
 
 	@doc("The address space for the VNET. IPv4 CIDR.")
