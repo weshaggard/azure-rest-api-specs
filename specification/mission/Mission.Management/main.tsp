@@ -103,45 +103,11 @@ model ExternalConnection is TrackedResource<ExternalConnectionProperties> {
   name: string;
 }
 
-/*Temporary ArmResourceCreateOrUpdateSync until Typespec library updates*/
-
-/** Compliant create or update template */ 
-/**
- * A long-running resource CreateOrUpdate (PUT)
- * @template TResource the resource being patched
- * @template TBaseParameters Optional. Allows overriding the operation parameters
- */
-#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation-outside-interface" "This is a valid template"
-@autoRoute
-@doc("Create a {name}", TResource)
-@armResourceCreateOrUpdate(TResource)
-@put
-op ArmResourceCreateOrUpdate2Sync<
-  TResource extends Azure.ResourceManager.Foundations.ArmResource,
-  TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
->(
-  ...ResourceInstanceParameters<TResource, TBaseParameters>,
-
-  @doc("Resource create parameters.")
-  @body
-  resource: TResource,
-): ArmUpdatedResponse<TResource> | ArmCreatedResponseSync<TResource> | ErrorResponse;
-
-@doc("Arm resource update successful")
-model ArmUpdatedResponse<TResource extends Azure.ResourceManager.Foundations.ArmResource> 
-  is ArmResponse<TResource> {}
-
-@doc("Arm resource create successful")
-model ArmCreatedResponseSync<TResource extends Azure.ResourceManager.Foundations.ArmResource> 
-  is Body<TResource>{
-  ...CreatedResponse;
-}
-
 @doc("Workload Interface")
 @armResourceOperations
 interface Workload {
     get is ArmResourceRead<WorkloadResource>;
-    createOrUpdate is ArmResourceCreateOrUpdate2Sync<WorkloadResource>;
+    createOrUpdate is ArmResourceCreateOrUpdateAsync<WorkloadResource>;
     update is ArmResourcePatchAsync<WorkloadResource, WorkloadProperties>;
     delete is ArmResourceDeleteAsync<WorkloadResource>;
     listByParent is ArmResourceListByParent<WorkloadResource>;
@@ -152,7 +118,7 @@ interface Workload {
 @armResourceOperations
 interface Endpoint {
     get is ArmResourceRead<EndpointResource>;
-    createOrUpdate is ArmResourceCreateOrUpdate2Sync<EndpointResource>;
+    createOrUpdate is ArmResourceCreateOrUpdateAsync<EndpointResource>;
     update is ArmResourcePatchAsync<EndpointResource, EndpointProperties>;
     delete is ArmResourceDeleteAsync<EndpointResource>;
     listByParent is ArmResourceListByParent<EndpointResource>;
@@ -163,7 +129,7 @@ interface Endpoint {
 @armResourceOperations
 interface VirtualEnclave {
     get is ArmResourceRead<EnclaveResource>;
-    createOrUpdate is ArmResourceCreateOrUpdate2Sync<EnclaveResource>;
+    createOrUpdate is ArmResourceCreateOrUpdateAsync<EnclaveResource>;
     update is ArmResourcePatchAsync<EnclaveResource, VirtualEnclaveProperties>;
     delete is ArmResourceDeleteAsync<EnclaveResource>;
     listByParent is ArmResourceListByParent<EnclaveResource>;
@@ -174,7 +140,7 @@ interface VirtualEnclave {
 @armResourceOperations
 interface Community {
     get is ArmResourceRead<CommunityResource>;
-    createOrUpdate is ArmResourceCreateOrUpdate2Sync<CommunityResource>;
+    createOrUpdate is ArmResourceCreateOrUpdateAsync<CommunityResource>;
     update is ArmResourcePatchAsync<CommunityResource, CommunityProperties>;
     delete is ArmResourceDeleteAsync<CommunityResource>;
     listByParent is ArmResourceListByParent<CommunityResource>;
@@ -185,7 +151,7 @@ interface Community {
 @armResourceOperations
 interface Catalog {
     get is ArmResourceRead<CatalogResource>;
-    createOrUpdate is ArmResourceCreateOrUpdate2Sync<CatalogResource>;
+    createOrUpdate is ArmResourceCreateOrUpdateAsync<CatalogResource>;
     update is ArmResourcePatchAsync<CatalogResource, CatalogProperties>;
     delete is ArmResourceDeleteAsync<CatalogResource>;
     listByParent is ArmResourceListByParent<CatalogResource>;
@@ -196,7 +162,7 @@ interface Catalog {
 @armResourceOperations
 interface InternalConnections {
     get is ArmResourceRead<InternalConnection>;
-    createOrUpdate is ArmResourceCreateOrUpdate2Sync<InternalConnection>;
+    createOrUpdate is ArmResourceCreateOrUpdateAsync<InternalConnection>;
     update is ArmResourcePatchAsync<InternalConnection, InternalConnectionProperties>;
     delete is ArmResourceDeleteAsync<InternalConnection>;
     listByParent is ArmResourceListByParent<InternalConnection>;
@@ -207,7 +173,7 @@ interface InternalConnections {
 @armResourceOperations
 interface ExternalConnections {
     get is ArmResourceRead<ExternalConnection>;
-    createOrUpdate is ArmResourceCreateOrUpdate2Sync<ExternalConnection>;
+    createOrUpdate is ArmResourceCreateOrUpdateAsync<ExternalConnection>;
     update is ArmResourcePatchAsync<ExternalConnection, ExternalConnectionProperties>;
     delete is ArmResourceDeleteAsync<ExternalConnection>;
     listByParent is ArmResourceListByParent<ExternalConnection>;
