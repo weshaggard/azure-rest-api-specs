@@ -2,7 +2,8 @@ import "./webProtection.tsp";
 import "./botProtection.tsp";
 import "./policySettings.tsp";
 import "./protectedEndpoint.tsp";
-import "./customRules.tsp";
+import "./customRules/customRule.tsp";
+import "./managedRulesCustomization.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -39,6 +40,9 @@ model PolicyProperties {
 
   @doc("Describes the bot protection policy")
   botProtection?: BotProtection;
+
+  @doc("Customization for managed rules (including exclusions and overrides)")
+  managedRulesCustomization?: ManagedRulesCustomization;
 }
 
 @doc("Policy resource definition")
