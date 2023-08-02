@@ -71,6 +71,42 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/activationstatus.json
 ```
 
+```yaml $(tag) == 'package-2023-08-31-preview'
+input-file:
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/operation.json 
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/common.json 
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/routing.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/servicearea.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/trackingarea.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/amfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/amfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/cluster.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/deploymentarea.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/datanetwork.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/deeppacketinspection.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/mmedeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/mobilepacketcore.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/networkslice.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/nfvi.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/nrfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/nrfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/nssfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/nssfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/packetdetectionrule.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/packetflowdescription.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/pccrule.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/pccrulebase.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/plmn.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/saegwcpdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/saegwupdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/smfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/smfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/subscriberanalyzer.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/upfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/upfprofile.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/configsnapshot.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/activationstatus.json
+
 
 # Code Generation
 
