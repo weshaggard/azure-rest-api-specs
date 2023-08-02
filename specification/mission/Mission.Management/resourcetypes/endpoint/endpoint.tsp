@@ -16,12 +16,23 @@ using Azure.ResourceManager;
 
 @doc("Endpoint Protocol Enum")
 enum EndpointProtocol {
+  @doc("ANY")
   ANY,
+  
+  @doc("TCP")
   TCP,
+
+  @doc("UDP")
   UDP,
+
+  @doc("ICMP")
   ICMP,
+
+  @doc("ESP")
   ESP,
-  AH,
+
+  @doc("AH")
+  AH
 }
 
 @doc("EndpointRule Properties")
@@ -35,7 +46,7 @@ model EndpointRule {
   @doc("Port. Can include multiple ports separated by commas or a range indicated by a hyphen.")
   port?: string;
 
-  @doc("Protocol.")
+  @doc("Protocol. Options specified by Endpoint Protocol Enum.")
   protocol?: EndpointProtocol;
 }
 

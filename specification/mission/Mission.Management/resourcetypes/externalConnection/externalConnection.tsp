@@ -15,8 +15,13 @@ using Azure.ResourceManager;
 
 @doc("Specifies the state of the externalConnection.")
 enum ExternalConnectionState {
+  @doc("Pending")
   Pending,
+
+  @doc("Approved")
   Approved,
+
+  @doc("Active")
   Active,
 }
 

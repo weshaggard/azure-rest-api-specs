@@ -13,13 +13,31 @@ using Azure.ResourceManager;
 @doc("Provisioning State Enum")
 enum ProvisioningState {
   ...ResourceProvisioningState,
+
+  @doc("Accepted")
   Accepted,
+
+  @doc("Created")
   Created,
+
+  @doc("Creating")
   Creating,
+
+  @doc("Deleted")
   Deleted,
+
+  @doc("Deleting")
   Deleting,
+
+  @doc("NotSpecified")
   NotSpecified,
+
+  @doc("Ready")
   Ready,
+
+  @doc("Running")
   Running,
-  Updating,
+
+  @doc("Updating")
+  Updating
 }
