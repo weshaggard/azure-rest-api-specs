@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Microsoft Mission",
-    "version": "2022-10-31-preview",
+    "version": "2022-12-07-preview",
     "description": "Microsoft Mission Resource Provider management API.",
     "x-cadl-generated": [
       {
@@ -131,7 +131,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Mission/communities/{communityName}/virtualEnclaves": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Mission/virtualEnclaves": {
       "get": {
         "tags": [
           "VirtualEnclave"
@@ -144,9 +144,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "#/parameters/communityResource.communityName"
           }
         ],
         "responses": {
@@ -444,13 +441,13 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Mission/communities/{communityName}/virtualEnclaves": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Mission/virtualEnclaves": {
       "get": {
         "tags": [
           "VirtualEnclave"
         ],
-        "operationId": "VirtualEnclave_ListByCommunityResource",
-        "description": "List enclaveResource resources by CommunityResource",
+        "operationId": "VirtualEnclave_ListByResourceGroup",
+        "description": "List enclaveResource resources by resource group",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -460,9 +457,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/communityResource.communityName"
           }
         ],
         "responses": {
@@ -483,16 +477,16 @@
           "nextLinkName": "nextLink"
         },
         "x-ms-examples": {
-          "VirtualEnclave_ListByCommunityResource_MaximumSet_Gen": {
-            "$ref": "./examples/VirtualEnclave_ListByCommunityResource_MaximumSet_Gen.json"
+          "VirtualEnclave_ListByResourceGroup_MaximumSet_Gen": {
+            "$ref": "./examples/VirtualEnclave_ListByResourceGroup_MaximumSet_Gen.json"
           },
-          "VirtualEnclave_ListByCommunityResource_MinimumSet_Gen": {
-            "$ref": "./examples/VirtualEnclave_ListByCommunityResource_MinimumSet_Gen.json"
+          "VirtualEnclave_ListByResourceGroup_MinimumSet_Gen": {
+            "$ref": "./examples/VirtualEnclave_ListByResourceGroup_MinimumSet_Gen.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Mission/communities/{communityName}/virtualEnclaves/{virtualEnclaveName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Mission/virtualEnclaves/{virtualEnclaveName}": {
       "get": {
         "tags": [
           "VirtualEnclave"
@@ -508,9 +502,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/communityResource.communityName"
           },
           {
             "$ref": "#/parameters/enclaveResource.virtualEnclaveName"
@@ -554,9 +545,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/communityResource.communityName"
           },
           {
             "$ref": "#/parameters/enclaveResource.virtualEnclaveName"
@@ -628,9 +616,6 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "#/parameters/communityResource.communityName"
-          },
-          {
             "$ref": "#/parameters/enclaveResource.virtualEnclaveName"
           },
           {
@@ -681,9 +666,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/communityResource.communityName"
           },
           {
             "$ref": "#/parameters/enclaveResource.virtualEnclaveName"
@@ -960,6 +942,10 @@
         "enclaveAdministratorsObjectId": {
           "type": "string",
           "description": "Virtual Enclave Administrators Object Id."
+        },
+        "communityResourceId": {
+          "type": "string",
+          "description": "Community Resource Id."
         }
       },
       "description": "The updatable properties of the enclaveResource."
@@ -970,35 +956,6 @@
         "networkSize": {
           "type": "string",
           "description": "Network Size."
-        },
-        "networkCidr": {
-          "type": "string",
-          "description": "Network Address."
-        },
-        "subnetGatewayCidr": {
-          "type": "string",
-          "description": "Subnet Gateway Address."
-        },
-        "subnetClientCidr": {
-          "type": "string",
-          "description": "Subnet Client Address."
-        },
-        "subnetManagementCidr": {
-          "type": "string",
-          "description": "Subnet Management Address."
-        },
-        "subnetResourcesCidr": {
-          "type": "string",
-          "description": "Subnet Resources Address."
-        },
-        "subnetHostPoolCidr": {
-          "type": "string",
-          "description": "Subnet HostPool Address."
-        },
-        "vpnASN": {
-          "type": "integer",
-          "format": "int32",
-          "description": "VPN asn."
         }
       },
       "description": "Enclave Virtual Network Properties"
@@ -1046,9 +1003,21 @@
           "$ref": "#/definitions/provisioningState",
           "description": "Provisioning State.",
           "readOnly": true
+        },
+        "communityResourceId": {
+          "type": "string",
+          "description": "Community Resource Id."
+        },
+        "communityResource": {
+          "$ref": "#/definitions/communityResource",
+          "description": "Community Resource Object.",
+          "readOnly": true
         }
       },
-      "description": "Virtual Enclave Resource properties"
+      "description": "Virtual Enclave Resource properties",
+      "required": [
+        "communityResourceId"
+      ]
     }
   },
   "parameters": {
