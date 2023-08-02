@@ -15,28 +15,6 @@ model LandingZoneConfigurationProperties {
 	@doc("The status for the landing zone configuration workflow.")
 	authoringStatus?: AuthoringStatus;
 
-	@doc("Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default, will deploy beneath tenant toot management group.")
-	existingTopLevelMgParentId?: string;
-
-	@doc("The prefix that will be added to all resources created by this deployment.")
-	@minLength(2)
-	@maxLength(5)
-	@pattern("^([a-zA-Z0-9-]*)$")
-	deploymentPrefix: string;
-
-	@doc("The suffix that will be added to management group name.")
-	@minLength(2)
-	@maxLength(5)
-	deploymentSuffix?: string;
-
-	@doc("The top level management group display name.")
-	@minLength(1)
-	@maxLength(90)
-	topLevelMgDisplayName: string;
-
-	@doc("The name of the country/region or agency SLZ is being deployed for.")
-	organization: string;
-
 	@doc("Yes to deploy DDoS, otherwise no. To provide an existing DDoS protection plan select existing.")
 	ddosProtectionCreationOption: ResourceCreationOptions;
 
@@ -66,10 +44,6 @@ model LandingZoneConfigurationProperties {
 	@minValue(30)
 	@maxValue(730)
 	logRetentionInDays: int64;
-
-	@doc("Location to run deployment(s) from the list of Azure Regions")
-	@pattern("^([a-zA-Z0-9]+)$")
-	deploymentLocation: string;
 
 	@doc("The address space for the VNET. IPv4 CIDR.")
 	hubNetworkCidrBlock: string;
@@ -181,6 +155,32 @@ model GenerateLandingZoneRequest {
 
 	@doc("Enrollment Id")
 	enrollmentAccountId?: string;
+
+	@doc("Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default, will deploy beneath tenant toot management group.")
+	existingTopLevelMgParentId?: string;
+
+	@doc("The prefix that will be added to all resources created by this deployment.")
+	@minLength(2)
+	@maxLength(5)
+	@pattern("^([a-zA-Z0-9-]*)$")
+	deploymentPrefix: string;
+
+	@doc("The suffix that will be added to management group name.")
+	@minLength(2)
+	@maxLength(5)
+	deploymentSuffix?: string;
+
+	@doc("The top level management group display name.")
+	@minLength(1)
+	@maxLength(90)
+	topLevelMgDisplayName: string;
+
+	@doc("Location to run deployment(s) from the list of Azure Regions")
+	@pattern("^([a-zA-Z0-9]+)$")
+	deploymentLocation: string;
+
+	@doc("The name of the country/region or agency SLZ is being deployed for.")
+	organization: string;
 }
 
 @doc("The response for generate landing zone request.")
@@ -204,9 +204,6 @@ model SetAuthoringStatusRequest {
 
 @doc("The response body for the set authoring status request")
 model SetAuthoringStatusResponse {
-	@doc("The top level management group display name.")
-	topLevelMgDisplayName: string;
-
 	@doc("The name of the landing zone configuration resource.")
 	landingZoneConfigurationName: string;
 
