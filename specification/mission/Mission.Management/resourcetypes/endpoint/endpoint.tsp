@@ -16,22 +16,22 @@ using Azure.ResourceManager;
 
 @doc("Endpoint Protocol Enum")
 enum EndpointProtocol {
-  @doc("ANY")
+  @doc("Protocol of Type ANY")
   ANY,
   
-  @doc("TCP")
+  @doc("Protocol of Type TCP")
   TCP,
 
-  @doc("UDP")
+  @doc("Protocol of Type UDP")
   UDP,
 
-  @doc("ICMP")
+  @doc("Protocol of Type ICMP")
   ICMP,
 
-  @doc("ESP")
+  @doc("Protocol of Type ESP")
   ESP,
 
-  @doc("AH")
+  @doc("Protocol of Type AH")
   AH
 }
 

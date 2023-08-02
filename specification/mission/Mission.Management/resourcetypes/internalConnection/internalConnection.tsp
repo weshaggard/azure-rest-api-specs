@@ -15,22 +15,22 @@ using Azure.ResourceManager;
 
 @doc("Specifies the different types of network connections.")
 enum InternalConnectionType {
-  @doc("PrivateLink")
+  @doc("InternalConnectionType of Type PrivateLink")
   PrivateLink,
 
-  @doc("NetworkSecurityGroup")
+  @doc("InternalConnectionType of Type NetworkSecurityGroup")
   NetworkSecurityGroup
 }
 
 @doc("Specifies the state of the internalConnection.")
 enum InternalConnectionState {
-  @doc("Pending")
+  @doc("InternalConnectionState of Type Pending")
   Pending,
 
-  @doc("Approved")
+  @doc("InternalConnectionState of Type Approved")
   Approved,
 
-  @doc("Active")
+  @doc("InternalConnectionState of Type Active")
   Active
 }
 
