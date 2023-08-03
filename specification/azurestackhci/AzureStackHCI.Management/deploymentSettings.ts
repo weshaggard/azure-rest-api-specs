@@ -206,14 +206,6 @@ model Step {
   exception?: string[]
 }
 
-@doc("The Evaluation of AzureStackHCI Cluster.")
-model Evaluation {
-  @doc("Evaluation message")
-  @visibility("read")
-  message?: string
-}
-
-
 @doc("The SecuritySettings of AzureStackHCI Cluster.")
 model SecuritySettings {
 
