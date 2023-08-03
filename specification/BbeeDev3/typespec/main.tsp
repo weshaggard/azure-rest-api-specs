@@ -139,13 +139,10 @@ model ProvisioningPolicyProperties {
 @doc("Type of resource being provisioned.")
 enum ProvisioningResourceType {
   @doc("Azure device registry device. Microsoft.DeviceRegistry/devices")
-  //DeviceRegistryDevice:"Microsoft.DeviceRegistry/devices",
-  DeviceRegistryDevice,
-  // TODO another option is use value in double quotes. Try in ARM RPaas to finalize (Testing)
+  DeviceRegistryDevice:"Microsoft.DeviceRegistry/devices",
 
   @doc("Arc enabled device. Microsoft.HybridCompute/machines")
-  //HybridComputeMachine:"Microsoft.HybridCompute/machines",
-  HybridComputeMachine,
+  HybridComputeMachine:"Microsoft.HybridCompute/machines",
 }
 
 @doc("Common further details about the policy resource")
