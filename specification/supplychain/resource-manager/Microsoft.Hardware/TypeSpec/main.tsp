@@ -47,6 +47,9 @@ model OrderProperties {
   @OpenAPI.extension("x-ms-identifiers",["id"])
   orderLines:OrderLine[];
 
+  @doc("Billing Information")
+  billingInformation:BillingInformation;
+
   @doc("Currency")
   @visibility("read")
   currency?:string;
