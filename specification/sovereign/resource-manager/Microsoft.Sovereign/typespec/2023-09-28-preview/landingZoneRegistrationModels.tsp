@@ -9,10 +9,8 @@ model LandingZoneRegistrationProperties {
 	provisioningState?: ResourceProvisioningState;
 
 	@doc("The top level management group id.")
-	@visibility("read", "create")
 	existingTopLevelMgId: string;
 
 	@doc("The associated landing zone configuration resource.")
-	@visibility("read", "create")
 	existingLandingZoneConfigurationId: string;
 }

@@ -47,6 +47,9 @@ model OrderProperties {
   @OpenAPI.extension("x-ms-identifiers",["id"])
   orderLines:OrderLine[];
 
+  @doc("Billing Information")
+  billingInformation:BillingInformation;
+
   @doc("Currency")
   @visibility("read")
   currency?:string;
@@ -270,6 +273,10 @@ enum OrderStatus{
   Confirmed,
   @doc("Order is PartiallyConfirmed")
   PartiallyConfirmed,
+  @doc("Order is pending cancellation")
+  PendingCancel,
+  @doc("Order is Ready to Ship cannot be cancelled")
+  PendingShipment,
   @doc("Order is PartiallyShipped")
   PartiallyShipped,
   @doc("Order is Shipped")
@@ -286,6 +293,10 @@ enum OrderLineStatus{
   Confirmed,
   @doc("Order is PartiallyConfirmed")
   PartiallyConfirmed,
+  @doc("Order is pending cancellation")
+  PendingCancel,
+  @doc("Order is Ready to Ship cannot be cancelled")
+  PendingShipment,
   @doc("Order is PartiallyShipped")
   PartiallyShipped,
   @doc("Order is Shipped")
