@@ -56,6 +56,12 @@
               "$ref": "#/definitions/SqlServerDatabaseResource"
             }
           },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/SqlServerDatabaseResource"
+            }
+          },
           "default": {
             "description": "*** Error Responses: ***",
             "schema": {
@@ -95,6 +101,9 @@
         "responses": {
           "200": {
             "description": "Successfully deleted the database."
+          },
+          "202": {
+            "description": "Resource deletion is in progress."
           },
           "204": {
             "description": "The specified database does not exist."
@@ -193,6 +202,9 @@
             "schema": {
               "$ref": "#/definitions/SqlServerDatabaseResource"
             }
+          },
+          "202": {
+            "description": "Resource update is in progress."
           },
           "default": {
             "description": "*** Error Responses: ***",
@@ -407,6 +419,36 @@
               "type": "string"
             }
           }
+        },
+        "createMode": {
+          "description": "Database create mode. PointInTimeRestore: Create a database by restoring a point in time backup of an existing database. SourceDatabaseName, SourceManagedInstanceName and PointInTime must be specified.",
+          "enum": [
+            "PointInTimeRestore"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "name": "DatabaseCreateMode",
+            "modelAsString": true
+          },
+          "x-ms-mutability": [
+            "create"
+          ]
+        },
+        "sourceDatabaseId": {
+          "description": "The resource identifier of the source database associated with create operation of this database.",
+          "type": "string",
+          "format": "arm-id",
+          "x-ms-mutability": [
+            "create"
+          ]
+        },
+        "restorePointInTime": {
+          "format": "date-time",
+          "description": "Conditional. If createMode is PointInTimeRestore, this value is required. Specifies the point in time (ISO8601 format) of the source database that will be restored to create the new database.",
+          "type": "string",
+          "x-ms-mutability": [
+            "create"
+          ]
         },
         "provisioningState": {
           "type": "string",
