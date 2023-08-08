@@ -70,6 +70,10 @@ model Datastore {
   adxClusterUri: string;
 
   @added(Versions.v2023_09_01_preview)
+  @doc("The Kusto cluster display name.")
+  kustoClusterDisplayName?: string;
+
+  @added(Versions.v2023_09_01_preview)
   @doc("The Kusto cluster URI.")
   kustoClusterUri: string;
 
