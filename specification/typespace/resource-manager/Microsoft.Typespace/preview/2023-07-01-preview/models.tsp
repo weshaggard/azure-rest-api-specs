@@ -9,7 +9,7 @@ using Azure.ResourceManager;
 
 namespace Microsoft.TypeSpace;
 
-@subscriptionResource
+@tenantResource
 model NameSpace is ProxyResource<NameSpaceProperties> {
   @doc("The namespace")
   @pattern("^[a-zA-Z0-9-.]{3,50}$")
@@ -27,7 +27,7 @@ model NameSpaceProperties {
   types: string[];
 }
 
-@subscriptionResource
+@tenantResource
 @parentResource(NameSpace)
 model Type is ProxyResource<TypeProperties> {
   @doc("The name of the type")
@@ -48,7 +48,7 @@ model TypeProperties {
   versions: string[];
 }
 
-@subscriptionResource
+@tenantResource
 @parentResource(Type)
 model Version is ProxyResource<VersionProperties> {
   @doc("The version of the type")
@@ -71,7 +71,7 @@ model VersionProperties {
   operations: string[];
 }
 
-@subscriptionResource
+@tenantResource
 @parentResource(Type)
 model Annotation is ProxyResource<AnnotationProperties> {
   @doc("The annotations of the type")
@@ -94,7 +94,7 @@ model AnnotationProperties {
   values: string;
 }
 
-@subscriptionResource
+@tenantResource
 @parentResource(Version)
 model Operation is ProxyResource<OperationProperties> {
   @doc("The name of the operation")
