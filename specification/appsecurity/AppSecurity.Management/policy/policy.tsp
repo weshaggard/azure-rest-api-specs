@@ -20,7 +20,7 @@ alias MaxCustomRulesCount = 100;
 alias MinManagedRulesCount = 1;
 alias MaxManagedRulesCount = 10;
 
-@doc("The Policy properties")
+@doc("The policy properties")
 model PolicyProperties {
   @doc("The status of the last operation")
   @visibility("read")

@@ -56,7 +56,7 @@ model RuleGroupScope {
   @doc("Relevant rule group name")
   ruleGroupName: string;
 
-  @doc("Relevant rules within the specified rule group. If not specified, the scope is the entire rule group.")
+  @doc("Relevant rules within the specified rule group. If not specified, the scope is the entire rule group")
   @maxItems(100)
   rules?: string[];
 }
