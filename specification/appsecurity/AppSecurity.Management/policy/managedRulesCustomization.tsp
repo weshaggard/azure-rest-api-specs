@@ -63,7 +63,7 @@ model RuleGroupScope {
 
 @doc("Defines a managed rule set override")
 model ManagedRuleSetOverride {
-    ...ManagedRuleSetId;
+  ...ManagedRuleSetId;
 
   @doc("Rule group level overrides")
   @extension("x-ms-identifiers", ["ruleGroupName"])

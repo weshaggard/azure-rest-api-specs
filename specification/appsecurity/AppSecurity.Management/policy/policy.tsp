@@ -13,6 +13,13 @@ using OpenAPI;
 
 namespace Microsoft.AppSecurity;
 
+alias MinResourceNameLength = 1;
+alias MaxResourceNameLength = 128;
+alias MaxProtectedEndpointsCount = 100;
+alias MaxCustomRulesCount = 100;
+alias MinManagedRulesCount = 1;
+alias MaxManagedRulesCount = 10;
+
 @doc("The Policy properties")
 model PolicyProperties {
   @doc("The status of the last operation")
@@ -24,7 +31,7 @@ model PolicyProperties {
 
   @doc("The list of endpoints this policy protects")
   @extension("x-ms-identifiers", ["endpointId"])
-  @maxItems(100)
+  @maxItems(MaxProtectedEndpointsCount)
   protectedEndpoints?: ProtectedEndpoint[];
 
   @doc("Rules for scrubbing sensitive log fields")
@@ -32,7 +39,7 @@ model PolicyProperties {
 
   @doc("User defined rules")
   @extension("x-ms-identifiers", ["name"])
-  @maxItems(100) // AppGW custom rules limitation is 100
+  @maxItems(MaxCustomRulesCount) // AppGW custom rules limitation is 100
   customRules?: CustomRule[];
 
   @doc("Describes the web protection policy")
@@ -52,18 +59,13 @@ model Policy is TrackedResource<PolicyProperties> {
   @segment("policies") // Path segment
   @key("policyName")
   @path
-  @minLength(1)
-  @maxLength(128)
+  @minLength(MinResourceNameLength)
+  @maxLength(MaxResourceNameLength)
   name: string;
-  // ...ResourceSku;
-}
 
-@doc("Request or response body of endpoints attachment/detachment operation")
-model ProtectedEndpointList {
-  @maxItems(100)
-  @extension("x-ms-identifiers", ["endpointId"])
-  @doc("List of endpoints to attach/detach to the policy, or that are currently protected by the policy")
-  protectedEndpoints: ProtectedEndpoint[];
+  // ...ResourceSku;
+
+  ...EntityTag;
 }
 
 @armResourceOperations

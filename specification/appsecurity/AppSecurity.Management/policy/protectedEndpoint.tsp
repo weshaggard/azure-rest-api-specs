@@ -11,7 +11,7 @@ namespace Microsoft.AppSecurity;
 model ProtectedEndpoint {
   // TODO - enable this when providerhub emitter supports this https://msazure.visualstudio.com/One/_workitems/edit/24658912
   // @doc("Defines the endpoint type")
-  // endpointType: EndpointType; 
+  // endpointType: EndpointType;
 
   @doc("Fully qualified ARM ID of the endpoint to protect")
   endpointId: ProtectedEndpointId;
