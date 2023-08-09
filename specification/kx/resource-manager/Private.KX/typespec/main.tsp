@@ -19,7 +19,8 @@ using Azure.ResourceManager;
 using Azure.Core;
 
 @doc("A kdbInsightsEnterprise resource")
-model KdbInsightsEnterpriseResource is TrackedResource<KdbInsightsEnterpriseProperties> {
+model KdbInsightsEnterpriseResource
+  is TrackedResource<KdbInsightsEnterpriseProperties> {
   @doc("The name of the kdbInsightsEnterprise resource")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("kdbInsightsEnterpriseName")
@@ -32,6 +33,7 @@ model KdbInsightsEnterpriseResource is TrackedResource<KdbInsightsEnterpriseProp
 @doc("The full set of provisioning states")
 enum ProvisioningState {
   ...Azure.ResourceManager.ResourceProvisioningState,
+
   @doc("Provisioning the resource is in progress")
   Provisioning,
 
@@ -73,6 +75,11 @@ model KdbInsightsEnterpriseProperties {
   @pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])[a-zA-Z0-9!@#\\$%\\^&\\*]{14,320}$")
   keyCloakPassword: PasswordString;
 
+  @visibility("read", "create")
+  @doc("The KeyCloak user name")
+  @pattern("^[A-Za-z0-9]{8,20}$")
+  keyCloakAdminUsername?: string;
+
   @visibility("create")
   @doc("The password to use for the UI")
   @pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])[a-zA-Z0-9!@#\\$%\\^&\\*]{14,320}$")
@@ -86,43 +93,51 @@ model KdbInsightsEnterpriseProperties {
   @visibility("read", "create")
   @doc("The UI user name")
   @pattern("^[A-Za-z0-9]{8,20}$")
-  uiUsername: string;  
-  
+  uiUsername: string;
+
   @visibility("read", "create")
   @doc("AKS System node pool VM size")
-  systemNodePoolVmSize?: string = "Standard_D2d_v4";  
+  systemNodePoolVmSize?: string;
+
+  @visibility("read", "create")
+  @doc("Number of VMs in the AKS System Node Pool")
+  systemNodePoolVmCount?: int64;
 
   @visibility("read", "create")
   @doc("AKS User node pool VM size")
-  userNodePoolVmSize?: string = "Standard_D8ds_v4";  
+  userNodePoolVmSize?: string;
+
+  @visibility("read", "create")
+  @doc("Number of VMs in the AKS System Node Pool")
+  userNodePoolVmCount?: int64;
 
   @visibility("read", "create")
   @doc("Storage Class for ReadWriteMany volumes")
-  readWriteManyStorageClass?: ReadWriteManyStorageClass;  
+  readWriteManyStorageClass?: ReadWriteManyStorageClass;
 
   @visibility("read", "create")
   @doc("Storage Class for ReadWriteOnce volumes derived from IsPremiumStorageEnabled")
-  readWriteOnceStorageClass?: string = "managed-csi";
+  readWriteOnceStorageClass?: string;
 
   @visibility("read", "create")
   @doc("RT storage class value, derived from IsPremiumStorageEnabled")
-  rtStorageClass?: string = "managed-csi";
+  rtStorageClass?: string;
 
   @visibility("read", "create")
   @doc("Indicate whether to deploy a Ceph cluster into AKS and enable rook-cephfs storage class")
-  isRookCeph?: boolean = false;
+  isRookCeph?: boolean;
 
   @visibility("read", "create")
   @doc("Indicate whether to enable Microsoft Defender for Containers")
-  securityMonitoringEnabled?: boolean = false;
+  securityMonitoringEnabled?: boolean;
 
   @visibility("read", "create")
   @doc("Indicate whether to use Premium Storage for ReadWriteOnce volumes")
-  isPremiumStorageEnabled?: boolean = false;
+  isPremiumStorageEnabled?: boolean;
 
   @visibility("read", "create")
   @doc("Indicate whether to send notification emails to the client")
-  isNotificationsOn?: boolean = false;
+  isNotificationsOn?: boolean;
 
   @visibility("read", "create")
   @doc("Email address for alert notifications")
@@ -132,11 +147,11 @@ model KdbInsightsEnterpriseProperties {
   @visibility("read", "create")
   @doc("A custom *.*.0.0/16 Address space for the kdb Insights Enterprise cluster Virtual Network")
   @pattern("\\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\\b/[0-9]+")
-  vnetAddressSpace?: string = "10.0.0.0/16";
+  vnetAddressSpace?: string;
 
   @visibility("read", "create")
   @doc("Indicate whether to secure access to the Kubernetes API server using authorized public IP address ranges")
-  isAuthorizedIpRanges?: boolean = false;
+  isAuthorizedIpRanges?: boolean;
 
   @visibility("read", "create")
   @doc("A comma-separated list of public IP addresses or address ranges")
@@ -147,16 +162,24 @@ model KdbInsightsEnterpriseProperties {
   @doc("AKS Container insights retention period in days")
   @minValue(30)
   @maxValue(730)
-  aksContainerInsightsRetentionDays?: int64 = 30;
+  aksContainerInsightsRetentionDays?: int64;
 
   @visibility("read", "create")
   @doc("AKS Kubernetes audit log retention period in days. A value of 0 will retain the events indefinitely.")
-  aksLogRetentionDays?: int64 = 30;  
-  
+  aksLogRetentionDays?: int64;
+
   @visibility("read", "create")
   @doc("AKS Kubernetes metrics retention period in days. A value of 0 will retain the metrics indefinitely.")
-  aksMetricsRetentionDays?: int64 = 30;
-  
+  aksMetricsRetentionDays?: int64;
+
+  @visibility("read", "create")
+  @doc("Availability Zones options.")
+  availabilityZones?: string[];
+
+  @visibility("read", "create")
+  @doc("Project name.")
+  projectName?: string;
+
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
@@ -170,7 +193,10 @@ model KdbInsightsEnterpriseProperties {
 interface KdbInsightsEnterprise {
   get is ArmResourceRead<KdbInsightsEnterpriseResource>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<KdbInsightsEnterpriseResource>;
-  update is ArmResourcePatchAsync<KdbInsightsEnterpriseResource, KdbInsightsEnterpriseProperties>;
+  update is ArmResourcePatchAsync<
+    KdbInsightsEnterpriseResource,
+    KdbInsightsEnterpriseProperties
+  >;
   delete is ArmResourceDeleteAsync<KdbInsightsEnterpriseResource>;
   listByResourceGroup is ArmResourceListByParent<KdbInsightsEnterpriseResource>;
   listBySubscription is ArmListBySubscription<KdbInsightsEnterpriseResource>;
