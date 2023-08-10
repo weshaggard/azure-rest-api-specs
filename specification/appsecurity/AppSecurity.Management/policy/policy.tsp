@@ -54,7 +54,7 @@ model PolicyProperties {
 
 @doc("Policy resource definition")
 model Policy is TrackedResource<PolicyProperties> {
-  //@pattern("^[a-zA-Z0-9-]{3,24}$")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
   @doc("The name of the policy")
   @segment("policies") // Path segment
   @key("policyName")

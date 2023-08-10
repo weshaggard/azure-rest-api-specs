@@ -50,7 +50,7 @@ model CustomBlockResponse {
   @doc("Response status code")
   statusCode: HttpStatusCodeType;
 
-  @doc("Resonse body. The body must be specified in base64 encoding")
+  @doc("Response body. The body must be specified in base64 encoding")
   @pattern(CustomBlockResponsePattern)
   @maxLength(MaxCustomBlockResponseBodyLength)
   body: string;
