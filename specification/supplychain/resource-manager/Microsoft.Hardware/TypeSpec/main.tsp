@@ -17,7 +17,21 @@ using Azure.ResourceManager;
   version: "2023-07-12-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+@useDependency(Azure.Core.Versions.v1_0_Preview_2)
 namespace Microsoft.Hardware;
+
+interface OrderOperations{
+  @summary("Preview Order")
+  @doc("A sync API for previewing the Order. This will also return the taxes and fees as part of validation response.")
+  @route("/orders/preview")
+  @post
+  previewOrder is Azure.Core.RpcOperation<{
+      @body
+      @doc("The request of preview order.")
+      body: Order;
+    },
+    Order>;
+}
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
