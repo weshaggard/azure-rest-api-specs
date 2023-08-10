@@ -3,6 +3,7 @@ import "@typespec/versioning";
 import "@azure-tools/typespec-autorest";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
+import "./models/azureHost.tsp";
 
 
 
@@ -19,34 +20,10 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
 
-@doc("Azure Host Properties")
-model AzureHostProperties {
-    @doc("Node Id")
-    nodeId: string;
-
-    @doc("Cluster Id")
-    clusterId: string;
-
-    @doc("Provisionsing state")
-    provisioningState?: ProvisioningState;
-}
-
-
-@doc("Provisionsingin state enum")
-enum ProvisioningState {
-  Provisioning,
-  Updating,
-  Deleting,
-  Accepted,
-  Succeeded,
-  Failed,
-  Canceled,
-}
-
 @tenantResource
-model AzureHost is ProxyResource<AzureHostProperties> {
+model AzureHostResource is ProxyResource<AzureHostProperties> {
     @key("azureHostName")
-    @segment("azureHosts")
+    @segment("physical_azureHosts")
     @doc("Azure Host")
     @path
     name: string;
@@ -54,7 +31,7 @@ model AzureHost is ProxyResource<AzureHostProperties> {
 
 @armResourceOperations
 interface AzureHosts {
-    get is ArmResourceRead<AzureHost>;
+    get is ArmResourceRead<AzureHostResource>;
 } 
 
 interface Operations extends Azure.ResourceManager.Operations {}
