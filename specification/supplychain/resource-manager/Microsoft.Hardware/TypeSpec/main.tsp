@@ -334,19 +334,19 @@ alias DefaultProviderNamespace = {
 };
 
 @armResourceOperations
-interface PreviewOrderInterface {
+interface PreviewOrdersInterface {
 @armResourceCollectionAction
   @armProviderNameValue
-  @doc("Implements previewOrder operations")
-  @TypeSpec.Rest.action("previewOrder")
+  @doc("Implements previewOrders operations")
+  @TypeSpec.Rest.action("previewOrders")
   @post
-  op previewOrder(
+  op previewOrders(
     ...SubscriptionIdParameter,
     ...ResourceGroupParameter,
     ...DefaultProviderNamespace,
     ...ApiVersionParameter,
 
-    @doc("The previewOrder request")
+    @doc("The previewOrders request")
     @body
     body: Order,
   ): Order | ErrorResponse;
