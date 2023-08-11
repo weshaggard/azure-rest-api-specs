@@ -342,8 +342,8 @@ interface PreviewOrderInterface {
   @post
   op previewOrder(
     ...SubscriptionIdParameter,
-    ...DefaultProviderNamespace,
     ...ResourceGroupParameter,
+    ...DefaultProviderNamespace,
     ...ApiVersionParameter,
 
     @doc("The previewOrder request")
