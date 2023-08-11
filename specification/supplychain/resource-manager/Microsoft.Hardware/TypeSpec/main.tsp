@@ -17,10 +17,10 @@ using Azure.ResourceManager;
   version: "2023-07-12-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-@useDependency(Azure.Core.Versions.v1_0_Preview_2)
+//@useDependency(Azure.Core.Versions.v1_0_Preview_2)
 namespace Microsoft.Hardware;
 
-interface OrderOperations{
+/*interface OrderOperations{
   @summary("Preview Order")
   @doc("A sync API for previewing the Order. This will also return the taxes and fees as part of validation response.")
   @route("/orders/preview")
@@ -31,7 +31,7 @@ interface OrderOperations{
       body: Order;
     },
     Order>;
-}
+}*/
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
