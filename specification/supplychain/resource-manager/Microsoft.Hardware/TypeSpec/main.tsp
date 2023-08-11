@@ -325,3 +325,29 @@ enum ProvisioningState {
   Pending
 
 }
+
+alias DefaultProviderNamespace = {
+  @path
+  @TypeSpec.Rest.segment("providers")
+  @doc("The provider namespace for the resource.")
+  provider: "Microsoft.Hardware";
+};
+
+@armResourceOperations
+interface PreviewOrderInterface {
+@armResourceCollectionAction
+  @armProviderNameValue
+  @doc("Implements prefulfill operations")
+  @TypeSpec.Rest.action("previewOrder")
+  @post
+  op prefulfill(
+    ...SubscriptionIdParameter,
+    ...DefaultProviderNamespace,
+    ...ResourceGroupParameter,
+    ...ApiVersionParameter,
+
+    @doc("The Prefulfill request")
+    @body
+    body: string,
+  ): string | ErrorResponse;
+}
