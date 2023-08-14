@@ -78,7 +78,7 @@ model KdbInsightsEnterpriseProperties {
   @visibility("read", "create")
   @doc("The KeyCloak user name")
   @pattern("^[A-Za-z0-9]{8,20}$")
-  keyCloakAdminUsername?: string;
+  keyCloakAdminUsername?: string = "user";
 
   @visibility("create")
   @doc("The password to use for the UI")
@@ -96,19 +96,19 @@ model KdbInsightsEnterpriseProperties {
 
   @visibility("read", "create")
   @doc("AKS System node pool VM size")
-  systemNodePoolVmSize?: string;
+  systemNodePoolVmSize?: string = "Standard_D2d_v4";
 
   @visibility("read", "create")
   @doc("Number of VMs in the AKS System Node Pool")
-  systemNodePoolVmCount?: int64;
+  systemNodePoolVmCount?: int64 = 3;
 
   @visibility("read", "create")
   @doc("AKS User node pool VM size")
-  userNodePoolVmSize?: string;
+  userNodePoolVmSize?: string = "Standard_D16ds_v4";
 
   @visibility("read", "create")
   @doc("Number of VMs in the AKS System Node Pool")
-  userNodePoolVmCount?: int64;
+  userNodePoolVmCount?: int64 = 3;
 
   @visibility("read", "create")
   @doc("Storage Class for ReadWriteMany volumes")
@@ -124,19 +124,19 @@ model KdbInsightsEnterpriseProperties {
 
   @visibility("read", "create")
   @doc("Indicate whether to deploy a Ceph cluster into AKS and enable rook-cephfs storage class")
-  isRookCeph?: boolean;
+  isRookCeph?: boolean = false;
 
   @visibility("read", "create")
   @doc("Indicate whether to enable Microsoft Defender for Containers")
-  securityMonitoringEnabled?: boolean;
+  securityMonitoringEnabled?: boolean = false;
 
   @visibility("read", "create")
   @doc("Indicate whether to use Premium Storage for ReadWriteOnce volumes")
-  isPremiumStorageEnabled?: boolean;
+  isPremiumStorageEnabled?: boolean = false;
 
   @visibility("read", "create")
   @doc("Indicate whether to send notification emails to the client")
-  isNotificationsOn?: boolean;
+  isNotificationsOn?: boolean = false;
 
   @visibility("read", "create")
   @doc("Email address for alert notifications")
@@ -145,12 +145,12 @@ model KdbInsightsEnterpriseProperties {
 
   @visibility("read", "create")
   @doc("A custom *.*.0.0/16 Address space for the kdb Insights Enterprise cluster Virtual Network")
-  @pattern("\\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\\b/[0-9]+")
-  vnetAddressSpace?: string;
+  @pattern("\\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\\b\\/[0-9]+")
+  vnetAddressSpace?: string = "10.0.0.0/16";
 
   @visibility("read", "create")
   @doc("Indicate whether to secure access to the Kubernetes API server using authorized public IP address ranges")
-  isAuthorizedIpRanges?: boolean;
+  isAuthorizedIpRanges?: boolean = false;
 
   @visibility("read", "create")
   @doc("A comma-separated list of public IP addresses or address ranges")
@@ -161,23 +161,23 @@ model KdbInsightsEnterpriseProperties {
   @doc("AKS Container insights retention period in days")
   @minValue(30)
   @maxValue(730)
-  aksContainerInsightsRetentionDays?: int64;
+  aksContainerInsightsRetentionDays?: int64 = 30;
 
   @visibility("read", "create")
   @doc("AKS Kubernetes audit log retention period in days. A value of 0 will retain the events indefinitely.")
-  aksLogRetentionDays?: int64;
+  aksLogRetentionDays?: int64 = 30;
 
   @visibility("read", "create")
   @doc("AKS Kubernetes metrics retention period in days. A value of 0 will retain the metrics indefinitely.")
-  aksMetricsRetentionDays?: int64;
+  aksMetricsRetentionDays?: int64 = 30;
 
   @visibility("read", "create")
   @doc("Availability Zones options.")
-  availabilityZones?: string[];
+  availabilityZones?: string[] = ["1", "2", "3"];
 
   @visibility("read", "create")
   @doc("Project name.")
-  projectName?: string;
+  projectName?: string = "kdbInsightsEnt";
 
   @visibility("read")
   @doc("The status of the last operation.")
