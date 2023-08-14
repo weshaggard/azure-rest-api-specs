@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Microsoft Inventory",
-    "version": "2023-08-09",
+    "version": "2023-08-09-preview",
     "x-typespec-generated": [
       {
         "emitter": "@azure-tools/typespec-autorest"
@@ -77,7 +77,38 @@
         }
       }
     },
-    "/providers/Microsoft.Inventory/physical_azureHosts/{azureHostName}": {
+    "/providers/Microsoft.Inventory/physicalAzureHosts": {
+      "get": {
+        "operationId": "AzureHosts_ListByTenant",
+        "tags": [
+          "AzureHosts"
+        ],
+        "description": "List AzureHostResource resources by tenant",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/AzureHostResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/providers/Microsoft.Inventory/physicalAzureHosts/{azureHostName}": {
       "get": {
         "operationId": "AzureHosts_Get",
         "tags": [
@@ -93,7 +124,8 @@
             "in": "path",
             "description": "Azure Host",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "[a-zA-Z0-9]+[-]*"
           }
         ],
         "responses": {
@@ -154,6 +186,27 @@
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
         }
+      ]
+    },
+    "AzureHostResourceListResult": {
+      "type": "object",
+      "description": "The response of a AzureHostResource list operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The AzureHostResource items on this page",
+          "items": {
+            "$ref": "#/definitions/AzureHostResource"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
       ]
     },
     "ProvisioningState": {
