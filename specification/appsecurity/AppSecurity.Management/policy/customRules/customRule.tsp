@@ -5,13 +5,23 @@ using TypeSpec.Rest;
 
 namespace Microsoft.AppSecurity;
 
+alias MinCustomRuleNameLength = 1;
+alias MaxCustomRuleNameLength = 128;
+alias CustomRuleNamePattern = "^[a-zA-Z][a-zA-Z0-9]*$";
+// Min-Max = 0-65535 is basically an int16, but it is not supported in Azure resource manager
+alias MinCustomRulePriority = 0;
+alias MaxCustomRulePriority = 65535;
+alias MinCustomRuleConditionsCount = 1;
+alias MaxCustomRuleConditionsCount = 10;
+alias RateLimitMinThreshold = 1;
+
 @doc("Defines a custom rule")
 @discriminator("ruleType")
 model CustomRule {
   @doc("The name of the rule")
-  @minLength(1)
-  @maxLength(128)
-  @pattern("^[a-zA-Z][a-zA-Z0-9]*$")
+  @minLength(MinCustomRuleNameLength)
+  @maxLength(MaxCustomRuleNameLength)
+  @pattern(CustomRuleNamePattern)
   name: string;
 
   @doc("The state of the custom rule. Default is Enabled")
@@ -21,8 +31,8 @@ model CustomRule {
   action: CustomRuleActionType;
 
   @doc("Describes priority of the rule. Rules with a lower value will be evaluated before rules with a higher value")
-  @minValue(0) // Assuming AppGW "100" doesn't exist anymore
-  @maxValue(65535) // This is basically an int16, which is not supported in Azure resource manager
+  @minValue(MinCustomRulePriority) // Assuming AppGW "100" doesn't exist anymore
+  @maxValue(MaxCustomRulePriority)
   priority: int32;
 
   // TODO - move this inside the specific custom rule type <https://msazure.visualstudio.com/One/_backlogs/backlog/DDoS%20ILDC/Features/?workitem=24659181>
@@ -30,8 +40,8 @@ model CustomRule {
   // @doc("The list of conditions that must be met for an incoming request to be included in the rate calculation")
   @doc("A list of conditions that must be met for the actions to be executed")
   @extension("x-ms-identifiers", [])
-  @minItems(1)
-  @maxItems(10)
+  @minItems(MinCustomRuleConditionsCount)
+  @maxItems(MaxCustomRuleConditionsCount)
   matchConditions: CustomRuleCondition[];
 }
 
@@ -56,7 +66,7 @@ model RateLimit {
   durationInMinutes: DurationInMinutes = DurationInMinutes.One;
 
   @doc("If the total number of requests exceeds this threshold during a rate limit duration, the rate limit action will be invoked")
-  @minValue(1)
+  @minValue(RateLimitMinThreshold)
   threshold: int32;
 
   @doc("Group requests based on their type and apply rate limits to each group independently. Default is ClientAddr based grouping")

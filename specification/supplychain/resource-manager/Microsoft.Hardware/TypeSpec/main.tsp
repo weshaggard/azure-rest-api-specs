@@ -17,7 +17,21 @@ using Azure.ResourceManager;
   version: "2023-07-12-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+//@useDependency(Azure.Core.Versions.v1_0_Preview_2)
 namespace Microsoft.Hardware;
+
+/*interface OrderOperations{
+  @summary("Preview Order")
+  @doc("A sync API for previewing the Order. This will also return the taxes and fees as part of validation response.")
+  @route("/orders/preview")
+  @post
+  previewOrder is Azure.Core.RpcOperation<{
+      @body
+      @doc("The request of preview order.")
+      body: Order;
+    },
+    Order>;
+}*/
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -310,4 +324,30 @@ enum ProvisioningState {
   @doc("Order is pending")
   Pending
 
+}
+
+alias DefaultProviderNamespace = {
+  @path
+  @TypeSpec.Rest.segment("providers")
+  @doc("The provider namespace for the resource.")
+  provider: "Microsoft.Hardware";
+};
+
+@armResourceOperations
+interface PreviewOrdersInterface {
+@armResourceCollectionAction
+  @armProviderNameValue
+  @doc("Implements previewOrders operations")
+  @TypeSpec.Rest.action("previewOrders")
+  @post
+  op previewOrders(
+    ...SubscriptionIdParameter,
+    ...ResourceGroupParameter,
+    ...DefaultProviderNamespace,
+    ...ApiVersionParameter,
+
+    @doc("The previewOrders request")
+    @body
+    body: Order,
+  ): Order | ErrorResponse;
 }

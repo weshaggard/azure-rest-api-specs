@@ -3,6 +3,18 @@ using TypeSpec.Rest;
 
 namespace Microsoft.AppSecurity;
 
+alias MinIpMatchConditionMatchValueCount = 1;
+alias MaxIpMatchConditionMatchValueCount = 600;
+alias MinGeoMatchConditionMatchValueCount = 1;
+alias MaxGeoMatchConditionMatchValueCount = 100;
+alias MinMatchVariableSelectorLength = 1;
+alias MaxMatchVariableSelectorLength = 128;
+alias MinStringMatchConditionMatchValueCount = 1;
+alias MaxStringMatchConditionMatchValueCount = 10;
+alias MaxMatchConditionTransformationsCount = 20;
+alias MinExistsMatchConditionMatchValueLength = 0;
+alias MaxExistsMatchConditionMatchValueLength = 1024;
+
 @doc("Defines a custom rule condition")
 @discriminator("conditionType")
 model CustomRuleCondition {
@@ -23,8 +35,8 @@ model IpMatchCondition extends CustomRuleCondition {
   // matchValue: IpListResourceId;
 
   @doc("A list of mutually disjoint IP addresses or CIDR ranges (IPv4 or IPv6)")
-  @minItems(1)
-  @maxItems(600)
+  @minItems(MinIpMatchConditionMatchValueCount)
+  @maxItems(MaxIpMatchConditionMatchValueCount)
   matchValue: string[];
 }
 
@@ -45,8 +57,8 @@ model GeoMatchCondition extends CustomRuleCondition {
   // matchValue: GeoListResourceId;
 
   @doc("List of countries or regions")
-  @minItems(1)
-  @maxItems(100)
+  @minItems(MinGeoMatchConditionMatchValueCount)
+  @maxItems(MaxGeoMatchConditionMatchValueCount)
   matchValue: string[];
 }
 
@@ -62,17 +74,17 @@ model StringMatchCondition extends CustomRuleCondition {
   matchVariable: StringOperatorVariable;
 
   @doc("Match against a specific key from RequestHeader, PostArgs and RequestCookies. Default is Null") // TODO - generate this doc according to WithSelectorOperatorVariable
-  @minLength(1)
-  @maxLength(128)
+  @minLength(MinMatchVariableSelectorLength)
+  @maxLength(MaxMatchVariableSelectorLength)
   matchVariableSelector?: string;
 
   @doc("The condition is met if any of the values match the variable with the given operator")
-  @minItems(1)
-  @maxItems(10)
+  @minItems(MinStringMatchConditionMatchValueCount)
+  @maxItems(MaxStringMatchConditionMatchValueCount)
   matchValue: string[]; //TODO - restrict maxLength
 
   @doc("Describes what transforms applied before matching")
-  @maxItems(20)
+  @maxItems(MaxMatchConditionTransformationsCount)
   transformations?: TransformType[];
 }
 
@@ -109,8 +121,8 @@ model ExistsMatchCondition extends CustomRuleCondition {
   matchVariable: ExistsOperatorVariable;
 
   @doc("This condition is met if the matchValue is one of the matchVariable's keys")
-  @minLength(0)
-  @maxLength(1024)
+  @minLength(MinExistsMatchConditionMatchValueLength)
+  @maxLength(MaxExistsMatchConditionMatchValueLength)
   matchValue: string;
 }
 
@@ -186,16 +198,16 @@ enum ExistsOperatorVariable {
 
 @doc("Operators that can be applied in conditions of type String")
 enum StringOperator {
-  @doc("Equals")
+  @doc("Performs an ordinal (case-sensitive and culture-insensitive) comparison")
   Equals_: "Equals", // Changes the generated name and prevents error CS0108, in which Equal hides inherited member of 'ValueType.Equals(object?)'
 
-  @doc("Contains")
+  @doc("checks whether a string contains a sequence of characters")
   Contains,
 
-  @doc("Starts with")
-  BeginsWith, // TODO - change to StartsWith so it would be consistent with managedRules.tsp ExclusionSelectorMatchOperator
+  @doc("Checks whether a string starts with a specified string")
+  StartsWith, // TODO - change to StartsWith so it would be consistent with managedRules.tsp ExclusionSelectorMatchOperator
 
-  @doc("Ends with")
+  @doc("Checks whether a string ends with a specified string")
   EndsWith,
 
   @doc("Regex match")

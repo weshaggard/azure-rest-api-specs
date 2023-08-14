@@ -2,6 +2,11 @@ using OpenAPI;
 
 namespace Microsoft.AppSecurity;
 
+alias MinRedirectUrlLength = 3;
+alias MaxRedirectUrlLength = 2048;
+alias CustomBlockResponsePattern = "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$";
+alias MaxCustomBlockResponseBodyLength = 32768;
+
 @doc("Defines top-level policy settings")
 model PolicySettings {
   @doc("The state of the policy. Default value is Enabled")
@@ -11,8 +16,8 @@ model PolicySettings {
   mode?: PolicyMode = PolicyMode.Detection;
 
   @doc("If action type is redirect, this field represents redirect URL for the client")
-  @minLength(3)
-  @maxLength(2048)
+  @minLength(MinRedirectUrlLength)
+  @maxLength(MaxRedirectUrlLength)
   redirectUrl?: string = ""; // TODO - didn't find a url built-in type in /workspace/src/API/node_modules/@typespec/compiler/lib/lib.tsp
 
   @doc("Custom block response configuration, if action type is block")
@@ -45,9 +50,9 @@ model CustomBlockResponse {
   @doc("Response status code")
   statusCode: HttpStatusCodeType;
 
-  @doc("Resonse body. The body must be specified in base64 encoding")
-  @pattern("^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$")
-  @maxLength(32768)
+  @doc("Response body. The body must be specified in base64 encoding")
+  @pattern(CustomBlockResponsePattern)
+  @maxLength(MaxCustomBlockResponseBodyLength)
   body: string;
 }
 

@@ -26,6 +26,10 @@ enum Versions {
   @doc("2023-07-13-preview")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_07_13_preview: "2023-07-13-preview",
+
+  @doc("2023-08-07-preview")
+  @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+  v2023_08_07_preview: "2023-08-07-preview",
 }
 
 interface Operations extends Azure.ResourceManager.Operations {}
