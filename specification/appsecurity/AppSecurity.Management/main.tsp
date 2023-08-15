@@ -5,16 +5,15 @@ import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 
 import "./common.tsp";
-import "./ipList/ipList.tsp";
-import "./geoList/geoList.tsp";
-import "./policy/customRules.tsp";
+import "./policy/customRules/customRule.tsp";
+import "./policy/customRules/matchCondition.tsp";
 import "./policy/logScrubbing.tsp";
 import "./policy/managedRules.tsp";
+import "./policy/managedRulesCustomization.tsp";
 import "./policy/policySettings.tsp";
 import "./policy/webProtection.tsp";
-import "./policy/apiProtection.tsp";
 import "./policy/botProtection.tsp";
-import "./policy/ddosProtection.tsp";
+import "./policy/protectedEndpoint.tsp";
 import "./policy/policy.tsp";
 
 using TypeSpec.Http;

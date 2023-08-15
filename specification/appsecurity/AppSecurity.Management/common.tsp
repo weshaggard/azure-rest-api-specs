@@ -31,37 +31,16 @@ enum ProvisioningState {
 enum EnabledState {
   @doc("The object is enabled")
   Enabled,
+
   @doc("The object is disabled")
   Disabled,
 }
 
-scalar IpListResourceId
-  extends Azure.ResourceManager.ResourceIdentifier<[
-    {
-      type: "Microsoft.AppSecurity/IpLists",
-    }
-  ]>;
+@doc("The type of the endpoint")
+enum EndpointType {
+  @doc("application gateway endpoints, which are under Microsoft.Network/applicationGateways")
+  ApplicationGateway,
 
-scalar GeoListResourceId
-  extends Azure.ResourceManager.ResourceIdentifier<[
-    {
-      type: "Microsoft.AppSecurity/GeoLists",
-    }
-  ]>;
-
-scalar ProtectedEndpointId
-  extends Azure.ResourceManager.ResourceIdentifier<[
-    {
-      type: "Microsoft.Network/applicationGateways",
-    },
-    {
-      type: "Microsoft.Network/applicationGateways/httpListeners",
-    },
-    {
-      type: "Microsoft.Network/applicationGateways/requestRoutingRules",
-    },
-    {
-      type: "Microsoft.CDN/frontdoors",
-    }
-    // TODO - add frontdoors/routingrules and all others
-  ]>;
+  @doc("FrontDoor endpoints, which are under Microsoft.Cdn/profiles")
+  FrontDoor,
+}

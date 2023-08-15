@@ -26,16 +26,16 @@ These are the global settings for the bluefin.
 
 ```yaml
 openapi-type: arm
-tag: package-2022-11-01-preview
+tag: package-2023-06-26-preview
 ```
 
-### Tag: package-2022-11-01-preview
+### Tag: package-2023-06-26-preview
 
-These settings apply only when `--tag=package-2022-11-01-preview` is specified on the command line.
+These settings apply only when `--tag=package-2023-06-26-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-11-01-preview'
+```yaml $(tag) == 'package-2023-06-26-preview'
 input-file:
-  - Microsoft.Bluefin/preview/2022-11-01-preview/bluefin.json
+  - Microsoft.bluefin/preview/2023-06-26-preview/openapi.json
 ```
 
 ---

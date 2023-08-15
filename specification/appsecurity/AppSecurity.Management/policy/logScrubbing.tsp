@@ -2,18 +2,27 @@ using OpenAPI;
 
 namespace Microsoft.AppSecurity;
 
+alias MinScrubbingRuleSelectorLength = 1;
+alias MaxScrubbingRuleSelectorLength = 128;
+alias MaxScrubbingRulesCount = 100;
+
 @doc("Supported variable types for scrubbing rules")
 enum ScrubbingRuleMatchVariable {
   @doc("The request headers to be scrubbed")
   RequestHeaderNames,
+
   @doc("The request cookies to be scrubbed")
   RequestCookieNames,
+
   @doc("The request arguments to be scrubbed")
   RequestArgNames,
+
   @doc("The request post arguments to be scrubbed")
   RequestPostArgNames,
+
   @doc("The request JSON arguments to be scrubbed")
   RequestJSONArgNames,
+
   @doc("The request IP address")
   RequestIPAddress,
 }
@@ -22,6 +31,7 @@ enum ScrubbingRuleMatchVariable {
 enum ScrubbingRuleSelectorMatchOperator {
   @doc("Equals operator")
   Equals_: "Equals", // Changes the generated name and prevents error CS0108, in which Equal hides inherited member of 'ValueType.Equals(object?)'
+
   @doc("Equals any operator")
   EqualsAny,
 }
@@ -38,8 +48,8 @@ model ScrubbingRule {
   selectorMatchOperator: ScrubbingRuleSelectorMatchOperator;
 
   @doc("When matchVariable is a collection, operator used to specify which elements in the collection this rule applies to")
-  @minLength(1)
-  @maxLength(128)
+  @minLength(MinScrubbingRuleSelectorLength)
+  @maxLength(MaxScrubbingRuleSelectorLength)
   selector: string;
 }
 
@@ -50,6 +60,6 @@ model LogScrubbing {
 
   @doc("The rules that are applied to the logs for scrubbing")
   @extension("x-ms-identifiers", [])
-  @maxItems(100)
+  @maxItems(MaxScrubbingRulesCount)
   scrubbingRules: ScrubbingRule[];
 }

@@ -12,10 +12,21 @@
         "policySettings": {
           "mode": "Prevention",
           "redirectUrl": "http://bing.com",
-          "customBlockResponseStatusCode": 499,
-          "customBlockResponseBody": "SGVsbG8=",
-          "maxRequestBodySizeInKb": 128,
-          "fileUploadLimitInMb": 100
+          "customBlockResponse": {
+            "body": "SGVsbG8=",
+            "statusCode": 499
+          },
+          "requestBodySizeLimitations": [
+            {
+              "maxSizeInKb": 128
+            }
+          ],
+          "fileUploadSizeLimitations": [
+            {
+              "endpointType": "ApplicationGateway",
+              "maxSizeInMb": 100
+            }
+          ]
         },
         "logScrubbing": {
           "state": "Enabled",
@@ -37,17 +48,18 @@
         "customRules": [
           {
             "name": "Rule1",
+            "ruleType": "RateBased",
             "state": "Enabled",
             "action": "Block",
             "priority": 10,
             "rateLimit": {
-              "limitType": "ClientIp",
+              "groupBy": "ClientAddr",
               "durationInMinutes": 1,
-              "maxRequestsPerSecond": 1000
+              "threshold": 1000
             },
             "matchConditions": [
               {
-                "negationCondition": true,
+                "negateCondition": true,
                 "conditionType": "Ip",
                 "matchVariable": "ClientAddr",
                 "matchValue": [
@@ -59,6 +71,7 @@
           },
           {
             "name": "Rule2",
+            "ruleType": "MatchBased",
             "action": "Redirect",
             "priority": 20,
             "matchConditions": [
@@ -71,11 +84,11 @@
                 ]
               },
               {
-                "negationCondition": false,
+                "negateCondition": false,
                 "conditionType": "String",
                 "operator": "Contains",
                 "matchVariable": "RequestHeader",
-                "selector": "UserAgent",
+                "matchVariableSelector": "UserAgent",
                 "matchValue": [
                   "windows"
                 ],
@@ -95,66 +108,7 @@
           "managedRules": [
             {
               "ruleSetType": "DRS",
-              "ruleSetVersion": "3.2",
-              "ruleGroupOverrides": [
-                {
-                  "ruleGroupName": "REQUEST-930-APPLICATION-ATTACK-LFI",
-                  "groupOverride": {
-                    "state": "Disabled"
-                  }
-                },
-                {
-                  "ruleGroupName": "REQUEST-931-APPLICATION-ATTACK-RFI",
-                  "groupOverride": {
-                    "state": "Enabled",
-                    "action": "AnomalyScoring"
-                  },
-                  "rules": [
-                    {
-                      "ruleId": "931120",
-                      "state": "Enabled",
-                      "action": "Redirect"
-                    },
-                    {
-                      "ruleId": "931130",
-                      "state": "Disabled"
-                    }
-                  ]
-                }
-              ],
-              "exclusions": [
-                {
-                  "matchVariable": "RequestArgNames",
-                  "selectorMatchOperator": "EndsWith",
-                  "selector": "hello"
-                },
-                {
-                  "matchVariable": "RequestArgNames",
-                  "selectorMatchOperator": "StartsWith",
-                  "selector": "hello",
-                  "ruleGroups": [
-                    {
-                      "ruleGroupName": "REQUEST-930-APPLICATION-ATTACK-LFI",
-                      "rules": [
-                        "930120"
-                      ]
-                    },
-                    {
-                      "ruleGroupName": "REQUEST-932-APPLICATION-ATTACK-RCE"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        "apiProtection": {
-          "managedRules": [
-            {
-              "ruleSetType": "ApiProtection",
-              "ruleSetVersion": "1.0",
-              "ruleGroupOverrides": [],
-              "exclusions": []
+              "ruleSetVersion": "3.2"
             }
           ]
         },
@@ -162,9 +116,7 @@
           "managedRules": [
             {
               "ruleSetType": "BotProtection",
-              "ruleSetVersion": "1.0",
-              "ruleGroupOverrides": [],
-              "exclusions": []
+              "ruleSetVersion": "1.0"
             }
           ]
         }
@@ -184,10 +136,26 @@
           "policySettings": {
             "mode": "Prevention",
             "redirectUrl": "http://bing.com",
-            "customBlockResponseStatusCode": 499,
-            "customBlockResponseBody": "SGVsbG8=",
-            "maxRequestBodySizeInKb": 128,
-            "fileUploadLimitInMb": 100
+            "customBlockResponse": {
+              "body": "SGVsbG8=",
+              "statusCode": 499
+            },
+            "requestBodySizeLimitations": [
+              {
+                "maxSizeInKb": 128
+              }
+            ],
+            "fileUploadSizeLimitations": [
+              {
+                "endpointType": "ApplicationGateway",
+                "maxSizeInMb": 100
+              }
+            ],
+            "requestBodyInspections": [
+              {
+                "state": "Disabled"
+              }
+            ]
           },
           "logScrubbing": {
             "state": "Enabled",
@@ -209,17 +177,18 @@
           "customRules": [
             {
               "name": "Rule1",
+              "ruleType": "RateBased",
               "state": "Enabled",
               "action": "Block",
               "priority": 10,
               "rateLimit": {
-                "limitType": "ClientIp",
+                "groupBy": "ClientAddr",
                 "durationInMinutes": 1,
-                "maxRequestsPerSecond": 1000
+                "threshold": 1000
               },
               "matchConditions": [
                 {
-                  "negationCondition": true,
+                  "negateCondition": true,
                   "conditionType": "Ip",
                   "matchVariable": "ClientAddr",
                   "matchValue": [
@@ -231,6 +200,7 @@
             },
             {
               "name": "Rule2",
+              "ruleType": "MatchBased",
               "action": "Redirect",
               "priority": 20,
               "matchConditions": [
@@ -243,11 +213,11 @@
                   ]
                 },
                 {
-                  "negationCondition": false,
+                  "negateCondition": false,
                   "conditionType": "String",
                   "operator": "Contains",
                   "matchVariable": "RequestHeader",
-                  "selector": "UserAgent",
+                  "matchVariableSelector": "UserAgent",
                   "matchValue": [
                     "windows"
                   ],
@@ -267,66 +237,7 @@
             "managedRules": [
               {
                 "ruleSetType": "DRS",
-                "ruleSetVersion": "3.2",
-                "ruleGroupOverrides": [
-                  {
-                    "ruleGroupName": "REQUEST-930-APPLICATION-ATTACK-LFI",
-                    "groupOverride": {
-                      "state": "Disabled"
-                    }
-                  },
-                  {
-                    "ruleGroupName": "REQUEST-931-APPLICATION-ATTACK-RFI",
-                    "groupOverride": {
-                      "state": "Enabled",
-                      "action": "AnomalyScoring"
-                    },
-                    "rules": [
-                      {
-                        "ruleId": "931120",
-                        "state": "Enabled",
-                        "action": "Redirect"
-                      },
-                      {
-                        "ruleId": "931130",
-                        "state": "Disabled"
-                      }
-                    ]
-                  }
-                ],
-                "exclusions": [
-                  {
-                    "matchVariable": "RequestArgNames",
-                    "selectorMatchOperator": "EndsWith",
-                    "selector": "hello"
-                  },
-                  {
-                    "matchVariable": "RequestArgNames",
-                    "selectorMatchOperator": "StartsWith",
-                    "selector": "hello",
-                    "ruleGroups": [
-                      {
-                        "ruleGroupName": "REQUEST-930-APPLICATION-ATTACK-LFI",
-                        "rules": [
-                          "930120"
-                        ]
-                      },
-                      {
-                        "ruleGroupName": "REQUEST-932-APPLICATION-ATTACK-RCE"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          "apiProtection": {
-            "managedRules": [
-              {
-                "ruleSetType": "ApiProtection",
-                "ruleSetVersion": "1.0",
-                "ruleGroupOverrides": [],
-                "exclusions": []
+                "ruleSetVersion": "3.2"
               }
             ]
           },
@@ -334,9 +245,7 @@
             "managedRules": [
               {
                 "ruleSetType": "BotProtection",
-                "ruleSetVersion": "1.0",
-                "ruleGroupOverrides": [],
-                "exclusions": []
+                "ruleSetVersion": "1.0"
               }
             ]
           }
@@ -355,10 +264,26 @@
           "policySettings": {
             "mode": "Prevention",
             "redirectUrl": "http://bing.com",
-            "customBlockResponseStatusCode": 499,
-            "customBlockResponseBody": "SGVsbG8=",
-            "maxRequestBodySizeInKb": 128,
-            "fileUploadLimitInMb": 100
+            "customBlockResponse": {
+              "body": "SGVsbG8=",
+              "statusCode": 499
+            },
+            "requestBodySizeLimitations": [
+              {
+                "maxSizeInKb": 128
+              }
+            ],
+            "fileUploadSizeLimitations": [
+              {
+                "endpointType": "ApplicationGateway",
+                "maxSizeInMb": 100
+              }
+            ],
+            "requestBodyInspections": [
+              {
+                "state": "Disabled"
+              }
+            ]
           },
           "logScrubbing": {
             "state": "Enabled",
@@ -379,18 +304,19 @@
           },
           "customRules": [
             {
+              "ruleType": "RateBased",
               "name": "Rule1",
               "state": "Enabled",
               "action": "Block",
               "priority": 10,
               "rateLimit": {
-                "limitType": "ClientIp",
+                "groupBy": "ClientAddr",
                 "durationInMinutes": 1,
-                "maxRequestsPerSecond": 1000
+                "threshold": 1000
               },
               "matchConditions": [
                 {
-                  "negationCondition": true,
+                  "negateCondition": true,
                   "conditionType": "Ip",
                   "matchVariable": "ClientAddr",
                   "matchValue": [
@@ -402,6 +328,7 @@
             },
             {
               "name": "Rule2",
+              "ruleType": "MatchBased",
               "action": "Redirect",
               "priority": 20,
               "matchConditions": [
@@ -414,11 +341,11 @@
                   ]
                 },
                 {
-                  "negationCondition": false,
+                  "negateCondition": false,
                   "conditionType": "String",
                   "operator": "Contains",
                   "matchVariable": "RequestHeader",
-                  "selector": "UserAgent",
+                  "matchVariableSelector": "UserAgent",
                   "matchValue": [
                     "windows"
                   ],
@@ -438,66 +365,7 @@
             "managedRules": [
               {
                 "ruleSetType": "DRS",
-                "ruleSetVersion": "3.2",
-                "ruleGroupOverrides": [
-                  {
-                    "ruleGroupName": "REQUEST-930-APPLICATION-ATTACK-LFI",
-                    "groupOverride": {
-                      "state": "Disabled"
-                    }
-                  },
-                  {
-                    "ruleGroupName": "REQUEST-931-APPLICATION-ATTACK-RFI",
-                    "groupOverride": {
-                      "state": "Enabled",
-                      "action": "AnomalyScoring"
-                    },
-                    "rules": [
-                      {
-                        "ruleId": "931120",
-                        "state": "Enabled",
-                        "action": "Redirect"
-                      },
-                      {
-                        "ruleId": "931130",
-                        "state": "Disabled"
-                      }
-                    ]
-                  }
-                ],
-                "exclusions": [
-                  {
-                    "matchVariable": "RequestArgNames",
-                    "selectorMatchOperator": "EndsWith",
-                    "selector": "hello"
-                  },
-                  {
-                    "matchVariable": "RequestArgNames",
-                    "selectorMatchOperator": "StartsWith",
-                    "selector": "hello",
-                    "ruleGroups": [
-                      {
-                        "ruleGroupName": "REQUEST-930-APPLICATION-ATTACK-LFI",
-                        "rules": [
-                          "930120"
-                        ]
-                      },
-                      {
-                        "ruleGroupName": "REQUEST-932-APPLICATION-ATTACK-RCE"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          "apiProtection": {
-            "managedRules": [
-              {
-                "ruleSetType": "ApiProtection",
-                "ruleSetVersion": "1.0",
-                "ruleGroupOverrides": [],
-                "exclusions": []
+                "ruleSetVersion": "3.2"
               }
             ]
           },
@@ -505,9 +373,7 @@
             "managedRules": [
               {
                 "ruleSetType": "BotProtection",
-                "ruleSetVersion": "1.0",
-                "ruleGroupOverrides": [],
-                "exclusions": []
+                "ruleSetVersion": "1.0"
               }
             ]
           }

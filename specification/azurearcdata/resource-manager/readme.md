@@ -30,6 +30,24 @@ openapi-subtype: rpaas
 tag: package-preview-2023-05
 ```
 
+### Tag: package-preview-2023-10
+
+These settings apply only when `--tag=package-preview-2023-10` is specified on the command line.
+
+```yaml $(tag) == 'package-preview-2023-10'
+input-file:
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/activeDirectoryConnectors.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/azurearcdata.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/common.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/dataControllers.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/failoverGroups.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/operations.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/postgresInstances.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/sqlManagedInstances.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/sqlServerDatabases.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/sqlServerInstances.json
+  - Microsoft.AzureArcData/preview/2023-10-01-preview/sqlServerAvailabilityGroups.json
+```
 
 ### Tag: package-preview-2023-06
 
@@ -47,7 +65,7 @@ input-file:
   - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlManagedInstances.json
   - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlServerDatabases.json
   - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlServerInstances.json
-  - Microsoft.AzureArcData/preview/2023-06-13-alpha/availabilityGroups.json
+  - Microsoft.AzureArcData/preview/2023-06-13-alpha/sqlServerAvailabilityGroups.json
 ```
 
 ### Tag: package-preview-2023-05
@@ -66,7 +84,7 @@ input-file:
   - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlManagedInstances.json
   - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerDatabases.json
   - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerInstances.json
-  - Microsoft.AzureArcData/preview/2023-05-16-preview/availabilityGroups.json
+  - Microsoft.AzureArcData/preview/2023-05-16-preview/sqlServerAvailabilityGroups.json
 ```
 
 ### Tag: package-2021-11-01
@@ -146,3 +164,23 @@ See configuration in [readme.typescript.md](./readme.typescript.md)
 ## CSharp
 
 See configuration in [readme.csharp.md](./readme.csharp.md)
+
+## Powershell
+
+These settings apply only when `--powershell` is specified on the command line.
+
+``` yaml $(powershell)
+directive:
+  - from: swagger-document
+    where: $.definitions.BackupPolicy.properties.differentialBackupHours
+    transform: >-
+      return {
+          "type": "integer",
+          "format": "int32",
+          "enum": [
+            12,
+            24
+          ],
+          "description": "The differential backup interval in hours."
+        }
+```
