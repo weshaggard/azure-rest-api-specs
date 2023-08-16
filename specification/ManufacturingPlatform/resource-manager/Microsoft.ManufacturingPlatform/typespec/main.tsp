@@ -295,7 +295,7 @@ interface ManufacturingDataServices  {
   get is ArmResourceRead<MdsResource>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<MdsResource>;
   update is ArmResourcePatchAsync<MdsResource, MdsResourceProperties>;
-  delete is ArmResourceDeleteSync<MdsResource>;
+  delete is ArmResourceDeleteWithoutOkAsync<MdsResource>;
   listByResourceGroup is ArmResourceListByParent<MdsResource>;
   listBySubscription is ArmListBySubscription<MdsResource>;
 
