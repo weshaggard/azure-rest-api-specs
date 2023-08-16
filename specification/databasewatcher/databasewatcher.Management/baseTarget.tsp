@@ -14,6 +14,7 @@ using OpenAPI;
 @doc("The generic properties of a target.")
 @discriminator("targetType")
 model TargetProperties {
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @added(Versions.v2023_09_01_preview)
   @doc("The type of authentication to use when connecting to a target.")
   targetAuthenticationType: TargetAuthenticationType;

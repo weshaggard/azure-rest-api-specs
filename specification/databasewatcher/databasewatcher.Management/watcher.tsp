@@ -23,10 +23,13 @@ using OpenAPI;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
+@doc("Versions info.")
 enum Versions {
+  @doc("The 2023-03-01-preview version.")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_03_01_preview: "2023-03-01-preview",
 
+  @doc("The 2023-09-01-preview version.")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_09_01_preview: "2023-09-01-preview",
 }
@@ -38,6 +41,7 @@ model Watcher is TrackedResource<WatcherProperties> {
   @path
   @segment("watchers")
   name: string;
+
   ...ManagedServiceIdentity;
 }
 
@@ -57,6 +61,7 @@ model WatcherProperties {
 
 @doc("The properties of a data store.")
 model Datastore {
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @removed(Versions.v2023_09_01_preview)
   @doc("The ARM ResourceId of an Azure Data Explorer database.")
   adxDatabaseResourceId: string;
@@ -65,6 +70,7 @@ model Datastore {
   @doc("The ARM ResourceId of an Azure Data Explorer cluster.")
   adxClusterResourceId?: string;
 
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @removed(Versions.v2023_09_01_preview)
   @doc("The Kusto cluster URI.")
   adxClusterUri: string;
@@ -73,22 +79,27 @@ model Datastore {
   @doc("The Kusto cluster display name.")
   kustoClusterDisplayName?: string;
 
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @added(Versions.v2023_09_01_preview)
   @doc("The Kusto cluster URI.")
   kustoClusterUri: string;
 
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @added(Versions.v2023_09_01_preview)
   @doc("The Kusto data ingestion URI.")
   kustoDataIngestionUri: string;
 
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @added(Versions.v2023_09_01_preview)
   @doc("The name of a Kusto database.")
   kustoDatabaseName: string;
 
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @added(Versions.v2023_09_01_preview)
   @doc("The Kusto management URL.")
   kustoManagementUrl: string;
 
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @added(Versions.v2023_09_01_preview)
   @doc("The type of a Kusto offering.")
   kustoOfferingType: KustoOfferingType;
@@ -132,7 +143,7 @@ interface Watchers {
     }
   )
   start(
-    ...ResourceInstanceParameters<Watcher>
+    ...ResourceInstanceParameters<Watcher>,
   ): ArmAcceptedResponse | ArmResponse<Watcher> | ErrorResponse;
 
   @doc("The action to stop monitoring all targets configured for a database watcher.")
@@ -147,7 +158,7 @@ interface Watchers {
     }
   )
   stop(
-    ...ResourceInstanceParameters<Watcher>
+    ...ResourceInstanceParameters<Watcher>,
   ): ArmAcceptedResponse | ArmResponse<Watcher> | ErrorResponse;
 }
 
