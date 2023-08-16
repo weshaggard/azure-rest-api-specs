@@ -6,6 +6,7 @@ model AzureHostProperties {
     nodeId: string;
 
     @doc("Cluster Id")
+    @pattern("[/providers/Microsoft.Inventory/physicalClusters/]{1}[a-zA-Z0-9-]+")
     clusterId: string;
 
     @doc("Provisionsing state")

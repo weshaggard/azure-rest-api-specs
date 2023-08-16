@@ -2,7 +2,7 @@
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for oneinventory.
+This is the AutoRest configuration file for Microsoft.Inventory.
 
 ## Getting Started
 
@@ -26,14 +26,14 @@ These are the global settings for the oneinventory.
 
 ```yaml
 openapi-type: arm
-tag: package-2023-08-09
+tag: package-2023-08-09-preview
 ```
 
 ### Tag: package-2023-08-09
 
-These settings apply only when `--tag=package-2023-08-09` is specified on the command line.
+These settings apply only when `--tag=package-2023-08-09-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-08-09'
+```yaml $(tag) == 'package-2023-08-09-preview'
 input-file:
-  - Microsoft.Inventory/stable/2023-08-09/OneInventory.json
+  - Microsoft.Inventory/preview/2023-08-09-preview/OneInventory.json
 ```
