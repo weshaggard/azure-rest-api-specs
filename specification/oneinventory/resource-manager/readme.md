@@ -26,14 +26,14 @@ These are the global settings for the oneinventory.
 
 ```yaml
 openapi-type: arm
-tag: package-2023-08-09-preview
+tag: package-2023-08-16-preview
 ```
 
-### Tag: package-2023-08-09
+### Tag: package-2023-08-16
 
-These settings apply only when `--tag=package-2023-08-09-preview` is specified on the command line.
+These settings apply only when `--tag=package-2023-08-16-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2023-08-09-preview'
+```yaml $(tag) == 'package-2023-08-16-preview'
 input-file:
-  - Microsoft.Inventory/preview/2023-08-09-preview/OneInventory.json
+  - Microsoft.Inventory/preview/2023-08-16-preview/OneInventory.json
 ```

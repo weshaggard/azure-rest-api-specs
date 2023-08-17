@@ -14,7 +14,7 @@ using Azure.ResourceManager;
 @armProviderNamespace
 @service({
   title: "Microsoft Inventory",
-  version: "2023-08-09-preview",
+  version: "2023-08-16-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.Inventory;
