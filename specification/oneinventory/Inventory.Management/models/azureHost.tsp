@@ -6,9 +6,11 @@ model AzureHostProperties {
   nodeId: string;
 
   @doc("Cluster Id")
-  @pattern("[/providers/Microsoft.Inventory/physicalClusters/]{1}[a-zA-Z0-9-]+")
-  clusterId: string;
+  clusterId: ClusterResourceId;
+
+  @doc("Physical server Id")
+  serverId: ServerResourceId;
 
   @doc("Provisionsing state")
-  provisioningState?: Microsoft.Inventory.ProvisioningState;
+  provisioningState?: ProvisioningState;
 }

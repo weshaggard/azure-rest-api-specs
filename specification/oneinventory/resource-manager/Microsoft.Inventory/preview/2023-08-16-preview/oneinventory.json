@@ -42,6 +42,12 @@
       "name": "AzureHosts"
     },
     {
+      "name": "Clusters"
+    },
+    {
+      "name": "Datacenters"
+    },
+    {
       "name": "Operations"
     }
   ],
@@ -120,7 +126,7 @@
     },
     "/providers/Microsoft.Inventory/physicalAzureHosts/{azureHostName}": {
       "get": {
-        "operationId": "AzureHosts_Get",
+        "operationId": "AzureHosts_GetAzureHost",
         "tags": [
           "AzureHosts"
         ],
@@ -153,14 +159,171 @@
           }
         },
         "x-ms-examples": {
-          "AzureHosts_Get": {
-            "$ref": "./examples/AzureHosts_Get_MaximumSet_Gen.json"
+          "AzureHosts_GetAzureHost": {
+            "$ref": "./examples/AzureHosts_GetAzureHost_MaximumSet_Gen.json"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.Inventory/physicalClusters": {
+      "get": {
+        "operationId": "Clusters_ListByTenant",
+        "tags": [
+          "Clusters"
+        ],
+        "description": "List ClusterResource resources by tenant",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/ClusterResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Clusters_ListByTenant": {
+            "$ref": "./examples/Clusters_ListByTenant_MaximumSet_Gen.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/providers/Microsoft.Inventory/physicalClusters/{clusterName}": {
+      "get": {
+        "operationId": "Clusters_GetCluster",
+        "tags": [
+          "Clusters"
+        ],
+        "description": "Get a ClusterResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "clusterName",
+            "in": "path",
+            "description": "Cluster",
+            "required": true,
+            "type": "string",
+            "pattern": "[a-zA-Z0-9]+[-_]*"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/ClusterResource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Clusters_GetCluster": {
+            "$ref": "./examples/Clusters_GetCluster_MaximumSet_Gen.json"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.Inventory/physicalDatacenters": {
+      "get": {
+        "operationId": "Datacenters_ListByTenant",
+        "tags": [
+          "Datacenters"
+        ],
+        "description": "List DatacenterResource resources by tenant",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/DatacenterResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Datacenters_ListByTenant": {
+            "$ref": "./examples/Datacenters_ListByTenant_MaximumSet_Gen.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/providers/Microsoft.Inventory/physicalDatacenters/{datacenterName}": {
+      "get": {
+        "operationId": "Datacenters_GetDatacenter",
+        "tags": [
+          "Datacenters"
+        ],
+        "description": "Get a DatacenterResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "datacenterName",
+            "in": "path",
+            "description": "Datacenter",
+            "required": true,
+            "type": "string",
+            "pattern": "[a-zA-Z0-9]+[-_]*"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/DatacenterResource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Datacenters_GetDatacenter": {
+            "$ref": "./examples/Datacenters_GetDatacenter_MaximumSet_Gen.json"
           }
         }
       }
     }
   },
   "definitions": {
+    "AvailabilityZoneResourceId": {
+      "type": "string"
+    },
     "AzureHostProperties": {
       "type": "object",
       "description": "Azure Host Properties",
@@ -170,9 +333,12 @@
           "description": "Node Id"
         },
         "clusterId": {
-          "type": "string",
-          "description": "Cluster Id",
-          "pattern": "[/providers/Microsoft.Inventory/physicalClusters/]{1}[a-zA-Z0-9-]+"
+          "$ref": "#/definitions/ClusterResourceId",
+          "description": "Cluster Id"
+        },
+        "serverId": {
+          "$ref": "#/definitions/ServerResourceId",
+          "description": "Physical server Id"
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -181,7 +347,8 @@
       },
       "required": [
         "nodeId",
-        "clusterId"
+        "clusterId",
+        "serverId"
       ]
     },
     "AzureHostResource": {
@@ -224,6 +391,169 @@
       "required": [
         "value"
       ]
+    },
+    "AzureRegionResourceId": {
+      "type": "string"
+    },
+    "ClusterProperties": {
+      "type": "object",
+      "description": "Cluster Properties",
+      "properties": {
+        "friendlyName": {
+          "type": "string",
+          "description": "friendly Name"
+        },
+        "isClusterInBuildout": {
+          "type": "boolean",
+          "description": "Is cluster in buildout"
+        },
+        "datacenterId": {
+          "$ref": "#/definitions/DatacenterResourceId",
+          "description": "Datacenter Resource Id"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisionsing state"
+        }
+      },
+      "required": [
+        "friendlyName",
+        "isClusterInBuildout",
+        "datacenterId"
+      ]
+    },
+    "ClusterResource": {
+      "type": "object",
+      "description": "Concrete proxy resource types can be created by aliasing this type using a specific property type.",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/ClusterProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "ClusterResourceId": {
+      "type": "string"
+    },
+    "ClusterResourceListResult": {
+      "type": "object",
+      "description": "The response of a ClusterResource list operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The ClusterResource items on this page",
+          "items": {
+            "$ref": "#/definitions/ClusterResource"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "DatacenterProperties": {
+      "type": "object",
+      "description": "Datacenter Properties",
+      "properties": {
+        "shortId": {
+          "type": "string",
+          "description": "Datacenter short Id"
+        },
+        "locationDcmtId": {
+          "type": "string",
+          "description": "Datacenter location Dcmt Id"
+        },
+        "friendlyName": {
+          "type": "string",
+          "description": "Datacenter friendly Name Id"
+        },
+        "availabilityZoneId": {
+          "$ref": "#/definitions/AvailabilityZoneResourceId",
+          "description": "Availability Zone Id"
+        },
+        "facilityId": {
+          "$ref": "#/definitions/FacilityResourceId",
+          "description": "Facility Id"
+        },
+        "azureRegionId": {
+          "$ref": "#/definitions/AzureRegionResourceId",
+          "description": "Azure Region Id"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisionsing state"
+        }
+      },
+      "required": [
+        "shortId",
+        "locationDcmtId",
+        "friendlyName",
+        "availabilityZoneId",
+        "facilityId",
+        "azureRegionId"
+      ]
+    },
+    "DatacenterResource": {
+      "type": "object",
+      "description": "Concrete proxy resource types can be created by aliasing this type using a specific property type.",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/DatacenterProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "DatacenterResourceId": {
+      "type": "string"
+    },
+    "DatacenterResourceListResult": {
+      "type": "object",
+      "description": "The response of a DatacenterResource list operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The DatacenterResource items on this page",
+          "items": {
+            "$ref": "#/definitions/DatacenterResource"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "FacilityResourceId": {
+      "type": "string"
     },
     "ProvisioningState": {
       "type": "string",
@@ -296,6 +626,9 @@
           }
         ]
       }
+    },
+    "ServerResourceId": {
+      "type": "string"
     }
   },
   "parameters": {}

@@ -5,6 +5,8 @@ import "@azure-tools/typespec-autorest";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 import "./models/azureHost.tsp";
+import "./models/cluster.tsp";
+import "./models/datacenter.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -31,8 +33,40 @@ model AzureHostResource is ProxyResource<AzureHostProperties> {
 
 @armResourceOperations
 interface AzureHosts {
-  get is ArmResourceRead<AzureHostResource>;
-  listByParent is ArmResourceListByParent<AzureHostResource>;
+  getAzureHost is ArmResourceRead<AzureHostResource>;
+  listAzureHosts is ArmResourceListByParent<AzureHostResource>;
+}
+
+@tenantResource
+model ClusterResource is ProxyResource<ClusterProperties> {
+  @pattern("[a-zA-Z0-9]+[-_]*")
+  @key("clusterName")
+  @segment("physicalClusters")
+  @doc("Cluster")
+  @path
+  name: string;
+}
+
+@armResourceOperations
+interface Clusters {
+  getCluster is ArmResourceRead<ClusterResource>;
+  listClusters is ArmResourceListByParent<ClusterResource>;
+}
+
+@tenantResource
+model DatacenterResource is ProxyResource<DatacenterProperties> {
+  @pattern("[a-zA-Z0-9]+[-_]*")
+  @key("datacenterName")
+  @segment("physicalDatacenters")
+  @doc("Datacenter")
+  @path
+  name: string;
+}
+
+@armResourceOperations
+interface Datacenters {
+  getDatacenter is ArmResourceRead<DatacenterResource>;
+  listDatacenters is ArmResourceListByParent<DatacenterResource>;
 }
 
 interface Operations extends Azure.ResourceManager.Operations {}
