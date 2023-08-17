@@ -86,8 +86,8 @@ model KdbInsightsEnterpriseProperties {
 
   @visibility("read", "create")
   @doc("The KeyCloak user name")
-  @pattern("^[A-Za-z0-9]{8,20}$")
-  keyCloakAdminUsername?: string = "adminUser";
+  @pattern("^[A-Za-z0-9]{4,20}$")
+  keyCloakAdminUsername?: string = "user";
 
   @visibility("create")
   @doc("The password to use for the UI")
