@@ -32,32 +32,32 @@ enum ProvisioningState {
   NotSpecified,
 }
 
-scalar ClusterResourceId extends string;
-//   extends Azure.ResourceManager.ResourceIdentifier<[{
-//   type: "Microsoft.Inventory/physicalClusters"
-// }]>;
+scalar ClusterResourceId
+  extends Azure.ResourceManager.ResourceIdentifier<[{
+  type: "Microsoft.Inventory/physicalClusters"
+}]>;
 
-scalar ServerResourceId extends string;
-//   extends Azure.ResourceManager.ResourceIdentifier<[{
-//   type: "Microsoft.Inventory/physicalServers"
-// }]>;
+scalar ServerResourceId
+  extends Azure.ResourceManager.ResourceIdentifier<[{
+  type: "Microsoft.Inventory/physicalServers"
+}]>;
 
-scalar DatacenterResourceId extends string;
-//   extends Azure.ResourceManager.ResourceIdentifier<[{
-//   type: "Microsoft.Inventory/physicalDatacenters"
-// }]>;
+scalar DatacenterResourceId 
+  extends Azure.ResourceManager.ResourceIdentifier<[{
+  type: "Microsoft.Inventory/physicalDatacenters"
+}]>;
 
-scalar AvailabilityZoneResourceId extends string;
-//   extends Azure.ResourceManager.ResourceIdentifier<[{
-//   type: "Microsoft.Inventory/physicalAvailabilityZones"
-// }]>;
+scalar AvailabilityZoneResourceId
+  extends Azure.ResourceManager.ResourceIdentifier<[{
+  type: "Microsoft.Inventory/physicalAvailabilityZones"
+}]>;
 
-scalar FacilityResourceId extends string;
-//   extends Azure.ResourceManager.ResourceIdentifier<[{
-//   type: "Microsoft.Inventory/physicalFacilities"
-// }]>;
+scalar FacilityResourceId 
+  extends Azure.ResourceManager.ResourceIdentifier<[{
+  type: "Microsoft.Inventory/physicalFacilities"
+}]>;
 
-scalar AzureRegionResourceId extends string;
-//   extends Azure.ResourceManager.ResourceIdentifier<[{
-//   type: "Microsoft.Inventory/physicalAzureRegions"
-// }]>;
+scalar AzureRegionResourceId 
+  extends Azure.ResourceManager.ResourceIdentifier<[{
+  type: "Microsoft.Inventory/physicalAzureRegions"
+}]>;
