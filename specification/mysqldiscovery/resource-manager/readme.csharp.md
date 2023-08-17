@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.MySQLDiscovery
-  output-folder: $(csharp-sdks-folder)/mysqldiscovery/management/Microsoft.MySQLDiscovery/GeneratedProtocol
+  namespace: Private.MySQLDiscovery
+  output-folder: $(csharp-sdks-folder)/mysqldiscovery/management/Private.MySQLDiscovery/GeneratedProtocol
 ```
