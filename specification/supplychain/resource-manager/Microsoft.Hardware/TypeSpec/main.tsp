@@ -47,7 +47,7 @@ model Order is TrackedResource<OrderProperties> {
 @doc("Forward Order")
 model OrderProperties {
   @doc("Customer PurchaseOrder")
-  purchaseOrder?: PurchaseOrder;
+  customerOrder?: CustomerOrder;
 
   @doc("Type of action Pre-Fulfill/Fulfill")
   @visibility("read")
@@ -86,12 +86,12 @@ model OrderProperties {
 }
 
 @doc("Customer PurchaseOrder")
-model PurchaseOrder {
+model CustomerOrder {
   @doc("Customer PurchaseOrder Id")
   id: string;
 
   @doc("Customer PurchaseOrder Date")
-  createdDateTime: plainDate;
+  createdDate: plainDate;
 }
 
 @doc("Billing Details for Order")
@@ -136,11 +136,11 @@ model OrderLine {
 
   @doc("Estimated Deliver Date")
   @visibility("read")
-  estimatedDeliverDateTime?:plainDate;
+  estimatedDeliveryDate?:plainDate;
 
   @doc("Estimated Shipped Date")
   @visibility("read")
-  estimatedShippedDateTime?:plainDate;
+  estimatedShippedDate?:plainDate;
 }
 
 @doc("Order Line Qty")
@@ -191,7 +191,7 @@ model Price {
 @doc("Fee model")
 model Fee{
   @doc("Fee charged")
-  feeAmount: float64;
+  amount: float64;
 
   @doc("Fee Type")
   type: FeeType;
