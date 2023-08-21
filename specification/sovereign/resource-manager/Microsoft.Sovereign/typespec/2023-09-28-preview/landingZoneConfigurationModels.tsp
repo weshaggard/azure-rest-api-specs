@@ -51,7 +51,7 @@ model LandingZoneConfigurationProperties {
 	@doc("To deploy the Bastion service, choose Yes, otherwise No. Choose Existing for existing Bastion service.")
 	azureBastionCreationOption: ResourceCreationOptions;
 
-	@doc("Existing azure bastion fully qualified Id.")
+	@doc("Existing Azure Bastion fully qualified Id.")
 	existingAzureBastionId?: string;
 
 	@doc("Azure Bastion subnet. IP v4 CIDR block.")
@@ -111,7 +111,7 @@ model PolicyInitiativeAssignmentProperties {
 	assignmentParameters: Record<unknown>;
 }
 
-@doc("Decommissioned Managemenrt Group properties.")
+@doc("Decommissioned Management Group properties.")
 model DecommissionedMgProperties {
 	...MgProperties;
 
@@ -156,7 +156,7 @@ model GenerateLandingZoneRequest {
 	@doc("Enrollment Id")
 	enrollmentAccountId?: string;
 
-	@doc("Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default will deploy beneath tenant toot management group.")
+	@doc("Optional parent for Management Group hierarchy, used as intermediate root management group parent, if specified. If empty, default will deploy beneath tenant toot management group.")
 	existingTopLevelMgParentId?: string;
 
 	@doc("The prefix that will be added to all resources created by this deployment.")
@@ -180,7 +180,7 @@ model GenerateLandingZoneRequest {
 	deploymentLocation: string;
 
 	@doc("The name of the country, region or agency the Landing Zone is being deployed for.")
-	organization: string;
+	organization?: string;
 }
 
 @doc("The response for the request to generate Landing Zone code.")

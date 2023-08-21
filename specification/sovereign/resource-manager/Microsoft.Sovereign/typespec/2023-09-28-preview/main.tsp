@@ -34,7 +34,7 @@ model LandingZoneConfiguration
 	is ProxyResource<LandingZoneConfigurationProperties> {
 	@doc("The name of the landing zone configuration resource.")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("landingZoneConfigurationName")
+	@key("name")
 	@segment("landingZoneConfigurations")
 	@path
 	name: string;
@@ -76,7 +76,7 @@ model LandingZoneRegistration
 	is ProxyResource<LandingZoneRegistrationProperties> {
 		@doc("The name of the Landing Zone registration resource.")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("landingZoneRegistrationName")
+	@key("name")
 	@segment("landingZoneRegistrations")
 	@path
 	name: string;
