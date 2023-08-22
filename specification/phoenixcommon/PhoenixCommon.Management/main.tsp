@@ -28,7 +28,7 @@ model MassDriver is TrackedResource<MassDriverProperties> {
   @key("massdriverName")
   @segment("massDrivers")
   @visibility("read")
-  @path()
+  @path
   name: string;
 }
 
