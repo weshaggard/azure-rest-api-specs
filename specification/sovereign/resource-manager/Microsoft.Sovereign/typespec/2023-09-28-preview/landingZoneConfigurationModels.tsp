@@ -19,13 +19,21 @@ model LandingZoneConfigurationProperties {
 	ddosProtectionCreationOption: ResourceCreationOptions;
 
 	@doc("Existing DDoS protection plan fully qualified Id.")
-	existingDdosProtectionId?: string;
+	existingDdosProtectionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Network\\ddosProtectionPlans";
+		}
+	]>;
 
 	@doc("To deploy Log Analytics workspace, choose Yes, otherwise No. Select 'Existing' to provide an existing Log Analytics workspace.")
 	logAnalyticsWorkspaceCreationOption: ResourceCreationOptions;
 
 	@doc("The fully qualified Id for the Log Analytics workspace that was created to centralize log ingest.")
-	existingLogAnalyticsWorkspaceId?: string;
+	existingLogAnalyticsWorkspaceId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.OperationalInsights\\workspaces";
+		}
+	]>;
 
 	@doc("Array of tag objects in format of {'name':'a tag name', 'value':'a tag value'}.")
 	@OpenAPI.extension("x-ms-identifiers", [])
@@ -52,7 +60,11 @@ model LandingZoneConfigurationProperties {
 	azureBastionCreationOption: ResourceCreationOptions;
 
 	@doc("Existing Azure Bastion fully qualified Id.")
-	existingAzureBastionId?: string;
+	existingAzureBastionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Network\\bastionHosts";
+		}
+	]>;
 
 	@doc("Azure Bastion subnet. IP v4 CIDR block.")
 	azureBastionSubnetCidrBlock?: string;
@@ -142,13 +154,25 @@ model GenerateLandingZoneRequest {
 	iacOutputOption: IaCOutputOptions;
 
 	@doc("Management subscription fully qualified Id.")
-	existingManagementSubscriptionId?: string;
+	existingManagementSubscriptionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Subscription\\aliases";
+		}
+	]>;
 
 	@doc("Identity subscription fully qualified Id.")
-	existingIdentitySubscriptionId?: string;
+	existingIdentitySubscriptionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Subscription\\aliases";
+		}
+	]>;
 
 	@doc("Connectivity subscription fully qualified Id.")
-	existingConnectivitySubscriptionId?: string;
+	existingConnectivitySubscriptionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Subscription\\aliases";
+		}
+	]>;
 
 	@doc("Billing scope account Id")
 	billingScopeAccountId?: string;
@@ -157,7 +181,11 @@ model GenerateLandingZoneRequest {
 	enrollmentAccountId?: string;
 
 	@doc("Optional parent for Management Group hierarchy, used as intermediate root management group parent, if specified. If empty, default will deploy beneath tenant toot management group.")
-	existingTopLevelMgParentId?: string;
+	existingTopLevelMgParentId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Management\\managementGroups";
+		}
+	]>;
 
 	@doc("The prefix that will be added to all resources created by this deployment.")
 	@minLength(2)

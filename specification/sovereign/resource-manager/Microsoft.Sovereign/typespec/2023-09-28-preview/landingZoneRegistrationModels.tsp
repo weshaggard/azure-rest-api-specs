@@ -9,8 +9,16 @@ model LandingZoneRegistrationProperties {
 	provisioningState?: ResourceProvisioningState;
 
 	@doc("The top level Management Group Id.")
-	existingTopLevelMgId: string;
+	existingTopLevelMgId: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Management\\managementGroups";
+		}
+	]>;
 
 	@doc("The associated Landing Zone configuration Id.")
-	existingLandingZoneConfigurationId: string;
+	existingLandingZoneConfigurationId: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Sovereign\\landingZoneConfigurations";
+		}
+	]>;
 }
