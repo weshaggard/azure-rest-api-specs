@@ -24,12 +24,12 @@ interface Operations extends Azure.ResourceManager.Operations {}
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 @doc("A MassDriver")
 model MassDriver is TrackedResource<MassDriverProperties> {
+  @doc("driver name")
   @key("massdriverName")
   @segment("massDrivers")
+  @visibility("read")
+  @path()
   name: string;
-
-  @doc("The ID of the microschip.")
-  chipId: string;
 }
 
 @doc("The status of the current operation.")
