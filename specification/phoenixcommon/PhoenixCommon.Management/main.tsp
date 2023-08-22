@@ -68,4 +68,7 @@ interface MassDrivers {
   get is ArmResourceRead<MassDriver>;
   create is ArmResourceCreateOrUpdateSync<MassDriver>;
   delete is ArmResourceDeleteSync<MassDriver>;
+  update is ArmResourcePatchSync<MassDriver, MassDriverProperties>;
+  listByParent is ArmResourceListByParent<MassDriver>;
+  listBySubscription is ArmListBySubscription<MassDriver>;
 }
