@@ -57,7 +57,7 @@ model MassDriverProperties {
   fullName: string;
 
   @doc("MassDriver Type")
-  massDriverType: integer;
+  massDriverType: int32;
 
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
