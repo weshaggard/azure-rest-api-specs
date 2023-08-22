@@ -75,10 +75,13 @@ enum SCProvisioningState {
 enum SCType {
   @doc("Native storage class")
   Native,
+
   @doc("RWX storage class")
   RWX,
+
   @doc("S3 storage class")
   S3,
+
   @doc("Blob storage class")
   Blob,
 }
@@ -87,6 +90,7 @@ enum SCType {
 enum DataResilienceTier {
   @doc("Not data resilient")
   NotDataResilient,
+
   @doc("Data resilient")
   DataResilient,
 }
@@ -95,35 +99,9 @@ enum DataResilienceTier {
 enum VolumeExpansion {
   @doc("Allow volume expansion")
   Allow,
+
   @doc("Disallow volume expansion")
   Disallow,
-}
-
-// All properties should be optional under TemplateParameterProperties
-@doc("The properties to create new ManagedStorageClass")
-model TemplateParameterProperties {
-  @doc("The backing storageclass used to create new storageclass")
-  backingStorageClassName?: string;
-
-  @doc("[S3] accessKeyId")
-  accessKeyId?: string;
-
-  @doc("[S3] S3 SecretAccessKey")
-  @secret
-  secretAccessKey?: string;
-
-  @doc("[S3] S3 Endpoint")
-  endpoint?: string;
-
-  @doc("[S3] S3 Region")
-  region?: string;
-
-  @doc("[Blob] Azure Storage Account Name")
-  azureStorageAccountName?: string;
-
-  @doc("[Blob] Azure Storage Account Key")
-  @secret
-  azureStorageAccountKey?: string;
 }
 
 @doc("The status of the ManagedStorageClass")
@@ -133,6 +111,7 @@ model ManagedStorageClassStatus {
   scProvisioningState?: SCProvisioningState;
 }
 
+@discriminator("storageClassType")
 @doc("The properties of ManagedStorageClass")
 model ManagedStorageClassProperties {
   @doc("[Native] Volume can be expanded or not")
@@ -175,9 +154,6 @@ model ManagedStorageClassProperties {
   @doc("Type of the ManagedStorageClass")
   storageClassType: SCType;
 
-  @doc("Parameters to create new ManagedStorageClass")
-  templateParameters?: TemplateParameterProperties;
-
   @doc("Actual Status of the ManagedStorageClass")
   @visibility("read")
   status?: ManagedStorageClassStatus;
@@ -185,6 +161,81 @@ model ManagedStorageClassProperties {
   @doc("Resource provision state")
   @visibility("read")
   provisioningState?: ProvisioningState;
+}
+
+@doc("The properties of Native ManagedStorageClass")
+model NativeTemplateParameters {}
+
+@doc("The properties of RWX ManagedStorageClass")
+model RwxTemplateParameters {
+  @doc("The backing storageclass used to create new storageclass")
+  backingStorageClassName?: string;
+}
+
+@doc("The properties of S3 ManagedStorageClass")
+model S3TemplateParameters {
+  @doc("[S3] accessKeyId")
+  accessKeyId?: string;
+
+  @doc("[S3] S3 SecretAccessKey")
+  @secret
+  secretAccessKey?: string;
+
+  @doc("[S3] S3 Endpoint")
+  endpoint?: string;
+
+  @doc("[S3] S3 Region")
+  region?: string;
+}
+
+@doc("The properties of S3 ManagedStorageClass")
+model BlobTemplateParameters {
+  @doc("[Blob] Azure Storage Account Name")
+  azureStorageAccountName?: string;
+
+  @doc("[Blob] Azure Storage Account Key")
+  @secret
+  azureStorageAccountKey?: string;
+}
+
+@doc("The properties of Native ManagedStorageClass")
+model NativeManagedStorageClassProperties
+  extends ManagedStorageClassProperties {
+  @doc("Native ManagedStorageClass")
+  storageClassType: SCType.Native;
+
+  @doc("Native ManagedStorageClass template parameters")
+  templateParameters?: NativeTemplateParameters;
+}
+
+@doc("The properties of RWX ManagedStorageClass")
+model RwxManagedStorageClassProperties
+  extends ManagedStorageClassProperties {
+  @doc("RWX ManagedStorageClass")
+  storageClassType: SCType.RWX;
+
+  @doc("RWX ManagedStorageClass template parameters")
+  templateParameters?: RwxTemplateParameters;
+}
+
+@doc("The properties of S3 ManagedStorageClass")
+model S3ManagedStorageClassProperties
+  extends ManagedStorageClassProperties {
+  @doc("S3 ManagedStorageClass")
+  storageClassType: SCType.S3;
+
+  @doc("S3 ManagedStorageClass template parameters")
+  templateParameters?: S3TemplateParameters;
+}
+
+@doc("The properties of Blob ManagedStorageClass")
+model BlobManagedStorageClassProperties
+  extends ManagedStorageClassProperties {
+  @doc("Blob ManagedStorageClass")
+  storageClassType: SCType.Blob;
+
+  @doc("Blob ManagedStorageClass template parameters")
+  templateParameters?: BlobTemplateParameters;
 }
 
 @doc("extended location")

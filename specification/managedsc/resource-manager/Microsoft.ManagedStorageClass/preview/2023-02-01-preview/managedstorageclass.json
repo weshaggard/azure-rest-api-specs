@@ -400,6 +400,38 @@
     }
   },
   "definitions": {
+    "BlobManagedStorageClassProperties": {
+      "type": "object",
+      "description": "The properties of Blob ManagedStorageClass",
+      "properties": {
+        "templateParameters": {
+          "$ref": "#/definitions/BlobTemplateParameters",
+          "description": "Blob ManagedStorageClass template parameters"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ManagedStorageClassProperties"
+        }
+      ],
+      "x-ms-discriminator-value": "Blob"
+    },
+    "BlobTemplateParameters": {
+      "type": "object",
+      "description": "The properties of S3 ManagedStorageClass",
+      "properties": {
+        "azureStorageAccountName": {
+          "type": "string",
+          "description": "[Blob] Azure Storage Account Name"
+        },
+        "azureStorageAccountKey": {
+          "type": "string",
+          "format": "password",
+          "description": "[Blob] Azure Storage Account Key",
+          "x-ms-secret": true
+        }
+      }
+    },
     "DataResilienceTier": {
       "type": "string",
       "description": "Data resilience tier of a storage class",
@@ -557,10 +589,6 @@
           "$ref": "#/definitions/SCType",
           "description": "Type of the ManagedStorageClass"
         },
-        "templateParameters": {
-          "$ref": "#/definitions/TemplateParameterProperties",
-          "description": "Parameters to create new ManagedStorageClass"
-        },
         "status": {
           "$ref": "#/definitions/ManagedStorageClassStatus",
           "description": "Actual Status of the ManagedStorageClass",
@@ -572,6 +600,7 @@
           "readOnly": true
         }
       },
+      "discriminator": "storageClassType",
       "required": [
         "storageClassType"
       ]
@@ -665,10 +694,6 @@
         "storageClassType": {
           "$ref": "#/definitions/SCType",
           "description": "Type of the ManagedStorageClass"
-        },
-        "templateParameters": {
-          "$ref": "#/definitions/TemplateParameterProperties",
-          "description": "Parameters to create new ManagedStorageClass"
         }
       }
     },
@@ -682,6 +707,27 @@
           "readOnly": true
         }
       }
+    },
+    "NativeManagedStorageClassProperties": {
+      "type": "object",
+      "description": "The properties of Native ManagedStorageClass",
+      "properties": {
+        "templateParameters": {
+          "$ref": "#/definitions/NativeTemplateParameters",
+          "description": "Native ManagedStorageClass template parameters"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ManagedStorageClassProperties"
+        }
+      ],
+      "x-ms-discriminator-value": "Native"
+    },
+    "NativeTemplateParameters": {
+      "type": "object",
+      "description": "The properties of Native ManagedStorageClass",
+      "properties": {}
     },
     "PerformanceTier": {
       "type": "string",
@@ -755,6 +801,72 @@
         ]
       }
     },
+    "RwxManagedStorageClassProperties": {
+      "type": "object",
+      "description": "The properties of RWX ManagedStorageClass",
+      "properties": {
+        "templateParameters": {
+          "$ref": "#/definitions/RwxTemplateParameters",
+          "description": "RWX ManagedStorageClass template parameters"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ManagedStorageClassProperties"
+        }
+      ],
+      "x-ms-discriminator-value": "RWX"
+    },
+    "RwxTemplateParameters": {
+      "type": "object",
+      "description": "The properties of RWX ManagedStorageClass",
+      "properties": {
+        "backingStorageClassName": {
+          "type": "string",
+          "description": "The backing storageclass used to create new storageclass"
+        }
+      }
+    },
+    "S3ManagedStorageClassProperties": {
+      "type": "object",
+      "description": "The properties of S3 ManagedStorageClass",
+      "properties": {
+        "templateParameters": {
+          "$ref": "#/definitions/S3TemplateParameters",
+          "description": "S3 ManagedStorageClass template parameters"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ManagedStorageClassProperties"
+        }
+      ],
+      "x-ms-discriminator-value": "S3"
+    },
+    "S3TemplateParameters": {
+      "type": "object",
+      "description": "The properties of S3 ManagedStorageClass",
+      "properties": {
+        "accessKeyId": {
+          "type": "string",
+          "description": "[S3] accessKeyId"
+        },
+        "secretAccessKey": {
+          "type": "string",
+          "format": "password",
+          "description": "[S3] S3 SecretAccessKey",
+          "x-ms-secret": true
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "[S3] S3 Endpoint"
+        },
+        "region": {
+          "type": "string",
+          "description": "[S3] S3 Region"
+        }
+      }
+    },
     "SCProvisioningState": {
       "type": "string",
       "description": "Provision state of a managed storage class",
@@ -819,44 +931,6 @@
             "description": "Blob storage class"
           }
         ]
-      }
-    },
-    "TemplateParameterProperties": {
-      "type": "object",
-      "description": "The properties to create new ManagedStorageClass",
-      "properties": {
-        "backingStorageClassName": {
-          "type": "string",
-          "description": "The backing storageclass used to create new storageclass"
-        },
-        "accessKeyId": {
-          "type": "string",
-          "description": "[S3] accessKeyId"
-        },
-        "secretAccessKey": {
-          "type": "string",
-          "format": "password",
-          "description": "[S3] S3 SecretAccessKey",
-          "x-ms-secret": true
-        },
-        "endpoint": {
-          "type": "string",
-          "description": "[S3] S3 Endpoint"
-        },
-        "region": {
-          "type": "string",
-          "description": "[S3] S3 Region"
-        },
-        "azureStorageAccountName": {
-          "type": "string",
-          "description": "[Blob] Azure Storage Account Name"
-        },
-        "azureStorageAccountKey": {
-          "type": "string",
-          "format": "password",
-          "description": "[Blob] Azure Storage Account Key",
-          "x-ms-secret": true
-        }
       }
     },
     "VolumeExpansion": {
