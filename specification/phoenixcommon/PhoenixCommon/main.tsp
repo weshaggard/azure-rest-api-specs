@@ -13,7 +13,7 @@ using Azure.ResourceManager;
 @armProviderNamespace("Microsoft.PhoenixCommon")
 @service({
   title: "Microsoft.PhoenixCommon",
-  version: "2021-08-01-preview",
+  version: "2023-08-22-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.PhoenixCommon;
