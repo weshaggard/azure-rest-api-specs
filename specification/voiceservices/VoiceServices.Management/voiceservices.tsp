@@ -77,7 +77,7 @@ interface ResourceUpdateNoProperties<TResource extends Foundations.ArmResource> 
 
     @doc("The resource properties to be updated.")
     @body
-    properties: ResourceUpdateModelNoProperties<TResource>
+    properties: ResourceUpdateModelNoProperties<TResource>,
   ): ArmResponse<TResource> | ErrorResponse;
 }
 
@@ -132,7 +132,8 @@ interface NameAvailability {
     @doc("The location in which uniqueness will be verified.")
     @path
     location: string,
+
     ...SubscriptionIdParameter,
-    ...ApiVersionParameter
+    ...ApiVersionParameter,
   ): CheckNameAvailabilityResponse | ErrorResponse;
 }

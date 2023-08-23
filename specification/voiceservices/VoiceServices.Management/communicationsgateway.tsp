@@ -57,7 +57,6 @@ interface TestLines
 @doc("A CommunicationsGateway resource")
 model CommunicationsGateway
   is TrackedResource<CommunicationsGatewayProperties> {
-
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("communicationsGatewayName")
   @segment("communicationsGateways")
@@ -197,7 +196,7 @@ model ApiBridgeProperties {
 
 @doc("Details of a DNS Domain delegated to the Communications Gateway.")
 @added(Versions.v2023_08_07_preview)
-model DnsDelegationProperties { 
+model DnsDelegationProperties {
   @doc("Domain name to delegate")
   @visibility("read", "update", "create")
   @added(Versions.v2023_08_07_preview)
@@ -211,7 +210,7 @@ model DnsDelegationProperties {
 
 @doc("Details of DNS Domains delegated to the Communications Gateway.")
 @added(Versions.v2023_08_07_preview)
-model DnsDelegationsProperties { 
+model DnsDelegationsProperties {
   @doc("DNS Domains to delegate for the creation of DNS Zones by the Azure Communications Gateway")
   @visibility("read", "update", "create")
   @OpenAPI.extension("x-ms-identifiers", ["domain"])
@@ -221,7 +220,7 @@ model DnsDelegationsProperties {
 
 @doc("Details of a Custom SIP Header.")
 @added(Versions.v2023_08_07_preview)
-model CustomSipHeader { 
+model CustomSipHeader {
   @doc("The name of the Custom SIP Header")
   @visibility("read", "update", "create")
   @added(Versions.v2023_08_07_preview)
@@ -230,7 +229,7 @@ model CustomSipHeader {
 
 @doc("Properties of Custom SIP Headers.")
 @added(Versions.v2023_08_07_preview)
-model CustomSipHeadersProperties { 
+model CustomSipHeadersProperties {
   @doc("The Custom SIP Headers to apply to the calls which traverse the Communications Gateway")
   @visibility("read", "update", "create")
   @OpenAPI.extension("x-ms-identifiers", ["name"])
