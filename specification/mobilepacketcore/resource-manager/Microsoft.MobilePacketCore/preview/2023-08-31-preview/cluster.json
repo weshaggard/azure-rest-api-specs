@@ -237,10 +237,10 @@
       "type": "object",
       "description": "Common parameters for IP pools",
       "properties": {
-        "ipStart": {
+        "startIp": {
           "$ref": "./common.json#/definitions/IpAddress"
         },
-        "ipEnd": {
+        "endIp": {
           "$ref": "./common.json#/definitions/IpAddress"
         },
         "allocations": {
@@ -248,16 +248,7 @@
           "description": "IP addresses that have been allocated for workloads (in use)",
           "readOnly": true,
           "items": {
-            "type": "object",
-            "properties": {
-              "usage": {
-                "type": "string",
-                "description": "For what this IP address is used"
-              },
-              "ipAddress": {
-                "$ref": "./common.json#/definitions/IpAddress"
-              }
-            }
+            "$ref": "./common.json#/definitions/AllocatedIpAddresses"
           }
         }
       }
@@ -372,18 +363,45 @@
               "networkContextName": {
                 "$ref": "./common.json#/definitions/NetworkContextName"
               },
-              "poolType": {
-                "type": "string",
-                "enum": [
-                  "Interface",
-                  "User",
-                  "NAT"
-                ],
-                "x-ms-enum": {
-                  "name": "ClusterUserDataIpPoolType",
-                  "modelAsString": true
-                },
-                "description": "Usage of IP pool"
+              "usage": {
+                "type": "array",
+                "description": "Usage of this IP Pool",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Interface",
+                    "UserEquipment",
+                    "NAT",
+                    "Loopback"
+                  ],
+                  "x-ms-enum": {
+                    "name": "ClusterUserDataIpPoolType",
+                    "modelAsString": true,
+                    "values": [
+                      {
+                        "name": "Interface",
+                        "value": "Interface",
+                        "description": "IP Pool is to be used for IP Interfaces"
+                      },
+                      {
+                        "name": "UserEquipment",
+                        "value": "UserEquipment",
+                        "description": "IP Pool is to be used for User Equipment IP allocations"
+                      },
+                      {
+                        "name": "NAT",
+                        "value": "NAT",
+                        "description": "IP Pool is to be used for Network Address Translation IP allocations"
+                      },
+                      {
+                        "name": "Loopback",
+                        "value": "Loopback",
+                        "description": "IP Pool is to be used for Loopback intefaces"
+                      }
+                    ]
+                  },
+                  "description": "Usage of IP pool"
+                }
               },
               "tag": {
                 "type": "string",
@@ -399,7 +417,7 @@
             "type": "object",
             "properties": {
               "dataNetwork": {
-                "$ref": "./common.json#/definitions/ReferencedResource",
+                "$ref": "./common.json#/definitions/DataNetworkIdProperty",
                 "description": "Reference to Data Network object to which the Data Network Access Identifiers applies"
               },
               "dataNetworkAccessIdentifiers": {

@@ -263,9 +263,6 @@
           "readOnly": true,
           "description": "Resolved details of the UPF deployment",
           "properties": {
-            "pfcpFqdn": {
-              "$ref": "./common.json#/definitions/Fqdn"
-            },
             "smfList": {
               "$ref": "./common.json#/definitions/PfcpPeers",
               "description": "A list of SMFs with which the UPF instance communicates"
@@ -382,11 +379,32 @@
             }
           }
         },
+        "upfInstanceId": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+          "description": "Unique identity of the UPF in the form of a uuid",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "pfcpFqdn": {
+          "$ref": "./common.json#/definitions/Fqdn",
+          "description": "FQDN used as the node ID in PFCP associations"
+        },
+        "upfProfile": {
+          "$ref": "./common.json#/definitions/UpfProfileIdProperty",
+          "description": "Optional profile to be used for this specific deployment  This overrides the profile specified at the deployment area",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
         "networkFunctionVersionManagement": {
           "$ref": "./common.json#/definitions/NetworkFunctionVersionManagement"
         },
         "deploymentArea": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
+          "$ref": "./common.json#/definitions/DeploymentAreaIdProperty",
           "description": "The reference to the deployment area to which this network function belongs.",
           "x-ms-mutability": [
             "create",
@@ -399,7 +417,7 @@
             "type": "object",
             "properties": {
               "networkSlice": {
-                "$ref": "./common.json#/definitions/ReferencedResource",
+                "$ref": "./common.json#/definitions/NetworkSliceIdProperty",
                 "description": "Network slice in which this network function participates"
               },
               "distinguishedName": {

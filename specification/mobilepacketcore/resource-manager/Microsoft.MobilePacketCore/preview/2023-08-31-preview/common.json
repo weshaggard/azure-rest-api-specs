@@ -670,6 +670,21 @@
         "modelAsString": true
       }
     },
+    "AllocatedIpAddresses": {
+      "type": "object",
+      "properties": {
+        "usage": {
+          "type": "string",
+          "description": "For what this IP range is used"
+        },
+        "startIp": {
+          "$ref": "#/definitions/IpAddress"
+        },
+        "endIp": {
+          "$ref": "#/definitions/IpAddress"
+        }
+      }
+    },
     "DeploymentStatus": {
       "type": "object",
       "description": "Status of the deployment",
@@ -704,7 +719,7 @@
                 "description": "End timestamp (UTC) of triggering snapshot event"
               },
               "snapshotId": {
-                "$ref": "#/definitions/ReferencedResource",
+                "$ref": "#/definitions/ConfigSnapshotIdProperty",
                 "description": "URI of triggering snapshot event"
               },
               "operation": {
@@ -746,7 +761,7 @@
                 "description": "End timestamp (UTC) of triggering snapshot event"
               },
               "snapshotId": {
-                "$ref": "#/definitions/ReferencedResource",
+                "$ref": "#/definitions/ConfigSnapshotIdProperty",
                 "description": "URI of triggering snapshot event"
               },
               "status": {
@@ -764,17 +779,12 @@
           "description": "IPs that have been allocated for this deployment",
           "items": {
             "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/definitions/AllocatedIpAddresses"
+              }
+            ],
             "properties": {
-              "usage": {
-                "type": "string",
-                "description": "For what this IP range is used"
-              },
-              "startIp": {
-                "$ref": "#/definitions/IpAddress"
-              },
-              "endIp": {
-                "$ref": "#/definitions/IpAddress"
-              },
               "aksDetails": {
                 "type": "object",
                 "description": "Information applicable to AKS deployments",
@@ -1374,18 +1384,10 @@
       "description": "Single Network Slice Selection Assistance Information",
       "properties": {
         "sliceServiceType": {
-          "type": "string",
-          "readOnly": false,
-          "enum": [
-            "Embb",
-            "Mmtc",
-            "Urllc"
-          ],
-          "x-ms-enum": {
-            "name": "sliceServiceType",
-            "modelAsString": true
-          },
-          "description": "Slice service type.  Embb: enhanced mobile broadband.  Mmtc: massive machine type communications.  Urllc: ultra reliable low latency communications"
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Slice service type.  See TS 23.501, section 5.15.2.2 for standardised values"
         },
         "sliceDifferentiator": {
           "type": "string",
@@ -1394,8 +1396,7 @@
         }
       },
       "required": [
-        "sliceServiceType",
-        "sliceDifferentiator"
+        "sliceServiceType"
       ]
     },
     "NetworkContextUsage": {
@@ -1433,7 +1434,7 @@
       "description": "Type of the IP pool",
       "enum": [
         "NAT",
-        "UE"
+        "UserEquipment"
       ],
       "x-ms-enum": {
         "name": "PoolType",
@@ -1443,7 +1444,7 @@
     "Initiator": {
       "type": "string",
       "enum": [
-        "UE",
+        "UserEquipment",
         "Network",
         "Both"
       ],
@@ -1467,13 +1468,13 @@
         },
         "tag": {
           "type": "string",
-          "description": "Optional tag to be used to identify the cluster pool from which this pool is allocated.  If specified, only pools provisioned with the same tag value can be used to populate this IP Pool when the network function is deployed.  If not specified any untagged pool can be used"
+          "description": "Optional tag to be used to identify the cluster pool from which this pool is allocated.  If specified, only pools provisioned with the same tag value can be used to populate this IP Pool when the network function is deployed.  If not specified any matching untagged pool can be used"
         },
         "dataNetworkList": {
           "type": "array",
           "description": "Optional list of data networks which can use this IP pool.  If not specified this pool can be used by any DNN in the same network context.  Applicable to pools of type UE",
           "items": {
-            "$ref": "#/definitions/ReferencedResource"
+            "$ref": "#/definitions/DataNetworkIdProperty"
           }
         },
         "routeSummaryPrefixLength": {
@@ -1492,7 +1493,7 @@
           "minimum": 1,
           "maximum": 4294967295,
           "default": 8192,
-          "description": "Size of the UE IP pool chunks that will be used in resource blocks for Layer 3 Affinity mode - for resource management with multiple packet processing engine instances. Only applicable to pools of type UE"
+          "description": "Size of the UE IP pool chunks that will be used in resource blocks for Layer 3 Affinity mode - for resource management with multiple packet processing engine instances. Only applicable to pools of type UserEquipment"
         },
         "nat": {
           "type": "object",
@@ -1547,6 +1548,10 @@
         "subnetSharing": {
           "$ref": "#/definitions/EnableDisable",
           "description": "Enables or disables shared subnet"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Optional tag to be used to identify the cluster pool from which this pool is allocated.  If specified, only pools provisioned with the same tag value can be used to populate this IP Pool when the network function is deployed.  If not specified any matching untagged pool can be used"
         }
       }
     },
@@ -1570,6 +1575,10 @@
           "items": {
             "$ref": "#/definitions/LoopbackUsage"
           }
+        },
+        "tag": {
+          "type": "string",
+          "description": "Optional tag to be used to identify the cluster pool from which this pool is allocated.  If specified, only pools provisioned with the same tag value can be used to populate this IP Pool when the network function is deployed.  If not specified any matching untagged pool can be used"
         }
       }
     },
@@ -1584,6 +1593,231 @@
         "name": "OperationalTaskType",
         "modelAsString": true
       }
+    },
+    "DataNetworkIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Data Network.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/dataNetworks"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/dataNetworks/exampleDataNetwork"
+    },
+    "ConfigSnapshotIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Snapshot.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/configSnapshots"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/configSnapshots/exampleSnapshot"
+    },
+    "AmfProfileIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the AMF Profile.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/amfProfiles"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/amfProfiles/exampleAmfProfile"
+    },
+    "SmfProfileIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the SMF Profile.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/smfProfiles"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/smfProfiles/exampleSmfProfile"
+    },
+    "UpfProfileIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the UPF Profile.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/upfProfiles"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/upfProfiles/exampleUpfProfile"
+    },
+    "NrfProfileIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the NRF Profile.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/nrfProfiles"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/nrfProfiles/exampleNrfProfile"
+    },
+    "NssfProfileIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the NSSF Profile.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/nssfProfiles"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/nssfProfiles/exampleNssfProfile"
+    },
+    "ServiceAreaIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Service Area Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/serviceAreas"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/serviceAreas/exampleServiceArea"
+    },
+    "RoutingIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Routing Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/routings"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/routings/exampleRouting"
+    },
+    "DeepPacketInspectionIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Deep Packet Inspection Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/deepPacketInspections"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/deepPacketInspections/exampleDeepPacketInspection"
+    },
+    "DeploymentAreaIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Deployment Area Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/deploymentAreas"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/deploymentAreas/exampleDeploymentArea"
+    },
+    "NetworkSliceIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Network Slice Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/networkSlices"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/networkSlices/exampleNetworkSlice"
+    },
+    "PccRuleBaseIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the PCC Rule Base Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/pccRuleBases"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/pccRuleBases/examplePccRuleBase"
+    },
+    "PccRuleIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the PCC Rule Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/pccRules"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/pccRules/examplePccRule"
+    },
+    "PacketDetectionRuleIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Packet Detection Rule Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/packetDetectionRules"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/packetDetectionRules/examplePacketDetectionRule"
+    },
+    "PacketFlowDescriptionIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of the Packet Flow Description Resource.",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/packetFlowDescriptions"
+          }
+        ]
+      },
+      "example": "/subscriptions/xxxx-xxxx-xxxx-xxxx/resourceGroups/example-rg/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/packetFlowDescriptions/examplePacketFlowDescription"
+    },
+    "NetworkFunctionInstanceIdProperty": {
+      "type": "string",
+      "description": "ARM resource ID of Network Function Resource.s",
+      "format": "arm-id",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/nfvis/clusters/smfDeployments",
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/nfvis/clusters/amfDeployments",
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/nfvis/clusters/upfDeployments",
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/nfvis/clusters/nrfDeployments",
+            "type": "Microsoft.MobilePacketCore/mobilePacketCores/nfvis/clusters/nssfDeployments"
+          }
+        ]
+      },
+      "example": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MobilePacketCore/mobilePacketCores/exampleMpc/nfvis/exampleNfvi/clusters/exampleCluster/smfDeployments/exampleSmfDeployment"
     }
   },
   "parameters": {
