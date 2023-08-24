@@ -66,7 +66,7 @@ model VersionProperties {
   @doc("The resource namespace")
   nameSpace: string;
   @doc("The resource type")
-  resourceType: string;
+  type: string;
   @doc("The list of operations under the API version")
   operations: string[];
 }
@@ -89,7 +89,7 @@ model AnnotationProperties {
   @doc("The resource namespace")
   nameSpace: string;
   @doc("The resource type")
-  resourceType: string;
+  type: string;
   @doc("The annotations")
   values: Record<string>;
 }
@@ -109,15 +109,15 @@ model Operation is ProxyResource<OperationProperties> {
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-provisioning-state" "This is a tenant level proxy resource type where provisioning state doesn't apply"
 @doc("The properties of the resource operation")
 model OperationProperties {
-  @doc("The resource namespace")
+  @doc("The resource namespace, ex. Microsoft.Compute")
   nameSpace: string;
-  @doc("The resource type")
-  resourceType: string;
+  @doc("The resource type, ex. virtualMachines")
+  type: string;
   @doc("The API Version")
   version: string;
-  @doc("The operation ID")
+  @doc("The operation ID, ex. /Microsoft.Computey/virtualMachines/2022-11-01/GET/200")
   operationId: string;
-  @doc("The operation name")
+  @doc("The operation name, ex. GET")
   operation: string;
   @doc("The possible response codes")
   responseCode: string;
@@ -127,8 +127,8 @@ model OperationProperties {
 
 @doc("The property bag of the resource type")
 model TypePropertyBag {
-    @doc("The type of the resource property")
+    @doc("The type of the resource property, ex. string")
     type: string;
     @doc("The property flags of the resource property")
-    propertyflags?: string[];
+    propertyFlags?: string[];
 }
