@@ -90,8 +90,8 @@ model AnnotationProperties {
   nameSpace: string;
   @doc("The resource type")
   resourceType: string;
-  @doc("map of path to annotation")
-  values: string;
+  @doc("The annotations")
+  values: Record<string>;
 }
 
 @subscriptionResource
@@ -115,6 +115,20 @@ model OperationProperties {
   resourceType: string;
   @doc("The API Version")
   version: string;
+  @doc("The operation ID")
+  operationId: string;
+  @doc("The operation name")
+  operation: string;
   @doc("The possible response codes")
   responseCode: string;
+  @doc("The properties of the resource type")
+  typeProperties: Record<TypePropertyBag>;
+}
+
+@doc("The property bag of the resource type")
+model TypePropertyBag {
+    @doc("The type of the resource property")
+    type: string;
+    @doc("The property flags of the resource property")
+    propertyflags?: string[];
 }
