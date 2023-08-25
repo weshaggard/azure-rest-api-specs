@@ -12,7 +12,6 @@ namespace Microsoft.TypeSpace;
 @subscriptionResource
 model NameSpace is ProxyResource<NameSpaceProperties> {
   @doc("The namespace")
-  @pattern("^[a-zA-Z0-9-.]{3,50}$")
   @key("nameSpaceName")
   @segment("nameSpaces")
   @path
@@ -23,6 +22,8 @@ model NameSpace is ProxyResource<NameSpaceProperties> {
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-provisioning-state" "This is a tenant level proxy resource type where provisioning state doesn't apply"
 @doc("The properties of the namespace")
 model NameSpaceProperties {
+  @doc("The namespace")
+  nameSpace: string;
   @doc("The list of types under the namespace")
   types: string[];
 }
@@ -31,7 +32,6 @@ model NameSpaceProperties {
 @parentResource(NameSpace)
 model Type is ProxyResource<TypeProperties> {
   @doc("The name of the type")
-  @pattern("^[a-zA-Z0-9-]{3,50}$")
   @key("typeName")
   @segment("types")
   @visibility("read")
@@ -44,6 +44,8 @@ model Type is ProxyResource<TypeProperties> {
 model TypeProperties {
   @doc("The resource type namespace")
   nameSpace: string;
+  @doc("The resource type name")
+  type: string;
   @doc("The list of API versions for the type")
   versions: string[];
 }
@@ -52,7 +54,6 @@ model TypeProperties {
 @parentResource(Type)
 model Version is ProxyResource<VersionProperties> {
   @doc("The version of the type")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("version")
   @segment("versions")
   @visibility("read")
@@ -75,7 +76,6 @@ model VersionProperties {
 @parentResource(Type)
 model Annotation is ProxyResource<AnnotationProperties> {
   @doc("The annotations of the type")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("annotationName")
   @segment("annotations")
   @visibility("read")
@@ -90,7 +90,9 @@ model AnnotationProperties {
   nameSpace: string;
   @doc("The resource type")
   type: string;
-  @doc("The annotations")
+  @doc("The annotation")
+  annotation: string;
+  @doc("The annotation values for each property path")
   values: Record<string>;
 }
 
@@ -131,4 +133,8 @@ model TypePropertyBag {
     type: string;
     @doc("The property flags of the resource property")
     propertyFlags?: string[];
+    @doc("The defaultValue of the property, TODO: make required when enum is in propertyFlag")
+    defaultValue?: string;
+    @doc("The enum storing all values of the property, TODO: make required when enum is in propertyFlag")
+    enums?: string[];
 }
