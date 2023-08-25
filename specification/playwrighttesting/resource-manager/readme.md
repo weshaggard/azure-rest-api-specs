@@ -26,17 +26,16 @@ These are the global settings for the playwrighttesting.
 
 ```yaml
 openapi-type: arm
-openapi-subtype: rpaas
-tag: package-2022-09-01-preview
+tag: package-2023-10-01-preview
 ```
 
-### Tag: package-2022-09-01-preview
+### Tag: package-2023-10-01-preview
 
-These settings apply only when `--tag=package-2022-09-01-preview` is specified on the command line.
+These settings apply only when `--tag=package-2023-10-01-preview` is specified on the command line.
 
-```yaml $(tag) == 'package-2022-09-01-preview'
+```yaml $(tag) == 'package-2023-10-01-preview'
 input-file:
-  - Microsoft.PlaywrightTesting/preview/2022-09-01-preview/playwrighttesting.json
+  - Microsoft.AzurePlaywrightService/preview/2023-10-01-preview/playwrighttesting.json
 ```
 
 ---
@@ -52,9 +51,15 @@ This is not used by Autorest itself.
 swagger-to-sdk:
   - repo: azure-sdk-for-python-track2
   - repo: azure-sdk-for-java
-  - repo: azure-sdk-for-go-track2
+  - repo: azure-sdk-for-go
   - repo: azure-sdk-for-js
+  - repo: azure-resource-manager-schemas
+  - repo: azure-cli-extensions
+  - repo: azure-powershell
 ```
+## Az
+
+See configuration in [readme.az.md](./readme.az.md)
 
 ## Go
 
