@@ -1,21 +1,21 @@
 // -----------------------------------------------------------------------
-// <copyright file="standbyVM.cadl" company="Microsoft Corporation">
+// <copyright file="standbyVM.tsp" company="Microsoft Corporation">
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-import "@cadl-lang/rest";
-import "@cadl-lang/versioning";
-import "@azure-tools/cadl-providerhub";
-import "@azure-tools/cadl-azure-core";
-import "@azure-tools/cadl-azure-resource-manager";
-import "./standbyVMPool.cadl";
+import "@typespec/rest";
+import "@typespec/versioning";
+import "@azure-tools/typespec-providerhub";
+import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-azure-resource-manager";
+import "./standbyVMPool.tsp";
 
 using Azure.Core;
 using Azure.ResourceManager;
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using OpenAPI;
 
 @service({
@@ -26,7 +26,8 @@ using OpenAPI;
 namespace Microsoft.StandbyPool;
 
 @parentResource(StandbyVirtualMachinePoolResource)
-model StandbyVirtualMachineResource is ProxyResource<StandbyVirtualMachineResourceProperties> {
+model StandbyVirtualMachineResource
+  is ProxyResource<StandbyVirtualMachineResourceProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("standbyVirtualMachineName")
   @segment("standbyVirtualMachines")

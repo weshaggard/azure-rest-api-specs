@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------
-// <copyright file="main.cadl" company="Microsoft Corporation">
+// <copyright file="main.tsp" company="Microsoft Corporation">
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-import "./standbyVMPool.cadl";
-import "./standbyVM.cadl";
+import "./standbyVMPool.tsp";
+import "./standbyVM.tsp";

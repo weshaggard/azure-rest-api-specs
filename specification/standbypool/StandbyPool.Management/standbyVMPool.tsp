@@ -1,20 +1,20 @@
 // -----------------------------------------------------------------------
-// <copyright file="standbyVMPool.cadl" company="Microsoft Corporation">
+// <copyright file="standbyVMPool.tsp" company="Microsoft Corporation">
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-import "@cadl-lang/rest";
-import "@cadl-lang/versioning";
-import "@azure-tools/cadl-providerhub";
-import "@azure-tools/cadl-azure-core";
-import "@azure-tools/cadl-azure-resource-manager";
+import "@typespec/rest";
+import "@typespec/versioning";
+import "@azure-tools/typespec-providerhub";
+import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-azure-resource-manager";
 
 using Azure.Core;
 using Azure.ResourceManager;
-using Cadl.Http;
-using Cadl.Rest;
-using Cadl.Versioning;
+using TypeSpec.Http;
+using TypeSpec.Rest;
+using TypeSpec.Versioning;
 using OpenAPI;
 
 @armProviderNamespace("Microsoft.StandbyPool")
@@ -28,7 +28,8 @@ namespace Microsoft.StandbyPool;
 interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("A StandbyVirtualMachinePoolResource.")
-model StandbyVirtualMachinePoolResource is TrackedResource<StandbyVirtualMachinePoolResourceProperties> {
+model StandbyVirtualMachinePoolResource
+  is TrackedResource<StandbyVirtualMachinePoolResourceProperties> {
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("standbyVirtualMachinePoolName")
   @segment("standbyVirtualMachinePools")
@@ -58,7 +59,10 @@ model StandbyVirtualMachinePoolResourceProperties {
 
 @doc("State of standby virtual machines")
 enum VirtualMachineState {
+  @doc("Virtual machine is up and running.")
   Running,
+
+  @doc("The virtual machine has released the lease on the underlying hardware and is powered off.")
   Deallocated,
 }
 
@@ -66,6 +70,8 @@ enum VirtualMachineState {
 @lroStatus
 enum ProvisioningState {
   ...ResourceProvisioningState,
+
+  @doc("Virtual machine is being deleted.")
   Deleting,
 }
 
@@ -74,7 +80,10 @@ interface StandbyVirtualMachinePool {
   get is ArmResourceRead<StandbyVirtualMachinePoolResource>;
   createOrUpdate is ArmResourceCreateOrUpdateAsync<StandbyVirtualMachinePoolResource>;
   delete is ArmResourceDeleteAsync<StandbyVirtualMachinePoolResource>;
-  update is ArmResourcePatchSync<StandbyVirtualMachinePoolResource, StandbyVirtualMachinePoolResourceProperties>;
+  update is ArmResourcePatchSync<
+    StandbyVirtualMachinePoolResource,
+    StandbyVirtualMachinePoolResourceProperties
+  >;
   listByResourceGroup is ArmResourceListByParent<StandbyVirtualMachinePoolResource>;
   listBySubscription is ArmListBySubscription<StandbyVirtualMachinePoolResource>;
 }
