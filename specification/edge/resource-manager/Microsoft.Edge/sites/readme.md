@@ -27,17 +27,7 @@ These are the global settings for the edgesites.
 ```yaml
 openapi-type: arm
 openapi-subtype: providerHub
-tag: package-2023-08-01-privatepreview
-```
-
-### Tag: package-2023-08-01-privatepreview
-
-These settings apply only when `--tag=package-2023-08-01-privatepreview` is specified on the command line.
-
-```yaml $(tag) == 'package-2023-08-01-preview'
-input-file:
-  - preview/2023-08-01-privatepreview/edgesites.json
-  - preview/2023-08-01-privatepreview/siteAwareResourceTypes.json
+tag: package-2023-07-01-preview
 ```
 
 ### Tag: package-2023-07-01-preview
