@@ -12,11 +12,20 @@ model TrackingProfileDefinition {
     @doc("The tracking definition schema uri.")
     $schema: string;
 
-    @doc("The business process name.")
-    businessProcessName: string;
+    @doc("The business process reference.")
+    businessProcess: BusinessProcessReference;
 
     @doc("The tracking definitions.")
     trackingDefinitions: Record<FlowTrackingDefinition>;
+}
+
+@doc("The business process reference.")
+model BusinessProcessReference {
+    @doc("The business process name.")
+    name: string;
+
+    @doc("The business process version.")
+    version: string;
 }
 
 @doc("The workflow tracking definition.")

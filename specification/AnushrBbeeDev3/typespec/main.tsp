@@ -52,14 +52,15 @@ model ProvisioningResourceProperties {
 @doc("Device endpoints.")
 model DeviceEndpoints { // TODO: follow up with DP and PM on the definition of the endpoints for ignite
   @doc("The default endpoint.")
-  default: DeviceEndpoint,
+  @visibility("read")
+  default?: DeviceEndpoint,
 }
 
 @doc("The device endpoint.")
 model DeviceEndpoint {
   @doc("Hostname of the Endpoint.")
   @visibility("read")
-  hostname: string;
+  hostname?: string;
 }
 
 @doc("Resource create or update operation completed successfully.")
@@ -136,6 +137,18 @@ model ProvisioningPolicyProperties {
   resourceDetails: ProvisioningPolicyResourceDetails;
 }
 
+@doc("Type of resource being provisioned.")
+enum ProvisioningResourceType {
+  @doc("Azure device registry device. Microsoft.DeviceRegistry/devices")
+  //DeviceRegistryDevice:"Microsoft.DeviceRegistry/devices",
+  DeviceRegistryDevice,
+  // TODO another option is use value in double quotes. Try in ARM RPaas to finalize (Testing)
+
+  @doc("Arc enabled device. Microsoft.HybridCompute/machines")
+  //HybridComputeMachine:"Microsoft.HybridCompute/machines",
+  HybridComputeMachine,
+}
+
 @doc("Common further details about the policy resource")
 @discriminator("resourceType")
 model ProvisioningPolicyResourceDetails {
@@ -174,7 +187,6 @@ enum BootstrapAuthenticationType {
   Discovery,
   // PM: how does user understand this auth type & the device behavior/requirements
   // TODO name confirmation with PMs
-
 }
 
 @doc("The authentication rule for bootstrap.")
@@ -204,18 +216,6 @@ model X509BootstrapAuthenticationRule extends BootstrapAuthenticationRule {
 model DiscoveryBootstrapAuthenticationRule extends BootstrapAuthenticationRule {
   @doc("The type of authentication rule.")
   type: BootstrapAuthenticationType.Discovery;
-}
-
-@doc("Type of resource being provisioned.")
-enum ProvisioningResourceType {
-  @doc("Azure device registry device. Microsoft.DeviceRegistry/devices")
-  //DeviceRegistryDevice:"Microsoft.DeviceRegistry/devices",
-  DeviceRegistryDevice,
-  // TODO another option is use value in double quotes. Try in ARM RPaas to finalize (Testing)
-
-  @doc("Arc enabled device. Microsoft.HybridCompute/machines")
-  //HybridComputeMachine:"Microsoft.HybridCompute/machines",
-  HybridComputeMachine,
 }
 
 @doc("The rule for Just-in-time connection.")
@@ -542,6 +542,7 @@ model IdentityInfo {
   @doc("AAD group name for static group.")
   staticGroup?: string;
 
+  @doc("The id of the devices Tenant.")
   deviceTenantId: string;
   //@doc("The identity info to return to device.")
   //identityInfoForDevice?: DeviceIdentityInfo; // TODO check with Adarsh,Sekhar if this supports both HCI and ADR scenario

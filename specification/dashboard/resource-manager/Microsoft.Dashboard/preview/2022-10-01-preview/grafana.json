@@ -744,12 +744,12 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Dashboard/grafana/{workspaceName}/queryPluginCatalog": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Dashboard/grafana/{workspaceName}/fetchAvailablePlugins": {
       "post": {
         "tags": [
           "GrafanaPlugin"
         ],
-        "operationId": "Grafana_QueryPluginCatalog",
+        "operationId": "Grafana_FetchAvailablePlugins",
         "produces": [
           "application/json"
         ],
@@ -771,7 +771,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/GrafanaCatalogPluginQueryResponse"
+              "$ref": "#/definitions/GrafanaAvailablePluginListResponse"
             }
           },
           "default": {
@@ -785,55 +785,8 @@
           "nextLinkName": "nextLink"
         },
         "x-ms-examples": {
-          "Grafana_QueryPluginCatalog": {
-            "$ref": "./examples/Grafana_QueryPluginCatalog.json"
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Dashboard/grafana/{workspaceName}/queryPreinstalledPlugins": {
-      "post": {
-        "tags": [
-          "GrafanaPlugin"
-        ],
-        "operationId": "Grafana_QueryPreinstalledPlugins",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/parameters/WorkspaceNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/GrafanaPluginQueryResponse"
-            }
-          },
-          "default": {
-            "description": "Default error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-pageable": {
-          "nextLinkName": "nextLink"
-        },
-        "x-ms-examples": {
-          "Grafana_QueryPreinstalledPlugins": {
-            "$ref": "./examples/Grafana_QueryPreinstalledPlugins.json"
+          "Grafana_FetchAvailablePlugins": {
+            "$ref": "./examples/Grafana_FetchAvailablePlugins.json"
           }
         }
       }
@@ -1327,6 +1280,10 @@
           "additionalProperties": {
             "$ref": "#/definitions/GrafanaPlugin"
           }
+        },
+        "grafanaMajorVersion": {
+          "description": "The major Grafana software version to target.",
+          "type": "string"
         }
       }
     },
@@ -1388,6 +1345,10 @@
           "additionalProperties": {
             "$ref": "#/definitions/GrafanaPlugin"
           }
+        },
+        "grafanaMajorVersion": {
+          "description": "The major Grafana software version to target.",
+          "type": "string"
         }
       }
     },
@@ -1732,7 +1693,7 @@
         }
       }
     },
-    "GrafanaCatalogPlugin": {
+    "GrafanaAvailablePlugin": {
       "description": "Plugin of Grafana catalog",
       "type": "object",
       "properties": {
@@ -1741,30 +1702,20 @@
           "type": "string",
           "readOnly": true
         },
-        "pluginName": {
+        "name": {
           "description": "Grafana plugin display name",
-          "type": "string",
-          "readOnly": true
-        },
-        "pluginDescription": {
-          "description": "Grafana plugin description",
-          "type": "string",
-          "readOnly": true
-        },
-        "pluginCategory": {
-          "description": "Grafana plugin catetory. E.g., enterprise, active",
           "type": "string",
           "readOnly": true
         }
       }
     },
-    "GrafanaCatalogPluginQueryResponse": {
+    "GrafanaAvailablePluginListResponse": {
       "type": "object",
       "properties": {
         "value": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/GrafanaCatalogPlugin"
+            "$ref": "#/definitions/GrafanaAvailablePlugin"
           }
         },
         "nextLink": {
@@ -1780,20 +1731,6 @@
           "description": "Grafana plugin id",
           "type": "string",
           "readOnly": true
-        }
-      }
-    },
-    "GrafanaPluginQueryResponse": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/GrafanaPlugin"
-          }
-        },
-        "nextLink": {
-          "type": "string"
         }
       }
     },

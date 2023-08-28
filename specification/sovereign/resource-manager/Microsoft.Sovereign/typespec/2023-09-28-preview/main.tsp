@@ -29,12 +29,12 @@ interface Operations extends Azure.ResourceManager.Operations {}
 // Landing zone configuration Resource Type
 @tenantResource
 @added(Versions.Preview20230928)
-@doc("The landing zone configuration resource type.")
+@doc("The Landing Zone configuration resource type.")
 model LandingZoneConfiguration
 	is ProxyResource<LandingZoneConfigurationProperties> {
-	@doc("The name of the landing zone configuration resource type.")
+	@doc("The name of the landing zone configuration resource.")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("landingZoneConfigurationName")
+	@key("name")
 	@segment("landingZoneConfigurations")
 	@path
 	name: string;
@@ -71,12 +71,12 @@ interface LandingZonesConfigurations
 #suppress "@azure-tools/typespec-azure-resource-manager/empty-updateable-properties" "No properties of Landing Zone Registration can be updated."
 @tenantResource
 @added(Versions.Preview20230928)
-@doc("The landing zone registration resource type")
+@doc("The Landing Zone registration resource type.")
 model LandingZoneRegistration
 	is ProxyResource<LandingZoneRegistrationProperties> {
-	@doc("The name of the landing zone registration resource type")
+		@doc("The name of the Landing Zone registration resource.")
 	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("landingZoneRegistrationName")
+	@key("name")
 	@segment("landingZoneRegistrations")
 	@path
 	name: string;

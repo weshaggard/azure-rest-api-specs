@@ -15,45 +15,31 @@ model LandingZoneConfigurationProperties {
 	@doc("The status for the landing zone configuration workflow.")
 	authoringStatus?: AuthoringStatus;
 
-	@doc("Optional parent for management group hierarchy, used as intermediate root management group parent, if specified. If empty, default, will deploy beneath tenant toot management group.")
-	existingTopLevelMgParentId?: string;
-
-	@doc("The prefix that will be added to all resources created by this deployment.")
-	@minLength(2)
-	@maxLength(5)
-	@pattern("^([a-zA-Z0-9-]*)$")
-	deploymentPrefix: string;
-
-	@doc("The suffix that will be added to management group name.")
-	@minLength(2)
-	@maxLength(5)
-	deploymentSuffix?: string;
-
-	@doc("The top level management group display name.")
-	@minLength(1)
-	@maxLength(90)
-	topLevelMgDisplayName: string;
-
-	@doc("The name of the country/region or agency SLZ is being deployed for.")
-	organization: string;
-
-	@doc("Yes to deploy DDoS, otherwise no. To provide an existing DDoS protection plan select existing.")
+	@doc("To deploy DDoS, choose Yes, otherwise No. Select Existing to provide an existing DDoS protection plan.")
 	ddosProtectionCreationOption: ResourceCreationOptions;
 
-	@doc("Existing ddos protection fully qualified plan id.")
-	existingDdosProtectionId?: string;
+	@doc("Existing DDoS protection plan fully qualified Id.")
+	existingDdosProtectionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Network\\ddosProtectionPlans";
+		}
+	]>;
 
-	@doc("yes to deploy log Analytics workspace, otherwise no. To provide an existing log Analytics workspace select existing.")
+	@doc("To deploy Log Analytics workspace, choose Yes, otherwise No. Select 'Existing' to provide an existing Log Analytics workspace.")
 	logAnalyticsWorkspaceCreationOption: ResourceCreationOptions;
 
-	@doc("The fully qualified id for the Log Analytics workspace that was created to centralize log ingest.")
-	existingLogAnalyticsWorkspaceId?: string;
+	@doc("The fully qualified Id for the Log Analytics workspace that was created to centralize log ingest.")
+	existingLogAnalyticsWorkspaceId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.OperationalInsights\\workspaces";
+		}
+	]>;
 
-	@doc("Array of tag objects in format of {'name':'a tag name', 'value':'a tag value'}")
+	@doc("Array of tag objects in format of {'name':'a tag name', 'value':'a tag value'}.")
 	@OpenAPI.extension("x-ms-identifiers", [])
 	tags?: Tags[];
 
-	@doc("To deploy firewall choose the standard/premium based on the desired SKU. None for no firewall and existing to choose a pre existing one.")
+	@doc("To deploy firewall, choose the Standard/Premium based on the desired SKU. Choose None for no firewall and Existing for a pre existing one.")
 	firewallCreationOption: FirewallCreationOptions;
 
 	@doc("Azure firewall subnet. IPv4 CIDR block.")
@@ -67,168 +53,207 @@ model LandingZoneConfigurationProperties {
 	@maxValue(730)
 	logRetentionInDays: int64;
 
-	@doc("Location to run deployment(s) from the list of Azure Regions")
-	@pattern("^([a-zA-Z0-9]*)$")
-	deploymentLocation: string;
-
-	@doc("The address space for the VNET. IPv4 CIDR.")
+	@doc("The address space for the VNET. IPv4 CIDR block.")
 	hubNetworkCidrBlock: string;
 
-	@doc("To deploy the Bastion service choose the yes, no otherwise. For existing bastion service existing.")
+	@doc("To deploy the Bastion service, choose Yes, otherwise No. Choose Existing for existing Bastion service.")
 	azureBastionCreationOption: ResourceCreationOptions;
 
-	@doc("Existing azure bastion fully qualified id.")
-	existingAzureBastionId?: string;
+	@doc("Existing Azure Bastion fully qualified Id.")
+	existingAzureBastionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Network\\bastionHosts";
+		}
+	]>;
 
-	@doc("Azure bastion subnet. IP v4 CIDR block")
+	@doc("Azure Bastion subnet. IP v4 CIDR block.")
 	azureBastionSubnetCidrBlock?: string;
 
-	@doc("Landing zone management group properties")
+	@doc("Landing zone children management group properties")
 	@OpenAPI.extension("x-ms-identifiers", [])
 	landingZonesMgChildren?: LandingZoneMgProperties[];
 
-	@doc("This will be applied to the deployment root of the landing zone")
+	@doc("This will be applied to the root of the Landing Zone deployment.")
 	topLevelMgMetadata?: MgProperties;
 
-	@doc("This will be applied to the landing zones management group")
+	@doc("This will be applied to the Landing Zone Management Groups.")
 	landingZonesMgMetadata?: MgProperties;
 
-	@doc("This will be applied to the platform management group")
+	@doc("This will be applied to the Platform Management Group.")
 	platformMgMetadata?: MgProperties;
 
-	@doc("This will be applied to the Management management group under Platform")
+	@doc("This will be applied to the Management Management Group under Platform.")
 	platformManagementMgMetadata?: MgProperties;
 
-	@doc("This will be applied to the connectivity management group under Platform")
+	@doc("This will be applied to the Connectivity Management Group under Platform.")
 	platformConnectivityMgMetadata?: MgProperties;
 
-	@doc("This will be applied to the identity management group under Platform")
+	@doc("This will be applied to the Identity Management Group under Platform.")
 	platformIdentityMgMetadata?: MgProperties;
 
-	@doc("This will be applied to the decommissioned management group.")
+	@doc("This will be applied to the Decommissioned Management Group.")
 	decommissionedMgMetadata?: DecommissionedMgProperties;
 
-	@doc("This will be applied to the sandbox management group.")
+	@doc("This will be applied to the Sandbox Management Group.")
 	sandboxMgMetadata?: SandboxMgProperties;
 }
 
-@doc("Landing zone management group properties")
+@doc("Landing Zone Management Group properties.")
 model LandingZoneMgProperties {
 	...MgProperties;
 
-	@doc("Management group name.")
+	@doc("Management Group name.")
 	name: string;
 }
 
-@doc("Details of policy and initiatives associated with the management group.")
+@doc("Details of the policy and initiatives associated with the Management Group.")
 model MgProperties {
-	@doc("Array of initiative assignments to be applied to the management group.")
+	@doc("Array of initiative assignments to be applied to the Management Group.")
 	@OpenAPI.extension("x-ms-identifiers", [])
 	policyInitiativesAssignmentProperties: PolicyInitiativeAssignmentProperties[];
 }
 
 @doc("Details of policy assignments")
 model PolicyInitiativeAssignmentProperties {
-	@doc("The id of the policy initiatives.")
+	@doc("The fully qualified Id of the policy initiatives.")
 	policyInitiativeId: string;
 
 	#suppress "@azure-tools/typespec-azure-core/bad-record-type" "This would be customer defined parameter based on the policy initiatives to be assigned. Hence we need to use Record<unknown> as it will differ per initiative."
-	@doc("The parameters for the policy or initiatives.")
+	@doc("The parameters for the assignment of policy initiatives.")
 	assignmentParameters: Record<unknown>;
 }
 
-@doc("Decommissioned managemenrt group properties")
+@doc("Decommissioned Management Group properties.")
 model DecommissionedMgProperties {
 	...MgProperties;
 
-	@doc("when set to false this MG is not created")
+	@doc("When set to false, this Management Group will not be created.")
 	create: boolean;
 }
 
-@doc("Sandbox management group properties")
+@doc("Sandbox Management Group properties.")
 model SandboxMgProperties {
 	...MgProperties;
 
-	@doc("When set to false this management group is not created.")
+	@doc("When set to false this Management Group will not be created.")
 	create: boolean;
 }
 
-@doc("The detail of each tags")
+@doc("The details associated with tags.")
 model Tags {
-	@doc("a tag name")
+	@doc("A tag name.")
 	name: string;
 
-	@doc("a tag value")
+	@doc("A tag value.")
 	value: string;
 }
 
-@doc("The request body to generate a Landing Zone.")
+@doc("The request to generate code for a Landing Zone.")
 model GenerateLandingZoneRequest {
-	@doc("The options that code can be generated in")
+	@doc("The export options available for code generation.")
 	iacOutputOption: IaCOutputOptions;
 
-	@doc("Management subscription fully qualified id.")
-	existingManagementSubscriptionId?: string;
+	@doc("Management subscription fully qualified Id.")
+	existingManagementSubscriptionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Subscription\\aliases";
+		}
+	]>;
 
-	@doc("Identity subscription fully qualified id.")
-	existingIdentitySubscriptionId?: string;
+	@doc("Identity subscription fully qualified Id.")
+	existingIdentitySubscriptionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Subscription\\aliases";
+		}
+	]>;
 
-	@doc("Connectivity subscription fully qualified id.")
-	existingConnectivitySubscriptionId?: string;
+	@doc("Connectivity subscription fully qualified Id.")
+	existingConnectivitySubscriptionId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Subscription\\aliases";
+		}
+	]>;
 
 	@doc("Billing scope account Id")
 	billingScopeAccountId?: string;
 
 	@doc("Enrollment Id")
 	enrollmentAccountId?: string;
-}
 
-@doc("The response for generate landing zone request.")
-model GenerateLandingZoneResponse {
+	@doc("Optional parent for Management Group hierarchy, used as intermediate root management group parent, if specified. If empty, default will deploy beneath tenant toot management group.")
+	existingTopLevelMgParentId?: ResourceIdentifier<[
+		{
+			type: "\\Microsoft.Management\\managementGroups";
+		}
+	]>;
+
+	@doc("The prefix that will be added to all resources created by this deployment.")
+	@minLength(2)
+	@maxLength(5)
+	@pattern("^([a-zA-Z0-9-]*)$")
+	deploymentPrefix: string;
+
+	@doc("The suffix that will be added to Management Group names.")
+	@minLength(2)
+	@maxLength(5)
+	deploymentSuffix?: string;
+
 	@doc("The top level management group display name.")
+	@minLength(1)
+	@maxLength(90)
 	topLevelMgDisplayName: string;
 
-	@doc("The name of the landing zone configuration resource.")
+	@doc("Location to run deployment(s) from the list of Azure Regions.")
+	@pattern("^([a-zA-Z0-9]+)$")
+	deploymentLocation: string;
+
+	@doc("The name of the country, region or agency the Landing Zone is being deployed for.")
+	organization?: string;
+}
+
+@doc("The response for the request to generate Landing Zone code.")
+model GenerateLandingZoneResponse {
+	@doc("The top level Management Group display name.")
+	topLevelMgDisplayName: string;
+
+	@doc("The name of the Landing Zone configuration resource.")
 	landingZoneConfigurationName: string;
 
-	@doc("The blob url where generated landing zone is stored")
+	@doc("The blob URL where the generated code for the Landing Zone will be stored.")
 	@secret
 	blobUrl: url;
 }
 
-@doc("The request body to update the authoring status.")
+@doc("The request to update authoring status of a configuration.")
 model SetAuthoringStatusRequest {
 	@doc("The value of the authoring status to be updated.")
 	authoringStatus: AuthoringStatus;
 }
 
-@doc("The response body for the set authoring status request")
+@doc("The response for the request to set authoring status.")
 model SetAuthoringStatusResponse {
-	@doc("The top level management group display name.")
-	topLevelMgDisplayName: string;
-
-	@doc("The name of the landing zone configuration resource.")
+	@doc("The name of the Landing Zone configuration resource.")
 	landingZoneConfigurationName: string;
 
 	@doc("The value of the authoring status to be updated.")
 	authoringStatus: AuthoringStatus;
 }
 
-@doc("The authoring status for landing zone configuration workflow.")
+@doc("The authoring status for a Landing Zone configuration.")
 enum AuthoringStatus {
-	@doc("Default status set automatically on create request. In this status the landing zone configuration can be updated.")
+	@doc("This is the default status when a create configuration request is made. In this state, the Landing Zone configuration can be updated.")
 	Authoring: "Authoring",
 
-	@doc("This status is set when the configuration changes are done and the configuration is ready for generating the landing zone code.")
+	@doc("This status is set when the configuration changes are complete and the configuration is ready for code generation")
 	ReadyForUse: "ReadyForUse",
 
 	@doc("This status is set when the landing zone configuration is no longer in use.")
 	Disabled: "Disabled",
 }
 
-@doc("The format in which the landing zone code can be generated.")
+@doc("Output options for Landing Zone code generation.")
 enum IaCOutputOptions {
-	@doc("Value choosen when the customer wants to generate the code in bicep.")
+	@doc("Value when generating Landing Zone code in Bicep.")
 	Bicep: "Bicep",
 
 	// values to be added in the future.
@@ -238,24 +263,24 @@ enum IaCOutputOptions {
 
 @doc("The input values for creating or using an existing firewall resource.")
 enum FirewallCreationOptions {
-	@doc("Value choosen when a user does not want to create a firewall resource.")
+	@doc("Value when a firewall resource is not created.")
 	None: "None",
 
-	@doc("Value choosen when a user wants to create a firewall resource of standard SKU.")
+	@doc("Value when the firewall creation is based on the Standard SKU.")
 	Standard: "Standard",
 
-	@doc("Value choosen when a user wants to create a firewall resource of premium SKU.")
+	@doc("Value when the firewall creation is based on the Premium SKU.")
 	Premium: "Premium",
 }
 
-@doc("Represents options for resource creation.")
+@doc("Options for resource creation.")
 enum ResourceCreationOptions {
-	@doc("This option indicates that a new resource should be created.")
+	@doc("Value to create a new resource.")
 	Yes: "Yes",
 
-	@doc("This option indicates that a new resource should not be created.")
+	@doc("Value to not create a new resource.")
 	No: "No",
 
-	@doc("This option indicates that an existing resource should be used.")
+	@doc("Value to use an existing resource.")
 	UseExisting: "UseExisting",
 }

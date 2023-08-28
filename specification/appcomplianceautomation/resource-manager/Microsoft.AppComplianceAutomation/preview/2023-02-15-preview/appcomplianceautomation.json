@@ -1357,6 +1357,78 @@
           }
         }
       }
+    },
+    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/fix": {
+      "post": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Fix the AppComplianceAutomation report error. e.g: ACAT service unregistered, automation removed.",
+        "operationId": "Reports_Fix",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ReportFixResult"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Report_Fix": {
+            "$ref": "./examples/Report_Fix.json"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/verify": {
+      "post": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Verify the AppComplianceAutomation report health status.",
+        "operationId": "Report_Verify",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/ReportVerificationResult"
+            }
+          },
+          "default": {
+            "description": "Error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Report_Verify": {
+            "$ref": "./examples/Report_Verify.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1548,6 +1620,17 @@
             "modelAsString": true
           }
         },
+        "errors": {
+          "description": "List of report errors.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReportError"
+          },
+          "readOnly": true,
+          "x-ms-identifiers": [
+            "errorCode"
+          ]
+        },
         "tenantId": {
           "type": "string",
           "description": "Report's tenant id.",
@@ -1628,6 +1711,93 @@
           "readOnly": true,
           "description": "Azure lifecycle management",
           "$ref": "#/definitions/ProvisioningState"
+        }
+      }
+    },
+    "ReportError": {
+      "type": "object",
+      "description": "Report error.",
+      "properties": {
+        "errorCode": {
+          "type": "string",
+          "description": "Error code.",
+          "readOnly": true
+        },
+        "errorShortname": {
+          "type": "string",
+          "description": "Error shortname.",
+          "readOnly": true
+        },
+        "errorReason": {
+          "type": "string",
+          "description": "Error reason.",
+          "readOnly": true
+        },
+        "errorRemediation": {
+          "type": "string",
+          "description": "Remediation to fix the error.",
+          "readOnly": true
+        },
+        "autoFix": {
+          "type": "string",
+          "description": "Whether the error can be fixed automatically.",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "readOnly": false,
+          "x-ms-enum": {
+            "name": "AutoFixError",
+            "modelAsString": true
+          }
+        }
+      }
+    },
+    "ReportFixResult": {
+      "type": "object",
+      "description": "Report fix result.",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "Succeeded",
+            "Failed"
+          ],
+          "readOnly": true,
+          "description": "Indicates whether the fix action is Succeeded or Failed.",
+          "x-ms-enum": {
+            "name": "result",
+            "modelAsString": true
+          }
+        },
+        "reason": {
+          "description": "If the report fix action failed, to indicate the detailed failed reason.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ReportVerificationResult": {
+      "type": "object",
+      "description": "Report health status verification result.",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "Succeeded",
+            "Failed"
+          ],
+          "readOnly": true,
+          "description": "Indicates whether the report verification action is Succeeded or Failed.",
+          "x-ms-enum": {
+            "name": "result",
+            "modelAsString": true
+          }
+        },
+        "reason": {
+          "description": "If the report verification action failed, to indicate the detailed failed reason.",
+          "type": "string",
+          "readOnly": true
         }
       }
     },
@@ -2592,6 +2762,14 @@
         "reportSystemData": {
           "readOnly": true,
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData"
+        },
+        "complianceData": {
+          "type": "object",
+          "readOnly": true,
+          "description": "The compliance data.",
+          "additionalProperties": {
+            "type": "string"
+          }
         },
         "complianceResults": {
           "readOnly": true,

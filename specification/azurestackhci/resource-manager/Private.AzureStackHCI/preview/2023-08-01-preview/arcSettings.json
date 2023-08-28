@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2023-03-01",
+    "version": "2023-08-01-preview",
     "title": "AzureStackHCI",
     "description": "Azure Stack HCI management service"
   },
@@ -567,6 +567,10 @@
           "description": "Tenant id of arc AAD identity.",
           "type": "string"
         },
+        "arcServicePrincipalObjectId": {
+          "description": "Object id of arc AAD service principal.",
+          "type": "string"
+        },
         "arcApplicationObjectId": {
           "description": "Object id of arc AAD identity.",
           "type": "string"
@@ -605,8 +609,7 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/PerNodeState"
-          },
-          "readOnly": true
+          }
         },
         "connectivityProperties": {
           "description": "contains connectivity related configuration for ARC resources",
@@ -634,18 +637,16 @@
       "properties": {
         "name": {
           "type": "string",
-          "readOnly": true,
           "description": "Name of the Node in HCI Cluster"
         },
         "arcInstance": {
           "description": "Fully qualified resource ID for the Arc agent of this node.",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "arcNodeServicePrincipalObjectId": {
           "description": "The service principal id of the arc for server node",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
+
         },
         "state": {
           "description": "State of Arc agent in this node.",
@@ -673,8 +674,7 @@
           "x-ms-enum": {
             "name": "NodeArcState",
             "modelAsString": true
-          },
-          "readOnly": true
+          }
         }
       }
     },
@@ -702,9 +702,42 @@
         "enabled": {
           "type": "boolean",
           "description": "True indicates ARC connectivity is enabled"
+        },
+        "serviceConfigurations": {
+          "type": "array",
+          "description": "Service configurations associated with the connectivity resource. They are only processed by the server if 'enabled' property is set to 'true'.",
+          "items": {
+            "$ref": "#/definitions/ServiceConfiguration"
+          }
         }
       },
       "additionalProperties": false
+    },
+    "ServiceConfiguration": {
+      "type": "object",
+      "description": "Service configuration details",
+      "required": [
+        "serviceName",
+        "port"
+      ],
+      "properties": {
+        "serviceName": {
+          "type": "string",
+          "description": "Name of the service.",
+          "enum": [
+            "WAC"
+          ],
+          "x-ms-enum": {
+            "name": "serviceName",
+            "modelAsString": true
+          }
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The port on which service is enabled."
+        }
+      }
     },
     "PasswordCredential": {
       "type": "object",

@@ -17,7 +17,21 @@ using Azure.ResourceManager;
   version: "2023-07-12-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+//@useDependency(Azure.Core.Versions.v1_0_Preview_2)
 namespace Microsoft.Hardware;
+
+/*interface OrderOperations{
+  @summary("Preview Order")
+  @doc("A sync API for previewing the Order. This will also return the taxes and fees as part of validation response.")
+  @route("/orders/preview")
+  @post
+  previewOrder is Azure.Core.RpcOperation<{
+      @body
+      @doc("The request of preview order.")
+      body: Order;
+    },
+    Order>;
+}*/
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -33,7 +47,7 @@ model Order is TrackedResource<OrderProperties> {
 @doc("Forward Order")
 model OrderProperties {
   @doc("Customer PurchaseOrder")
-  purchaseOrder?: PurchaseOrder;
+  customerOrder?: CustomerOrder;
 
   @doc("Type of action Pre-Fulfill/Fulfill")
   @visibility("read")
@@ -46,6 +60,9 @@ model OrderProperties {
   @doc("Order line details")
   @OpenAPI.extension("x-ms-identifiers",["id"])
   orderLines:OrderLine[];
+
+  @doc("Billing Information")
+  billingInformation:BillingInformation;
 
   @doc("Currency")
   @visibility("read")
@@ -69,12 +86,12 @@ model OrderProperties {
 }
 
 @doc("Customer PurchaseOrder")
-model PurchaseOrder {
+model CustomerOrder {
   @doc("Customer PurchaseOrder Id")
   id: string;
 
   @doc("Customer PurchaseOrder Date")
-  createdDateTime: plainDate;
+  createdDate: plainDate;
 }
 
 @doc("Billing Details for Order")
@@ -119,11 +136,11 @@ model OrderLine {
 
   @doc("Estimated Deliver Date")
   @visibility("read")
-  estimatedDeliverDateTime?:plainDate;
+  estimatedDeliveryDate?:plainDate;
 
   @doc("Estimated Shipped Date")
   @visibility("read")
-  estimatedShippedDateTime?:plainDate;
+  estimatedShippedDate?:plainDate;
 }
 
 @doc("Order Line Qty")
@@ -174,7 +191,7 @@ model Price {
 @doc("Fee model")
 model Fee{
   @doc("Fee charged")
-  feeAmount: float64;
+  amount: float64;
 
   @doc("Fee Type")
   type: FeeType;
@@ -270,6 +287,10 @@ enum OrderStatus{
   Confirmed,
   @doc("Order is PartiallyConfirmed")
   PartiallyConfirmed,
+  @doc("Order is pending cancellation")
+  PendingCancel,
+  @doc("Order is Ready to Ship cannot be cancelled")
+  PendingShipment,
   @doc("Order is PartiallyShipped")
   PartiallyShipped,
   @doc("Order is Shipped")
@@ -286,6 +307,10 @@ enum OrderLineStatus{
   Confirmed,
   @doc("Order is PartiallyConfirmed")
   PartiallyConfirmed,
+  @doc("Order is pending cancellation")
+  PendingCancel,
+  @doc("Order is Ready to Ship cannot be cancelled")
+  PendingShipment,
   @doc("Order is PartiallyShipped")
   PartiallyShipped,
   @doc("Order is Shipped")
@@ -299,4 +324,67 @@ enum ProvisioningState {
   @doc("Order is pending")
   Pending
 
+}
+
+alias DefaultProviderNamespace = {
+  @path
+  @TypeSpec.Rest.segment("providers")
+  @doc("The provider namespace for the resource.")
+  provider: "Microsoft.Hardware";
+};
+
+@armResourceOperations
+interface PreviewOrdersInterface {
+@armResourceCollectionAction
+  @armProviderNameValue
+  @doc("Implements previewOrders operations")
+  @TypeSpec.Rest.action("previewOrders")
+  @post
+  op previewOrders(
+    ...SubscriptionIdParameter,
+    ...ResourceGroupParameter,
+    ...DefaultProviderNamespace,
+    ...ApiVersionParameter,
+
+    @doc("The previewOrders request")
+    @body
+    body: Order,
+  ): Order | ErrorResponse;
+}
+
+@armResourceOperations
+interface PreviewOrders2Interface {
+@armResourceCollectionAction
+  @armProviderNameValue
+  @doc("Implements previewOrders operations")
+  @TypeSpec.Rest.action("previewOrders2")
+  @post
+  op previewOrders2(
+    ...SubscriptionIdParameter,
+    ...ResourceGroupParameter,
+    ...DefaultProviderNamespace,
+    ...ApiVersionParameter,
+
+    @doc("The previewOrders2 request")
+    @body
+    body: Order,
+  ): Order | ErrorResponse;
+}
+
+@armResourceOperations
+interface PreviewOrders3Interface {
+@armResourceCollectionAction
+  @armProviderNameValue
+  @doc("Implements previewOrders operations")
+  @TypeSpec.Rest.action("previewOrders3")
+  @post
+  op previewOrders3(
+    ...SubscriptionIdParameter,
+    ...DefaultProviderNamespace,
+    ...ApiVersionParameter,
+
+    @doc("The previewOrders3 request")
+    @body
+    body: Order,
+  ): Order | ErrorResponse;
 }

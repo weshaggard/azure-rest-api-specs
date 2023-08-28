@@ -188,7 +188,8 @@
             "required": true,
             "type": "string",
             "minLength": 1,
-            "maxLength": 128
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
           }
         ],
         "responses": {
@@ -234,7 +235,8 @@
             "required": true,
             "type": "string",
             "minLength": 1,
-            "maxLength": 128
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
           },
           {
             "name": "resource",
@@ -248,13 +250,13 @@
         ],
         "responses": {
           "200": {
-            "description": "ARM operation completed successfully.",
+            "description": "Resource 'Policy' update operation succeeded",
             "schema": {
               "$ref": "#/definitions/Policy"
             }
           },
           "201": {
-            "description": "ARM create operation completed successfully.",
+            "description": "Resource 'Policy' create operation succeeded",
             "schema": {
               "$ref": "#/definitions/Policy"
             },
@@ -306,7 +308,8 @@
             "required": true,
             "type": "string",
             "minLength": 1,
-            "maxLength": 128
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
           },
           {
             "name": "properties",
@@ -379,7 +382,8 @@
             "required": true,
             "type": "string",
             "minLength": 1,
-            "maxLength": 128
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
           }
         ],
         "responses": {
@@ -475,10 +479,50 @@
         }
       }
     },
+    "CustomBlockResponse": {
+      "type": "object",
+      "description": "Custom block response configuration, if action type is block",
+      "properties": {
+        "statusCode": {
+          "$ref": "#/definitions/HttpStatusCodeType",
+          "description": "Response status code"
+        },
+        "body": {
+          "type": "string",
+          "description": "Response body. The body must be specified in base64 encoding",
+          "maxLength": 32768,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$"
+        }
+      },
+      "required": [
+        "statusCode",
+        "body"
+      ]
+    },
+    "CustomBlockResponseUpdate": {
+      "type": "object",
+      "description": "Custom block response configuration, if action type is block",
+      "properties": {
+        "statusCode": {
+          "$ref": "#/definitions/HttpStatusCodeType",
+          "description": "Response status code"
+        },
+        "body": {
+          "type": "string",
+          "description": "Response body. The body must be specified in base64 encoding",
+          "maxLength": 32768,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$"
+        }
+      }
+    },
     "CustomRule": {
       "type": "object",
-      "description": "Defines contents of a web application rule",
+      "description": "Defines a custom rule",
       "properties": {
+        "ruleType": {
+          "type": "string",
+          "description": "Discriminator property for CustomRule."
+        },
         "name": {
           "type": "string",
           "description": "The name of the rule",
@@ -502,10 +546,6 @@
           "minimum": 0,
           "maximum": 65535
         },
-        "rateLimit": {
-          "$ref": "#/definitions/RateLimit",
-          "description": "Enables and configures a rate limit mechanism for the rule"
-        },
         "matchConditions": {
           "type": "array",
           "description": "A list of conditions that must be met for the actions to be executed",
@@ -517,7 +557,9 @@
           "x-ms-identifiers": []
         }
       },
+      "discriminator": "ruleType",
       "required": [
+        "ruleType",
         "name",
         "action",
         "priority",
@@ -529,10 +571,9 @@
       "description": "Describes the override action to be applied when custom rule matches",
       "enum": [
         "Allow",
-        "Deny",
+        "Block",
         "Log",
-        "Redirect",
-        "AnomalyScoring"
+        "Redirect"
       ],
       "x-ms-enum": {
         "name": "CustomRuleActionType",
@@ -544,9 +585,9 @@
             "description": "Allow the request"
           },
           {
-            "name": "Deny",
-            "value": "Deny",
-            "description": "Deny the request"
+            "name": "Block",
+            "value": "Block",
+            "description": "Block the request"
           },
           {
             "name": "Log",
@@ -557,11 +598,6 @@
             "name": "Redirect",
             "value": "Redirect",
             "description": "Redirect the request"
-          },
-          {
-            "name": "AnomalyScoring",
-            "value": "AnomalyScoring",
-            "description": "Use Anomaly Scoring to decide wether to allow or deny"
           }
         ]
       }
@@ -574,7 +610,7 @@
           "type": "string",
           "description": "Discriminator property for CustomRuleCondition."
         },
-        "negationCondition": {
+        "negateCondition": {
           "type": "boolean",
           "description": "Whether this is negate the condition. Default is false",
           "default": false
@@ -584,6 +620,30 @@
       "required": [
         "conditionType"
       ]
+    },
+    "DurationInMinutes": {
+      "type": "number",
+      "description": "Duration in minutes",
+      "enum": [
+        1,
+        5
+      ],
+      "x-ms-enum": {
+        "name": "DurationInMinutes",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "One",
+            "value": 1,
+            "description": "One minute"
+          },
+          {
+            "name": "Five",
+            "value": 5,
+            "description": "Five minutes"
+          }
+        ]
+      }
     },
     "EnabledState": {
       "type": "string",
@@ -609,9 +669,33 @@
         ]
       }
     },
-    "Exclusion": {
+    "EndpointType": {
+      "type": "string",
+      "description": "The type of the endpoint",
+      "enum": [
+        "ApplicationGateway",
+        "FrontDoor"
+      ],
+      "x-ms-enum": {
+        "name": "EndpointType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "ApplicationGateway",
+            "value": "ApplicationGateway",
+            "description": "application gateway endpoints, which are under Microsoft.Network/applicationGateways"
+          },
+          {
+            "name": "FrontDoor",
+            "value": "FrontDoor",
+            "description": "FrontDoor endpoints, which are under Microsoft.Cdn/profiles"
+          }
+        ]
+      }
+    },
+    "ExclusionCondition": {
       "type": "object",
-      "description": "Allow to exclude some variable satisfy the condition for the WAF check",
+      "description": "Defines a condition for the exclusion",
       "properties": {
         "matchVariable": {
           "$ref": "#/definitions/ExclusionMatchVariable",
@@ -624,17 +708,6 @@
         "selector": {
           "type": "string",
           "description": "When matchVariable is a collection, operator used to specify which elements in the collection this exclusion applies to"
-        },
-        "ruleGroups": {
-          "type": "array",
-          "description": "Exclusion scope. If not specified, then the exclusion is applied to the entire rule set",
-          "maxItems": 100,
-          "items": {
-            "$ref": "#/definitions/RuleGroupScope"
-          },
-          "x-ms-identifiers": [
-            "ruleGroupName"
-          ]
         }
       },
       "required": [
@@ -725,22 +798,22 @@
           {
             "name": "Equals_",
             "value": "Equals",
-            "description": "Equals"
+            "description": "Performs an ordinal (case-sensitive and culture-insensitive) comparison"
           },
           {
             "name": "Contains",
             "value": "Contains",
-            "description": "Contains"
+            "description": "Checks whether a string contains a sequence of characters"
           },
           {
             "name": "StartsWith",
             "value": "StartsWith",
-            "description": "Starts with"
+            "description": "Checks whether a string starts with a specified string"
           },
           {
             "name": "EndsWith",
             "value": "EndsWith",
-            "description": "Ends with"
+            "description": "Checks whether a string ends with a specified string"
           },
           {
             "name": "EqualsAny",
@@ -806,6 +879,26 @@
         ]
       }
     },
+    "FileUploadSizeLimitation": {
+      "type": "object",
+      "description": "Used to limit the file upload size",
+      "properties": {
+        "endpointType": {
+          "$ref": "#/definitions/EndpointType",
+          "description": "If specified, this will be applied only to endpoints of the specified types. Otherwise, all endpoint types are inspected"
+        },
+        "state": {
+          "$ref": "#/definitions/EnabledState",
+          "description": "Whether the size limitation is enabled or disabled. Default value is Enabled",
+          "default": "Enabled"
+        },
+        "maxSizeInMb": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Maximum allowed upload size in MB"
+        }
+      }
+    },
     "FrontDoorProtectedEndpoint": {
       "type": "object",
       "description": "Defines a custom rule condition of type Ip",
@@ -860,6 +953,48 @@
             "name": "ClientAddr",
             "value": "ClientAddr",
             "description": "The client IP address"
+          }
+        ]
+      }
+    },
+    "HttpStatusCodeType": {
+      "type": "number",
+      "description": "HTTP response status codes",
+      "enum": [
+        200,
+        403,
+        405,
+        406,
+        429
+      ],
+      "x-ms-enum": {
+        "name": "HttpStatusCodeType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Ok",
+            "value": 200,
+            "description": "The request has succeeded"
+          },
+          {
+            "name": "Forbidden",
+            "value": 403,
+            "description": "The client does not have access rights to the content"
+          },
+          {
+            "name": "MethodNotAllowed",
+            "value": 405,
+            "description": "The request method is known by the server but is not supported by the target resource"
+          },
+          {
+            "name": "NotAcceptable",
+            "value": 406,
+            "description": "This response is sent when the web server, after performing server-driven content negotiation, doesn't find any content that conforms to the criteria given by the user agent"
+          },
+          {
+            "name": "TooManyRequests",
+            "value": 429,
+            "description": "The user has sent too many requests in a given amount of time"
           }
         ]
       }
@@ -954,9 +1089,51 @@
         }
       }
     },
+    "ManagedRuleActionType": {
+      "type": "string",
+      "description": "Supported action that can be applied if a rule matches",
+      "enum": [
+        "AnomalyScoring",
+        "Allow",
+        "Block",
+        "Log",
+        "Redirect"
+      ],
+      "x-ms-enum": {
+        "name": "ManagedRuleActionType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "AnomalyScoring",
+            "value": "AnomalyScoring",
+            "description": "Anomaly scoring action"
+          },
+          {
+            "name": "Allow",
+            "value": "Allow",
+            "description": "Allow the request"
+          },
+          {
+            "name": "Block",
+            "value": "Block",
+            "description": "Block the request"
+          },
+          {
+            "name": "Log",
+            "value": "Log",
+            "description": "Log the request and allow it"
+          },
+          {
+            "name": "Redirect",
+            "value": "Redirect",
+            "description": "Redirect the request"
+          }
+        ]
+      }
+    },
     "ManagedRuleSet": {
       "type": "object",
-      "description": "Defines a managed rule set",
+      "description": "Managed rule set definition",
       "properties": {
         "state": {
           "$ref": "#/definitions/EnabledState",
@@ -965,41 +1142,210 @@
         },
         "ruleSetType": {
           "type": "string",
-          "description": "Defines the rule set type to use",
+          "description": "Defines the type of the rule set",
           "minLength": 1,
           "maxLength": 30
         },
         "ruleSetVersion": {
           "type": "string",
-          "description": "Defines the version of the rule set to use",
+          "description": "Defines the version of the rule set",
           "minLength": 1,
           "maxLength": 20
-        },
-        "ruleGroupOverrides": {
-          "type": "array",
-          "description": "Defines the rule group overrides to apply to the rule set",
-          "maxItems": 100,
-          "items": {
-            "$ref": "#/definitions/RuleGroupOverride"
-          },
-          "x-ms-identifiers": [
-            "ruleGroupName"
-          ]
-        },
-        "exclusions": {
-          "type": "array",
-          "description": "The exclusions that are applied on the managed rule set",
-          "maxItems": 100,
-          "items": {
-            "$ref": "#/definitions/Exclusion"
-          },
-          "x-ms-identifiers": []
         }
       },
       "required": [
         "ruleSetType",
         "ruleSetVersion"
       ]
+    },
+    "ManagedRuleSetId": {
+      "type": "object",
+      "description": "Defines a managed rule set identifier",
+      "properties": {
+        "ruleSetType": {
+          "type": "string",
+          "description": "Defines the type of the rule set",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "ruleSetVersion": {
+          "type": "string",
+          "description": "Defines the version of the rule set",
+          "minLength": 1,
+          "maxLength": 20
+        }
+      },
+      "required": [
+        "ruleSetType",
+        "ruleSetVersion"
+      ]
+    },
+    "ManagedRuleSetOverride": {
+      "type": "object",
+      "description": "Defines a managed rule set override",
+      "properties": {
+        "ruleSetType": {
+          "type": "string",
+          "description": "Defines the type of the rule set",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "ruleSetVersion": {
+          "type": "string",
+          "description": "Defines the version of the rule set",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "ruleGroupOverrides": {
+          "type": "array",
+          "description": "Rule group level overrides",
+          "items": {
+            "$ref": "#/definitions/RuleGroupOverride"
+          },
+          "x-ms-identifiers": [
+            "ruleGroupName"
+          ]
+        }
+      },
+      "required": [
+        "ruleSetType",
+        "ruleSetVersion"
+      ]
+    },
+    "ManagedRuleSetScope": {
+      "type": "object",
+      "description": "Defines a managed rule set scope, which can be the entire rule set or a subset of rules within it",
+      "properties": {
+        "ruleSetType": {
+          "type": "string",
+          "description": "Defines the type of the rule set",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "ruleSetVersion": {
+          "type": "string",
+          "description": "Defines the version of the rule set",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "ruleGroups": {
+          "type": "array",
+          "description": "Exclusion scope. If not specified, then the exclusion is applied to the entire rule set",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/RuleGroupScope"
+          },
+          "x-ms-identifiers": [
+            "ruleGroupName"
+          ]
+        }
+      },
+      "required": [
+        "ruleSetType",
+        "ruleSetVersion"
+      ]
+    },
+    "ManagedRulesCustomization": {
+      "type": "object",
+      "description": "Defines managed rules customization (including exclusions and overrides)",
+      "properties": {
+        "exclusions": {
+          "type": "array",
+          "description": "List of exclusions to be applied to the managed rules inspection. If not specified, then no exclusions are applied",
+          "items": {
+            "$ref": "#/definitions/ManagedRulesExclusion"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
+        },
+        "overrides": {
+          "type": "array",
+          "description": "List of managed rule set overrides. If not specified, then no overrides are applied",
+          "items": {
+            "$ref": "#/definitions/ManagedRuleSetOverride"
+          },
+          "x-ms-identifiers": [
+            "ruleSetType",
+            "ruleSetVersion"
+          ]
+        }
+      },
+      "required": [
+        "exclusions",
+        "overrides"
+      ]
+    },
+    "ManagedRulesCustomizationUpdate": {
+      "type": "object",
+      "description": "Defines managed rules customization (including exclusions and overrides)",
+      "properties": {
+        "exclusions": {
+          "type": "array",
+          "description": "List of exclusions to be applied to the managed rules inspection. If not specified, then no exclusions are applied",
+          "items": {
+            "$ref": "#/definitions/ManagedRulesExclusion"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
+        },
+        "overrides": {
+          "type": "array",
+          "description": "List of managed rule set overrides. If not specified, then no overrides are applied",
+          "items": {
+            "$ref": "#/definitions/ManagedRuleSetOverride"
+          },
+          "x-ms-identifiers": [
+            "ruleSetType",
+            "ruleSetVersion"
+          ]
+        }
+      }
+    },
+    "ManagedRulesExclusion": {
+      "type": "object",
+      "description": "Enable exclusion of variables based on conditions from managed rules inspection",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the exclusion"
+        },
+        "conditions": {
+          "type": "array",
+          "description": "The exclusion conditions",
+          "items": {
+            "$ref": "#/definitions/ExclusionCondition"
+          },
+          "x-ms-identifiers": []
+        },
+        "scope": {
+          "type": "array",
+          "description": "The scope of the exclusion. If not specified, then the exclusion is applied to all managed rules",
+          "items": {
+            "$ref": "#/definitions/ManagedRuleSetScope"
+          },
+          "x-ms-identifiers": [
+            "ruleSetType",
+            "ruleSetVersion"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "conditions"
+      ]
+    },
+    "MatchCustomRule": {
+      "type": "object",
+      "description": "User defined rule to execute an action if conditions are met on an incoming request",
+      "properties": {},
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomRule"
+        }
+      ],
+      "x-ms-discriminator-value": "MatchBased"
     },
     "Policy": {
       "type": "object",
@@ -1013,6 +1359,11 @@
             "read",
             "create"
           ]
+        },
+        "eTag": {
+          "type": "string",
+          "description": "If eTag is provided in the response body, it may also be provided as a header per the normal etag convention.  Entity tags are used for comparing two or more entities from the same requested resource. HTTP/1.1 uses entity tags in the etag (section 14.19), If-Match (section 14.24), If-None-Match (section 14.26), and If-Range (section 14.27) header fields.",
+          "readOnly": true
         }
       },
       "allOf": [
@@ -1068,7 +1419,7 @@
     },
     "PolicyProperties": {
       "type": "object",
-      "description": "The Policy properties",
+      "description": "The policy properties",
       "properties": {
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -1112,6 +1463,10 @@
         "botProtection": {
           "$ref": "#/definitions/BotProtection",
           "description": "Describes the bot protection policy"
+        },
+        "managedRulesCustomization": {
+          "$ref": "#/definitions/ManagedRulesCustomization",
+          "description": "Customization for managed rules (including exclusions and overrides)"
         }
       },
       "required": [
@@ -1139,34 +1494,99 @@
           "minLength": 3,
           "maxLength": 2048
         },
-        "customBlockResponseStatusCode": {
-          "type": "integer",
-          "format": "int64",
-          "description": "If the action type is block, customer can override the response status code",
-          "minimum": 0
+        "customBlockResponse": {
+          "$ref": "#/definitions/CustomBlockResponse",
+          "description": "Custom block response configuration, if action type is block"
         },
-        "customBlockResponseBody": {
-          "type": "string",
-          "description": "If the action type is block, customer can override the response body. The body must be specified in base64 encoding",
-          "maxLength": 32768,
-          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$"
+        "requestBodyInspections": {
+          "type": "array",
+          "description": "Request body inspection settings overrides for endpoint types",
+          "items": {
+            "$ref": "#/definitions/RequestBodyInspection"
+          },
+          "x-ms-identifiers": [
+            "endpointType"
+          ]
         },
-        "requestBodyCheck": {
+        "requestBodySizeLimitations": {
+          "type": "array",
+          "description": "Request body size limitation settings overrides for endpoint types",
+          "items": {
+            "$ref": "#/definitions/RequestBodySizeLimitation"
+          },
+          "x-ms-identifiers": [
+            "endpointType"
+          ]
+        },
+        "fileUploadSizeLimitations": {
+          "type": "array",
+          "description": "File upload size limitation settings overrides for endpoint types",
+          "items": {
+            "$ref": "#/definitions/FileUploadSizeLimitation"
+          },
+          "x-ms-identifiers": [
+            "endpointType"
+          ]
+        }
+      },
+      "required": [
+        "fileUploadSizeLimitations"
+      ]
+    },
+    "PolicySettingsUpdate": {
+      "type": "object",
+      "description": "Defines top-level policy settings",
+      "properties": {
+        "state": {
           "$ref": "#/definitions/EnabledState",
-          "description": "Describes if policy managed rules will inspect the request body content. Default value is Enable",
+          "description": "The state of the policy. Default value is Enabled",
           "default": "Enabled"
         },
-        "maxRequestBodySizeInKb": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Maximum request body size in Kb for WAF",
-          "minimum": 8
+        "mode": {
+          "$ref": "#/definitions/PolicyMode",
+          "description": "The mode of the policy. Default value is Detection",
+          "default": "Detection"
         },
-        "fileUploadLimitInMb": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Maximum file upload size in Mb for WAF",
-          "minimum": 0
+        "redirectUrl": {
+          "type": "string",
+          "description": "If action type is redirect, this field represents redirect URL for the client",
+          "default": "",
+          "minLength": 3,
+          "maxLength": 2048
+        },
+        "customBlockResponse": {
+          "$ref": "#/definitions/CustomBlockResponseUpdate",
+          "description": "Custom block response configuration, if action type is block"
+        },
+        "requestBodyInspections": {
+          "type": "array",
+          "description": "Request body inspection settings overrides for endpoint types",
+          "items": {
+            "$ref": "#/definitions/RequestBodyInspection"
+          },
+          "x-ms-identifiers": [
+            "endpointType"
+          ]
+        },
+        "requestBodySizeLimitations": {
+          "type": "array",
+          "description": "Request body size limitation settings overrides for endpoint types",
+          "items": {
+            "$ref": "#/definitions/RequestBodySizeLimitation"
+          },
+          "x-ms-identifiers": [
+            "endpointType"
+          ]
+        },
+        "fileUploadSizeLimitations": {
+          "type": "array",
+          "description": "File upload size limitation settings overrides for endpoint types",
+          "items": {
+            "$ref": "#/definitions/FileUploadSizeLimitation"
+          },
+          "x-ms-identifiers": [
+            "endpointType"
+          ]
         }
       }
     },
@@ -1192,7 +1612,7 @@
       "description": "The updatable properties of the Policy.",
       "properties": {
         "policySettings": {
-          "$ref": "#/definitions/PolicySettings",
+          "$ref": "#/definitions/PolicySettingsUpdate",
           "description": "Global settings for the policy"
         },
         "protectedEndpoints": {
@@ -1228,6 +1648,10 @@
         "botProtection": {
           "$ref": "#/definitions/BotProtectionUpdate",
           "description": "Describes the bot protection policy"
+        },
+        "managedRulesCustomization": {
+          "$ref": "#/definitions/ManagedRulesCustomizationUpdate",
+          "description": "Customization for managed rules (including exclusions and overrides)"
         }
       }
     },
@@ -1235,7 +1659,7 @@
       "type": "object",
       "description": "Protected endpoint definition",
       "properties": {
-        "applicationType": {
+        "endpointType": {
           "type": "string",
           "description": "Discriminator property for ProtectedEndpoint."
         },
@@ -1254,9 +1678,9 @@
           "readOnly": true
         }
       },
-      "discriminator": "applicationType",
+      "discriminator": "endpointType",
       "required": [
-        "applicationType",
+        "endpointType",
         "endpointId"
       ]
     },
@@ -1289,26 +1713,6 @@
           }
         ]
       }
-    },
-    "ProtectedEndpointList": {
-      "type": "object",
-      "description": "Request or response body of endpoints attachment/detachment operation",
-      "properties": {
-        "protectedEndpoints": {
-          "type": "array",
-          "description": "List of endpoints to attach/detach to the policy, or that are currently protected by the policy",
-          "maxItems": 100,
-          "items": {
-            "$ref": "#/definitions/ProtectedEndpoint"
-          },
-          "x-ms-identifiers": [
-            "endpointId"
-          ]
-        }
-      },
-      "required": [
-        "protectedEndpoints"
-      ]
     },
     "ProvisioningState": {
       "type": "string",
@@ -1364,62 +1768,120 @@
         ]
       }
     },
-    "RateLimit": {
+    "RateBasedCustomRule": {
       "type": "object",
-      "description": "Describes the rate limit configuration of a rule",
+      "description": "User defined rule that is triggered by the rate of incoming requests",
       "properties": {
-        "limitType": {
-          "$ref": "#/definitions/RateLimitType",
-          "description": "Rate limiting is done based on the limit type"
-        },
-        "durationInMinutes": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Time window for resetting the rate limit count. Default is 1 minute",
-          "default": 1,
-          "minimum": 1,
-          "maximum": 5
-        },
-        "maxRequestsPerSecond": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Max number of allowed requests per limit type, within the defined duration",
-          "minimum": 1
+        "rateLimit": {
+          "$ref": "#/definitions/RateLimit",
+          "description": "Configures a rate limit mechanism for the rule"
         }
       },
       "required": [
-        "limitType",
-        "maxRequestsPerSecond"
+        "rateLimit"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomRule"
+        }
+      ],
+      "x-ms-discriminator-value": "RateBased"
+    },
+    "RateLimit": {
+      "type": "object",
+      "description": "Describes the rate limit configuration of a rate limit custom rule",
+      "properties": {
+        "durationInMinutes": {
+          "$ref": "#/definitions/DurationInMinutes",
+          "description": "The time duration for which the rate limit threshold is enforced. Default value is 1 minute",
+          "default": 1
+        },
+        "threshold": {
+          "type": "integer",
+          "format": "int32",
+          "description": "If the total number of requests exceeds this threshold during a rate limit duration, the rate limit action will be invoked",
+          "minimum": 1
+        },
+        "groupBy": {
+          "$ref": "#/definitions/RateLimitGroupByType",
+          "description": "Group requests based on their type and apply rate limits to each group independently. Default is ClientAddr based grouping",
+          "default": "ClientAddr"
+        }
+      },
+      "required": [
+        "durationInMinutes",
+        "threshold",
+        "groupBy"
       ]
     },
-    "RateLimitType": {
+    "RateLimitGroupByType": {
       "type": "string",
-      "description": "Supported rate limiting types",
+      "description": "Defines the available grouping options for rate limiting",
       "enum": [
-        "ClientIp",
-        "Geo",
-        "DestinationIp"
+        "ClientAddr",
+        "GeoLocation",
+        "None"
       ],
       "x-ms-enum": {
-        "name": "RateLimitType",
+        "name": "RateLimitGroupByType",
         "modelAsString": true,
         "values": [
           {
-            "name": "ClientIp",
-            "value": "ClientIp",
-            "description": "Rate limiting is done based on the client IP"
+            "name": "ClientAddr",
+            "value": "ClientAddr",
+            "description": "Grouping based on client address"
           },
           {
-            "name": "Geo",
-            "value": "Geo",
-            "description": "Rate limiting is done based on the geographic location of the request"
+            "name": "GeoLocation",
+            "value": "GeoLocation",
+            "description": "Grouping is based on the geographic location of the request"
           },
           {
-            "name": "DestinationIp",
-            "value": "DestinationIp",
-            "description": "Rate limiting is done based on the destination IP"
+            "name": "None",
+            "value": "None",
+            "description": "No grouping is being done. Rate limit is global"
           }
         ]
+      }
+    },
+    "RequestBodyInspection": {
+      "type": "object",
+      "description": "Describes whether policy rules will inspect the request body content and maximum request body size to inspect in KB",
+      "properties": {
+        "endpointType": {
+          "$ref": "#/definitions/EndpointType",
+          "description": "If specified, this will be applied only to endpoints of the specified types. Otherwise, all endpoint types are inspected"
+        },
+        "state": {
+          "$ref": "#/definitions/EnabledState",
+          "description": "Describes whether inspection is enabled for managed rules. Default value is Enabled",
+          "default": "Enabled"
+        },
+        "maxSizeInKb": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Maximum request body size to inspect in KB"
+        }
+      }
+    },
+    "RequestBodySizeLimitation": {
+      "type": "object",
+      "description": "Used to limit the size of the incoming request body",
+      "properties": {
+        "endpointType": {
+          "$ref": "#/definitions/EndpointType",
+          "description": "If specified, this will be applied only to endpoints of the specified types. Otherwise, all endpoint types are inspected"
+        },
+        "state": {
+          "$ref": "#/definitions/EnabledState",
+          "description": "Whether the size limitation is enabled or disabled. Default value is Enabled",
+          "default": "Enabled"
+        },
+        "maxSizeInKb": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Maximum allowed request body size in KB"
+        }
       }
     },
     "RuleGroupOverride": {
@@ -1434,7 +1896,7 @@
         },
         "groupOverride": {
           "$ref": "#/definitions/StateAndActionOverride",
-          "description": "Group level override"
+          "description": "Rule group level override"
         },
         "rules": {
           "type": "array",
@@ -1462,7 +1924,7 @@
         },
         "rules": {
           "type": "array",
-          "description": "Relevant rules within the specified rule group. If not specified, the scope is the entire rule group.",
+          "description": "Relevant rules within the specified rule group. If not specified, the scope is the entire rule group",
           "maxItems": 100,
           "items": {
             "type": "string"
@@ -1486,7 +1948,7 @@
           "description": "The state of the managed rule or rule group"
         },
         "action": {
-          "$ref": "#/definitions/WafActionType",
+          "$ref": "#/definitions/ManagedRuleActionType",
           "description": "Overrides the action to be applied when a rule matches"
         }
       },
@@ -1606,7 +2068,7 @@
           "description": "The state of the managed rule or rule group"
         },
         "action": {
-          "$ref": "#/definitions/WafActionType",
+          "$ref": "#/definitions/ManagedRuleActionType",
           "description": "Overrides the action to be applied when a rule matches"
         }
       },
@@ -1668,7 +2130,7 @@
       "enum": [
         "Equals",
         "Contains",
-        "BeginsWith",
+        "StartsWith",
         "EndsWith",
         "Regex",
         "GeoMatch"
@@ -1680,22 +2142,22 @@
           {
             "name": "Equals_",
             "value": "Equals",
-            "description": "Equals"
+            "description": "Performs an ordinal (case-sensitive and culture-insensitive) comparison"
           },
           {
             "name": "Contains",
             "value": "Contains",
-            "description": "Contains"
+            "description": "checks whether a string contains a sequence of characters"
           },
           {
-            "name": "BeginsWith",
-            "value": "BeginsWith",
-            "description": "Starts with"
+            "name": "StartsWith",
+            "value": "StartsWith",
+            "description": "Checks whether a string starts with a specified string"
           },
           {
             "name": "EndsWith",
             "value": "EndsWith",
-            "description": "Ends with"
+            "description": "Checks whether a string ends with a specified string"
           },
           {
             "name": "Regex",
@@ -1886,48 +2348,6 @@
             "name": "v2023_02_06_preview",
             "value": "2023-02-06-preview",
             "description": "Version 2023-02-06-preview"
-          }
-        ]
-      }
-    },
-    "WafActionType": {
-      "type": "string",
-      "description": "Supported action that can be applied if a rule matches",
-      "enum": [
-        "AnomalyScoring",
-        "Allow",
-        "Block",
-        "Log",
-        "Redirect"
-      ],
-      "x-ms-enum": {
-        "name": "WafActionType",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "AnomalyScoring",
-            "value": "AnomalyScoring",
-            "description": "Anomaly scoring action"
-          },
-          {
-            "name": "Allow",
-            "value": "Allow",
-            "description": "Allow the request"
-          },
-          {
-            "name": "Block",
-            "value": "Block",
-            "description": "Block the request"
-          },
-          {
-            "name": "Log",
-            "value": "Log",
-            "description": "Log the request and allow it"
-          },
-          {
-            "name": "Redirect",
-            "value": "Redirect",
-            "description": "Redirect the request"
           }
         ]
       }
