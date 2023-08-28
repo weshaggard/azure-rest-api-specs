@@ -388,3 +388,21 @@ interface PreviewOrders3Interface {
     body: Order,
   ): Order | ErrorResponse;
 }
+
+@armResourceOperations
+interface PreviewOrders4Interface {
+@armResourceCollectionAction
+  @armProviderNameValue
+  @doc("Implements previewOrders operations")
+  @TypeSpec.Rest.action("previewOrders4")
+  @post
+  op previewOrders4(
+    ...SubscriptionIdParameter,
+    ...DefaultProviderNamespace,
+    ...ApiVersionParameter,
+
+    @doc("The previewOrders4 request")
+    @body
+    body: Order,
+  ): Order | ErrorResponse;
+}
