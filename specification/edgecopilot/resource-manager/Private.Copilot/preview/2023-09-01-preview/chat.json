@@ -1,0 +1,131 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2023-01-01",
+    "title": "Edge Copilot",
+    "description": "The Azure Edge Copilot API."
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Storage/locations/{location}/chat": {
+      "post": {
+        "tags": [
+        ],
+        "operationId": "Chat",
+        "x-ms-examples": {
+          "TableServicesList": {
+            "$ref": "./examples/chat_example.json"
+          }
+        },
+        "description": "Post a message to chatbot",
+        "parameters": [
+          {
+            "name": "chatrequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChatRequest"
+            }
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v2/types.json#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK -- return the reply messages from chatbot",
+            "schema": {
+              "$ref": "#/definitions/ChatResponse"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v2/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ChatRequest": {
+      "properties": {
+        "userMessage": {
+          "type": "object",
+          "$ref": "#/definitions/ChatMessage",
+          "description": "List of tables returned."
+        }
+      },
+      "description": "Chat request schema. Contains input message from user"
+    },
+    "ChatResponse": {
+      "properties": {
+        "replyMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChatMessage"
+          },
+          "description": "Reply message schema. Contains reply messages from chatbot",
+          "readOnly": true
+        }
+      },
+      "description":  "Chat response schema. Contains reply messages from chatbot"
+    },
+    "ChatMessage": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of message. Can be either 'text' or 'image'."
+        },
+        "content": {
+          "type": "string",
+          "description": "List of stored access policies specified on the table."
+        }
+      }
+    },
+    "ChatMessageType": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of message."
+        },
+        "subtype": {
+          "type": "string",
+          "description": "Sub-type of message."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of message. Can be 'system', 'assistant', or 'user'."
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of message."
+        }
+      }
+    }
+  },
+  "parameters": {},
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ]
+}
