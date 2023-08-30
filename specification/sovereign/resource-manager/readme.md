@@ -38,6 +38,9 @@ These settings apply only when `--tag=package-2023-09-28-preview` is specified o
 ```yaml $(tag) == 'package-2023-09-28-preview'
 input-file:
   - Microsoft.Sovereign/preview/2023-09-28-preview/sovereign.json
+suppressions:    
+  - code: TopLevelResourcesListBySubscription
+    reason: The resource types in the Microsoft.Sovereign resource provider are tenant level, so subscription list operation is not valid.
 ```
 
 ---
