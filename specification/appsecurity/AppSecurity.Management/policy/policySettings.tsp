@@ -18,7 +18,7 @@ model PolicySettings {
   @doc("If action type is redirect, this field represents redirect URL for the client")
   @minLength(MinRedirectUrlLength)
   @maxLength(MaxRedirectUrlLength)
-  redirectUrl?: string = ""; // TODO - didn't find a url built-in type in /workspace/src/API/node_modules/@typespec/compiler/lib/lib.tsp
+  redirectUrl?: string; // TODO - didn't find a url built-in type in /workspace/src/API/node_modules/@typespec/compiler/lib/lib.tsp
 
   @doc("Custom block response configuration, if action type is block")
   customBlockResponse?: CustomBlockResponse;
@@ -33,7 +33,7 @@ model PolicySettings {
 
   @doc("File upload size limitation settings overrides for endpoint types")
   @extension("x-ms-identifiers", ["endpointType"])
-  fileUploadSizeLimitations: FileUploadSizeLimitation[];
+  fileUploadSizeLimitations?: FileUploadSizeLimitation[];
 }
 
 @doc("Supported policy modes")
