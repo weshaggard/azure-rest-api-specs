@@ -469,7 +469,9 @@
           "items": {
             "$ref": "#/definitions/PhysicalNodes"
           },
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "name"
+          ]
         },
         "hostNetwork": {
           "$ref": "#/definitions/HostNetwork",
@@ -500,6 +502,30 @@
         "hostNetwork",
         "adouPath"
       ]
+    },
+    "DeploymentMode": {
+      "type": "string",
+      "description": "The deployment mode of deployment settings for a cluster.",
+      "enum": [
+        "Validate",
+        "Deploy"
+      ],
+      "x-ms-enum": {
+        "name": "DeploymentMode",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Validate",
+            "value": "Validate",
+            "description": "Validate deployment settings for cluster."
+          },
+          {
+            "name": "Deploy",
+            "value": "Deploy",
+            "description": "Deploy cluster using  deployment settings."
+          }
+        ]
+      }
     },
     "DeploymentRequest": {
       "type": "object",
@@ -566,7 +592,21 @@
       "properties": {
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
-          "description": "DeploymentSetting provisioning state"
+          "description": "DeploymentSetting provisioning state",
+          "readOnly": true
+        },
+        "arcNodeResourceIds": {
+          "type": "array",
+          "description": "ARM resource ids of Arc machines to be part of cluster.",
+          "items": {
+            "type": "string"
+          },
+          "x-ms-identifiers": []
+        },
+        "deploymentMode": {
+          "$ref": "#/definitions/DeploymentMode",
+          "description": "Deployment mode can have values 'Validate' or 'Deploy'.",
+          "default": "Deploy"
         },
         "deploymentConfiguration": {
           "$ref": "#/definitions/DeploymentConfiguration",
@@ -579,6 +619,8 @@
         }
       },
       "required": [
+        "arcNodeResourceIds",
+        "deploymentMode",
         "deploymentConfiguration"
       ]
     },
@@ -610,7 +652,9 @@
           "items": {
             "$ref": "#/definitions/Intents"
           },
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "name"
+          ]
         },
         "storageNetworks": {
           "type": "array",
@@ -618,7 +662,9 @@
           "items": {
             "$ref": "#/definitions/StorageNetworks"
           },
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "name"
+          ]
         },
         "storageConnectivitySwitchless": {
           "type": "boolean",
