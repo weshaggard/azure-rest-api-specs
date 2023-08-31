@@ -22,12 +22,12 @@ interface Operations extends Azure.ResourceManager.Operations {}
 
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
-@doc("A MassDriver")
+@doc("A Drill")
 @parentResource(IceHarvester)
-model MassDriver is ProxyResource<MassDriverProperties> {
-  @doc("driver name")
-  @key("massdriverName")
-  @segment("massDrivers")
+model Drill is ProxyResource<DrillProperties> {
+  @doc("drill name")
+  @key("drillName")
+  @segment("drills")
   @visibility("read")
   @path
   name: string;
@@ -51,27 +51,27 @@ enum ProvisioningState {
   Accepted,
 }
 
-@doc("The properties of MassDriver")
-model MassDriverProperties {
-  @doc("The user's full name")
+@doc("The properties of Drill")
+model DrillProperties {
+  @doc("The drill's shape")
   @visibility("read")
-  fullName: string;
+  bitShape: string;
 
-  @doc("MassDriver Type")
-  massDriverType: int32;
+  @doc("Drill bit angle")
+  bitAngle: int32;
 
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
 }
 
 @armResourceOperations
-interface MassDrivers {
-  get is ArmResourceRead<MassDriver>;
-  create is ArmResourceCreateOrUpdateSync<MassDriver>;
-  delete is ArmResourceDeleteSync<MassDriver>;
-  update is ArmResourcePatchSync<MassDriver, MassDriverProperties>;
-  listByParent is ArmResourceListByParent<MassDriver>;
-  listBySubscription is ArmListBySubscription<MassDriver>;
+interface Drills {
+  get is ArmResourceRead<Drill>;
+  create is ArmResourceCreateOrUpdateSync<Drill>;
+  delete is ArmResourceDeleteSync<Drill>;
+  update is ArmResourcePatchSync<Drill, DrillProperties>;
+  listByParent is ArmResourceListByParent<Drill>;
+  listBySubscription is ArmListBySubscription<Drill>;
 }
 
 @doc("A IceHarvester")
