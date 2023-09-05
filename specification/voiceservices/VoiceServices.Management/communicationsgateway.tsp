@@ -160,19 +160,19 @@ enum CommunicationsPlatform {
   TeamsPhoneMobile,
 
   @doc("Teams Direct Routing")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   TeamsDirectRouting,
 }
 
 @doc("API Bridge activation state.")
-@added(Versions.v2023_08_07_preview)
+@added(Versions.v2023_09_01)
 enum ApiBridgeActivationState {
   @doc("API Bridge is enabled")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   enabled,
 
   @doc("API Bridge is disabled")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   disabled,
 }
 
@@ -180,60 +180,60 @@ enum ApiBridgeActivationState {
 model ApiBridgeProperties {
   @doc("The activation state of the API Bridge for this Communications Gateway")
   @visibility("read", "update", "create")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   configureApiBridge?: ApiBridgeActivationState = ApiBridgeActivationState.disabled;
 
   @doc("FQDNs for sending requests to the API Bridge endpoint")
   @visibility("read")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   endpointFqdns?: string[];
 
   @doc("The allowed source IP addresses or CIDR ranges for accessing the API Bridge")
   @visibility("read", "update", "create")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   allowedAddressPrefixes?: string[];
 }
 
 @doc("Details of a DNS Domain delegated to the Communications Gateway.")
-@added(Versions.v2023_08_07_preview)
+@added(Versions.v2023_09_01)
 model DnsDelegationProperties {
   @doc("Domain name to delegate")
   @visibility("read", "update", "create")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   domain?: string;
 
   @doc("The Azure-hosted DNS Name Servers for the delegated DNS Zones")
   @visibility("read")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   nameServers?: string[];
 }
 
 @doc("Details of DNS Domains delegated to the Communications Gateway.")
-@added(Versions.v2023_08_07_preview)
+@added(Versions.v2023_09_01)
 model DnsDelegationsProperties {
   @doc("DNS Domains to delegate for the creation of DNS Zones by the Azure Communications Gateway")
   @visibility("read", "update", "create")
   @OpenAPI.extension("x-ms-identifiers", ["domain"])
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   delegations?: DnsDelegationProperties[];
 }
 
 @doc("Details of a Custom SIP Header.")
-@added(Versions.v2023_08_07_preview)
+@added(Versions.v2023_09_01)
 model CustomSipHeader {
   @doc("The name of the Custom SIP Header")
   @visibility("read", "update", "create")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   name?: string;
 }
 
 @doc("Properties of Custom SIP Headers.")
-@added(Versions.v2023_08_07_preview)
+@added(Versions.v2023_09_01)
 model CustomSipHeadersProperties {
   @doc("The Custom SIP Headers to apply to the calls which traverse the Communications Gateway")
   @visibility("read", "update", "create")
   @OpenAPI.extension("x-ms-identifiers", ["name"])
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   headers?: CustomSipHeader[];
 }
 
@@ -309,26 +309,26 @@ model CommunicationsGatewayProperties is ResourceProperties {
   @visibility("read", "update", "create")
   emergencyDialStrings?: string[] = ["911", "933"];
 
-  // Added 2023-08-07-preview
+  // Added 2023-09-01
 
   @doc("Details of DNS Domains to delegate to the Communications Gateway.")
   @visibility("read", "update", "create")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   dnsDelegations?: DnsDelegationsProperties;
 
   @doc("Custom SIP Header to add to any subscriber with a custom_header value, if required.")
   @visibility("read", "update", "create")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   customSipHeaders?: CustomSipHeadersProperties;
 
   @doc("A list of IP allocated prefixes which may be used to recieve signaling data from this Communications Gateway.")
   @visibility("read")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   allocatedSignalingAddressPrefixes?: string[];
 
   @doc("A list of allocated IP prefixes which may be used to recieve media data from this Communications Gateway.")
   @visibility("read")
-  @added(Versions.v2023_08_07_preview)
+  @added(Versions.v2023_09_01)
   allocatedMediaAddressPrefixes?: string[];
 }
 
