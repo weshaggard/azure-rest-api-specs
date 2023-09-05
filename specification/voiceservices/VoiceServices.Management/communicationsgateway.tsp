@@ -72,7 +72,6 @@ model CommunicationsGateway
 
   #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-invalid-envelope-property" "Add property for versioning"
   @added(Versions.v2023_07_13_preview)
-  @removed(Versions.v2023_09_01)
   @doc("The SKU (Stock Keeping Unit) assigned to this resource.")
   sku?: Azure.ResourceManager.Foundations.ResourceSkuType;
 }
