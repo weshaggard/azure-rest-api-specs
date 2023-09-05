@@ -60,8 +60,8 @@ op ArmResourceListActionSync<
   TRelationshipName extends valueof string,
   TBaseParameters = BaseParameters<TResource>
 >(
-  ...ProviderNamespace<TResource>,
   ...TBaseParameters,
+  ...ProviderNamespace<TResource>,
 
   @doc("The name of the relationship to list resources for.")
   @path
