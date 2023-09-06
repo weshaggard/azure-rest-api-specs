@@ -38,6 +38,10 @@ model ServerProperties {
   status: string;
 
   @visibility("read")
+  @doc("The current status of the GoalState")
+  goalStateStatus: string;
+
+  @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
 
@@ -51,7 +55,7 @@ model ServerProperties {
 
   @visibility("read", "query")
   @doc("Server Inventory Information")
-  inventory: Inventory;
+  inventory?: Inventory;
 }
 
 @armResourceOperations(Server)
