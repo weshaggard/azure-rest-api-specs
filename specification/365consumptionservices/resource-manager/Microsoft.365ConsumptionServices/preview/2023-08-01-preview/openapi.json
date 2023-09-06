@@ -3,7 +3,7 @@
   "info": {
     "title": "Microsoft.365ConsumptionServices",
     "version": "2023-08-01-preview",
-    "description": "AdminMonetizationTest Resource Provider management API.",
+    "description": "Microsoft.365ConsumptionServices Resource Provider management API.",
     "x-typespec-generated": [
       {
         "emitter": "@azure-tools/typespec-autorest"
@@ -78,7 +78,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.365ConsumptionServices/Services": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.365ConsumptionServices/services": {
       "get": {
         "operationId": "Services_ListBySubscription",
         "tags": [
@@ -112,7 +112,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.365ConsumptionServices/Services": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.365ConsumptionServices/services": {
       "get": {
         "operationId": "Services_ListByResourceGroup",
         "tags": [
@@ -149,7 +149,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.365ConsumptionServices/Services/{ServiceName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.365ConsumptionServices/services/{serviceName}": {
       "get": {
         "operationId": "Services_Get",
         "tags": [
@@ -167,12 +167,11 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "name": "ServiceName",
+            "name": "serviceName",
             "in": "path",
             "description": "The name of the service.",
             "required": true,
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "type": "string"
           }
         ],
         "responses": {
@@ -207,12 +206,11 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "name": "ServiceName",
+            "name": "serviceName",
             "in": "path",
             "description": "The name of the service.",
             "required": true,
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "type": "string"
           },
           {
             "name": "resource",
@@ -273,12 +271,11 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "name": "ServiceName",
+            "name": "serviceName",
             "in": "path",
             "description": "The name of the service.",
             "required": true,
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "type": "string"
           },
           {
             "name": "properties",
@@ -322,31 +319,16 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "name": "ServiceName",
+            "name": "serviceName",
             "in": "path",
             "description": "The name of the service.",
             "required": true,
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Resource deleted successfully."
-          },
-          "202": {
-            "description": "Resource deletion accepted.",
-            "headers": {
-              "Retry-After": {
-                "type": "integer",
-                "format": "int32",
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
-              },
-              "Location": {
-                "type": "string",
-                "description": "The Location header contains the URL where the status of the long running operation can be checked."
-              }
-            }
           },
           "204": {
             "description": "Resource deleted successfully."
@@ -357,26 +339,18 @@
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        },
-        "x-ms-long-running-operation": true
+        }
       }
     }
   },
   "definitions": {
     "ProvisioningState": {
       "type": "string",
-      "description": "The status of the current operation.",
+      "description": "The provisioning state of a resource.",
       "enum": [
         "Succeeded",
         "Failed",
-        "Canceled",
-        "Provisioning",
-        "Updating",
-        "Deleting",
-        "Accepted"
+        "Canceled"
       ],
       "x-ms-enum": {
         "name": "ProvisioningState",
@@ -396,33 +370,13 @@
             "name": "Canceled",
             "value": "Canceled",
             "description": "Resource creation was canceled."
-          },
-          {
-            "name": "Provisioning",
-            "value": "Provisioning",
-            "description": "Initial provisioning in progress"
-          },
-          {
-            "name": "Updating",
-            "value": "Updating",
-            "description": "Update in progress"
-          },
-          {
-            "name": "Deleting",
-            "value": "Deleting",
-            "description": "Deletion in progress"
-          },
-          {
-            "name": "Accepted",
-            "value": "Accepted",
-            "description": "Change accepted for processing"
           }
         ]
       }
     },
     "Service": {
       "type": "object",
-      "description": "A 365ConsumptionServicesProviderHub resource",
+      "description": "A 365ConsumptionServices resource",
       "properties": {
         "properties": {
           "$ref": "#/definitions/ServiceProperties",
@@ -432,8 +386,49 @@
             "read",
             "create"
           ]
+        },
+        "location": {
+          "type": "string",
+          "description": "The geo-location where the resource lives",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "tags": {
+          "type": "object",
+          "description": "Resource tags.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+          "readOnly": true
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+          "readOnly": true
+        },
+        "systemData": {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/systemData",
+          "description": "Azure Resource Manager metadata containing createdBy and modifiedBy information.",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the service.",
+          "readOnly": true
         }
       },
+      "required": [
+        "location",
+        "id",
+        "type",
+        "name"
+      ],
       "allOf": [
         {
           "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
@@ -463,7 +458,7 @@
     },
     "ServiceProperties": {
       "type": "object",
-      "description": "Details of the 365ConsumptionServices Service.",
+      "description": "Service properties.",
       "properties": {
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState",
@@ -472,12 +467,22 @@
         },
         "tenantId": {
           "type": "string",
-          "description": "Tenant Id."
+          "description": "Tenant id.",
+          "pattern": "(^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}?)$",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
         "usageType": {
           "type": "integer",
-          "format": "int64",
-          "description": "Usage Type."
+          "format": "int32",
+          "description": "Usage type.",
+          "minimum": 1,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         }
       },
       "required": [
@@ -495,25 +500,6 @@
           "additionalProperties": {
             "type": "string"
           }
-        },
-        "properties": {
-          "$ref": "#/definitions/ServiceUpdateProperties",
-          "x-ms-client-flatten": true
-        }
-      }
-    },
-    "ServiceUpdateProperties": {
-      "type": "object",
-      "description": "The updatable properties of the Service.",
-      "properties": {
-        "tenantId": {
-          "type": "string",
-          "description": "Tenant Id."
-        },
-        "usageType": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Usage Type."
         }
       }
     },
