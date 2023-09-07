@@ -95,4 +95,6 @@ interface PushAgentV2Accounts {
   @doc("PushAgentV2Account allocation")
   @example("./examples/AddAccount.json", "Create a PushAgentV2Account")
   createOrUpdate is ArmResourceCreateOrUpdateAsync<PushAgentV2AccountResource>;
+  listBySubscription is ArmListBySubscription<PushAgentV2AccountResource>;
+  listByResourceGroup is ArmResourceListByParent<PushAgentV2AccountResource>;
 }
