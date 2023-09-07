@@ -14,17 +14,16 @@ using Autorest;
 @armProviderNamespace
 @service({
   title: "Foundational ARM Client",
-  version: "2023-08-22-preview"
+  version: "2023-08-22-preview",
 })
-
-@doc("dsmsAllowlists Provider")
+@doc("dscm Service")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureCIS;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("dsmsAllowlists properties")
-model dsmsAllowlistsResourceProperties {
+model DsmsAllowlistsResourceProperties {
   @doc("The name of the folder to apply allowlist changes to. This should be the full folder path starting with a '$', with '$' replacing all '/' characters. Example: '/my-folder/root-folder' should be passed as '$my-folder$root-folder")
   folderName: string; // camel case for the parameter name
 
@@ -32,13 +31,13 @@ model dsmsAllowlistsResourceProperties {
   targetDsmsEndpoints?: Array<string>;
 
   @doc("Dns domain patterns in the allowlist. Patterns with '*' are accepted values here.")
-  dnsPatterns? : Array<string>;
+  dnsPatterns?: Array<string>;
 
   @doc("Guids of Azure deployment subscriptions in allowlist.")
-  deploymentSubscriptions? : Array<string>;
+  deploymentSubscriptions?: Array<string>;
 
   @doc("Guids of Azure storage subscriptions in allowlist.")
-  storageSubscriptions? : Array<string>;
+  storageSubscriptions?: Array<string>;
 
   @doc("Provisioning state")
   @visibility("read")
@@ -46,11 +45,12 @@ model dsmsAllowlistsResourceProperties {
 }
 
 @doc("dsmsAllowlists Resource")
-model dsmsAllowlistsResource is ProxyResource<dsmsAllowlistsResourceProperties> { // this can be TrackedResource based on resourcetype
+model DsmsAllowlistsResource
+  is ProxyResource<DsmsAllowlistsResourceProperties> { // this can be TrackedResource based on resourcetype
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("dsmsAllowlists")// start with lower case
+  @segment("dsmsAllowlists") // start with lower case
   @visibility("read")
   @path
   name: string;
@@ -59,16 +59,17 @@ model dsmsAllowlistsResource is ProxyResource<dsmsAllowlistsResourceProperties> 
 @doc("Provisioning status of the resource.")
 enum dsmsAllowlistsProvisioningState {
   ...ResourceProvisioningState,
+
   @doc("Accepted State")
-  Accepted
+  Accepted,
 }
 
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
-interface dsmsAllowlists {
+interface DsmsAllowlists {
   @doc(" dsmsAllowlists creation")
   @example("./examples/CreateDsmsAllowlist.json", "Create dsmsAllowlists")
-  createOrUpdate  is ArmResourceCreateOrUpdateAsync<dsmsAllowlistsResource>;
-  listBySubscription is ArmListBySubscription<dsmsAllowlistsResource>;
-  listByResourceGroup is ArmResourceListByParent<dsmsAllowlistsResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsAllowlistsResource>;
+  listBySubscription is ArmListBySubscription<DsmsAllowlistsResource>;
+  listByResourceGroup is ArmResourceListByParent<DsmsAllowlistsResource>;
 }
