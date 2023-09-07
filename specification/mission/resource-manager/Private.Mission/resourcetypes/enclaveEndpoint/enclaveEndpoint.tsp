@@ -6,24 +6,20 @@ import "@azure-tools/typespec-azure-resource-manager";
 
 import "../shared/provisioningstate.tsp";
 import "../shared/resourceid.tsp";
-import "../virtualEnclave/virtualenclave.tsp";
+import "../shared/endpointRule.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using Azure.Core;
 using Azure.ResourceManager;
+using OpenAPI;
 
-@doc("Workload Resource properties")
-model WorkloadProperties {
-  @doc("Workload Description.")
-  description?: string;
-
-  @doc("Virtual Enclave Resource Id.")
-  enclaveResourceId?: VirtualEnclaveResourceId;
-
-  @doc("Managed Resource Groups.")
-  managedResourceGroups?: string[];
+@doc("Enclave Endpoint Resource properties")
+model EnclaveEndpointProperties {
+  @extension("x-ms-identifiers", ["name"])
+  @doc("Endpoint Rule Collection.")
+  endpointRuleCollection?: EndpointRule[];
 
   @doc("Provisioning State.")
   @visibility("read")
