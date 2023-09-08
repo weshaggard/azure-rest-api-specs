@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "MobilePacketCoreManagementClient",
-    "description": "The definitions in this swagger specification will be used for MobilePacketCore SAEGW UP deployment object. A SAEGW user plane deployment object represents a SAEGW user plane instance that will be (or is) deployed as part of a Mobile Packet Core.",
+    "description": "The definitions in this swagger specification will be used for MobilePacketCore SAEGW control plane deployment object. A SAEGW control plane deployment object represents a SAEGW control plane instance that will be (or is) deployed as part of a Mobile Packet Core.",
     "version": "2023-08-31-preview"
   },
   "host": "management.azure.com",
@@ -40,7 +40,7 @@
           "SaegwUpDeployments"
         ],
         "operationId": "SaegwUpDeployments_CreateOrUpdate",
-        "description": "Creates or updates a Mobile Packet Core NSSFSAEGW UP deployment resource",
+        "description": "Creates or updates a Mobile Packet Core SAEGW CP deployment resource",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
@@ -67,12 +67,12 @@
             "schema": {
               "$ref": "#/definitions/SaegwUpDeployment"
             },
-            "description": "Parameters supplied to create or update a SAEGW UP profile object"
+            "description": "Parameters supplied to create or update a SAEGW CP profile object"
           }
         ],
         "responses": {
           "200": {
-            "description": "Updates the SAEGW UP resource.",
+            "description": "Updates the SAEGW CP resource.",
             "schema": {
               "$ref": "#/definitions/SaegwUpDeployment"
             }
@@ -85,7 +85,7 @@
           }
         },
         "x-ms-examples": {
-          "Create SaegwUp Deployment resource": {
+          "Create SaegwUp Deployment": {
             "$ref": "./examples/SaegwUpDeploymentCreate.json"
           }
         }
@@ -95,7 +95,7 @@
           "SaegwUpDeployments"
         ],
         "operationId": "SaegwUpDeployments_Get",
-        "description": "Get information about the specified Mobile Packet Core SAEGW UP Deployment resource",
+        "description": "Get information about the specified Mobile Packet Core SAEGW CP resource",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
@@ -118,7 +118,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Retrieves the SAEGW UP resource.",
+            "description": "Retrieves the SAEGW CP resource.",
             "schema": {
               "$ref": "#/definitions/SaegwUpDeployment"
             }
@@ -131,7 +131,7 @@
           }
         },
         "x-ms-examples": {
-          "Get SaegwUp Deployment resource": {
+          "Get SaegwUp Deployment": {
             "$ref": "./examples/SaegwUpDeploymentGet.json"
           }
         }
@@ -141,7 +141,7 @@
           "SaegwUpDeployments"
         ],
         "operationId": "SaegwUpDeployments_Delete",
-        "description": "Deletes the specified Mobile Packet Core SAEGW UP Deployment resource.",
+        "description": "Deletes the specified Mobile Packet Core SAEGW CP Deployment resource.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
@@ -164,10 +164,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful: The SAEGW UP Deployment object has been deleted"
+            "description": "Successful: The SAEGW CP Deployment object has been deleted"
           },
           "204": {
-            "description": "Successful: The SAEGW UP Deployment object does not exist"
+            "description": "Successful: The SAEGW CP Deployment object does not exist"
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -177,7 +177,7 @@
           }
         },
         "x-ms-examples": {
-          "Delete SaegwUp Deployment resource": {
+          "Delete SaegwUp Deployment": {
             "$ref": "./examples/SaegwUpDeploymentDelete.json"
           }
         }
@@ -189,7 +189,7 @@
           "SaegwUpDeployments"
         ],
         "operationId": "SaegwUpDeployments_ListByNfvi",
-        "description": "Lists all the SAEGW UP Deployment in a nfvi instance.",
+        "description": "Lists all the SAEGW CP Deployments in a nfvi instance.",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
@@ -218,26 +218,190 @@
             }
           }
         },
-        "x-ms-examples": {
-          "List SAEGW UP deployments by mobile packet core instance": {
-            "$ref": "./examples/SaegwUpDeploymentListByNfvi.json"
-          }
-        },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "List SaegwUp Deployments by Nfvi": {
+            "$ref": "./examples/SaegwUpDeploymentListByNfvi.json"
+          }
         }
       }
     }
   },
   "definitions": {
+    "SaegwUpTypeSpecificData": {
+      "type": "object",
+      "description": "SaegwUp deployment type specific properties.",
+      "discriminator": "saegwUpDeploymentNfviType",
+      "properties": {
+        "saegwUpDeploymentNfviType": {
+          "type": "string",
+          "enum": [
+            "AzureCore",
+            "AzureOperatorNexus"
+          ],
+          "x-ms-enum": {
+            "name": "SaegwUpDeploymentNfviType",
+            "modelAsString": true
+          },
+          "description": "Type of SaegwUp",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        }
+      },
+      "required": [
+        "saegwUpDeploymentNfviType"
+      ]
+    },
+    "AzureOperatorNexusData": {
+      "type": "object",
+      "description": "Azure Operator Nexus SaegwUp deployment properties.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SaegwUpTypeSpecificData"
+        }
+      ],
+      "properties": {
+        "managementL3Network": {
+          "$ref": "./common.json#/definitions/NexusL3NetworkProperties",
+          "description": "Management network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "northSouth1L3Network": {
+          "$ref": "./common.json#/definitions/NexusL3NetworkProperties",
+          "description": "North South 1 network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "northSouth2L3Network": {
+          "$ref": "./common.json#/definitions/NexusL3NetworkProperties",
+          "description": "North South 2 network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "base1L2Network": {
+          "$ref": "./common.json#/definitions/NexusL3NetworkProperties",
+          "description": "Base 1 network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "base2L2Network": {
+          "$ref": "./common.json#/definitions/NexusL3NetworkProperties",
+          "description": "Base 2 network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "eastWest1L2Network": {
+          "$ref": "./common.json#/definitions/NexusL2NetworkProperties",
+          "description": "East/west 1 network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "eastWest2L2Network": {
+          "$ref": "./common.json#/definitions/NexusL2NetworkProperties",
+          "description": "East/west 1 network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        }
+      },
+      "required": [
+        "managementL3Network",
+        "northSouth1L3Network",
+        "northSouth2L3Network",
+        "base1L2Network",
+        "base2L2Network",
+        "eastWest1L2Network",
+        "eastWest2L2Network"
+      ],
+      "x-ms-discriminator-value": "AzureOperatorNexus"
+    },
+    "AzureCoreData": {
+      "type": "object",
+      "description": "Azure Core SaegwUp deployment properties.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SaegwUpTypeSpecificData"
+        }
+      ],
+      "properties": {
+        "managementIpPool": {
+          "$ref": "./common.json#/definitions/VnfExternalIpPool",
+          "description": "IP pools for management traffic where the subnetId is taken from the management subnet of containing NFVi instance",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "northSouthIpPools": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "description": "A list of IP pools for north/south traffic according to the associated SaewCp profile",
+          "x-ms-identifiers": [
+            "usage"
+          ],
+          "items": {
+            "$ref": "./common.json#/definitions/VnfNorthSouthIpPool"
+          },
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "baseNetwork": {
+          "$ref": "./common.json#/definitions/VnfInternalSubnet",
+          "description": "The base subnet.",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "eastWestNetwork": {
+          "$ref": "./common.json#/definitions/VnfInternalSubnet",
+          "description": "The base subnet.",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        }
+      },
+      "required": [
+        "managementIpPool",
+        "northSouthIpPools",
+        "baseNetwork",
+        "eastWestNetwork"
+      ],
+      "x-ms-discriminator-value": "AzureCore"
+    },
     "SaegwUpDeploymentProperties": {
       "type": "object",
-      "description": "The SAEGW UP resource definition.",
+      "description": "The SAEGW CP resource definition.",
       "properties": {
         "provisioningState": {
           "readOnly": true,
           "$ref": "./common.json#/definitions/ProvisioningState",
-          "description": "The provisioning state of the SAEGW UP Deployment resource."
+          "description": "The provisioning state of the SAEGW CP Deployment resource."
+        },
+        "typeSpecificData": {
+          "$ref": "#/definitions/SaegwUpTypeSpecificData"
         },
         "deploymentStatus": {
           "readOnly": true,
@@ -246,11 +410,11 @@
         "deploymentDetails": {
           "type": "object",
           "readOnly": true,
-          "description": "Resolved details of the SAEGW UP deployment",
+          "description": "Resolved details of the SAEGW CP deployment",
           "properties": {
             "saegwUpName": {
               "type": "string",
-              "description": "Name applied to the SAEGW UP instance"
+              "description": "Name applied to the SAEGW CP instance"
             }
           }
         },
@@ -258,22 +422,17 @@
           "$ref": "./common.json#/definitions/NetworkFunctionVersionManagement"
         },
         "deploymentArea": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
+          "$ref": "./common.json#/definitions/DeploymentAreaIdProperty",
           "description": "The reference to the deployment area to which this network function belongs.",
           "x-ms-mutability": [
             "create",
             "read"
           ]
-        },
-        "vnetSubnet": {
-          "type": "string",
-          "pattern": "([0-9]{1,3}.){3}[0-9]{1,3}(/([0-9]|[1-2][0-9]|3[0-2]))",
-          "description": "VNET Subnet in CIDR format"
         }
       },
       "required": [
         "deploymentArea",
-        "vnetSubnet"
+        "typeSpecificData"
       ]
     },
     "SaegwUpDeployment": {
@@ -282,7 +441,7 @@
         "properties": {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/SaegwUpDeploymentProperties",
-          "description": "Mobile Packet Core SAEGW-UP Deployment properties."
+          "description": "Mobile Packet Core SAEGW-CP Deployment properties."
         }
       },
       "allOf": [
@@ -293,7 +452,7 @@
       "required": [
         "properties"
       ],
-      "description": "The SAEGW UP resource."
+      "description": "The SAEGW CP resource."
     },
     "SaegwUpDeploymentListResult": {
       "type": "object",
@@ -303,7 +462,7 @@
           "items": {
             "$ref": "#/definitions/SaegwUpDeployment"
           },
-          "description": "A list of SAEGW UP function in a subscription or resource group."
+          "description": "A list of SAEGW CP function in a subscription or resource group."
         },
         "nextLink": {
           "type": "string",
@@ -311,7 +470,7 @@
           "description": "The URL to get the next set of results."
         }
       },
-      "description": "Response for SAEGW UP Deployment API service call."
+      "description": "Response for SAEGW CP Deployment API service call."
     }
   },
   "parameters": {
@@ -320,7 +479,7 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "description": "The name of SAEGW UP deployment object.",
+      "description": "The name of SAEGW CP deployment object.",
       "x-ms-parameter-location": "client"
     }
   }

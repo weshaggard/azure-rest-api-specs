@@ -27,10 +27,21 @@ These are the global settings for the fist.
 ``` yaml
 openapi-type: arm
 openapi-subtype: providerHub
-tag: package-2023-02-08-preview
+tag: package-2023-09-01-preview
 ```
 
 
+### Tag: package-2023-09-01-preview
+
+These settings apply only when `--tag=package-2023-09-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-09-01-preview'
+input-file:
+  - Private.IoTFirmwareDefense/preview/2023-09-01-preview/common.json
+  - Private.IoTFirmwareDefense/preview/2023-09-01-preview/firmwares.json
+  - Private.IoTFirmwareDefense/preview/2023-09-01-preview/workspaces.json
+  - Private.IoTFirmwareDefense/preview/2023-09-01-preview/operations.json
+```
 ### Tag: package-2023-02-08-preview
 
 These settings apply only when `--tag=package-2023-02-08-preview` is specified on the command line.

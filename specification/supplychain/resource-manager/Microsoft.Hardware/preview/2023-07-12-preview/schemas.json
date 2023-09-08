@@ -45,16 +45,7 @@
       "name": "Orders"
     },
     {
-      "name": "PreviewOrdersInterface"
-    },
-    {
-      "name": "PreviewOrders2Interface"
-    },
-    {
-      "name": "PreviewOrders3Interface"
-    },
-    {
-      "name": "PreviewOrders4Interface"
+      "name": "PreviewOrderInterface"
     }
   ],
   "paths": {
@@ -128,11 +119,11 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Hardware/previewOrders3": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Hardware/previewOrder": {
       "post": {
-        "operationId": "PreviewOrders3Interface_PreviewOrders3",
+        "operationId": "PreviewOrderInterface_PreviewOrder",
         "tags": [
-          "PreviewOrders3Interface"
+          "PreviewOrderInterface"
         ],
         "description": "Implements previewOrders operations",
         "parameters": [
@@ -145,47 +136,7 @@
           {
             "name": "body",
             "in": "body",
-            "description": "The previewOrders3 request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The request has succeeded.",
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.Hardware/previewOrders4": {
-      "post": {
-        "operationId": "PreviewOrders4Interface_PreviewOrders4",
-        "tags": [
-          "PreviewOrders4Interface"
-        ],
-        "description": "Implements previewOrders operations",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "The previewOrders4 request",
+            "description": "The previewOrder request",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Order"
@@ -462,92 +413,6 @@
           }
         }
       }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Hardware/previewOrders": {
-      "post": {
-        "operationId": "PreviewOrdersInterface_PreviewOrders",
-        "tags": [
-          "PreviewOrdersInterface"
-        ],
-        "description": "Implements previewOrders operations",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "The previewOrders request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The request has succeeded.",
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Hardware/previewOrders2": {
-      "post": {
-        "operationId": "PreviewOrders2Interface_PreviewOrders2",
-        "tags": [
-          "PreviewOrders2Interface"
-        ],
-        "description": "Implements previewOrders operations",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "The previewOrders2 request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The request has succeeded.",
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
     }
   },
   "definitions": {
@@ -717,7 +582,15 @@
         "requestedDeliveryDate": {
           "type": "string",
           "format": "date",
-          "description": " Requested Delivery Date"
+          "description": "Requested Delivery Date"
+        },
+        "cancellationReason": {
+          "type": "string",
+          "description": "Cancellation Reason"
+        },
+        "cancelledBy": {
+          "type": "string",
+          "description": "Cancelled By User details"
         },
         "estimatedDeliveryDate": {
           "type": "string",
@@ -739,7 +612,9 @@
         "price",
         "shipTo",
         "shippingMethod",
-        "requestedDeliveryDate"
+        "requestedDeliveryDate",
+        "cancellationReason",
+        "cancelledBy"
       ]
     },
     "OrderLineQty": {
@@ -1083,7 +958,7 @@
       "enum": [
         "UPN",
         "PSA",
-        "MS"
+        "FulfillmentProductId"
       ],
       "x-ms-enum": {
         "name": "ProductIdType",
@@ -1100,8 +975,8 @@
             "description": "Product, SKU, Availability in Big-Catalog"
           },
           {
-            "name": "MS",
-            "value": "MS",
+            "name": "FulfillmentProductId",
+            "value": "FulfillmentProductId",
             "description": "MS Product Identitier (3x5 SKU)"
           }
         ]

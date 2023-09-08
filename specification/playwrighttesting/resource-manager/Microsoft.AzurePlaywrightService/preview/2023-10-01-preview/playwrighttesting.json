@@ -86,66 +86,6 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/locations/{location}/providers/Microsoft.AzurePlaywrightService/quotas/{name}": {
-      "get": {
-        "operationId": "Quotas_Get",
-        "tags": [
-          "Quotas"
-        ],
-        "description": "Get quota by bucket name.",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/LocationParameter"
-          },
-          {
-            "name": "name",
-            "in": "path",
-            "description": "The quota bucket name.",
-            "required": true,
-            "type": "string",
-            "enum": [
-              "TestExecution"
-            ],
-            "x-ms-enum": {
-              "name": "QuotaBucketNames",
-              "modelAsString": true,
-              "values": [
-                {
-                  "name": "TestExecution",
-                  "value": "TestExecution",
-                  "description": "The test execution quota."
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/Quota"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "Quotas_Get": {
-            "$ref": "./examples/Quotas_Get.json"
-          }
-        }
-      }
-    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.AzurePlaywrightService/accounts": {
       "get": {
         "operationId": "Accounts_ListBySubscription",
@@ -185,7 +125,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/providers/Microsoft.AzurePlaywrightService/quotas": {
+    "/subscriptions/{subscriptionId}/providers/Microsoft.AzurePlaywrightService/locations/{location}/quotas": {
       "get": {
         "operationId": "Quotas_ListBySubscription",
         "tags": [
@@ -198,6 +138,13 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "name": "location",
+            "in": "path",
+            "description": "The location of quota in ARM Normalized format like eastus, southeastasia etc.",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -221,6 +168,70 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.AzurePlaywrightService/locations/{location}/quotas/{name}": {
+      "get": {
+        "operationId": "Quotas_Get",
+        "tags": [
+          "Quotas"
+        ],
+        "description": "Get quota by name.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "name": "location",
+            "in": "path",
+            "description": "The location of quota in ARM Normalized format like eastus, southeastasia etc.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The quota name.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "ScalableExecution"
+            ],
+            "x-ms-enum": {
+              "name": "QuotaNames",
+              "modelAsString": true,
+              "values": [
+                {
+                  "name": "ScalableExecution",
+                  "value": "ScalableExecution",
+                  "description": "The quota details for scalable execution feature. When enabled, Playwright client workers can connect to cloud-hosted browsers. This can increase the number of parallel workers for a test run, significantly minimizing test completion durations."
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/Quota"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Quotas_Get": {
+            "$ref": "./examples/Quotas_Get.json"
+          }
         }
       }
     },
@@ -564,17 +575,17 @@
         },
         "regionalAffinity": {
           "$ref": "#/definitions/EnablementStatus",
-          "description": "The regionalAffinity feature enablement status for the account.",
+          "description": "This property sets the connection region for Playwright client workers to cloud-hosted browsers. If enabled, workers connect to browsers in the closest Azure region, ensuring lower latency. If disabled, workers connect to browsers in the Azure region in which the workspace was initially created.",
           "default": "Enabled"
         },
         "scalableExecution": {
           "$ref": "#/definitions/EnablementStatus",
-          "description": "The scalableExecution feature enablement status for the account.",
+          "description": "When enabled, Playwright client workers can connect to cloud-hosted browsers. This can increase the number of parallel workers for a test run, significantly minimizing test completion durations.",
           "default": "Enabled"
         },
         "reporting": {
           "$ref": "#/definitions/EnablementStatus",
-          "description": "The reporting feature enablement status for the account.",
+          "description": "When enabled, this feature allows the workspace to upload and display test results, including artifacts like traces and screenshots, in the Playwright portal. This enables faster and more efficient troubleshooting.",
           "default": "Disabled"
         },
         "provisioningState": {
@@ -610,17 +621,17 @@
       "properties": {
         "regionalAffinity": {
           "$ref": "#/definitions/EnablementStatus",
-          "description": "The regionalAffinity feature enablement status for the account.",
+          "description": "This property sets the connection region for Playwright client workers to cloud-hosted browsers. If enabled, workers connect to browsers in the closest Azure region, ensuring lower latency. If disabled, workers connect to browsers in the Azure region in which the workspace was initially created.",
           "default": "Enabled"
         },
         "scalableExecution": {
           "$ref": "#/definitions/EnablementStatus",
-          "description": "The scalableExecution feature enablement status for the account.",
+          "description": "When enabled, Playwright client workers can connect to cloud-hosted browsers. This can increase the number of parallel workers for a test run, significantly minimizing test completion durations.",
           "default": "Enabled"
         },
         "reporting": {
           "$ref": "#/definitions/EnablementStatus",
-          "description": "The reporting feature enablement status for the account.",
+          "description": "When enabled, this feature allows the workspace to upload and display test results, including artifacts like traces and screenshots, in the Playwright portal. This enables faster and more efficient troubleshooting.",
           "default": "Disabled"
         }
       }
@@ -660,7 +671,7 @@
       "properties": {
         "accountId": {
           "$ref": "#/definitions/Azure.Core.uuid",
-          "description": "The playwright account resource id.",
+          "description": "The playwright account id.",
           "readOnly": true
         },
         "createdAt": {
@@ -678,18 +689,18 @@
         "allocatedValue": {
           "type": "integer",
           "format": "int32",
-          "description": "The free-trial allocated limit value.",
+          "description": "The free-trial allocated limit value eg. allocated free minutes.",
           "readOnly": true
         },
         "usedValue": {
           "type": "integer",
           "format": "int32",
-          "description": "The free-trial used value.",
+          "description": "The free-trial used value eg. used free minutes.",
           "readOnly": true
         },
         "percentageUsed": {
-          "type": "integer",
-          "format": "int32",
+          "type": "number",
+          "format": "decimal",
           "description": "The free-trial percentage used.",
           "minimum": 0,
           "maximum": 100,

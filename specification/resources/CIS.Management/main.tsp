@@ -1,1 +1,0 @@
-import "./dscmResourceTypes/dsmsallowlist.tsp";

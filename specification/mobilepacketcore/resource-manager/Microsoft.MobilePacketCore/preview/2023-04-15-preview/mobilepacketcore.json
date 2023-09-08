@@ -1601,6 +1601,16 @@
         }
       }
     },
+    "KeyVault": {
+      "description": "An Azure key vault.",
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "The keyvault URL. For example: https://contosovault.vault.azure.net/."
+        }
+      }
+    },
     "MobilePacketCoreProperties": {
       "type": "object",
       "properties": {
@@ -1608,6 +1618,10 @@
           "readOnly": true,
           "$ref": "./common.json#/definitions/ProvisioningState",
           "description": "The provisioning state of the resource."
+        },
+        "keyVault": {
+          "$ref": "#/definitions/KeyVault",
+          "description": "The URL of the Azure key vault instance"
         },
         "baseMetrics": {
           "$ref": "./common.json#/definitions/BaseMetrics"
@@ -1664,7 +1678,7 @@
           }
         },
         "activeSnapshot": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
+          "$ref": "./common.json#/definitions/ConfigSnapshotIdProperty",
           "description": "Resource identifier of the desired active snapshot.  When this parameter is changed the active snapshot will be applied to the running mobile packet core"
         },
         "networkFunctionVersionManagement": {
@@ -1695,7 +1709,7 @@
                 "type": "object",
                 "properties": {
                   "networkFunction": {
-                    "$ref": "./common.json#/definitions/ReferencedResource",
+                    "$ref": "./common.json#/definitions/NetworkFunctionInstanceIdProperty",
                     "description": "Resource identifier of the deployed network function"
                   },
                   "currentImageVersion": {
@@ -1703,7 +1717,7 @@
                     "description": "The image version this network function is currently running"
                   },
                   "currentActiveSnapshot": {
-                    "$ref": "./common.json#/definitions/ReferencedResource",
+                    "$ref": "./common.json#/definitions/ConfigSnapshotIdProperty",
                     "description": "Resource identifier of the currently active snapshot applied to this network function"
                   }
                 }
@@ -1814,6 +1828,10 @@
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/MobilePacketCoreProperties",
           "description": "Mobile packet core properties."
+        },
+        "identity": {
+          "$ref": "./common.json#/definitions/ManagedServiceIdentity",
+          "description": "The identity used to retrieve keys from Azure key vault."
         }
       },
       "allOf": [
@@ -1853,7 +1871,7 @@
           "description": "List of objects that have changed (added/delete/modified)"
         },
         "activeSnapshot": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
+          "$ref": "./common.json#/definitions/ConfigSnapshotIdProperty",
           "description": "Currently active snapshot"
         }
       }
@@ -1862,7 +1880,7 @@
       "type": "object",
       "properties": {
         "snapshot": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
+          "$ref": "./common.json#/definitions/ConfigSnapshotIdProperty",
           "description": "Snapshot against which to run what-if activate"
         }
       },
@@ -1876,7 +1894,7 @@
         "description": "Network function instance",
         "properties": {
           "resourceId": {
-            "$ref": "./common.json#/definitions/ReferencedResource",
+            "$ref": "./common.json#/definitions/NetworkFunctionInstanceIdProperty",
             "description": "Identifier of the Network Function instance"
           },
           "task": {
@@ -1909,7 +1927,7 @@
       "description": "Allows for the validation of creating a snapshot resource without creating the resource",
       "properties": {
         "snapshot": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
+          "$ref": "./common.json#/definitions/ConfigSnapshotIdProperty",
           "description": "Snapshot against which the what-if activate operation was run"
         },
         "networkFunctionInstances": {

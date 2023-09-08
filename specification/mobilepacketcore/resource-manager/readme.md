@@ -71,6 +71,10 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/activationstatus.json
 ```
 
+### Tag: package-2023-08-31-preview
+
+These settings apply only when `--tag=package-2023-08-31-preview` is specified on the command line.
+
 ```yaml $(tag) == 'package-2023-08-31-preview'
 input-file:
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/operation.json 
@@ -85,6 +89,7 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/datanetwork.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/deeppacketinspection.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/mmedeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/mmeprofile.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/mobilepacketcore.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/networkslice.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/nfvi.json
@@ -98,8 +103,10 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/pccrulebase.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/plmn.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/saegwcpdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/saegwcpprofile.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/saegwupdeployment.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/smfdeployment.json
+  - Microsoft.MobilePacketCore/preview/2023-08-31-preview/saegwupprofile.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/smfprofile.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/subscriberanalyzer.json
   - Microsoft.MobilePacketCore/preview/2023-08-31-preview/upfdeployment.json

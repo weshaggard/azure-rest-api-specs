@@ -56,15 +56,6 @@ enum ReadWriteManyStorageClassOptions {
   RookCeph: "rook-cephfs",
 }
 
-@doc("Accepted values for the networkAccessibility property")
-enum NetworkAccessibilityOptions {
-  @doc("Sets the kdb Insights Enterprise UI and API endpoints to private")
-  PrivateIPAddress: "privateIpAddress",
-
-  @doc("Sets the kdb Insights Enterprise UI and API endpoints to public")
-  PublicIPAddress: "publicIpAddress",
-}
-
 @secret
 @pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])[a-zA-Z0-9!@#\\$%\\^&\\*]{14,320}$")
 scalar PasswordString extends string;
@@ -81,16 +72,16 @@ model ManagedResourceGroupConfiguration {
 @doc("Details of the kdbInsightsEnterprise resource.")
 model KdbInsightsEnterpriseProperties {
   @visibility("create")
-  @doc("The password to use for KeyCloak")
-  keyCloakPassword: PasswordString;
+  @doc("Keycloak admin password. Keycloak is kdb Insights Enterprise's Identity and Access Management. Please make note of this Admin Password to control user access to Insights.")
+  keycloakAdminPassword: PasswordString;
 
   @visibility("read", "create")
-  @doc("The KeyCloak user name")
+  @doc("The Keycloak user name. Keycloak is kdb Insights Enterprise's Identity and Access Management. Please make note of this Admin Username to control user access to Insights.")
   @pattern("^[A-Za-z0-9]{4,20}$")
-  keyCloakAdminUsername?: string = "user";
+  keycloakAdminUsername?: string = "user";
 
   @visibility("create")
-  @doc("The password to use for the UI")
+  @doc("The password to be used to log in to the kdb Insights Enterprise UI.")
   uiPassword: PasswordString;
 
   @visibility("read", "create")
@@ -99,7 +90,7 @@ model KdbInsightsEnterpriseProperties {
   emailAddress: string;
 
   @visibility("read", "create")
-  @doc("The UI user name")
+  @doc("The username to be used to log in to the kdb Insights Enterprise UI")
   @pattern("^[A-Za-z0-9]{8,20}$")
   uiUsername: string;
 
@@ -124,11 +115,11 @@ model KdbInsightsEnterpriseProperties {
   userNodePoolVmCount?: int32 = 3;
 
   @visibility("read", "create")
-  @doc("Storage Class for ReadWriteMany volumes")
+  @doc("Storage Class for ReadWriteMany volumes. The storage class backing persistence volume claims for pods that have a ReadWriteMany (RWX) claim type.")
   readWriteManyStorageClass?: ReadWriteManyStorageClassOptions = ReadWriteManyStorageClassOptions.AzureFile;
 
   @visibility("read", "create")
-  @doc("Indicate whether to deploy a Ceph cluster into AKS and enable rook-cephfs storage class")
+  @doc("Indicate whether to deploy a Ceph cluster into AKS and enable rook-cephfs storage class. Requires additional compute for the cluster.")
   isRookCeph?: boolean = false;
 
   @visibility("read", "create")
@@ -138,10 +129,6 @@ model KdbInsightsEnterpriseProperties {
   @visibility("read", "create")
   @doc("Indicate whether to use Premium Storage for ReadWriteOnce volumes")
   isPremiumStorageEnabled?: boolean = false;
-
-  @visibility("read", "create")
-  @doc("Indicate whether to send notification emails to the client")
-  isNotificationsOn?: boolean = false;
 
   @visibility("read", "create")
   @doc("Email address for alert notifications")
@@ -154,11 +141,7 @@ model KdbInsightsEnterpriseProperties {
   vnetAddressSpace?: string = "10.0.0.0/16";
 
   @visibility("read", "create")
-  @doc("Indicate whether to secure access to the Kubernetes API server using authorized public IP address ranges")
-  isAuthorizedIpRanges?: boolean = false;
-
-  @visibility("read", "create")
-  @doc("A comma-separated list of public IP addresses or address ranges")
+  @doc("Authorized IP ranges. Provide a public IPv4 address range using CIDR notation (e.g. 20.38.1.0/24), or a public IP address (e.g. 52.16.10.28). You can also provide a comma-separated list of public IP addresses or address ranges. When you specify a CIDR range, start with the first IP address in the range. For example, 137.117.106.90/29 is a valid range, but make sure you specify the first IP address in the range, such as 137.117.106.88/29.")
   @pattern("^(?=.{1,320}$)\\b(?!(10\\.|172\\.(1[6-9]|2[0-9]|3[0-1])\\.|192\\.168))(((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([1-9]|1[0-9]|2[0-8]|3[0-2])){0,1}){0,1}((\\s*,\\s*)(?=[^,])){0,1})+$")
   authorizedIpRanges?: string;
 
@@ -177,15 +160,11 @@ model KdbInsightsEnterpriseProperties {
   aksMetricsRetentionDays?: int32 = 30;
 
   @visibility("read", "create")
-  @doc("Sets how kdb Insights Enterprise UI and API endpoints will be accessed.")
-  networkAccessibility?: NetworkAccessibilityOptions = NetworkAccessibilityOptions.PrivateIPAddress;
-
-  @visibility("read", "create")
   @doc("Availability Zones options.")
   availabilityZones?: string[] = ["1", "2", "3"];
 
   @visibility("read", "create")
-  @doc("Project name.")
+  @doc("The project name.")
   projectName?: string = "kdbInsightsEnt";
 
   @visibility("read")
