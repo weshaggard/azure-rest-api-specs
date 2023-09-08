@@ -503,20 +503,6 @@
               "$ref": "#/definitions/IndexKeys"
             }
           },
-          "202": {
-            "description": "Resource operation accepted.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              },
-              "Location": {
-                "description": "The Location header contains the URL where the status of the long running operation can be checked.",
-                "type": "string"
-              }
-            }
-          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -528,9 +514,6 @@
           "IndexOperations_RegenerateKey": {
             "$ref": "./examples/IndexOperations_RegenerateKey.json"
           }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
         },
         "x-ms-long-running-operation": true
       }
@@ -809,6 +792,7 @@
     },
     "AuthOption": {
       "type": "string",
+      "description": "Authentication options for accessing the dataplane",
       "enum": [
         "AadOnly",
         "AadAndApiKeys"
@@ -1080,19 +1064,27 @@
       "properties": {
         "primaryReadWriteKey": {
           "type": "string",
-          "description": "Primary read-write ApiKey."
+          "description": "Primary read-write ApiKey.",
+          "format": "password",
+          "x-ms-secret": true
         },
         "secondaryReadWriteKey": {
           "type": "string",
-          "description": "Secondary read-write ApiKey."
+          "description": "Secondary read-write ApiKey.",
+          "format": "password",
+          "x-ms-secret": true
         },
         "primaryReadOnlyKey": {
           "type": "string",
-          "description": "Primary read-only ApiKey."
+          "description": "Primary read-only ApiKey.",
+          "format": "password",
+          "x-ms-secret": true
         },
         "secondaryReadOnlyKey": {
           "type": "string",
-          "description": "Secondary read-only ApiKey."
+          "description": "Secondary read-only ApiKey.",
+          "format": "password",
+          "x-ms-secret": true
         }
       },
       "description": "The list of all ApiKeys used to access the dataplane.",
@@ -1279,6 +1271,7 @@
     },
     "KeyKind": {
       "type": "string",
+      "description": "ApiKeys used to access the dataplane",
       "enum": [
         "PrimaryReadWriteKey",
         "SecondaryReadWriteKey",
