@@ -250,7 +250,7 @@ enum ProductIdType{
   @doc("Product, SKU, Availability in Big-Catalog")
   PSA,
   @doc("MS Product Identitier (3x5 SKU)")
-  MS
+  FulfillmentProductId
 }
 
 @doc("Shipping Method")
@@ -295,8 +295,6 @@ enum OrderStatus{
   PartiallyConfirmed,
   @doc("Order is pending cancellation")
   PendingCancel,
-  @doc("Order is pending refund")
-  PendingRefund,
   @doc("Order is Ready to Ship cannot be cancelled")
   PendingShipment,
   @doc("Order is PartiallyShipped")
@@ -317,8 +315,6 @@ enum OrderLineStatus{
   PartiallyConfirmed,
   @doc("Order is pending cancellation")
   PendingCancel,
-  @doc("Order is pending refund")
-  PendingRefund,
   @doc("Order is Ready to Ship cannot be cancelled")
   PendingShipment,
   @doc("Order is PartiallyShipped")
