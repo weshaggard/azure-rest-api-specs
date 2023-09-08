@@ -131,8 +131,14 @@ model OrderLine {
   @doc("Shipping Method")
   shippingMethod: ShippingMethod;
 
-  @doc(" Requested Delivery Date")
+  @doc("Requested Delivery Date")
   requestedDeliveryDate:plainDate;
+
+  @doc("Cancellation Reason")
+  cancellationReason:string;
+
+  @doc("Cancelled By User details")
+  cancelledBy:string;
 
   @doc("Estimated Deliver Date")
   @visibility("read")
@@ -289,6 +295,8 @@ enum OrderStatus{
   PartiallyConfirmed,
   @doc("Order is pending cancellation")
   PendingCancel,
+  @doc("Order is pending refund")
+  PendingRefund,
   @doc("Order is Ready to Ship cannot be cancelled")
   PendingShipment,
   @doc("Order is PartiallyShipped")
@@ -309,6 +317,8 @@ enum OrderLineStatus{
   PartiallyConfirmed,
   @doc("Order is pending cancellation")
   PendingCancel,
+  @doc("Order is pending refund")
+  PendingRefund,
   @doc("Order is Ready to Ship cannot be cancelled")
   PendingShipment,
   @doc("Order is PartiallyShipped")
@@ -334,74 +344,18 @@ alias DefaultProviderNamespace = {
 };
 
 @armResourceOperations
-interface PreviewOrdersInterface {
+interface PreviewOrderInterface {
 @armResourceCollectionAction
   @armProviderNameValue
   @doc("Implements previewOrders operations")
-  @TypeSpec.Rest.action("previewOrders")
+  @TypeSpec.Rest.action("previewOrder")
   @post
-  op previewOrders(
-    ...SubscriptionIdParameter,
-    ...ResourceGroupParameter,
-    ...DefaultProviderNamespace,
-    ...ApiVersionParameter,
-
-    @doc("The previewOrders request")
-    @body
-    body: Order,
-  ): Order | ErrorResponse;
-}
-
-@armResourceOperations
-interface PreviewOrders2Interface {
-@armResourceCollectionAction
-  @armProviderNameValue
-  @doc("Implements previewOrders operations")
-  @TypeSpec.Rest.action("previewOrders2")
-  @post
-  op previewOrders2(
-    ...SubscriptionIdParameter,
-    ...ResourceGroupParameter,
-    ...DefaultProviderNamespace,
-    ...ApiVersionParameter,
-
-    @doc("The previewOrders2 request")
-    @body
-    body: Order,
-  ): Order | ErrorResponse;
-}
-
-@armResourceOperations
-interface PreviewOrders3Interface {
-@armResourceCollectionAction
-  @armProviderNameValue
-  @doc("Implements previewOrders operations")
-  @TypeSpec.Rest.action("previewOrders3")
-  @post
-  op previewOrders3(
+  op previewOrder(
     ...SubscriptionIdParameter,
     ...DefaultProviderNamespace,
     ...ApiVersionParameter,
 
-    @doc("The previewOrders3 request")
-    @body
-    body: Order,
-  ): Order | ErrorResponse;
-}
-
-@armResourceOperations
-interface PreviewOrders4Interface {
-@armResourceCollectionAction
-  @armProviderNameValue
-  @doc("Implements previewOrders operations")
-  @TypeSpec.Rest.action("previewOrders4")
-  @post
-  op previewOrders4(
-    ...SubscriptionIdParameter,
-    ...DefaultProviderNamespace,
-    ...ApiVersionParameter,
-
-    @doc("The previewOrders4 request")
+    @doc("The previewOrder request")
     @body
     body: Order,
   ): Order | ErrorResponse;
