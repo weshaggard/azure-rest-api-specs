@@ -14,7 +14,7 @@ using Autorest;
 @armProviderNamespace
 @service({
   title: "Foundational ARM Client",
-  version: "2023-09-05-preview",
+  version: "2023-08-22-preview",
 })
 @doc("GenericGenevaActions Provider")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
