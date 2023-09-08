@@ -62,7 +62,7 @@ model OrderProperties {
   orderLines:OrderLine[];
 
   @doc("Billing Information")
-  billingInformation:BillingInformation;
+  billingInformation?:BillingInformation;
 
   @doc("Currency")
   @visibility("read")
@@ -129,16 +129,16 @@ model OrderLine {
   shipTo: ShipTo;
 
   @doc("Shipping Method")
-  shippingMethod: ShippingMethod;
+  shippingMethod?: ShippingMethod;
 
   @doc("Requested Delivery Date")
-  requestedDeliveryDate:plainDate;
+  requestedDeliveryDate?:plainDate;
 
   @doc("Cancellation Reason")
-  cancellationReason:string;
+  cancellationReason?:string;
 
   @doc("Cancelled By User details")
-  cancelledBy:string;
+  cancelledBy?:string;
 
   @doc("Estimated Deliver Date")
   @visibility("read")
@@ -182,7 +182,7 @@ model Price {
   unitAmount: float64;
 
   @doc("Shipping Cost for the line")
-  shippingCost: float64;
+  shippingCost?: float64;
 
   @doc("Tax for this line")
   @visibility("read")
