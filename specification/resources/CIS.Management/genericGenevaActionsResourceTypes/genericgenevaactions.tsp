@@ -14,9 +14,8 @@ using Autorest;
 @armProviderNamespace
 @service({
   title: "Foundational ARM Client",
-  version: "2023-09-05-preview"
+  version: "2023-09-05-preview",
 })
-
 @doc("GenericGenevaActions Provider")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureCIS;
@@ -29,19 +28,19 @@ model GenericGenevaActionsResourceProperties {
   environment: string;
 
   @doc("The extension name for geneva action")
-  extension : string;
+  extension: string;
 
   @doc("The endpoint name for geneva action")
-  endpoint : string;
+  endpoint: string;
 
   @doc("The operation for geneva action")
-  operation : string;
+  operation: string;
 
   @doc("The input mode for geneva action (single/batch)")
-  inputMode : string;
+  inputMode: string;
 
   @doc("The parameter list for geneva action")
-  parameters : Array<Parameter>;
+  parameters: Array<Parameter>;
 
   @doc("Provisioning state")
   @visibility("read")
@@ -49,11 +48,12 @@ model GenericGenevaActionsResourceProperties {
 }
 
 @doc("genericGenevaActions Resource")
-model GenericGenevaActionsResource is ProxyResource<GenericGenevaActionsResourceProperties> { // this can be TrackedResource based on resourcetype
+model GenericGenevaActionsResource
+  is ProxyResource<GenericGenevaActionsResourceProperties> { // this can be TrackedResource based on resourcetype
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("genericGenevaActions")// start with lower case
+  @segment("genericGenevaActions") // start with lower case
   @visibility("read")
   @path
   name: string;
@@ -62,8 +62,9 @@ model GenericGenevaActionsResource is ProxyResource<GenericGenevaActionsResource
 @doc("Provisioning status of the resource.")
 enum genericGenevaActionsProvisioningState {
   ...ResourceProvisioningState,
+
   @doc("Accepted State")
-  Accepted
+  Accepted,
 }
 
 @doc("GenericGenevaActions Resource Parameter")
@@ -79,8 +80,11 @@ model Parameter { // this can be TrackedResource based on resourcetype
 @armResourceOperations
 interface GenericGenevaActions {
   @doc("genericGenevaActions creation")
-  @example("./examples/CreateGenericGenevaActions.json", "Create genericGenevaActions")
-  createOrUpdate  is ArmResourceCreateOrUpdateAsync<GenericGenevaActionsResource>;
+  @example(
+    "../examples/CreateGenericGenevaActions.json",
+    "Create genericGenevaActions"
+  )
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<GenericGenevaActionsResource>;
   listBySubscription is ArmListBySubscription<GenericGenevaActionsResource>;
   listByResourceGroup is ArmResourceListByParent<GenericGenevaActionsResource>;
 }
