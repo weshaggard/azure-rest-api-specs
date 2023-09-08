@@ -67,7 +67,7 @@
             "schema": {
               "$ref": "#/definitions/MmeDeployment"
             },
-            "description": "Parameters supplied to create or update a MME profile object"
+            "description": "Parameters supplied to create or update a MME deployment object"
           }
         ],
         "responses": {
@@ -85,7 +85,7 @@
           }
         },
         "x-ms-examples": {
-          "Create MME Deployment resource": {
+          "Create MME Deployment": {
             "$ref": "./examples/MmeDeploymentCreate.json"
           }
         }
@@ -131,7 +131,7 @@
           }
         },
         "x-ms-examples": {
-          "Get MME Deployment resource": {
+          "Get MME Deployment": {
             "$ref": "./examples/MmeDeploymentGet.json"
           }
         }
@@ -177,7 +177,7 @@
           }
         },
         "x-ms-examples": {
-          "Delete MME Deployment resource": {
+          "Delete MME Deployment": {
             "$ref": "./examples/MmeDeploymentDelete.json"
           }
         }
@@ -218,18 +218,153 @@
             }
           }
         },
-        "x-ms-examples": {
-          "List MME deployments by NFVI instance": {
-            "$ref": "./examples/MmeDeploymentListByNfvi.json"
-          }
-        },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "List MME Deployments by Nfvi": {
+            "$ref": "./examples/MmeDeploymentListByNfvi.json"
+          }
         }
       }
     }
   },
   "definitions": {
+    "MmeTypeSpecificData": {
+      "type": "object",
+      "description": "MME deployment type specific properties.",
+      "discriminator": "mmeDeploymentNfviType",
+      "properties": {
+        "mmeDeploymentNfviType": {
+          "type": "string",
+          "enum": [
+            "AzureCore",
+            "AzureOperatorNexus"
+          ],
+          "x-ms-enum": {
+            "name": "MmeDeploymentNfviType",
+            "modelAsString": true
+          },
+          "description": "Type of MME",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        }
+      },
+      "required": [
+        "mmeDeploymentNfviType"
+      ]
+    },
+    "AzureOperatorNexusData": {
+      "type": "object",
+      "description": "Azure Operator Nexus MME deployment properties.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MmeTypeSpecificData"
+        }
+      ],
+      "properties": {
+        "managementL3Network": {
+          "$ref": "./common.json#/definitions/NexusL3NetworkProperties",
+          "description": "Management network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "accessL3Network": {
+          "$ref": "./common.json#/definitions/NexusL3NetworkProperties",
+          "description": "Access network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "coreL3Network": {
+          "$ref": "./common.json#/definitions/NexusL3NetworkProperties",
+          "description": "Core network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "baseL2Network": {
+          "$ref": "./common.json#/definitions/NexusL2NetworkProperties",
+          "description": "Base network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "dataL2Network": {
+          "$ref": "./common.json#/definitions/NexusL2NetworkProperties",
+          "description": "Data network",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        }
+      },
+      "required": [
+        "managementL3Network",
+        "accessL3Network",
+        "coreL3Network",
+        "baseL2Network",
+        "dataL2Network"
+      ],
+      "x-ms-discriminator-value": "AzureOperatorNexus"
+    },
+    "AzureCoreData": {
+      "type": "object",
+      "description": "Azure Core MME deployment properties.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MmeTypeSpecificData"
+        }
+      ],
+      "properties": {
+        "managementIpPool": {
+          "$ref": "./common.json#/definitions/VnfExternalIpPool",
+          "description": "IP pools for management traffic where the subnetId is taken from the management Subnet of containing NFVi instance, e.g. 172.32.0.0/24",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "northSouthIpPool": {
+          "$ref": "./common.json#/definitions/VnfExternalIpPool",
+          "description": "IP pools for north/south control plane traffic where the subnetId is taken from the north/south of containing NFVi instance",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "northSouthDataIpPool": {
+          "$ref": "./common.json#/definitions/VnfExternalIpPool",
+          "description": "IP pools for north/south data plane traffic where the subnetId is taken from the north/south-data of containing NFVi instance",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "baseNetwork": {
+          "$ref": "./common.json#/definitions/VnfInternalSubnet",
+          "description": "The base subnet."
+        },
+        "eastWestNetwork": {
+          "$ref": "./common.json#/definitions/VnfInternalSubnet",
+          "description": "The base subnet."
+        }
+      },
+      "required": [
+        "managementIpPool",
+        "northSouthDataIpPool",
+        "baseNetwork",
+        "eastWestNetwork"
+      ],
+      "x-ms-discriminator-value": "AzureCore"
+    },
     "MmeDeploymentProperties": {
       "type": "object",
       "description": "The MME resource definition.",
@@ -238,6 +373,17 @@
           "readOnly": true,
           "$ref": "./common.json#/definitions/ProvisioningState",
           "description": "The provisioning state of the MME Deployment resource."
+        },
+        "managementFloatingIp": {
+          "$ref": "./common.json#/definitions/IpAddress",
+          "description": "Floating IP address",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
+        "typeSpecificData": {
+          "$ref": "#/definitions/MmeTypeSpecificData"
         },
         "deploymentStatus": {
           "readOnly": true,
@@ -258,7 +404,7 @@
           "$ref": "./common.json#/definitions/NetworkFunctionVersionManagement"
         },
         "deploymentArea": {
-          "$ref": "./common.json#/definitions/ReferencedResource",
+          "$ref": "./common.json#/definitions/DeploymentAreaIdProperty",
           "description": "The reference to the deployment area to which this network function belongs.",
           "x-ms-mutability": [
             "create",
@@ -267,7 +413,9 @@
         }
       },
       "required": [
-        "deploymentArea"
+        "deploymentArea",
+        "managementFloatingIp",
+        "typeSpecificData"
       ]
     },
     "MmeDeployment": {

@@ -14,6 +14,9 @@ import "./resourcetypes/endpoint/endpoint.tsp";
 import "./resourcetypes/internalConnection/internalConnection.tsp";
 import "./resourcetypes/postActions/checkaddressspaceavailability.tsp";
 import "./resourcetypes/transitHub/transitHub.tsp";
+import "./resourcetypes/enclaveConnection/enclaveConnection.tsp";
+import "./resourcetypes/communityEndpoint/communityEndpoint.tsp";
+import "./resourcetypes/enclaveEndpoint/enclaveEndpoint.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -143,6 +146,40 @@ model TransitHubResource is TrackedResource<TransitHubProperties> {
   name: string;
 }
 
+@doc("EnclaveConnection Model Resource")
+model EnclaveConnectionResource
+  is TrackedResource<EnclaveConnectionProperties> {
+  @key("enclaveConnectionName")
+  @segment("enclaveConnections")
+  @path
+  @pattern("^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$")
+  @doc("The name of the Enclave Connection Resource")
+  name: string;
+}
+
+@doc("EnclaveEndpoint Model Resource")
+@parentResource(EnclaveResource)
+model EnclaveEndpointResource is TrackedResource<EnclaveEndpointProperties> {
+  @key("enclaveEndpointName")
+  @segment("enclaveEndpoints")
+  @path
+  @pattern("^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$")
+  @doc("The name of the Enclave Endpoint Resource")
+  name: string;
+}
+
+@doc("CommunityEndpoint Model Resource")
+@parentResource(CommunityResource)
+model CommunityEndpointResource
+  is TrackedResource<CommunityEndpointProperties> {
+  @key("communityEndpointName")
+  @segment("communityEndpoints")
+  @path
+  @pattern("^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$")
+  @doc("The name of the Community Endpoint Resource")
+  name: string;
+}
+
 @doc("Workload Interface")
 @armResourceOperations
 interface Workload {
@@ -248,4 +285,46 @@ interface TransitHub {
   delete is ArmResourceDeleteAsync<TransitHubResource>;
   listByParent is ArmResourceListByParent<TransitHubResource>;
   listBySubscription is ArmListBySubscription<TransitHubResource>;
+}
+
+@doc("Enclave Connection Interface")
+@armResourceOperations
+interface EnclaveConnection {
+  get is ArmResourceRead<EnclaveConnectionResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<EnclaveConnectionResource>;
+  update is ArmResourcePatchAsync<
+    EnclaveConnectionResource,
+    EnclaveConnectionProperties
+  >;
+  delete is ArmResourceDeleteAsync<EnclaveConnectionResource>;
+  listByParent is ArmResourceListByParent<EnclaveConnectionResource>;
+  listBySubscription is ArmListBySubscription<EnclaveConnectionResource>;
+}
+
+@doc("Enclave Endpoint Interface")
+@armResourceOperations
+interface EnclaveEndpoints {
+  get is ArmResourceRead<EnclaveEndpointResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<EnclaveEndpointResource>;
+  update is ArmResourcePatchAsync<
+    EnclaveEndpointResource,
+    EnclaveEndpointProperties
+  >;
+  delete is ArmResourceDeleteAsync<EnclaveEndpointResource>;
+  listByParent is ArmResourceListByParent<EnclaveEndpointResource>;
+  listBySubscription is ArmListBySubscription<EnclaveEndpointResource>;
+}
+
+@doc("Community Endpoint Interface")
+@armResourceOperations
+interface CommunityEndpoints {
+  get is ArmResourceRead<CommunityEndpointResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<CommunityEndpointResource>;
+  update is ArmResourcePatchAsync<
+    CommunityEndpointResource,
+    CommunityEndpointProperties
+  >;
+  delete is ArmResourceDeleteAsync<CommunityEndpointResource>;
+  listByParent is ArmResourceListByParent<CommunityEndpointResource>;
+  listBySubscription is ArmListBySubscription<CommunityEndpointResource>;
 }

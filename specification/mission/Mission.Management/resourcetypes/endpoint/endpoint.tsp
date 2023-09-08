@@ -18,7 +18,7 @@ using Azure.ResourceManager;
 enum EndpointProtocol {
   @doc("Protocol of Type ANY")
   ANY,
-  
+
   @doc("Protocol of Type TCP")
   TCP,
 
@@ -32,7 +32,7 @@ enum EndpointProtocol {
   ESP,
 
   @doc("Protocol of Type AH")
-  AH
+  AH,
 }
 
 @doc("EndpointRule Properties")

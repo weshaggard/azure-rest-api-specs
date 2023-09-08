@@ -39,5 +39,5 @@ enum ProvisioningState {
   Running,
 
   @doc("ProvisioningState of Type Updating")
-  Updating
+  Updating,
 }
