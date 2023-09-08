@@ -46,12 +46,12 @@ model ServiceProperties {
   usageType: int32;
 }
 
+#suppress "@azure-tools/typespec-azure-resource-manager/resource-name" "Suppress warning"
 @doc("A 365ConsumptionServices resource")
 model Service is TrackedResource<ServiceProperties> {
   ...Azure.ResourceManager.Foundations.TrackedResourceBase;
 
   @doc("The name of the service.")
-  @visibility("read")
   @key("serviceName")
   @segment("services")
   name: string;
