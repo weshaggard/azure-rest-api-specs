@@ -81,7 +81,7 @@ model Parameter { // this can be TrackedResource based on resourcetype
 interface GenericGenevaActions {
   @doc("genericGenevaActions creation")
   @example(
-    "../examples/CreateGenericGenevaActions.json",
+    "./examples/CreateGenericGenevaActions.json",
     "Create genericGenevaActions"
   )
   createOrUpdate is ArmResourceCreateOrUpdateAsync<GenericGenevaActionsResource>;
