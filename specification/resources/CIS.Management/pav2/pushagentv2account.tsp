@@ -14,7 +14,7 @@ using Autorest;
 @armProviderNamespace
 @service({
   title: "Foundational ARM Client",
-  version: "2023-08-22-preview"
+  version: "2023-08-22-preview",
 })
 @doc("PushAgentV2Account Provider")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
@@ -72,11 +72,12 @@ model PushAgentV2AccountResourceProperties {
 }
 
 @doc("PushAgentV2Account Resource")
-model PushAgentV2AccountResource is ProxyResource<PushAgentV2AccountResourceProperties> {
+model PushAgentV2AccountResource
+  is ProxyResource<PushAgentV2AccountResourceProperties> {
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("pushAgentV2Accounts")// start with lower case
+  @segment("pushAgentV2Accounts") // start with lower case
   @visibility("read")
   @path
   name: string;
@@ -85,8 +86,9 @@ model PushAgentV2AccountResource is ProxyResource<PushAgentV2AccountResourceProp
 @doc("Provisioning status of the resource.")
 enum PushAgentV2AccountProvisioningState {
   ...ResourceProvisioningState,
+
   @doc("Accepted State")
-  Accepted
+  Accepted,
 }
 
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
