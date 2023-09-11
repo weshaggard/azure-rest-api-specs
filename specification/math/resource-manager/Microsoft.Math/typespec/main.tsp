@@ -24,7 +24,7 @@ interface Operations extends Azure.ResourceManager.Operations {}
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
 @doc("A MathProviderHub resource")
 model MathApi is TrackedResource<MathApiProperties> {
-  @doc("The name of the employee")
+  @doc("The name of the mathapi")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("MathApiName")
   @segment("MathApis")
