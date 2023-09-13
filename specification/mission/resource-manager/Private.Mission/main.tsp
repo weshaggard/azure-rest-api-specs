@@ -211,18 +211,29 @@ interface VirtualEnclave {
   delete is ArmResourceDeleteAsync<EnclaveResource>;
   listByParent is ArmResourceListByParent<EnclaveResource>;
   listBySubscription is ArmListBySubscription<EnclaveResource>;
+}
+
+@doc("Community Interface")
+@armResourceOperations
+interface Community {
+  get is ArmResourceRead<CommunityResource>;
+  createOrUpdate is ArmResourceCreateOrUpdate2Async<CommunityResource>;
+  update is ArmResourcePatchAsync<CommunityResource, CommunityProperties>;
+  delete is ArmResourceDeleteAsync<CommunityResource>;
+  listByParent is ArmResourceListByParent<CommunityResource>;
+  listBySubscription is ArmListBySubscription<CommunityResource>;
 
   @autoRoute
-  @doc("Checks that the IP Address Space to be allocated for this Virtual Enclave is available.")
-  @armResourceAction(EnclaveResource)
-  @post
-  checkAddressSpaceAvailability(
-    ...ResourceInstanceParameters<EnclaveResource>,
+    @doc("Checks that the IP Address Space to be allocated for a new Virtual Enclave is available.")
+    @armResourceAction(CommunityResource)
+    @post
+    checkAddressSpaceAvailability(
+        ...ResourceInstanceParameters<CommunityResource>,
 
-    @doc("Check IP Address Space request body.")
-    @body
-    checkAddressSpaceAvailabilityRequest: CheckAddressSpaceAvailabilityRequest,
-  ): ArmResponse<CheckAddressSpaceAvailabilityResponse> | ErrorResponse;
+        @doc("Check IP Address Space request body.")
+        @body
+        checkAddressSpaceAvailabilityRequest: CheckAddressSpaceAvailabilityRequest,
+    ): ArmResponse<CheckAddressSpaceAvailabilityResponse>  | ErrorResponse;
 }
 
 @doc("Request to the action call to check address space availability.")
@@ -238,17 +249,6 @@ model CheckAddressSpaceAvailabilityRequest {
 model CheckAddressSpaceAvailabilityResponse {
   @doc("Boolean representing whether the address space is available.")
   value: boolean;
-}
-
-@doc("Community Interface")
-@armResourceOperations
-interface Community {
-  get is ArmResourceRead<CommunityResource>;
-  createOrUpdate is ArmResourceCreateOrUpdate2Async<CommunityResource>;
-  update is ArmResourcePatchAsync<CommunityResource, CommunityProperties>;
-  delete is ArmResourceDeleteAsync<CommunityResource>;
-  listByParent is ArmResourceListByParent<CommunityResource>;
-  listBySubscription is ArmListBySubscription<CommunityResource>;
 }
 
 @doc("Catalog Interface")
