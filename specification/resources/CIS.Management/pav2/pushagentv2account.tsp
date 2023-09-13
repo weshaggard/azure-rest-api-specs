@@ -25,7 +25,7 @@ interface Operations extends Azure.ResourceManager.Operations {}
 @doc("PushAgentV2Account properties")
 model PushAgentV2AccountResourceProperties {
   @doc("Geneva environment. Test or Prod. Default is Prod.")
-  environment: string;
+  environment?: string;
 
   @doc("PAv2 Resource Provider name.")
   resourceProvider: string;
@@ -38,6 +38,9 @@ model PushAgentV2AccountResourceProperties {
 
   @doc("The type of the account where the storage account secret is stored. It can be dSMS, KeyVault, or Gsm.")
   accountType: string;
+
+  @doc("The endpoint suffix of the Storage Account")
+  endpointSuffix?: string;
 
   @doc("Absolute URL to the secret where storage account SAS token is stored. The secret path of storage account key.")
   secretPath: string;
