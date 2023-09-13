@@ -3,7 +3,7 @@ import "@typespec/rest";
 import "@typespec/versioning";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
-import "./BusinessProcess.tsp";
+import "./BusinessProcessDevelopmentArtifact.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -61,6 +61,12 @@ model TrackingDataStore {
 
     @doc("The data store resource id.")
     dataStoreResourceId: string;
+
+    @doc("The data store URI.")
+    dataStoreUri: string;
+
+    @doc("The data store ingestion URI.")
+    dataStoreIngestionUri: string;
 }
 
 @doc("The properties of application.")
@@ -107,8 +113,8 @@ model Space is TrackedResource<SpaceResourceProperties> {
 @doc("The operations of space.")
 interface Spaces {
     get is ArmResourceRead<Space>;
-    create is ArmResourceCreateOrUpdateSync<Space>;
-    update is ArmResourcePatchSync<Space, SpaceResourceProperties>;
+    createOrUpdate is ArmResourceCreateOrUpdateSync<Space>;
+    patch is ArmResourcePatchSync<Space, SpaceResourceProperties>;
     delete is ArmResourceDeleteSync<Space>;
     listBySubscription is ArmListBySubscription<Space>;
     listByResourceGroup is ArmResourceListByParent<
@@ -139,8 +145,8 @@ model InfrastructureResource
 @doc("The operations of the infrastructure resource.")
 interface InfrastructureResources {
     get is ArmResourceRead<InfrastructureResource>;
-    create is ArmResourceCreateOrUpdateSync<InfrastructureResource>;
-    update is ArmResourcePatchSync<
+    createOrUpdate is ArmResourceCreateOrUpdateSync<InfrastructureResource>;
+    patch is ArmResourcePatchSync<
         InfrastructureResource,
         InfrastructureResourceProperties
     >;
@@ -168,11 +174,24 @@ model Application is TrackedResource<ApplicationProperties> {
     name: string;
 }
 
+// NOTE(archidda): This is a template for resource list actions that return synchronously with no request body. This which will be added to the library at some point.
+#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a template"
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation-outside-interface" "This is a template"
+@armResourceAction(TResource)
+@post
+op ArmResourceListActionSync<
+  TResource extends Azure.ResourceManager.Foundations.ArmResource,
+  TResponse extends object,
+  TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
+>(
+  ...ResourceInstanceParameters<TResource, TBaseParameters>
+): ArmResponse<TResponse> | ErrorResponse;
+
 @armResourceOperations
 interface Applications {
     get is ArmResourceRead<Application>;
-    create is ArmResourceCreateOrUpdateSync<Application>;
-    update is ArmResourcePatchSync<Application, ApplicationProperties>;
+    createOrUpdate is ArmResourceCreateOrUpdateSync<Application>;
+    patch is ArmResourcePatchSync<Application, ApplicationProperties>;
     delete is ArmResourceDeleteSync<Application>;
     listBySpace is ArmResourceListByParent<
         Application,
@@ -182,6 +201,33 @@ interface Applications {
             Azure.Core.SelectQueryParameter &
             Azure.Core.ExpandQueryParameter &
             Azure.Core.OrderByQueryParameter
+    >;
+
+    @doc("The save business process development artifact action.")
+    saveBusinessProcessDevelopmentArtifact is ArmResourceActionSync<
+        Application,
+        SaveBusinessProcessDevelopmentArtifactRequest,
+        SaveOrGetBusinessProcessDevelopmentArtifactResponse        
+    >;
+
+    @doc("The get business process development artifact action.")
+    getBusinessProcessDevelopmentArtifact is ArmResourceActionSync<
+        Application,
+        GetOrDeleteBusinessProcessDevelopmentArtifactRequest,
+        SaveOrGetBusinessProcessDevelopmentArtifactResponse
+    >;
+
+    @doc("The list business process development artifacts action.")
+    listBusinessProcessDevelopmentArtifacts is ArmResourceListActionSync<
+        Application,
+        ListBusinessProcessDevelopmentArtifactsResponse
+    >;
+
+    @doc("The delete business process development artifact action.")
+    deleteBusinessProcessDevelopmentArtifact is ArmResourceActionSync<
+        Application,
+        GetOrDeleteBusinessProcessDevelopmentArtifactRequest,
+        ArmDeletedResponse
     >;
 }
 
@@ -200,8 +246,8 @@ model ApplicationResource is ProxyResource<ApplicationResourceProperties> {
 @armResourceOperations
 interface ApplicationResources {
     get is ArmResourceRead<ApplicationResource>;
-    create is ArmResourceCreateOrUpdateSync<ApplicationResource>;
-    update is ArmResourcePatchSync<
+    createOrUpdate is ArmResourceCreateOrUpdateSync<ApplicationResource>;
+    patch is ArmResourcePatchSync<
         ApplicationResource,
         ApplicationResourceProperties
     >;
@@ -232,12 +278,37 @@ model BusinessProcess is ProxyResource<BusinessProcessProperties> {
 @armResourceOperations
 interface BusinessProcesses {
     get is ArmResourceRead<BusinessProcess>;
-    create is ArmResourceCreateOrUpdateSync<BusinessProcess>;
-    update is ArmResourcePatchSync<BusinessProcess, BusinessProcessProperties>;
+    createOrUpdate is ArmResourceCreateOrUpdateSync<BusinessProcess>;
+    patch is ArmResourcePatchSync<BusinessProcess, BusinessProcessProperties>;
     delete is ArmResourceDeleteSync<BusinessProcess>;
     listByApplication is ArmResourceListByParent<
         BusinessProcess,
         Azure.ResourceManager.Foundations.BaseParameters<BusinessProcess> &
+            Azure.Core.StandardListQueryParameters &
+            Azure.Core.FilterQueryParameter &
+            Azure.Core.SelectQueryParameter &
+            Azure.Core.ExpandQueryParameter &
+            Azure.Core.OrderByQueryParameter
+    >;
+}
+
+// Business Process Version
+@doc("A business process version.")
+@parentResource(BusinessProcess)
+model BusinessProcessVersion is ProxyResource<BusinessProcessProperties> {
+    @key("businessProcessVersion")
+    @segment("versions")
+    @doc("The version of the business process")
+    @path
+    name: string;
+}
+
+@armResourceOperations
+interface BusinessProcessVersions {
+    get is ArmResourceRead<BusinessProcessVersion>;
+    listByBusinessProcess is ArmResourceListByParent<
+    BusinessProcessVersion,
+        Azure.ResourceManager.Foundations.BaseParameters<BusinessProcessVersion> &
             Azure.Core.StandardListQueryParameters &
             Azure.Core.FilterQueryParameter &
             Azure.Core.SelectQueryParameter &

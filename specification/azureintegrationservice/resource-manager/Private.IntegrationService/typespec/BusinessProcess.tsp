@@ -38,28 +38,10 @@ model BusinessProcessMappingItem {
     operationType?: FlowOperationType;
 }
 
-@doc("The status of the current operation.")
+@doc("The properties of business process stage.")
 enum BusinessProcessStagePropertyType {
-    integer,
-    string,
-}
-
-@doc("The properties of the draft business process.")
-model DraftBusinessProcess {
-    @doc("The boolean value indicating if the draft business process is deployed.")
-    isDeployed?: boolean;
-
-    @doc("The draft business process identifier.")
-    identifier?: BusinessProcessIdentifier;
-
-    @doc("The business process stages.")
-    businessProcessStages?: Record<BusinessProcessStage>;
-
-    @doc("The business process mapping.")
-    businessProcessMapping?: Record<BusinessProcessMappingItem>;
-
-    @doc("The tracking profile for the business process.")
-    trackingProfiles?: Record<TrackingProfileDefinition>;
+    Integer,
+    String,
 }
 
 @doc("The properties of business process.")
@@ -68,11 +50,12 @@ model BusinessProcessProperties {
     @doc("The status of the last operation.")
     provisioningState?: ProvisioningState;
 
+    @visibility("read")
+    @doc("The version of the business process.")
+    version?: string;
+
     @doc("The description of the business process.")
     description?: string;
-
-    @doc("The draft business process.")
-    draftBusinessProcess?: DraftBusinessProcess;
 
     @doc("The business process identifier.")
     identifier?: BusinessProcessIdentifier;
