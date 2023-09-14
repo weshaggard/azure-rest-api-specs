@@ -17,7 +17,7 @@ model BusinessProcessStage {
     description?: string;
 
     @doc("The properties within the properties of the business process stage.")
-    properties?: Record<BusinessProcessStagePropertyType>;
+    properties?: Record<string>;
 
     @doc("The property to keep track of stages before current in the business process stage.")
     stagesBefore?: string[];
@@ -35,14 +35,7 @@ model BusinessProcessMappingItem {
     operationName?: string;
 
     @doc("The mapping item operation type of the business process.")
-    operationType?: FlowOperationType;
-}
-
-#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a self explanatory."
-@doc("The properties of business process stage.")
-enum BusinessProcessStagePropertyType {
-    Integer,
-    String,
+    operationType?: string;
 }
 
 @doc("The properties of business process.")

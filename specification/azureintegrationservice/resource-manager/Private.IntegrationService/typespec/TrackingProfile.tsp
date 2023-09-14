@@ -1,12 +1,5 @@
 namespace Private.IntegrationService;
 
-#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a self explanatory."
-@doc("The status of the current operation.")
-enum FlowOperationType {
-    Trigger,
-    Action,
-}
-
 @doc("The tracking profile for the business process")
 model TrackingProfileDefinition {
     #suppress "@azure-tools/typespec-azure-core/casing-style"
@@ -41,7 +34,7 @@ model FlowTrackingDefinition {
 @doc("The tracking correlation context.")
 model TrackingCorrelationContext {
     @doc("The operation type for correlation context.")
-    operationType?: FlowOperationType;
+    operationType?: string;
 
     @doc("The operation name for correlation context.")
     operationName?: string;
@@ -57,7 +50,7 @@ model TrackingCorrelationContext {
 @doc("The tracking event definition.")
 model TrackingEventDefinition {
     @doc("The operation type.")
-    operationType?: FlowOperationType;
+    operationType?: string;
 
     @doc("The operation name.")
     operationName?: string;
