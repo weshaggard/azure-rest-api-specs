@@ -5,7 +5,6 @@ namespace Microsoft.AppSecurity;
 alias MinRedirectUrlLength = 3;
 alias MaxRedirectUrlLength = 2048;
 alias CustomBlockResponsePattern = "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$";
-alias MaxCustomBlockResponseBodyLength = 32768;
 
 @doc("Defines top-level policy settings")
 model PolicySettings {
@@ -52,7 +51,6 @@ model CustomBlockResponse {
 
   @doc("Response body. The body must be specified in base64 encoding")
   @pattern(CustomBlockResponsePattern)
-  @maxLength(MaxCustomBlockResponseBodyLength)
   body: string;
 }
 
