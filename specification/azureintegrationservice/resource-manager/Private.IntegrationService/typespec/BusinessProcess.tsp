@@ -38,6 +38,7 @@ model BusinessProcessMappingItem {
     operationType?: FlowOperationType;
 }
 
+#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a self explanatory."
 @doc("The properties of business process stage.")
 enum BusinessProcessStagePropertyType {
     Integer,

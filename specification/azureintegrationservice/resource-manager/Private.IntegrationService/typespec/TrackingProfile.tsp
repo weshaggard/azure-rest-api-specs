@@ -1,5 +1,6 @@
 namespace Private.IntegrationService;
 
+#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a self explanatory."
 @doc("The status of the current operation.")
 enum FlowOperationType {
     Trigger,
@@ -52,6 +53,7 @@ model TrackingCorrelationContext {
     value?: string;
 }
 
+#suppress "deprecated" "This is a temporary."
 @doc("The tracking event definition.")
 model TrackingEventDefinition {
     @doc("The operation type.")

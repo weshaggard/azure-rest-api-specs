@@ -21,6 +21,7 @@ namespace Private.IntegrationService;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
+#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a self explanatory."
 @doc("The status of the current operation.")
 @Azure.Core.lroStatus
 enum ProvisioningState {
@@ -113,7 +114,7 @@ model Space is TrackedResource<SpaceResourceProperties> {
 @doc("The operations of space.")
 interface Spaces {
     get is ArmResourceRead<Space>;
-    createOrUpdate is ArmResourceCreateOrUpdateSync<Space>;
+    createOrUpdate is ArmResourceCreateOrReplaceSync<Space>;
     patch is ArmResourcePatchSync<Space, SpaceResourceProperties>;
     delete is ArmResourceDeleteSync<Space>;
     listBySubscription is ArmListBySubscription<Space>;
@@ -145,7 +146,7 @@ model InfrastructureResource
 @doc("The operations of the infrastructure resource.")
 interface InfrastructureResources {
     get is ArmResourceRead<InfrastructureResource>;
-    createOrUpdate is ArmResourceCreateOrUpdateSync<InfrastructureResource>;
+    createOrUpdate is ArmResourceCreateOrReplaceSync<InfrastructureResource>;
     patch is ArmResourcePatchSync<
         InfrastructureResource,
         InfrastructureResourceProperties
@@ -181,7 +182,7 @@ model Application is TrackedResource<ApplicationProperties> {
 @post
 op ArmResourceListActionSync<
   TResource extends Azure.ResourceManager.Foundations.ArmResource,
-  TResponse extends object,
+  TResponse extends unknown,
   TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
 >(
   ...ResourceInstanceParameters<TResource, TBaseParameters>
@@ -190,7 +191,7 @@ op ArmResourceListActionSync<
 @armResourceOperations
 interface Applications {
     get is ArmResourceRead<Application>;
-    createOrUpdate is ArmResourceCreateOrUpdateSync<Application>;
+    createOrUpdate is ArmResourceCreateOrReplaceSync<Application>;
     patch is ArmResourcePatchSync<Application, ApplicationProperties>;
     delete is ArmResourceDeleteSync<Application>;
     listBySpace is ArmResourceListByParent<
@@ -246,7 +247,7 @@ model ApplicationResource is ProxyResource<ApplicationResourceProperties> {
 @armResourceOperations
 interface ApplicationResources {
     get is ArmResourceRead<ApplicationResource>;
-    createOrUpdate is ArmResourceCreateOrUpdateSync<ApplicationResource>;
+    createOrUpdate is ArmResourceCreateOrReplaceSync<ApplicationResource>;
     patch is ArmResourcePatchSync<
         ApplicationResource,
         ApplicationResourceProperties
@@ -278,7 +279,7 @@ model BusinessProcess is ProxyResource<BusinessProcessProperties> {
 @armResourceOperations
 interface BusinessProcesses {
     get is ArmResourceRead<BusinessProcess>;
-    createOrUpdate is ArmResourceCreateOrUpdateSync<BusinessProcess>;
+    createOrUpdate is ArmResourceCreateOrReplaceSync<BusinessProcess>;
     patch is ArmResourcePatchSync<BusinessProcess, BusinessProcessProperties>;
     delete is ArmResourceDeleteSync<BusinessProcess>;
     listByApplication is ArmResourceListByParent<
