@@ -47,6 +47,9 @@
     },
     {
       "name": "DstsServiceAccount"
+    },
+    {
+      "name": "DstsApplicationProvider"
     }
   ],
   "paths": {
@@ -101,6 +104,40 @@
             "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/DsmsAllowlistsResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.AzureCIS/dstsApplicationProvider": {
+      "get": {
+        "operationId": "DstsApplicationProvider_ListBySubscription",
+        "tags": [
+          "DstsApplicationProvider"
+        ],
+        "description": "List DstsApplicationProviderResource resources by subscription ID",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/DstsApplicationProviderResourceListResult"
             }
           },
           "default": {
@@ -262,6 +299,119 @@
         "x-ms-long-running-operation": true
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureCIS/dstsApplicationProvider": {
+      "get": {
+        "operationId": "DstsApplicationProvider_ListByResourceGroup",
+        "tags": [
+          "DstsApplicationProvider"
+        ],
+        "description": "List DstsApplicationProviderResource resources by resource group",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/DstsApplicationProviderResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureCIS/dstsApplicationProvider/{resourceName}": {
+      "put": {
+        "operationId": "DstsApplicationProvider_CreateOrUpdate",
+        "tags": [
+          "DstsApplicationProvider"
+        ],
+        "description": "dstsApplicationProvider creation",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "resourceName",
+            "in": "path",
+            "description": "The name of resource.",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "description": "Resource create parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DstsApplicationProviderResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource 'DstsApplicationProviderResource' update operation succeeded",
+            "schema": {
+              "$ref": "#/definitions/DstsApplicationProviderResource"
+            }
+          },
+          "201": {
+            "description": "Resource 'DstsApplicationProviderResource' create operation succeeded",
+            "schema": {
+              "$ref": "#/definitions/DstsApplicationProviderResource"
+            },
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create dstsApplicationProvider": {
+            "$ref": "./examples/CreateDstsApplicationProvider.json"
+          },
+          "CreateDstsApplicationProvider": {
+            "$ref": "./examples/CreateDstsApplicationProvider.json"
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureCIS/dstsServiceAccount": {
       "get": {
         "operationId": "DstsServiceAccount_ListByResourceGroup",
@@ -377,6 +527,164 @@
     }
   },
   "definitions": {
+    "ApplicationAccount": {
+      "type": "object",
+      "description": "Application.",
+      "properties": {
+        "dstsInstance": {
+          "type": "string",
+          "description": "The dSTS instance where the Application resides."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the Application."
+        },
+        "serviceTreeId": {
+          "type": "string",
+          "description": "Service Tree GUID of the service who owns the Application."
+        },
+        "realms": {
+          "type": "array",
+          "description": "The realms of the application. Optional.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "servicePrincipalNames": {
+          "type": "array",
+          "description": "The Service Principal Names of the application. Optional.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replyToAddresses": {
+          "type": "array",
+          "description": "The Reply Addresses of application. Optional.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groupId": {
+          "type": "string",
+          "description": "GUID of the dSCM Application group to which the Application belongs. Optional."
+        },
+        "groupName": {
+          "type": "string",
+          "description": "Group name of the dSCM Application group to which the Application belongs. Optional."
+        },
+        "isMfaEnabled": {
+          "type": "boolean",
+          "description": "If set to true, authenticating to the application requires MFA. Optional.",
+          "default": true
+        },
+        "sawDeviceEnforcement": {
+          "type": "string",
+          "description": "If it is null, full SAW enforcement will apply to the application. Optional."
+        },
+        "isElevatedAccess": {
+          "type": "boolean",
+          "description": "If you application (service) is exclusively limited to System Metadata, Read-Only access levels, set it to false. Optional."
+        },
+        "isProduction": {
+          "type": "boolean",
+          "description": "If your application (service) is exclusively NonProduction, set it to false. Optional.",
+          "default": true
+        }
+      },
+      "required": [
+        "dstsInstance",
+        "name",
+        "serviceTreeId"
+      ]
+    },
+    "ApplicationGroup": {
+      "type": "object",
+      "description": "The application group. Optional.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Group id."
+        },
+        "serviceTreeId": {
+          "type": "string",
+          "description": "Group service tree id."
+        },
+        "name": {
+          "type": "string",
+          "description": "Group name."
+        },
+        "applicationName": {
+          "type": "string",
+          "description": "Group application name."
+        },
+        "servicePrincipalNames": {
+          "type": "array",
+          "description": "The Service Principal Names of the application. Optional.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "realms": {
+          "type": "array",
+          "description": "Actor realm.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replyToAddresses": {
+          "type": "array",
+          "description": "The Reply Addresses of application. Optional.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isMfaEnabled": {
+          "type": "boolean",
+          "description": "If set to true, authenticating to the application requires MFA. Optional.",
+          "default": true
+        },
+        "isGlobalService": {
+          "type": "boolean",
+          "description": "If not set, default is regional service. Optional."
+        },
+        "sawDeviceEnforcement": {
+          "type": "string",
+          "description": "If it is null, full SAW enforcement will apply to the application. Optional."
+        },
+        "clientTokenIpRangeRestrictions": {
+          "type": "array",
+          "description": "Change.Remove client token ip range.",
+          "items": {
+            "$ref": "#/definitions/IpRange"
+          },
+          "x-ms-identifiers": []
+        },
+        "cloudId": {
+          "type": "string",
+          "description": "Optional. If it is null, full SAW enforcement will apply to the application.",
+          "default": "PROD"
+        },
+        "clientSubscriptions": {
+          "type": "array",
+          "description": "Optional.client subscriptions.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "regions": {
+          "type": "array",
+          "description": "Specific dSTS instances to create applications on.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "serviceTreeId",
+        "name",
+        "cloudId"
+      ]
+    },
     "Azure.ResourceManager.ResourceProvisioningState": {
       "type": "string",
       "description": "The provisioning state of a resource type.",
@@ -492,6 +800,69 @@
       },
       "required": [
         "folderName"
+      ]
+    },
+    "DstsApplicationProviderResource": {
+      "type": "object",
+      "description": "dstsApplicationProvider Resource",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/DstsApplicationProviderResourceProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "DstsApplicationProviderResourceListResult": {
+      "type": "object",
+      "description": "The response of a DstsApplicationProviderResource list operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The DstsApplicationProviderResource items on this page",
+          "items": {
+            "$ref": "#/definitions/DstsApplicationProviderResource"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "DstsApplicationProviderResourceProperties": {
+      "type": "object",
+      "description": "dstsApplicationProvider properties",
+      "properties": {
+        "applicationAccount": {
+          "$ref": "#/definitions/ApplicationAccount",
+          "description": "Application."
+        },
+        "applicationGroup": {
+          "$ref": "#/definitions/ApplicationGroup",
+          "description": "The application group. Optional."
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/dstsApplicationProviderProvisioningState",
+          "description": "Provisioning state",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "applicationAccount"
       ]
     },
     "DstsAuthenticationRequirement": {
@@ -669,6 +1040,19 @@
         "dstsInstance"
       ]
     },
+    "IpRange": {
+      "type": "object",
+      "description": "Class for a contiguous range of IP Adresses.",
+      "properties": {
+        "toIpAddress": {
+          "type": "string",
+          "description": "To IP address."
+        }
+      },
+      "required": [
+        "toIpAddress"
+      ]
+    },
     "dsmsAllowlistsProvisioningState": {
       "type": "string",
       "description": "Provisioning status of the resource.",
@@ -680,6 +1064,42 @@
       ],
       "x-ms-enum": {
         "name": "dsmsAllowlistsProvisioningState",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Succeeded",
+            "value": "Succeeded",
+            "description": "Resource has been created."
+          },
+          {
+            "name": "Failed",
+            "value": "Failed",
+            "description": "Resource creation failed."
+          },
+          {
+            "name": "Canceled",
+            "value": "Canceled",
+            "description": "Resource creation was canceled."
+          },
+          {
+            "name": "Accepted",
+            "value": "Accepted",
+            "description": "Accepted State"
+          }
+        ]
+      }
+    },
+    "dstsApplicationProviderProvisioningState": {
+      "type": "string",
+      "description": "Provisioning status of the resource.",
+      "enum": [
+        "Succeeded",
+        "Failed",
+        "Canceled",
+        "Accepted"
+      ],
+      "x-ms-enum": {
+        "name": "dstsApplicationProviderProvisioningState",
         "modelAsString": true,
         "values": [
           {
