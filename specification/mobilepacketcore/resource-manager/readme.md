@@ -106,7 +106,7 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/upfprofile.json
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/configsnapshot.json
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/activationstatus.json
-
+```
 
 # Code Generation
 
