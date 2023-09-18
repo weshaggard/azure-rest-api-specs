@@ -47,7 +47,6 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/deploymentarea.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/datanetwork.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/deeppacketinspection.json
-  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/mmedeployment.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/mobilepacketcore.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/networkslice.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/nfvi.json
@@ -60,8 +59,6 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/pccrule.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/pccrulebase.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/plmn.json
-  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/saegwcpdeployment.json
-  - Microsoft.MobilePacketCore/preview/2023-04-15-preview/saegwupdeployment.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/smfdeployment.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/smfprofile.json
   - Microsoft.MobilePacketCore/preview/2023-04-15-preview/subscriberanalyzer.json
@@ -102,11 +99,7 @@ input-file:
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/pccrule.json
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/pccrulebase.json
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/plmn.json
-  - Microsoft.MobilePacketCore/preview/2023-10-15-preview/saegwcpdeployment.json
-  - Microsoft.MobilePacketCore/preview/2023-10-15-preview/saegwcpprofile.json
-  - Microsoft.MobilePacketCore/preview/2023-10-15-preview/saegwupdeployment.json
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/smfdeployment.json
-  - Microsoft.MobilePacketCore/preview/2023-10-15-preview/saegwupprofile.json
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/smfprofile.json
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/subscriberanalyzer.json
   - Microsoft.MobilePacketCore/preview/2023-10-15-preview/upfdeployment.json
