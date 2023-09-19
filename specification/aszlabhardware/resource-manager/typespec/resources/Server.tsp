@@ -56,6 +56,14 @@ model ServerProperties {
   @visibility("read", "query")
   @doc("Server Inventory Information")
   inventory?: Inventory;
+
+  @visibility("read", "update")
+  @doc("Server banner message")
+  banner: string;
+
+  @visibility("read", "query", "update")
+  @doc("Server nickname")
+  nickname: string;
 }
 
 @armResourceOperations(Server)
