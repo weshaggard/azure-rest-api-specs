@@ -61,8 +61,6 @@ interface Operations extends Azure.ResourceManager.Operations {}
 //   ...CreatedResponse;
 // }
 
-
-
 // /e4k resource Operations
 @armResourceOperations
 interface E4k {
