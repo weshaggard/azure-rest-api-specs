@@ -4,6 +4,7 @@ import "@typespec/versioning";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 import "./BusinessProcessDevelopmentArtifact.tsp";
+import "./CustomOperations.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -175,19 +176,6 @@ model Application is TrackedResource<ApplicationProperties> {
     name: string;
 }
 
-// NOTE(archidda): This is a template for resource list actions that return synchronously with no request body. This which will be added to the library at some point.
-#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a template"
-#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation-outside-interface" "This is a template"
-@armResourceAction(TResource)
-@post
-op ArmResourceListActionSync<
-  TResource extends Azure.ResourceManager.Foundations.ArmResource,
-  TResponse extends unknown,
-  TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
->(
-  ...ResourceInstanceParameters<TResource, TBaseParameters>
-): ArmResponse<TResponse> | ErrorResponse;
-
 @armResourceOperations
 interface Applications {
     get is ArmResourceRead<Application>;
@@ -225,10 +213,10 @@ interface Applications {
     >;
 
     @doc("The delete business process development artifact action.")
-    deleteBusinessProcessDevelopmentArtifact is ArmResourceActionSync<
+    deleteBusinessProcessDevelopmentArtifact is ArmResourceActionRawSync<
         Application,
         GetOrDeleteBusinessProcessDevelopmentArtifactRequest,
-        ArmDeletedResponse
+        DeleteBusinessProcessDevelopmentArtifactResponse
     >;
 }
 
