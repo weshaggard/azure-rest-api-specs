@@ -59,11 +59,11 @@ model ServerProperties {
 
   @visibility("read", "update")
   @doc("Server banner message")
-  banner: string;
+  banner?: string;
 
   @visibility("read", "query", "update")
   @doc("Server nickname")
-  nickname: string;
+  nickname?: string;
 }
 
 @armResourceOperations(Server)
