@@ -11,8 +11,8 @@ using Autorest;
 
 namespace Microsoft.AzureCIS;
 
-@doc("dstsApplicationProvider properties")
-model DstsApplicationProviderResourceProperties {
+@doc("dstsApplications properties")
+model DstsApplicationsResourceProperties {
   @doc("Application.")
   applicationAccount: ApplicationAccount;
 
@@ -21,17 +21,17 @@ model DstsApplicationProviderResourceProperties {
 
   @doc("Provisioning state")
   @visibility("read")
-  provisioningState?: dstsApplicationProviderProvisioningState;
+  provisioningState?: dstsApplicationsProvisioningState;
 }
 
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-name-invalid-chars" "Arm resource name must contain only alphanumeric characters"
-@doc("dstsApplicationProvider Resource")
-model DstsApplicationProviderResource
-  is ProxyResource<DstsApplicationProviderResourceProperties> {
+@doc("dstsApplication Resource")
+model DstsApplicationsResource
+  is ProxyResource<DstsApplicationsResourceProperties> {
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("dstsApplicationProvider") // start with lower case
+  @segment("dstsApplications") // start with lower case
   @visibility("read")
   @path
   name: string;
@@ -128,7 +128,7 @@ model IpRange {
 }
 
 @doc("Provisioning status of the resource.")
-enum dstsApplicationProviderProvisioningState {
+enum dstsApplicationsProvisioningState {
   ...ResourceProvisioningState,
 
   @doc("Accepted State")
@@ -137,13 +137,13 @@ enum dstsApplicationProviderProvisioningState {
 
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
-interface DstsApplicationProvider {
-  @doc("dstsApplicationProvider creation")
+interface DstsApplications {
+  @doc("dstsApplications creation")
   @example(
-    "./examples/CreateDstsApplicationProvider.json",
-    "Create dstsApplicationProvider"
+    "./examples/CreateDstsApplications.json",
+    "Create dstsApplications"
   )
-  createOrUpdate is ArmResourceCreateOrUpdateAsync<DstsApplicationProviderResource>;
-  listBySubscription is ArmListBySubscription<DstsApplicationProviderResource>;
-  listByResourceGroup is ArmResourceListByParent<DstsApplicationProviderResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<DstsApplicationsResource>;
+  listBySubscription is ArmListBySubscription<DstsApplicationsResource>;
+  listByResourceGroup is ArmResourceListByParent<DstsApplicationsResource>;
 }

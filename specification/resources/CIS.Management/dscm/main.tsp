@@ -1,6 +1,6 @@
 import "./dsmsallowlist.tsp";
 import "./dstsserviceaccount.tsp";
-import "./dstsapplicationprovider.tsp";
+import "./dstsapplications.tsp";
 import "./dsmsrootfolderprovider.tsp";
 
 using TypeSpec.Versioning;
