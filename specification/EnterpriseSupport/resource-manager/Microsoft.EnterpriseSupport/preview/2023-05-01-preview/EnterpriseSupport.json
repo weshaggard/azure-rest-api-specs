@@ -85,6 +85,38 @@
         }
       }
     },
+    "/providers/Microsoft.EnterpriseSupport/Validate": {
+      "post": {
+        "tags": [
+          "ProviderLevelOperations"
+        ],
+        "operationId": "ProviderLevelOperations_Validate",
+        "description": "ProviderLevel operation to check eligibility to create Enterprise Support",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ValidateEnterpriseSupportRequestItem"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/ValidateEnterpriseSupportResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "ValidateEnterpriseSupportEligibility": {
+            "$ref": "./examples/ProviderLevelOperations_Validate.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.EnterpriseSupport/EnterpriseSupports": {
       "get": {
         "tags": [
@@ -248,7 +280,7 @@
         ],
         "responses": {
           "200": {
-            "description": "ARM operation update completed successfully.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/EnterpriseSupports"
             }
@@ -400,44 +432,6 @@
         },
         "x-ms-long-running-operation": true
       }
-    },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EnterpriseSupport/ValidateEnterpriseSupport": {
-      "post": {
-        "tags": [
-          "ProviderLevelOperations"
-        ],
-        "operationId": "ProviderLevelOperations_ValidateEnterpriseSupport",
-        "description": "ProviderLevel operation to check eligibility to create EnterpriseSupport instance",
-        "parameters": [
-          {
-            "$ref": "#/parameters/CustomParams.subscriptionId"
-          },
-          {
-            "$ref": "#/parameters/CustomParams.resourceGroupName"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ValidateEnterpriseSupportRequestItem"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "ARM operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/ValidateEnterpriseSupportResponse"
-            }
-          }
-        },
-        "x-ms-examples": {
-          "ValidateEnterpriseSupport": {
-            "$ref": "./examples/ProviderLevelOperations_ValidateEnterpriseSupport.json"
-          }
-        }
-      }
     }
   },
   "definitions": {
@@ -520,7 +514,6 @@
           "description": "BigCat Term ID"
         },
         "quantity": {
-          "type": "integer",
           "description": "Quantity for the purchase"
         },
         "serviceStartDate": {
@@ -606,7 +599,6 @@
           "description": "BigCat Term ID"
         },
         "quantity": {
-          "type": "integer",
           "description": "Quantity for the purchase"
         },
         "serviceStartDate": {
@@ -628,33 +620,22 @@
     "LineItem": {
       "type": "object",
       "properties": {
-        "billingAccountId": {
+        "scope": {
           "type": "string",
-          "description": "The billing account ID"
+          "description": "The purchasing scope"
         },
-        "billingGroupId": {
+        "upn": {
           "type": "string",
-          "description": "The billing group ID"
-        },
-        "productId": {
-          "type": "string",
-          "description": "The product ID."
-        },
-        "skuId": {
-          "type": "string",
-          "description": "The product SKU ID."
+          "description": "The upn of a product."
         },
         "quantity": {
-          "type": "integer",
           "description": "The quantity for this purchase"
         }
       },
       "description": "The item to be validated.",
       "required": [
-        "billingAccountId",
-        "billingGroupId",
-        "productId",
-        "skuId",
+        "scope",
+        "upn",
         "quantity"
       ]
     },
@@ -697,7 +678,7 @@
     "ValidateEnterpriseSupportResponse": {
       "type": "object",
       "properties": {
-        "lineItemValidations": {
+        "lineItems": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ValidateEnterpriseSupportResponseItem"
@@ -709,26 +690,26 @@
       },
       "description": "The response for an eligibility check.",
       "required": [
-        "lineItemValidations"
+        "lineItems"
       ]
     },
     "ValidateEnterpriseSupportResponseItem": {
       "type": "object",
       "properties": {
-        "productId": {
+        "scope": {
           "type": "string",
-          "description": "The product ID."
+          "description": "The purchasing scope"
         },
-        "skuId": {
+        "upn": {
           "type": "string",
-          "description": "The product SKU ID."
+          "description": "The upn of a product."
         },
         "quantity": {
           "description": "The quantity for this purchase"
         },
         "isEligible": {
-          "type": "boolean",
-          "description": "Boolean value to determine if purchase is eligible"
+          "type": "string",
+          "description": "Possible values are: eligible, ineligible and undetermined"
         },
         "reason": {
           "type": "string",
@@ -740,8 +721,8 @@
       },
       "description": "The item for an eligibility check.",
       "required": [
-        "productId",
-        "skuId",
+        "scope",
+        "upn",
         "quantity",
         "isEligible",
         "reason",
@@ -749,22 +730,5 @@
       ]
     }
   },
-  "parameters": {
-    "CustomParams.resourceGroupName": {
-      "name": "resourceGroupName",
-      "in": "path",
-      "required": true,
-      "description": "Resource Group Name",
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "CustomParams.subscriptionId": {
-      "name": "subscriptionId",
-      "in": "path",
-      "required": true,
-      "description": "Subscription ID",
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    }
-  }
+  "parameters": {}
 }
