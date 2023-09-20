@@ -115,7 +115,7 @@ interface Operations extends Azure.ResourceManager.Operations {}
 @armResourceOperations
 interface StorageCollectionRules {
   get is ArmResourceRead<StorageCollectionRule>;
-  createOrUpdate is ArmResourceCreateOrUpdateSync<StorageCollectionRule>; // replace with ArmResourceCreateOrReplaceSync when available (@azure-tools/typespec-autorest": "~0.33.0")
+  createOrReplace is ArmResourceCreateOrReplaceSync<StorageCollectionRule>;
   update is ArmResourcePatchSync<
     StorageCollectionRule,
     StorageCollectionRuleProperties

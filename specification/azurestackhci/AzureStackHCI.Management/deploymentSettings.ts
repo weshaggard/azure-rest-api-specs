@@ -29,6 +29,14 @@ model Clusters is TrackedResource<ClusterProperties> {
   name: string;
 }
 
+@doc("The deployment mode of deployment settings for a cluster.")
+enum DeploymentMode {
+  @doc("Validate deployment settings for cluster.")
+  Validate,
+  @doc("Deploy cluster using  deployment settings.")
+  Deploy
+}
+
 @doc("A ClusterProperties")
 model ClusterProperties {
 }
@@ -49,6 +57,13 @@ model DeploymentSettingsProperties {
   @doc("DeploymentSetting provisioning state")
   @visibility("read")
   provisioningState?: ProvisioningState,
+
+  @doc("ARM resource ids of Arc machines to be part of cluster.")
+  @extension("x-ms-identifiers", [])
+  "arcNodeResourceIds" : string[],
+
+  @doc("Deployment mode can have values 'validate' or 'deploy'.")
+  "deploymentMode" : DeploymentMode = DeploymentMode.Deploy,
 
   @doc("Scale units will contains list of deploymentdata")
   @extension("x-ms-identifiers", [])

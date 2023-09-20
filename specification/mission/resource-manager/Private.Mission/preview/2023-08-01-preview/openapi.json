@@ -62,6 +62,15 @@
     },
     {
       "name": "TransitHub"
+    },
+    {
+      "name": "EnclaveConnection"
+    },
+    {
+      "name": "EnclaveEndpoints"
+    },
+    {
+      "name": "CommunityEndpoints"
     }
   ],
   "paths": {
@@ -179,6 +188,104 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Private.Mission/communities/{communityName}/communityEndpoints": {
+      "get": {
+        "operationId": "CommunityEndpoints_ListBySubscription",
+        "tags": [
+          "CommunityEndpoints"
+        ],
+        "description": "List CommunityEndpointResource resources by subscription ID",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "name": "communityName",
+            "in": "path",
+            "description": "The name of the communityResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/CommunityEndpointResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/communities/{communityName}/checkAddressSpaceAvailability": {
+      "post": {
+        "operationId": "Community_CheckAddressSpaceAvailability",
+        "tags": [
+          "Community"
+        ],
+        "description": "Checks that the IP Address Space to be allocated for a new Virtual Enclave is available.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "communityName",
+            "in": "path",
+            "description": "The name of the communityResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "checkAddressSpaceAvailabilityRequest",
+            "in": "body",
+            "description": "Check IP Address Space request body.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CheckAddressSpaceAvailabilityRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/CheckAddressSpaceAvailabilityResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Community_CheckAddressSpaceAvailability": {
+            "$ref": "./examples/Community_PostCheckAddressSpaceAvailability.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Private.Mission/communities/{communityName}/transitHubs": {
       "get": {
         "operationId": "TransitHub_ListBySubscription",
@@ -216,9 +323,43 @@
             }
           }
         },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Private.Mission/enclaveConnections": {
+      "get": {
+        "operationId": "EnclaveConnection_ListBySubscription",
+        "tags": [
+          "EnclaveConnection"
+        ],
+        "description": "List EnclaveConnectionResource resources by subscription ID",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveConnectionResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
         "x-ms-examples": {
-          "TransitHubs_ListBySubscription": {
-            "$ref": "./examples/TransitHubs_ListBySubscription.json"
+          "EnclaveConnection_ListBySubscription": {
+            "$ref": "./examples/EnclaveConnection_ListBySubscription.json"
           }
         },
         "x-ms-pageable": {
@@ -297,6 +438,48 @@
         "x-ms-examples": {
           "VirtualEnclave_ListBySubscription": {
             "$ref": "./examples/VirtualEnclave_ListBySubscription.json"
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Private.Mission/virtualEnclaves/{virtualEnclaveName}/enclaveEndpoints": {
+      "get": {
+        "operationId": "EnclaveEndpoints_ListBySubscription",
+        "tags": [
+          "EnclaveEndpoints"
+        ],
+        "description": "List EnclaveEndpointResource resources by subscription ID",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "name": "virtualEnclaveName",
+            "in": "path",
+            "description": "The name of the enclaveResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveEndpointResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
           }
         },
         "x-ms-pageable": {
@@ -988,6 +1171,316 @@
         "x-ms-long-running-operation": true
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/communities/{communityName}/communityEndpoints": {
+      "get": {
+        "operationId": "CommunityEndpoints_ListByCommunityResource",
+        "tags": [
+          "CommunityEndpoints"
+        ],
+        "description": "List CommunityEndpointResource resources by CommunityResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "communityName",
+            "in": "path",
+            "description": "The name of the communityResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/CommunityEndpointResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/communities/{communityName}/communityEndpoints/{communityEndpointName}": {
+      "get": {
+        "operationId": "CommunityEndpoints_Get",
+        "tags": [
+          "CommunityEndpoints"
+        ],
+        "description": "Get a CommunityEndpointResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "communityName",
+            "in": "path",
+            "description": "The name of the communityResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "communityEndpointName",
+            "in": "path",
+            "description": "The name of the Community Endpoint Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/CommunityEndpointResource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "CommunityEndpoints_CreateOrUpdate",
+        "tags": [
+          "CommunityEndpoints"
+        ],
+        "description": "Create a CommunityEndpointResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "communityName",
+            "in": "path",
+            "description": "The name of the communityResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "communityEndpointName",
+            "in": "path",
+            "description": "The name of the Community Endpoint Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "description": "Resource create parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommunityEndpointResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/CommunityEndpointResource"
+            }
+          },
+          "201": {
+            "description": "ARM create operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/CommunityEndpointResource"
+            },
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
+      },
+      "patch": {
+        "operationId": "CommunityEndpoints_Update",
+        "tags": [
+          "CommunityEndpoints"
+        ],
+        "description": "Update a CommunityEndpointResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "communityName",
+            "in": "path",
+            "description": "The name of the communityResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "communityEndpointName",
+            "in": "path",
+            "description": "The name of the Community Endpoint Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "properties",
+            "in": "body",
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommunityEndpointResourceUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/CommunityEndpointResource"
+            }
+          },
+          "202": {
+            "description": "Resource update request accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
+      },
+      "delete": {
+        "operationId": "CommunityEndpoints_Delete",
+        "tags": [
+          "CommunityEndpoints"
+        ],
+        "description": "Delete a CommunityEndpointResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "communityName",
+            "in": "path",
+            "description": "The name of the communityResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "communityEndpointName",
+            "in": "path",
+            "description": "The name of the Community Endpoint Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource deleted successfully."
+          },
+          "202": {
+            "description": "Resource deletion accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
+          },
+          "204": {
+            "description": "Resource deleted successfully."
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/communities/{communityName}/transitHubs": {
       "get": {
         "operationId": "TransitHub_ListByCommunityResource",
@@ -1026,11 +1519,6 @@
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
-          }
-        },
-        "x-ms-examples": {
-          "TransitHubs_ListByResourceGroup": {
-            "$ref": "./examples/TransitHubs_ListByResourceGroup.json"
           }
         },
         "x-ms-pageable": {
@@ -1084,11 +1572,6 @@
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
-          }
-        },
-        "x-ms-examples": {
-          "TransitHubs_Get": {
-            "$ref": "./examples/TransitHubs_Get.json"
           }
         }
       },
@@ -1159,11 +1642,6 @@
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
-          }
-        },
-        "x-ms-examples": {
-          "TransitHubs_CreateOrUpdate": {
-            "$ref": "./examples/TransitHubs_CreateOrUpdate.json"
           }
         },
         "x-ms-long-running-operation-options": {
@@ -1241,11 +1719,6 @@
             }
           }
         },
-        "x-ms-examples": {
-          "TransitHubs_Update": {
-            "$ref": "./examples/TransitHubs_Update.json"
-          }
-        },
         "x-ms-long-running-operation-options": {
           "final-state-via": "location"
         },
@@ -1312,9 +1785,294 @@
             }
           }
         },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/enclaveConnections": {
+      "get": {
+        "operationId": "EnclaveConnection_ListByResourceGroup",
+        "tags": [
+          "EnclaveConnection"
+        ],
+        "description": "List EnclaveConnectionResource resources by resource group",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveConnectionResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/enclaveConnections/{enclaveConnectionName}": {
+      "get": {
+        "operationId": "EnclaveConnection_Get",
+        "tags": [
+          "EnclaveConnection"
+        ],
+        "description": "Get a EnclaveConnectionResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "enclaveConnectionName",
+            "in": "path",
+            "description": "The name of the Enclave Connection Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveConnectionResource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
         "x-ms-examples": {
-          "TransitHubs_Delete": {
-            "$ref": "./examples/TransitHubs_Delete.json"
+          "EnclaveConnection_Get": {
+            "$ref": "./examples/EnclaveConnection_Get.json"
+          }
+        }
+      },
+      "put": {
+        "operationId": "EnclaveConnection_CreateOrUpdate",
+        "tags": [
+          "EnclaveConnection"
+        ],
+        "description": "Create a EnclaveConnectionResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "enclaveConnectionName",
+            "in": "path",
+            "description": "The name of the Enclave Connection Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "description": "Resource create parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EnclaveConnectionResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveConnectionResource"
+            }
+          },
+          "201": {
+            "description": "ARM create operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveConnectionResource"
+            },
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "EnclaveConnection_CreateOrUpdate": {
+            "$ref": "./examples/EnclaveConnection_CreateOrUpdate.json"
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
+      },
+      "patch": {
+        "operationId": "EnclaveConnection_Update",
+        "tags": [
+          "EnclaveConnection"
+        ],
+        "description": "Update a EnclaveConnectionResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "enclaveConnectionName",
+            "in": "path",
+            "description": "The name of the Enclave Connection Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "properties",
+            "in": "body",
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EnclaveConnectionResourceUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveConnectionResource"
+            }
+          },
+          "202": {
+            "description": "Resource update request accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "EnclaveConnection_Update": {
+            "$ref": "./examples/EnclaveConnection_Update.json"
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
+      },
+      "delete": {
+        "operationId": "EnclaveConnection_Delete",
+        "tags": [
+          "EnclaveConnection"
+        ],
+        "description": "Delete a EnclaveConnectionResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "enclaveConnectionName",
+            "in": "path",
+            "description": "The name of the Enclave Connection Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource deleted successfully."
+          },
+          "202": {
+            "description": "Resource deletion accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
+          },
+          "204": {
+            "description": "Resource deleted successfully."
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "EnclaveConnection_Delete": {
+            "$ref": "./examples/EnclaveConnection_Delete.json"
           }
         },
         "x-ms-long-running-operation-options": {
@@ -1913,13 +2671,58 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/virtualEnclaves/{virtualEnclaveName}/checkAddressSpaceAvailability": {
-      "post": {
-        "operationId": "VirtualEnclave_CheckAddressSpaceAvailability",
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/virtualEnclaves/{virtualEnclaveName}/enclaveEndpoints": {
+      "get": {
+        "operationId": "EnclaveEndpoints_ListByEnclaveResource",
         "tags": [
-          "VirtualEnclave"
+          "EnclaveEndpoints"
         ],
-        "description": "Checks that the IP Address Space to be allocated for this Virtual Enclave is available.",
+        "description": "List EnclaveEndpointResource resources by EnclaveResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "virtualEnclaveName",
+            "in": "path",
+            "description": "The name of the enclaveResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveEndpointResourceListResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/virtualEnclaves/{virtualEnclaveName}/enclaveEndpoints/{enclaveEndpointName}": {
+      "get": {
+        "operationId": "EnclaveEndpoints_Get",
+        "tags": [
+          "EnclaveEndpoints"
+        ],
+        "description": "Get a EnclaveEndpointResource",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -1939,12 +2742,68 @@
             "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
           },
           {
-            "name": "checkAddressSpaceAvailabilityRequest",
+            "name": "enclaveEndpointName",
+            "in": "path",
+            "description": "The name of the Enclave Endpoint Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveEndpointResource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "EnclaveEndpoints_CreateOrUpdate",
+        "tags": [
+          "EnclaveEndpoints"
+        ],
+        "description": "Create a EnclaveEndpointResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "virtualEnclaveName",
+            "in": "path",
+            "description": "The name of the enclaveResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "enclaveEndpointName",
+            "in": "path",
+            "description": "The name of the Enclave Endpoint Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "resource",
             "in": "body",
-            "description": "Check IP Address Space request body.",
+            "description": "Resource create parameters.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/CheckAddressSpaceAvailabilityRequest"
+              "$ref": "#/definitions/EnclaveEndpointResource"
             }
           }
         ],
@@ -1952,7 +2811,20 @@
           "200": {
             "description": "ARM operation completed successfully.",
             "schema": {
-              "$ref": "#/definitions/CheckAddressSpaceAvailabilityResponse"
+              "$ref": "#/definitions/EnclaveEndpointResource"
+            }
+          },
+          "201": {
+            "description": "ARM create operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveEndpointResource"
+            },
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              }
             }
           },
           "default": {
@@ -1962,11 +2834,151 @@
             }
           }
         },
-        "x-ms-examples": {
-          "VirtualEnclave_CheckAddressSpaceAvailability": {
-            "$ref": "./examples/VirtualEnclave_PostCheckAddressSpaceAvailability.json"
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
+      },
+      "patch": {
+        "operationId": "EnclaveEndpoints_Update",
+        "tags": [
+          "EnclaveEndpoints"
+        ],
+        "description": "Update a EnclaveEndpointResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "virtualEnclaveName",
+            "in": "path",
+            "description": "The name of the enclaveResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "enclaveEndpointName",
+            "in": "path",
+            "description": "The name of the Enclave Endpoint Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "properties",
+            "in": "body",
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EnclaveEndpointResourceUpdate"
+            }
           }
-        }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EnclaveEndpointResource"
+            }
+          },
+          "202": {
+            "description": "Resource update request accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
+      },
+      "delete": {
+        "operationId": "EnclaveEndpoints_Delete",
+        "tags": [
+          "EnclaveEndpoints"
+        ],
+        "description": "Delete a EnclaveEndpointResource",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "name": "virtualEnclaveName",
+            "in": "path",
+            "description": "The name of the enclaveResource Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          },
+          {
+            "name": "enclaveEndpointName",
+            "in": "path",
+            "description": "The name of the Enclave Endpoint Resource",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource deleted successfully."
+          },
+          "202": {
+            "description": "Resource deletion accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
+          },
+          "204": {
+            "description": "Resource deleted successfully."
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.Mission/virtualEnclaves/{virtualEnclaveName}/endpoints": {
@@ -2845,6 +3857,148 @@
         "value"
       ]
     },
+    "CommunityEndpointProperties": {
+      "type": "object",
+      "description": "Community Endpoint Resource properties",
+      "properties": {
+        "destinationRuleCollection": {
+          "type": "array",
+          "description": "Destination Rule Collection.",
+          "items": {
+            "$ref": "#/definitions/DestinationRule"
+          },
+          "x-ms-identifiers": []
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisioning State.",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "destinationRuleCollection"
+      ]
+    },
+    "CommunityEndpointProtocol": {
+      "type": "string",
+      "description": "Community Endpoint Protocol Enum",
+      "enum": [
+        "ANY",
+        "TCP",
+        "UDP",
+        "ICMP",
+        "ESP",
+        "AH"
+      ],
+      "x-ms-enum": {
+        "name": "CommunityEndpointProtocol",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "ANY",
+            "value": "ANY",
+            "description": "CommunityEndpointProtocol Type ANY"
+          },
+          {
+            "name": "TCP",
+            "value": "TCP",
+            "description": "CommunityEndpointProtocol Type TCP"
+          },
+          {
+            "name": "UDP",
+            "value": "UDP",
+            "description": "CommunityEndpointProtocol Type UDP"
+          },
+          {
+            "name": "ICMP",
+            "value": "ICMP",
+            "description": "CommunityEndpointProtocol Type ICMP"
+          },
+          {
+            "name": "ESP",
+            "value": "ESP",
+            "description": "CommunityEndpointProtocol Type ESP"
+          },
+          {
+            "name": "AH",
+            "value": "AH",
+            "description": "CommunityEndpointProtocol Type AH"
+          }
+        ]
+      }
+    },
+    "CommunityEndpointResource": {
+      "type": "object",
+      "description": "CommunityEndpoint Model Resource",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/CommunityEndpointProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "CommunityEndpointResourceListResult": {
+      "type": "object",
+      "description": "The response of a CommunityEndpointResource list operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The CommunityEndpointResource items on this page",
+          "items": {
+            "$ref": "#/definitions/CommunityEndpointResource"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "CommunityEndpointResourceUpdate": {
+      "type": "object",
+      "description": "The type used for update operations of the CommunityEndpointResource.",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "description": "Resource tags.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "$ref": "#/definitions/CommunityEndpointResourceUpdateProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "CommunityEndpointResourceUpdateProperties": {
+      "type": "object",
+      "description": "The updatable properties of the CommunityEndpointResource.",
+      "properties": {
+        "destinationRuleCollection": {
+          "type": "array",
+          "description": "Destination Rule Collection.",
+          "items": {
+            "$ref": "#/definitions/DestinationRule"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
     "CommunityProperties": {
       "type": "object",
       "description": "Community Resource Properties",
@@ -2976,6 +4130,222 @@
         }
       }
     },
+    "DestinationEndpointResourceId": {
+      "type": "string",
+      "format": "arm-id",
+      "description": "A type definition that refers the id to an ARM resource.",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.Mission/virtualEnclaves/enclaveEndpoints"
+          },
+          {
+            "type": "Microsoft.Mission/communities/communityEndpoints"
+          }
+        ]
+      }
+    },
+    "DestinationRule": {
+      "type": "object",
+      "description": "Base type for destination rules.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Destination Rule Name."
+        },
+        "destinationType": {
+          "$ref": "#/definitions/DestinationType",
+          "description": "Destination Type."
+        },
+        "destination": {
+          "type": "array",
+          "description": "Destination must follow the format for FQDNs if it is selected as the destination type (no IP/CIDR or full web URLs).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "port": {
+          "type": "string",
+          "description": "Port. Can include multiple ports separated by commas or a range indicated by a hyphen."
+        },
+        "protocol": {
+          "type": "array",
+          "description": "Protocol. Options specified by Endpoint Protocol Enum.",
+          "items": {
+            "$ref": "#/definitions/CommunityEndpointProtocol"
+          }
+        }
+      },
+      "discriminator": "destinationType",
+      "required": [
+        "destinationType",
+        "destination"
+      ]
+    },
+    "DestinationType": {
+      "type": "string",
+      "description": "Destination Type Enum",
+      "enum": [
+        "FQDN",
+        "FQDNTag",
+        "IPAddress",
+        "PrivateNetwork"
+      ],
+      "x-ms-enum": {
+        "name": "DestinationType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "FQDN",
+            "value": "FQDN",
+            "description": "DestinationType Type FQDN"
+          },
+          {
+            "name": "FQDNTag",
+            "value": "FQDNTag",
+            "description": "DestinationType Type FQDNTag"
+          },
+          {
+            "name": "IPAddress",
+            "value": "IPAddress",
+            "description": "DestinationType Type IPAddress"
+          },
+          {
+            "name": "PrivateNetwork",
+            "value": "PrivateNetwork",
+            "description": "DestinationType Type PrivateNetwork"
+          }
+        ]
+      }
+    },
+    "EnclaveConnectionProperties": {
+      "type": "object",
+      "description": "Enclave Connection Resource properties",
+      "properties": {
+        "communityResourceId": {
+          "$ref": "#/definitions/CommunityResourceId",
+          "description": "Community Resource Id."
+        },
+        "sourceResourceId": {
+          "$ref": "#/definitions/EnclaveConnectionSourceResourceId",
+          "description": "Source Resource Id."
+        },
+        "sourceCidr": {
+          "type": "string",
+          "description": "Source CIDR."
+        },
+        "destinationEndpointId": {
+          "$ref": "#/definitions/DestinationEndpointResourceId",
+          "description": "Destination Endpoint Resource Id."
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisioning State.",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "communityResourceId",
+        "sourceResourceId",
+        "sourceCidr",
+        "destinationEndpointId"
+      ]
+    },
+    "EnclaveConnectionResource": {
+      "type": "object",
+      "description": "EnclaveConnection Model Resource",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/EnclaveConnectionProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "EnclaveConnectionResourceListResult": {
+      "type": "object",
+      "description": "The response of a EnclaveConnectionResource list operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The EnclaveConnectionResource items on this page",
+          "items": {
+            "$ref": "#/definitions/EnclaveConnectionResource"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "EnclaveConnectionResourceUpdate": {
+      "type": "object",
+      "description": "The type used for update operations of the EnclaveConnectionResource.",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "description": "Resource tags.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "$ref": "#/definitions/EnclaveConnectionResourceUpdateProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "EnclaveConnectionResourceUpdateProperties": {
+      "type": "object",
+      "description": "The updatable properties of the EnclaveConnectionResource.",
+      "properties": {
+        "communityResourceId": {
+          "$ref": "#/definitions/CommunityResourceId",
+          "description": "Community Resource Id."
+        },
+        "sourceResourceId": {
+          "$ref": "#/definitions/EnclaveConnectionSourceResourceId",
+          "description": "Source Resource Id."
+        },
+        "sourceCidr": {
+          "type": "string",
+          "description": "Source CIDR."
+        },
+        "destinationEndpointId": {
+          "$ref": "#/definitions/DestinationEndpointResourceId",
+          "description": "Destination Endpoint Resource Id."
+        }
+      }
+    },
+    "EnclaveConnectionSourceResourceId": {
+      "type": "string",
+      "format": "arm-id",
+      "description": "A type definition that refers the id to an ARM resource.",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.Mission/virtualEnclaves"
+          },
+          {
+            "type": "Microsoft.Mission/transitHubs"
+          }
+        ]
+      }
+    },
     "EnclaveDefaultSettings": {
       "type": "object",
       "description": "Virtual Enclave Default Settings",
@@ -2991,6 +4361,101 @@
         "storageAccountResourceId": {
           "$ref": "#/definitions/StorageAccountResourceId",
           "description": "Storage Account Resource Id."
+        }
+      }
+    },
+    "EnclaveEndpointProperties": {
+      "type": "object",
+      "description": "Enclave Endpoint Resource properties",
+      "properties": {
+        "endpointRuleCollection": {
+          "type": "array",
+          "description": "Endpoint Rule Collection.",
+          "items": {
+            "$ref": "#/definitions/EndpointRule"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisioning State.",
+          "readOnly": true
+        }
+      }
+    },
+    "EnclaveEndpointResource": {
+      "type": "object",
+      "description": "EnclaveEndpoint Model Resource",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/EnclaveEndpointProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "EnclaveEndpointResourceListResult": {
+      "type": "object",
+      "description": "The response of a EnclaveEndpointResource list operation.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The EnclaveEndpointResource items on this page",
+          "items": {
+            "$ref": "#/definitions/EnclaveEndpointResource"
+          }
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "EnclaveEndpointResourceUpdate": {
+      "type": "object",
+      "description": "The type used for update operations of the EnclaveEndpointResource.",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "description": "Resource tags.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "$ref": "#/definitions/EnclaveEndpointResourceUpdateProperties",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "EnclaveEndpointResourceUpdateProperties": {
+      "type": "object",
+      "description": "The updatable properties of the EnclaveEndpointResource.",
+      "properties": {
+        "endpointRuleCollection": {
+          "type": "array",
+          "description": "Endpoint Rule Collection.",
+          "items": {
+            "$ref": "#/definitions/EndpointRule"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
         }
       }
     },

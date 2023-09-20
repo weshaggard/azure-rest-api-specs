@@ -14,11 +14,23 @@ using Azure.ResourceManager;
 
 @armProviderNamespace("Microsoft.ManufacturingPlatform")
 @service({
-  title: "Microsoft.ManufacturingPlatform",
-  version: "2023-02-01-preview",
+  title: "Microsoft.ManufacturingPlatform"
 })
-@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+
+@versioned(Microsoft.ManufacturingPlatform.Versions)
 namespace Microsoft.ManufacturingPlatform;
+
+
+@doc("Supported API versions for the Microsoft.ManufacturingPlatform resource provider.")
+enum Versions {
+  @doc("The 2023-02-01-preview version.")
+  @Versioning.useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+  v2023_02_01_preview: "2023-02-01-preview",
+
+  @doc("The 2024-02-01-preview version.")
+  @Versioning.useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+  v2024_02_01_preview: "2024-02-01-preview",
+}
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -33,8 +45,10 @@ model MdsResource is TrackedResource<MdsResourceProperties> {
   name: string;
 
   ...ManagedServiceIdentity;
+  ...ResourceSku;
 }
 
+@@added(MdsResource.sku ,Versions.v2024_02_01_preview);
 
 @doc("The status of the current operation.")
 @Azure.Core.lroStatus
@@ -98,18 +112,61 @@ model MdsResourceProperties {
   @doc("Profile of Storage Created.")
   storageProfile?: StorageProfile;
 
-  @visibility("read")
+ //@visibility("read")
+ //@doc("Profile of Database Created.")
+ //databaseProfile?: DatabaseProfile;
+
+  //@visibility("read", "create" ,"update")
+  //@doc("Profile of Adx Created.")
+  //adxProfile?: AdxProfile;
+
+  //@visibility("read")
+  //@doc("Profile of Adt Created.")
+  //adtProfile?: AdtProfile;
+
+    
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
+  /** renaming adxProfile to old oldAdxProfile. doing to enable change of visiblity */
   @doc("Profile of Database Created.")
+  @removed(Versions.v2024_02_01_preview)
+  @renamedFrom(Versions.v2024_02_01_preview, "databaseProfile")
+  @visibility("read")
+  oldDatabaseProfile?: DatabaseProfile;
+
+  
+  @doc("Profile of Database Created.")
+  @added(Versions.v2024_02_01_preview)
+  @visibility("read", "create")
   databaseProfile?: DatabaseProfile;
 
-  @visibility("read")
+
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
+  /** renaming adxProfile to old oldAdxProfile. doing to enable change of visiblity */
   @doc("Profile of Adx Created.")
+  @removed(Versions.v2024_02_01_preview)
+  @renamedFrom(Versions.v2024_02_01_preview, "adxProfile")
+  @visibility("read")
+  oldAdxProfile?: AdxProfile;
+
+  
+  @doc("Profile of Adx Created.")
+  @added(Versions.v2024_02_01_preview)
+  @visibility("read", "create")
   adxProfile?: AdxProfile;
 
-  @visibility("read")
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
+  /** renaming adtProfile to old oldAdtProfile. doing to enable change of visiblity. */
   @doc("Profile of Adt Created.")
-  adtProfile?: AdtProfile;
+  @removed(Versions.v2024_02_01_preview)
+  @renamedFrom(Versions.v2024_02_01_preview, "adtProfile")
+  @visibility("read")
+  oldAdtProfile?: AdtProfile;
 
+  @doc("Profile of Adt Created.")
+  @added(Versions.v2024_02_01_preview)
+  @visibility("read", "create")
+  adtProfile?: AdtProfile;
+  
   @visibility("read")
   @doc("Profile of Akv Created.")
   akvProfile?: AkvProfile;
@@ -142,6 +199,22 @@ model MdsResourceProperties {
   @visibility("read")
   @doc("Configuration of the managed resource group associated with the resource.")
   managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
+
+  @visibility("read")
+  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+  @doc("Profile of Azure Machine Learning Resource.")
+  amlProfile?: AmlProfile;
+
+  @visibility("read", "create")
+  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+  @doc("Enable CMK.")
+  enableCmk?: boolean;
+
+  @visibility("read", "create")
+  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+  @doc("CMK Settings.")
+  cmkProfile?: CmkProfile;
+ 
 }
 
 @doc("The properties related to Aks Resource")
@@ -164,18 +237,50 @@ model StorageProfile {
 @doc("The properties related to Database Resource")
 model DatabaseProfile {
 
+  //@doc("Resource Id of Cosmos Resource")
+  //@visibility("read")
+  //cosmosId?: string;
+
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
+  /** renaming id to old id. doing to enable change of visiblity */
   @doc("Resource Id of Cosmos Resource")
+  @removed(Versions.v2024_02_01_preview)
+  @renamedFrom(Versions.v2024_02_01_preview, "cosmosId")
   @visibility("read")
+  oldCosmosId?: string;
+  
+  @doc("Resource Id of Cosmos Resource")
+  @added(Versions.v2024_02_01_preview)
+  @visibility("read", "create")
   cosmosId?: string;
+
+  @doc("User Managed.")
+  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+  @visibility("read", "create")
+  userManaged?: boolean;
+
 }
 
 
 @doc("The properties related to Azure Data Explorer (Adx) Resource")
 model AdxProfile {
-  
+
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
+  /** renaming id to old id. doing to enable change of visiblity */
   @doc("Resource Id of Adx Resource")
+  @removed(Versions.v2024_02_01_preview)
+  @renamedFrom(Versions.v2024_02_01_preview, "id")
   @visibility("read")
+  oldId?: string;
+
+  @doc("Resource Id of Adx Resource")
+  @added(Versions.v2024_02_01_preview)
+  @visibility("read", "create")
   id?: string;
+  
+  //@doc("Resource Id of Adx Resource")
+  //@visibility("read")
+  //id?: string;
 
   @doc("Uri of Adx Resource")
   @visibility("read")
@@ -185,19 +290,42 @@ model AdxProfile {
   @visibility("read")
   dataIngestionUri?: string;
 
+  @doc("User Managed.")
+  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+  @visibility("read", "create")
+  userManaged?: boolean;
+
 }
 
 
 @doc("The properties related to Azure Digital Twin (Adt) Resource")
 model AdtProfile {
   
+ // @doc("Resource Id of Adt Resource")
+ // @visibility("read")
+ // id?: string;
+
+  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
+  /** renaming id to old id. doing to enable change of visiblity */
   @doc("Resource Id of Adt Resource")
+  @removed(Versions.v2024_02_01_preview)
+  @renamedFrom(Versions.v2024_02_01_preview, "id")
   @visibility("read")
+  oldId?: string;
+
+  @doc("Resource Id of Adt Resource")
+  @added(Versions.v2024_02_01_preview)
+  @visibility("read", "create")
   id?: string;
 
   @doc("Host Name")
   @visibility("read")
   hostName?: string;
+
+  @doc("User Managed.")
+  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+  @visibility("read", "create")
+  userManaged?: boolean;
 
 }
 
@@ -288,7 +416,23 @@ model ManagedResourceGroupConfiguration {
   location: string;
 }
 
+@doc("The properties related to Azure Machine Learning Resource")
+@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+model AmlProfile {
+  
+  @doc("Resource Id of Azure Machine Learning Resource")
+  @visibility("read")
+  id?: string;
+}
 
+@doc("The properties related to CMK")
+@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+model CmkProfile {
+  
+  @doc("URI of Key in AKV")
+  @visibility("read","create")
+  keyUri?: string;
+}
 
 @armResourceOperations(MdsResource)
 interface ManufacturingDataServices  {
@@ -301,6 +445,7 @@ interface ManufacturingDataServices  {
 
   @doc("Returns the list of available versions")
   listAvailableVersions is ArmResourceListActionSync<MdsResource, AvailableVersionListResult>;
+
 }
 
 

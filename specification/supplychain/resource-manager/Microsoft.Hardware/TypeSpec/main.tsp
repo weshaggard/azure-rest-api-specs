@@ -62,7 +62,7 @@ model OrderProperties {
   orderLines:OrderLine[];
 
   @doc("Billing Information")
-  billingInformation:BillingInformation;
+  billingInformation?:BillingInformation;
 
   @doc("Currency")
   @visibility("read")
@@ -129,10 +129,16 @@ model OrderLine {
   shipTo: ShipTo;
 
   @doc("Shipping Method")
-  shippingMethod: ShippingMethod;
+  shippingMethod?: ShippingMethod;
 
-  @doc(" Requested Delivery Date")
-  requestedDeliveryDate:plainDate;
+  @doc("Requested Delivery Date")
+  requestedDeliveryDate?:plainDate;
+
+  @doc("Cancellation Reason")
+  cancellationReason?:string;
+
+  @doc("Cancelled By User details")
+  cancelledBy?:string;
 
   @doc("Estimated Deliver Date")
   @visibility("read")
@@ -176,7 +182,7 @@ model Price {
   unitAmount: float64;
 
   @doc("Shipping Cost for the line")
-  shippingCost: float64;
+  shippingCost?: float64;
 
   @doc("Tax for this line")
   @visibility("read")
@@ -244,7 +250,7 @@ enum ProductIdType{
   @doc("Product, SKU, Availability in Big-Catalog")
   PSA,
   @doc("MS Product Identitier (3x5 SKU)")
-  MS
+  FulfillmentProductId
 }
 
 @doc("Shipping Method")
@@ -334,56 +340,18 @@ alias DefaultProviderNamespace = {
 };
 
 @armResourceOperations
-interface PreviewOrdersInterface {
+interface OrderPreviewInterface {
 @armResourceCollectionAction
   @armProviderNameValue
-  @doc("Implements previewOrders operations")
-  @TypeSpec.Rest.action("previewOrders")
+  @doc("Implements orderPreview operations")
+  @TypeSpec.Rest.action("orderPreview")
   @post
-  op previewOrders(
-    ...SubscriptionIdParameter,
-    ...ResourceGroupParameter,
-    ...DefaultProviderNamespace,
-    ...ApiVersionParameter,
-
-    @doc("The previewOrders request")
-    @body
-    body: Order,
-  ): Order | ErrorResponse;
-}
-
-@armResourceOperations
-interface PreviewOrders2Interface {
-@armResourceCollectionAction
-  @armProviderNameValue
-  @doc("Implements previewOrders operations")
-  @TypeSpec.Rest.action("previewOrders2")
-  @post
-  op previewOrders2(
-    ...SubscriptionIdParameter,
-    ...ResourceGroupParameter,
-    ...DefaultProviderNamespace,
-    ...ApiVersionParameter,
-
-    @doc("The previewOrders2 request")
-    @body
-    body: Order,
-  ): Order | ErrorResponse;
-}
-
-@armResourceOperations
-interface PreviewOrders3Interface {
-@armResourceCollectionAction
-  @armProviderNameValue
-  @doc("Implements previewOrders operations")
-  @TypeSpec.Rest.action("previewOrders3")
-  @post
-  op previewOrders3(
+  op orderPreview(
     ...SubscriptionIdParameter,
     ...DefaultProviderNamespace,
     ...ApiVersionParameter,
 
-    @doc("The previewOrders3 request")
+    @doc("The orderPreview request")
     @body
     body: Order,
   ): Order | ErrorResponse;

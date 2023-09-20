@@ -683,6 +683,12 @@
           },
           {
             "$ref": "#/parameters/OSNameParameter"
+          },
+          {
+            "$ref": "#/parameters/OffsetParameter"
+          },
+          {
+            "$ref": "#/parameters/TopFilter"
           }
         ],
         "responses": {
@@ -3491,6 +3497,9 @@
           "items": {
             "$ref": "#/definitions/TestBaseAccountSKU"
           },
+          "x-ms-identifiers": [
+            "name"
+          ],
           "description": "The list of Test Base Account SKUs."
         },
         "nextLink": {
@@ -3529,7 +3538,10 @@
           "readOnly": true,
           "items": {
             "$ref": "#/definitions/TestBaseAccountSKUCapability"
-          }
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
         },
         "locations": {
           "description": "The locations that the SKU is available.",
@@ -3746,7 +3758,17 @@
           "description": "Resource type for file uploading.",
           "x-ms-enum": {
             "name": "fileUploadResourceType",
-            "modelAsString": true
+            "modelAsString": true,
+            "values": [
+              {
+                "value": "Package",
+                "description": "Upload file for package onboarding."
+              },
+              {
+                "value": "VHD",
+                "description": "Upload VHD file for image onboarding."
+              }
+            ]
           }
         }
       }
@@ -4388,6 +4410,19 @@
     "PackageRunTestParameters": {
       "description": "The parameters supplied to the Test Base Package to start a Test Run.",
       "type": "object",
+      "properties": {},
+      "required": [
+        "testType"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestRunParameters"
+        }
+      ]
+    },
+    "TestRunParameters": {
+      "type": "object",
+      "description": "Base parameters for Package and TestConfiguration Test Run.",
       "properties": {
         "testType": {
           "$ref": "#/definitions/TestType",
@@ -4423,18 +4458,15 @@
           "type": "string",
           "description": "The build version of the operating system."
         },
-        "mediaPackageVersion": {
-          "type": "string",
-          "description": "The package version of the operating system. It can be empty."
-        },
         "customImageId": {
           "type": "string",
           "description": "The tested custom image id. 'osName', 'release', 'buildVersion' and 'mediaPackageVersion' would be ignored when it's eligible.'"
+        },
+        "mediaPackageVersion": {
+          "type": "string",
+          "description": "The package version of the operating system. It can be empty."
         }
-      },
-      "required": [
-        "testType"
-      ]
+      }
     },
     "PackageListResult": {
       "description": "A list of Test Base Packages.",
@@ -4588,6 +4620,10 @@
           },
           "x-ms-identifiers": [],
           "description": "The detailed test information."
+        },
+        "intuneEnrollmentMetadata": {
+          "description": "The metadata of Intune enrollment.",
+          "$ref": "#/definitions/IntuneEnrollmentMetadata"
         }
       },
       "required": [
@@ -4723,6 +4759,7 @@
           "items": {
             "$ref": "#/definitions/Command"
           },
+          "x-ms-identifiers": [],
           "description": "The commands used in the test."
         }
       },
@@ -4812,6 +4849,10 @@
         "postUpgrade": {
           "type": "boolean",
           "description": "Specifies whether the command is assigned to be executed after in-place upgrade."
+        },
+        "enrollIntuneBefore": {
+          "type": "boolean",
+          "description": "Specifies whether to enroll Intune before the command."
         }
       },
       "required": [
@@ -4890,6 +4931,10 @@
           },
           "x-ms-identifiers": [],
           "description": "The detailed test information."
+        },
+        "intuneEnrollmentMetadata": {
+          "description": "The metadata of Intune enrollment.",
+          "$ref": "#/definitions/IntuneEnrollmentMetadata"
         }
       }
     },
@@ -5087,6 +5132,7 @@
           "items": {
             "$ref": "#/definitions/OSUpdateTestSummary"
           },
+          "x-ms-identifiers": [],
           "description": "Detailed summary for each OS update"
         }
       }
@@ -5290,6 +5336,9 @@
           "items": {
             "$ref": "#/definitions/TestResultAnalysisSummary"
           },
+          "x-ms-identifiers": [
+            "name"
+          ],
           "description": "List of analysis summaries."
         },
         "inplaceUpgradeProperties": {
@@ -5313,6 +5362,14 @@
           },
           "x-ms-identifiers": [],
           "description": "The list of first party applications tested along with the package."
+        },
+        "testConfigurationName": {
+          "type": "string",
+          "description": "The test configuration name."
+        },
+        "testPassId": {
+          "type": "string",
+          "description": "The test pass id."
         }
       }
     },
@@ -5560,7 +5617,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ScriptExecutionResult"
-          }
+          },
+          "x-ms-identifiers": []
         }
       },
       "allOf": [
@@ -5712,7 +5770,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/UtilizationResult"
-          }
+          },
+          "x-ms-identifiers": []
         }
       },
       "allOf": [
@@ -5731,7 +5790,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/UtilizationResult"
-          }
+          },
+          "x-ms-identifiers": []
         }
       },
       "allOf": [
@@ -5761,6 +5821,7 @@
           "items": {
             "$ref": "#/definitions/UtilizationEntry"
           },
+          "x-ms-identifiers": [],
           "description": "Utilization data"
         }
       }
@@ -5807,7 +5868,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/RegressionResult"
-          }
+          },
+          "x-ms-identifiers": []
         }
       },
       "allOf": [
@@ -5826,7 +5888,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/RegressionResult"
-          }
+          },
+          "x-ms-identifiers": []
         }
       },
       "allOf": [
@@ -5905,7 +5968,10 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/IdentifiedFailure"
-          }
+          },
+          "x-ms-identifiers": [
+            "failureId"
+          ]
         }
       }
     },
@@ -6053,6 +6119,7 @@
           "items": {
             "$ref": "#/definitions/Operation"
           },
+          "x-ms-identifiers": [],
           "description": "List of operations supported by the Test Base resource provider."
         },
         "nextLink": {
@@ -6218,6 +6285,7 @@
           "items": {
             "$ref": "#/definitions/NotificationEventReceiver"
           },
+          "x-ms-identifiers": [],
           "description": "The notification event receivers."
         }
       },
@@ -6981,6 +7049,56 @@
           "description": "The version of the Windows OS."
         }
       }
+    },
+    "IntuneEnrollmentMetadata": {
+      "description": "The metadata of Intune enrollment.",
+      "type": "object",
+      "properties": {
+        "appList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnrolledIntuneApp"
+          },
+          "x-ms-identifiers": [],
+          "description": "The enrolled Intune apps."
+        },
+        "credentialId": {
+          "description": "The id of the Intune enrollment credential.",
+          "type": "string"
+        },
+        "expectedDeploymentDurationInMinute": {
+          "description": "The expected duration of Intune applications and policies deployment.",
+          "type": "integer",
+          "format": "int32",
+          "default": 90
+        }
+      },
+      "required": [
+        "credentialId"
+      ]
+    },
+    "EnrolledIntuneApp": {
+      "description": "Metadata of the enrolled Intune app.",
+      "type": "object",
+      "properties": {
+        "appName": {
+          "type": "string",
+          "description": "Intune app name."
+        },
+        "appId": {
+          "type": "string",
+          "description": "Intune app id."
+        },
+        "expectedInstallationPath": {
+          "type": "string",
+          "description": "Intune app expected installation path."
+        }
+      },
+      "required": [
+        "appName",
+        "appId",
+        "expectedInstallationPath"
+      ]
     }
   },
   "parameters": {
@@ -7157,6 +7275,7 @@
       "in": "query",
       "required": false,
       "type": "integer",
+      "format": "int32",
       "x-ms-parameter-location": "method",
       "description": "According to the reverse order of time, how many first ones are taken."
     },
@@ -7175,6 +7294,14 @@
       "pattern": "^[A-Za-z0-9]([A-Za-z0-9_]|((-{1,2}|[. ])[A-Za-z0-9]))+$",
       "x-ms-parameter-location": "method",
       "description": "The full available OS update name in this format: osName--release--buildNumber--buildRevision--packageVersion--architecture, Example: Windows 10 22H2--2020.03 D--19043--1237--1.2.3--x64"
+    },
+    "OffsetParameter": {
+      "name": "offset",
+      "in": "query",
+      "type": "integer",
+      "format": "int32",
+      "x-ms-parameter-location": "method",
+      "description": "The number of items to skip before starting to collect the result set."
     }
   }
 }

@@ -19,7 +19,7 @@ enum InternalConnectionType {
   PrivateLink,
 
   @doc("InternalConnectionType of Type NetworkSecurityGroup")
-  NetworkSecurityGroup
+  NetworkSecurityGroup,
 }
 
 @doc("Specifies the state of the internalConnection.")
@@ -31,7 +31,7 @@ enum InternalConnectionState {
   Approved,
 
   @doc("InternalConnectionState of Type Active")
-  Active
+  Active,
 }
 
 @doc("Describes the properties of an Internal Connection.")

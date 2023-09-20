@@ -17,57 +17,54 @@ using TypeSpec.Reflection;
 @service({
   title: "Microsoft.365ConsumptionServices",
 })
-@doc("AdminMonetizationTest Resource Provider management API.")
+@doc("Microsoft.365ConsumptionServices Resource Provider management API.")
 @versioned(Microsoft.ConsumptionServices.Versions)
 namespace Microsoft.ConsumptionServices;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
-#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
-#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
-@doc("A 365ConsumptionServicesProviderHub resource")
+@doc("The provisioning state of a resource.")
+@Azure.Core.lroStatus
+enum ProvisioningState {
+    ...Azure.ResourceManager.ResourceProvisioningState
+}
+
+@doc("Service properties.")
+model ServiceProperties {
+  @doc("The status of the last operation.")
+  @visibility("read")
+  provisioningState?: ProvisioningState;
+
+  @doc("Tenant id.")
+  @visibility("create", "read")
+  @pattern("(^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}?)$")
+  tenantId: string;
+
+  @doc("Usage type.")
+  @visibility("create", "read")
+  @minValue(1)
+  usageType: int32;
+}
+
+#suppress "@azure-tools/typespec-azure-resource-manager/resource-name" "Suppress warning"
+@doc("A 365ConsumptionServices resource")
 model Service is TrackedResource<ServiceProperties> {
+  ...Azure.ResourceManager.Foundations.TrackedResourceBase;
+
   @doc("The name of the service.")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("ServiceName")
-  @segment("Services")
-  @path
+  @key("serviceName")
+  @segment("services")
   name: string;
 }
 
-@doc("The status of the current operation.")
-@Azure.Core.lroStatus
-enum ProvisioningState {
-  ...ResourceProvisioningState,
-
-  @doc("Initial provisioning in progress")
-  Provisioning,
-
-  @doc("Update in progress")
-  Updating,
-
-  @doc("Deletion in progress")
-  Deleting,
-
-  @doc("Change accepted for processing")
-  Accepted,
-}
-
-@doc("Details of the 365ConsumptionServices Service.")
-model ServiceProperties {
-  @visibility("read")
-  @doc("The status of the last operation.")
-  provisioningState?: ProvisioningState;
-
-  @doc("Tenant Id.")
-  tenantId: string;
-
-  @doc("Usage Type.")
-  usageType: int64;
-}
-
 @armResourceOperations
-interface Services extends TrackedResourceOperations<Service, ServiceProperties> {
+interface Services {
+  get is ArmResourceRead<Service>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<Service>;
+  update is ArmResourcePatchSync<Service, ServiceProperties>;
+  delete is ArmResourceDeleteSync<Service>;
+  listByResourceGroup is ArmResourceListByParent<Service>;
+  listBySubscription is ArmListBySubscription<Service>;
 }
 
 @doc("Versions.")
