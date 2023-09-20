@@ -4,6 +4,7 @@ import "@typespec/versioning";
 import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
+import "@azure-tools/typespec-providerhub-controller";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
