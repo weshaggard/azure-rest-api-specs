@@ -141,6 +141,6 @@ model ValidateEnterpriseSupportResponseItem {
 interface ProviderLevelOperations {
     @post
 	@doc("ProviderLevel operation to check eligibility to create Enterprise Support")
-    @segment("providers/Microsoft.EnterpriseSupport/Validate")
+    @segment("providers/Microsoft.EnterpriseSupport/validate")
     validate(@body body: ValidateEnterpriseSupportRequestItem): ArmResponse<ValidateEnterpriseSupportResponse>;
 }
