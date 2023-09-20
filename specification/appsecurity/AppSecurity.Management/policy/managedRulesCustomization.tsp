@@ -106,16 +106,16 @@ model RuleOverride {
 
 @doc("Comparison operators variants that can be used with Exclusion variables when defining an Exclusion")
 enum ExclusionSelectorMatchOperator {
-  @doc("Equals")
+  @doc("Performs an ordinal (case-sensitive and culture-insensitive) comparison")
   Equals_: "Equals", // Changes the generated name and prevents error CS0108, in which Equal hides inherited member of 'ValueType.Equals(object?)'
 
-  @doc("Contains")
+  @doc("Checks whether a string contains a sequence of characters")
   Contains,
 
-  @doc("Starts with")
+  @doc("Checks whether a string starts with a specified string")
   StartsWith,
 
-  @doc("Ends with")
+  @doc("Checks whether a string ends with a specified string")
   EndsWith,
 
   @doc("Equals any")

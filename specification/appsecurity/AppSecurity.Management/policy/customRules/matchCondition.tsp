@@ -198,16 +198,16 @@ enum ExistsOperatorVariable {
 
 @doc("Operators that can be applied in conditions of type String")
 enum StringOperator {
-  @doc("Equals")
+  @doc("Performs an ordinal (case-sensitive and culture-insensitive) comparison")
   Equals_: "Equals", // Changes the generated name and prevents error CS0108, in which Equal hides inherited member of 'ValueType.Equals(object?)'
 
-  @doc("Contains")
+  @doc("checks whether a string contains a sequence of characters")
   Contains,
 
-  @doc("Starts with")
-  BeginsWith, // TODO - change to StartsWith so it would be consistent with managedRules.tsp ExclusionSelectorMatchOperator
+  @doc("Checks whether a string starts with a specified string")
+  StartsWith, // TODO - change to StartsWith so it would be consistent with managedRules.tsp ExclusionSelectorMatchOperator
 
-  @doc("Ends with")
+  @doc("Checks whether a string ends with a specified string")
   EndsWith,
 
   @doc("Regex match")

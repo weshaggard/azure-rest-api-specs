@@ -21,15 +21,19 @@ namespace Microsoft.VoiceServices;
 enum Versions {
   @doc("2023-04-03")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+  v2023_01_31: "2023-01-31",
+
+  @doc("2023-04-03")
+  @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_04_03: "2023-04-03",
 
   @doc("2023-07-13-preview")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2023_07_13_preview: "2023-07-13-preview",
 
-  @doc("2023-08-07-preview")
+  @doc("2023-09-01")
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-  v2023_08_07_preview: "2023-08-07-preview",
+  v2023_09_01: "2023-09-01",
 }
 
 interface Operations extends Azure.ResourceManager.Operations {}
@@ -73,7 +77,7 @@ interface ResourceUpdateNoProperties<TResource extends Foundations.ArmResource> 
 
     @doc("The resource properties to be updated.")
     @body
-    properties: ResourceUpdateModelNoProperties<TResource>
+    properties: ResourceUpdateModelNoProperties<TResource>,
   ): ArmResponse<TResource> | ErrorResponse;
 }
 
@@ -128,7 +132,8 @@ interface NameAvailability {
     @doc("The location in which uniqueness will be verified.")
     @path
     location: string,
+
     ...SubscriptionIdParameter,
-    ...ApiVersionParameter
+    ...ApiVersionParameter,
   ): CheckNameAvailabilityResponse | ErrorResponse;
 }

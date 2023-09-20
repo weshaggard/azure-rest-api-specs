@@ -72,6 +72,11 @@
             }
           }
         },
+        "x-ms-examples": {
+          "Operations_List": {
+            "$ref": "./examples/Operations_List_MinimumSet_Gen.json"
+          }
+        },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         }
@@ -240,13 +245,13 @@
         ],
         "responses": {
           "200": {
-            "description": "ARM operation completed successfully.",
+            "description": "Resource 'MdsResource' update operation succeeded",
             "schema": {
               "$ref": "#/definitions/MdsResource"
             }
           },
           "201": {
-            "description": "ARM create operation completed successfully.",
+            "description": "Resource 'MdsResource' create operation succeeded",
             "schema": {
               "$ref": "#/definitions/MdsResource"
             },
@@ -373,8 +378,19 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Resource deleted successfully."
+          "202": {
+            "description": "Resource deletion accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
           },
           "204": {
             "description": "Resource deleted successfully."
@@ -390,7 +406,11 @@
           "ManufacturingDataServices_Delete": {
             "$ref": "./examples/ManufacturingDataServices_Delete_MinimumSet_Gen.json"
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManufacturingPlatform/manufacturingDataServices/{mdsResourceName}/listAvailableVersions": {
@@ -953,6 +973,30 @@
           "description": "Synapse Development Endpoint",
           "readOnly": true
         }
+      }
+    },
+    "Versions": {
+      "type": "string",
+      "description": "Supported API versions for the Microsoft.ManufacturingPlatform resource provider.",
+      "enum": [
+        "2023-02-01-preview",
+        "2024-02-01-preview"
+      ],
+      "x-ms-enum": {
+        "name": "Versions",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "v2023_02_01_preview",
+            "value": "2023-02-01-preview",
+            "description": "The 2023-02-01-preview version."
+          },
+          {
+            "name": "v2024_02_01_preview",
+            "value": "2024-02-01-preview",
+            "description": "The 2024-02-01-preview version."
+          }
+        ]
       }
     }
   },

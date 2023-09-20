@@ -5,7 +5,6 @@ import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
 
-import "./resources/Reservation.tsp";
 import "./resources/Server.tsp";
 
 using TypeSpec.Http;
@@ -27,16 +26,4 @@ interface Operations extends Azure.ResourceManager.Operations {}
 @Azure.Core.lroStatus
 enum ProvisioningState {
   ...ResourceProvisioningState,
-
-  @doc("Provisioning the resource")
-  Provisioning,
-
-  @doc("Updating the resource")
-  Updating,
-
-  @doc("Deleting the resource")
-  Deleting,
-
-  @doc("Accepted the resource")
-  Accepted,
 }

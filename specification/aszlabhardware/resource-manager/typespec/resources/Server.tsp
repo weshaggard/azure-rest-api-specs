@@ -7,22 +7,16 @@ using Azure.ResourceManager;
 
 namespace Private.AszLabHardware;
 
-@doc("The status of the server")
-enum Status {
-  @doc("The server is rented out")
-  Reserved,
+@doc("Details of the physical properties of the AszLabHw Server")
+model Inventory {
+  @doc("The processor of the Server")
+  cpu: string;
 
-  @doc("The server is available to be rented out")
-  Available,
+  @doc("The memory of the server")
+  memory: string;
 
-  @doc("The server is rented out and will undergo maintenance on check-in")
-  PendingMaintenance,
-
-  @doc("The server is undergoing maintenance")
-  InMaintenance,
-
-  @doc("The server is completed with maintenance and will be available soon")
-  PendingAvailable,
+  @doc("The hard drive of the server")
+  disk: string;
 }
 
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
@@ -31,8 +25,8 @@ enum Status {
 model Server is TrackedResource<ServerProperties> {
   @doc("The name of the server")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
-  @key("ServerName")
-  @segment("Servers")
+  @key("serverName")
+  @segment("servers")
   @path
   name: string;
 }
@@ -41,12 +35,36 @@ model Server is TrackedResource<ServerProperties> {
 model ServerProperties {
   @visibility("read", "query")
   @doc("The status of the server")
-  status: Status;
+  status: string;
+
+  @visibility("read")
+  @doc("The current status of the GoalState")
+  goalStateStatus: string;
 
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ProvisioningState;
+
+  @visibility("read", "create")
+  @doc("The OneAsset ID of the server.")
+  assetTag: string;
+
+  @visibility("read", "create")
+  @doc("IP address of the server's BMC.")
+  bmcIpAddress: string;
+
+  @visibility("read", "query")
+  @doc("Server Inventory Information")
+  inventory?: Inventory;
+
+  @visibility("read", "update")
+  @doc("Server banner message")
+  banner?: string;
+
+  @visibility("read", "query", "update")
+  @doc("Server nickname")
+  nickname?: string;
 }
 
-@armResourceOperations
+@armResourceOperations(Server)
 interface Servers extends TrackedResourceOperations<Server, ServerProperties> {}

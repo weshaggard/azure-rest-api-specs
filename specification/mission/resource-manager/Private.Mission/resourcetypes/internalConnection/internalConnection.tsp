@@ -26,15 +26,18 @@ enum InternalConnectionType {
 enum InternalConnectionState {
   @doc("InternalConnectionState Type Pending Approval")
   PendingApproval,
-  
+
   @doc("InternalConnectionState Type Pending Update")
   PendingUpdate,
 
   @doc("InternalConnectionState Type Approved")
   Approved,
 
-  @doc("InternalConnectionState Type Failed")
+  @doc("InternalConnectionState Type Active")
   Active,
+
+  @doc("InternalConnectionState Type Failed")
+  Failed,
 }
 
 @doc("Describes the properties of an Internal Connection.")

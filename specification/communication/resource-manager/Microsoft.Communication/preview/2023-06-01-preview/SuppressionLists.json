@@ -30,7 +30,7 @@
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/suppressionLists": {
       "get": {
         "description": "List all suppression lists for a domains resource.",
-        "operationId": "SuppressionLists_List",
+        "operationId": "SuppressionLists_ListByDomain",
         "summary": "List",
         "tags": [
           "SuppressionLists"
@@ -507,15 +507,21 @@
       "description": "A class that describes the properties of a SuppressionList resource.",
       "type": "object",
       "properties": {
+        "listName": {
+          "description": "The the name of the suppression list. This value must match one of the valid sender usernames of the sending domain.",
+          "type": "string"
+        },
         "dataLocation": {
           "description": "The location where the SuppressionList resource data is stored at rest.",
-          "type": "string",
-          "readOnly": true
+          "type": "string"
         },
         "lastUpdatedTimeStamp": {
-          "description": "The location where the SuppressionList resource data is stored at rest.",
-          "type": "string",
-          "readOnly": true
+          "description": "The date the resource was last updated.",
+          "type": "string"
+        },
+        "createdTimeStamp": {
+          "description": "The date the resource was created.",
+          "type": "string"
         }
       }
     },
@@ -543,6 +549,22 @@
     "SuppressionListAddressResource": {
       "description": "A object that represents a SuppressionList record.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/SuppressionListAddressProperties",
+          "description": "The properties of a SuppressionListAddress resource.",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "SuppressionListAddressProperties": {
+      "description": "A class that describes the properties of a SuppressionListAddress resource.",
+      "type": "object",
       "required": [
         "email"
       ],
@@ -550,11 +572,6 @@
         "email": {
           "description": "Email address of the recipient.",
           "type": "string"
-        },
-        "listId": {
-          "description": "The list id which this address is unsubscribed from (maps to the mail from field in the portal).",
-          "type": "string",
-          "readOnly": true
         },
         "firstName": {
           "description": "The first name of the email recipient.",
@@ -568,16 +585,10 @@
           "description": "An optional property to provide contextual notes or a description for an address.",
           "type": "string"
         },
-        "lastUpdated": {
+        "lastModified": {
           "description": "The date the address was last updated in a suppression list.",
           "type": "string",
-          "format": "date-time",
-          "readOnly": true
-        },
-        "addressId": {
-          "description": "Unique identifier for the address.",
-          "type": "string",
-          "readOnly": true
+          "format": "date-time"
         }
       }
     },

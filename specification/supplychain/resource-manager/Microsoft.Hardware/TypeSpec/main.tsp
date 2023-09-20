@@ -17,7 +17,21 @@ using Azure.ResourceManager;
   version: "2023-07-12-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+//@useDependency(Azure.Core.Versions.v1_0_Preview_2)
 namespace Microsoft.Hardware;
+
+/*interface OrderOperations{
+  @summary("Preview Order")
+  @doc("A sync API for previewing the Order. This will also return the taxes and fees as part of validation response.")
+  @route("/orders/preview")
+  @post
+  previewOrder is Azure.Core.RpcOperation<{
+      @body
+      @doc("The request of preview order.")
+      body: Order;
+    },
+    Order>;
+}*/
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -33,7 +47,7 @@ model Order is TrackedResource<OrderProperties> {
 @doc("Forward Order")
 model OrderProperties {
   @doc("Customer PurchaseOrder")
-  purchaseOrder?: PurchaseOrder;
+  customerOrder?: CustomerOrder;
 
   @doc("Type of action Pre-Fulfill/Fulfill")
   @visibility("read")
@@ -48,7 +62,7 @@ model OrderProperties {
   orderLines:OrderLine[];
 
   @doc("Billing Information")
-  billingInformation:BillingInformation;
+  billingInformation?:BillingInformation;
 
   @doc("Currency")
   @visibility("read")
@@ -72,12 +86,12 @@ model OrderProperties {
 }
 
 @doc("Customer PurchaseOrder")
-model PurchaseOrder {
+model CustomerOrder {
   @doc("Customer PurchaseOrder Id")
   id: string;
 
   @doc("Customer PurchaseOrder Date")
-  createdDateTime: plainDate;
+  createdDate: plainDate;
 }
 
 @doc("Billing Details for Order")
@@ -115,18 +129,24 @@ model OrderLine {
   shipTo: ShipTo;
 
   @doc("Shipping Method")
-  shippingMethod: ShippingMethod;
+  shippingMethod?: ShippingMethod;
 
-  @doc(" Requested Delivery Date")
-  requestedDeliveryDate:plainDate;
+  @doc("Requested Delivery Date")
+  requestedDeliveryDate?:plainDate;
+
+  @doc("Cancellation Reason")
+  cancellationReason?:string;
+
+  @doc("Cancelled By User details")
+  cancelledBy?:string;
 
   @doc("Estimated Deliver Date")
   @visibility("read")
-  estimatedDeliverDateTime?:plainDate;
+  estimatedDeliveryDate?:plainDate;
 
   @doc("Estimated Shipped Date")
   @visibility("read")
-  estimatedShippedDateTime?:plainDate;
+  estimatedShippedDate?:plainDate;
 }
 
 @doc("Order Line Qty")
@@ -162,7 +182,7 @@ model Price {
   unitAmount: float64;
 
   @doc("Shipping Cost for the line")
-  shippingCost: float64;
+  shippingCost?: float64;
 
   @doc("Tax for this line")
   @visibility("read")
@@ -177,7 +197,7 @@ model Price {
 @doc("Fee model")
 model Fee{
   @doc("Fee charged")
-  feeAmount: float64;
+  amount: float64;
 
   @doc("Fee Type")
   type: FeeType;
@@ -230,7 +250,7 @@ enum ProductIdType{
   @doc("Product, SKU, Availability in Big-Catalog")
   PSA,
   @doc("MS Product Identitier (3x5 SKU)")
-  MS
+  FulfillmentProductId
 }
 
 @doc("Shipping Method")
@@ -310,4 +330,29 @@ enum ProvisioningState {
   @doc("Order is pending")
   Pending
 
+}
+
+alias DefaultProviderNamespace = {
+  @path
+  @TypeSpec.Rest.segment("providers")
+  @doc("The provider namespace for the resource.")
+  provider: "Microsoft.Hardware";
+};
+
+@armResourceOperations
+interface OrderPreviewInterface {
+@armResourceCollectionAction
+  @armProviderNameValue
+  @doc("Implements orderPreview operations")
+  @TypeSpec.Rest.action("orderPreview")
+  @post
+  op orderPreview(
+    ...SubscriptionIdParameter,
+    ...DefaultProviderNamespace,
+    ...ApiVersionParameter,
+
+    @doc("The orderPreview request")
+    @body
+    body: Order,
+  ): Order | ErrorResponse;
 }
