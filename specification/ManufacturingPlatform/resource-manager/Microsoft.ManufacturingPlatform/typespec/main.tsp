@@ -237,27 +237,14 @@ model StorageProfile {
 @doc("The properties related to Database Resource")
 model DatabaseProfile {
 
-  //@doc("Resource Id of Cosmos Resource")
-  //@visibility("read")
-  //cosmosId?: string;
-
-  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
-  /** renaming id to old id. doing to enable change of visiblity */
   @doc("Resource Id of Cosmos Resource")
-  @removed(Versions.v2024_02_01_preview)
-  @renamedFrom(Versions.v2024_02_01_preview, "cosmosId")
   @visibility("read")
-  oldCosmosId?: string;
-  
-  @doc("Resource Id of Cosmos Resource")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
   cosmosId?: string;
 
-  @doc("User Managed.")
+  @doc("Resource Id of User Managed Cosmos Resource.")
   @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
   @visibility("read", "create")
-  userManaged?: boolean;
+  userManagedId?: string;
 
 }
 
@@ -265,22 +252,9 @@ model DatabaseProfile {
 @doc("The properties related to Azure Data Explorer (Adx) Resource")
 model AdxProfile {
 
-  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
-  /** renaming id to old id. doing to enable change of visiblity */
   @doc("Resource Id of Adx Resource")
-  @removed(Versions.v2024_02_01_preview)
-  @renamedFrom(Versions.v2024_02_01_preview, "id")
   @visibility("read")
-  oldId?: string;
-
-  @doc("Resource Id of Adx Resource")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
   id?: string;
-  
-  //@doc("Resource Id of Adx Resource")
-  //@visibility("read")
-  //id?: string;
 
   @doc("Uri of Adx Resource")
   @visibility("read")
@@ -290,10 +264,10 @@ model AdxProfile {
   @visibility("read")
   dataIngestionUri?: string;
 
-  @doc("User Managed.")
+  @doc("Resource Id of User Managed Adx Resource.")
   @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
   @visibility("read", "create")
-  userManaged?: boolean;
+  userManagedId?: string;
 
 }
 
@@ -301,31 +275,18 @@ model AdxProfile {
 @doc("The properties related to Azure Digital Twin (Adt) Resource")
 model AdtProfile {
   
- // @doc("Resource Id of Adt Resource")
- // @visibility("read")
- // id?: string;
-
-  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
-  /** renaming id to old id. doing to enable change of visiblity */
   @doc("Resource Id of Adt Resource")
-  @removed(Versions.v2024_02_01_preview)
-  @renamedFrom(Versions.v2024_02_01_preview, "id")
   @visibility("read")
-  oldId?: string;
-
-  @doc("Resource Id of Adt Resource")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
   id?: string;
-
+  
   @doc("Host Name")
   @visibility("read")
   hostName?: string;
 
-  @doc("User Managed.")
+  @doc("Resource Id of User Managed Adt Resource.")
   @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
   @visibility("read", "create")
-  userManaged?: boolean;
+  userManagedId?: string;
 
 }
 
