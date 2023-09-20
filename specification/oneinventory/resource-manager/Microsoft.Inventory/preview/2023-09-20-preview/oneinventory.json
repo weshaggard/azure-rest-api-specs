@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Microsoft Inventory",
-    "version": "2023-08-16-preview",
+    "version": "2023-09-20-preview",
     "x-typespec-generated": [
       {
         "emitter": "@azure-tools/typespec-autorest"
@@ -48,10 +48,57 @@
       "name": "Datacenters"
     },
     {
+      "name": "SubscriptionInternalPropertyResources"
+    },
+    {
       "name": "Operations"
     }
   ],
   "paths": {
+    "/{resourceUri}/providers/Microsoft.Inventory/subscriptionInternalProperties/{subscriptionInternalPropertyName}": {
+      "get": {
+        "operationId": "SubscriptionInternalPropertyResources_GetSubscriptionInternalPropertyResource",
+        "tags": [
+          "SubscriptionInternalPropertyResources"
+        ],
+        "description": "Gets Subscription's internal properties.",
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/Azure.ResourceManager.ResourceUriParameter"
+          },
+          {
+            "name": "subscriptionInternalPropertyName",
+            "in": "path",
+            "description": "Subscription billing properties",
+            "required": true,
+            "type": "string",
+            "default": "default"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ARM operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionInternalPropertyResource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "SubscriptionInternalPropertyResources_GetSubscriptionInternalPropertyResource": {
+            "$ref": "./examples/SubscriptionInternalPropertyResources_GetSubscriptionInternalPropertyResource_MaximumSet_Gen.json"
+          }
+        }
+      }
+    },
     "/providers/Microsoft.Inventory/locations/{location}/physicalAzureHosts": {
       "get": {
         "operationId": "AzureHosts_ListByTenant",
@@ -339,6 +386,20 @@
     }
   },
   "definitions": {
+    "AdditionalStateInformation": {
+      "type": "object",
+      "description": "Commerce object identifying additional state information associated with the subscription.",
+      "properties": {
+        "releaseNonDataRetentionResource": {
+          "type": "boolean",
+          "description": "Indicates whether the Non data retention resources can be released. This is a high confidence signal that would be set to true when the subscription is already in disabled state. To learn about Azure Data Retention policy after subscription has been disabled see"
+        },
+        "blockNewResourceCreation": {
+          "type": "boolean",
+          "description": "Indicates whether the new resource creation should be blocked. Existing resources functionality should not be impacted. This signal should be looked at when subscription state is Active. The service should be able to recover if the flag is reset to false."
+        }
+      }
+    },
     "AvailabilityZoneResourceId": {
       "type": "string",
       "format": "arm-id",
@@ -431,6 +492,89 @@
         ]
       }
     },
+    "BillingAccount": {
+      "type": "object",
+      "description": "Billing account of the customer that holds customer payment instrument, address etc. The subscription is always linked to a billing account.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique Id identifying the commerce object for the billing account."
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "BillingProperties": {
+      "type": "object",
+      "description": "The Subscription billing properties",
+      "properties": {
+        "additionalStateInformation": {
+          "$ref": "#/definitions/AdditionalStateInformation",
+          "description": "Commerce object identifying additional state information associated with the subscription."
+        },
+        "billingAccount": {
+          "$ref": "#/definitions/BillingAccount",
+          "description": "Billing account of the customer that holds customer payment instrument, address etc. The subscription is always linked to a billing account."
+        },
+        "billingType": {
+          "$ref": "#/definitions/BillingType",
+          "description": "Indicates the commerce stack that this account is on - modern or legacy"
+        },
+        "channelType": {
+          "$ref": "#/definitions/ChannelType",
+          "description": "Indicates the sales motion that this subscription type belongs to. This can be changed if a subscription moves from one channel type to another (e.g., CustomerLed to PartnerLed)"
+        },
+        "paymentType": {
+          "$ref": "#/definitions/PaymentType",
+          "description": "Differentiates how customer is paying for the subscription. This can change if customer changes from free to paid, etc."
+        },
+        "tier": {
+          "$ref": "#/definitions/Tier",
+          "description": "Customer segment"
+        },
+        "workloadType": {
+          "$ref": "#/definitions/WorkloadType",
+          "description": "Indicates the importance of this subscription. DevTest subscriptions get lower SLA compared to Production ones. This property can be changed later if needed as well."
+        }
+      },
+      "required": [
+        "additionalStateInformation",
+        "billingAccount",
+        "billingType",
+        "channelType",
+        "paymentType",
+        "tier",
+        "workloadType"
+      ]
+    },
+    "BillingType": {
+      "type": "string",
+      "description": "Subscription state image type",
+      "enum": [
+        "Legacy",
+        "Modern"
+      ],
+      "x-ms-enum": {
+        "name": "BillingType",
+        "modelAsString": true
+      }
+    },
+    "ChannelType": {
+      "type": "string",
+      "description": "Subscription state image type",
+      "enum": [
+        "None",
+        "Internal",
+        "FieldLed",
+        "CustomerLed",
+        "PartnerLed"
+      ],
+      "x-ms-enum": {
+        "name": "ChannelType",
+        "modelAsString": true
+      }
+    },
     "ClusterProperties": {
       "type": "object",
       "description": "Cluster Properties",
@@ -510,6 +654,22 @@
       "required": [
         "value"
       ]
+    },
+    "CostCategory": {
+      "type": "string",
+      "description": "CostCategory for internal subscription",
+      "enum": [
+        "None",
+        "FR",
+        "FG",
+        "FS",
+        "FX",
+        "FB"
+      ],
+      "x-ms-enum": {
+        "name": "CostCategory",
+        "modelAsString": true
+      }
     },
     "DatacenterProperties": {
       "type": "object",
@@ -618,6 +778,81 @@
         ]
       }
     },
+    "InternalSubscriptionPolicies": {
+      "type": "object",
+      "description": "The Internal Subscription policies",
+      "properties": {
+        "costCategory": {
+          "$ref": "#/definitions/CostCategory",
+          "description": "Cost categorizations used for internal subscriptions."
+        },
+        "environment": {
+          "type": "string",
+          "description": "Environment for the internal subscription."
+        },
+        "pcCode": {
+          "type": "string",
+          "description": "PCCode for the internal subscription."
+        }
+      },
+      "required": [
+        "costCategory",
+        "environment",
+        "pcCode"
+      ]
+    },
+    "PaymentType": {
+      "type": "string",
+      "description": "Subscription state image type",
+      "enum": [
+        "None",
+        "Paid",
+        "Free",
+        "Entitlement",
+        "SponsoredPlus",
+        "Sponsored",
+        "Benefit"
+      ],
+      "x-ms-enum": {
+        "name": "PaymentType",
+        "modelAsString": true
+      }
+    },
+    "PromotionData": {
+      "type": "object",
+      "description": "Promtion",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "promotion category free vs pay-as-you-go"
+        },
+        "endDateTime": {
+          "type": "string",
+          "description": "promotion end date time"
+        }
+      },
+      "required": [
+        "category",
+        "endDateTime"
+      ]
+    },
+    "PromotionsList": {
+      "type": "object",
+      "description": "List of promotions",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "Promtion",
+          "items": {
+            "$ref": "#/definitions/PromotionData"
+          },
+          "x-ms-identifiers": []
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
     "ProvisioningState": {
       "type": "string",
       "description": "Provisionsingin state enum",
@@ -701,7 +936,168 @@
           }
         ]
       }
+    },
+    "State": {
+      "type": "string",
+      "description": "Subscription state",
+      "enum": [
+        "Registered",
+        "Unregistered",
+        "Warned",
+        "Suspended",
+        "Deleted"
+      ],
+      "x-ms-enum": {
+        "name": "State",
+        "modelAsString": true
+      }
+    },
+    "SubscriptionInternalProperties": {
+      "type": "object",
+      "description": "The Subscription internal properties",
+      "properties": {
+        "billingProperties": {
+          "$ref": "#/definitions/BillingProperties",
+          "description": "Billing properties."
+        },
+        "subscriptionId": {
+          "type": "string",
+          "description": "Subscription Id"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Subscription diplay name"
+        },
+        "entitlementStartDate": {
+          "type": "string",
+          "description": "Entitilement start date"
+        },
+        "offerCategory": {
+          "type": "string",
+          "description": "Offer Category"
+        },
+        "offerType": {
+          "type": "string",
+          "description": "offer Type"
+        },
+        "promotions": {
+          "$ref": "#/definitions/PromotionsList",
+          "description": "Promotions"
+        },
+        "state": {
+          "$ref": "#/definitions/State",
+          "description": "Current state of subscription"
+        },
+        "subscriptionPolicies": {
+          "$ref": "#/definitions/SubscriptionPolicies",
+          "description": "Subscription policies"
+        },
+        "internalSubscriptionPolicies": {
+          "$ref": "#/definitions/InternalSubscriptionPolicies",
+          "description": "internal subscription policies"
+        },
+        "tenantId": {
+          "type": "string",
+          "description": "Tenant Id"
+        },
+        "changedTime": {
+          "type": "string",
+          "description": "Changed Time"
+        },
+        "createdTime": {
+          "type": "string",
+          "description": "Created Time"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "Provisionsing state"
+        }
+      },
+      "required": [
+        "subscriptionId",
+        "tenantId"
+      ]
+    },
+    "SubscriptionInternalPropertyResource": {
+      "type": "object",
+      "description": "Concrete extension resource types can be created by aliasing this type using a specific property type.",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/SubscriptionInternalProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true,
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ]
+    },
+    "SubscriptionPolicies": {
+      "type": "object",
+      "description": "The Subscription policies",
+      "properties": {
+        "locationPlacementId": {
+          "type": "string",
+          "description": "The placement requirement for the subscription based on its country of origin / offer type / offer category / etc. This is used in geo-fencing of certain regions or regulatory boundaries (e.g. Australia ring-fencing)."
+        },
+        "quotaId": {
+          "type": "string",
+          "description": "The quota requirement for the subscription based on the offer type / category (e.g. free vs. pay-as-you-go). This can be used to inform quota information for the subscription (e.g. max # of resource groups or max # of virtual machines."
+        },
+        "spendingLimit": {
+          "type": "string",
+          "description": "Indicates whether subscription has spending limit."
+        }
+      },
+      "required": [
+        "locationPlacementId",
+        "quotaId",
+        "spendingLimit"
+      ]
+    },
+    "Tier": {
+      "type": "string",
+      "description": "Subscription state image type",
+      "enum": [
+        "Unknown",
+        "Standard",
+        "Premium",
+        "Priority"
+      ],
+      "x-ms-enum": {
+        "name": "Tier",
+        "modelAsString": true
+      }
+    },
+    "WorkloadType": {
+      "type": "string",
+      "description": "Subscription state image type",
+      "enum": [
+        "None",
+        "DevTest",
+        "Production"
+      ],
+      "x-ms-enum": {
+        "name": "WorkloadType",
+        "modelAsString": true
+      }
     }
   },
-  "parameters": {}
+  "parameters": {
+    "Azure.ResourceManager.ResourceUriParameter": {
+      "name": "resourceUri",
+      "in": "path",
+      "description": "The fully qualified Azure Resource manager identifier of the resource.",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method",
+      "x-ms-skip-url-encoding": true
+    }
+  }
 }

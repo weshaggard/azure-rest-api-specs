@@ -7,6 +7,7 @@ import "@azure-tools/typespec-azure-resource-manager";
 import "./models/azureHost.tsp";
 import "./models/cluster.tsp";
 import "./models/datacenter.tsp";
+import "./models/subscriptioninternalproperty.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -17,7 +18,7 @@ using Azure.ResourceManager.Foundations;
 @armProviderNamespace
 @service({
   title: "Microsoft Inventory",
-  version: "2023-08-16-preview",
+  version: "2023-09-20-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.Inventory;
@@ -68,6 +69,20 @@ model DatacenterResource is ProxyResource<DatacenterProperties> {
 interface Datacenters {
   getDatacenter is ArmLocResourceRead<DatacenterResource>;
   listDatacenters is ArmLocResourceListByParent<DatacenterResource>;
+}
+
+model SubscriptionInternalPropertyResource is ExtensionResource<SubscriptionInternalProperties> {
+  @segment("subscriptionInternalProperties")
+  @doc("Subscription billing properties")
+  @key("subscriptionInternalPropertyName")
+  @path
+  name: string = "default";
+}
+
+@armResourceOperations
+interface SubscriptionInternalPropertyResources {
+  @doc("Gets Subscription's internal properties.")
+  getSubscriptionInternalPropertyResource is ArmResourceRead<SubscriptionInternalPropertyResource>;
 }
 
 interface Operations extends Azure.ResourceManager.Operations {}
