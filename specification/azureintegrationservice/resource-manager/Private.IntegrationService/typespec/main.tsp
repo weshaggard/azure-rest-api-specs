@@ -193,9 +193,16 @@ interface Applications {
     >;
 
     @doc("The save business process development artifact action.")
+    validateBusinessProcessDevelopmentArtifact is ArmResourceActionRawSync<
+        Application,
+        SaveOrValidateBusinessProcessDevelopmentArtifactRequest,
+        SuccessfulBusinessProcessDevelopmentArtifactResponse
+    >;
+
+    @doc("The save business process development artifact action.")
     saveBusinessProcessDevelopmentArtifact is ArmResourceActionSync<
         Application,
-        SaveBusinessProcessDevelopmentArtifactRequest,
+        SaveOrValidateBusinessProcessDevelopmentArtifactRequest,
         SaveOrGetBusinessProcessDevelopmentArtifactResponse        
     >;
 
@@ -216,7 +223,7 @@ interface Applications {
     deleteBusinessProcessDevelopmentArtifact is ArmResourceActionRawSync<
         Application,
         GetOrDeleteBusinessProcessDevelopmentArtifactRequest,
-        DeleteBusinessProcessDevelopmentArtifactResponse
+        SuccessfulBusinessProcessDevelopmentArtifactResponse
     >;
 }
 
