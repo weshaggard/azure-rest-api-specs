@@ -11,8 +11,8 @@ using Autorest;
 
 namespace Microsoft.AzureCIS;
 
-@doc("dsmsRootFolderProvider properties")
-model DsmsRootFolderProviderResourceProperties {
+@doc("dsmsRootFolder properties")
+model DsmsRootFolderResourceProperties {
   @doc("The ServiceTreeId that owns the new root folder")
   serviceTreeId?: string;
 
@@ -25,16 +25,16 @@ model DsmsRootFolderProviderResourceProperties {
 
   @doc("Provisioning state")
   @visibility("read")
-  provisioningState?: dsmsRootFolderProviderProvisioningState;
+  provisioningState?: dsmsRootFolderProvisioningState;
 }
 
-@doc("dsmsRootFolderProvider Resource")
-model DsmsRootFolderProviderResource
-  is ProxyResource<DsmsRootFolderProviderResourceProperties> { // this can be TrackedResource based on resourcetype
+@doc("dsmsRootFolder Resource")
+model DsmsRootFolderResource
+  is ProxyResource<DsmsRootFolderResourceProperties> { // this can be TrackedResource based on resourcetype
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("dsmsRootFolderProvider") // start with lower case
+  @segment("dsmsRootFolders") // start with lower case
   @visibility("read")
   @path
   name: string;
@@ -42,19 +42,19 @@ model DsmsRootFolderProviderResource
 
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
-interface DsmsRootFolderProvider {
-  @doc(" dsmsRootFolderProvider creation")
+interface DsmsRootFolder {
+  @doc(" dsmsRootFolder creation")
   @example(
-    "./examples/CreateDsmsRootFolderProvider.json",
-    "Create dsmsRootFolderProvider"
+    "./examples/CreateDsmsRootFolder.json",
+    "Create dsmsRootFolder"
   )
-  createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsRootFolderProviderResource>;
-  listBySubscription is ArmListBySubscription<DsmsRootFolderProviderResource>;
-  listByResourceGroup is ArmResourceListByParent<DsmsRootFolderProviderResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsRootFolderResource>;
+  listBySubscription is ArmListBySubscription<DsmsRootFolderResource>;
+  listByResourceGroup is ArmResourceListByParent<DsmsRootFolderResource>;
 }
 
 @doc("Provisioning status of the resource.")
-enum dsmsRootFolderProviderProvisioningState {
+enum dsmsRootFolderProvisioningState {
   ...ResourceProvisioningState,
 
   @doc("Accepted State")

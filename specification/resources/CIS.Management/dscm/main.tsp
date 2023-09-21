@@ -1,7 +1,7 @@
 import "./dsmsallowlist.tsp";
 import "./dstsserviceaccount.tsp";
 import "./dstsapplications.tsp";
-import "./dsmsrootfolderprovider.tsp";
+import "./dsmsrootfolder.tsp";
 
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
