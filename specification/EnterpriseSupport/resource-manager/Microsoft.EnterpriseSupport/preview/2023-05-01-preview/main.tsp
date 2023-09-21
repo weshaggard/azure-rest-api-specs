@@ -1,5 +1,6 @@
 import "@typespec/http";
 import "@typespec/rest";
+import "@typespec/openapi";
 import "@typespec/versioning";
 import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
@@ -74,7 +75,7 @@ model EnterpriseSupportsResponseProperties {
 	termId: string;
 
 	@doc("Quantity for the purchase")
-	quantity: integer;
+	quantity: int32;
 
 	@doc("Service start date for  Enterprise Support")
 	serviceStartDate: utcDateTime;
@@ -89,77 +90,55 @@ model EnterpriseSupportsResponseProperties {
 @doc("The request for an eligibility check.")
 model ValidateEnterpriseSupportRequestItem {
 	@doc("The array of line items to be validated")
+    @OpenAPI.extension("x-ms-identifiers",[])
 	lineItems: Array<LineItem>;
 }
 
 @doc("The item to be validated.")
 model LineItem {
-	@doc("The billing account ID")
-	billingAccountId: string;
+	@doc("The purchasing scope")
+	scope: string;
 
-	@doc("The billing group ID")
-	billingGroupId: string;
-
-	@doc("The product ID.")
-	productId: string;
-
-	@doc("The product SKU ID.")
-	skuId: string;
+	@doc("The upn of a product.")
+	upn: string;
 
 	@doc("The quantity for this purchase")
-	quantity: integer;
+	quantity: int32;
 }
 
 @doc("The response for an eligibility check.")
 model ValidateEnterpriseSupportResponse {
 	@doc("The array of line item validations.")
-	lineItemValidations: Array<ValidateEnterpriseSupportResponseItem>;
+	@OpenAPI.extension("x-ms-identifiers",[])
+	lineItems: Array<ValidateEnterpriseSupportResponseItem>;
 }
 
 @doc("The item for an eligibility check.")
 model ValidateEnterpriseSupportResponseItem {
-	@doc("The product ID.")
-	productId: string;
+	@doc("The purchasing scope")
+	scope: string;
 
-	@doc("The product SKU ID.")
-	skuId: string;
+	@doc("The upn of a product.")
+	upn: string;
 
 	@doc("The quantity for this purchase")
-	quantity: integer;	
+	quantity: int32;
 
-	@doc("Boolean value to determine if purchase is eligible")
-	isEligible: boolean;	
+	@doc("Possible values are: eligible, ineligible and undetermined")
+	isEligible: string;
 
 	@doc("String reason for isEligible")
 	reason: string;
 
 	@doc("Code reason for isEligible")
-	reasonCode: integer;
-}
-
-@doc("Parameters for a custom operation.")
-model CustomParams {
-	@doc("Subscription ID")
-	@path
-	@segment("subscriptions")
-	subscriptionId: string;
-
-	@doc("Resource Group Name")
-	@path
-	@segment("resourceGroups")
-	resourceGroupName: string;
-}
-
-@armResourceOperations
-interface EnterpriseSupportsResource extends TrackedResourceOperations<EnterpriseSupports, EnterpriseSupportsResponseProperties> {
+	reasonCode: int32;
 }
 
 @autoRoute
 @armResourceOperations
 interface ProviderLevelOperations {
     @post
-	@doc("ProviderLevel operation to check eligibility to create EnterpriseSupport instance")
-    @segment("providers/Microsoft.EnterpriseSupport/ValidateEnterpriseSupport")
-    validateEnterpriseSupport(...CustomParams, @body body: ValidateEnterpriseSupportRequestItem): ArmResponse<ValidateEnterpriseSupportResponse>;
+	@doc("ProviderLevel operation to check eligibility to create Enterprise Support")
+    @segment("providers/Microsoft.EnterpriseSupport/validate")
+    validate(@body body: ValidateEnterpriseSupportRequestItem): ArmResponse<ValidateEnterpriseSupportResponse>;
 }
-
