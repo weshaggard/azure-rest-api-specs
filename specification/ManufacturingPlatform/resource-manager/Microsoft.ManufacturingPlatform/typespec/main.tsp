@@ -112,59 +112,16 @@ model MdsResourceProperties {
   @doc("Profile of Storage Created.")
   storageProfile?: StorageProfile;
 
- //@visibility("read")
- //@doc("Profile of Database Created.")
- //databaseProfile?: DatabaseProfile;
-
-  //@visibility("read", "create" ,"update")
-  //@doc("Profile of Adx Created.")
-  //adxProfile?: AdxProfile;
-
-  //@visibility("read")
-  //@doc("Profile of Adt Created.")
-  //adtProfile?: AdtProfile;
-
-    
-  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
-  /** renaming adxProfile to old oldAdxProfile. doing to enable change of visiblity */
-  @doc("Profile of Database Created.")
-  @removed(Versions.v2024_02_01_preview)
-  @renamedFrom(Versions.v2024_02_01_preview, "databaseProfile")
   @visibility("read")
-  oldDatabaseProfile?: DatabaseProfile;
-
-  
   @doc("Profile of Database Created.")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
   databaseProfile?: DatabaseProfile;
 
-
-  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
-  /** renaming adxProfile to old oldAdxProfile. doing to enable change of visiblity */
-  @doc("Profile of Adx Created.")
-  @removed(Versions.v2024_02_01_preview)
-  @renamedFrom(Versions.v2024_02_01_preview, "adxProfile")
   @visibility("read")
-  oldAdxProfile?: AdxProfile;
-
-  
   @doc("Profile of Adx Created.")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
   adxProfile?: AdxProfile;
 
-  #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning" "Preview versions"
-  /** renaming adtProfile to old oldAdtProfile. doing to enable change of visiblity. */
-  @doc("Profile of Adt Created.")
-  @removed(Versions.v2024_02_01_preview)
-  @renamedFrom(Versions.v2024_02_01_preview, "adtProfile")
   @visibility("read")
-  oldAdtProfile?: AdtProfile;
-
   @doc("Profile of Adt Created.")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
   adtProfile?: AdtProfile;
   
   @visibility("read")
@@ -205,14 +162,24 @@ model MdsResourceProperties {
   @doc("Profile of Azure Machine Learning Resource.")
   amlProfile?: AmlProfile;
 
+  @doc("Profile of User Managed Database.")
+  @added(Versions.v2024_02_01_preview)
   @visibility("read", "create")
-  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-  @doc("Enable CMK.")
-  enableCmk?: boolean;
+  userManagedDatabaseProfile?: UserManagedDatabaseProfile;
+ 
+  @doc("Profile of User Manged Adx.")
+  @added(Versions.v2024_02_01_preview)
+  @visibility("read", "create")
+  userMangedAdxProfile?: UserManagedAdxProfile;
 
+  @doc("Profile of User Managed Adt .")
+  @added(Versions.v2024_02_01_preview)
+  @visibility("read", "create")
+  userManagedAdtProfile?: UserManagedAdtProfile;
+  
   @visibility("read", "create")
   @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-  @doc("CMK Settings.")
+  @doc("Profile of CMK Settings.")
   cmkProfile?: CmkProfile;
  
 }
@@ -240,12 +207,6 @@ model DatabaseProfile {
   @doc("Resource Id of Cosmos Resource")
   @visibility("read")
   cosmosId?: string;
-
-  @doc("Resource Id of User Managed Cosmos Resource.")
-  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-  @visibility("read", "create")
-  userManagedId?: string;
-
 }
 
 
@@ -264,11 +225,6 @@ model AdxProfile {
   @visibility("read")
   dataIngestionUri?: string;
 
-  @doc("Resource Id of User Managed Adx Resource.")
-  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-  @visibility("read", "create")
-  userManagedId?: string;
-
 }
 
 
@@ -283,13 +239,50 @@ model AdtProfile {
   @visibility("read")
   hostName?: string;
 
-  @doc("Resource Id of User Managed Adt Resource.")
-  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+}
+
+@doc("The properties related to User Managed Database Resource")
+@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+model UserManagedDatabaseProfile {
+
+  @doc("Resource Id of Cosmos Resource")
+  @visibility("read","create")
+  cosmosId: string;
+  
+}
+
+@doc("The properties related to User Managed Azure Data Explorer (Adx) Resource")
+@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+model UserManagedAdxProfile {
+
+  @doc("Resource Id of Adx Resource")
   @visibility("read", "create")
-  userManagedId?: string;
+  id: string;
+
+  @doc("Uri of Adx Resource")
+  @visibility("read")
+  uri?: string;
+
+  @doc("Data Ingestion Uri of Adx Resource")
+  @visibility("read")
+  dataIngestionUri?: string;
 
 }
 
+
+@doc("The properties related to User Managed Azure Digital Twin (Adt) Resource")
+@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
+model UserManagedAdtProfile {
+  
+  @doc("Resource Id of Adt Resource")
+  @visibility("read","create")
+  id: string;
+  
+  @doc("Host Name")
+  @visibility("read")
+  hostName?: string;
+
+}
 
 @doc("The properties related to Azure Key Vault (Akv) Resource")
 model AkvProfile {
@@ -392,7 +385,7 @@ model CmkProfile {
   
   @doc("URI of Key in AKV")
   @visibility("read","create")
-  keyUri?: string;
+  keyUri: string;
 }
 
 @armResourceOperations(MdsResource)

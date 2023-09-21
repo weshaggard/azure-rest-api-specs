@@ -157,61 +157,6 @@
             }
           }
         }
-      },
-      "patch": {
-        "operationId": "provisionedClusterInstances_Update",
-        "x-ms-examples": {
-          "UpdateProvisionedClusterInstance": {
-            "$ref": "./examples/UpdateProvisionedClusterInstance.json"
-          }
-        },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "summary": "Updates the provisioned cluster instance",
-        "description": "Updates the Hybrid AKS provisioned cluster instance",
-        "parameters": [
-          {
-            "$ref": "#/parameters/connectedClusterResourceUriParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "name": "provisionedClusterInstance",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/provisionedClustersPatch"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success. Updated the provisionedClusterInstances resource.",
-            "schema": {
-              "$ref": "#/definitions/provisionedClusters"
-            }
-          },
-          "202": {
-            "description": "Updates the provisionedClusterInstances resource.",
-            "headers": {
-              "Location": {
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/provisionedClusters"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ErrorResponse"
-            }
-          }
-        }
       }
     },
     "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances": {
@@ -1213,10 +1158,6 @@
     "provisionedClusterProperties": {
       "type": "object",
       "properties": {
-        "aadProfile": {
-          "description": "AAD profile for the provisioned cluster.",
-          "$ref": "#/definitions/AADProfile"
-        },
         "enableRbac": {
           "type": "boolean",
           "description": "EnableRBAC - Whether to enable Kubernetes Role-Based Access Control."
@@ -1224,16 +1165,6 @@
         "linuxProfile": {
           "description": "LinuxProfile - The profile for Linux VMs in the Provisioned Cluster.",
           "$ref": "#/definitions/LinuxProfileProperties"
-        },
-        "features": {
-          "type": "object",
-          "description": "Additional features specs like Arc Agent Onboarding.",
-          "properties": {
-            "arcAgentProfile": {
-              "description": "Arc agentry configuration for the provisioned cluster.",
-              "$ref": "#/definitions/ArcAgentProfile"
-            }
-          }
         },
         "controlPlane": {
           "$ref": "#/definitions/ControlPlaneProfile",
@@ -1317,14 +1248,6 @@
           },
           "description": "HybridAKSClusterStatus defines the observed state of HybridAKSCluster"
         },
-        "securityProfile": {
-          "$ref": "#/definitions/ProvisionedClusterSecurityProfile",
-          "description": "The security profile for the provisioned cluster."
-        },
-        "oidcIssuerProfile": {
-          "$ref": "#/definitions/ProvisionedClusterOIDCIssuerProfile",
-          "description": "The OIDC issuer profile of the provisioned cluster."
-        },
         "licenseProfile": {
           "$ref": "#/definitions/ProvisionedClusterLicenseProfile",
           "description": "The license profile of the provisioned cluster."
@@ -1336,15 +1259,8 @@
       "type": "object",
       "x-ms-azure-resource": true,
       "properties": {
-        "identity": {
-          "$ref": "#/definitions/provisionedClusterIdentity"
-        },
         "properties": {
           "$ref": "#/definitions/provisionedClusterProperties"
-        },
-        "systemData": {
-          "readOnly": true,
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
         },
         "extendedLocation": {
           "$ref": "#/definitions/ExtendedLocation"
@@ -1352,27 +1268,10 @@
       },
       "allOf": [
         {
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ProxyResource"
         }
       ],
       "description": "The provisionedClusterInstances resource definition."
-    },
-    "provisionedClustersPatch": {
-      "type": "object",
-      "properties": {
-        "tags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Resource tags"
-        },
-        "identity": {
-          "$ref": "#/definitions/provisionedClusterIdentity",
-          "description": "The identity of the provisioned cluster."
-        }
-      },
-      "description": "The provisionedClusterInstances resource patch definition."
     },
     "provisionedClustersListResult": {
       "type": "object",
@@ -1603,68 +1502,6 @@
         }
       }
     },
-    "AADProfile": {
-      "type": "object",
-      "description": "AAD Profile specifies attributes for Azure Active Directory integration.",
-      "properties": {
-        "adminGroupObjectIDs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The list of AAD group object IDs that will have admin role of the cluster."
-        },
-        "enableAzureRbac": {
-          "type": "boolean",
-          "description": "Whether to enable Azure RBAC for Kubernetes authorization."
-        },
-        "managed": {
-          "type": "boolean",
-          "description": "Whether to enable managed AAD."
-        },
-        "tenantID": {
-          "type": "string",
-          "description": "The AAD tenant ID to use for authentication. If not specified, will use the tenant of the deployment subscription."
-        }
-      }
-    },
-    "ProvisionedClusterSecurityProfile": {
-      "type": "object",
-      "properties": {
-        "workloadIdentity": {
-          "$ref": "#/definitions/ProvisionedClusterSecurityProfileWorkloadIdentity",
-          "description": "Workload identity settings for the security profile. Workload identity enables Kubernetes applications to access Azure cloud resources securely with Azure AD."
-        }
-      },
-      "description": "The security profile for the provisioned cluster."
-    },
-    "ProvisionedClusterSecurityProfileWorkloadIdentity": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "description": "Whether the workload identity is enabled.",
-          "default": false
-        }
-      },
-      "description": "The workload identity profile of the provisioned cluster."
-    },
-    "ProvisionedClusterOIDCIssuerProfile": {
-      "type": "object",
-      "properties": {
-        "issuerURL": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The OIDC issuer url of the provisioned cluster."
-        },
-        "enabled": {
-          "type": "boolean",
-          "description": "Whether the OIDC issuer is enabled.",
-          "default": false
-        }
-      },
-      "description": "The OIDC issuer profile of the provisioned cluster."
-    },
     "ProvisionedClusterLicenseProfile": {
       "type": "object",
       "properties": {
@@ -1724,6 +1561,18 @@
     "NetworkProfile": {
       "type": "object",
       "properties": {
+        "loadBalancerProfile": {
+          "type": "object",
+          "description": "LoadBalancerProfile - Profile of the cluster load balancer.",
+          "properties": {
+            "count": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Count - Number of load balancer VMs. The default value is 0.",
+              "default": 0
+            }
+          }
+        },
         "networkPolicy": {
           "type": "string",
           "description": "NetworkPolicy - Network policy used for building Kubernetes network. Possible values include: 'calico', 'flannel'. Default is 'calico'",
@@ -1816,29 +1665,6 @@
         }
       }
     },
-    "ArcAgentProfile": {
-      "description": "Defines the Arc Agent properties for the Provisioned clusters.",
-      "type": "object",
-      "properties": {
-        "agentVersion": {
-          "type": "string",
-          "description": "Version of the Arc agents to be installed on the provisioned Provisioned cluster resource"
-        },
-        "agentAutoUpgrade": {
-          "type": "string",
-          "description": "Indicates whether the Arc agents on the provisioned clusters be upgraded automatically to the latest version. Defaults to Enabled.",
-          "default": "Enabled",
-          "enum": [
-            "Enabled",
-            "Disabled"
-          ],
-          "x-ms-enum": {
-            "name": "AutoUpgradeOptions",
-            "modelAsString": true
-          }
-        }
-      }
-    },
     "ArcAgentStatus": {
       "description": "Defines the observed Arc Agent status that is resourceSynced back to the ARM resource.",
       "type": "object",
@@ -1864,63 +1690,8 @@
         "errorMessage": {
           "type": "string",
           "description": "Error messages while onboarding/upgrading/uninstalling the Arc agents"
-        },
-        "onboardingPublicKey": {
-          "type": "string",
-          "description": "Onboarding public key for provisioning the Managed identity for the HybridAKS cluster. Will be used to create the hybridIdentityMetadata proxy resource and will not be persisted."
-        },
-        "agentVersion": {
-          "type": "string",
-          "description": "Version of the Arc agents currently running on the Provisioned cluster resource."
-        },
-        "coreCount": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Number of CPU cores present in the Provisioned cluster resource"
-        },
-        "managedIdentityCertificateExpirationTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "ManagedIdentity certificate expiration time (ValidUntil)."
-        },
-        "lastConnectivityTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Last connected timestamp of the Provisioned cluster resource."
         }
       }
-    },
-    "provisionedClusterIdentity": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "principalId": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The principal id of provisioned cluster identity. This property will only be provided for a system assigned identity."
-        },
-        "tenantId": {
-          "readOnly": true,
-          "type": "string",
-          "description": "The tenant id associated with the provisioned cluster. This property will only be provided for a system assigned identity."
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of identity used for the provisioned cluster. The type SystemAssigned, includes a system created identity. The type None means no identity is assigned to the provisioned cluster.",
-          "enum": [
-            "None",
-            "SystemAssigned"
-          ],
-          "default": "SystemAssigned",
-          "x-ms-enum": {
-            "name": "ResourceIdentityType",
-            "modelAsString": false
-          }
-        }
-      },
-      "description": "Identity for the Provisioned cluster."
     },
     "hybridIdentityMetadata": {
       "description": "Defines the hybridIdentityMetadata.",
@@ -1958,10 +1729,6 @@
         "publicKey": {
           "description": "Onboarding public key for provisioning the Managed identity for the HybridAKS cluster.",
           "type": "string"
-        },
-        "identity": {
-          "$ref": "#/definitions/provisionedClusterIdentity",
-          "description": "The identity of the provisioned cluster."
         },
         "provisioningState": {
           "$ref": "#/definitions/ProvisioningState"

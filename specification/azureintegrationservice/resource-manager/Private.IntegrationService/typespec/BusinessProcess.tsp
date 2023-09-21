@@ -51,6 +51,12 @@ model BusinessProcessProperties {
     @doc("The description of the business process.")
     description?: string;
 
+    @doc("The table name of the business process.")
+    tableName?: string;
+
+    @doc("The tracking data store reference name.")
+    trackingDataStoreReferenceName?: string;
+
     @doc("The business process identifier.")
     identifier?: BusinessProcessIdentifier;
 
@@ -59,7 +65,4 @@ model BusinessProcessProperties {
 
     @doc("The business process mapping.")
     businessProcessMapping?: Record<BusinessProcessMappingItem>;
-
-    @doc("The tracking data store reference name.")
-    trackingDataStoreReferenceName?: string;
 }
