@@ -14,23 +14,11 @@ using Azure.ResourceManager;
 
 @armProviderNamespace("Microsoft.ManufacturingPlatform")
 @service({
-  title: "Microsoft.ManufacturingPlatform"
+  title: "Microsoft.ManufacturingPlatform",
+  version: "2023-02-01-preview",
 })
-
-@versioned(Microsoft.ManufacturingPlatform.Versions)
+@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.ManufacturingPlatform;
-
-
-@doc("Supported API versions for the Microsoft.ManufacturingPlatform resource provider.")
-enum Versions {
-  @doc("The 2023-02-01-preview version.")
-  @Versioning.useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-  v2023_02_01_preview: "2023-02-01-preview",
-
-  @doc("The 2024-02-01-preview version.")
-  @Versioning.useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-  v2024_02_01_preview: "2024-02-01-preview",
-}
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -45,10 +33,8 @@ model MdsResource is TrackedResource<MdsResourceProperties> {
   name: string;
 
   ...ManagedServiceIdentity;
-  ...ResourceSku;
 }
 
-@@added(MdsResource.sku ,Versions.v2024_02_01_preview);
 
 @doc("The status of the current operation.")
 @Azure.Core.lroStatus
@@ -99,7 +85,7 @@ model MdsResourceProperties {
   @visibility("read", "create")
   @doc("Continuous Export Period.")
   continuousExportPeriod: int32;
-
+      
   @visibility("read")
   @doc("Service Url")
   serviceUrl?: string;
@@ -156,37 +142,11 @@ model MdsResourceProperties {
   @visibility("read")
   @doc("Configuration of the managed resource group associated with the resource.")
   managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
-
-  @visibility("read")
-  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-  @doc("Profile of Azure Machine Learning Resource.")
-  amlProfile?: AmlProfile;
-
-  @doc("Profile of User Managed Database.")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
-  userManagedDatabaseProfile?: UserManagedDatabaseProfile;
-
-  @doc("Profile of User Manged Adx.")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
-  userMangedAdxProfile?: UserManagedAdxProfile;
-
-  @doc("Profile of User Managed Adt .")
-  @added(Versions.v2024_02_01_preview)
-  @visibility("read", "create")
-  userManagedAdtProfile?: UserManagedAdtProfile;
-
-  @visibility("read", "create")
-  @added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-  @doc("Profile of CMK Settings.")
-  cmkProfile?: CmkProfile;
-
 }
 
 @doc("The properties related to Aks Resource")
 model AksProfile {
-
+  
   @doc("Resource Id of AKS Resource")
   @visibility("read")
   id?: string;
@@ -194,7 +154,7 @@ model AksProfile {
 
 @doc("The properties related to Storage Resource")
 model StorageProfile {
-
+  
   @doc("Resource Id of Storage Resource")
   @visibility("read")
   id?: string;
@@ -212,7 +172,7 @@ model DatabaseProfile {
 
 @doc("The properties related to Azure Data Explorer (Adx) Resource")
 model AdxProfile {
-
+  
   @doc("Resource Id of Adx Resource")
   @visibility("read")
   id?: string;
@@ -230,7 +190,7 @@ model AdxProfile {
 
 @doc("The properties related to Azure Digital Twin (Adt) Resource")
 model AdtProfile {
-
+  
   @doc("Resource Id of Adt Resource")
   @visibility("read")
   id?: string;
@@ -241,81 +201,39 @@ model AdtProfile {
 
 }
 
-@doc("The properties related to User Managed Database Resource")
-@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-model UserManagedDatabaseProfile {
-
-  @doc("Resource Id of Cosmos Resource")
-  @visibility("read","create")
-  cosmosId: string;
-
-}
-
-@doc("The properties related to User Managed Azure Data Explorer (Adx) Resource")
-@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-model UserManagedAdxProfile {
-
-  @doc("Resource Id of Adx Resource")
-  @visibility("read", "create")
-  id: string;
-
-  @doc("Uri of Adx Resource")
-  @visibility("read")
-  uri?: string;
-
-  @doc("Data Ingestion Uri of Adx Resource")
-  @visibility("read")
-  dataIngestionUri?: string;
-
-}
-
-
-@doc("The properties related to User Managed Azure Digital Twin (Adt) Resource")
-@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-model UserManagedAdtProfile {
-
-  @doc("Resource Id of Adt Resource")
-  @visibility("read","create")
-  id: string;
-
-  @doc("Host Name")
-  @visibility("read")
-  hostName?: string;
-
-}
 
 @doc("The properties related to Azure Key Vault (Akv) Resource")
 model AkvProfile {
-
+  
   @doc("Resource Id of Akv Resource")
   @visibility("read")
   id?: string;
-
+    
 }
 
 
 @doc("The properties related to Azure Redis Cache Resource")
 model RedisProfile {
-
+  
   @doc("Resource Id of Azure Redis Cache Resource")
   @visibility("read")
   id?: string;
-
+    
 }
 
 
 @doc("The properties related to Monitoring Resource")
 model MonitoringProfile {
-
+  
   @doc("Resource Id of Application Insights Resource")
   @visibility("read")
   id?: string;
-
+    
 }
 
 @doc("The properties related to Synapse Resource")
 model SynapseProfile {
-
+  
   @doc("Resource Id of Synapse Resource")
   @visibility("read")
   id?: string;
@@ -328,7 +246,7 @@ model SynapseProfile {
 
 @doc("The properties related to EventHub Resource")
 model EventHubProfile {
-
+  
   @doc("Resource Id of Ingestion Instance EventHub Resource")
   @visibility("read")
   ingestionInstanceId?: string;
@@ -344,21 +262,21 @@ model EventHubProfile {
 
 @doc("The properties related to Azure Function App Resource")
 model FunctionAppProfile {
-
+  
   @doc("Resource Id of Azure Function App Resource")
   @visibility("read")
   id?: string;
-
+    
 }
 
 #suppress "@azure-tools/typespec-azure-core/casing-style" "AI is a well-known abbreviation"
 @doc("The properties related to OpenAI Resource")
 model OpenAIProfile {
-
+  
   @doc("Resource Id of OpenAI Resource")
   @visibility("read")
   id?: string;
-
+    
 }
 
 @doc("Configuration of the managed resource group associated with the resource.")
@@ -370,23 +288,7 @@ model ManagedResourceGroupConfiguration {
   location: string;
 }
 
-@doc("The properties related to Azure Machine Learning Resource")
-@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-model AmlProfile {
 
-  @doc("Resource Id of Azure Machine Learning Resource")
-  @visibility("read")
-  id?: string;
-}
-
-@doc("The properties related to CMK")
-@added(Microsoft.ManufacturingPlatform.Versions.v2024_02_01_preview)
-model CmkProfile {
-
-  @doc("URI of Key in AKV")
-  @visibility("read","create")
-  keyUri: string;
-}
 
 @armResourceOperations(MdsResource)
 interface ManufacturingDataServices  {
@@ -399,7 +301,6 @@ interface ManufacturingDataServices  {
 
   @doc("Returns the list of available versions")
   listAvailableVersions is ArmResourceListActionSync<MdsResource, AvailableVersionListResult>;
-
 }
 
 
