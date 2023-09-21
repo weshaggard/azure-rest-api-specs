@@ -1,5 +1,6 @@
 import "@typespec/http";
 import "@typespec/rest";
+import "@typespec/openapi";
 import "@typespec/versioning";
 import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
@@ -11,6 +12,7 @@ using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Azure.Core;
 using Azure.Core.Traits;
+
 
 @armProviderNamespace("Microsoft.EnterpriseSupport")
 @service({
@@ -74,7 +76,7 @@ model EnterpriseSupportsResponseProperties {
 	termId: string;
 
 	@doc("Quantity for the purchase")
-	quantity: integer;
+	quantity: int32;
 
 	@doc("Service start date for  Enterprise Support")
 	serviceStartDate: utcDateTime;
@@ -93,6 +95,7 @@ interface EnterpriseSupportsResource extends TrackedResourceOperations<Enterpris
 @doc("The request for an eligibility check.")
 model ValidateEnterpriseSupportRequestItem {
 	@doc("The array of line items to be validated")
+    @OpenAPI.extension("x-ms-identifiers",[])
 	lineItems: Array<LineItem>;
 }
 
@@ -105,12 +108,13 @@ model LineItem {
 	upn: string;
 
 	@doc("The quantity for this purchase")
-	quantity: integer;
+	quantity: int32;
 }
 
 @doc("The response for an eligibility check.")
 model ValidateEnterpriseSupportResponse {
 	@doc("The array of line item validations.")
+	@OpenAPI.extension("x-ms-identifiers",[])
 	lineItems: Array<ValidateEnterpriseSupportResponseItem>;
 }
 
@@ -123,7 +127,7 @@ model ValidateEnterpriseSupportResponseItem {
 	upn: string;
 
 	@doc("The quantity for this purchase")
-	quantity: integer;
+	quantity: int32;
 
 	@doc("Possible values are: eligible, ineligible and undetermined")
 	isEligible: string;
@@ -132,15 +136,14 @@ model ValidateEnterpriseSupportResponseItem {
 	reason: string;
 
 	@doc("Code reason for isEligible")
-	reasonCode: integer;
+	reasonCode: int32;
 }
-
 
 @autoRoute
 @armResourceOperations
 interface ProviderLevelOperations {
     @post
 	@doc("ProviderLevel operation to check eligibility to create Enterprise Support")
-    @segment("providers/Microsoft.EnterpriseSupport/validate")
+    @segment("providers/Microsoft.EnterpriseSupport/Validate")
     validate(@body body: ValidateEnterpriseSupportRequestItem): ArmResponse<ValidateEnterpriseSupportResponse>;
 }

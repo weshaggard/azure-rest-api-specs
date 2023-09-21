@@ -1,6 +1,5 @@
 import "@typespec/http";
 import "@typespec/rest";
-import "@typespec/openapi";
 import "@typespec/versioning";
 import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
@@ -9,141 +8,333 @@ import "@azure-tools/typespec-azure-resource-manager";
 using TypeSpec.Http;
 using TypeSpec.Rest;
 using TypeSpec.Versioning;
-using Azure.ResourceManager;
 using Azure.Core;
-using Azure.Core.Traits;
+using Azure.ResourceManager;
 
 
-@armProviderNamespace("Microsoft.EnterpriseSupport")
+@armProviderNamespace("Microsoft.ManufacturingPlatform")
 @service({
-  title: "Microsoft ESRP",
-  version: "2023-05-01-preview",
-  summary: "Microsoft Enterprise Support Resource Provider"
+  title: "Microsoft.ManufacturingPlatform",
+  version: "2023-02-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-@useDependency(Azure.Core.Versions.v1_0_Preview_2)
-namespace Microsoft.EnterpriseSupport;
+namespace Microsoft.ManufacturingPlatform;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
-#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-path-segment-invalid-chars" "Existing Template"
-#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-key-invalid-chars" "Existing template"
-@doc("A ESRPProviderHub resource")
-model EnterpriseSupports is TrackedResource<EnterpriseSupportsResponseProperties> {
-	@doc("The name of the  Enterprise Support")
-	@pattern("^[a-zA-Z0-9-]{3,24}$")
-	@key("EnterpriseSupportName")
-	@segment("EnterpriseSupports")
-	@path
-	name: string;
+@doc("A ManufacturingPlatformProviderHub resource")
+model MdsResource is TrackedResource<MdsResourceProperties> {
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("mdsResourceName")
+  @segment("manufacturingDataServices")
+  @doc("Name.")
+  @path
+  @visibility("read")
+  name: string;
+
+  ...ManagedServiceIdentity;
 }
+
 
 @doc("The status of the current operation.")
 @Azure.Core.lroStatus
 enum ProvisioningState {
-	...ResourceProvisioningState,
-	Provisioning,
-	Updating,
-	Deleting,
-	Accepted,
-	Deleted
+  ...ResourceProvisioningState,
+
+  @doc("Initial provisioning in progress")
+  Provisioning,
+
+  @doc("Update in progress")
+  Updating,
+
+  @doc("Deletion in progress")
+  Deleting,
+
+  @doc("Change accepted for processing")
+  Accepted,
 }
 
-@doc("Details of the ESRP EnterpriseSupport.")
-model EnterpriseSupportsResponseProperties {
-	@doc("Provisioning status")
-	provisioningState?: ProvisioningState;
+@doc("Details of the ManufacturingPlatform MdsResource.")
+model MdsResourceProperties {
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ProvisioningState;
 
-	@doc("Billing Account ID")
-	billingAccountId: string;
+  @doc("Mds Resource Version.")
+  @visibility("read", "create", "update")
+  version?: string;
 
-	@doc("Billing Group ID")
-	billingGroupId: string;
+  @visibility("read", "create", "update")
+  @doc("Enable Teams Notification.")
+  enableTeamsNotification?: boolean;
 
-	@doc("Invoice section for the billing account")
-	projectId: string;
+  @visibility("read", "create", "update")
+  @doc("Enable Copilot.")
+  enableCopilot?: boolean;
 
-	@doc("BicCat product ID")
-	productId: string;
+  @visibility("read", "create")
+  @doc("AAD Application Id.")
+  @pattern("^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$")
+  aadApplicationId: string;
 
-	@doc("BigCat SKU ID")
-	skuId: string;
+  @visibility("read", "create")
+  @doc("AKS Admin Group Id.")
+  @pattern("^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$")
+  aksAdminGroupId: string;
 
-	@doc("BigCat availability ID")
-	availabilityId: string;
+  @visibility("read", "create")
+  @doc("Continuous Export Period.")
+  continuousExportPeriod: int32;
 
-	@doc("BigCat Term ID")
-	termId: string;
+  @visibility("read")
+  @doc("Service Url")
+  serviceUrl?: string;
 
-	@doc("Quantity for the purchase")
-	quantity: int32;
+  @visibility("read")
+  @doc("Profile of AKS Created.")
+  aksProfile?: AksProfile;
 
-	@doc("Service start date for  Enterprise Support")
-	serviceStartDate: utcDateTime;
+  @visibility("read")
+  @doc("Profile of Storage Created.")
+  storageProfile?: StorageProfile;
 
-	@doc("CSAM for the  Enterprise Support")
-	csam: string;
+  @visibility("read")
+  @doc("Profile of Database Created.")
+  databaseProfile?: DatabaseProfile;
 
-	@doc("Product UPN")
-	upn: string;
+  @visibility("read")
+  @doc("Profile of Adx Created.")
+  adxProfile?: AdxProfile;
+
+  @visibility("read")
+  @doc("Profile of Adt Created.")
+  adtProfile?: AdtProfile;
+
+  @visibility("read")
+  @doc("Profile of Akv Created.")
+  akvProfile?: AkvProfile;
+
+  @visibility("read")
+  @doc("Profile of Azure Redis Created.")
+  redisProfile?: RedisProfile;
+
+  @visibility("read")
+  @doc("Profile of Synapse Created.")
+  synapseProfile?: SynapseProfile;
+
+  @visibility("read")
+  @doc("Profile of Monitoring Resource Created.")
+  monitoringProfile?: MonitoringProfile;
+
+  @visibility("read")
+  @doc("Profile of EventHub Resource.")
+  eventHubProfile?: EventHubProfile;
+
+  @visibility("read")
+  @doc("Profile of Function App Resource.")
+  functionAppProfile?: FunctionAppProfile;
+
+  #suppress "@azure-tools/typespec-azure-core/casing-style" "AI is a well-known abbreviation"
+  @visibility("read")
+  @doc("Profile of OpenAI Resource.")
+  openAIProfile?: OpenAIProfile;
+
+  @visibility("read")
+  @doc("Configuration of the managed resource group associated with the resource.")
+  managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
 }
 
-@armResourceOperations
-interface EnterpriseSupportsResource extends TrackedResourceOperations<EnterpriseSupports, EnterpriseSupportsResponseProperties> {
+@doc("The properties related to Aks Resource")
+model AksProfile {
+
+  @doc("Resource Id of AKS Resource")
+  @visibility("read")
+  id?: string;
 }
 
-@doc("The request for an eligibility check.")
-model ValidateEnterpriseSupportRequestItem {
-	@doc("The array of line items to be validated")
-    @OpenAPI.extension("x-ms-identifiers",[])
-	lineItems: Array<LineItem>;
+@doc("The properties related to Storage Resource")
+model StorageProfile {
+
+  @doc("Resource Id of Storage Resource")
+  @visibility("read")
+  id?: string;
 }
 
-@doc("The item to be validated.")
-model LineItem {
-	@doc("The purchasing scope")
-	scope: string;
 
-	@doc("The upn of a product.")
-	upn: string;
+@doc("The properties related to Database Resource")
+model DatabaseProfile {
 
-	@doc("The quantity for this purchase")
-	quantity: int32;
+  @doc("Resource Id of Cosmos Resource")
+  @visibility("read")
+  cosmosId?: string;
 }
 
-@doc("The response for an eligibility check.")
-model ValidateEnterpriseSupportResponse {
-	@doc("The array of line item validations.")
-	@OpenAPI.extension("x-ms-identifiers",[])
-	lineItems: Array<ValidateEnterpriseSupportResponseItem>;
+
+@doc("The properties related to Azure Data Explorer (Adx) Resource")
+model AdxProfile {
+
+  @doc("Resource Id of Adx Resource")
+  @visibility("read")
+  id?: string;
+
+  @doc("Uri of Adx Resource")
+  @visibility("read")
+  uri?: string;
+
+  @doc("Data Ingestion Uri of Adx Resource")
+  @visibility("read")
+  dataIngestionUri?: string;
+
 }
 
-@doc("The item for an eligibility check.")
-model ValidateEnterpriseSupportResponseItem {
-	@doc("The purchasing scope")
-	scope: string;
 
-	@doc("The upn of a product.")
-	upn: string;
+@doc("The properties related to Azure Digital Twin (Adt) Resource")
+model AdtProfile {
 
-	@doc("The quantity for this purchase")
-	quantity: int32;
+  @doc("Resource Id of Adt Resource")
+  @visibility("read")
+  id?: string;
 
-	@doc("Possible values are: eligible, ineligible and undetermined")
-	isEligible: string;
+  @doc("Host Name")
+  @visibility("read")
+  hostName?: string;
 
-	@doc("String reason for isEligible")
-	reason: string;
-
-	@doc("Code reason for isEligible")
-	reasonCode: int32;
 }
 
-@autoRoute
-@armResourceOperations
-interface ProviderLevelOperations {
-    @post
-	@doc("ProviderLevel operation to check eligibility to create Enterprise Support")
-    @segment("providers/Microsoft.EnterpriseSupport/Validate")
-    validate(@body body: ValidateEnterpriseSupportRequestItem): ArmResponse<ValidateEnterpriseSupportResponse>;
+
+@doc("The properties related to Azure Key Vault (Akv) Resource")
+model AkvProfile {
+
+  @doc("Resource Id of Akv Resource")
+  @visibility("read")
+  id?: string;
+
+}
+
+
+@doc("The properties related to Azure Redis Cache Resource")
+model RedisProfile {
+
+  @doc("Resource Id of Azure Redis Cache Resource")
+  @visibility("read")
+  id?: string;
+
+}
+
+
+@doc("The properties related to Monitoring Resource")
+model MonitoringProfile {
+
+  @doc("Resource Id of Application Insights Resource")
+  @visibility("read")
+  id?: string;
+
+}
+
+@doc("The properties related to Synapse Resource")
+model SynapseProfile {
+
+  @doc("Resource Id of Synapse Resource")
+  @visibility("read")
+  id?: string;
+
+  @doc("Synapse Development Endpoint")
+  @visibility("read")
+  devEndpoint?: string;
+}
+
+
+@doc("The properties related to EventHub Resource")
+model EventHubProfile {
+
+  @doc("Resource Id of Ingestion Instance EventHub Resource")
+  @visibility("read")
+  ingestionInstanceId?: string;
+
+  @doc("Resource Id of Data History Instance EventHub Resource")
+  @visibility("read")
+  dhInstanceId?: string;
+
+  @doc("Host Name")
+  @visibility("read")
+  hostName?: string;
+}
+
+@doc("The properties related to Azure Function App Resource")
+model FunctionAppProfile {
+
+  @doc("Resource Id of Azure Function App Resource")
+  @visibility("read")
+  id?: string;
+
+}
+
+#suppress "@azure-tools/typespec-azure-core/casing-style" "AI is a well-known abbreviation"
+@doc("The properties related to OpenAI Resource")
+model OpenAIProfile {
+
+  @doc("Resource Id of OpenAI Resource")
+  @visibility("read")
+  id?: string;
+
+}
+
+@doc("Configuration of the managed resource group associated with the resource.")
+model ManagedResourceGroupConfiguration {
+  @doc("The resource group name.")
+  name: string;
+
+  @doc("The resource group location.")
+  location: string;
+}
+
+
+
+@armResourceOperations(MdsResource)
+interface ManufacturingDataServices  {
+  get is ArmResourceRead<MdsResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<MdsResource>;
+  update is ArmResourcePatchAsync<MdsResource, MdsResourceProperties>;
+  delete is ArmResourceDeleteWithoutOkAsync<MdsResource>;
+  listByResourceGroup is ArmResourceListByParent<MdsResource>;
+  listBySubscription is ArmListBySubscription<MdsResource>;
+
+  @doc("Returns the list of available versions")
+  listAvailableVersions is ArmResourceListActionSync<MdsResource, AvailableVersionListResult>;
+}
+
+
+
+// note this is a template for an empty body resource action, which will be added to the library at some point
+#suppress "@azure-tools/typespec-azure-core/documentation-required" "This is a template"
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation-outside-interface" "This is a template"
+@armResourceAction(TResource)
+@post
+op ArmResourceListActionSync<
+  TResource extends Azure.ResourceManager.Foundations.ArmResource,
+  TResponse extends {},
+  TBaseParameters = Azure.ResourceManager.Foundations.BaseParameters<TResource>
+>(
+  ...ResourceInstanceParameters<TResource, TBaseParameters>
+): ArmResponse<TResponse> | ErrorResponse;
+
+
+@doc("The list of available versions")
+model AvailableVersionListResult {
+  @doc("The list of versions")
+  @OpenAPI.extension("x-ms-identifiers", [])
+  versions: ApplicationVersion[];
+}
+
+
+@doc("Information about application versions")
+model ApplicationVersion {
+  @doc("Application Version")
+  version: string;
+
+  @doc("Is Latest")
+  isLatest: boolean;
+
+  @doc("Is Preview")
+  isPreview: boolean;
 }
