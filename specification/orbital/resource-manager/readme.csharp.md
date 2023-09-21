@@ -11,5 +11,5 @@ csharp:
   clear-output-folder: true
   client-side-validation: false
   namespace: Microsoft.OrbitalTest
-  output-folder: $(csharp-sdks-folder)/orbital/management/Microsoft.OrbitalTest/GeneratedProtocol
+  output-folder: $(csharp-sdks-folder)/orbital/management/Microsoft.Orbital/GeneratedProtocol
 ```

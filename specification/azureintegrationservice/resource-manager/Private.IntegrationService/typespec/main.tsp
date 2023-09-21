@@ -192,7 +192,7 @@ interface Applications {
             Azure.Core.OrderByQueryParameter
     >;
 
-    @doc("The save business process development artifact action.")
+    @doc("The validate business process development artifact action.")
     validateBusinessProcessDevelopmentArtifact is ArmResourceActionRawSync<
         Application,
         SaveOrValidateBusinessProcessDevelopmentArtifactRequest,

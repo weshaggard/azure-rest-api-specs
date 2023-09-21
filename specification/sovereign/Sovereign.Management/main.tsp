@@ -65,10 +65,15 @@ interface LandingZonesConfigurations
     UpdateAuthoringStatusRequest,
     UpdateAuthoringStatusResponse
   >;
+
+  @action("createCopy")
+  @doc("Provides a mechanism to create a copy of the landing zone configuration.")
+  @added(Versions.Preview20230928)
+  @armResourceAction(LandingZoneConfiguration)
+  createCopy is ArmResourceNoInputActionSync<LandingZoneConfiguration, CreateCopyLandingZoneConfigurationCopyResponse>;
 }
 
 // Landing zone registration Resource Type
-#suppress "@azure-tools/typespec-azure-resource-manager/empty-updateable-properties" "No properties of Landing Zone Registration can be updated."
 @tenantResource
 @added(Versions.Preview20230928)
 @doc("The Landing Zone registration resource type.")
@@ -88,3 +93,12 @@ interface LandingZoneRegistrations
       LandingZoneRegistration,
       LandingZoneRegistrationProperties
     > {}
+
+
+// Template definition for no input operation
+@autoRoute
+@armResourceAction(TResource)
+@post
+op ArmResourceNoInputActionSync<TResource extends ArmResource, TResponse extends TypeSpec.Reflection.Model>(
+  ...ResourceInstanceParameters<TResource, BaseParameters<TResource>>,
+): ArmResponse<TResponse> | ErrorResponse;
