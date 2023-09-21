@@ -44,10 +44,7 @@ model DsmsRootFolderResource
 @armResourceOperations
 interface DsmsRootFolder {
   @doc(" dsmsRootFolder creation")
-  @example(
-    "./examples/CreateDsmsRootFolder.json",
-    "Create dsmsRootFolder"
-  )
+  @example("./examples/CreateDsmsRootFolder.json", "Create dsmsRootFolder")
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsRootFolderResource>;
   listBySubscription is ArmListBySubscription<DsmsRootFolderResource>;
   listByResourceGroup is ArmResourceListByParent<DsmsRootFolderResource>;
