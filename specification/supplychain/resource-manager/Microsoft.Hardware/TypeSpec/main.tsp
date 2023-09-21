@@ -115,7 +115,7 @@ model OrderLine {
   shippingMethod?: ShippingMethod;
 
   @doc("Requested Delivery Date")
-  requestedDeliveryDate?:plainDate;
+  requestedDeliveryDate?:utcDateTime;
 
   @doc("Cancellation Reason")
   cancellationReason?:string;
@@ -237,6 +237,8 @@ enum ProductIdType{
 
 @doc("Shipping Method")
 enum ShippingMethod{
+  @doc("Ground shipping")
+  Ground,
   @doc("Two day shipping")
   TwoDay,
   @doc("Three day shipping")
