@@ -17,21 +17,7 @@ using Azure.ResourceManager;
   version: "2023-07-12-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-//@useDependency(Azure.Core.Versions.v1_0_Preview_2)
 namespace Microsoft.Hardware;
-
-/*interface OrderOperations{
-  @summary("Preview Order")
-  @doc("A sync API for previewing the Order. This will also return the taxes and fees as part of validation response.")
-  @route("/orders/preview")
-  @post
-  previewOrder is Azure.Core.RpcOperation<{
-      @body
-      @doc("The request of preview order.")
-      body: Order;
-    },
-    Order>;
-}*/
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -64,20 +50,17 @@ model OrderProperties {
   @doc("Billing Information")
   billingInformation?:BillingInformation;
 
-  @doc("Currency")
+  @doc("Currency for the order")
   @visibility("read")
   currency?:string;
 
   @doc("Market - country code for Order")
-  @visibility("read")
   market?:string;
 
   @doc("Language - language code for Order")
-  @visibility("read")
   language?:string;
 
   @doc("Reservation for order if applicable")
-  @visibility("read")
   reservationId?:string;
 
   @visibility("read")
@@ -142,11 +125,11 @@ model OrderLine {
 
   @doc("Estimated Deliver Date")
   @visibility("read")
-  estimatedDeliveryDate?:plainDate;
+  estimatedDeliveryDate?:utcDateTime;
 
   @doc("Estimated Shipped Date")
   @visibility("read")
-  estimatedShippedDate?:plainDate;
+  estimatedShippedDate?:utcDateTime;
 }
 
 @doc("Order Line Qty")
@@ -185,7 +168,6 @@ model Price {
   shippingCost?: float64;
 
   @doc("Tax for this line")
-  @visibility("read")
   taxes?: Tax[];
 
   @doc("Fees for this line")
@@ -249,23 +231,29 @@ enum ProductIdType{
   UPN,
   @doc("Product, SKU, Availability in Big-Catalog")
   PSA,
-  @doc("MS Product Identitier (3x5 SKU)")
+  @doc("MS Product Identifier (3x5 SKU)")
   FulfillmentProductId
 }
 
 @doc("Shipping Method")
 enum ShippingMethod{
-  @doc("Ground shipping")
-  Ground,
-  @doc("OverNight shipping")
-  OverNight
+  @doc("Two day shipping")
+  TwoDay,
+  @doc("Three day shipping")
+  ThreeDay,
+  @doc("Sustainable shipping")
+  Sustainable,
+  @doc("Street date shipping")
+  StreetDate,
+  @doc("APO FPO shipping")
+  ApoFpo
 }
 
 @doc("shipToId Type")
 enum ShipToIdType{
-  @doc("MCAPI Business Location")
+  @doc("Modern Commerce API Business Location")
   BusinessLocation,
-  @doc("Parnter ExternalId")
+  @doc("Partner External-Id")
   ExternalId
 }
 
@@ -344,6 +332,7 @@ interface OrderPreviewInterface {
 @armResourceCollectionAction
   @armProviderNameValue
   @doc("Implements orderPreview operations")
+  @Autorest.example("./examples/Orders_Preview.json","OrderPreview")
   @TypeSpec.Rest.action("orderPreview")
   @post
   op orderPreview(
