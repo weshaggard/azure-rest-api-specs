@@ -7,6 +7,7 @@ import "@azure-tools/typespec-azure-resource-manager";
 
 import "./index.tsp";
 import "./indexer.tsp";
+import "./versions.tsp";
 
 using Autorest;
 using Azure.ResourceManager.Foundations;
@@ -16,12 +17,10 @@ using TypeSpec.Versioning;
 using Azure.Core;
 using Azure.ResourceManager;
 
+@versioned(Private.Search.Versions)
 @armProviderNamespace
 @service({
-    title: "IndexManagementClient",
-    version: "2023-05-01-preview",
+    title: "IndexManagementClient"
 })
 @doc("CognitiveSearch Resource Provider management API.")
-@useDependency(Azure.Core.Versions.v1_0_Preview_1)
-@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Private.Search;
