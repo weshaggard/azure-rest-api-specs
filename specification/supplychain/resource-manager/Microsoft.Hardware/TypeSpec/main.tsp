@@ -51,7 +51,6 @@ model OrderProperties {
   billingInformation?:BillingInformation;
 
   @doc("Currency for the order")
-  @visibility("read")
   currency?:string;
 
   @doc("Market - country code for Order")
