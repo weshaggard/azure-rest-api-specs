@@ -72,8 +72,8 @@ model CustomerOrder {
   @doc("Customer PurchaseOrder Id")
   id: string;
 
-  @doc("Customer PurchaseOrder Date")
-  createdDate: plainDate;
+  @doc("Customer PurchaseOrder Date Time")
+  createdDateTime: utcDateTime;
 }
 
 @doc("Billing Details for Order")
@@ -94,7 +94,7 @@ model OrderLine {
   @visibility("read")
   status?: OrderLineStatus;
   
-  @doc("Order line date")
+  @doc("Order line created date time")
   @visibility("read")
   createdDateTime?: utcDateTime;
   
@@ -113,8 +113,8 @@ model OrderLine {
   @doc("Shipping Method")
   shippingMethod?: ShippingMethod;
 
-  @doc("Requested Delivery Date")
-  requestedDeliveryDate?:utcDateTime;
+  @doc("Requested Delivery Date Time")
+  requestedDeliveryDateTime?:utcDateTime;
 
   @doc("Cancellation Reason")
   cancellationReason?:string;
@@ -122,13 +122,13 @@ model OrderLine {
   @doc("Cancelled By User details")
   cancelledBy?:string;
 
-  @doc("Estimated Deliver Date")
+  @doc("Estimated Delivery Date Time")
   @visibility("read")
-  estimatedDeliveryDate?:utcDateTime;
+  estimatedDeliveryDateTime?:utcDateTime;
 
-  @doc("Estimated Shipped Date")
+  @doc("Estimated Shipped Date Time")
   @visibility("read")
-  estimatedShippedDate?:utcDateTime;
+  estimatedShippedDateTime?:utcDateTime;
 }
 
 @doc("Order Line Qty")
