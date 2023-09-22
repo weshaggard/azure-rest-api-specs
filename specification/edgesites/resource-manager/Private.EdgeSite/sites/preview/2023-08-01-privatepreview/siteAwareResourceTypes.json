@@ -134,14 +134,24 @@
           "$ref": "../../../../../../common-types/resource-management/v5/types.json#/definitions/ProxyResource"
         }
       ],
-      "properties": 
-      {
-        "supportedResourceTypes" : {
-          "description": "Mount points of shares in role(s).",
-          "uniqueItems": true,
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/SiteAwareResourceTypesProperties",
+          "description": "The resource-specific properties for this resource.",
+          "x-ms-client-flatten": true
+        }
+      }
+    },
+    "SiteAwareResourceTypesProperties": {
+      "description": "SiteAwareResourceTypes API Properties",
+      "type": "object",
+      "properties": {
+        "supportedResourceTypes": {
+          "description": "Details for each SiteAwareResourceType",
+          "uniqueItems": false,
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SiteAwareResourceTypesProperties"
+            "$ref": "#/definitions/SiteAwareResourceTypesDetails"
           },
           "x-ms-identifiers": [
             "resourceType"
@@ -149,48 +159,48 @@
         }
       }
     },
-    "SiteAwareResourceTypesProperties": {
+    "SiteAwareResourceTypesDetails": {
       "description": "The properties of the site Resource Types which support Sites operations and can be displayed under this view.",
       "type": "object",
       "properties": {
-          "displayName": {
-            "description": "Portal Display Name",
+        "displayName": {
+          "description": "Portal Display Name",
+          "type": "string",
+          "readOnly": true
+        },
+        "resourceType": {
+          "description": "Name of the operation.",
+          "type": "string",
+          "readOnly": true
+        },
+        "availabilityStatus": {
+          "description": "Distinguishes whether RP is already supported or coming soon.",
+          "type": "string",
+          "enum": [
+            "ComingSoon",
+            "Supported"
+          ],
+          "x-ms-enum": {
+            "name": "availabilityStatus",
+            "modelAsString": true
+          },
+          "readOnly": true
+        },
+        "supportedCapabilities": {
+          "description": "Aggregation Capabilities",
+          "type": "array",
+          "items": {
             "type": "string",
             "readOnly": true
           },
-          "resourceType": {
-            "description": "Name of the operation.",
-            "type": "string",
-            "readOnly": true
-          },
-          "availabilityStatus": {
-            "description": "Distinguishes whether RP is already supported or coming soon.",
-            "type": "string",
-            "enum": [
-              "ComingSoon",
-              "Supported"
-            ],
-            "x-ms-enum": {
-              "name": "availabilityStatus",
-              "modelAsString": true
-            },
-            "readOnly": true
-          },
-          "supportedCapabilities": {
-            "description": "Aggregation Capabilities",
-            "type": "array",
-            "items": {
-              "type": "string",
-              "readOnly": true
-            },
-            "readOnly": true
-          },
-          "provisioningState": {
-            "$ref": "#/definitions/ProvisioningState",
-            "description": "The status of the last operation.",
-            "readOnly": true
-          }
+          "readOnly": true
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The status of the last operation.",
+          "readOnly": true
         }
+      }
     }
   }
 }
