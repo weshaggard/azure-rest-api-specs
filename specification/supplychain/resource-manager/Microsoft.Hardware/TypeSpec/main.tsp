@@ -170,7 +170,6 @@ model Price {
   taxes?: Tax[];
 
   @doc("Fees for this line")
-  @visibility("read")
   @OpenAPI.extension("x-ms-identifiers",["type"])
   fees?: Fee[];
 }
