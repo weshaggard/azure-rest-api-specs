@@ -8,7 +8,7 @@ import "@azure-tools/typespec-azure-resource-manager";
 @armProviderNamespace("Microsoft.KX")
 @service({
   title: "KX Resource Provider",
-  version: "2022-11-01-preview",
+  version: "2023-09-01-preview",
 })
 @Versioning.useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.KX;
@@ -56,10 +56,6 @@ enum ReadWriteManyStorageClassOptions {
   RookCeph: "rook-cephfs",
 }
 
-@secret
-@pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])[a-zA-Z0-9!@#\\$%\\^&\\*]{14,320}$")
-scalar PasswordString extends string;
-
 @doc("Configuration of the managed resource group associated with the resource.")
 model ManagedResourceGroupConfiguration {
   @doc("The resource group name.")
@@ -73,7 +69,9 @@ model ManagedResourceGroupConfiguration {
 model KdbInsightsEnterpriseProperties {
   @visibility("create")
   @doc("Keycloak admin password. Keycloak is kdb Insights Enterprise's Identity and Access Management. Please make note of this Admin Password to control user access to Insights.")
-  keycloakAdminPassword: PasswordString;
+  @pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])[a-zA-Z0-9!@#\\$%\\^&\\*]{14,320}$")
+  @secret
+  keycloakAdminPassword: string;
 
   @visibility("read", "create")
   @doc("The Keycloak user name. Keycloak is kdb Insights Enterprise's Identity and Access Management. Please make note of this Admin Username to control user access to Insights.")
@@ -82,7 +80,9 @@ model KdbInsightsEnterpriseProperties {
 
   @visibility("create")
   @doc("The password to be used to log in to the kdb Insights Enterprise UI.")
-  uiPassword: PasswordString;
+  @pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])[a-zA-Z0-9!@#\\$%\\^&\\*]{14,320}$")
+  @secret
+  uiPassword: string;
 
   @visibility("read", "create")
   @doc("Email address for licensing and certificate registration")
