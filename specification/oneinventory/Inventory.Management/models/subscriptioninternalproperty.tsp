@@ -64,10 +64,15 @@ model PromotionData {
 
 @doc("Subscription state")
 enum State { 
+  @doc("Registered subscription state")
   Registered,
+  @doc("Unregistered subscription state")
   Unregistered,
+  @doc("Warned subscription state")
   Warned,
+  @doc("Suspended subscription state")
   Suspended,
+  @doc("Deleted subscription state")
   Deleted
 }
 
@@ -111,53 +116,80 @@ model BillingAccount {
 }
 
 @doc("Subscription state image type")
-enum BillingType {    
+enum BillingType { 
+  @doc("Legacy billing type")   
   Legacy,
+  @doc("Modern billing type")
   Modern
 }
 
 @doc("Subscription state image type")
-enum ChannelType {    
+enum ChannelType {  
+  @doc("None channel type")  
   None, 
+  @doc("Internal channel type")  
   Internal,
+  @doc("FieldLed channel type")  
   FieldLed,
+  @doc("CustomerLed channel type")  
   CustomerLed,
+  @doc("Partnerled channel type")  
   PartnerLed
 }
 
 @doc("Subscription state image type")
-enum PaymentType {    
+enum PaymentType {  
+  @doc("None payment type")    
   None,
+  @doc("Paid payment type")      
   Paid,
+  @doc("Free payment type")    
   Free,
+  @doc("Entitlement payment type")    
   Entitlement,
+  @doc("SponsoredPlus payment type")    
   SponsoredPlus,
+  @doc("Sponsored payment type")    
   Sponsored,
+  @doc("Benefit payment type")    
   Benefit
 }
 
 @doc("Subscription state image type")
-enum Tier {    
+enum Tier {   
+  @doc("Unknown tier")  
   Unknown,
+  @doc("Standard tier")   
   Standard,
+  @doc("Premium tier")   
   Premium,
+  @doc("Priority tier")  
   Priority
 }
 
 @doc("Subscription state image type")
 enum WorkloadType {    
+  @doc("None workload type")  
   None,
+  @doc("devtest workload type")  
   DevTest,
+  @doc("Production workload type")  
   Production
 }
 
 @doc("CostCategory for internal subscription")
-enum CostCategory {    
+enum CostCategory {   
+  @doc("None cost category")  
   None,
+  @doc("FR cost category")  
   FR,
+  @doc("FG cost category")  
   FG,
+  @doc("FS cost category")  
   FS,
+  @doc("FX cost category")  
   FX,
+  @doc("FB cost category")  
   FB
 }
 
