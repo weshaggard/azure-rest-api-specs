@@ -15,7 +15,7 @@ using Azure.ResourceManager;
 @armProviderNamespace("Private.AszLabHardware")
 @service({
   title: "Private.AszLabHardware",
-  version: "2022-07-01-preview",
+  version: "2023-09-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Private.AszLabHardware;
