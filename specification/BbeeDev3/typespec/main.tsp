@@ -29,7 +29,8 @@ interface Operations extends Azure.ResourceManager.Operations {}
 @doc("A provisioning resource.")
 model ProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
   @doc("The name of the Provisioning Resource.")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @maxLength(128)
+  @pattern("^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$")
   @key("provisioningResourceName")
   @segment("provisioningResources")
   @path
@@ -47,6 +48,10 @@ model ProvisioningResourceProperties {
   @visibility("read")
   @doc("The provisioning service endpoints.")
   deviceEndpoints?: DeviceEndpoints;
+
+  @doc("Selecting 'yes' will enable a Microsoft managed PKI to issue certificates. Setting up of the CA and policies for certificate management will be while defining the bumblebee provisioning policy.")
+  @visibility("read", "create")
+  enableOperationalCertificates: boolean;
 }
 
 @doc("Device endpoints.")
@@ -67,35 +72,10 @@ model ResourceUpdatedResponse<T> is ArmResponse<T> {
 }
 
 @armResourceOperations
-interface EdgeProvisioningOperations {
-  @autoRoute
-  @doc("Create a {name}", TResource)
-  @extension("x-ms-long-running-operation", true)
-  @extension(
-    "x-ms-long-running-operation-options",
-    {
-      `final-state-via`: "azure-async-operation",
-    }
-  )
-  @armResourceCreateOrUpdate(TResource)
-  @put
-  op EdgeProvisioningResourceCreateOrUpdateAsync<
-    TResource extends ArmResource,
-    TBaseParameters = BaseParameters<TResource>
-  >(
-    ...ResourceInstanceParameters<TResource, TBaseParameters>,
-
-    @doc("Resource create parameters.")
-    @body
-    resource: TResource,
-  ): ResourceUpdatedResponse<TResource> | ArmCreatedResponse<TResource> | ErrorResponse;
-}
-
-@armResourceOperations
 interface ProvisioningResources {
   get is ArmResourceRead<ProvisioningResource>;
-  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningResource>;
-  delete is ArmResourceDeleteSync<ProvisioningResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<ProvisioningResource>;
+  delete is ArmResourceDeleteAsync<ProvisioningResource>;
   update is ArmResourcePatchSync<ProvisioningResource, ProvisioningResourceProperties>;
   listByResourceGroup is ArmResourceListByParent<ProvisioningResource>;
   listBySubscription is ArmListBySubscription<ProvisioningResource>;
@@ -108,7 +88,8 @@ interface ProvisioningResources {
 @parentResource(ProvisioningResource)
 model ProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
   @doc("The name of the Provisioning Policy tracked resource.")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @maxLength(128)
+  @pattern("^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$")
   @key("provisioningPolicyName")
   @segment("provisioningPolicies")
   @path
@@ -487,7 +468,7 @@ model IdentityInfo {
   deviceTemplateId: string;
 
   @doc("Guid for static AAD group.")
-  staticGroupId?: string;
+  staticGroupId: string;
 
 //  @doc("Guid for MTLS Oauth Config.")
 //  @visibility("read", "create")
@@ -527,9 +508,9 @@ model ResourceMetadata {
 @armResourceOperations
 interface ProvisioningPolicies {
   get is ArmResourceRead<ProvisioningPolicy>;
-  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningPolicy>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<ProvisioningPolicy>;
   delete is ArmResourceDeleteSync<ProvisioningPolicy>;
-  update is ArmCustomPatchSync<
+  update is ArmCustomPatchAsync<
     ProvisioningPolicy,
     ProvisioningPolicyPropertiesUpdate
   >;
@@ -609,7 +590,7 @@ enum OnboardingStatus {
 @armResourceOperations
 interface DeviceProvisioningStates {
   get is ArmResourceRead<DeviceProvisioningState>;
-  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<DeviceProvisioningState>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<DeviceProvisioningState>;
   delete is ArmResourceDeleteSync<DeviceProvisioningState>;
   update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
   listByParent is ArmResourceListByParent<DeviceProvisioningState>;

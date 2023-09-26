@@ -141,20 +141,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Resource create or update operation completed successfully.",
-            "schema": {
-              "$ref": "#/definitions/DeviceProvisioningState"
-            }
-          },
-          "201": {
-            "description": "ARM create operation completed successfully.",
-            "headers": {
-              "Retry-After": {
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
-                "type": "integer",
-                "format": "int32"
-              }
-            },
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/DeviceProvisioningState"
             }
@@ -165,11 +152,7 @@
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
+        }
       },
       "delete": {
         "tags": [
@@ -364,7 +347,8 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           }
         ],
         "responses": {
@@ -409,7 +393,8 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           },
           {
             "name": "resource",
@@ -423,7 +408,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Resource create or update operation completed successfully.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/ProvisioningResource"
             }
@@ -480,12 +465,27 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           }
         ],
         "responses": {
           "200": {
             "description": "Resource deleted successfully."
+          },
+          "202": {
+            "description": "Resource deletion accepted.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "Location": {
+                "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                "type": "string"
+              }
+            }
           },
           "204": {
             "description": "Resource deleted successfully."
@@ -496,7 +496,11 @@
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       },
       "patch": {
         "tags": [
@@ -520,7 +524,8 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           },
           {
             "name": "properties",
@@ -571,7 +576,8 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           }
         ],
         "responses": {
@@ -616,7 +622,8 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           },
           {
             "name": "provisioningPolicyName",
@@ -624,7 +631,8 @@
             "required": true,
             "description": "The name of the Provisioning Policy tracked resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           }
         ],
         "responses": {
@@ -664,7 +672,8 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           },
           {
             "name": "provisioningPolicyName",
@@ -672,7 +681,8 @@
             "required": true,
             "description": "The name of the Provisioning Policy tracked resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           },
           {
             "name": "resource",
@@ -686,7 +696,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Resource create or update operation completed successfully.",
+            "description": "ARM operation completed successfully.",
             "schema": {
               "$ref": "#/definitions/ProvisioningPolicy"
             }
@@ -738,7 +748,8 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           },
           {
             "name": "provisioningPolicyName",
@@ -746,7 +757,8 @@
             "required": true,
             "description": "The name of the Provisioning Policy tracked resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           }
         ],
         "responses": {
@@ -786,7 +798,8 @@
             "required": true,
             "description": "The name of the Provisioning Resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           },
           {
             "name": "provisioningPolicyName",
@@ -794,7 +807,8 @@
             "required": true,
             "description": "The name of the Provisioning Policy tracked resource.",
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$",
+            "maxLength": 128
           },
           {
             "name": "properties",
@@ -813,13 +827,31 @@
               "$ref": "#/definitions/ProvisioningPolicy"
             }
           },
+          "202": {
+            "description": "Resource update request accepted.",
+            "headers": {
+              "Retry-After": {
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "Location": {
+                "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                "type": "string"
+              }
+            }
+          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
               "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       }
     }
   },
@@ -1479,7 +1511,8 @@
       },
       "description": "The information related to device identity.",
       "required": [
-        "deviceTemplateId"
+        "deviceTemplateId",
+        "staticGroupId"
       ]
     },
     "IdentityInfoUpdate": {
@@ -1807,9 +1840,20 @@
           "$ref": "#/definitions/DeviceEndpoints",
           "description": "The provisioning service endpoints.",
           "readOnly": true
+        },
+        "enableOperationalCertificates": {
+          "type": "boolean",
+          "description": "Selecting 'yes' will enable a Microsoft managed PKI to issue certificates. Setting up of the CA and policies for certificate management will be while defining the bumblebee provisioning policy.",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         }
       },
-      "description": "Details of the EdgeProvisioning ProvisioningResource."
+      "description": "Details of the EdgeProvisioning ProvisioningResource.",
+      "required": [
+        "enableOperationalCertificates"
+      ]
     },
     "ProvisioningResourceType": {
       "type": "string",
