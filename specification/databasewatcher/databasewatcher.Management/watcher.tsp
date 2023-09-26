@@ -2,8 +2,7 @@ import "@typespec/rest";
 import "@azure-tools/typespec-providerhub";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-azure-resource-manager";
-import "@azure-tools/typespec-providerhub";
-import "./sqlDbSingleDatabaseTarget.tsp";
+import "./sqlDbDatabaseTarget.tsp";
 import "./sqlDbElasticPoolTarget.tsp";
 import "./sqlMiTarget.tsp";
 import "./sqlVmTarget.tsp";
@@ -66,11 +65,11 @@ model Datastore {
   #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @removed(Versions.v2023_09_01_preview)
   @doc("The ARM ResourceId of an Azure Data Explorer database.")
-  adxDatabaseResourceId: string;
+  adxDatabaseResourceId: ResourceIdentifier<[{type:"Microsoft.Kusto/Clusters/Databases"}]>;
 
   @added(Versions.v2023_09_01_preview)
   @doc("The ARM ResourceId of an Azure Data Explorer cluster.")
-  adxClusterResourceId?: string;
+  adxClusterResourceId?: ResourceIdentifier<[{type:"Microsoft.Kusto/Clusters"}]>;
 
   #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @removed(Versions.v2023_09_01_preview)

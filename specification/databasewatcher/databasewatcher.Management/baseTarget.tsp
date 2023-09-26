@@ -51,7 +51,7 @@ model TargetProperties {
 @doc("The vault specific details required if using SQL authentication to connect to a target.")
 model VaultSecret {
   @doc("The ARM ResourceId of the Key Vault instance storing database authentication secrets.")
-  akvResourceId?: string;
+  akvResourceId?: ResourceIdentifier<[{type:"Microsoft.KeyVault/vaults"}]>;
 
   @doc("The path to the Key Vault secret storing the login name (aka user name, aka account name) for authentication to a target.")
   akvTargetUser?: string;
