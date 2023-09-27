@@ -66,7 +66,7 @@ model PushAgentV2AccountResourceProperties {
   @doc("Tenant ID of the Subscription.")
   tenantId: string;
 
-  @doc("Subscription ID. We have made the 'azcis-host-prod' Service Principal a Contributor to this Subscription when creating it so it should have permissions.")
+  @doc("Subscription ID. We have made your tenant aad app service principal a contributor to this subscription when creating it so it should have permissions.")
   subscriptionId: string;
 
   @doc("Provisioning state")
