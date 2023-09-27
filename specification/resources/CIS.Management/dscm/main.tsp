@@ -1,1 +1,0 @@
-import "./dsmsallowlist.tsp";

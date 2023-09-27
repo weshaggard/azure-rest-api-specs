@@ -17,21 +17,7 @@ using Azure.ResourceManager;
   version: "2023-07-12-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-//@useDependency(Azure.Core.Versions.v1_0_Preview_2)
 namespace Microsoft.Hardware;
-
-/*interface OrderOperations{
-  @summary("Preview Order")
-  @doc("A sync API for previewing the Order. This will also return the taxes and fees as part of validation response.")
-  @route("/orders/preview")
-  @post
-  previewOrder is Azure.Core.RpcOperation<{
-      @body
-      @doc("The request of preview order.")
-      body: Order;
-    },
-    Order>;
-}*/
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
@@ -64,20 +50,16 @@ model OrderProperties {
   @doc("Billing Information")
   billingInformation?:BillingInformation;
 
-  @doc("Currency")
-  @visibility("read")
+  @doc("Currency for the order")
   currency?:string;
 
   @doc("Market - country code for Order")
-  @visibility("read")
   market?:string;
 
   @doc("Language - language code for Order")
-  @visibility("read")
   language?:string;
 
   @doc("Reservation for order if applicable")
-  @visibility("read")
   reservationId?:string;
 
   @visibility("read")
@@ -90,8 +72,8 @@ model CustomerOrder {
   @doc("Customer PurchaseOrder Id")
   id: string;
 
-  @doc("Customer PurchaseOrder Date")
-  createdDate: plainDate;
+  @doc("Customer PurchaseOrder Date Time")
+  createdDateTime: utcDateTime;
 }
 
 @doc("Billing Details for Order")
@@ -112,7 +94,7 @@ model OrderLine {
   @visibility("read")
   status?: OrderLineStatus;
   
-  @doc("Order line date")
+  @doc("Order line created date time")
   @visibility("read")
   createdDateTime?: utcDateTime;
   
@@ -131,8 +113,8 @@ model OrderLine {
   @doc("Shipping Method")
   shippingMethod?: ShippingMethod;
 
-  @doc("Requested Delivery Date")
-  requestedDeliveryDate?:plainDate;
+  @doc("Requested Delivery Date Time")
+  requestedDeliveryDateTime?:utcDateTime;
 
   @doc("Cancellation Reason")
   cancellationReason?:string;
@@ -140,13 +122,13 @@ model OrderLine {
   @doc("Cancelled By User details")
   cancelledBy?:string;
 
-  @doc("Estimated Deliver Date")
+  @doc("Estimated Delivery Date Time")
   @visibility("read")
-  estimatedDeliveryDate?:plainDate;
+  estimatedDeliveryDateTime?:utcDateTime;
 
-  @doc("Estimated Shipped Date")
+  @doc("Estimated Shipped Date Time")
   @visibility("read")
-  estimatedShippedDate?:plainDate;
+  estimatedShippedDateTime?:utcDateTime;
 }
 
 @doc("Order Line Qty")
@@ -185,11 +167,9 @@ model Price {
   shippingCost?: float64;
 
   @doc("Tax for this line")
-  @visibility("read")
   taxes?: Tax[];
 
   @doc("Fees for this line")
-  @visibility("read")
   @OpenAPI.extension("x-ms-identifiers",["type"])
   fees?: Fee[];
 }
@@ -249,7 +229,7 @@ enum ProductIdType{
   UPN,
   @doc("Product, SKU, Availability in Big-Catalog")
   PSA,
-  @doc("MS Product Identitier (3x5 SKU)")
+  @doc("MS Product Identifier (3x5 SKU)")
   FulfillmentProductId
 }
 
@@ -257,15 +237,23 @@ enum ProductIdType{
 enum ShippingMethod{
   @doc("Ground shipping")
   Ground,
-  @doc("OverNight shipping")
-  OverNight
+  @doc("Two day shipping")
+  TwoDay,
+  @doc("Three day shipping")
+  ThreeDay,
+  @doc("Sustainable shipping")
+  Sustainable,
+  @doc("Street date shipping")
+  StreetDate,
+  @doc("APO FPO shipping")
+  ApoFpo
 }
 
 @doc("shipToId Type")
 enum ShipToIdType{
-  @doc("MCAPI Business Location")
+  @doc("Modern Commerce API Business Location")
   BusinessLocation,
-  @doc("Parnter ExternalId")
+  @doc("Partner External-Id")
   ExternalId
 }
 
@@ -344,6 +332,7 @@ interface OrderPreviewInterface {
 @armResourceCollectionAction
   @armProviderNameValue
   @doc("Implements orderPreview operations")
+  @Autorest.example("./examples/Orders_Preview.json","OrderPreview")
   @TypeSpec.Rest.action("orderPreview")
   @post
   op orderPreview(

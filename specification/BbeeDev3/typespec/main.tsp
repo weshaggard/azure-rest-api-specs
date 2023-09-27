@@ -29,7 +29,8 @@ interface Operations extends Azure.ResourceManager.Operations {}
 @doc("A provisioning resource.")
 model ProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
   @doc("The name of the Provisioning Resource.")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @maxLength(128)
+  @pattern("^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$")
   @key("provisioningResourceName")
   @segment("provisioningResources")
   @path
@@ -47,6 +48,10 @@ model ProvisioningResourceProperties {
   @visibility("read")
   @doc("The provisioning service endpoints.")
   deviceEndpoints?: DeviceEndpoints;
+
+  @doc("Selecting 'yes' will enable a Microsoft managed PKI to issue certificates. Setting up of the CA and policies for certificate management will be while defining the bumblebee provisioning policy.")
+  @visibility("read", "create")
+  enableOperationalCertificates: boolean;
 }
 
 @doc("Device endpoints.")
@@ -67,35 +72,10 @@ model ResourceUpdatedResponse<T> is ArmResponse<T> {
 }
 
 @armResourceOperations
-interface EdgeProvisioningOperations {
-  @autoRoute
-  @doc("Create a {name}", TResource)
-  @extension("x-ms-long-running-operation", true)
-  @extension(
-    "x-ms-long-running-operation-options",
-    {
-      `final-state-via`: "azure-async-operation",
-    }
-  )
-  @armResourceCreateOrUpdate(TResource)
-  @put
-  op EdgeProvisioningResourceCreateOrUpdateAsync<
-    TResource extends ArmResource,
-    TBaseParameters = BaseParameters<TResource>
-  >(
-    ...ResourceInstanceParameters<TResource, TBaseParameters>,
-
-    @doc("Resource create parameters.")
-    @body
-    resource: TResource,
-  ): ResourceUpdatedResponse<TResource> | ArmCreatedResponse<TResource> | ErrorResponse;
-}
-
-@armResourceOperations
 interface ProvisioningResources {
   get is ArmResourceRead<ProvisioningResource>;
-  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningResource>;
-  delete is ArmResourceDeleteSync<ProvisioningResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<ProvisioningResource>;
+  delete is ArmResourceDeleteAsync<ProvisioningResource>;
   update is ArmResourcePatchSync<ProvisioningResource, ProvisioningResourceProperties>;
   listByResourceGroup is ArmResourceListByParent<ProvisioningResource>;
   listBySubscription is ArmListBySubscription<ProvisioningResource>;
@@ -108,7 +88,8 @@ interface ProvisioningResources {
 @parentResource(ProvisioningResource)
 model ProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
   @doc("The name of the Provisioning Policy tracked resource.")
-  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @maxLength(128)
+  @pattern("^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$")
   @key("provisioningPolicyName")
   @segment("provisioningPolicies")
   @path
@@ -117,6 +98,12 @@ model ProvisioningPolicy is TrackedResource<ProvisioningPolicyProperties> {
 
 @doc("Details of the ProvisioningService ProvisioningPolicy.")
 model ProvisioningPolicyProperties {
+  @doc("Description of the policy")
+  description?: string;
+
+  @doc("The policy status")
+  status: boolean;
+
   @visibility("read")
   @doc("The status of the last operation.")
   provisioningState?: ResourceProvisioningState;
@@ -136,42 +123,70 @@ model ProvisioningPolicyProperties {
   resourceDetails: ProvisioningPolicyResourceDetails;
 }
 
+model ProvisioningPolicyPropertiesUpdate is OptionalProperties<UpdateableProperties<OmitProperties<ProvisioningPolicy, "name">>> { 
+  @doc("Description of the policy")
+  description?: string;
+
+  @doc("The policy status")
+  status?: boolean;
+
+  @visibility("read")
+  @doc("The status of the last operation.")
+  provisioningState?: ResourceProvisioningState;
+
+  @doc("The bootstrap authentication rule.")
+  bootstrapAuthentication?: BootstrapAuthenticationRule;
+
+  @doc("Allocation rules.")
+  @extension("x-ms-identifiers", ["name"])
+  @maxItems(1)
+  allocations?: Array<AllocationRule>;
+
+  @doc("Just-in-time rule to create the device resource.")
+  jit?: JitRule;
+
+  @doc("Further details about the policy resource")
+  resourceDetails?: ProvisioningPolicyResourceDetails;
+}
+
 @doc("Type of resource being provisioned.")
 enum ProvisioningResourceType {
   @doc("Azure device registry device. Microsoft.DeviceRegistry/devices")
-  DeviceRegistryDevice:"Microsoft.DeviceRegistry/devices",
+  DeviceRegistryDevice: "Microsoft.DeviceRegistry/devices",
 
   @doc("Arc enabled device. Microsoft.HybridCompute/machines")
-  HybridComputeMachine:"Microsoft.HybridCompute/machines",
+  HybridComputeMachine: "Microsoft.HybridCompute/machines",
 }
 
 @doc("Common further details about the policy resource")
-@discriminator("resourceType")
+@discriminator("type")
 model ProvisioningPolicyResourceDetails {
   @doc("Type of the resource being provisioned.")
-  resourceType: ProvisioningResourceType;
+  type: ProvisioningResourceType;
 }
 
 @doc("Details of the ProvisioningService Device Registry ProvisioningPolicy.")
-model DeviceRegistryProvisioningPolicyResourceDetails extends ProvisioningPolicyResourceDetails {
+model DeviceRegistryProvisioningPolicyResourceDetails
+  extends ProvisioningPolicyResourceDetails {
   @doc("The policy resource type for device registry devices.")
-  resourceType: ProvisioningResourceType.DeviceRegistryDevice;  
+  type: ProvisioningResourceType.DeviceRegistryDevice;
 
   @doc("Identity information.")
-  operationalIdentityInfo?: IdentityInfo; 
+  operationalIdentityInfo?: IdentityInfo;
+
   // make this property polymorphic based on ProvisioningResourceType.
   // The current definition of the identity Info is for ADR resource type.
   // AadIdentityInfo
 
   @doc("Resource metadata.")
-  @maxLength(200)
-  resourceMetadata?: string; // for customer to label the devices
+  resourceMetadata?: ResourceMetadata; // for customer to label the devices
 }
 
 @doc("Details of the ProvisioningService Discovery ProvisioningPolicy.")
-model DiscoveryProvisioningPolicyResourceDetails extends ProvisioningPolicyResourceDetails {
+model DiscoveryProvisioningPolicyResourceDetails
+  extends ProvisioningPolicyResourceDetails {
   @doc("The policy resource type for device registry devices.")
-  resourceType: ProvisioningResourceType.HybridComputeMachine;
+  type: ProvisioningResourceType.HybridComputeMachine;
 }
 
 @doc("The authentication type for bootstrap.")
@@ -192,6 +207,20 @@ model BootstrapAuthenticationRule {
   type: BootstrapAuthenticationType;
 }
 
+@doc("X509 Certificate.")
+model X509Certificate {
+  @doc("The certificate.")
+  certificate: string;
+
+  @doc("Thumbprint extracted from the certificate.")
+  @visibility("read")
+  thumbprint?: string;
+
+  @doc("Expiry date for the certificate.")
+  @visibility("read")
+  expiryDate?: utcDateTime;
+}
+
 @doc("The x509-based authentication rule for bootstrapping.")
 model X509BootstrapAuthenticationRule extends BootstrapAuthenticationRule {
   @doc("The type of authentication rule.")
@@ -199,13 +228,11 @@ model X509BootstrapAuthenticationRule extends BootstrapAuthenticationRule {
 
   @doc("The primary certificate. B64 x509 cert")
   //@secret todo
-  primaryCertificate: string;
-  // TODO Tim - on any additional properties needed from user. example: root, chain, etc
-  // Todo Adarsh/Tim, are there more details for x509s
+  primaryCertificate: X509Certificate;
 
   @doc("The secondary certificate.")
   //@secret todo
-  secondaryCertificate?: string;
+  secondaryCertificate?: X509Certificate;
 }
 
 @doc("The Discovery-based authentication rule for bootstrapping.")
@@ -214,20 +241,22 @@ model DiscoveryBootstrapAuthenticationRule extends BootstrapAuthenticationRule {
   type: BootstrapAuthenticationType.Discovery;
 }
 
+
 @doc("The rule for Just-in-time connection.")
 model JitRule {
   @doc("The priority of the policy. Should be greater than 0.")
-  priority: int32; 
-  // TODO: is priority required property. 
+  priority: int32;
+
+  // TODO: is priority required property.
   // can we avoid requirement for uniquenes
-  // how can the customer swap priority for policies 
+  // how can the customer swap priority for policies
   // alternate option1: Consider Provisioning Policy properties as an array
   // alternate option2: Keep the priority as separate concept outside of policy
   // Investigate options from other resources
 
-  @minLength(1)
-  @doc("The region.")
-  region: string; // TODO: checkout the location resource and see if we can use it here
+  // @minLength(1)
+  // @doc("The region.")
+  // region: string; // TODO: checkout the location resource and see if we can use it here
 
   //...SubscriptionIdParameter;
   @minLength(1)
@@ -245,7 +274,7 @@ model JitRule {
 @doc("Type of the endpoint.")
 enum EndpointType {
   @doc("Azure event grid broker.")
-  MicrosoftEventGridNamespace:"Microsoft.EventGrid/namespaces",
+  MicrosoftEventGridNamespace: "Microsoft.EventGrid/namespaces",
 
   //@doc("Azure storage")
   //AzureStorage,
@@ -253,16 +282,14 @@ enum EndpointType {
 
 @doc("Type of allocation rule.")
 enum AllocationType {
-  @doc("Static allocation of a single endpoint.")
-  Static,
-  // This is simpler version for Weighted with 1 endpoint in the array
-  // PM input needed
+  @doc("Evenly distributed allocation.")
+  EvenlyDistributed,
 
-  @doc("Allocation based on geo-location.")
-  GeoBased,
+  //@doc("Allocation based on geo-location.")
+  //GeoBased,
 
-  @doc("Allocation based on weight.")
-  Weighted,
+  //@doc("Allocation based on weight.")
+  //EvenlyWeighted,
 }
 
 @doc("The allocation rule.")
@@ -278,42 +305,8 @@ model AllocationRule {
   type: AllocationType;
 }
 
-// TODO name in allocation endpoint Geo-based vs latency-based
-@doc("GeoBased allocation endpoint.")
-model GeoBasedAllocationEndpoint {
-  @doc("Name of the endpoint.")
-  name: string;
-
-  @doc("Resource id of the endpoint.")
-  resourceId: string;
-
-  @doc("host name of the endpoint.")
-  hostName: string;
-
-  @doc("Region of the endpoint.")
-  region: string;
-}
-
-@doc("Weighted allocation endpoint.")
-model WeightedAllocationEndpoint {
-  @doc("Name of the endpoint.")
-  name: string;
-
-  @doc("Resource id of the endpoint.")
-  resourceId: string;
-
-  @doc("host name of the endpoint.")
-  hostName: string;
-
-  @doc("Weight of the endpoint.")
-  weight: float64;
-}
-
-@doc("Static allocation endpoint.")
-model StaticAllocationEndpoint {
-  @doc("Name of the endpoint.")
-  name: string;
-
+@doc("Allocation endpoint.")
+model AllocationEndpoint {
   @doc("Resource id of the endpoint.")
   resourceId: string;
 
@@ -321,41 +314,53 @@ model StaticAllocationEndpoint {
   hostName: string;
 }
 
-@doc("The allocation rule for geoBased allocation type.")
-model GeoBasedAllocationRule extends AllocationRule {
-  @doc("GeoBased allocation type.")
-  type: AllocationType.GeoBased;
+//@doc("GeoBased allocation endpoint.")
+//model GeoBasedAllocationEndpoint {
+//  @doc("Resource id of the endpoint.")
+//  resourceId: string;
+//
+//  @doc("host name of the endpoint.")
+//  hostName: string;
+//
+//  @doc("Region of the endpoint.")
+//  region: string;
+//}
 
-  @doc("List of endpoints for geoBased allocation type.")
+//@doc("The allocation rule for geoBased allocation type.")
+//model GeoBasedAllocationRule extends AllocationRule {
+//  @doc("GeoBased allocation type.")
+//  type: AllocationType.GeoBased;
+
+//  @doc("List of endpoints for geoBased allocation type.")
+//  @maxItems(10)
+//  @minItems(1)
+//  @extension("x-ms-identifiers", ["resourceId"])
+//  endpoints: Array<GeoBasedAllocationEndpoint>;
+//}
+
+//@doc("The allocation rule for evenly weighted allocation type.")
+//model EvenlyWeightedAllocationRule extends AllocationRule {
+//  @doc("weighted allocation type.")
+//  type: AllocationType.EvenlyWeighted;
+//
+//  @doc("List of endpoints for evenly weighted allocation type.")
+//  @maxItems(10)
+//  @minItems(1)
+//  @extension("x-ms-identifiers", ["resourceId"])
+//  endpoints: Array<AllocationEndpoint>;
+//  // todo no optional (to be tested)
+//}
+
+@doc("The allocation rule for evenly distributed allocation type.")
+model EvenlyDistributedAllocationRule extends AllocationRule {
+  @doc("Evenly distributed allocation type.")
+  type: AllocationType.EvenlyDistributed;
+
+  @doc("List of endpoints for evenly distributed allocation type.")
   @maxItems(10)
   @minItems(1)
-  @extension("x-ms-identifiers", ["name"])
-  endpoints: Array<GeoBasedAllocationEndpoint>;
-}
-
-@doc("The allocation rule for weighted allocation type.")
-model WeightedAllocationRule extends AllocationRule {
-  @doc("weighted allocation type.")
-  type: AllocationType.Weighted;
-
-  @doc("List of endpoints for weighted allocation type.")
-  @maxItems(10)
-  @minItems(1)
-  @extension("x-ms-identifiers", ["name"])
-  endpoints: Array<WeightedAllocationEndpoint>;
-// todo no optional (to be tested)
-}
-
-@doc("The allocation rule for static allocation type.")
-model StaticAllocationRule extends AllocationRule {
-  @doc("Static allocation type.")
-  type: AllocationType.Static;
-
-  @doc("List of endpoints for static allocation type.")
-  @maxItems(1)
-  @minItems(1)
-  @extension("x-ms-identifiers", ["name"])
-  endpoints: Array<StaticAllocationEndpoint>;
+  @extension("x-ms-identifiers", ["resourceId"])
+  endpoints: Array<AllocationEndpoint>;
 }
 
 @doc("The identity info to return to device.")
@@ -379,137 +384,63 @@ enum SourceType {
   Policy,
 
   @doc("From the substitute.")
-  Substitute
+  Substitute,
 }
 
 @doc("Supported key types.")
 enum SupportedKeyType {
-  @doc("Indicate the RSA key type.")
-  RSA,
+  //@doc("Indicate the RSA key type.")
+  //RSA,
 
-  @doc("Indicate the EC key type.")
-  EC,
-}
-
-@doc("Supported extended key usages.")
-enum SupportedExtendedKeyUsage {
-  @doc("Client auth.")
-  ClientAuth,
-
-  @doc("Code signing.")
-  CodeSigning,
-
-  @doc("Email protection.")
-  EmailProtection,
-
-  @doc("Ipsec end system.")
-  IpsecEndSystem,
-
-  @doc("Ipsec tunnel.")
-  IpsecTunnel,
-
-  @doc("Ipsec user.")
-  IpsecUser,
-
-  @doc("Mac address.")
-  MacAddress,
-
-  @doc("Ocsp signing.")
-  OcspSigning,
-
-  @doc("Server auth.")
-  ServerAuth,
-
-  @doc("Smartcard logon.")
-  SmartcardLogon,
-
-  @doc("Time stamping.")
-  TimeStamping
-}
-
-@doc("Supported curve types.")
-enum SupportedCurveType {
-  @doc("Indicate the NistP256 Curve Type.")
-  NistP256,
-
-  @doc("Indicate the NistP384 Curve Type.")
-  NistP384,
-
-  @doc("Indicate the NistP521 Curve Type.")
-  NistP521,
-
-  @doc("Indicate the Secp256K1 Curve Type.")
-  Secp256K1,
+  @doc("Indicate the ECC key type.")
+  ECC,
 }
 
 @doc("Supported issuing authority.")
 enum SupportedIssuingAuthority {
+  // TODO: should we use FirstParty or match the PM spec and use MicrosoftManagedPKI?
   @doc("First party cert issuance.")
-  FirstParty
+  FirstParty,
 }
 
 @doc("The configuration for setting up a CA.")
-model CaConfig
-{
-  @doc("Name of the CA.")
-  name: string;
+model CaConfig {
+  @doc("System-generated value for referencing the CA.")
+  @visibility("read")
+  name?: string;
 
   @doc("Certificate properties.")
   properties: CertificateProperties;
 }
 
 @doc("Certificate properties.")
-model CertificateProperties
-{
-  @doc("Key type: RSA or EC.")
+model CertificateProperties {
+  @doc("Crypto type: RSA or EC.")
   keyType: SupportedKeyType;
 
-  @doc("Key size for RSA key type.")
-  keySize?: int32;
-
   @doc("Certificate subject.")
-  subject: string;
+  @visibility("read")
+  subject?: string;
 
-  @doc("Certificate is valid not before this date. Format ISO8601")
-  validityNotBefore: utcDateTime;
+  @doc("System-assigned validity period.")
+  @visibility("read")
+  @maxValue(366)
+  @minValue(365)
+  validityPeriodInDays?: int32;
 
-  @doc("Certificate is valid not after this date. Format ISO8601")
-  validityNotAfter: utcDateTime;
+  @doc("Certificate is valid not before this date. Format ISO8601. Generated based on on validity period.")
+  @visibility("read")
+  validityNotBefore?: utcDateTime;
 
-  @doc("Extended key usage.")
-  extendedKeyUsage?: Array<SupportedExtendedKeyUsage>;
-
-  @doc("Curve type of EC.")
-  curveType?: SupportedCurveType;
+  @doc("Certificate is valid not after this date. Format ISO8601. Generated based on validity period.")
+  @visibility("read")
+  validityNotAfter?: utcDateTime;
 }
 
 @doc("The configuration for setting up a policy.")
-model CertPolicyConfig
-{
-  @doc("The validity period.")
-  validityPeriod: ValidityPeriod;
-}
-
-@doc("The validity period for an enrollment policy.")
-model ValidityPeriod
-{
-  @doc("Source of the value.")
-  source: SourceType;
-
-  @doc("Skew in minutes to account for the time on different computers not being in sync.")
-  notBeforeSkewMinutes: int32;
-
-  @doc("For calculation of the NotBefore date.")
-  valueNotBeforeOffSetDays?: int32;
-
-  @doc("For calculation of the NotAfter date.")
-  valueValidityPeriodDays?: int32,
-
-  @doc("Allowed not before offset in days.")
-  allowedNotBeforeOffSetDays?: int32;
-
-  @doc("Allowed validity period in days.")
-  allowedValidityPeriodDays?: int32;
+model CertPolicyConfig {
+  @doc("The validity period in days.")
+  validityPeriodInDays: int32;
 }
 
 @doc("Certificate issuance configurations.")
@@ -520,8 +451,8 @@ model CertificateIssuanceRule {
   @doc("The configuration to set up an ICA.")
   certificateAuthorityConfiguration: CaConfig; // set by the customers
 
-  @doc("The enrollment policy configuration.")
-  certificatePolicyConfiguration: CertPolicyConfig; // same type as the ica config
+  @doc("The leaf certificate configuration.")
+  leafCertificateConfiguration: CertPolicyConfig; // same type as the ica config
 
   @doc("Cert renewal interval.")
   renewalInterval: int32; // A number of percentage. An example for renewal interval is - renew at 80%
@@ -529,17 +460,24 @@ model CertificateIssuanceRule {
 
 @doc("The information related to device identity.")
 model IdentityInfo {
-  //@doc("Certificate issuance settings.")
-  //certificateIssuance?: CertificateIssuanceRule; // For PKI
+  @doc("Certificate issuance settings.")
+  certificateIssuance?: CertificateIssuanceRule; // For PKI
 
-  @doc("Device template id.")
-  deviceTemplateId?: string;
+  @doc("Guid of the device template.")
+  @visibility("read", "create")
+  deviceTemplateId: string;
 
-  @doc("AAD group name for static group.")
-  staticGroup?: string;
+  @doc("Guid for static AAD group.")
+  staticGroupId: string;
 
-  @doc("The id of the devices Tenant.")
-  deviceTenantId: string;
+//  @doc("Guid for MTLS Oauth Config.")
+//  @visibility("read", "create")
+//  mtlsOauthConfigurationId: string;
+
+//  @doc("Guid of the devices Tenant.")
+//  @visibility("read", "create")
+//  deviceTenantId: string;
+
   //@doc("The identity info to return to device.")
   //identityInfoForDevice?: DeviceIdentityInfo; // TODO check with Adarsh,Sekhar if this supports both HCI and ADR scenario
 }
@@ -553,19 +491,29 @@ model ProvisioningRule {
   jit?: JitRule;
 
   @doc("Identity information.")
-  operationalIdentityInfo?: IdentityInfo; 
+  operationalIdentityInfo?: IdentityInfo;
 
   @doc("Resource metadata.")
   @maxLength(200)
   resourceMetadata?: string; // for customer to label the devices
 }
 
+@doc("Resource metadata")
+model ResourceMetadata {
+  @doc("Custom attributes")
+  @visibility("read", "create")
+  customAttributes?: Record<unknown>;
+}
+
 @armResourceOperations
 interface ProvisioningPolicies {
   get is ArmResourceRead<ProvisioningPolicy>;
-  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<ProvisioningPolicy>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<ProvisioningPolicy>;
   delete is ArmResourceDeleteSync<ProvisioningPolicy>;
-  update is ArmResourcePatchSync<ProvisioningPolicy, ProvisioningPolicyProperties>;
+  update is ArmCustomPatchAsync<
+    ProvisioningPolicy,
+    ProvisioningPolicyPropertiesUpdate
+  >;
   listByParent is ArmResourceListByParent<ProvisioningPolicy>;
 }
 
@@ -589,8 +537,21 @@ scalar ProvisioningPolicyResourceId
     }
   ]>;
 
+@doc("Representation of a previously allocated endpoint")
+model AllocatedEndpoint {
+  @doc("Name of the endpoint.")
+  name: string;
+ 
+  @doc("Type of the endpoint.")
+  endpointType: EndpointType;
+
+  @doc("Hostname of the endpoint.")
+  hostName: string;
+}
+
 @doc("Details of the DeviceProvisioningState")
 model DeviceProvisioningStateProperties {
+  @visibility("read", "create")
   @doc("Unique identifier for the device. Allow alphanumeric and '-', '.', '_', ':' only. Last character can only be alphanumeric and '-'")
   @maxLength(128)
   @pattern("^([a-z0-9-._:]{0,127}[a-z0-9-])$")
@@ -605,6 +566,11 @@ model DeviceProvisioningStateProperties {
 
   @doc("The provisioning policy resource id")
   provisioningPolicyResourceId: ProvisioningPolicyResourceId;
+
+  @doc("Array of previously allocated endpoints")
+  @maxItems(1)
+  @extension("x-ms-identifiers", ["name"])
+  allocatedEndpoints?: Array<AllocatedEndpoint>;
 
   @visibility("read")
   @doc("The status of the last operation.")
@@ -624,7 +590,7 @@ enum OnboardingStatus {
 @armResourceOperations
 interface DeviceProvisioningStates {
   get is ArmResourceRead<DeviceProvisioningState>;
-  createOrUpdate is EdgeProvisioningOperations.EdgeProvisioningResourceCreateOrUpdateAsync<DeviceProvisioningState>;
+  createOrUpdate is ArmResourceCreateOrUpdateSync<DeviceProvisioningState>;
   delete is ArmResourceDeleteSync<DeviceProvisioningState>;
   update is ArmResourcePatchSync<DeviceProvisioningState, DeviceProvisioningStateProperties>;
   listByParent is ArmResourceListByParent<DeviceProvisioningState>;

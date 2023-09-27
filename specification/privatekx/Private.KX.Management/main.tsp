@@ -8,7 +8,7 @@ import "@azure-tools/typespec-azure-resource-manager";
 @armProviderNamespace("Private.KX")
 @service({
   title: "KX Resource Provider",
-  version: "2022-11-01-preview",
+  version: "2023-09-01-preview",
 })
 @Versioning.useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Private.KX;

@@ -11,6 +11,19 @@ using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using OpenAPI;
 
+@armResourceOperations
+interface Targets extends ProxyResourceOperations<Target> {}
+
+@parentResource(Watcher)
+model Target is ProxyResource<TargetProperties> {
+  @doc("The target resource name.")
+  @key("targetName")
+  @pattern("^[a-zA-Z0-9]{1}[a-zA-Z0-9-_]{3,60}$")
+  @segment("targets")
+  @path
+  name: string;
+}
+
 @doc("The generic properties of a target.")
 @discriminator("targetType")
 model TargetProperties {
@@ -38,7 +51,7 @@ model TargetProperties {
 @doc("The vault specific details required if using SQL authentication to connect to a target.")
 model VaultSecret {
   @doc("The ARM ResourceId of the Key Vault instance storing database authentication secrets.")
-  akvResourceId?: string;
+  akvResourceId?: ResourceIdentifier<[{type:"Microsoft.KeyVault/vaults"}]>;
 
   @doc("The path to the Key Vault secret storing the login name (aka user name, aka account name) for authentication to a target.")
   akvTargetUser?: string;
@@ -65,6 +78,3 @@ enum TargetAuthenticationType {
   @doc("The SQL password authentication.")
   Sql,
 }
-
-@armResourceOperations
-interface Targets extends ProxyResourceOperations<Target> {}

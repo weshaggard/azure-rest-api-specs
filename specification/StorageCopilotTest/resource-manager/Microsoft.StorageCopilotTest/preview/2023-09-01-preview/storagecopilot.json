@@ -39,24 +39,18 @@
   },
   "tags": [
     {
-      "name": "ChatServerTest"
+      "name": "StorageAssistant"
     }
   ],
   "paths": {
-    "/subscriptions/{subscriptionId}/providers/Microsoft.StorageCopilotTest/ChatServers/default/chat": {
+    "/providers/Microsoft.StorageCopilotTest/storage/chat": {
       "post": {
-        "operationId": "ChatServerTest_Chat",
+        "operationId": "StorageAssistant_Chat",
         "tags": [
-          "ChatServerTest"
+          "StorageAssistant"
         ],
         "description": "Send chat user input",
         "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
-          },
           {
             "name": "userRequest",
             "in": "body",
@@ -98,42 +92,62 @@
         "chatResponse"
       ]
     },
-    "ChatServer": {
+    "ConversationHistory": {
       "type": "object",
-      "description": "A StorageCopilotTestProviderHub resource",
+      "description": "Use to provide the previous conversation context for this particular user request",
       "properties": {
-        "properties": {
-          "type": "object",
-          "description": "The resource-specific properties for this resource.",
-          "properties": {},
-          "x-ms-client-flatten": true,
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
+        "index": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Index in conservation array"
+        },
+        "userInput": {
+          "type": "string",
+          "description": "The user input"
+        },
+        "chatResponse": {
+          "type": "string",
+          "description": "The chat bot response"
         }
       },
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
-        }
+      "required": [
+        "index",
+        "userInput",
+        "chatResponse"
       ]
     },
     "UserRequest": {
       "type": "object",
       "description": "User request to the chat handler",
       "properties": {
-        "userMessage": {
+        "userInput": {
           "type": "string",
           "description": "User message to the chat handler"
         },
         "resourceId": {
           "type": "string",
           "description": "Resource ID that is relevant to the user question"
+        },
+        "bladeInformation": {
+          "type": "string",
+          "description": "If invoked from the Portal, supply the calling blade"
+        },
+        "conversationHistory": {
+          "type": "array",
+          "description": "Past conversation records",
+          "items": {
+            "$ref": "#/definitions/ConversationHistory"
+          },
+          "x-ms-identifiers": []
+        },
+        "contextResources": {
+          "type": "array",
+          "description": "Resources information that is relevant to this query",
+          "items": {}
         }
       },
       "required": [
-        "userMessage"
+        "userInput"
       ]
     }
   },

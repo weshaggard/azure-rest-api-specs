@@ -246,16 +246,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Asset deletion is successful."
+          },
           "202": {
+            "description": "Async operation to delete the Asset is created.",
             "headers": {
               "Location": {
                 "type": "string"
               }
-            },
-            "description": "Async operation to delete the Asset."
+            }
           },
           "204": {
-            "description": "Asset delete successful."
+            "description": "Asset deletion no-op since the resource does not exist."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
@@ -322,8 +325,8 @@
       "in": "path",
       "required": true,
       "type": "string",
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]*[a-zA-Z0-9]$",
-      "maxLength": 64,
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "maxLength": 63,
       "minLength": 3
     }
   },
@@ -351,7 +354,15 @@
       ],
       "properties": {
         "properties": {
-          "$ref": "#/definitions/AssetProperties",
+          "type": "object",
+          "required": [
+            "assetEndpointProfileUri"
+          ],
+          "allOf": [
+            {
+              "$ref": "#/definitions/AssetProperties"
+            }
+          ],
           "description": "Asset resource properties."
         },
         "extendedLocation": {
@@ -435,13 +446,13 @@
           "type": "string",
           "description": "Human-readable description of the asset."
         },
-        "connectivityProfileUri": {
+        "assetEndpointProfileUri": {
           "type": "string",
           "x-ms-mutability": [
             "read",
             "create"
           ],
-          "description": "A reference to the connectivity profile (connection information) used by brokers to connect to an endpoint that provides data points for this asset. Must have the format <ModuleCR.metadata.namespace>/<ModuleCR.metadata.name>."
+          "description": "A reference to the asset endpoint profile (connection information) used by brokers to connect to an endpoint that provides data points for this asset. Must have the format <ModuleCR.metadata.namespace>/<ModuleCR.metadata.name>."
         },
         "version": {
           "type": "integer",
@@ -480,6 +491,11 @@
         "serialNumber": {
           "type": "string",
           "description": "Asset serial number."
+        },
+        "attributes": {
+          "type": "object",
+          "description": "A set of key-value pairs that contain custom attributes set by the customer.",
+          "additionalProperties": true
         },
         "defaultDataPointsConfiguration": {
           "type": "string",

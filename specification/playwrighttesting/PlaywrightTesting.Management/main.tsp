@@ -26,8 +26,8 @@ interface Operations extends Azure.ResourceManager.Operations {}
 model Account is TrackedResource<AccountProperties> {
   @doc("Name of account")
   @minLength(3)
-  @maxLength(253)
-  @pattern("^[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]$")
+  @maxLength(64)
+  @pattern("^[a-zA-Z]{1}[a-zA-Z0-9]{2,63}$")
   @key("name")
   @path
   @segment("accounts")
@@ -38,7 +38,7 @@ model Account is TrackedResource<AccountProperties> {
 model AccountProperties {
   @visibility("read")
   @doc("The Playwright testing dashboard URI for the account resource.")
-  dashboardUri: url;
+  dashboardUri?: url;
 
   @doc("This property sets the connection region for Playwright client workers to cloud-hosted browsers. If enabled, workers connect to browsers in the closest Azure region, ensuring lower latency. If disabled, workers connect to browsers in the Azure region in which the workspace was initially created.")
   regionalAffinity?: EnablementStatus = EnablementStatus.Enabled;
@@ -120,7 +120,7 @@ model QuotaProperties {
 model FreeTrialProperties {
   @doc("The playwright account id.")
   @visibility("read")
-  accountId: uuid;
+  accountId: string;
 
   @doc("The free-trial createdAt utcDateTime.")
   @visibility("read")
