@@ -67,11 +67,6 @@ model DstsServiceAccountResource
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface DstsServiceAccount {
-  @doc(" dstsServiceAccount creation")
-  @example(
-    "./examples/CreateDstsServiceAccount.json",
-    "Create dstsServiceAccount"
-  )
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DstsServiceAccountResource>;
   listBySubscription is ArmListBySubscription<DstsServiceAccountResource>;
   listByResourceGroup is ArmResourceListByParent<DstsServiceAccountResource>;

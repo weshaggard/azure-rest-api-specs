@@ -59,8 +59,6 @@ model EnvironmentResource
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface Environment {
-  @doc(" environment creation")
-  @example("./examples/CreateEnvironment.json", "Create environment")
   createOrUpdate is ArmResourceCreateOrUpdateAsync<EnvironmentResource>;
   listBySubscription is ArmListBySubscription<EnvironmentResource>;
   listByResourceGroup is ArmResourceListByParent<EnvironmentResource>;

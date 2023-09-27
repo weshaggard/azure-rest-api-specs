@@ -79,11 +79,6 @@ model Parameter { // this can be TrackedResource based on resourcetype
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface GenericGenevaActions {
-  @doc("genericGenevaActions creation")
-  @example(
-    "./examples/CreateGenericGenevaActions.json",
-    "Create genericGenevaActions"
-  )
   createOrUpdate is ArmResourceCreateOrUpdateAsync<GenericGenevaActionsResource>;
   listBySubscription is ArmListBySubscription<GenericGenevaActionsResource>;
   listByResourceGroup is ArmResourceListByParent<GenericGenevaActionsResource>;

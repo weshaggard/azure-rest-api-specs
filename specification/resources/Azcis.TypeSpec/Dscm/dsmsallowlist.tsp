@@ -56,8 +56,6 @@ enum dsmsAllowlistsProvisioningState {
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface DsmsAllowlists {
-  @doc(" dsmsAllowlists creation")
-  @example("./examples/CreateDsmsAllowlist.json", "Create dsmsAllowlists")
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsAllowlistsResource>;
   listBySubscription is ArmListBySubscription<DsmsAllowlistsResource>;
   listByResourceGroup is ArmResourceListByParent<DsmsAllowlistsResource>;

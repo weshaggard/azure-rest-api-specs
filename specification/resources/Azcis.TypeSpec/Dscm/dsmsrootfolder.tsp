@@ -43,8 +43,6 @@ model DsmsRootFolderResource
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface DsmsRootFolder {
-  @doc(" dsmsRootFolder creation")
-  @example("./examples/CreateDsmsRootFolder.json", "Create dsmsRootFolder")
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsRootFolderResource>;
   listBySubscription is ArmListBySubscription<DsmsRootFolderResource>;
   listByResourceGroup is ArmResourceListByParent<DsmsRootFolderResource>;
