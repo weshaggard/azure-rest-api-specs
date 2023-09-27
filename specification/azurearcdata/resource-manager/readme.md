@@ -27,14 +27,33 @@ These are the global settings for the azurearcdata.
 ``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-preview-2023-05
+tag: package-preview-2023-11
 ```
 
+
+### Tag: package-preview-2023-11
+
+These settings apply only when `--tag=package-preview-2023-11` is specified on the command line.
+
+```yaml $(tag) == 'package-preview-2023-11'
+input-file:
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/activeDirectoryConnectors.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/azurearcdata.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/common.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/dataControllers.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/failoverGroups.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/operations.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/postgresInstances.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/sqlManagedInstances.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/sqlServerAvailabilityGroups.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/sqlServerDatabases.json
+  - Microsoft.AzureArcData/preview/2023-11-01-preview/sqlServerInstances.json
+```
 ### Tag: package-preview-2023-10
 
 These settings apply only when `--tag=package-preview-2023-10` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2023-10'
+``` yaml $(tag) == 'package-preview-2023-10'
 input-file:
   - Microsoft.AzureArcData/preview/2023-10-01-preview/activeDirectoryConnectors.json
   - Microsoft.AzureArcData/preview/2023-10-01-preview/azurearcdata.json
@@ -53,7 +72,7 @@ input-file:
 
 These settings apply only when `--tag=package-preview-2023-06` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2023-06'
+``` yaml $(tag) == 'package-preview-2023-06'
 input-file:
   - Microsoft.AzureArcData/preview/2023-06-13-alpha/activeDirectoryConnectors.json
   - Microsoft.AzureArcData/preview/2023-06-13-alpha/azurearcdata.json
@@ -72,7 +91,7 @@ input-file:
 
 These settings apply only when `--tag=package-preview-2023-05` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2023-05'
+``` yaml $(tag) == 'package-preview-2023-05'
 input-file:
   - Microsoft.AzureArcData/preview/2023-05-16-preview/activeDirectoryConnectors.json
   - Microsoft.AzureArcData/preview/2023-05-16-preview/azurearcdata.json
@@ -91,7 +110,7 @@ input-file:
 
 These settings apply only when `--tag=package-2021-11-01` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-11-01'
+``` yaml $(tag) == 'package-2021-11-01'
 input-file:
   - Microsoft.AzureArcData/stable/2021-11-01/azurearcdata.json
 ```
@@ -100,7 +119,7 @@ input-file:
 
 These settings apply only when `--tag=package-2021-08-01` is specified on the command line.
 
-```yaml $(tag) == 'package-2021-08-01'
+``` yaml $(tag) == 'package-2021-08-01'
 input-file:
   - Microsoft.AzureArcData/stable/2021-08-01/azurearcdata.json
 ```
@@ -109,7 +128,7 @@ input-file:
 
 These settings apply only when `--tag=package-preview-2021-07-01` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2021-07-01'
+``` yaml $(tag) == 'package-preview-2021-07-01'
 input-file:
   - Microsoft.AzureArcData/preview/2021-07-01-preview/azurearcdata.json
 ```
@@ -118,7 +137,7 @@ input-file:
 
 These settings apply only when `--tag=package-preview-2021-06-01` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2021-06-01'
+``` yaml $(tag) == 'package-preview-2021-06-01'
 input-file:
   - Microsoft.AzureArcData/preview/2021-06-01-preview/azurearcdata.json
 ```
