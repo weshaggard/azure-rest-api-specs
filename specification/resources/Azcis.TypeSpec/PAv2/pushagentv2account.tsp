@@ -97,7 +97,7 @@ enum PushAgentV2AccountProvisioningState {
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface PushAgentV2Accounts {
-  @doc("PushAgentV2Account allocation")
+  @doc("Create PushAgentV2Account")
   @example("./examples/AddAccount.json", "Create a PushAgentV2Account")
   createOrUpdate is ArmResourceCreateOrUpdateAsync<PushAgentV2AccountResource>;
   listBySubscription is ArmListBySubscription<PushAgentV2AccountResource>;
