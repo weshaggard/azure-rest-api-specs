@@ -26,9 +26,19 @@ These are the global settings for the deviceregistry.
 
 ``` yaml
 openapi-type: arm
-tag: package-preview-2023-10
+tag: package-preview-2023-11
 ```
 
+### Tag: package-preview-2023-11
+
+These settings apply only when `--tag=package-preview-2023-11` is specified on the command line.
+
+```yaml $(tag) == 'package-preview-2023-11'
+input-file:
+  - Microsoft.DeviceRegistry/preview/2023-11-01-preview/asset.json
+  - Microsoft.DeviceRegistry/preview/2023-11-01-preview/assetEndpointProfiles.json
+  - Microsoft.DeviceRegistry/preview/2023-11-01-preview/devices.json
+```
 
 ### Tag: package-preview-2023-10
 
