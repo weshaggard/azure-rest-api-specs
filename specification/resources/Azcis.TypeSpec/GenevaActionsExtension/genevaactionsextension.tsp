@@ -14,9 +14,8 @@ using Autorest;
 @armProviderNamespace
 @service({
   title: "Foundational ARM Client",
-  version: "2023-08-22-preview"
+  version: "2023-08-22-preview",
 })
-
 @doc("https://eng.ms/docs/products/azcis-resource-provisioning/template-user-guide/resources/geneva/geneva-actions-extension-resource-template")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureCIS;
@@ -37,11 +36,12 @@ model GenevaActionsExtensionResourceProperties {
 }
 
 @doc("GenevaActionsExtension Resource")
-model GenevaActionsExtensionResource is ProxyResource<GenevaActionsExtensionResourceProperties> { // this can be TrackedResource based on resourcetype
+model GenevaActionsExtensionResource
+  is ProxyResource<GenevaActionsExtensionResourceProperties> { // this can be TrackedResource based on resourcetype
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("genevaActionsExtensions")// start with lower case
+  @segment("genevaActionsExtensions") // start with lower case
   @visibility("read")
   @path
   name: string;
@@ -58,7 +58,7 @@ enum genevaActionsExtensionsProvisioningState {
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface GenevaActionsExtensions {
-  createOrUpdate  is ArmResourceCreateOrUpdateAsync<GenevaActionsExtensionResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<GenevaActionsExtensionResource>;
   listBySubscription is ArmListBySubscription<GenevaActionsExtensionResource>;
   listByResourceGroup is ArmResourceListByParent<GenevaActionsExtensionResource>;
 }
