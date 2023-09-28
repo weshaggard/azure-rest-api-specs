@@ -100,4 +100,5 @@ interface PushAgentV2Accounts {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<PushAgentV2AccountResource>;
   listBySubscription is ArmListBySubscription<PushAgentV2AccountResource>;
   listByResourceGroup is ArmResourceListByParent<PushAgentV2AccountResource>;
+  get is ArmResourceRead<PushAgentV2AccountResource>;
 }
