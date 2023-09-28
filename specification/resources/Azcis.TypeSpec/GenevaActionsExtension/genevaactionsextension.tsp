@@ -59,6 +59,7 @@ enum genevaActionsExtensionsProvisioningState {
 @armResourceOperations
 interface GenevaActionsExtensions {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<GenevaActionsExtensionResource>;
-  listBySubscription is ArmListBySubscription<GenevaActionsExtensionResource>;
+  get is ArmResourceRead<GenevaActionsExtensionResource>;
   listByResourceGroup is ArmResourceListByParent<GenevaActionsExtensionResource>;
+  listBySubscription is ArmListBySubscription<GenevaActionsExtensionResource>;
 }
