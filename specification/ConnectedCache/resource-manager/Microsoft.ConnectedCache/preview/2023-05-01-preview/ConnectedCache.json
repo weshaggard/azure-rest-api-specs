@@ -932,7 +932,7 @@
         "tags": [
           "ispCacheNodes"
         ],
-        "summary": "Gets ispCacheNode resource information of an ispCustomer parent resource",
+        "summary": "Gets isp CacheNode resource information of an isp Customer parent resource",
         "description": "This api gets ispCacheNode resource information",
         "operationId": "ispCacheNodes_Get",
         "x-ms-examples": {
@@ -1227,6 +1227,52 @@
             "description": "The get Bgp cidrs request was successful; response contains ispCacheNode Bgp Cidrs",
             "schema": {
               "$ref": "#/definitions/MccCacheNodeBgpCidrDetails"
+            }
+          },
+          "default": {
+            "description": "The get request has failed; error response details : 4xx/5xx for ispCacheNode",
+            "schema": {
+              "$ref": "#/definitions/MCCErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedCache/ispCustomers/{customerResourceName}/ispCacheNodes/{cacheNodeResourceName}/getCacheNodeInstallDetails": {
+      "post": {
+        "tags": [
+          "ispCacheNodes"
+        ],
+        "summary": "Gets required properties for ispCacheNode resource install key details",
+        "description": "This api gets secrets of the ispCacheNode resource install details",
+        "operationId": "ispCacheNodes_getCacheNodeInstallDetails",
+        "x-ms-examples": {
+          "ispCacheNodes install details Get": {
+            "$ref": "./examples/ispCacheNodesGetCacheNodeInstallDetails.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/CustomerNameParameter"
+          },
+          {
+            "$ref": "#/parameters/CacheNodeNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The get cache node install details request was successful; response contains ispCacheNode Bgp Cidrs",
+            "schema": {
+              "$ref": "#/definitions/MccCacheNodeInstallDetails"
             }
           },
           "default": {
@@ -1794,6 +1840,52 @@
           "nextLinkName": "nextLink"
         }
       }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConnectedCache/enterpriseMccCustomers/{customerResourceName}/enterpriseMccCacheNodes/{cacheNodeResourceName}/getCacheNodeInstallDetails": {
+      "post": {
+        "tags": [
+          "enterpriseMccCacheNodes"
+        ],
+        "summary": "Gets required properties for enterprise Mcc CacheNode resource install key details",
+        "description": "This api gets secrets of the enterprise Mcc CacheNode resource install details",
+        "operationId": "enterpriseMccCacheNodes_getCacheNodeInstallDetails",
+        "x-ms-examples": {
+          "enterpriseMccCacheNodes install details Get": {
+            "$ref": "./examples/enterprise/enterpriseMccCacheNodeGetCacheNodeInstallDetails.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/CustomerNameParameter"
+          },
+          {
+            "$ref": "#/parameters/CacheNodeNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The get cache node install details request was successful; response contains ispCacheNode Bgp Cidrs",
+            "schema": {
+              "$ref": "#/definitions/MccCacheNodeInstallDetails"
+            }
+          },
+          "default": {
+            "description": "The get request has failed; error response details : 4xx/5xx for ispCacheNode",
+            "schema": {
+              "$ref": "#/definitions/MCCErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1809,17 +1901,6 @@
         "error": {
           "$ref": "#/definitions/ErrorDefinition",
           "description": "The error details"
-        },
-        "properties": {
-          "description": "Additional ConnectedCache properties",
-          "title": "ConnectedCache Additional properties",
-          "x-ms-client-flatten": true,
-          "$ref": "#/definitions/CacheNode"
-        },
-        "systemData": {
-          "readOnly": true,
-          "description": "The system meta data relating to this resource",
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
         }
       }
     },
@@ -1925,6 +2006,7 @@
       "properties": {
         "peeringDbLastUpdateTime": {
           "type": "string",
+          "format": "date-time",
           "description": "last update timestamp of peering db update"
         },
         "CustomerProperties_Overview_CacheEfficiency": {
@@ -1945,6 +2027,7 @@
         },
         "CustomerProperties_Overview_EgressMbpsMaxDateTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp of max egress"
         },
         "CustomerProperties_Overview_MissMbpsMax": {
@@ -1953,6 +2036,7 @@
         },
         "CustomerProperties_Overview_MissMbpsMaxDateTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp of miss max throughput"
         },
         "CustomerProperties_Overview_CacheNodesHealthyCount": {
@@ -1967,7 +2051,7 @@
         },
         "signupStatus": {
           "type": "boolean",
-          "description": "status of signup"
+          "description": "status of signup represents as true or false"
         },
         "signupStatusCode": {
           "description": "status of signup",
@@ -2102,17 +2186,12 @@
           "format": "int32",
           "description": "state of cache node state as part of additional cache node properties"
         },
-        "RegistrationKey": {
-          "type": "string",
-          "description": "iot device registration temporary registration key"
-        },
         "driveConfiguration": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/CacheNodeDriveConfiguration"
           },
-          "x-ms-identifiers": [
-          ],
+          "x-ms-identifiers": [],
           "description": "drive configurations for the cache node"
         },
         "bgpConfiguration": {
@@ -2121,9 +2200,9 @@
           "$ref": "#/definitions/BgpConfiguration",
           "description": "bgp configuration of the cache node"
         },
-        "proxyIP": {
+        "proxyUrl": {
           "type": "string",
-          "description": "proxy ip property in the MCC Object"
+          "description": "proxy url property in the MCC Object"
         },
         "optionalProperty1": {
           "type": "string",
@@ -2153,18 +2232,17 @@
       "required": [
         "location"
       ],
-      "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+        }
+      ],
       "properties": {
         "properties": {
           "description": "Additional ConnectedCache properties",
           "title": "ConnectedCache Additional properties",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/CreateOrUpdateCustomerRequestEntity"
-        },
-        "systemData": {
-          "readOnly": true,
-          "description": "The system meta data relating to this resource",
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
         }
       }
     },
@@ -2202,7 +2280,7 @@
         },
         "CustomerAsn": {
           "type": "string",
-          "description": "asn of the customer"
+          "description": "asn (autonomous system number) of the customer entered value"
         },
         "TransitState": {
           "type": "string",
@@ -2232,18 +2310,17 @@
       "required": [
         "location"
       ],
-      "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+        }
+      ],
       "properties": {
         "properties": {
           "description": "Additional ConnectedCache properties",
           "title": "ConnectedCache Additional properties",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/CreateOrUpdateCacheNodeRequestEntity"
-        },
-        "systemData": {
-          "readOnly": true,
-          "description": "The system meta data relating to this resource",
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
         }
       }
     },
@@ -2289,7 +2366,7 @@
         },
         "IsEnabled": {
           "type": "boolean",
-          "description": "is the cache node enabled"
+          "description": "is the cache node enabled value is true or false"
         },
         "IsEnterpriseManaged": {
           "type": "boolean",
@@ -2308,7 +2385,11 @@
       "required": [
         "location"
       ],
-      "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+        }
+      ],
       "properties": {
         "properties": {
           "type": "object",
@@ -2316,11 +2397,6 @@
           "title": "Properties of mcc cache node resource.",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/CacheNode"
-        },
-        "systemData": {
-          "readOnly": true,
-          "description": "The system meta data relating to this resource",
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
         }
       }
     },
@@ -2330,7 +2406,11 @@
       "required": [
         "location"
       ],
-      "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+        }
+      ],
       "properties": {
         "properties": {
           "type": "object",
@@ -2338,11 +2418,6 @@
           "title": "Properties of mcc customer resource.",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/Customer"
-        },
-        "systemData": {
-          "readOnly": true,
-          "description": "The system meta data relating to this resource",
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
         }
       }
     },
@@ -2352,19 +2427,84 @@
       "required": [
         "location"
       ],
-      "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "type": "object",
+          "description": "Properties of Bgp cidrs of mcc cache node resource",
+          "title": "Properties of bgp cidrs of mcc cache node resource",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/BgpCidrsConfiguration"
+        }
+      }
+    },
+    "BgpCidrsConfiguration": {
+      "type": "object",
+      "description": "Bgp cidr details of mcc cache node resource",
       "properties": {
         "bgpCidrs": {
           "type": "array",
-          "description": "Bgp cidr details of mcc cache node resource.",
+          "description": "Bgp cidr details of mcc cache node resource",
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "MccCacheNodeInstallDetails": {
+      "type": "object",
+      "description": "Represents all cache node install details",
+      "required": [
+        "location"
+      ],
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "type": "object",
+          "description": "Properties of  mcc cache node resource install script",
+          "title": "Properties of mcc cache node resource install script",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/CacheNodeInstallProperties"
+        }
+      }
+    },
+    "CacheNodeInstallProperties": {
+      "type": "object",
+      "description": "install script properties",
+      "properties": {
+        "CustomerId": {
+          "type": "string",
+          "description": "mcc customer id"
         },
-        "systemData": {
+        "CacheNodeId": {
+          "type": "string",
+          "description": "identifier of the cache node"
+        },
+        "PrimaryAccountKey": {
+          "x-ms-secret": true,
           "readOnly": true,
-          "description": "The system meta data relating to this resource",
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
+          "type": "string",
+          "description": "primary account key. This is internal to mcc"
+        },
+        "SecondaryAccountKey": {
+          "x-ms-secret": true,
+          "readOnly": true,
+          "type": "string",
+          "description": "secondary account key. This is internal to mcc"
+        },
+        "RegistrationKey": {
+          "x-ms-secret": true,
+          "readOnly": true,
+          "type": "string",
+          "description": "iot device registration temporary registration key used one time"
         }
       }
     },
@@ -2399,10 +2539,10 @@
         },
         "additionalCacheNodeProperties": {
           "type": "object",
-          "title": "Additional customer properties",
+          "title": "Additional cache node properties",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/AdditionalCacheNodeProperties",
-          "description": "Additional properties for Mcc Customer entity"
+          "description": "Additional properties for Mcc cache node entity"
         },
         "statusCode": {
           "type": "string",
@@ -2460,7 +2600,11 @@
           "type": "object",
           "title": "Additional customer properties",
           "x-ms-client-flatten": true,
-          "$ref": "#/definitions/AdditionalCustomerProperties",
+          "allOf": [
+            {
+              "$ref": "#/definitions/AdditionalCustomerProperties"
+            }
+          ],
           "description": "Additional properties for Mcc Customer entity"
         },
         "statusCode": {
@@ -2497,8 +2641,7 @@
           "items": {
             "$ref": "#/definitions/ResourceProviderOperationDefinition"
           },
-          "x-ms-identifiers": [
-          ]
+          "x-ms-identifiers": []
         },
         "nextLink": {
           "description": "The URI that can be used to request the next page for list of Azure operations",
@@ -2546,14 +2689,6 @@
         "CustomerName": {
           "type": "string",
           "description": "name of the customer"
-        },
-        "PrimaryAccountKey": {
-          "type": "string",
-          "description": "primary account key. This is internal to mcc"
-        },
-        "SecondaryAccountKey": {
-          "type": "string",
-          "description": "secondary account key. This is internal to mcc"
         },
         "ContactEmail": {
           "type": "string",
@@ -2615,6 +2750,7 @@
         },
         "DeletedFlagSetDateTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp when delete flag was set for the customer"
         },
         "ProvisioningState": {
@@ -2624,6 +2760,7 @@
         },
         "LastAttemptedDeleteTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp of last delete attempt"
         },
         "SynchWithArmAttemptsCount": {
@@ -2633,6 +2770,7 @@
         },
         "LastSyncWithArmTimestamp": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp of last sync with arm"
         },
         "IsEnterpriseManaged": {
@@ -2663,7 +2801,7 @@
         },
         "CustomerIndex": {
           "type": "string",
-          "description": "Customer index"
+          "description": "Customer index as string"
         },
         "CacheNodeId": {
           "type": "string",
@@ -2717,6 +2855,7 @@
         },
         "DeletedFlagSetDateTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp when delete flag was set for the customer"
         },
         "ProvisioningState": {
@@ -2726,6 +2865,7 @@
         },
         "LastAttemptedDeleteTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp of last delete attempt"
         },
         "ReleaseVersion": {
@@ -2752,6 +2892,7 @@
         },
         "CidrCsvLastUpdateTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp of last update to cidr csv"
         },
         "BgpCidrCsv": {
@@ -2760,10 +2901,12 @@
         },
         "BgpCidrCsvLastUpdateTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp of last update to bgp cidr csv"
         },
         "BgpLastReportedTime": {
           "type": "string",
+          "format": "date-time",
           "description": "timestamp of last bgp report time"
         },
         "BgpReviewStateText": {
@@ -2883,6 +3026,7 @@
         },
         "WorkerConnections_LastUpdatedDateTime": {
           "type": "string",
+          "format": "date-time",
           "description": "indicates the most recent date time when the worker count on the physical MCC was successfully updated"
         },
         "ContainerResyncTrigger": {
@@ -2902,18 +3046,17 @@
       "required": [
         "location"
       ],
-      "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+        }
+      ],
       "properties": {
         "properties": {
           "description": "Additional ConnectedCache properties",
           "title": "ConnectedCache Additional properties",
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/CacheNodeOldResponse"
-        },
-        "systemData": {
-          "readOnly": true,
-          "description": "The system meta data relating to this resource",
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/systemData"
         }
       }
     },
@@ -2954,8 +3097,7 @@
         },
         "additionalCacheNodeProperties": {
           "type": "object",
-          "description": "additional Mcc Cache Node Json properties for BGP and Update and IOT central",
-          "additionalProperties": {}
+          "description": "additional Mcc Cache Node Json properties for BGP and Update and IOT central"
         },
         "statusCode": {
           "type": "string",
@@ -2986,8 +3128,7 @@
       "properties": {
         "tags": {
           "type": "object",
-          "description": "Additional tag configuration related properties",
-          "additionalProperties": {}
+          "description": "Additional tag configuration related properties"
         }
       }
     },
@@ -3026,8 +3167,7 @@
         },
         "additionalAggregatedProperties": {
           "description": "Tags for the ConnectedCache",
-          "type": "object",
-          "additionalProperties": {}
+          "type": "object"
         },
         "nextLink": {
           "description": "The URL the client should use to fetch the next page (per server side paging)",

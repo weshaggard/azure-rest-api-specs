@@ -22,12 +22,31 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the ConnectedCache
+These are the global settings for the connectedcache
 
-```yaml
+``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2019-12-04-preview
+tag: package-2023-05-01-preview
+```
+
+
+### Tag: package-preview-2023-05-01-preview
+
+These settings apply only when `--tag=package-2023-05-01-preview` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-05-01-preview'
+input-file:
+  - Microsoft.ConnectedCache/preview/2023-05-01-preview/ConnectedCache.json
+```
+
+### Tag: package-2023-04-01-preview
+
+These settings apply only when `--tag=package-2023-04-01-preview` is specified on the command line.
+
+``` yaml $(tag) == 'package-2023-04-01-preview'
+input-file:
+  - Microsoft.ConnectedCache/preview/2023-04-01-preview/ConnectedCache.json
 ```
 
 ### Tag: package-2019-12-04-preview
@@ -68,23 +87,6 @@ These settings apply only when `--tag=package-2022-03-21-preview` is specified o
 ```yaml $(tag) == 'package-2022-03-21-preview'
 input-file:
   - Microsoft.ConnectedCache/preview/2022-03-21-preview/ConnectedCache.json
-```
-### Tag: package-2023-04-01-preview
-
-These settings apply only when `--tag=package-2023-04-01-preview` is specified on the command line.
-
-```yaml $(tag) == 'package-2023-04-01-preview'
-input-file:
-  - Microsoft.ConnectedCache/preview/2023-04-01-preview/ConnectedCache.json
-```
-
-### Tag: package-2023-05-01-preview
-
-These settings apply only when `--tag=package-2023-05-01-preview` is specified on the command line.
-
-```yaml $(tag) == 'package-2023-05-01-preview'
-input-file:
-  - Microsoft.ConnectedCache/preview/2023-05-01-preview/ConnectedCache.json
 ```
 
 ## Suppression
