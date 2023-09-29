@@ -20,8 +20,6 @@ using Autorest;
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureCIS;
 
-interface Operations extends Azure.ResourceManager.Operations {}
-
 @doc("AddressRecord properties")
 model AddressRecordResourceProperties {
   @doc("Gets or sets the IP Address in String format")
