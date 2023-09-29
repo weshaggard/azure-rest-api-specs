@@ -32,7 +32,7 @@ Requirements for defining an ARM Service:
 @armProviderNamespace
 @service({
     title: "Azure Linux Testing Service",
-    version: "2022-12-08-privatepreview"
+    version: "2023-08-01-preview"
 
 })
 
