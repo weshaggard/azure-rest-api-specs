@@ -233,6 +233,74 @@
     }
   },
   "definitions": {
+    "ClusterStorage": {
+      "type": "object",
+      "description": "Storage information",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "NFS",
+            "Local"
+          ],
+          "x-ms-enum": {
+            "name": "ClusterStorageType",
+            "modelAsString": true
+          },
+          "description": "Storage type used by cluster",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "ClusterStorageNfs": {
+      "type": "object",
+      "description": "NFS storage parameters",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ClusterStorage"
+        }
+      ],
+      "properties": {
+        "serverIp": {
+          "$ref": "./common.json#/definitions/IpAddress"
+        },
+        "filePath": {
+          "type": "string",
+          "description": "Path of storage location on remote server"
+        }
+      },
+      "required": [
+        "serverIp",
+        "filePath"
+      ],
+      "x-ms-discriminator-value": "NFS"
+    },
+    "ClusterStorageLocal": {
+      "type": "object",
+      "description": "Local storage parameters",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ClusterStorage"
+        }
+      ],
+      "properties": {
+        "storageClassName": {
+          "type": "string",
+          "description": "Storage class name"
+        }
+      },
+      "required": [
+        "storageClassName"
+      ],
+      "x-ms-discriminator-value": "Local"
+    },
     "ClusterIpPools": {
       "type": "object",
       "description": "Common parameters for IP pools",
@@ -295,16 +363,27 @@
           "description": "The type of cluster"
         },
         "storage": {
-          "type": "object",
-          "description": "Storage information",
-          "properties": {
-            "serverIp": {
-              "$ref": "./common.json#/definitions/IpAddress"
+          "$ref": "#/definitions/ClusterStorage"
+        },
+        "sriovNetworks": {
+          "type": "array",
+          "description": "List of SRIOV network names to use with this cluster",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Label used by SRIOV network"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name used by SRIOV network"
+              }
             },
-            "filePath": {
-              "type": "string",
-              "description": "Path of storage location on remote server"
-            }
+            "required": [
+              "label",
+              "name"
+            ]
           }
         },
         "managementIpPools": {
