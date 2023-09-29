@@ -37,5 +37,6 @@ These settings apply only when `--tag=package-2023-08-22-preview` is specified o
 input-file:
   - Microsoft.AzureCIS/preview/2023-08-22-preview/dscm.json
   - Microsoft.AzureCIS/preview/2023-08-22-preview/environment.json
+  - Microsoft.AzureCIS/preview/2023-08-22-preview/storageAccountDsms.json
 ```
 ---
