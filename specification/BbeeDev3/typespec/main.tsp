@@ -43,7 +43,7 @@ model ProvisioningResource is TrackedResource<ProvisioningResourceProperties> {
 model ProvisioningResourceProperties {
   @visibility("read")
   @doc("The status of the last operation.")
-  provisioningState?: ResourceProvisioningState;
+  provisioningState?: ProvisioningState;
 
   @visibility("read")
   @doc("The provisioning service endpoints.")
@@ -69,6 +69,18 @@ model DeviceEndpoint {
 
 @doc("Resource create or update operation completed successfully.")
 model ResourceUpdatedResponse<T> is ArmResponse<T> {
+}
+
+@doc("The status of the current operation.")
+@Azure.Core.lroStatus
+enum ProvisioningState {
+  ...ResourceProvisioningState,
+  @doc("Resource is being created.")
+  Creating,
+  @doc("Resource is being updated.")
+  Updating,
+  @doc("Resource is being deleted.")
+  Deleting
 }
 
 @armResourceOperations
@@ -106,7 +118,7 @@ model ProvisioningPolicyProperties {
 
   @visibility("read")
   @doc("The status of the last operation.")
-  provisioningState?: ResourceProvisioningState;
+  provisioningState?: ProvisioningState;
 
   @doc("The bootstrap authentication rule.")
   bootstrapAuthentication: BootstrapAuthenticationRule;
@@ -132,7 +144,7 @@ model ProvisioningPolicyPropertiesUpdate is OptionalProperties<UpdateablePropert
 
   @visibility("read")
   @doc("The status of the last operation.")
-  provisioningState?: ResourceProvisioningState;
+  provisioningState?: ProvisioningState;
 
   @doc("The bootstrap authentication rule.")
   bootstrapAuthentication?: BootstrapAuthenticationRule;
@@ -574,7 +586,7 @@ model DeviceProvisioningStateProperties {
 
   @visibility("read")
   @doc("The status of the last operation.")
-  provisioningState?: ResourceProvisioningState;
+  provisioningState?: ProvisioningState;
 }
 
 @doc("The current onboarding status.")
