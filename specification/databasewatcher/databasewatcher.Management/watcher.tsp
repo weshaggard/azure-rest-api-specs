@@ -65,11 +65,11 @@ model Datastore {
   #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @removed(Versions.v2023_09_01_preview)
   @doc("The ARM ResourceId of an Azure Data Explorer database.")
-  adxDatabaseResourceId: ResourceIdentifier<[{type:"Microsoft.Kusto/Clusters/Databases"}]>;
+  adxDatabaseResourceId: string;
 
   @added(Versions.v2023_09_01_preview)
   @doc("The ARM ResourceId of an Azure Data Explorer cluster.")
-  adxClusterResourceId?: ResourceIdentifier<[{type:"Microsoft.Kusto/Clusters"}]>;
+  adxClusterResourceId?: string;
 
   #suppress "@azure-tools/typespec-providerhub/non-breaking-versioning"
   @removed(Versions.v2023_09_01_preview)

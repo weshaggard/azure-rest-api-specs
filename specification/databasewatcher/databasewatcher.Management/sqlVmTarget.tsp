@@ -17,7 +17,7 @@ model SqlVmTargetProperties extends TargetProperties {
   targetType: "SqlVm";
 
   @doc("The ARM ResourceId of an Azure SQL VM target.")
-  sqlVmResourceId: ResourceIdentifier<[{type:"Microsoft.SqlVirtualMachine/SqlVirtualMachines"}]>;
+  sqlVmResourceId: string;
 
   @doc("The TCP port number to optionally use in the connection string when connecting to an Azure SQL VM target.")
   connectionTcpPort?: int32 = 1433;

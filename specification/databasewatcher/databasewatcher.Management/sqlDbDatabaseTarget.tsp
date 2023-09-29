@@ -17,7 +17,7 @@ model SqlDbSingleDatabaseTargetProperties extends TargetProperties {
   targetType: "SqlDb";
 
   @doc("The ARM ResourceId of an Azure SQL DB single database target.")
-  sqlDbResourceId: ResourceIdentifier<[{type:"Microsoft.Sql/servers/databases"}]>;
+  sqlDbResourceId: string;
 
   @doc("Set to true to monitor a high availability replica of specified target, if any.")
   readIntent?: boolean = false;
