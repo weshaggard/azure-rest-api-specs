@@ -151,22 +151,15 @@
         ],
         "responses": {
           "200": {
-            "description": "Resource create or update operation completed successfully.",
+            "description": "Resource 'DeviceProvisioningState' update operation succeeded",
             "schema": {
               "$ref": "#/definitions/DeviceProvisioningState"
             }
           },
           "201": {
-            "description": "ARM create operation completed successfully.",
+            "description": "Resource 'DeviceProvisioningState' create operation succeeded",
             "schema": {
               "$ref": "#/definitions/DeviceProvisioningState"
-            },
-            "headers": {
-              "Retry-After": {
-                "type": "integer",
-                "format": "int32",
-                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
-              }
             }
           },
           "default": {
@@ -180,11 +173,7 @@
           "DeviceProvisioningStates_CreateOrUpdate": {
             "$ref": "./examples/DeviceProvisioningStates_CreateOrUpdate.json"
           }
-        },
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "azure-async-operation"
-        },
-        "x-ms-long-running-operation": true
+        }
       },
       "patch": {
         "operationId": "DeviceProvisioningStates_Update",
@@ -404,7 +393,8 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           }
         ],
         "responses": {
@@ -449,7 +439,8 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           },
           {
             "name": "resource",
@@ -463,13 +454,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Resource create or update operation completed successfully.",
+            "description": "Resource 'ProvisioningResource' update operation succeeded",
             "schema": {
               "$ref": "#/definitions/ProvisioningResource"
             }
           },
           "201": {
-            "description": "ARM create operation completed successfully.",
+            "description": "Resource 'ProvisioningResource' create operation succeeded",
             "schema": {
               "$ref": "#/definitions/ProvisioningResource"
             },
@@ -520,7 +511,8 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           },
           {
             "name": "properties",
@@ -549,6 +541,9 @@
         "x-ms-examples": {
           "ProvisioningResources_Update": {
             "$ref": "./examples/ProvisioningResources_Update.json"
+          },
+          "ProvisioningResources_Update_MinimumSet_Gen": {
+            "$ref": "./examples/ProvisioningResources_Update_MinimumSet_Gen.json"
           }
         }
       },
@@ -574,12 +569,24 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           }
         ],
         "responses": {
-          "200": {
-            "description": "Resource deleted successfully."
+          "202": {
+            "description": "Resource deletion accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
           },
           "204": {
             "description": "Resource deleted successfully."
@@ -594,8 +601,15 @@
         "x-ms-examples": {
           "ProvisioningResources_Delete": {
             "$ref": "./examples/ProvisioningResources_Delete.json"
+          },
+          "ProvisioningResources_Delete_MaximumSet_Gen": {
+            "$ref": "./examples/ProvisioningResources_Delete_MaximumSet_Gen.json"
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EdgeTest/provisioningResources/{provisioningResourceName}/provisioningPolicies": {
@@ -621,7 +635,8 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           }
         ],
         "responses": {
@@ -641,6 +656,9 @@
         "x-ms-examples": {
           "ProvisioningPolicies_ListByProvisioningResource": {
             "$ref": "./examples/ProvisioningPolicies_ListByProvisioningResource.json"
+          },
+          "ProvisioningPolicies_ListByProvisioningResource_MaximumSet_Gen": {
+            "$ref": "./examples/ProvisioningPolicies_ListByProvisioningResource_MaximumSet_Gen.json"
           }
         },
         "x-ms-pageable": {
@@ -671,7 +689,8 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           },
           {
             "name": "provisioningPolicyName",
@@ -679,7 +698,8 @@
             "description": "The name of the Provisioning Policy tracked resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           }
         ],
         "responses": {
@@ -699,6 +719,9 @@
         "x-ms-examples": {
           "ProvisioningPolicies_Get": {
             "$ref": "./examples/ProvisioningPolicies_Get.json"
+          },
+          "ProvisioningPolicies_Get_MaximumSet_Gen": {
+            "$ref": "./examples/ProvisioningPolicies_Get_MaximumSet_Gen.json"
           }
         }
       },
@@ -724,7 +747,8 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           },
           {
             "name": "provisioningPolicyName",
@@ -732,7 +756,8 @@
             "description": "The name of the Provisioning Policy tracked resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           },
           {
             "name": "resource",
@@ -746,13 +771,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Resource create or update operation completed successfully.",
+            "description": "Resource 'ProvisioningPolicy' update operation succeeded",
             "schema": {
               "$ref": "#/definitions/ProvisioningPolicy"
             }
           },
           "201": {
-            "description": "ARM create operation completed successfully.",
+            "description": "Resource 'ProvisioningPolicy' create operation succeeded",
             "schema": {
               "$ref": "#/definitions/ProvisioningPolicy"
             },
@@ -774,6 +799,9 @@
         "x-ms-examples": {
           "ProvisioningPolicies_CreateOrUpdate": {
             "$ref": "./examples/ProvisioningPolicies_CreateOrUpdate.json"
+          },
+          "ProvisioningPolicies_CreateOrUpdate_MaximumSet_Gen": {
+            "$ref": "./examples/ProvisioningPolicies_CreateOrUpdate_MaximumSet_Gen.json"
           }
         },
         "x-ms-long-running-operation-options": {
@@ -803,7 +831,8 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           },
           {
             "name": "provisioningPolicyName",
@@ -811,7 +840,8 @@
             "description": "The name of the Provisioning Policy tracked resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           },
           {
             "name": "properties",
@@ -830,6 +860,20 @@
               "$ref": "#/definitions/ProvisioningPolicy"
             }
           },
+          "202": {
+            "description": "Resource update request accepted.",
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              },
+              "Location": {
+                "type": "string",
+                "description": "The Location header contains the URL where the status of the long running operation can be checked."
+              }
+            }
+          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -840,8 +884,15 @@
         "x-ms-examples": {
           "ProvisioningPolicies_Update": {
             "$ref": "./examples/ProvisioningPolicies_Update.json"
+          },
+          "ProvisioningPolicies_Update_MaximumSet_Gen": {
+            "$ref": "./examples/ProvisioningPolicies_Update_MaximumSet_Gen.json"
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-long-running-operation": true
       },
       "delete": {
         "operationId": "ProvisioningPolicies_Delete",
@@ -865,7 +916,8 @@
             "description": "The name of the Provisioning Resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           },
           {
             "name": "provisioningPolicyName",
@@ -873,7 +925,8 @@
             "description": "The name of the Provisioning Policy tracked resource.",
             "required": true,
             "type": "string",
-            "pattern": "^[a-zA-Z0-9-]{3,24}$"
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9-]{3,127}[a-zA-Z0-9]$"
           }
         ],
         "responses": {
@@ -893,12 +946,59 @@
         "x-ms-examples": {
           "ProvisioningPolicies_Delete": {
             "$ref": "./examples/ProvisioningPolicies_Delete.json"
+          },
+          "ProvisioningPolicies_Delete_MaximumSet_Gen": {
+            "$ref": "./examples/ProvisioningPolicies_Delete_MaximumSet_Gen.json"
+          },
+          "ProvisioningPolicies_Delete_MinimumSet_Gen": {
+            "$ref": "./examples/ProvisioningPolicies_Delete_MinimumSet_Gen.json"
           }
         }
       }
     }
   },
   "definitions": {
+    "AllocatedEndpoint": {
+      "type": "object",
+      "description": "Representation of a previously allocated endpoint",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the endpoint."
+        },
+        "endpointType": {
+          "$ref": "#/definitions/EndpointType",
+          "description": "Type of the endpoint."
+        },
+        "hostName": {
+          "type": "string",
+          "description": "Hostname of the endpoint."
+        }
+      },
+      "required": [
+        "name",
+        "endpointType",
+        "hostName"
+      ]
+    },
+    "AllocationEndpoint": {
+      "type": "object",
+      "description": "Allocation endpoint.",
+      "properties": {
+        "resourceId": {
+          "type": "string",
+          "description": "Resource id of the endpoint."
+        },
+        "hostName": {
+          "type": "string",
+          "description": "host name of the endpoint."
+        }
+      },
+      "required": [
+        "resourceId",
+        "hostName"
+      ]
+    },
     "AllocationRule": {
       "type": "object",
       "description": "The allocation rule.",
@@ -927,58 +1027,16 @@
       "type": "string",
       "description": "Type of allocation rule.",
       "enum": [
-        "Static",
-        "GeoBased",
-        "Weighted"
+        "EvenlyDistributed"
       ],
       "x-ms-enum": {
         "name": "AllocationType",
         "modelAsString": true,
         "values": [
           {
-            "name": "Static",
-            "value": "Static",
-            "description": "Static allocation of a single endpoint."
-          },
-          {
-            "name": "GeoBased",
-            "value": "GeoBased",
-            "description": "Allocation based on geo-location."
-          },
-          {
-            "name": "Weighted",
-            "value": "Weighted",
-            "description": "Allocation based on weight."
-          }
-        ]
-      }
-    },
-    "Azure.ResourceManager.ResourceProvisioningState": {
-      "type": "string",
-      "description": "The provisioning state of a resource type.",
-      "enum": [
-        "Succeeded",
-        "Failed",
-        "Canceled"
-      ],
-      "x-ms-enum": {
-        "name": "ResourceProvisioningState",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Succeeded",
-            "value": "Succeeded",
-            "description": "Resource has been created."
-          },
-          {
-            "name": "Failed",
-            "value": "Failed",
-            "description": "Resource creation failed."
-          },
-          {
-            "name": "Canceled",
-            "value": "Canceled",
-            "description": "Resource creation was canceled."
+            "name": "EvenlyDistributed",
+            "value": "EvenlyDistributed",
+            "description": "Evenly distributed allocation."
           }
         ]
       }
@@ -1006,10 +1064,7 @@
           "description": "The type of authentication rule."
         }
       },
-      "discriminator": "type",
-      "required": [
-        "type"
-      ]
+      "discriminator": "type"
     },
     "BootstrapAuthenticationType": {
       "type": "string",
@@ -1041,7 +1096,8 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "Name of the CA."
+          "description": "System-generated value for referencing the CA.",
+          "readOnly": true
         },
         "properties": {
           "$ref": "#/definitions/CertificateProperties",
@@ -1049,22 +1105,45 @@
         }
       },
       "required": [
-        "name",
         "properties"
       ]
+    },
+    "CaConfigUpdate": {
+      "type": "object",
+      "description": "The configuration for setting up a CA.",
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/CertificatePropertiesUpdate",
+          "description": "Certificate properties."
+        }
+      }
     },
     "CertPolicyConfig": {
       "type": "object",
       "description": "The configuration for setting up a policy.",
       "properties": {
-        "validityPeriod": {
-          "$ref": "#/definitions/ValidityPeriod",
-          "description": "The validity period."
+        "validityPeriodInDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The validity period in days.",
+          "minimum": 1
         }
       },
       "required": [
-        "validityPeriod"
+        "validityPeriodInDays"
       ]
+    },
+    "CertPolicyConfigUpdate": {
+      "type": "object",
+      "description": "The configuration for setting up a policy.",
+      "properties": {
+        "validityPeriodInDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The validity period in days.",
+          "minimum": 1
+        }
+      }
     },
     "CertificateIssuanceRule": {
       "type": "object",
@@ -1078,22 +1157,47 @@
           "$ref": "#/definitions/CaConfig",
           "description": "The configuration to set up an ICA."
         },
-        "certificatePolicyConfiguration": {
+        "leafCertificateConfiguration": {
           "$ref": "#/definitions/CertPolicyConfig",
-          "description": "The enrollment policy configuration."
+          "description": "The leaf certificate configuration."
         },
         "renewalInterval": {
           "type": "integer",
           "format": "int32",
-          "description": "Cert renewal interval."
+          "description": "Cert renewal interval.",
+          "minimum": 1
         }
       },
       "required": [
         "issuingAuthority",
         "certificateAuthorityConfiguration",
-        "certificatePolicyConfiguration",
+        "leafCertificateConfiguration",
         "renewalInterval"
       ]
+    },
+    "CertificateIssuanceRuleUpdate": {
+      "type": "object",
+      "description": "Certificate issuance configurations.",
+      "properties": {
+        "issuingAuthority": {
+          "$ref": "#/definitions/SupportedIssuingAuthority",
+          "description": "The type of authority for cert issuance."
+        },
+        "certificateAuthorityConfiguration": {
+          "$ref": "#/definitions/CaConfigUpdate",
+          "description": "The configuration to set up an ICA."
+        },
+        "leafCertificateConfiguration": {
+          "$ref": "#/definitions/CertPolicyConfigUpdate",
+          "description": "The leaf certificate configuration."
+        },
+        "renewalInterval": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Cert renewal interval.",
+          "minimum": 1
+        }
+      }
     },
     "CertificateProperties": {
       "type": "object",
@@ -1101,51 +1205,53 @@
       "properties": {
         "keyType": {
           "$ref": "#/definitions/SupportedKeyType",
-          "description": "Key type: RSA or EC."
-        },
-        "keySize": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Key size for RSA key type."
+          "description": "Crypto type: RSA or EC."
         },
         "subject": {
           "type": "string",
-          "description": "Certificate subject."
+          "description": "Certificate subject.",
+          "readOnly": true
+        },
+        "validityPeriodInDays": {
+          "type": "integer",
+          "format": "int32",
+          "description": "System-assigned validity period.",
+          "minimum": 365,
+          "maximum": 366,
+          "readOnly": true
         },
         "validityNotBefore": {
           "type": "string",
           "format": "date-time",
-          "description": "Certificate is valid not before this date. Format ISO8601"
+          "description": "Certificate is valid not before this date. Format ISO8601. Generated based on on validity period.",
+          "readOnly": true
         },
         "validityNotAfter": {
           "type": "string",
           "format": "date-time",
-          "description": "Certificate is valid not after this date. Format ISO8601"
-        },
-        "extendedKeyUsage": {
-          "type": "array",
-          "description": "Extended key usage.",
-          "items": {
-            "$ref": "#/definitions/SupportedExtendedKeyUsage"
-          }
-        },
-        "curveType": {
-          "$ref": "#/definitions/SupportedCurveType",
-          "description": "Curve type of EC."
+          "description": "Certificate is valid not after this date. Format ISO8601. Generated based on validity period.",
+          "readOnly": true
         }
       },
       "required": [
-        "keyType",
-        "subject",
-        "validityNotBefore",
-        "validityNotAfter"
+        "keyType"
       ]
+    },
+    "CertificatePropertiesUpdate": {
+      "type": "object",
+      "description": "Certificate properties.",
+      "properties": {
+        "keyType": {
+          "$ref": "#/definitions/SupportedKeyType",
+          "description": "Crypto type: RSA or EC."
+        }
+      }
     },
     "DeviceEndpoint": {
       "type": "object",
       "description": "The device endpoint.",
       "properties": {
-        "hostname": {
+        "hostName": {
           "type": "string",
           "description": "Hostname of the Endpoint.",
           "readOnly": true
@@ -1162,29 +1268,6 @@
           "readOnly": true
         }
       }
-    },
-    "DeviceIdentityInfo": {
-      "type": "object",
-      "description": "The identity info to return to device.",
-      "properties": {
-        "uuid": {
-          "type": "boolean",
-          "description": "If uuid need to be returned."
-        },
-        "accessTokenUrl": {
-          "type": "boolean",
-          "description": "If accessTokenUrl need to be returned."
-        },
-        "externalDeviceId": {
-          "type": "boolean",
-          "description": "If externalDeviceId need to be returned."
-        }
-      },
-      "required": [
-        "uuid",
-        "accessTokenUrl",
-        "externalDeviceId"
-      ]
     },
     "DeviceProvisioningState": {
       "type": "object",
@@ -1235,7 +1318,11 @@
           "type": "string",
           "description": "Unique identifier for the device. Allow alphanumeric and '-', '.', '_', ':' only. Last character can only be alphanumeric and '-'",
           "maxLength": 128,
-          "pattern": "^([a-z0-9-._:]{0,127}[a-z0-9-])$"
+          "pattern": "^([a-z0-9-._:]{0,127}[a-z0-9-])$",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
         "onboardingStatus": {
           "$ref": "#/definitions/OnboardingStatus",
@@ -1255,8 +1342,19 @@
           "$ref": "#/definitions/ProvisioningPolicyResourceId",
           "description": "The provisioning policy resource id"
         },
+        "allocatedEndpoints": {
+          "type": "array",
+          "description": "Array of previously allocated endpoints",
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/definitions/AllocatedEndpoint"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
+        },
         "provisioningState": {
-          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "The status of the last operation.",
           "readOnly": true
         }
@@ -1281,12 +1379,6 @@
       "type": "object",
       "description": "The updatable properties of the DeviceProvisioningState.",
       "properties": {
-        "registrationId": {
-          "type": "string",
-          "description": "Unique identifier for the device. Allow alphanumeric and '-', '.', '_', ':' only. Last character can only be alphanumeric and '-'",
-          "maxLength": 128,
-          "pattern": "^([a-z0-9-._:]{0,127}[a-z0-9-])$"
-        },
         "onboardingStatus": {
           "$ref": "#/definitions/OnboardingStatus",
           "description": "Onboarding status of the resource this DeviceProvisioningState extends",
@@ -1304,6 +1396,17 @@
         "provisioningPolicyResourceId": {
           "$ref": "#/definitions/ProvisioningPolicyResourceId",
           "description": "The provisioning policy resource id"
+        },
+        "allocatedEndpoints": {
+          "type": "array",
+          "description": "Array of previously allocated endpoints",
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/definitions/AllocatedEndpoint"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
         }
       }
     },
@@ -1316,9 +1419,8 @@
           "description": "Identity information."
         },
         "resourceMetadata": {
-          "type": "string",
-          "description": "Resource metadata.",
-          "maxLength": 200
+          "$ref": "#/definitions/ResourceMetadata",
+          "description": "Resource metadata."
         }
       },
       "allOf": [
@@ -1337,9 +1439,8 @@
           "description": "Identity information."
         },
         "resourceMetadata": {
-          "type": "string",
-          "description": "Resource metadata.",
-          "maxLength": 200
+          "$ref": "#/definitions/ResourceMetadata",
+          "description": "Resource metadata."
         }
       },
       "allOf": [
@@ -1352,7 +1453,6 @@
     "DiscoveryBootstrapAuthenticationRule": {
       "type": "object",
       "description": "The Discovery-based authentication rule for bootstrapping.",
-      "properties": {},
       "allOf": [
         {
           "$ref": "#/definitions/BootstrapAuthenticationRule"
@@ -1363,7 +1463,6 @@
     "DiscoveryBootstrapAuthenticationRuleUpdate": {
       "type": "object",
       "description": "The Discovery-based authentication rule for bootstrapping.",
-      "properties": {},
       "allOf": [
         {
           "$ref": "#/definitions/BootstrapAuthenticationRuleUpdate"
@@ -1374,7 +1473,6 @@
     "DiscoveryProvisioningPolicyResourceDetails": {
       "type": "object",
       "description": "Details of the ProvisioningService Discovery ProvisioningPolicy.",
-      "properties": {},
       "allOf": [
         {
           "$ref": "#/definitions/ProvisioningPolicyResourceDetails"
@@ -1385,7 +1483,6 @@
     "DiscoveryProvisioningPolicyResourceDetailsUpdate": {
       "type": "object",
       "description": "Details of the ProvisioningService Discovery ProvisioningPolicy.",
-      "properties": {},
       "allOf": [
         {
           "$ref": "#/definitions/ProvisioningPolicyResourceDetailsUpdate"
@@ -1411,48 +1508,20 @@
         ]
       }
     },
-    "GeoBasedAllocationEndpoint": {
+    "EvenlyDistributedAllocationRule": {
       "type": "object",
-      "description": "GeoBased allocation endpoint.",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the endpoint."
-        },
-        "resourceId": {
-          "type": "string",
-          "description": "Resource id of the endpoint."
-        },
-        "hostName": {
-          "type": "string",
-          "description": "host name of the endpoint."
-        },
-        "region": {
-          "type": "string",
-          "description": "Region of the endpoint."
-        }
-      },
-      "required": [
-        "name",
-        "resourceId",
-        "hostName",
-        "region"
-      ]
-    },
-    "GeoBasedAllocationRule": {
-      "type": "object",
-      "description": "The allocation rule for geoBased allocation type.",
+      "description": "The allocation rule for evenly distributed allocation type.",
       "properties": {
         "endpoints": {
           "type": "array",
-          "description": "List of endpoints for geoBased allocation type.",
+          "description": "List of endpoints for evenly distributed allocation type.",
           "minItems": 1,
           "maxItems": 10,
           "items": {
-            "$ref": "#/definitions/GeoBasedAllocationEndpoint"
+            "$ref": "#/definitions/AllocationEndpoint"
           },
           "x-ms-identifiers": [
-            "name"
+            "resourceId"
           ]
         }
       },
@@ -1464,44 +1533,45 @@
           "$ref": "#/definitions/AllocationRule"
         }
       ],
-      "x-ms-discriminator-value": "GeoBased"
+      "x-ms-discriminator-value": "EvenlyDistributed"
     },
     "IdentityInfo": {
       "type": "object",
       "description": "The information related to device identity.",
       "properties": {
+        "certificateIssuance": {
+          "$ref": "#/definitions/CertificateIssuanceRule",
+          "description": "Certificate issuance settings."
+        },
         "deviceTemplateId": {
           "type": "string",
-          "description": "Device template id."
+          "description": "Guid of the device template.",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         },
-        "staticGroup": {
+        "staticGroupId": {
           "type": "string",
-          "description": "AAD group name for static group."
-        },
-        "deviceTenantId": {
-          "type": "string",
-          "description": "The id of the devices Tenant."
+          "description": "Guid for static AAD group."
         }
       },
       "required": [
-        "deviceTenantId"
+        "deviceTemplateId",
+        "staticGroupId"
       ]
     },
     "IdentityInfoUpdate": {
       "type": "object",
       "description": "The information related to device identity.",
       "properties": {
-        "deviceTemplateId": {
-          "type": "string",
-          "description": "Device template id."
+        "certificateIssuance": {
+          "$ref": "#/definitions/CertificateIssuanceRuleUpdate",
+          "description": "Certificate issuance settings."
         },
-        "staticGroup": {
+        "staticGroupId": {
           "type": "string",
-          "description": "AAD group name for static group."
-        },
-        "deviceTenantId": {
-          "type": "string",
-          "description": "The id of the devices Tenant."
+          "description": "Guid for static AAD group."
         }
       }
     },
@@ -1512,12 +1582,8 @@
         "priority": {
           "type": "integer",
           "format": "int32",
-          "description": "The priority of the policy. Should be greater than 0."
-        },
-        "region": {
-          "type": "string",
-          "description": "The region.",
-          "minLength": 1
+          "description": "The priority of the policy. Should be greater than 0.",
+          "minimum": 1
         },
         "subscriptionId": {
           "type": "string",
@@ -1534,7 +1600,6 @@
       },
       "required": [
         "priority",
-        "region",
         "subscriptionId",
         "resourceGroupName"
       ]
@@ -1546,12 +1611,8 @@
         "priority": {
           "type": "integer",
           "format": "int32",
-          "description": "The priority of the policy. Should be greater than 0."
-        },
-        "region": {
-          "type": "string",
-          "description": "The region.",
-          "minLength": 1
+          "description": "The priority of the policy. Should be greater than 0.",
+          "minimum": 1
         },
         "subscriptionId": {
           "type": "string",
@@ -1642,8 +1703,16 @@
       "type": "object",
       "description": "Details of the ProvisioningService ProvisioningPolicy.",
       "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of the policy"
+        },
+        "status": {
+          "type": "boolean",
+          "description": "The policy status"
+        },
         "provisioningState": {
-          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "The status of the last operation.",
           "readOnly": true
         },
@@ -1672,9 +1741,59 @@
         }
       },
       "required": [
+        "status",
         "bootstrapAuthentication",
         "resourceDetails"
       ]
+    },
+    "ProvisioningPolicyPropertiesUpdate": {
+      "type": "object",
+      "description": "The template for adding optional properties.",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "description": "Resource tags.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the policy"
+        },
+        "status": {
+          "type": "boolean",
+          "description": "The policy status"
+        },
+        "provisioningState": {
+          "$ref": "#/definitions/ProvisioningState",
+          "description": "The status of the last operation.",
+          "readOnly": true
+        },
+        "bootstrapAuthentication": {
+          "$ref": "#/definitions/BootstrapAuthenticationRule",
+          "description": "The bootstrap authentication rule."
+        },
+        "allocations": {
+          "type": "array",
+          "description": "Allocation rules.",
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/definitions/AllocationRule"
+          },
+          "x-ms-identifiers": [
+            "name"
+          ]
+        },
+        "jit": {
+          "$ref": "#/definitions/JitRule",
+          "description": "Just-in-time rule to create the device resource."
+        },
+        "resourceDetails": {
+          "$ref": "#/definitions/ProvisioningPolicyResourceDetails",
+          "description": "Further details about the policy resource"
+        }
+      }
     },
     "ProvisioningPolicyResourceDetails": {
       "type": "object",
@@ -1699,10 +1818,7 @@
           "description": "Type of the resource being provisioned."
         }
       },
-      "discriminator": "type",
-      "required": [
-        "type"
-      ]
+      "discriminator": "type"
     },
     "ProvisioningPolicyResourceId": {
       "type": "string",
@@ -1738,6 +1854,14 @@
       "type": "object",
       "description": "The updatable properties of the ProvisioningPolicy.",
       "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of the policy"
+        },
+        "status": {
+          "type": "boolean",
+          "description": "The policy status"
+        },
         "bootstrapAuthentication": {
           "$ref": "#/definitions/BootstrapAuthenticationRuleUpdate",
           "description": "The bootstrap authentication rule."
@@ -1809,7 +1933,7 @@
       "description": "Details of the EdgeProvisioning ProvisioningResource.",
       "properties": {
         "provisioningState": {
-          "$ref": "#/definitions/Azure.ResourceManager.ResourceProvisioningState",
+          "$ref": "#/definitions/ProvisioningState",
           "description": "The status of the last operation.",
           "readOnly": true
         },
@@ -1817,8 +1941,19 @@
           "$ref": "#/definitions/DeviceEndpoints",
           "description": "The provisioning service endpoints.",
           "readOnly": true
+        },
+        "enableOperationalCertificates": {
+          "type": "boolean",
+          "description": "Selecting 'yes' will enable a Microsoft managed PKI to issue certificates. Setting up of the CA and policies for certificate management will be while defining the bumblebee provisioning policy.",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
         }
-      }
+      },
+      "required": [
+        "enableOperationalCertificates"
+      ]
     },
     "ProvisioningResourceType": {
       "type": "string",
@@ -1883,198 +2018,67 @@
         "type"
       ]
     },
-    "SourceType": {
+    "ProvisioningState": {
       "type": "string",
-      "description": "Potential sources for cert issuance config.",
+      "description": "The status of the current operation.",
       "enum": [
-        "CSR",
-        "Policy",
-        "Substitute"
+        "Succeeded",
+        "Failed",
+        "Canceled",
+        "Creating",
+        "Updating",
+        "Deleting"
       ],
       "x-ms-enum": {
-        "name": "SourceType",
+        "name": "ProvisioningState",
         "modelAsString": true,
         "values": [
           {
-            "name": "CSR",
-            "value": "CSR",
-            "description": "From certificate signing request."
+            "name": "Succeeded",
+            "value": "Succeeded",
+            "description": "Resource has been created."
           },
           {
-            "name": "Policy",
-            "value": "Policy",
-            "description": "From the enrollment policy."
+            "name": "Failed",
+            "value": "Failed",
+            "description": "Resource creation failed."
           },
           {
-            "name": "Substitute",
-            "value": "Substitute",
-            "description": "From the substitute."
+            "name": "Canceled",
+            "value": "Canceled",
+            "description": "Resource creation was canceled."
+          },
+          {
+            "name": "Creating",
+            "value": "Creating",
+            "description": "Resource is being created."
+          },
+          {
+            "name": "Updating",
+            "value": "Updating",
+            "description": "Resource is being updated."
+          },
+          {
+            "name": "Deleting",
+            "value": "Deleting",
+            "description": "Resource is being deleted."
           }
         ]
       }
     },
-    "StaticAllocationEndpoint": {
+    "ResourceMetadata": {
       "type": "object",
-      "description": "Static allocation endpoint.",
+      "description": "Resource metadata",
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the endpoint."
-        },
-        "resourceId": {
-          "type": "string",
-          "description": "Resource id of the endpoint."
-        },
-        "hostName": {
-          "type": "string",
-          "description": "host name of the endpoint."
-        }
-      },
-      "required": [
-        "name",
-        "resourceId",
-        "hostName"
-      ]
-    },
-    "StaticAllocationRule": {
-      "type": "object",
-      "description": "The allocation rule for static allocation type.",
-      "properties": {
-        "endpoints": {
-          "type": "array",
-          "description": "List of endpoints for static allocation type.",
-          "minItems": 1,
-          "maxItems": 1,
-          "items": {
-            "$ref": "#/definitions/StaticAllocationEndpoint"
-          },
-          "x-ms-identifiers": [
-            "name"
+        "customAttributes": {
+          "type": "object",
+          "description": "Custom attributes",
+          "additionalProperties": {},
+          "x-ms-mutability": [
+            "read",
+            "create"
           ]
         }
-      },
-      "required": [
-        "endpoints"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/AllocationRule"
-        }
-      ],
-      "x-ms-discriminator-value": "Static"
-    },
-    "SupportedCurveType": {
-      "type": "string",
-      "description": "Supported curve types.",
-      "enum": [
-        "NistP256",
-        "NistP384",
-        "NistP521",
-        "Secp256K1"
-      ],
-      "x-ms-enum": {
-        "name": "SupportedCurveType",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "NistP256",
-            "value": "NistP256",
-            "description": "Indicate the NistP256 Curve Type."
-          },
-          {
-            "name": "NistP384",
-            "value": "NistP384",
-            "description": "Indicate the NistP384 Curve Type."
-          },
-          {
-            "name": "NistP521",
-            "value": "NistP521",
-            "description": "Indicate the NistP521 Curve Type."
-          },
-          {
-            "name": "Secp256K1",
-            "value": "Secp256K1",
-            "description": "Indicate the Secp256K1 Curve Type."
-          }
-        ]
-      }
-    },
-    "SupportedExtendedKeyUsage": {
-      "type": "string",
-      "description": "Supported extended key usages.",
-      "enum": [
-        "ClientAuth",
-        "CodeSigning",
-        "EmailProtection",
-        "IpsecEndSystem",
-        "IpsecTunnel",
-        "IpsecUser",
-        "MacAddress",
-        "OcspSigning",
-        "ServerAuth",
-        "SmartcardLogon",
-        "TimeStamping"
-      ],
-      "x-ms-enum": {
-        "name": "SupportedExtendedKeyUsage",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "ClientAuth",
-            "value": "ClientAuth",
-            "description": "Client auth."
-          },
-          {
-            "name": "CodeSigning",
-            "value": "CodeSigning",
-            "description": "Code signing."
-          },
-          {
-            "name": "EmailProtection",
-            "value": "EmailProtection",
-            "description": "Email protection."
-          },
-          {
-            "name": "IpsecEndSystem",
-            "value": "IpsecEndSystem",
-            "description": "Ipsec end system."
-          },
-          {
-            "name": "IpsecTunnel",
-            "value": "IpsecTunnel",
-            "description": "Ipsec tunnel."
-          },
-          {
-            "name": "IpsecUser",
-            "value": "IpsecUser",
-            "description": "Ipsec user."
-          },
-          {
-            "name": "MacAddress",
-            "value": "MacAddress",
-            "description": "Mac address."
-          },
-          {
-            "name": "OcspSigning",
-            "value": "OcspSigning",
-            "description": "Ocsp signing."
-          },
-          {
-            "name": "ServerAuth",
-            "value": "ServerAuth",
-            "description": "Server auth."
-          },
-          {
-            "name": "SmartcardLogon",
-            "value": "SmartcardLogon",
-            "description": "Smartcard logon."
-          },
-          {
-            "name": "TimeStamping",
-            "value": "TimeStamping",
-            "description": "Time stamping."
-          }
-        ]
       }
     },
     "SupportedIssuingAuthority": {
@@ -2099,131 +2103,30 @@
       "type": "string",
       "description": "Supported key types.",
       "enum": [
-        "RSA",
-        "EC"
+        "ECC"
       ],
       "x-ms-enum": {
         "name": "SupportedKeyType",
         "modelAsString": true,
         "values": [
           {
-            "name": "RSA",
-            "value": "RSA",
-            "description": "Indicate the RSA key type."
-          },
-          {
-            "name": "EC",
-            "value": "EC",
-            "description": "Indicate the EC key type."
+            "name": "ECC",
+            "value": "ECC",
+            "description": "Indicate the ECC key type."
           }
         ]
       }
-    },
-    "ValidityPeriod": {
-      "type": "object",
-      "description": "The validity period for an enrollment policy.",
-      "properties": {
-        "source": {
-          "$ref": "#/definitions/SourceType",
-          "description": "Source of the value."
-        },
-        "notBeforeSkewMinutes": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Skew in minutes to account for the time on different computers not being in sync."
-        },
-        "valueNotBeforeOffSetDays": {
-          "type": "integer",
-          "format": "int32",
-          "description": "For calculation of the NotBefore date."
-        },
-        "valueValidityPeriodDays": {
-          "type": "integer",
-          "format": "int32",
-          "description": "For calculation of the NotAfter date."
-        },
-        "allowedNotBeforeOffSetDays": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Allowed not before offset in days."
-        },
-        "allowedValidityPeriodDays": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Allowed validity period in days."
-        }
-      },
-      "required": [
-        "source",
-        "notBeforeSkewMinutes"
-      ]
-    },
-    "WeightedAllocationEndpoint": {
-      "type": "object",
-      "description": "Weighted allocation endpoint.",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the endpoint."
-        },
-        "resourceId": {
-          "type": "string",
-          "description": "Resource id of the endpoint."
-        },
-        "hostName": {
-          "type": "string",
-          "description": "host name of the endpoint."
-        },
-        "weight": {
-          "type": "number",
-          "format": "double",
-          "description": "Weight of the endpoint."
-        }
-      },
-      "required": [
-        "name",
-        "resourceId",
-        "hostName",
-        "weight"
-      ]
-    },
-    "WeightedAllocationRule": {
-      "type": "object",
-      "description": "The allocation rule for weighted allocation type.",
-      "properties": {
-        "endpoints": {
-          "type": "array",
-          "description": "List of endpoints for weighted allocation type.",
-          "minItems": 1,
-          "maxItems": 10,
-          "items": {
-            "$ref": "#/definitions/WeightedAllocationEndpoint"
-          },
-          "x-ms-identifiers": [
-            "name"
-          ]
-        }
-      },
-      "required": [
-        "endpoints"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/AllocationRule"
-        }
-      ],
-      "x-ms-discriminator-value": "Weighted"
     },
     "X509BootstrapAuthenticationRule": {
       "type": "object",
       "description": "The x509-based authentication rule for bootstrapping.",
       "properties": {
         "primaryCertificate": {
-          "type": "string",
+          "$ref": "#/definitions/X509Certificate",
           "description": "The primary certificate. B64 x509 cert"
         },
         "secondaryCertificate": {
-          "type": "string",
+          "$ref": "#/definitions/X509Certificate",
           "description": "The secondary certificate."
         }
       },
@@ -2242,11 +2145,11 @@
       "description": "The x509-based authentication rule for bootstrapping.",
       "properties": {
         "primaryCertificate": {
-          "type": "string",
+          "$ref": "#/definitions/X509CertificateUpdate",
           "description": "The primary certificate. B64 x509 cert"
         },
         "secondaryCertificate": {
-          "type": "string",
+          "$ref": "#/definitions/X509CertificateUpdate",
           "description": "The secondary certificate."
         }
       },
@@ -2256,6 +2159,42 @@
         }
       ],
       "x-ms-discriminator-value": "X509"
+    },
+    "X509Certificate": {
+      "type": "object",
+      "description": "X509 Certificate.",
+      "properties": {
+        "certificate": {
+          "type": "string",
+          "format": "byte",
+          "description": "The certificate."
+        },
+        "thumbprint": {
+          "type": "string",
+          "description": "Thumbprint extracted from the certificate.",
+          "readOnly": true
+        },
+        "expiryDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Expiry date for the certificate.",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "certificate"
+      ]
+    },
+    "X509CertificateUpdate": {
+      "type": "object",
+      "description": "X509 Certificate.",
+      "properties": {
+        "certificate": {
+          "type": "string",
+          "format": "byte",
+          "description": "The certificate."
+        }
+      }
     }
   },
   "parameters": {
