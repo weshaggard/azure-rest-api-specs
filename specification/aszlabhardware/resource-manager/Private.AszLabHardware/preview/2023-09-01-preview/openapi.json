@@ -365,28 +365,397 @@
     }
   },
   "definitions": {
+    "AszLabHardwareSystem": {
+      "type": "object",
+      "description": "Details of the physical properties of the AszLabHw Server System",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The IP Address of the server to be used as unique identifer. Typespec requires this per https://azure.github.io/typespec-azure/docs/howtos/ARM/resource-type#modeling-arrays-of-complex-types"
+        },
+        "bmcIpAddress": {
+          "type": "string",
+          "description": "The IP Address of the server"
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "The manufacturer of the server"
+        },
+        "aszLabHardwareSystemModel": {
+          "type": "string",
+          "description": "The model of the server"
+        },
+        "partNumber": {
+          "type": "string",
+          "description": "The part number of the server"
+        },
+        "serviceTag": {
+          "type": "string",
+          "description": "The service tag of the server"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "The serial number of the server"
+        },
+        "assetTag": {
+          "type": "string",
+          "description": "The asset tag of the server"
+        },
+        "hostName": {
+          "type": "string",
+          "description": "The host name of the server"
+        },
+        "biosVersion": {
+          "type": "string",
+          "description": "The BIOS version of the server"
+        },
+        "cpldVersion": {
+          "type": "string",
+          "description": "The complex programmable logic device version of the server"
+        },
+        "tpm": {
+          "type": "string",
+          "description": "The TPM of the server"
+        },
+        "tpmFirmware": {
+          "type": "string",
+          "description": "The firmware of the TPM"
+        },
+        "processorInventory": {
+          "$ref": "#/definitions/ProcessorCollection",
+          "description": "The CPUs of the server"
+        },
+        "memoryInventory": {
+          "$ref": "#/definitions/MemoryCollection",
+          "description": "The memory information of the server"
+        },
+        "storageInventory": {
+          "$ref": "#/definitions/StorageCollection",
+          "description": "The disk information of the server"
+        },
+        "networkInventory": {
+          "$ref": "#/definitions/NetworkCollection",
+          "description": "The network information of the server"
+        }
+      },
+      "required": [
+        "networkInventory"
+      ]
+    },
+    "Drive": {
+      "type": "object",
+      "description": "Information regarding individual Disk Drives",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The Id of the disk drive"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the disk drive"
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "Manufacturer of the disk drive"
+        },
+        "driveModel": {
+          "type": "string",
+          "description": "Disk drive model"
+        },
+        "partNumber": {
+          "type": "string",
+          "description": "Part number of the disk drive"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the disk drive"
+        },
+        "firmwareVersion": {
+          "type": "string",
+          "description": "Firmware version of the disk drive"
+        },
+        "mediaType": {
+          "type": "string",
+          "description": "Media type of the disk drive"
+        },
+        "capacityBytes": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Capacity of the disk drive in bytes"
+        }
+      }
+    },
     "Inventory": {
       "type": "object",
       "description": "Details of the physical properties of the AszLabHw Server",
       "properties": {
-        "cpu": {
-          "type": "string",
-          "description": "The processor of the Server"
-        },
-        "memory": {
-          "type": "string",
-          "description": "The memory of the server"
-        },
-        "disk": {
-          "type": "string",
-          "description": "The hard drive of the server"
+        "systems": {
+          "type": "array",
+          "description": "The processor of the Server",
+          "items": {
+            "$ref": "#/definitions/AszLabHardwareSystem"
+          }
         }
       },
       "required": [
-        "cpu",
-        "memory",
-        "disk"
+        "systems"
       ]
+    },
+    "MemoryCollection": {
+      "type": "object",
+      "description": "Information regarding the RAM of the server",
+      "properties": {
+        "memoryModuleCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of memory modules"
+        },
+        "totalSystemMemoryGiB": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Total memory of server in GiB"
+        },
+        "memoryModules": {
+          "type": "array",
+          "description": "Information of individual memory modules",
+          "items": {
+            "$ref": "#/definitions/MemoryModule"
+          }
+        }
+      }
+    },
+    "MemoryModule": {
+      "type": "object",
+      "description": "Information about the individual memory modules of the server",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id of memory module"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the memory module"
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of the memory module"
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "Manufacturer of the memory module"
+        },
+        "partNumber": {
+          "type": "string",
+          "description": "Part number of the memory module"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the memory module"
+        },
+        "capacityMib": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Capacity of memory module in MiB"
+        },
+        "memoryDeviceType": {
+          "type": "string",
+          "description": "Device type of memory module"
+        },
+        "moduleProductId": {
+          "type": "string",
+          "description": "Product ID of memory module"
+        }
+      }
+    },
+    "NetDevice": {
+      "type": "object",
+      "description": "Information about a network device",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id of network device"
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "Manufacturer of the network device"
+        },
+        "netDeviceModel": {
+          "type": "string",
+          "description": "Model of the network device"
+        },
+        "partNumber": {
+          "type": "string",
+          "description": "Part number of the network device"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the network device"
+        },
+        "firmwareVersion": {
+          "type": "string",
+          "description": "Firmware version of the network device"
+        },
+        "portCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of ports on the network device"
+        },
+        "netDeviceMacs": {
+          "type": "array",
+          "description": "List of MACs for network device",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ports": {
+          "type": "array",
+          "description": "Information of individual ports on network device",
+          "items": {
+            "$ref": "#/definitions/Port"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "portCount",
+        "netDeviceMacs",
+        "ports"
+      ]
+    },
+    "NetworkCollection": {
+      "type": "object",
+      "description": "Information regarding the network of the server",
+      "properties": {
+        "systemMacs": {
+          "type": "array",
+          "description": "The list of MAC addresses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "netDevices": {
+          "type": "array",
+          "description": "Information about the individual network devices of the server",
+          "items": {
+            "$ref": "#/definitions/NetDevice"
+          }
+        }
+      }
+    },
+    "Port": {
+      "type": "object",
+      "description": "Information regarding an individual port",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id of port"
+        },
+        "linkType": {
+          "type": "string",
+          "description": "Link type of port"
+        },
+        "linkSpeedMbps": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Link speed of port in Mbps"
+        },
+        "linkStatus": {
+          "type": "string",
+          "description": "Link status of port"
+        },
+        "associatedMacs": {
+          "type": "array",
+          "description": "Associated MACs of port",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Processor": {
+      "type": "object",
+      "description": "Information regarding the processor of the server",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "id of processor"
+        },
+        "name": {
+          "type": "string",
+          "description": "The processor name"
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "The processor manufacturer"
+        },
+        "processorModel": {
+          "type": "string",
+          "description": "The processor model"
+        },
+        "version": {
+          "type": "string",
+          "description": "The processor version"
+        },
+        "microCodeInfo": {
+          "type": "string",
+          "description": "The microcode information"
+        },
+        "maxSpeedMhz": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The max clock speed"
+        },
+        "operatingSpeedMhz": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The operating clock speed"
+        },
+        "totalCores": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The number of cores"
+        },
+        "totalEnabledCores": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The total number of enabled cores"
+        },
+        "totalThreads": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The total threads of the processor"
+        },
+        "turboState": {
+          "type": "string",
+          "description": "The turbo state of the processor"
+        }
+      }
+    },
+    "ProcessorCollection": {
+      "type": "object",
+      "description": "Information regarding the processors of the server",
+      "properties": {
+        "processorCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Processor count total"
+        },
+        "logicalProcessorCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Logical core count"
+        },
+        "processors": {
+          "type": "array",
+          "description": "The processors of the server",
+          "items": {
+            "$ref": "#/definitions/Processor"
+          }
+        }
+      }
     },
     "ProvisioningState": {
       "type": "string",
@@ -522,22 +891,6 @@
           "x-ms-mutability": [
             "read"
           ]
-        },
-        "banner": {
-          "type": "string",
-          "description": "Server banner message",
-          "x-ms-mutability": [
-            "read",
-            "update"
-          ]
-        },
-        "nickname": {
-          "type": "string",
-          "description": "Server nickname",
-          "x-ms-mutability": [
-            "read",
-            "update"
-          ]
         }
       },
       "required": [
@@ -566,22 +919,6 @@
             "read",
             "create"
           ]
-        },
-        "banner": {
-          "type": "string",
-          "description": "Server banner message",
-          "x-ms-mutability": [
-            "read",
-            "update"
-          ]
-        },
-        "nickname": {
-          "type": "string",
-          "description": "Server nickname",
-          "x-ms-mutability": [
-            "read",
-            "update"
-          ]
         }
       },
       "required": [
@@ -599,32 +936,24 @@
           "additionalProperties": {
             "type": "string"
           }
-        },
-        "properties": {
-          "$ref": "#/definitions/ServerUpdateProperties",
-          "x-ms-client-flatten": true
         }
       }
     },
-    "ServerUpdateProperties": {
+    "StorageCollection": {
       "type": "object",
-      "description": "The updatable properties of the Server.",
+      "description": "Information regarding the storage of the server",
       "properties": {
-        "banner": {
-          "type": "string",
-          "description": "Server banner message",
-          "x-ms-mutability": [
-            "read",
-            "update"
-          ]
+        "totalDriveCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of disk drives"
         },
-        "nickname": {
-          "type": "string",
-          "description": "Server nickname",
-          "x-ms-mutability": [
-            "read",
-            "update"
-          ]
+        "drives": {
+          "type": "array",
+          "description": "Information about individual disk drives",
+          "items": {
+            "$ref": "#/definitions/Drive"
+          }
         }
       }
     }
