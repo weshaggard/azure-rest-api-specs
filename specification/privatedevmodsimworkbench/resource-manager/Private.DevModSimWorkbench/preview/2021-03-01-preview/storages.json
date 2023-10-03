@@ -115,7 +115,7 @@
         },
         "x-ms-examples": {
           "Create storage": {
-            "$ref": "./examples/StorageCreateOrUpdate.json"
+            "$ref": "./examples/StoragesCreateOrUpdate.json"
           }
         }
       },
@@ -188,6 +188,9 @@
             "headers": {
               "Location": {
                 "type": "string"
+              },
+              "x-ms-async-operation-timeout": {
+                "type": "string"
               }
             }
           },
@@ -205,7 +208,7 @@
         },
         "x-ms-examples": {
           "Update storage": {
-            "$ref": "./examples/StoragePatch.json"
+            "$ref": "./examples/StoragesPatch.json"
           }
         }
       },
@@ -271,7 +274,7 @@
         },
         "x-ms-examples": {
           "Get Storage": {
-            "$ref": "./examples/StorageGet.json"
+            "$ref": "./examples/StoragesGet.json"
           }
         }
       },
@@ -331,7 +334,15 @@
             "description": "Request is successful. Resource with the specified name does not exist."
           },
           "202": {
-            "description": "Accepted"
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "type": "string"
+              },
+              "x-ms-async-operation-timeout": {
+                "type": "string"
+              }
+            }
           },
           "default": {
             "description": "Default Error Response",
@@ -341,9 +352,77 @@
             "x-ms-error-response": true
           }
         },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
         "x-ms-examples": {
           "Delete Storage": {
-            "$ref": "./examples/StorageDelete.json"
+            "$ref": "./examples/StoragesDelete.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Private.DevModSimWorkbench/workbenches/{workbenchName}/chambers/{chamberName}/storages": {
+      "get": {
+        "tags": [
+          "storages_List"
+        ],
+        "operationId": "storages_List",
+        "description": "Lists all storages.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "name": "resourceGroup",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource group."
+          },
+          {
+            "name": "workbenchName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the workbench."
+          },
+          {
+            "name": "chamberName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the chamber."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request is successful. The operation returns the list of all storages",
+            "schema": {
+              "$ref": "#/definitions/StoragePageableList"
+            }
+          },
+          "default": {
+            "description": "Default Error Response",
+            "schema": {
+              "$ref": "./privatedevmodsimworkbench.json#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-examples": {
+          "List all storages": {
+            "$ref": "./examples/StoragesList.json"
           }
         }
       }
@@ -376,12 +455,12 @@
           "description": "Gets the status of the storage at the time the operation was called"
         },
         "capacityAllocated": {
-          "description": "Provisioned size of the HPC Workbench chamber storage in terabytes",
+          "description": "Provisioned size of the ModSim Workbench chamber storage in terabytes",
           "format": "int32",
           "type": "integer"
         },
         "performanceTier": {
-          "description": "Specifies performance tier of the HPC Workbench chamber storage.",
+          "description": "Specifies performance tier of the ModSim Workbench chamber storage.",
           "type": "string",
           "enum": [
             "Standard",
@@ -396,10 +475,12 @@
         },
         "localMountPath": {
           "description": "Directory where the SDW Private Storage volume mounted.",
+          "readOnly": true,
           "type": "string"
         },
         "capacityUsed": {
           "description": "Capacity used in the SDW Private Storage volume in gigabytes.",
+          "readOnly": true,
           "format": "int32",
           "type": "integer"
         }
