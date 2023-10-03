@@ -24,6 +24,9 @@ interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("GenericGenevaActions properties")
 model GenericGenevaActionsResourceProperties {
+  @doc("User given name for geneva action")
+  name: string;
+
   @doc("The execution environment for geneva action")
   environment: string;
 
