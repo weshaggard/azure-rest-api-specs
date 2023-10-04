@@ -40,10 +40,10 @@ model GenericGenevaActionsResourceProperties {
   operation: string;
 
   @doc("The input mode for geneva action (single/batch)")
-  inputMode: string;
+  inputMode?: string;
 
   @doc("The parameter list for geneva action")
-  parameters: Array<Parameter>;
+  parameters?: Array<Parameter>;
 
   @doc("Provisioning state")
   @visibility("read")
