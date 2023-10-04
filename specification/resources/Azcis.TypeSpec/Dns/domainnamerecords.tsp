@@ -43,7 +43,7 @@ model DomainNameRecordsResource
 }
 
 @doc("DomainNameRecord type model")
-model DomainNameRecord { 
+model DomainNameRecord {
   @doc("Gets or sets the domain name")
   name: string;
 

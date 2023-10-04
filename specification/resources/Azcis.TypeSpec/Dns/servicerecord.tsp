@@ -30,7 +30,7 @@ model ServiceRecordResourceProperties {
 
   @doc("Gets or sets the port field of a service record")
   port: string;
-  
+
   @doc("Gets or sets the canonical hostname of the target machine providing the service")
   cName: string;
 
@@ -40,8 +40,7 @@ model ServiceRecordResourceProperties {
 }
 
 @doc("ServiceRecord Resource")
-model ServiceRecordResource
-  is ProxyResource<ServiceRecordResourceProperties> {
+model ServiceRecordResource is ProxyResource<ServiceRecordResourceProperties> {
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")

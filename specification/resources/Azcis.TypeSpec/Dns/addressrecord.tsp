@@ -31,8 +31,7 @@ model AddressRecordResourceProperties {
 }
 
 @doc("AddressRecord Resource")
-model AddressRecordResource
-  is ProxyResource<AddressRecordResourceProperties> {
+model AddressRecordResource is ProxyResource<AddressRecordResourceProperties> {
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
