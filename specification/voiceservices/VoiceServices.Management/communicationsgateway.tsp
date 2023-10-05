@@ -321,12 +321,12 @@ model CommunicationsGatewayProperties is ResourceProperties {
   @added(Versions.v2023_09_01)
   customSipHeaders?: CustomSipHeadersProperties;
 
-  @doc("A list of IP allocated prefixes which may be used to recieve signaling data from this Communications Gateway.")
+  @doc("A list of IP allocated prefixes which may be used to receive signaling data from this Communications Gateway.")
   @visibility("read")
   @added(Versions.v2023_09_01)
   allocatedSignalingAddressPrefixes?: string[];
 
-  @doc("A list of allocated IP prefixes which may be used to recieve media data from this Communications Gateway.")
+  @doc("A list of allocated IP prefixes which may be used to receive media data from this Communications Gateway.")
   @visibility("read")
   @added(Versions.v2023_09_01)
   allocatedMediaAddressPrefixes?: string[];
