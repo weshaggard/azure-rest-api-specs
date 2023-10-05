@@ -9,7 +9,7 @@ using Azure.ResourceManager;
   title: "Foundational ARM Client",
   version: "2023-08-22-preview",
 })
-@doc("Rnm Vip Service")
+@doc("rnmVip Provider")
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureCIS;
 
