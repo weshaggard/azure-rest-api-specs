@@ -10,13 +10,13 @@ using TypeSpec.Rest;
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
 
-@armProviderNamespace("Microsoft.MyTravels")
+@armProviderNamespace("microsoft.dinwaRP")
 @service({
-  title: "Microsoft.MyTravels",
+  title: "microsoft.dinwaRP",
   version: "2021-08-01-preview",
 })
 @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
-namespace Microsoft.MyTravels;
+namespace microsoft.dinwaRP;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
