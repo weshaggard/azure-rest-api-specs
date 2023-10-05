@@ -22,6 +22,7 @@ namespace Microsoft.AzureCIS;
 
 interface Operations extends Azure.ResourceManager.Operations {}
 
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-duplicate-property" "Duplicate property found in the resource envelope and resource properties."
 @doc("GenevaActionsExtension properties")
 model GenevaActionsExtensionResourceProperties {
   @doc("User given name for GenevaActionExtension.")
