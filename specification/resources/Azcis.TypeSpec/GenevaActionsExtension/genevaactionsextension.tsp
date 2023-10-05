@@ -24,8 +24,11 @@ interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("GenevaActionsExtension properties")
 model GenevaActionsExtensionResourceProperties {
+  @doc("User given name for GenevaActionExtension.")
+  name: string; // camel case for the parameter names
+
   @doc("User provided package source branch.")
-  packageSourceBranch: string; // camel case for the parameter names
+  packageSourceBranch: string;
 
   @doc("This is the sub folder path to the package folder relative to the branch root.")
   packageSourceRelativePath: string;
