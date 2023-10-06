@@ -304,6 +304,10 @@
             "create",
             "read"
           ]
+        },
+        "mgmtIfIps": {
+          "type": "string",
+          "description": "Comma separated list of Interface IP addresses for the mgmt interface on the MGMT/MRM VMs in the cluster."
         }
       },
       "required": [
@@ -332,6 +336,14 @@
             "read"
           ]
         },
+        "oamIpPool": {
+          "$ref": "./common.json#/definitions/VnfExternalIpPool",
+          "description": "IP pools from which the floating IP is assigned where the subnetId is taken from the OAM Subnet of containing NFVi instance, e.g. 172.32.6.0/24",
+          "x-ms-mutability": [
+            "create",
+            "read"
+          ]
+        },
         "northSouthIpPool": {
           "$ref": "./common.json#/definitions/VnfExternalIpPool",
           "description": "IP pools for north/south control plane traffic where the subnetId is taken from the north/south of containing NFVi instance",
@@ -355,13 +367,104 @@
         "eastWestNetwork": {
           "$ref": "./common.json#/definitions/VnfInternalSubnet",
           "description": "The base subnet."
+        },
+        "mgmtIfIps": {
+          "type": "string",
+          "description": "Comma separated list of Interface IP addresses for the mgmt interface on the MGMT/MRM VMs in the cluster."
+        },
+        "mgmtBaseIfIps": {
+          "type": "string",
+          "description": "Comma separated list of IP addresses assigned to the Base Interface. These IPs would be assigned to Base interfaces in MGMT VMs in the order (mgmt-0, mgmt-1)."
+        },
+        "mgmtDataIfIps": {
+          "type": "string",
+          "description": "Comma separated list of IP addresses assigned to the Data Interface. These IPs would be assigned to Data interfaces in MGMT VMs in the order (mgmt-0, mgmt-1)."
+        },
+        "ns1Ips": {
+          "type": "string",
+          "description": "Comma separated list of IP addresses assigned to the LB/MSM VM NS1 Interface. These IPs would be used assigned to NS1 interfaces in LB/MSM in the order (lb-0 ... lb-n) or (msm0-0, msm0-1, msm1-0 ... msmX-Y)"
+        },
+        "ns1DataIps": {
+          "type": "string",
+          "description": "Comma separated list of IP addresses assigned to the DATA VM NS1 Interface. These IPs would be used assigned to NS1 interfaces in DATA VMs in the order (data-0 ... data-n). Required only if DATA VM is part of the deployment profile."
+        },
+        "loopbackConfig": {
+          "type": "array",
+          "description": "Loopback configuration for LB VMs",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ip": {
+                "$ref": "./common.json#/definitions/Ipv4Address",
+                "description": "The 3GPP loopback IP address"
+              },
+              "subnetId": {
+                "$ref": "./common.json#/definitions/VnetSubnetIdProperty",
+                "description": "ARM resource ID of the loopback subnet"
+              }
+            }
+          }
+        },
+        "dataLoopbackConfig": {
+          "type": "array",
+          "description": "Loopback configuration for Data VMs",
+          "items": {
+            "type": "object",
+            "properties": {
+              "vmService": {
+                "type": "string",
+                "enum": [
+                  "data-0",
+                  "data-1",
+                  "data-2",
+                  "data-3",
+                  "data-4",
+                  "data-5",
+                  "data-6",
+                  "data-7",
+                  "data-8",
+                  "data-9",
+                  "data-10",
+                  "data-11",
+                  "data-12",
+                  "data-13",
+                  "data-14",
+                  "data-15"
+                ],
+                "x-ms-enum": {
+                  "name": "MmeVmService",
+                  "modelAsString": true
+                }
+              },
+              "ip": {
+                "$ref": "./common.json#/definitions/Ipv4Address",
+                "description": "A 3GPP loopback IP address"
+              }
+            }
+          }
+        },
+        "availabilityZoneA": {
+          "$ref": "./common.json#/definitions/AvailabilityZone",
+          "description": "Availability zone for cluster side A"
+        },
+        "availabilityZoneB": {
+          "$ref": "./common.json#/definitions/AvailabilityZone",
+          "description": "Availability zone for cluster side B"
         }
       },
       "required": [
         "managementIpPool",
         "northSouthDataIpPool",
         "baseNetwork",
-        "eastWestNetwork"
+        "eastWestNetwork",
+        "oamIpPool",
+        "mgmtIfIps",
+        "mgmtBaseIfIps",
+        "mgmtDataIfIps",
+        "ns1Ips",
+        "ns1DataIps",
+        "loopbackConfig",
+        "dataLoopbackConfig"
       ],
       "x-ms-discriminator-value": "AzureCore"
     },
@@ -375,8 +478,8 @@
           "description": "The provisioning state of the MME Deployment resource."
         },
         "managementFloatingIp": {
-          "$ref": "./common.json#/definitions/IpAddress",
-          "description": "Floating IP address",
+          "$ref": "./common.json#/definitions/Ipv4Address",
+          "description": "Floating IPv4 address",
           "x-ms-mutability": [
             "create",
             "read"
@@ -411,7 +514,11 @@
             "read"
           ]
         }
-      }
+      },
+      "required": [
+        "managementFloatingIp",
+        "typeSpecificData"
+      ]
     },
     "MmeDeployment": {
       "type": "object",

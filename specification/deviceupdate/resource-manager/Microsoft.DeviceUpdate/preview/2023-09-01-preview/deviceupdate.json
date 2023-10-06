@@ -2217,35 +2217,13 @@
         "modelAsString": true
       }
     },
-    "AgentList": {
-      "description": "List of Agents.",
-      "type": "object",
-      "properties": {
-        "nextLink": {
-          "description": "The link used to get the next page of Agents list.",
-          "type": "string"
-        },
-        "value": {
-          "description": "List of Agents.",
-          "type": "array",
-          "x-ms-identifiers": [],
-          "items": {
-            "$ref": "#/definitions/Agent"
-          }
-        }
-      }
-    },
     "ProtocolId": {
       "type": "object",
       "properties": {
-        "name": {
-          "description": "The protocol Id name",
-          "type": "string"
-        },
-        "version": {
-          "description": "The protocol Id version",
+        "id": {
+          "description": "The protocol Id identifier",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         }
       },
       "description": "The protocol identifier representing the version of the device update protocol the agent supports."
@@ -2442,8 +2420,8 @@
           "description": "The deployment workflow metadata",
           "$ref": "#/definitions/DeploymentWorkflow"
         },
-        "update": {
-          "description": "The update for the deployment",
+        "updateId": {
+          "description": "The update Id for the deployment",
           "$ref": "#/definitions/UpdateId"
         },
         "state": {
@@ -2456,6 +2434,53 @@
         }
       },
       "description": "The agent metadata for a deployment."
+    },
+    "AgentEnrollmentStatus": {
+      "type": "object",
+      "description": "Agent enrollment status.",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/AgentEnrollmentState",
+          "description": "The agent enrollment state."
+        },
+        "error": {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorDetail",
+          "description": "The agent enrollment error detail. This is only populated when state is Failed"
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "AgentEnrollmentState": {
+      "type": "string",
+      "description": "The agent enrollment state.",
+      "enum": [
+        "Succeeded",
+        "Failed",
+        "InProgress"
+      ],
+      "x-ms-enum": {
+        "name": "AgentEnrollmentState",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "Succeeded",
+            "name": "Succeeded",
+            "description": "Agent enrollment succeeded."
+          },
+          {
+            "value": "Failed",
+            "name": "Failed",
+            "description": "Agent enrollment failed."
+          },
+          {
+            "value": "InProgress",
+            "name": "InProgress",
+            "description": "Agent enrollment is in progress."
+          }
+        ]
+      }
     },
     "Agent": {
       "description": "Device Update Agent details.",
@@ -2519,6 +2544,10 @@
             "installedUpdateId": {
               "description": "The current installed update Id on this agent",
               "$ref": "#/definitions/UpdateId"
+            },
+            "enrollmentStatus": {
+              "description": "Enrollment status",
+              "$ref": "#/definitions/AgentEnrollmentStatus"
             }
           }
         }
@@ -2526,6 +2555,25 @@
       "required": [
         "properties"
       ]
+    },
+    "AgentList": {
+      "description": "List of Agents.",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "The link used to get the next page of Agents list.",
+          "type": "string"
+        },
+        "value": {
+          "description": "List of Agents.",
+          "type": "array",
+          "x-ms-identifiers": [],
+          "items": {
+            "$ref": "#/definitions/Agent",
+            "description": "Agent details."
+          }
+        }
+      }
     }
   },
   "parameters": {
