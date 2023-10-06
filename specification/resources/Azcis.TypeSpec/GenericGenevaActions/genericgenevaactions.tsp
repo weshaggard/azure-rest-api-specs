@@ -13,6 +13,10 @@ namespace Microsoft.AzureCIS;
 
 @doc("GenericGenevaActions properties")
 model GenericGenevaActionsResourceProperties {
+  #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-duplicate-property" "Duplicate property found in the resource envelope and resource properties."
+  @doc("User given name for geneva action")
+  name: string;
+
   @doc("The execution environment for geneva action")
   environment: string;
 
@@ -26,10 +30,10 @@ model GenericGenevaActionsResourceProperties {
   operation: string;
 
   @doc("The input mode for geneva action (single/batch)")
-  inputMode: string;
+  inputMode?: string;
 
   @doc("The parameter list for geneva action")
-  parameters: Array<Parameter>;
+  parameters?: Array<Parameter>;
 
   @doc("Provisioning state")
   @visibility("read")
