@@ -6,24 +6,17 @@ import "@azure-tools/typespec-azure-resource-manager";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
-using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Autorest;
 
-#suppress "@azure-tools/typespec-azure-core/casing-style" "The names of Namespace types must use PascalCaseTypeSpec"
-@armProviderNamespace
-@service({
-  title: "Foundational ARM Client",
-  version: "2023-08-22-preview",
-})
-@doc("GenericGenevaActions Provider")
-@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureCIS;
-
-interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("GenericGenevaActions properties")
 model GenericGenevaActionsResourceProperties {
+  #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-duplicate-property" "Duplicate property found in the resource envelope and resource properties."
+  @doc("User given name for geneva action")
+  name: string;
+
   @doc("The execution environment for geneva action")
   environment: string;
 
@@ -37,10 +30,10 @@ model GenericGenevaActionsResourceProperties {
   operation: string;
 
   @doc("The input mode for geneva action (single/batch)")
-  inputMode: string;
+  inputMode?: string;
 
   @doc("The parameter list for geneva action")
-  parameters: Array<Parameter>;
+  parameters?: Array<Parameter>;
 
   @doc("Provisioning state")
   @visibility("read")

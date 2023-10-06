@@ -6,21 +6,10 @@ import "@azure-tools/typespec-azure-resource-manager";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
-using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Autorest;
 
-#suppress "@azure-tools/typespec-azure-core/casing-style" "The names of Namespace types must use PascalCaseTypeSpec"
-@armProviderNamespace
-@service({
-  title: "Foundational ARM Client",
-  version: "2023-08-22-preview",
-})
-@doc("storageAccounts Provider.")
-@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureCIS;
-
-interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("storageAccountDsms properties.")
 model StorageAccountDsmsResourceProperties {

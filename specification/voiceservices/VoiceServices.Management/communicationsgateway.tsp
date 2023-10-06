@@ -162,6 +162,10 @@ enum CommunicationsPlatform {
   @doc("Teams Direct Routing")
   @added(Versions.v2023_09_01)
   TeamsDirectRouting,
+
+  @doc("Zoom")
+  @added(Versions.v2023_09_21)
+  Zoom,
 }
 
 @doc("API Bridge activation state.")
@@ -174,6 +178,48 @@ enum ApiBridgeActivationState {
   @doc("API Bridge is disabled")
   @added(Versions.v2023_09_01)
   disabled,
+}
+
+@doc("Zoom regions.")
+@added(Versions.v2023_09_21)
+enum ZoomRegion {
+  @doc("North America Region")
+  NorthAmerica,
+
+  @doc("EMEA Region")
+  EMEA,
+
+  @doc("APAC Region")
+  APAC,
+
+  @doc("Japan Region")
+  Japan,
+
+  @doc("Australia and New Zealand Region")
+  AustraliaNewZealand,
+
+  @doc("Latin America Region")
+  LatinAmerica,
+}
+
+@doc("Zoom test line.")
+@added(Versions.v2023_09_21)
+model ZoomTestLine {
+  @doc("Phone number for the test line.")
+  @visibility("read", "update", "create")
+  phoneNumber: string;
+}
+
+@doc("Configuration for the Zoom platform.")
+@added(Versions.v2023_09_21)
+model ZoomConfig {
+  @doc("Zoom platform test lines.")
+  @visibility("read", "update", "create")
+  testLines: ZoomTestLine[];
+
+  @doc("The Zoom region to which this Communications Gateway is connected.")
+  @visibility("read", "update", "create")
+  region: ZoomRegion;
 }
 
 @doc("Configuration of the API Bridge.")
@@ -321,15 +367,22 @@ model CommunicationsGatewayProperties is ResourceProperties {
   @added(Versions.v2023_09_01)
   customSipHeaders?: CustomSipHeadersProperties;
 
-  @doc("A list of IP allocated prefixes which may be used to recieve signaling data from this Communications Gateway.")
+  @doc("A list of IP allocated prefixes which may be used to receive signaling data from this Communications Gateway.")
   @visibility("read")
   @added(Versions.v2023_09_01)
   allocatedSignalingAddressPrefixes?: string[];
 
-  @doc("A list of allocated IP prefixes which may be used to recieve media data from this Communications Gateway.")
+  @doc("A list of allocated IP prefixes which may be used to receive media data from this Communications Gateway.")
   @visibility("read")
   @added(Versions.v2023_09_01)
   allocatedMediaAddressPrefixes?: string[];
+
+  // Added 2023-09-21
+
+  @doc("Configuration for Zoom platform")
+  @visibility("read", "update", "create")
+  @added(Versions.v2023_09_21)
+  zoomConfig?: ZoomConfig;
 }
 
 @armResourceOperations

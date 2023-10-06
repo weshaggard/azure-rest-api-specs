@@ -6,26 +6,19 @@ import "@azure-tools/typespec-azure-resource-manager";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
-using TypeSpec.Versioning;
 using Azure.ResourceManager;
 using Autorest;
 
-#suppress "@azure-tools/typespec-azure-core/casing-style" "The names of Namespace types must use PascalCaseTypeSpec"
-@armProviderNamespace
-@service({
-  title: "Foundational ARM Client",
-  version: "2023-08-22-preview",
-})
-@doc("https://eng.ms/docs/products/azcis-resource-provisioning/template-user-guide/resources/geneva/geneva-actions-extension-resource-template")
-@useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
 namespace Microsoft.AzureCIS;
-
-interface Operations extends Azure.ResourceManager.Operations {}
 
 @doc("GenevaActionsExtension properties")
 model GenevaActionsExtensionResourceProperties {
+  #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-duplicate-property" "Duplicate property found in the resource envelope and resource properties."
+  @doc("User given name for GenevaActionExtension.")
+  name: string; // camel case for the parameter names
+
   @doc("User provided package source branch.")
-  packageSourceBranch: string; // camel case for the parameter names
+  packageSourceBranch: string;
 
   @doc("This is the sub folder path to the package folder relative to the branch root.")
   packageSourceRelativePath: string;
