@@ -27,7 +27,16 @@ These are the global settings for the Mobile Packet Core Network Function servic
 ```yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-2023-05-15-preview
+tag: package-2023-10-15
+```
+
+### Tag: package-2023-10-15
+
+These settings apply only when `--tag=package-2023-10-15` is specified on the command line.
+
+```yaml $(tag) == 'package-2023-10-15'
+input-file:
+  - Microsoft.MobilePacketCore/stable/2023-10-15/networkfunction.json
 ```
 
 ### Tag: package-2023-05-15-preview
