@@ -88,7 +88,7 @@ model DstsServiceClientIdentityResource
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("dstsServiceClientIdentity") // start with lower case
+  @segment("dstsServiceClientIdentities") // start with lower case
   @visibility("read")
   @path
   name: string;
@@ -96,7 +96,7 @@ model DstsServiceClientIdentityResource
 
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
-interface DstsServiceClientIdentitys {
+interface DstsServiceClientIdentity {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DstsServiceClientIdentityResource>;
   listBySubscription is ArmListBySubscription<DstsServiceClientIdentityResource>;
   listByResourceGroup is ArmResourceListByParent<DstsServiceClientIdentityResource>;
