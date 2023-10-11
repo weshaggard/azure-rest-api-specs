@@ -35,13 +35,13 @@ input-file:
     - Microsoft.Dashboard/preview/2023-10-01-preview/grafana.json
 ```
 
-### Tag: package-2022-10-01
+### Tag: package-2023-09-01
 
-These settings apply only when `--tag=package-2022-10-01` is specified on the command line.
+These settings apply only when `--tag=package-2023-09-01` is specified on the command line.
 
-``` yaml $(tag) == 'package-2022-10-01'
+``` yaml $(tag) == 'package-2023-09-01'
 input-file:
-    - Microsoft.Dashboard/stable/2022-10-01/grafana.json
+    - Microsoft.Dashboard/stable/2023-09-01/grafana.json
 ```
 
 ### Tag: package-2022-10-01-preview
