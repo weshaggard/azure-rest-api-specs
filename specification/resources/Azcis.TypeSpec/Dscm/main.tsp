@@ -2,6 +2,7 @@ import "./dsmsallowlist.tsp";
 import "./dstsserviceaccount.tsp";
 import "./dstsapplication.tsp";
 import "./dsmsrootfolder.tsp";
+import "./dstsserviceclientidentity.tsp";
 
 using TypeSpec.Versioning;
 using Azure.ResourceManager;
@@ -17,3 +18,11 @@ using Azure.ResourceManager;
 namespace Microsoft.AzureCIS;
 
 interface Operations extends Azure.ResourceManager.Operations {}
+
+@doc("Provisioning status of the resource.")
+enum DscmProvisioningState {
+  ...ResourceProvisioningState,
+
+  @doc("Accepted State")
+  Accepted,
+}
