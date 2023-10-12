@@ -663,12 +663,12 @@
         }
       }
     },
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/listClusterUserCredential": {
+    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/listUserKubeconfig": {
       "post": {
         "tags": [
           "provisionedClusterInstances"
         ],
-        "operationId": "provisionedClusterInstances_ListClusterUserCredentials",
+        "operationId": "provisionedClusterInstances_ListUserKubeconfig",
         "summary": "Listing the AAD user credentials of a provisioned cluster instance used only in direct mode.",
         "description": "Lists the AAD user credentials of a provisioned cluster instance used only in direct mode.",
         "parameters": [
@@ -703,22 +703,22 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "location",
+          "final-state-via": "azure-async-operation",
           "final-state-schema": "#/definitions/CredentialResults"
         },
         "x-ms-examples": {
           "ListClusterUserCredentials": {
-            "$ref": "./examples/ProvisionedClusterInstanceListClusterUserCredentials.json"
+            "$ref": "./examples/ProvisionedClusterInstanceListUserKubeconfig.json"
           }
         }
       }
     },
-    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/listClusterAdminCredential": {
+    "/{connectedClusterResourceUri}/providers/Microsoft.HybridContainerService/provisionedClusterInstances/default/listAdminKubeconfig": {
       "post": {
         "tags": [
           "provisionedClusterInstances"
         ],
-        "operationId": "provisionedClusterInstances_ListClusterAdminCredentials",
+        "operationId": "provisionedClusterInstances_ListAdminKubeconfig",
         "summary": "Listing the admin credentials of a provisioned cluster instance used only in direct mode.",
         "description": "Lists the admin credentials of a provisioned cluster instance used only in direct mode.",
         "parameters": [
@@ -753,12 +753,12 @@
         },
         "x-ms-long-running-operation": true,
         "x-ms-long-running-operation-options": {
-          "final-state-via": "location",
+          "final-state-via": "azure-async-operation",
           "final-state-schema": "#/definitions/CredentialResults"
         },
         "x-ms-examples": {
           "ListClusterAdminCredentials": {
-            "$ref": "./examples/ProvisionedClusterInstanceListClusterAdminCredentials.json"
+            "$ref": "./examples/ProvisionedClusterInstanceListAdminKubeconfig.json"
           }
         }
       }
@@ -1126,17 +1126,53 @@
     "CredentialResults": {
       "type": "object",
       "properties": {
-        "kubeconfigs": {
-          "type": "array",
+        "id": {
+          "type": "string",
           "readOnly": true,
-          "items": {
-            "$ref": "#/definitions/CredentialResult"
-          },
-          "x-ms-identifiers": [],
-          "description": "Base64-encoded Kubernetes configuration file."
+          "description": "Operation Id"
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Operation Name"
+        },
+        "resourceId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Resource Id"
+        },
+        "status": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Operation Status"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "kubeconfigs": {
+              "type": "array",
+              "readOnly": true,
+              "items": {
+                "$ref": "#/definitions/CredentialResult"
+              },
+              "x-ms-identifiers": [],
+              "description": "Base64-encoded Kubernetes configuration file."
+            }
+          }
         }
       },
-      "description": "The list credential result response."
+      "description": "The list kubeconfig result response."
     },
     "CredentialResult": {
       "type": "object",
