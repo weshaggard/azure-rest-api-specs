@@ -265,6 +265,105 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Private.DevModSimWorkbench/workbenches/{workbenchName}/chambers/{chamberName}/connectors/{name}/licenseAdd": {
+      "post": {
+        "tags": [
+          "connectors_LicenseAdd"
+        ],
+        "summary": "Add license to an ModSim Workbench connector.",
+        "operationId": "connectors_LicenseAdd",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "in": "path",
+            "name": "resourceGroup",
+            "description": "the resource group name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workbenchName",
+            "description": "the workbench name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "chamberName",
+            "description": "the chamber name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "name",
+            "description": "the connector name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "License key parameters",
+            "schema": {
+              "$ref": "#/definitions/LicenseKeyParameters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Location": {
+                "type": "string"
+              },
+              "x-ms-async-operation-timeout": {
+                "type": "string"
+              }
+            }
+          },
+          "default": {
+            "description": "Default Error Response",
+            "schema": {
+              "$ref": "./privatedevmodsimworkbench.json#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "location"
+        },
+        "x-ms-examples": {
+          "Connectors License Add": {
+            "$ref": "./examples/ConnectorsLicenseAdd.json"
+          }
+        },
+        "security": [
+          {
+            "azure_auth": [
+              "user_impersonation"
+            ]
+          }
+        ]
+      }
+    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Private.DevModSimWorkbench/workbenches/{workbenchName}/chambers/{chamberName}/connectors/{connectorName}": {
       "put": {
         "tags": [
@@ -682,6 +781,10 @@
           "description": "The reply URL of OTDS for Azure AD app.",
           "type": "string",
           "readOnly": true
+        },
+        "licenseKeyUri": {
+          "description": "The license key uri.",
+          "type": "string"
         }
       },
       "description": "Etx properties."
@@ -805,6 +908,17 @@
           "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
         }
       ]
+    },
+    "LicenseKeyParameters": {
+      "type": "object",
+      "description": "License Key Parameters",
+      "properties": {
+        "licenseKey": {
+          "x-ms-secret": true,
+          "description": "Value of License Key",
+          "type": "string"
+        }
+      }
     }
   }
 }
