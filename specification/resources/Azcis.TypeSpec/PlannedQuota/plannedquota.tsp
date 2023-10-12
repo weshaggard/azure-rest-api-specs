@@ -13,62 +13,62 @@ namespace Microsoft.AzureCIS;
 
 @doc("plannedQuota properties")
 model PlannedQuotaResourceProperties {
-    #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-duplicate-property" "Duplicate property found in the resource envelope and resource properties."
-    @doc("Name of the resource template")
-    name: string;
+  #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-duplicate-property" "Duplicate property found in the resource envelope and resource properties."
+  @doc("Name of the resource template")
+  name: string;
 
-    @doc("Contact email for manual approval")
-    contactEmail: string;
+  @doc("Contact email for manual approval")
+  contactEmail: string;
 
-    @doc("Subscription GUID")
-    subscriptionId: string;
+  @doc("Subscription GUID")
+  subscriptionId: string;
 
-    @doc("Service tree id")
-    serviceTreeId: string;
+  @doc("Service tree id")
+  serviceTreeId: string;
 
-    @doc("Subscription Name in plan")
-    subscriptionNameInPlan: string;
+  @doc("Subscription Name in plan")
+  subscriptionNameInPlan: string;
 
-    @doc("Stage name")
-    stage?: string;
+  @doc("Stage name")
+  stage?: string;
 
-    @doc("Property bindings")
-    propertyBindings?: Array<PropertyBinding>;
+  @doc("Property bindings")
+  propertyBindings?: Array<PropertyBinding>;
 
-    @doc("Skip unsupported silently")
-    skipUnsupportedSilently?: boolean;
+  @doc("Skip unsupported silently")
+  skipUnsupportedSilently?: boolean;
 
-    @doc("Provisioning state")
-    @visibility("read")
-    provisioningState?: PlannedQuotaProvisioningState;
+  @doc("Provisioning state")
+  @visibility("read")
+  provisioningState?: PlannedQuotaProvisioningState;
 }
 
 @doc("plannedQuota Property Binding")
 model PropertyBinding {
-    @doc("Placeholder")
-    placeholder: string;
+  @doc("Placeholder")
+  placeholder: string;
 
-    @doc("Resource Name")
-    resourceName: string;
+  @doc("Resource Name")
+  resourceName: string;
 }
 
 @doc("plannedQuota Resource")
 model PlannedQuotaResource
-    is ProxyResource<PlannedQuotaResourceProperties> { // this can be TrackedResource based on resourcetype
-    @doc("The name of resource.")
-    @pattern("^[a-zA-Z0-9-]{3,24}$")
-    @key("resourceName")
-    @segment("plannedQuotas") // Start with lower case. Should be plural
-    @visibility("read")
-    @path
-    name: string;
+  is ProxyResource<PlannedQuotaResourceProperties> { // this can be TrackedResource based on resourcetype
+  @doc("The name of resource.")
+  @pattern("^[a-zA-Z0-9-]{3,24}$")
+  @key("resourceName")
+  @segment("plannedQuotas") // Start with lower case. Should be plural
+  @visibility("read")
+  @path
+  name: string;
 }
 
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface PlannedQuota {
-    createOrUpdate is ArmResourceCreateOrUpdateAsync<PlannedQuotaResource>;
-    listBySubscription is ArmListBySubscription<PlannedQuotaResource>;
-    listByResourceGroup is ArmResourceListByParent<PlannedQuotaResource>;
-    get is ArmResourceRead<PlannedQuotaResource>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<PlannedQuotaResource>;
+  listBySubscription is ArmListBySubscription<PlannedQuotaResource>;
+  listByResourceGroup is ArmResourceListByParent<PlannedQuotaResource>;
+  get is ArmResourceRead<PlannedQuotaResource>;
 }
