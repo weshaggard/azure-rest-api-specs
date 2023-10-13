@@ -35,7 +35,7 @@ model ApSlbVipResource is ProxyResource<ApSlbVipResourceProperties> {
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("ApSlbVip") // start with lower case
+  @segment("apSlbVip") // start with lower case
   @visibility("read")
   @path
   name: string;
