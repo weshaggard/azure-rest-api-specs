@@ -24,7 +24,7 @@ model AadApplicationResourceProperties {
   availableToOtherTenants: string;
 
   @doc("The App ID Uri of multiple-tenant application to be globally unique.")
-  appIDUri?: string;
+  appIdUri?: string;
 
   @doc("The Subject Name for SNIssuer Config.")
   snIssuerConfig?: Array<string>;
