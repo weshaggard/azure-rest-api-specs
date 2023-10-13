@@ -1180,28 +1180,18 @@
           "type": "object",
           "readOnly": true,
           "properties": {
-            "featuresStatus": {
-              "type": "object",
-              "description": "Additional features status like Arc Agent Onboarding.",
-              "properties": {
-                "arcAgentStatus": {
-                  "description": "Defines the observed Arc Agent status that is resourceSynced back to the ARM resource.",
-                  "$ref": "#/definitions/ArcAgentStatus"
-                }
-              }
-            },
-            "addonStatus": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/definitions/AddonStatus"
+            "controlPlaneStatus": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AddonStatusProfile"
               },
-              "description": "AddonStatus - Status of Addons"
+              "description": "Status of the control plane components"
             },
             "errorMessage": {
               "type": "string",
               "description": "ErrorMessage - Error messages during creation of cluster"
             },
-            "provisioningStatus": {
+            "operationStatus": {
               "type": "object",
               "properties": {
                 "error": {
@@ -1217,10 +1207,6 @@
                 },
                 "operationId": {
                   "type": "string"
-                },
-                "phase": {
-                  "type": "string",
-                  "description": "Phase represents the current phase of cluster actuation. E.g. Pending, Running, Terminating, Failed etc."
                 },
                 "status": {
                   "type": "string"
@@ -1272,32 +1258,32 @@
       },
       "x-ms-identifiers": []
     },
-    "AddonStatus": {
-      "properties": {
-        "errorMessage": {
-          "description": "ErrorMessage will be set in the event that there is a terminal problem reconciling the AddOn and will contain a more verbose string suitable for logging and human consumption.",
-          "type": "string"
-        },
-        "phase": {
-          "description": "Phase represents the current phase of cluster actuation. E.g. Pending, Running, Terminating, Failed etc.",
-          "type": "string"
-        },
-        "ready": {
-          "type": "boolean"
-        }
-      },
+    "AgentPoolUpdateProfile": {
       "type": "object",
-      "description": "Status of the addon"
-    },
-    "AgentPoolProfile": {
-      "type": "object",
-      "description": "AgentPool configuration",
+      "description": "AgentPool update configuration",
       "properties": {
         "count": {
           "type": "integer",
           "format": "int32",
           "description": "Count - Number of agents to host docker containers. Allowed values must be in the range of 1 to 100 (inclusive). The default value is 1.",
           "default": 1
+        },
+        "vmSize": {
+          "type": "string",
+          "description": "VmSize - The size of the agent pool VMs."
+        }
+      }
+    },
+    "AgentPoolProfile": {
+      "type": "object",
+      "description": "AgentPool configuration",
+      "properties": {
+        "availabilityZones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "AvailabilityZones - The list of Availability zones to use for nodes. Datacenter racks modelled as zones"
         },
         "osType": {
           "$ref": "#/definitions/OSType"
@@ -1308,10 +1294,6 @@
         "nodeImageVersion": {
           "type": "string",
           "description": "The version of node image"
-        },
-        "vmSize": {
-          "type": "string",
-          "description": "VmSize - The size of the agent pool VMs."
         },
         "nodeLabels": {
           "type": "object",
@@ -1348,6 +1330,10 @@
         },
         {
           "x-ms-client-flatten": true,
+          "$ref": "#/definitions/AgentPoolUpdateProfile"
+        },
+        {
+          "x-ms-client-flatten": true,
           "$ref": "#/definitions/AgentPoolName"
         }
       ]
@@ -1357,6 +1343,10 @@
         {
           "x-ms-client-flatten": true,
           "$ref": "#/definitions/AgentPoolProfile"
+        },
+        {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/AgentPoolUpdateProfile"
         },
         {
           "x-ms-client-flatten": true,
@@ -1375,9 +1365,9 @@
           "properties": {
             "errorMessage": {
               "type": "string",
-              "description": "ErrorMessage - Error messages during creation of cluster"
+              "description": "ErrorMessage - Error messages during creation of agent pool"
             },
-            "provisioningStatus": {
+            "operationStatus": {
               "type": "object",
               "properties": {
                 "error": {
@@ -1394,10 +1384,6 @@
                 "operationId": {
                   "type": "string"
                 },
-                "phase": {
-                  "type": "string",
-                  "description": "Phase represents the current phase of cluster actuation. E.g. Pending, Running, Terminating, Failed etc."
-                },
                 "status": {
                   "type": "string"
                 }
@@ -1405,14 +1391,10 @@
               "description": "Contains Provisioning errors"
             },
             "readyReplicas": {
-              "type": "integer",
-              "format": "int32",
-              "description": "Total number of ready machines targeted by this deployment."
-            },
-            "replicas": {
-              "type": "integer",
-              "format": "int32",
-              "description": "Total number of non-terminated machines targeted by this deployment"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AgentPoolUpdateProfile"
+              }
             }
           },
           "description": "Defines the observed state of the agent pool"
@@ -1655,13 +1637,14 @@
         }
       }
     },
-    "ArcAgentStatus": {
-      "description": "Defines the observed Arc Agent status that is resourceSynced back to the ARM resource.",
+    "AddonStatusProfile": {
+      "description": "Defines the addon status profile.",
       "type": "object",
+      "readOnly": true,
       "properties": {
-        "deploymentState": {
+        "phase": {
           "type": "string",
-          "description": "Observed deployment state of the Arc Agents on the target cluster. Possible values include: 'pending', 'provisioning', 'provisioning {HelmChartInstalled}', 'provisioning {MSICertificateDownloaded}', 'provisioned', 'deleting', 'failed', 'upgrading'",
+          "description": "Observed phase of the addon on the target cluster. Possible values include: 'pending', 'provisioning', 'provisioning {HelmChartInstalled}', 'provisioning {MSICertificateDownloaded}', 'provisioned', 'deleting', 'failed', 'upgrading'",
           "enum": [
             "pending",
             "provisioning",
@@ -1674,12 +1657,16 @@
           ],
           "x-ms-enum": {
             "modelAsString": true,
-            "name": "deploymentState"
+            "name": "addonPhase"
           }
+        },
+        "ready": {
+          "type": "boolean",
+          "description": "Indicates whether the addon is ready"
         },
         "errorMessage": {
           "type": "string",
-          "description": "Error messages while onboarding/upgrading/uninstalling the Arc agents"
+          "description": "Error message while deploying the addon"
         }
       }
     },
