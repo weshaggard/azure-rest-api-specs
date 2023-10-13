@@ -26,14 +26,16 @@ using Azure.ResourceManager;
 using OpenAPI;
 
 interface Operations extends Azure.ResourceManager.Operations {
-  checkName is checkGlobalNameAvailability;
-  checkLocalName is checkLocalNameAvailability;
+  checkNameAvailability is checkGlobalNameAvailability;
+  checkNameAvailabilityLocal is checkLocalNameAvailability;
 }
 
 @doc("Provisioning state")
 @Azure.Core.lroStatus
 enum ProvisioningState {
   ...ResourceProvisioningState,
+  @doc("Resource being accepted")
+  Accepted,
   @doc("Resource being created")
   Creating,
   @doc("Resource being updated")
