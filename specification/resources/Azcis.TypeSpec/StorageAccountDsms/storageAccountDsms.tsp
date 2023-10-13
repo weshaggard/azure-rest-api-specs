@@ -13,8 +13,11 @@ namespace Microsoft.AzureCIS;
 
 @doc("storageAccountDsms properties.")
 model StorageAccountDsmsResourceProperties {
+  @doc("Gets or sets the root path of the certificate.")
+  rootPath?: string;
+
   @doc("Define in which region of dSMS to provision the storage account such as global-dsms.dsms.%(HostNameSuffix), uswest-dsms.dsms.%(HostNameSuffix). This is used only when provision storage account in non-home-dsms endpoint.")
-  dsmsDns: string;
+  dsmsDns?: string;
 
   @doc("Subscription ID to use this xstore account.")
   subscriptionId?: string;
@@ -33,6 +36,9 @@ model StorageAccountDsmsResourceProperties {
 
   @doc("Location of this storage account.")
   location?: string;
+
+  @doc("Label of this xstore account.")
+  label?: string;
 
   @doc("Gets or sets whether to enable 2TB for this xstore account.")
   enable2tb?: boolean;
@@ -140,27 +146,19 @@ model AccountSasInfo {
 
 @doc("storageAccounts Resource")
 model StorageAccountDsmsResource
-  is ProxyResource<StorageAccountDsmsResourceProperties> { // this can be TrackedResource based on resourcetype
+  is ProxyResource<StorageAccountDsmsResourceProperties> { // This can be TrackedResource based on resourcetype
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("storageAccountDsmss") // start with lower case
+  @segment("storageAccountDsmss") // Start with lower case. Should be plural
   @visibility("read")
   @path
   name: string;
 }
 
-@doc("Provisioning status of the resource.")
-enum StorageAccountDsmsProvisioningState {
-  ...ResourceProvisioningState,
-
-  @doc("Accepted State")
-  Accepted,
-}
-
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
-interface StorageAccountDsmss {
+interface StorageAccountDsms {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<StorageAccountDsmsResource>;
   listBySubscription is ArmListBySubscription<StorageAccountDsmsResource>;
   listByResourceGroup is ArmResourceListByParent<StorageAccountDsmsResource>;

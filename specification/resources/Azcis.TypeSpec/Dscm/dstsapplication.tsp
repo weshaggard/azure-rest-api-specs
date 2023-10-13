@@ -21,7 +21,7 @@ model DstsApplicationResourceProperties {
 
   @doc("Provisioning state")
   @visibility("read")
-  provisioningState?: dstsApplicationProvisioningState;
+  provisioningState?: DscmProvisioningState;
 }
 
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-name-invalid-chars" "Arm resource name must contain only alphanumeric characters"
@@ -31,7 +31,7 @@ model DstsApplicationResource
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("dstsApplications") // start with lower case
+  @segment("dstsApplications") // Start with lower case. Should be plural
   @visibility("read")
   @path
   name: string;
@@ -127,18 +127,11 @@ model IpRange {
   toIpAddress: string;
 }
 
-@doc("Provisioning status of the resource.")
-enum dstsApplicationProvisioningState {
-  ...ResourceProvisioningState,
-
-  @doc("Accepted State")
-  Accepted,
-}
-
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
 interface DstsApplication {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DstsApplicationResource>;
   listBySubscription is ArmListBySubscription<DstsApplicationResource>;
   listByResourceGroup is ArmResourceListByParent<DstsApplicationResource>;
+  get is ArmResourceRead<DstsApplicationResource>;
 }

@@ -58,7 +58,7 @@ model DstsServiceAccountResource
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("dstsServiceAccount") // start with lower case
+  @segment("dstsServiceAccounts") // Start with lower case. Should be plural
   @visibility("read")
   @path
   name: string;
@@ -70,6 +70,7 @@ interface DstsServiceAccount {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DstsServiceAccountResource>;
   listBySubscription is ArmListBySubscription<DstsServiceAccountResource>;
   listByResourceGroup is ArmResourceListByParent<DstsServiceAccountResource>;
+  get is ArmResourceRead<DstsServiceAccountResource>;
 }
 
 @doc("Authenticaiton requirement of the account.")

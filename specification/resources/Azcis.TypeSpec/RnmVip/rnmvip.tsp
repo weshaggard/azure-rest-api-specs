@@ -20,8 +20,8 @@ model RnmVipResourceProperties {
   @doc("Gets or sets the value of rnm subscription Guid. Every vip allocated by rnm needs to be associated with a subscription. Rnm team created subscriptions for different teams.")
   rnmSubscriptionId: string;
 
-  @doc("Gets or sets the value of vip reservation Id. Every vip allocated by rnm has a reservation Id. E.g. FF03EB76-BA3D-4892-BD40-E42EFEE3DF67")
-  reservationId: string;
+  @doc("Gets or sets the value of vip reservation Id. Every vip allocated by rnm has a reservation Id. This is an optional field for Static IP reservation. In this case, if the reservation is already present then the system will mark reservation as successful without any duplicate reservation. E.g. FF03EB76-BA3D-4892-BD40-E42EFEE3DF67")
+  reservationId?: string;
 
   @doc("Gets or sets the value of VIP address Family. It is an optional property. E.g. InterNetwork.")
   addressFamily?: string;
@@ -87,27 +87,19 @@ model RnmVipTag {
 
 @doc("rnmVips Resource")
 model RnmVipResource
-  is ProxyResource<RnmVipResourceProperties> { // this can be TrackedResource based on resourcetype
+  is ProxyResource<RnmVipResourceProperties> { // This can be TrackedResource based on resourcetype
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("rnmVips") // start with lower case
+  @segment("rnmVips") // Start with lower case. Should be plural
   @visibility("read")
   @path
   name: string;
 }
 
-@doc("Provisioning status of the resource.")
-enum RnmVipProvisioningState {
-  ...ResourceProvisioningState,
-
-  @doc("Accepted State")
-  Accepted,
-}
-
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
-interface RnmVips {
+interface RnmVip {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<RnmVipResource>;
   listBySubscription is ArmListBySubscription<RnmVipResource>;
   listByResourceGroup is ArmResourceListByParent<RnmVipResource>;

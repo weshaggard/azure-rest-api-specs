@@ -25,7 +25,7 @@ model DsmsRootFolderResourceProperties {
 
   @doc("Provisioning state")
   @visibility("read")
-  provisioningState?: dsmsRootFolderProvisioningState;
+  provisioningState?: DscmProvisioningState;
 }
 
 @doc("dsmsRootFolder Resource")
@@ -34,7 +34,7 @@ model DsmsRootFolderResource
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("dsmsRootFolders") // start with lower case
+  @segment("dsmsRootFolders") // Start with lower case. Should be plural
   @visibility("read")
   @path
   name: string;
@@ -46,12 +46,5 @@ interface DsmsRootFolder {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsRootFolderResource>;
   listBySubscription is ArmListBySubscription<DsmsRootFolderResource>;
   listByResourceGroup is ArmResourceListByParent<DsmsRootFolderResource>;
-}
-
-@doc("Provisioning status of the resource.")
-enum dsmsRootFolderProvisioningState {
-  ...ResourceProvisioningState,
-
-  @doc("Accepted State")
-  Accepted,
+  get is ArmResourceRead<DsmsRootFolderResource>;
 }

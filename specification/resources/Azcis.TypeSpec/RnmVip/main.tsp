@@ -14,3 +14,11 @@ using Azure.ResourceManager;
 namespace Microsoft.AzureCIS;
 
 interface Operations extends Azure.ResourceManager.Operations {}
+
+@doc("Provisioning status of the resource.")
+enum RnmVipProvisioningState {
+  ...ResourceProvisioningState,
+
+  @doc("Accepted State")
+  Accepted,
+}

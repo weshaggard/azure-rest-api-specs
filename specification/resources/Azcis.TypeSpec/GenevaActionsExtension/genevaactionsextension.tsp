@@ -25,32 +25,24 @@ model GenevaActionsExtensionResourceProperties {
 
   @doc("Provisioning state")
   @visibility("read")
-  provisioningState?: genevaActionsExtensionsProvisioningState;
+  provisioningState?: GenevaActionsExtensionProvisioningState;
 }
 
 @doc("GenevaActionsExtension Resource")
 model GenevaActionsExtensionResource
-  is ProxyResource<GenevaActionsExtensionResourceProperties> { // this can be TrackedResource based on resourcetype
+  is ProxyResource<GenevaActionsExtensionResourceProperties> { // This can be TrackedResource based on resourcetype
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("genevaActionsExtensions") // start with lower case
+  @segment("genevaActionsExtensions") // Start with lower case. Should be plural
   @visibility("read")
   @path
   name: string;
 }
 
-@doc("Provisioning status of the resource.")
-enum genevaActionsExtensionsProvisioningState {
-  ...ResourceProvisioningState,
-
-  @doc("Accepted State")
-  Accepted,
-}
-
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
-interface GenevaActionsExtensions {
+interface GenevaActionsExtension {
   createOrUpdate is ArmResourceCreateOrUpdateAsync<GenevaActionsExtensionResource>;
   get is ArmResourceRead<GenevaActionsExtensionResource>;
   listByResourceGroup is ArmResourceListByParent<GenevaActionsExtensionResource>;

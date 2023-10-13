@@ -37,7 +37,7 @@ model GenericGenevaActionsResourceProperties {
 
   @doc("Provisioning state")
   @visibility("read")
-  provisioningState?: genericGenevaActionsProvisioningState;
+  provisioningState?: GenericGenevaActionsProvisioningState;
 }
 
 @doc("genericGenevaActions Resource")
@@ -46,18 +46,10 @@ model GenericGenevaActionsResource
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("genericGenevaActionss") // start with lower case
+  @segment("genericGenevaActionss") // Start with lower case. Should be plural
   @visibility("read")
   @path
   name: string;
-}
-
-@doc("Provisioning status of the resource.")
-enum genericGenevaActionsProvisioningState {
-  ...ResourceProvisioningState,
-
-  @doc("Accepted State")
-  Accepted,
 }
 
 @doc("GenericGenevaActions Resource Parameter")

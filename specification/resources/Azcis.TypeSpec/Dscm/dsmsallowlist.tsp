@@ -11,8 +11,8 @@ using Autorest;
 
 namespace Microsoft.AzureCIS;
 
-@doc("dsmsAllowlists properties")
-model DsmsAllowlistsResourceProperties {
+@doc("dsmsAllowlist properties")
+model DsmsAllowlistResourceProperties {
   @doc("The name of the folder to apply allowlist changes to. This should be the full folder path starting with a '$', with '$' replacing all '/' characters. Example: '/my-folder/root-folder' should be passed as '$my-folder$root-folder")
   folderName: string; // camel case for the parameter name
 
@@ -30,33 +30,26 @@ model DsmsAllowlistsResourceProperties {
 
   @doc("Provisioning state")
   @visibility("read")
-  provisioningState?: dsmsAllowlistsProvisioningState;
+  provisioningState?: DscmProvisioningState;
 }
 
-@doc("dsmsAllowlists Resource")
-model DsmsAllowlistsResource
-  is ProxyResource<DsmsAllowlistsResourceProperties> { // this can be TrackedResource based on resourcetype
+@doc("dsmsAllowlist Resource")
+model DsmsAllowlistResource
+  is ProxyResource<DsmsAllowlistResourceProperties> { // this can be TrackedResource based on resourcetype
   @doc("The name of resource.")
   @pattern("^[a-zA-Z0-9-]{3,24}$")
   @key("resourceName")
-  @segment("dsmsAllowlists") // start with lower case
+  @segment("dsmsAllowlists") // Start with lower case. Should be plural
   @visibility("read")
   @path
   name: string;
 }
 
-@doc("Provisioning status of the resource.")
-enum dsmsAllowlistsProvisioningState {
-  ...ResourceProvisioningState,
-
-  @doc("Accepted State")
-  Accepted,
-}
-
 #suppress "@azure-tools/typespec-azure-resource-manager/no-resource-delete-operation" "The resource must have a delete operation.TypeSpec"
 @armResourceOperations
-interface DsmsAllowlists {
-  createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsAllowlistsResource>;
-  listBySubscription is ArmListBySubscription<DsmsAllowlistsResource>;
-  listByResourceGroup is ArmResourceListByParent<DsmsAllowlistsResource>;
+interface DsmsAllowlist {
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<DsmsAllowlistResource>;
+  listBySubscription is ArmListBySubscription<DsmsAllowlistResource>;
+  listByResourceGroup is ArmResourceListByParent<DsmsAllowlistResource>;
+  get is ArmResourceRead<DsmsAllowlistResource>;
 }
