@@ -14,9 +14,7 @@ To see additional help and options, run:
 
 > `autorest --help`
 
-For other options on installation see [Installing AutoRest](https://aka.ms/autorest/install) on the AutoRest github page.
----
-
+## For other options on installation see [Installing AutoRest](https://aka.ms/autorest/install) on the AutoRest github page.
 
 ## Configuration
 
@@ -47,7 +45,6 @@ These settings apply only when `--tag=package-2023-05-15-preview` is specified o
 input-file:
   - Microsoft.MobilePacketCore/preview/2023-05-15-preview/networkfunction.json
 ```
-
 
 # Code Generation
 

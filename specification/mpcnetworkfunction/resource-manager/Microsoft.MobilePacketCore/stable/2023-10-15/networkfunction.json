@@ -186,7 +186,10 @@
             "in": "path",
             "description": "The name of the network function",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
           }
         ],
         "responses": {
@@ -230,7 +233,10 @@
             "in": "path",
             "description": "The name of the network function",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
           },
           {
             "name": "resource",
@@ -244,9 +250,22 @@
         ],
         "responses": {
           "200": {
-            "description": "ARM operation completed successfully.",
+            "description": "ARM resource update successful",
             "schema": {
               "$ref": "#/definitions/NetworkFunctionResource"
+            }
+          },
+          "201": {
+            "description": "ARM create operation completed successfully.",
+            "schema": {
+              "$ref": "#/definitions/NetworkFunctionResource"
+            },
+            "headers": {
+              "Retry-After": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The Retry-After header can indicate how long the client should wait before polling the operation status."
+              }
             }
           },
           "default": {
@@ -260,7 +279,11 @@
           "NetworkFunctions_CreateOrUpdate": {
             "$ref": "./examples/NetworkFunctions_CreateOrUpdate.json"
           }
-        }
+        },
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        },
+        "x-ms-long-running-operation": true
       },
       "patch": {
         "operationId": "NetworkFunctions_UpdateTags",
@@ -283,7 +306,10 @@
             "in": "path",
             "description": "The name of the network function",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
           },
           {
             "name": "properties",
@@ -336,7 +362,10 @@
             "in": "path",
             "description": "The name of the network function",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
           }
         ],
         "responses": {
@@ -550,11 +579,6 @@
         "NRF",
         "NSSF",
         "MME",
-        "SaegwControlPlane",
-        "SaegwUserPlane",
-        "Saegw",
-        "ePDG",
-        "N3IWF",
         "RemotePaaS",
         "EMS",
         "OperationsPolicyManager"
@@ -592,31 +616,6 @@
             "name": "MME",
             "value": "MME",
             "description": "Mobility Management Entity"
-          },
-          {
-            "name": "SaegwControlPlane",
-            "value": "SaegwControlPlane",
-            "description": "System Architecture Evolution Gateway Control Plane, control and user plane separation (CUPS) architecture"
-          },
-          {
-            "name": "SaegwUserPlane",
-            "value": "SaegwUserPlane",
-            "description": "System Architecture Evolution Gateway User Plane, control and user plane separation (CUPS) architecture"
-          },
-          {
-            "name": "Saegw",
-            "value": "Saegw",
-            "description": "System Architecture Evolution Gateway.  This combines the Serving Gateway (SGW) and the Packet Data Network Gateway (PGW) functionality"
-          },
-          {
-            "name": "ePDG",
-            "value": "ePDG",
-            "description": "Evolved Packet Data Gateway"
-          },
-          {
-            "name": "N3IWF",
-            "value": "N3IWF",
-            "description": "Non-3GPP Interworking Function"
           },
           {
             "name": "RemotePaaS",
@@ -745,7 +744,7 @@
           {
             "name": "v2023_10_15",
             "value": "2023-10-15",
-            "description": "Oct 15, 2023 Preview API Version"
+            "description": "Oct 15, 2023 Stable API Version"
           }
         ]
       }
