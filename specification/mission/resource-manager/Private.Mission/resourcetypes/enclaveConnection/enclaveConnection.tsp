@@ -14,8 +14,29 @@ using Azure.Core;
 using Azure.ResourceManager;
 using OpenAPI;
 
+@doc("Specifies the state of the enclave connection.")
+enum EnclaveConnectionState {
+  @doc("EnclaveConnectionState Type Pending Approval")
+  PendingApproval,
+
+  @doc("EnclaveConnectionState Type Pending Update")
+  PendingUpdate,
+
+  @doc("EnclaveConnectionState Type Approved")
+  Approved,
+
+  @doc("EnclaveConnectionState Type Active")
+  Active,
+
+  @doc("EnclaveConnectionState Type Failed")
+  Failed,
+}
+
 @doc("Enclave Connection Resource properties")
 model EnclaveConnectionProperties {
+  @doc("The state of the enclaveConnection.")
+  state?: EnclaveConnectionState;
+
   @doc("Community Resource Id.")
   communityResourceId: CommunityResourceId;
 
@@ -23,7 +44,10 @@ model EnclaveConnectionProperties {
   sourceResourceId: EnclaveConnectionSourceResourceId;
 
   @doc("Source CIDR.")
-  sourceCidr: string;
+  sourceCidr?: string;
+
+  @doc("Source IP group Resource Id.")
+  ipGroup?: IPGroupResourceId;
 
   @doc("Destination Endpoint Resource Id.")
   destinationEndpointId: DestinationEndpointResourceId;
@@ -31,4 +55,7 @@ model EnclaveConnectionProperties {
   @doc("Provisioning State.")
   @visibility("read")
   provisioningState?: ProvisioningState;
+
+  @doc("List of resource ids modified by enclave Connections.")
+  resourceCollection?: string[];
 }

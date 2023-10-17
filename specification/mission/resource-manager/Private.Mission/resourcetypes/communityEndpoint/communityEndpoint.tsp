@@ -51,13 +51,12 @@ enum DestinationType {
 }
 
 @doc("Base type for destination rules.")
-@discriminator("destinationType")
 model DestinationRule {
   @doc("Destination Rule Name.")
   name?: string;
 
   @doc("Destination Type.")
-  destinationType: DestinationType;
+  destinationType?: DestinationType;
 
   @doc("Destination must follow the format for FQDNs if it is selected as the destination type (no IP/CIDR or full web URLs).")
   destination: string[];
@@ -67,11 +66,14 @@ model DestinationRule {
 
   @doc("Protocol. Options specified by Endpoint Protocol Enum.")
   protocol?: CommunityEndpointProtocol[];
+
+  @doc("Transit Hub Resource Id.")
+  transitHubResourceId: TransitHubResourceId;
 }
 
 @doc("Community Endpoint Resource properties")
 model CommunityEndpointProperties {
-  @extension("x-ms-identifiers", [])
+  @extension("x-ms-identifiers", ["name"])
   @doc("Destination Rule Collection.")
   destinationRuleCollection: DestinationRule[];
 

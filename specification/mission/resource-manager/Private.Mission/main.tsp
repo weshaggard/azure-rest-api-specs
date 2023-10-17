@@ -17,6 +17,7 @@ import "./resourcetypes/transitHub/transitHub.tsp";
 import "./resourcetypes/enclaveConnection/enclaveConnection.tsp";
 import "./resourcetypes/communityEndpoint/communityEndpoint.tsp";
 import "./resourcetypes/enclaveEndpoint/enclaveEndpoint.tsp";
+import "./resourcetypes/externalConnection/externalConnection.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -47,6 +48,7 @@ enum Versions {
  * @template TBaseParameters Optional. Allows overriding the operation parameters
  */
 #suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation-outside-interface" "This is a valid template"
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-operation" "This is a valid template"
 @autoRoute
 @doc("Create a {name}", TResource)
 @OpenAPI.extension("x-ms-long-running-operation", true)
@@ -224,16 +226,16 @@ interface Community {
   listBySubscription is ArmListBySubscription<CommunityResource>;
 
   @autoRoute
-    @doc("Checks that the IP Address Space to be allocated for a new Virtual Enclave is available.")
-    @armResourceAction(CommunityResource)
-    @post
-    checkAddressSpaceAvailability(
-        ...ResourceInstanceParameters<CommunityResource>,
+  @doc("Checks that the IP Address Space to be allocated for a new Virtual Enclave is available.")
+  @armResourceAction(CommunityResource)
+  @post
+  checkAddressSpaceAvailability(
+    ...ResourceInstanceParameters<CommunityResource>,
 
-        @doc("Check IP Address Space request body.")
-        @body
-        checkAddressSpaceAvailabilityRequest: CheckAddressSpaceAvailabilityRequest,
-    ): ArmResponse<CheckAddressSpaceAvailabilityResponse>  | ErrorResponse;
+    @doc("Check IP Address Space request body.")
+    @body
+    checkAddressSpaceAvailabilityRequest: CheckAddressSpaceAvailabilityRequest,
+  ): ArmResponse<CheckAddressSpaceAvailabilityResponse> | ErrorResponse;
 }
 
 @doc("Request to the action call to check address space availability.")
@@ -274,6 +276,15 @@ interface InternalConnections {
   delete is ArmResourceDeleteAsync<InternalConnection>;
   listByParent is ArmResourceListByParent<InternalConnection>;
   listBySubscription is ArmListBySubscription<InternalConnection>;
+}
+
+@doc("Describes an External Connection.")
+model ExternalConnection is TrackedResource<ExternalConnectionProperties> {
+  @key("externalConnectionName")
+  @segment("externalConnections")
+  @doc("The name of the external connection.")
+  @path
+  name: string;
 }
 
 @doc("TransitHub Interface")
@@ -327,4 +338,18 @@ interface CommunityEndpoints {
   delete is ArmResourceDeleteAsync<CommunityEndpointResource>;
   listByParent is ArmResourceListByParent<CommunityEndpointResource>;
   listBySubscription is ArmListBySubscription<CommunityEndpointResource>;
+}
+
+@doc("External Connections")
+@armResourceOperations
+interface ExternalConnections {
+  get is ArmResourceRead<ExternalConnection>;
+  createOrUpdate is ArmResourceCreateOrUpdateAsync<ExternalConnection>;
+  update is ArmResourcePatchAsync<
+    ExternalConnection,
+    ExternalConnectionProperties
+  >;
+  delete is ArmResourceDeleteAsync<ExternalConnection>;
+  listByParent is ArmResourceListByParent<ExternalConnection>;
+  listBySubscription is ArmListBySubscription<ExternalConnection>;
 }

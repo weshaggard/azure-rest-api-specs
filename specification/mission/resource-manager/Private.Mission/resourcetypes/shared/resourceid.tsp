@@ -78,3 +78,17 @@ scalar DestinationEndpointResourceId
       type: "Microsoft.Mission/communities/communityEndpoints",
     }
   ]>;
+
+scalar TransitHubResourceId
+  extends ResourceIdentifier<[
+    {
+      type: "Microsoft.Mission/transitHubs",
+    }
+  ]>;
+
+scalar IPGroupResourceId
+  extends ResourceIdentifier<[
+    {
+      type: "Microsoft.Network/IpGroups",
+    }
+  ]>;
