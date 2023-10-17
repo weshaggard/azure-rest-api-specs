@@ -1081,26 +1081,84 @@
         }
       }
     },
-    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/getScopingConfiguration": {
-      "post": {
+    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/scopingConfigurations": {
+      "get": {
+        "tags": [
+          "AppComplianceAutomation"
+        ],
+        "description": "Returns a list format of the singleton scopingConfiguration for a specified report.",
+        "operationId": "ScopingConfigurations_ListByReport",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/ReportNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/OfferGuidParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportCreatorTenantIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ScopingConfigurationList"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "x-ms-client-name": "ErrorCode"
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-examples": {
+          "ScopingConfigurations_List": {
+            "$ref": "./examples/ScopingConfigurations_List.json"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/scopingConfigurations/default": {
+      "get": {
         "tags": [
           "AppComplianceAutomation"
         ],
         "description": "Get the AppComplianceAutomation scoping configuration of the specific report.",
-        "operationId": "Reports_GetScopingConfiguration",
+        "operationId": "ScopingConfigurations_Get",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
             "$ref": "#/parameters/ReportNameParameter"
+          },
+          {
+            "$ref": "#/parameters/OfferGuidParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportCreatorTenantIdParameter"
           }
         ],
         "responses": {
           "200": {
             "description": "Success.",
             "schema": {
-              "$ref": "#/definitions/ScopingConfiguration"
+              "$ref": "#/definitions/ScopingConfigurationResource"
             }
           },
           "default": {
@@ -1112,18 +1170,16 @@
         },
         "x-ms-examples": {
           "ScopingConfiguration": {
-            "$ref": "./examples/ScopingConfiguration.json"
+            "$ref": "./examples/ScopingConfigurations_Get.json"
           }
         }
-      }
-    },
-    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/modifyScopingConfiguration": {
-      "post": {
+      },
+      "put": {
         "tags": [
           "AppComplianceAutomation"
         ],
         "description": "Get the AppComplianceAutomation scoping configuration of the specific report.",
-        "operationId": "Reports_ModifyScopingConfiguration",
+        "operationId": "ScopingConfigurations_Update",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -1132,12 +1188,18 @@
             "$ref": "#/parameters/ReportNameParameter"
           },
           {
+            "$ref": "#/parameters/OfferGuidParameter"
+          },
+          {
+            "$ref": "#/parameters/ReportCreatorTenantIdParameter"
+          },
+          {
             "name": "parameters",
             "in": "body",
-            "description": "Parameters for the query operation",
+            "description": "Parameters for the create or update operation",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ScopingConfiguration"
+              "$ref": "#/definitions/ScopingConfigurationResource"
             }
           }
         ],
@@ -1145,7 +1207,13 @@
           "200": {
             "description": "Success.",
             "schema": {
-              "$ref": "#/definitions/ScopingConfiguration"
+              "$ref": "#/definitions/ScopingConfigurationResource"
+            }
+          },
+          "201": {
+            "description": "Long running operation support.",
+            "schema": {
+              "$ref": "#/definitions/ScopingConfigurationResource"
             }
           },
           "default": {
@@ -1157,18 +1225,16 @@
         },
         "x-ms-examples": {
           "ScopingConfiguration_Modify": {
-            "$ref": "./examples/ScopingConfiguration_Modify.json"
+            "$ref": "./examples/ScopingConfigurations_CreateOrUpdate.json"
           }
         }
-      }
-    },
-    "/providers/Microsoft.AppComplianceAutomation/reports/{reportName}/cleanScopingConfiguration": {
-      "post": {
+      },
+      "delete": {
         "tags": [
           "AppComplianceAutomation"
         ],
         "description": "Clean the AppComplianceAutomation scoping configuration of the specific report.",
-        "operationId": "Reports_CleanScopingConfiguration",
+        "operationId": "ScopingConfigurations_Delete",
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
@@ -1181,6 +1247,9 @@
           "200": {
             "description": "Success."
           },
+          "204": {
+            "description": "Success. The response indicates the resource is already deleted."
+          },
           "default": {
             "description": "Error response.",
             "schema": {
@@ -1189,8 +1258,8 @@
           }
         },
         "x-ms-examples": {
-          "ScopingConfiguration_Clean": {
-            "$ref": "./examples/ScopingConfiguration_Clean.json"
+          "ScopingConfigurations_Delete": {
+            "$ref": "./examples/ScopingConfigurations_Delete.json"
           }
         }
       }
@@ -1516,7 +1585,7 @@
         "tags": [
           "AppComplianceAutomation"
         ],
-        "description": "Fix the AppComplianceAutomation report error. e.g: ACAT service unregistered, automation removed.",
+        "description": "Fix the AppComplianceAutomation report error. e.g: App Compliance Automation Tool service unregistered, automation removed.",
         "operationId": "Reports_Fix",
         "parameters": [
           {
@@ -3163,10 +3232,10 @@
       "enum": [
         "Succeeded",
         "Failed",
-        "Fixing",
         "Canceled",
         "Creating",
         "Deleting",
+        "Fixing",
         "Verifying",
         "Updating"
       ],
@@ -3174,6 +3243,28 @@
       "x-ms-enum": {
         "name": "provisioningState",
         "modelAsString": true
+      }
+    },
+    "ScopingConfigurationProperties": {
+      "type": "object",
+      "description": "ScopingConfiguration's properties.",
+      "properties": {
+        "answers": {
+          "description": "List of scoping question answers.",
+          "type": "array",
+          "items": {
+            "description": "Single scoping question answer.",
+            "$ref": "#/definitions/ScopingAnswer"
+          },
+          "x-ms-identifiers": [
+            "questionId"
+          ]
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "description": "Azure lifecycle management",
+          "$ref": "#/definitions/ProvisioningState"
+        }
       }
     },
     "EvidenceProperties": {
@@ -3320,20 +3411,40 @@
         }
       }
     },
-    "ScopingConfiguration": {
+    "ScopingConfigurationResource": {
       "type": "object",
-      "description": "Scoping configuration.",
+      "description": "A class represent an AppComlianceAutomation scoping configuration resource.",
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ProxyResource"
+        }
+      ],
       "properties": {
-        "answers": {
-          "description": "List of scoping question answers.",
+        "properties": {
+          "description": "ScopingConfiguration property.",
+          "$ref": "#/definitions/ScopingConfigurationProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "ScopingConfigurationList": {
+      "description": "Object that includes an array of resources.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "List of the evidence resources.",
           "type": "array",
+          "readOnly": true,
           "items": {
-            "description": "Single scoping question answer.",
-            "$ref": "#/definitions/ScopingAnswer"
+            "$ref": "#/definitions/ScopingConfigurationResource"
           },
-          "x-ms-identifiers": [
-            "questionId"
-          ]
+          "x-ms-identifiers": []
+        },
+        "nextLink": {
+          "description": "The URL the client should use to fetch the next page (per server side paging).\r\nIt's null for now, added for future use.",
+          "type": "string"
         }
       }
     },
@@ -3376,6 +3487,7 @@
         "ValidEmail"
       ],
       "type": "string",
+      "description": "Scoping question rule.",
       "x-ms-enum": {
         "name": "rule",
         "modelAsString": true
@@ -3403,6 +3515,7 @@
         "Upload"
       ],
       "type": "string",
+      "description": "Question input type.",
       "x-ms-enum": {
         "name": "inputType",
         "modelAsString": true
