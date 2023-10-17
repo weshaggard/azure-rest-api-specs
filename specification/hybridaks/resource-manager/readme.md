@@ -27,18 +27,18 @@ These are the global settings for the hybridaks.
 ``` yaml
 openapi-type: arm
 openapi-subtype: rpaas
-tag: package-preview-2024-01
+tag: package-2024-01
 ```
 
 
-### Tag: package-preview-2024-01
+### Tag: package-2024-01
 
-These settings apply only when `--tag=package-preview-2024-01` is specified on the command line.
+These settings apply only when `--tag=package-2024-01` is specified on the command line.
 
-```yaml $(tag) == 'package-preview-2024-01'
+```yaml $(tag) == 'package-2024-01'
 input-file:
-  - Microsoft.HybridContainerService/preview/2024-01-01-preview/provisionedClusterInstances.json
-  - Microsoft.HybridContainerService/preview/2024-01-01-preview/virtualNetworks.json
+  - Microsoft.HybridContainerService/stable/2024-01-01/provisionedClusterInstances.json
+  - Microsoft.HybridContainerService/stable/2024-01-01/virtualNetworks.json
 ```
 ### Tag: package-preview-2023-11
 
