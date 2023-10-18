@@ -33,14 +33,97 @@
       }
     }
   },
+  "definitions": {
+    "ConnectedChamber": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "arm-id"
+        }
+      }
+    },
+    "SharedStoragePropertiesFormat": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "./common-types.json#/definitions/ProvisioningStateProperty"
+        },
+        {
+          "$ref": "./common-types.json#/definitions/CapacityAllocatedProperty"
+        },
+        {
+          "$ref": "./common-types.json#/definitions/CapacityUsedProperty"
+        }
+      ],
+      "properties": {
+        "performanceTier": {
+          "description": "Specifies performance tier of the shared storage.",
+          "type": "string",
+          "enum": [
+            "Standard",
+            "Ultra"
+          ],
+          "default": "Standard",
+          "x-ms-enum": {
+            "name": "performanceTier",
+            "modelAsString": true
+          }
+        },
+        "chambers": {
+          "description": "List of Chambers that are connected to the shared storage.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConnectedChamber"
+          },
+          "x-ms-identifiers": [
+            "id"
+          ]
+        }
+      }
+    },
+    "SharedStorage": {
+      "description": "Shared storage resource",
+      "type": "object",
+      "x-ms-azure-resource": true,
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/SharedStoragePropertiesFormat",
+          "description": "Shared storage properties."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
+        }
+      ]
+    },
+    "SharedStoragePageableList": {
+      "description": "List of shared storages",
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "description": "Gets or sets the URL (link) to the next result set.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Gets or sets the values to emit from this list.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SharedStorage"
+          }
+        }
+      }
+    }
+  },
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Private.DevModSimWorkbench/workbenches/{workbenchName}/chambers/{chamberName}/storages/{storageName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Private.DevModSimWorkbench/workbenches/{workbenchName}/sharedStorages/{storageName}": {
       "put": {
         "tags": [
-          "storages_CreateOrUpdate"
+          "SharedStorages_CreateOrUpdate"
         ],
-        "operationId": "storages_CreateOrUpdate",
-        "description": "Creates or updates the storage.",
+        "operationId": "SharedStorages_CreateOrUpdate",
+        "description": "Creates or updates the shared storage.",
         "consumes": [
           "application/json"
         ],
@@ -52,13 +135,10 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "./common-types.json#/parameters/ResourceGroupDeprecatedParameter"
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "./common-types.json#/parameters/WorkbenchNameParameter"
-          },
-          {
-            "$ref": "./common-types.json#/parameters/ChamberNameParameter"
           },
           {
             "$ref": "./common-types.json#/parameters/StorageNameParameter"
@@ -66,23 +146,23 @@
           {
             "name": "parameters",
             "in": "body",
-            "description": "Parameters supplied to the create or update storage resource.",
+            "description": "Parameters supplied to the create or update shared storage resource.",
             "schema": {
-              "$ref": "#/definitions/Storage"
+              "$ref": "#/definitions/SharedStorage"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Update successful. The operation returns the resulting storage resource.",
+            "description": "Update successful. The operation returns the resulting shared storage resource.",
             "schema": {
-              "$ref": "#/definitions/Storage"
+              "$ref": "#/definitions/SharedStorage"
             }
           },
           "201": {
-            "description": "Create successful. The operation returns the resulting storage resource.",
+            "description": "Create successful. The operation returns the resulting shared storage resource.",
             "schema": {
-              "$ref": "#/definitions/Storage"
+              "$ref": "#/definitions/SharedStorage"
             }
           },
           "default": {
@@ -99,16 +179,16 @@
         },
         "x-ms-examples": {
           "Create storage": {
-            "$ref": "./examples/StoragesCreateOrUpdate.json"
+            "$ref": "./examples/SharedStoragesCreateOrUpdate.json"
           }
         }
       },
       "patch": {
         "tags": [
-          "storages_Update"
+          "SharedStorages_Update"
         ],
-        "operationId": "storages_Update",
-        "description": "Updates the storage.",
+        "operationId": "SharedStorages_Update",
+        "description": "Updates the shared storage.",
         "consumes": [
           "application/merge-patch+json",
           "application/json"
@@ -124,13 +204,10 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "./common-types.json#/parameters/ResourceGroupDeprecatedParameter"
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "./common-types.json#/parameters/WorkbenchNameParameter"
-          },
-          {
-            "$ref": "./common-types.json#/parameters/ChamberNameParameter"
           },
           {
             "$ref": "./common-types.json#/parameters/StorageNameParameter"
@@ -138,26 +215,23 @@
           {
             "name": "parameters",
             "in": "body",
-            "description": "Parameters supplied to the create or update storage resource.",
+            "description": "Parameters supplied to the create or update shared storage resource.",
             "schema": {
-              "$ref": "#/definitions/Storage"
+              "$ref": "#/definitions/SharedStorage"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Update successful. The operation returns the resulting storage resource.",
+            "description": "Update successful. The operation returns the resulting shared storage resource.",
             "schema": {
-              "$ref": "#/definitions/Storage"
+              "$ref": "#/definitions/SharedStorage"
             }
           },
           "202": {
             "description": "Accepted",
             "headers": {
               "Location": {
-                "type": "string"
-              },
-              "x-ms-async-operation-timeout": {
                 "type": "string"
               }
             }
@@ -176,16 +250,16 @@
         },
         "x-ms-examples": {
           "Update storage": {
-            "$ref": "./examples/StoragesPatch.json"
+            "$ref": "./examples/SharedStoragesPatch.json"
           }
         }
       },
       "get": {
         "tags": [
-          "storages_Get"
+          "SharedStorages_Get"
         ],
-        "operationId": "storages_Get",
-        "description": "Gets information about the storage.",
+        "operationId": "SharedStorages_Get",
+        "description": "Gets information about the shared storage.",
         "produces": [
           "application/json"
         ],
@@ -197,13 +271,10 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "./common-types.json#/parameters/ResourceGroupDeprecatedParameter"
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "./common-types.json#/parameters/WorkbenchNameParameter"
-          },
-          {
-            "$ref": "./common-types.json#/parameters/ChamberNameParameter"
           },
           {
             "$ref": "./common-types.json#/parameters/StorageNameParameter"
@@ -211,9 +282,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Request is successful. The operation returns the storage resource.",
+            "description": "Request is successful. The operation returns the shared storage resource.",
             "schema": {
-              "$ref": "#/definitions/Storage"
+              "$ref": "#/definitions/SharedStorage"
             }
           },
           "default": {
@@ -226,16 +297,16 @@
         },
         "x-ms-examples": {
           "Get Storage": {
-            "$ref": "./examples/StoragesGet.json"
+            "$ref": "./examples/SharedStoragesGet.json"
           }
         }
       },
       "delete": {
         "tags": [
-          "storages_Delete"
+          "SharedStorages_Delete"
         ],
-        "operationId": "storages_Delete",
-        "description": "Deletes the storage.",
+        "operationId": "SharedStorages_Delete",
+        "description": "Deletes the shared storage.",
         "produces": [
           "application/json"
         ],
@@ -247,13 +318,10 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
           },
           {
-            "$ref": "./common-types.json#/parameters/ResourceGroupDeprecatedParameter"
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "$ref": "./common-types.json#/parameters/WorkbenchNameParameter"
-          },
-          {
-            "$ref": "./common-types.json#/parameters/ChamberNameParameter"
           },
           {
             "$ref": "./common-types.json#/parameters/StorageNameParameter"
@@ -263,22 +331,14 @@
           "200": {
             "description": "The operation is completed successfully",
             "schema": {
-              "$ref": "#/definitions/Storage"
+              "$ref": "#/definitions/SharedStorage"
             }
           },
           "204": {
             "description": "Request is successful. Resource with the specified name does not exist."
           },
           "202": {
-            "description": "Accepted",
-            "headers": {
-              "Location": {
-                "type": "string"
-              },
-              "x-ms-async-operation-timeout": {
-                "type": "string"
-              }
-            }
+            "description": "Accepted"
           },
           "default": {
             "description": "Default Error Response",
@@ -288,24 +348,20 @@
             "x-ms-error-response": true
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        },
         "x-ms-examples": {
           "Delete Storage": {
-            "$ref": "./examples/StoragesDelete.json"
+            "$ref": "./examples/SharedStoragesDelete.json"
           }
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Private.DevModSimWorkbench/workbenches/{workbenchName}/chambers/{chamberName}/storages": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Private.DevModSimWorkbench/workbenches/{workbenchName}/sharedStorages": {
       "get": {
         "tags": [
-          "storages_List"
+          "sharedStorages_List"
         ],
-        "operationId": "storages_List",
-        "description": "Lists all storages.",
+        "operationId": "sharedStorages_List",
+        "description": "Lists all shared storages.",
         "produces": [
           "application/json"
         ],
@@ -321,16 +377,13 @@
           },
           {
             "$ref": "./common-types.json#/parameters/WorkbenchNameParameter"
-          },
-          {
-            "$ref": "./common-types.json#/parameters/ChamberNameParameter"
           }
         ],
         "responses": {
           "200": {
             "description": "Request is successful. The operation returns the list of all storages",
             "schema": {
-              "$ref": "#/definitions/StoragePageableList"
+              "$ref": "#/definitions/SharedStoragePageableList"
             }
           },
           "default": {
@@ -346,81 +399,10 @@
         },
         "x-ms-examples": {
           "List all storages": {
-            "$ref": "./examples/StoragesList.json"
+            "$ref": "./examples/SharedStoragesList.json"
           }
         }
       }
-    }
-  },
-  "definitions": {
-    "StoragePageableList": {
-      "description": "List of chamber storages.",
-      "type": "object",
-      "properties": {
-        "nextLink": {
-          "description": "Gets or sets the URL (link) to the next result set.",
-          "type": "string"
-        },
-        "value": {
-          "description": "Gets or sets the values to emit from this list.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Storage"
-          }
-        }
-      }
-    },
-    "StoragePropertiesFormat": {
-      "description": "Storage properties.",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "./common-types.json#/definitions/ProvisioningStateProperty"
-        },
-        {
-          "$ref": "./common-types.json#/definitions/CapacityAllocatedProperty"
-        },
-        {
-          "$ref": "./common-types.json#/definitions/CapacityUsedProperty"
-        }
-      ],
-      "properties": {
-        "performanceTier": {
-          "description": "Specifies performance tier of the chamber storage.",
-          "type": "string",
-          "enum": [
-            "Standard",
-            "Premium",
-            "Ultra"
-          ],
-          "default": "Premium",
-          "x-ms-enum": {
-            "name": "performanceTier",
-            "modelAsString": true
-          }
-        },
-        "localMountPath": {
-          "description": "Directory where the chamber storage volume mounted.",
-          "readOnly": true,
-          "type": "string"
-        }
-      }
-    },
-    "Storage": {
-      "description": "Storage resource",
-      "type": "object",
-      "x-ms-azure-resource": true,
-      "properties": {
-        "properties": {
-          "$ref": "#/definitions/StoragePropertiesFormat",
-          "description": "Storage properties."
-        }
-      },
-      "allOf": [
-        {
-          "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/TrackedResource"
-        }
-      ]
     }
   }
 }
