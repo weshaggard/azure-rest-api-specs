@@ -28,4 +28,7 @@ model WorkloadProperties {
   @doc("Provisioning State.")
   @visibility("read")
   provisioningState?: ProvisioningState;
+
+  @doc("Managed resource group configuration.")
+  managedResourceGroupConfiguration?: ManagedResourceGroupConfiguration;
 }
