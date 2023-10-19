@@ -36,6 +36,15 @@ model EnclaveDefaultSettings {
   storageAccountResourceId?: StorageAccountResourceId;
 }
 
+@doc("Enclave Address Spaces")
+model EnclaveAddressSpaces {
+  @doc("Enclave Address Space")
+  enclaveAddressSpace: string;
+
+  @doc("Managed Address Space")
+  managedAddressSpace: string;
+}
+
 @doc("Virtual Enclave Resource properties")
 model VirtualEnclaveProperties {
   @doc("Virtual Enclave Description.")
@@ -47,6 +56,10 @@ model VirtualEnclaveProperties {
 
   @doc("Virtual Network.")
   enclaveVirtualNetwork: EnclaveVirtualNetwork;
+
+  @doc("Enclave Address Spaces")
+  @visibility("read")
+  enclaveAddressSpaces?: EnclaveAddressSpaces;
 
   @doc("Community Resource Id.")
   communityResourceId: CommunityResourceId;
