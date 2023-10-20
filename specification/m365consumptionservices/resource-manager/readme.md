@@ -1,9 +1,9 @@
 
-# 365ConsumptionServices
+# M365ConsumptionServices
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for 365ConsumptionServices.
+This is the AutoRest configuration file for M365ConsumptionServices.
 
 ## Getting Started
 
@@ -23,7 +23,7 @@ For other options on installation see [Installing AutoRest](https://aka.ms/autor
 
 ### Basic Information
 
-These are the global settings for the 365ConsumptionServices.
+These are the global settings for the M365ConsumptionServices.
 
 ```yaml
 openapi-type: arm
@@ -36,11 +36,9 @@ tag: package-2023-08-01-preview
 These settings apply only when `--tag=package-2023-08-01-preview` is specified on the command line.
 
 ```yaml $(tag) == 'package-2023-08-01-preview'
-version: 2023-08-01-preview
 input-file:
-  - Microsoft.365ConsumptionServices/preview/2023-08-01-preview/365ConsumptionServices.json
+  - Microsoft.M365ConsumptionServices/preview/2023-08-01-preview/consumptionservices.json
 ```
-
 ---
 
 # Code Generation

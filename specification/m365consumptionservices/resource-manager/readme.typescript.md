@@ -4,8 +4,8 @@ Please also specify `--typescript-sdks-folder=<path to root folder of your azure
 ``` yaml $(typescript)
 typescript:
   azure-arm: true
-  package-name: "@azure/arm-365ConsumptionServices"
-  output-folder: "$(typescript-sdks-folder)/sdk/365ConsumptionServices/arm-365ConsumptionServices"
+  package-name: "@azure/arm-m365consumptionservices"
+  output-folder: "$(typescript-sdks-folder)/sdk/m365consumptionservices/arm-m365consumptionservices"
   payload-flattening-threshold: 1
   clear-output-folder: true
   generate-metadata: true
