@@ -10,6 +10,6 @@ csharp:
   payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.365ConsumptionServices
-  output-folder: $(csharp-sdks-folder)/365ConsumptionServices/management/Microsoft.365ConsumptionServices/GeneratedProtocol
+  namespace: Microsoft.M365ConsumptionServices
+  output-folder: $(csharp-sdks-folder)/m365consumptionservices/management/Microsoft.M365ConsumptionServices/GeneratedProtocol
 ```
