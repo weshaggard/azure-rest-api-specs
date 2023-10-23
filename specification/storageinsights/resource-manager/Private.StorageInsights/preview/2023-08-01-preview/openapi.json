@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "StorageInsightsClient",
-    "version": "2023-08-01-privatepreview",
+    "version": "2023-08-01-preview",
     "description": "Storage Insights resource provider API.",
     "x-typespec-generated": [
       {
@@ -379,15 +379,15 @@
     "ApiVersion": {
       "type": "string",
       "enum": [
-        "2023-08-01-privatepreview"
+        "2023-08-01-preview"
       ],
       "x-ms-enum": {
         "name": "ApiVersion",
         "modelAsString": true,
         "values": [
           {
-            "name": "v2023_08_01_privatepreview",
-            "value": "2023-08-01-privatepreview"
+            "name": "v2023_08_01_preview",
+            "value": "2023-08-01-preview"
           }
         ]
       }
@@ -426,28 +426,22 @@
       "type": "string",
       "description": "Storage account namespace structure",
       "enum": [
-        "HierarchicalOnly",
-        "FlatOnly",
-        "All"
+        "Hierarchical",
+        "Flat"
       ],
       "x-ms-enum": {
         "name": "NamespaceStructure",
         "modelAsString": true,
         "values": [
           {
-            "name": "HierarchicalOnly",
-            "value": "HierarchicalOnly",
-            "description": "Hierarchical namespace Only"
+            "name": "Hierarchical",
+            "value": "Hierarchical",
+            "description": "Hierarchical namespace"
           },
           {
-            "name": "FlatOnly",
-            "value": "FlatOnly",
-            "description": "Flat namespace Only"
-          },
-          {
-            "name": "All",
-            "value": "All",
-            "description": "Both hierarchical and flat namespaces"
+            "name": "Flat",
+            "value": "Flat",
+            "description": "Flat namespace"
           }
         ]
       }
@@ -489,35 +483,35 @@
       "type": "object",
       "description": "Destinations for storage collection rule data.",
       "properties": {
-        "workspaceResourceId": {
+        "dataCollectionRuleResourceId": {
           "type": "string",
           "format": "arm-id",
           "description": "The resource ID of the log analytics workspace.",
           "x-ms-arm-id-details": {
             "allowedResources": [
               {
-                "type": "Microsoft.OperationalInsights/workspaces"
+                "type": "Microsoft.Insights/dataCollectionRules"
               }
             ]
           }
         }
       },
       "required": [
-        "workspaceResourceId"
+        "dataCollectionRuleResourceId"
       ]
     },
     "StorageCollectionRuleDestinationsUpdate": {
       "type": "object",
       "description": "Destinations for storage collection rule data.",
       "properties": {
-        "workspaceResourceId": {
+        "dataCollectionRuleResourceId": {
           "type": "string",
           "format": "arm-id",
           "description": "The resource ID of the log analytics workspace.",
           "x-ms-arm-id-details": {
             "allowedResources": [
               {
-                "type": "Microsoft.OperationalInsights/workspaces"
+                "type": "Microsoft.Insights/dataCollectionRules"
               }
             ]
           }
@@ -526,7 +520,7 @@
     },
     "StorageCollectionRuleFilter": {
       "type": "object",
-      "description": "The filter definition of the storage collection rule. All of the filters are combined using a logical AND. Empty or null fields are ignored. For arrays and dictionaries, a match to ANY of the provided array members/key-value pairs will satisfy the condition.",
+      "description": "The filter definition of the storage collection rule. The filters are applied in a logical AND manner, such that only storage accounts that meet all the filters will be included in the collection. Filters that are empty or null have no effect on the selection. For filters that are arrays or dictionaries, any storage account that matches at least one of the array elements or key-value pairs will satisfy the filter condition.",
       "properties": {
         "scopes": {
           "type": "array",
@@ -577,9 +571,12 @@
             "$ref": "#/definitions/StorageSku"
           }
         },
-        "namespaceStructure": {
-          "$ref": "#/definitions/NamespaceStructure",
-          "description": "The storage account namespace structures to filter."
+        "namespaceStructures": {
+          "type": "array",
+          "description": "The storage account namespace structures to filter.",
+          "items": {
+            "$ref": "#/definitions/NamespaceStructure"
+          }
         }
       },
       "required": [
@@ -588,7 +585,7 @@
     },
     "StorageCollectionRuleFilterUpdate": {
       "type": "object",
-      "description": "The filter definition of the storage collection rule. All of the filters are combined using a logical AND. Empty or null fields are ignored. For arrays and dictionaries, a match to ANY of the provided array members/key-value pairs will satisfy the condition.",
+      "description": "The filter definition of the storage collection rule. The filters are applied in a logical AND manner, such that only storage accounts that meet all the filters will be included in the collection. Filters that are empty or null have no effect on the selection. For filters that are arrays or dictionaries, any storage account that matches at least one of the array elements or key-value pairs will satisfy the filter condition.",
       "properties": {
         "scopes": {
           "type": "array",
@@ -639,9 +636,12 @@
             "$ref": "#/definitions/StorageSku"
           }
         },
-        "namespaceStructure": {
-          "$ref": "#/definitions/NamespaceStructure",
-          "description": "The storage account namespace structures to filter."
+        "namespaceStructures": {
+          "type": "array",
+          "description": "The storage account namespace structures to filter.",
+          "items": {
+            "$ref": "#/definitions/NamespaceStructure"
+          }
         }
       }
     },
