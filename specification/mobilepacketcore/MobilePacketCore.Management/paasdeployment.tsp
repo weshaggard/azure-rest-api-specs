@@ -28,8 +28,6 @@ model PaasDeploymentResource
   @segment("paasDeployments")
   @visibility("create", "read")
   name: string;
-
-  ...ManagedServiceIdentity;
 }
 
 @doc("PAAS Deployment Properties.")

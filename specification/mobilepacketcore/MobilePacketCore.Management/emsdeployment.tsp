@@ -28,8 +28,6 @@ model EmsDeploymentResource
   @segment("emsDeployments")
   @visibility("create", "read")
   name: string;
-
-  ...ManagedServiceIdentity;
 }
 
 @doc("EMS Deployment Properties.")
@@ -42,8 +40,8 @@ model EmsDeploymentResourceProperties {
   @visibility("create", "read")
   mobileCoreScalingUnitSku: MobileCoreScalingUnitSku;
 
-  @doc("Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/")
-  keyVault: url;
+  @doc("EMS Release Version")
+  emsRelease: EmsRelease;
 
   @doc("Deployment status")
   @visibility("read")
@@ -51,7 +49,7 @@ model EmsDeploymentResourceProperties {
 
   @doc("Mobile Core Scaling Units (MCSU)")
   @visibility("read")
-  mobileCoreScalingUnits?: float32;
+  actualMobileCoreScalingUnits?: float32;
 }
 
 @armResourceOperations(EmsDeploymentResource)

@@ -57,75 +57,6 @@ scalar IPv4Cidr extends string;
 @pattern("^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$")
 scalar Ipv6Address extends string;
 
-@doc("Type of Network Function")
-enum MobilePacketCoreType {
-  @doc("Access and Mobility Function")
-  AMF,
-
-  @doc("Session Management Function")
-  SMF,
-
-  @doc("User Plane Function")
-  UPF,
-
-  @doc("Network Repository Function")
-  NRF,
-
-  @doc("Network Slice Selection Function")
-  NSSF,
-
-  @doc("Mobility Management Entity")
-  MME,
-
-  @doc("System Architecture Evolution Gateway Control Plane, control and user plane separation (CUPS) architecture")
-  SaegwControlPlane,
-
-  @doc("System Architecture Evolution Gateway User Plane, control and user plane separation (CUPS) architecture")
-  SaegwUserPlane,
-
-  @doc("System Architecture Evolution Gateway.  This combines the Serving Gateway (SGW) and the Packet Data Network Gateway (PGW) functionality")
-  Saegw,
-
-  @doc("Evolved Packet Data Gateway")
-  ePDG,
-
-  @doc("Non-3GPP Interworking Function")
-  N3IWF,
-
-  @doc("Remote Platform As A Service Components")
-  RemotePaaS,
-
-  @doc("Element Management System")
-  EMS,
-
-  @doc("Operations and Policy Manager")
-  OperationsPolicyManager,
-}
-
-@doc("Network Function Administrative State enumerations")
-enum MobilePacketCoreAdministrativeState {
-  @doc("Resource has been commissioned")
-  Commissioned,
-
-  @doc("Resource has been decommissioned")
-  Decommissioned,
-}
-
-@doc("Network Function Operational Status enumerations")
-enum MobilePacketCoreOperationalStatus {
-  @doc("Resource is inactive")
-  Inactive,
-
-  @doc("Resource has been deployed, awaiting provisioning")
-  InstantiatedNotProvisioned,
-
-  @doc("Resource has been deployed and provisioned, awaiting testing")
-  InstantiatedProvisioned,
-
-  @doc("Resource is fully deployed and operational")
-  Active,
-}
-
 @doc("Provisioning state of the resource")
 @Azure.Core.lroStatus
 enum ProvisioningState {
@@ -181,6 +112,14 @@ scalar L3IsolationDomainIdProperty
   extends Azure.ResourceManager.ResourceIdentifier<[
     {
       type: "Microsoft.ManagedNetworkFabric/l3IsolationDomains",
+    }
+  ]>;
+
+@doc("ARM resource ID of a cluster.")
+scalar ClusterIdProperty
+  extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+      type: "Microsoft.MobilePacketCore/clusters",
     }
   ]>;
 
@@ -251,7 +190,7 @@ model Ipv4StaticRouteConfiguration {
 @doc("Deployment Status of Network Functions")
 model DeploymentStatus {
   @doc("Placeholder")
-  placeHolder: string;
+  status: string;
 }
 
 @doc("Infrastructure Type Definitions")
@@ -308,4 +247,34 @@ model MobileCoreScalingUnitSku {
   @doc("Full SKU for the Resource")
   @visibility("read")
   sku?: string;
+}
+
+@doc("UnityCloud Release definition.")
+scalar UnityCloudRelease extends string;
+
+@doc("Virtual MME Release definition.")
+scalar VirtualMmeRelease extends string;
+
+@doc("EMS Release definition.")
+scalar EmsRelease extends string;
+
+@doc("Product Name.")
+enum ProductName {
+  @doc("UnityCloud product line")
+  UnityCloud,
+}
+
+@doc("UnityCloud Federation Parameters")
+scalar UnityCloudFederationParameters extends string;
+
+@doc("UnityCloud Federation Type")
+scalar UnityCloudFederationType extends string;
+
+@doc("UnityCloud Deployment Parameters")
+model UnityCloudDeploymentParameters {
+  @doc("Federaton Type")
+  type: UnityCloudFederationType;
+
+  @doc("Usage Definition")
+  parameters: UnityCloudFederationParameters;
 }

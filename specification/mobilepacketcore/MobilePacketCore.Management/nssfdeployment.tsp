@@ -28,8 +28,6 @@ model NssfDeploymentResource
   @segment("nssfDeployments")
   @visibility("create", "read")
   name: string;
-
-  ...ManagedServiceIdentity;
 }
 
 @doc("NSSF Deployment Properties.")
@@ -38,8 +36,15 @@ model NssfDeploymentResourceProperties {
   @visibility("read")
   provisioningState?: ProvisioningState;
 
-  @doc("Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/")
-  keyVault: url;
+  @doc("UnityCloud NF Federation Parameters")
+  unityCloudDeploymentParameters: UnityCloudFederationParameters;
+
+  @doc("Cluster where the NF is deployed")
+  @visibility("create", "read")
+  cluster: ClusterIdProperty;
+
+  @doc("Unity Cloud Release version of the NF. This is inherited from the cluster")
+  unityCloudRelease?: UnityCloudRelease;
 
   @doc("Deployment status")
   @visibility("read")

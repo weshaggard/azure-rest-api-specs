@@ -2865,7 +2865,7 @@
   "definitions": {
     "AmfDeploymentResource": {
       "type": "object",
-      "description": "Azure for Operators 5G Core AMF Deployment Resource",
+      "description": "Azure for Operators 5G Core AMF/MME Deployment Resource",
       "properties": {
         "properties": {
           "$ref": "#/definitions/AmfDeploymentResourceProperties",
@@ -2875,10 +2875,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -2925,16 +2921,27 @@
             "create"
           ]
         },
+        "unityCloudDeploymentParameters": {
+          "$ref": "#/definitions/UnityCloudFederationParameters",
+          "description": "UnityCloud NF Federation Parameters"
+        },
+        "cluster": {
+          "$ref": "#/definitions/ClusterIdProperty",
+          "description": "Cluster where the NF is deployed",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "unityCloudRelease": {
+          "$ref": "#/definitions/UnityCloudRelease",
+          "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
+        },
         "simultaneouslyAttachedUsersCount": {
           "type": "integer",
           "format": "int32",
           "description": "Simultaneously Attached Users (SAU)",
           "readOnly": true
-        },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
         },
         "deploymentStatus": {
           "$ref": "#/definitions/DeploymentStatus",
@@ -2944,7 +2951,8 @@
       },
       "required": [
         "usageSku",
-        "keyVault"
+        "unityCloudDeploymentParameters",
+        "cluster"
       ]
     },
     "AmfDeploymentResourceTagsUpdate": {
@@ -3008,6 +3016,18 @@
         ]
       }
     },
+    "ClusterIdProperty": {
+      "type": "string",
+      "format": "arm-id",
+      "description": "ARM resource ID of a cluster.",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/clusters"
+          }
+        ]
+      }
+    },
     "ClusterResource": {
       "type": "object",
       "description": "Azure for Operators 5G Core Cluster Resource",
@@ -3020,10 +3040,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -3070,21 +3086,20 @@
             "create"
           ]
         },
-        "mobileCoreScalingUnits": {
+        "actualMobileCoreScalingUnits": {
           "type": "number",
           "format": "float",
           "description": "Mobile Core Scaling Units (MCSU)",
           "readOnly": true
         },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
+        "unityCloudRelease": {
+          "$ref": "#/definitions/UnityCloudRelease",
+          "description": "Unity Cloud Release Version.  This is applied to all running workloads in this cluster"
         }
       },
       "required": [
         "mobileCoreScalingUnitSku",
-        "keyVault"
+        "unityCloudRelease"
       ]
     },
     "ClusterResourceTagsUpdate": {
@@ -3104,13 +3119,13 @@
       "type": "object",
       "description": "Deployment Status of Network Functions",
       "properties": {
-        "placeHolder": {
+        "status": {
           "type": "string",
           "description": "Placeholder"
         }
       },
       "required": [
-        "placeHolder"
+        "status"
       ]
     },
     "EmsDeploymentResource": {
@@ -3125,10 +3140,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -3175,17 +3186,16 @@
             "create"
           ]
         },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
+        "emsRelease": {
+          "$ref": "#/definitions/EmsRelease",
+          "description": "EMS Release Version"
         },
         "deploymentStatus": {
           "$ref": "#/definitions/DeploymentStatus",
           "description": "Deployment status",
           "readOnly": true
         },
-        "mobileCoreScalingUnits": {
+        "actualMobileCoreScalingUnits": {
           "type": "number",
           "format": "float",
           "description": "Mobile Core Scaling Units (MCSU)",
@@ -3194,7 +3204,7 @@
       },
       "required": [
         "mobileCoreScalingUnitSku",
-        "keyVault"
+        "emsRelease"
       ]
     },
     "EmsDeploymentResourceTagsUpdate": {
@@ -3209,6 +3219,10 @@
           }
         }
       }
+    },
+    "EmsRelease": {
+      "type": "string",
+      "description": "EMS Release definition."
     },
     "IPv4Address": {
       "type": "string",
@@ -3534,36 +3548,12 @@
       ],
       "x-ms-discriminator-value": "AzureCore"
     },
-    "MmeDeploymentProfileNfviType": {
-      "type": "string",
-      "description": "MME Deployment Profile NFVI Type.",
-      "enum": [
-        "AzureCore",
-        "AzureOperatorNexus"
-      ],
-      "x-ms-enum": {
-        "name": "MmeDeploymentProfileNfviType",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "AzureCore",
-            "value": "AzureCore",
-            "description": "Azure Core."
-          },
-          {
-            "name": "AzureOperatorNexus",
-            "value": "AzureOperatorNexus",
-            "description": "Azure Operator Nexus."
-          }
-        ]
-      }
-    },
     "MmeDeploymentProfileTypeSpecificData": {
       "type": "object",
       "description": "MME Deployment Profile type specific data.",
       "properties": {
         "type": {
-          "$ref": "#/definitions/MmeDeploymentProfileNfviType",
+          "$ref": "#/definitions/InfrastructureType",
           "description": "NFVI Type"
         }
       },
@@ -3574,7 +3564,7 @@
     },
     "MmeDeploymentResource": {
       "type": "object",
-      "description": "Azure for Operators 5G Core MME Deployment Resource",
+      "description": "Azure for Operators 5G Core virtual MME/SGSN Deployment Resource",
       "properties": {
         "properties": {
           "$ref": "#/definitions/MmeDeploymentResourceProperties",
@@ -3584,10 +3574,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -3642,17 +3628,12 @@
             "create"
           ]
         },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
-        },
         "deploymentStatus": {
           "$ref": "#/definitions/DeploymentStatus",
           "description": "Deployment status",
           "readOnly": true
         },
-        "mobileCoreScalingUnits": {
+        "actualMobileCoreScalingUnits": {
           "type": "number",
           "format": "float",
           "description": "Mobile Core Scaling Units (MCSU)",
@@ -3680,6 +3661,10 @@
             "create"
           ]
         },
+        "mmeRelease": {
+          "$ref": "#/definitions/VirtualMmeRelease",
+          "description": "MME Release Version"
+        },
         "managementFloatingIp": {
           "$ref": "#/definitions/IPv4Address",
           "description": "Floating IPv4 address for Management Access"
@@ -3688,9 +3673,9 @@
       "required": [
         "usageSku",
         "mobileCoreScalingUnitSku",
-        "keyVault",
         "deploymentProfile",
         "typeSpecificData",
+        "mmeRelease",
         "managementFloatingIp"
       ]
     },
@@ -4078,162 +4063,6 @@
         "mobileCoreScalingUnits"
       ]
     },
-    "MobilePacketCoreAdministrativeState": {
-      "type": "string",
-      "description": "Network Function Administrative State enumerations",
-      "enum": [
-        "Commissioned",
-        "Decommissioned"
-      ],
-      "x-ms-enum": {
-        "name": "MobilePacketCoreAdministrativeState",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Commissioned",
-            "value": "Commissioned",
-            "description": "Resource has been commissioned"
-          },
-          {
-            "name": "Decommissioned",
-            "value": "Decommissioned",
-            "description": "Resource has been decommissioned"
-          }
-        ]
-      }
-    },
-    "MobilePacketCoreOperationalStatus": {
-      "type": "string",
-      "description": "Network Function Operational Status enumerations",
-      "enum": [
-        "Inactive",
-        "InstantiatedNotProvisioned",
-        "InstantiatedProvisioned",
-        "Active"
-      ],
-      "x-ms-enum": {
-        "name": "MobilePacketCoreOperationalStatus",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "Inactive",
-            "value": "Inactive",
-            "description": "Resource is inactive"
-          },
-          {
-            "name": "InstantiatedNotProvisioned",
-            "value": "InstantiatedNotProvisioned",
-            "description": "Resource has been deployed, awaiting provisioning"
-          },
-          {
-            "name": "InstantiatedProvisioned",
-            "value": "InstantiatedProvisioned",
-            "description": "Resource has been deployed and provisioned, awaiting testing"
-          },
-          {
-            "name": "Active",
-            "value": "Active",
-            "description": "Resource is fully deployed and operational"
-          }
-        ]
-      }
-    },
-    "MobilePacketCoreType": {
-      "type": "string",
-      "description": "Type of Network Function",
-      "enum": [
-        "AMF",
-        "SMF",
-        "UPF",
-        "NRF",
-        "NSSF",
-        "MME",
-        "SaegwControlPlane",
-        "SaegwUserPlane",
-        "Saegw",
-        "ePDG",
-        "N3IWF",
-        "RemotePaaS",
-        "EMS",
-        "OperationsPolicyManager"
-      ],
-      "x-ms-enum": {
-        "name": "MobilePacketCoreType",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "AMF",
-            "value": "AMF",
-            "description": "Access and Mobility Function"
-          },
-          {
-            "name": "SMF",
-            "value": "SMF",
-            "description": "Session Management Function"
-          },
-          {
-            "name": "UPF",
-            "value": "UPF",
-            "description": "User Plane Function"
-          },
-          {
-            "name": "NRF",
-            "value": "NRF",
-            "description": "Network Repository Function"
-          },
-          {
-            "name": "NSSF",
-            "value": "NSSF",
-            "description": "Network Slice Selection Function"
-          },
-          {
-            "name": "MME",
-            "value": "MME",
-            "description": "Mobility Management Entity"
-          },
-          {
-            "name": "SaegwControlPlane",
-            "value": "SaegwControlPlane",
-            "description": "System Architecture Evolution Gateway Control Plane, control and user plane separation (CUPS) architecture"
-          },
-          {
-            "name": "SaegwUserPlane",
-            "value": "SaegwUserPlane",
-            "description": "System Architecture Evolution Gateway User Plane, control and user plane separation (CUPS) architecture"
-          },
-          {
-            "name": "Saegw",
-            "value": "Saegw",
-            "description": "System Architecture Evolution Gateway.  This combines the Serving Gateway (SGW) and the Packet Data Network Gateway (PGW) functionality"
-          },
-          {
-            "name": "ePDG",
-            "value": "ePDG",
-            "description": "Evolved Packet Data Gateway"
-          },
-          {
-            "name": "N3IWF",
-            "value": "N3IWF",
-            "description": "Non-3GPP Interworking Function"
-          },
-          {
-            "name": "RemotePaaS",
-            "value": "RemotePaaS",
-            "description": "Remote Platform As A Service Components"
-          },
-          {
-            "name": "EMS",
-            "value": "EMS",
-            "description": "Element Management System"
-          },
-          {
-            "name": "OperationsPolicyManager",
-            "value": "OperationsPolicyManager",
-            "description": "Operations and Policy Manager"
-          }
-        ]
-      }
-    },
     "NetworkFabricIdProperty": {
       "type": "string",
       "format": "arm-id",
@@ -4377,10 +4206,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -4419,10 +4244,21 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
+        "unityCloudDeploymentParameters": {
+          "$ref": "#/definitions/UnityCloudFederationParameters",
+          "description": "UnityCloud NF Federation Parameters"
+        },
+        "cluster": {
+          "$ref": "#/definitions/ClusterIdProperty",
+          "description": "Cluster where the NF is deployed",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "unityCloudRelease": {
+          "$ref": "#/definitions/UnityCloudRelease",
+          "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
         },
         "deploymentStatus": {
           "$ref": "#/definitions/DeploymentStatus",
@@ -4431,7 +4267,8 @@
         }
       },
       "required": [
-        "keyVault"
+        "unityCloudDeploymentParameters",
+        "cluster"
       ]
     },
     "NrfDeploymentResourceTagsUpdate": {
@@ -4459,10 +4296,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -4501,10 +4334,21 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
+        "unityCloudDeploymentParameters": {
+          "$ref": "#/definitions/UnityCloudFederationParameters",
+          "description": "UnityCloud NF Federation Parameters"
+        },
+        "cluster": {
+          "$ref": "#/definitions/ClusterIdProperty",
+          "description": "Cluster where the NF is deployed",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "unityCloudRelease": {
+          "$ref": "#/definitions/UnityCloudRelease",
+          "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
         },
         "deploymentStatus": {
           "$ref": "#/definitions/DeploymentStatus",
@@ -4513,7 +4357,8 @@
         }
       },
       "required": [
-        "keyVault"
+        "unityCloudDeploymentParameters",
+        "cluster"
       ]
     },
     "NssfDeploymentResourceTagsUpdate": {
@@ -4541,10 +4386,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -4609,6 +4450,24 @@
             "type": "string"
           }
         }
+      }
+    },
+    "ProductName": {
+      "type": "string",
+      "description": "Product Name.",
+      "enum": [
+        "UnityCloud"
+      ],
+      "x-ms-enum": {
+        "name": "ProductName",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "UnityCloud",
+            "value": "UnityCloud",
+            "description": "UnityCloud product line"
+          }
+        ]
       }
     },
     "ProvisioningState": {
@@ -4739,7 +4598,7 @@
     },
     "SmfDeploymentResource": {
       "type": "object",
-      "description": "Azure for Operators 5G Core SMF Deployment Resource",
+      "description": "Azure for Operators 5G Core SMF/SAEGW-CP/GGSN Deployment Resource",
       "properties": {
         "properties": {
           "$ref": "#/definitions/SmfDeploymentResourceProperties",
@@ -4749,10 +4608,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -4799,16 +4654,27 @@
             "create"
           ]
         },
+        "unityCloudDeploymentParameters": {
+          "$ref": "#/definitions/UnityCloudFederationParameters",
+          "description": "UnityCloud NF Federation Parameters"
+        },
+        "cluster": {
+          "$ref": "#/definitions/ClusterIdProperty",
+          "description": "Cluster where the NF is deployed",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "unityCloudRelease": {
+          "$ref": "#/definitions/UnityCloudRelease",
+          "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
+        },
         "sessionCount": {
           "type": "integer",
           "format": "int32",
           "description": "PDN/PDU Sessions",
           "readOnly": true
-        },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
         },
         "deploymentStatus": {
           "$ref": "#/definitions/DeploymentStatus",
@@ -4818,7 +4684,8 @@
       },
       "required": [
         "usageSku",
-        "keyVault"
+        "unityCloudDeploymentParameters",
+        "cluster"
       ]
     },
     "SmfDeploymentResourceTagsUpdate": {
@@ -4834,9 +4701,39 @@
         }
       }
     },
+    "UnityCloudDeploymentParameters": {
+      "type": "object",
+      "description": "UnityCloud Deployment Parameters",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/UnityCloudFederationType",
+          "description": "Federaton Type"
+        },
+        "parameters": {
+          "$ref": "#/definitions/UnityCloudFederationParameters",
+          "description": "Usage Definition"
+        }
+      },
+      "required": [
+        "type",
+        "parameters"
+      ]
+    },
+    "UnityCloudFederationParameters": {
+      "type": "string",
+      "description": "UnityCloud Federation Parameters"
+    },
+    "UnityCloudFederationType": {
+      "type": "string",
+      "description": "UnityCloud Federation Type"
+    },
+    "UnityCloudRelease": {
+      "type": "string",
+      "description": "UnityCloud Release definition."
+    },
     "UpfDeploymentResource": {
       "type": "object",
-      "description": "Azure for Operators 5G Core UPF Deployment Resource",
+      "description": "Azure for Operators 5G Core UPF/SAEGW-UP Deployment Resource",
       "properties": {
         "properties": {
           "$ref": "#/definitions/UpfDeploymentResourceProperties",
@@ -4846,10 +4743,6 @@
             "read",
             "create"
           ]
-        },
-        "identity": {
-          "$ref": "../../../../../common-types/resource-management/v4/managedidentity.json#/definitions/ManagedServiceIdentity",
-          "description": "The managed service identities assigned to this resource."
         }
       },
       "allOf": [
@@ -4888,14 +4781,31 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
+        "unityCloudDeploymentParameters": {
+          "$ref": "#/definitions/UnityCloudFederationParameters",
+          "description": "UnityCloud NF Federation Parameters"
+        },
+        "cluster": {
+          "$ref": "#/definitions/ClusterIdProperty",
+          "description": "Cluster where the NF is deployed",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
+        "unityCloudRelease": {
+          "$ref": "#/definitions/UnityCloudRelease",
+          "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
+        },
+        "deploymentStatus": {
+          "$ref": "#/definitions/DeploymentStatus",
+          "description": "Deployment status",
+          "readOnly": true
         }
       },
       "required": [
-        "keyVault"
+        "unityCloudDeploymentParameters",
+        "cluster"
       ]
     },
     "UpfDeploymentResourceTagsUpdate": {
@@ -4951,6 +4861,10 @@
           }
         ]
       }
+    },
+    "VirtualMmeRelease": {
+      "type": "string",
+      "description": "Virtual MME Release definition."
     },
     "VnetSubnetIdProperty": {
       "type": "string",

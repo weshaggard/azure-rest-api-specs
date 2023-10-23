@@ -15,7 +15,7 @@ using OpenAPI;
 
 namespace Microsoft.MobilePacketCore;
 
-@doc("Azure for Operators 5G Core AMF Deployment Resource")
+@doc("Azure for Operators 5G Core AMF/MME Deployment Resource")
 @resource("amfDeployments")
 model AmfDeploymentResource
   is TrackedResource<AmfDeploymentResourceProperties> {
@@ -28,8 +28,6 @@ model AmfDeploymentResource
   @segment("amfDeployments")
   @visibility("create", "read")
   name: string;
-
-  ...ManagedServiceIdentity;
 }
 
 @doc("AMF Deployment Properties.")
@@ -42,12 +40,19 @@ model AmfDeploymentResourceProperties {
   @visibility("create", "read")
   usageSku: UsageSku;
 
+  @doc("UnityCloud NF Federation Parameters")
+  unityCloudDeploymentParameters: UnityCloudFederationParameters;
+
+  @doc("Cluster where the NF is deployed")
+  @visibility("create", "read")
+  cluster: ClusterIdProperty;
+
+  @doc("Unity Cloud Release version of the NF. This is inherited from the cluster")
+  unityCloudRelease?: UnityCloudRelease;
+
   @doc("Simultaneously Attached Users (SAU)")
   @visibility("read")
   simultaneouslyAttachedUsersCount?: int32;
-
-  @doc("Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/")
-  keyVault: url;
 
   @doc("Deployment status")
   @visibility("read")

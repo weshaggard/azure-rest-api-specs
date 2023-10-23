@@ -27,8 +27,6 @@ model ClusterResource is TrackedResource<ClusterResourceProperties> {
   @segment("clusters")
   @visibility("create", "read")
   name: string;
-
-  ...ManagedServiceIdentity;
 }
 
 @doc("Cluster Properties.")
@@ -43,10 +41,10 @@ model ClusterResourceProperties {
 
   @doc("Mobile Core Scaling Units (MCSU)")
   @visibility("read")
-  mobileCoreScalingUnits?: float32;
+  actualMobileCoreScalingUnits?: float32;
 
-  @doc("Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/")
-  keyVault: url;
+  @doc("Unity Cloud Release Version.  This is applied to all running workloads in this cluster")
+  unityCloudRelease: UnityCloudRelease;
 }
 
 @armResourceOperations(ClusterResource)

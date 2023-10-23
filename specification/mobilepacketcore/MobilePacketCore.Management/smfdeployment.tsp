@@ -15,7 +15,7 @@ using OpenAPI;
 
 namespace Microsoft.MobilePacketCore;
 
-@doc("Azure for Operators 5G Core SMF Deployment Resource")
+@doc("Azure for Operators 5G Core SMF/SAEGW-CP/GGSN Deployment Resource")
 @resource("smfDeployment")
 model SmfDeploymentResource
   is TrackedResource<SmfDeploymentResourceProperties> {
@@ -28,8 +28,6 @@ model SmfDeploymentResource
   @segment("smfDeployment")
   @visibility("create", "read")
   name: string;
-
-  ...ManagedServiceIdentity;
 }
 
 @doc("SMF Deployment Properties.")
@@ -42,12 +40,19 @@ model SmfDeploymentResourceProperties {
   @visibility("create", "read")
   usageSku: UsageSku;
 
+  @doc("UnityCloud NF Federation Parameters")
+  unityCloudDeploymentParameters: UnityCloudFederationParameters;
+
+  @doc("Cluster where the NF is deployed")
+  @visibility("create", "read")
+  cluster: ClusterIdProperty;
+
+  @doc("Unity Cloud Release version of the NF. This is inherited from the cluster")
+  unityCloudRelease?: UnityCloudRelease;
+
   @doc("PDN/PDU Sessions")
   @visibility("read")
   sessionCount?: int32;
-
-  @doc("Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/")
-  keyVault: url;
 
   @doc("Deployment status")
   @visibility("read")

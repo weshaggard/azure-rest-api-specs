@@ -15,7 +15,7 @@ using OpenAPI;
 
 namespace Microsoft.MobilePacketCore;
 
-@doc("Azure for Operators 5G Core UPF Deployment Resource")
+@doc("Azure for Operators 5G Core UPF/SAEGW-UP Deployment Resource")
 @resource("upfDeployments")
 model UpfDeploymentResource
   is TrackedResource<UpfDeploymentResourceProperties> {
@@ -28,8 +28,6 @@ model UpfDeploymentResource
   @segment("upfDeployments")
   @visibility("create", "read")
   name: string;
-
-  ...ManagedServiceIdentity;
 }
 
 @doc("UPF Deployment Properties.")
@@ -38,8 +36,19 @@ model UpfDeploymentResourceProperties {
   @visibility("read")
   provisioningState?: ProvisioningState;
 
-  @doc("Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/")
-  keyVault: url;
+  @doc("UnityCloud NF Federation Parameters")
+  unityCloudDeploymentParameters: UnityCloudFederationParameters;
+
+  @doc("Cluster where the NF is deployed")
+  @visibility("create", "read")
+  cluster: ClusterIdProperty;
+
+  @doc("Unity Cloud Release version of the NF. This is inherited from the cluster")
+  unityCloudRelease?: UnityCloudRelease;
+
+  @doc("Deployment status")
+  @visibility("read")
+  deploymentStatus?: DeploymentStatus;
 }
 
 @armResourceOperations(UpfDeploymentResource)

@@ -15,7 +15,7 @@ using OpenAPI;
 
 namespace Microsoft.MobilePacketCore;
 
-@doc("Azure for Operators 5G Core MME Deployment Resource")
+@doc("Azure for Operators 5G Core virtual MME/SGSN Deployment Resource")
 @resource("mmeDeployments")
 model MmeDeploymentResource
   is TrackedResource<MmeDeploymentResourceProperties> {
@@ -28,8 +28,6 @@ model MmeDeploymentResource
   @segment("mmeDeployments")
   @visibility("create", "read")
   name: string;
-
-  ...ManagedServiceIdentity;
 }
 
 @doc("MME Deployment Properties.")
@@ -46,16 +44,13 @@ model MmeDeploymentResourceProperties {
   @visibility("create", "read")
   mobileCoreScalingUnitSku: MobileCoreScalingUnitSku;
 
-  @doc("Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/")
-  keyVault: url;
-
   @doc("Deployment status")
   @visibility("read")
   deploymentStatus?: DeploymentStatus;
 
   @doc("Mobile Core Scaling Units (MCSU)")
   @visibility("read")
-  mobileCoreScalingUnits?: float32;
+  actualMobileCoreScalingUnits?: float32;
 
   @doc("Simultaneously Attached Users (SAU)")
   @visibility("read")
@@ -68,6 +63,9 @@ model MmeDeploymentResourceProperties {
   @doc("MME deployment NFVI type specific data")
   @visibility("read", "create")
   typeSpecificData: MmeDeploymentProfileTypeSpecificData;
+
+  @doc("MME Release Version")
+  mmeRelease: VirtualMmeRelease;
 
   @doc("Floating IPv4 address for Management Access")
   managementFloatingIp: IPv4Address;
@@ -126,27 +124,18 @@ enum MmeDeploymentProfile {
   MME6VM_LARGE_2_2_20_10_5_0,
 }
 
-@doc("MME Deployment Profile NFVI Type.")
-enum MmeDeploymentProfileNfviType {
-  @doc("Azure Core.")
-  AzureCore,
-
-  @doc("Azure Operator Nexus.")
-  AzureOperatorNexus,
-}
-
 @doc("MME Deployment Profile type specific data.")
 @discriminator("type")
 model MmeDeploymentProfileTypeSpecificData {
   @doc("NFVI Type")
-  type: MmeDeploymentProfileNfviType;
+  type: InfrastructureType;
 }
 
 @doc("MME Deployment Profile Azure Core specific data.")
 model MmeDeploymentProfileAzureCoreData
   extends MmeDeploymentProfileTypeSpecificData {
   @doc("MME Deployment Properties.")
-  type: MmeDeploymentProfileNfviType.AzureCore;
+  type: InfrastructureType.AzureCore;
 
   @doc("Management subnet information for MME deployments")
   @visibility("create", "read")
@@ -218,7 +207,7 @@ model MmeDeploymentProfileAzureCoreData
 model MmeProfileAzureOperatorNexusData
   extends MmeDeploymentProfileTypeSpecificData {
   @doc("MME Deployment Properties.")
-  type: MmeDeploymentProfileNfviType.AzureOperatorNexus;
+  type: InfrastructureType.AzureOperatorNexus;
 
   @doc("ARM Resource ID of the Network Fabric")
   @visibility("create", "read")
