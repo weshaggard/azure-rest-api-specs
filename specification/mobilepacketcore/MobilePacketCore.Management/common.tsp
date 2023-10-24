@@ -123,6 +123,33 @@ scalar ClusterIdProperty
     }
   ]>;
 
+@doc("ARM resource ID of a EMS deployment.")
+scalar EmsDeploymentIdProperty
+  extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+      type: "Microsoft.MobilePacketCore/emsDeployments",
+    }
+  ]>;
+
+@doc("ARM resource ID of a connected or provisioned cluster.")
+scalar ConnectedClusterIdProperty
+  extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+      type: "Microsoft.Kubernetes/connectedClusters",
+    },
+    {
+      type: "Microsoft.HybridContainerService/provisionedClusters",
+    }
+  ]>;
+
+@doc("ARM resource ID of a custom location.")
+scalar CustomLocationIdProperty
+  extends Azure.ResourceManager.ResourceIdentifier<[
+    {
+      type: "Microsoft.ExtendedLocation/customLocations",
+    }
+  ]>;
+
 @doc("Azure Availability Zones.")
 enum AvailabilityZone {
   @doc("No availability zone")
@@ -200,6 +227,15 @@ enum InfrastructureType {
 
   @doc("Azure Operator Nexus")
   AzureOperatorNexus,
+}
+
+@doc("Cluster Type Definitions")
+enum ClusterType {
+  @doc("Azure Kubernetes Service")
+  Aks,
+
+  @doc("Azure Operator Nexus Kubernetes Service")
+  NexusAks,
 }
 
 @doc("Deployment Type Definitions")

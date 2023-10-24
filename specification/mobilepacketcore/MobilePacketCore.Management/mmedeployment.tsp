@@ -56,6 +56,10 @@ model MmeDeploymentResourceProperties {
   @visibility("read")
   simultaneouslyAttachedUsersCount?: int32;
 
+  @doc("EMS instance managing this MME")
+  @visibility("read", "create")
+  emsDeployment: EmsDeploymentIdProperty;
+
   @doc("MME deployment profile")
   @visibility("read", "create")
   deploymentProfile: MmeDeploymentProfile;

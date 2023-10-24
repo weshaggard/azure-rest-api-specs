@@ -45,6 +45,9 @@ model ClusterResourceProperties {
 
   @doc("Unity Cloud Release Version.  This is applied to all running workloads in this cluster")
   unityCloudRelease: UnityCloudRelease;
+
+  @doc("Cluster type specific data.  Contents depend on the cluster type")
+  clusterTypeSpecificData: ClusterTypeSpecificData;
 }
 
 @armResourceOperations(ClusterResource)
@@ -55,4 +58,29 @@ interface Clusters {
   delete is ArmResourceDeleteSync<ClusterResource>;
   listByResourceGroup is ArmResourceListByParent<ClusterResource>;
   listBySubscription is ArmListBySubscription<ClusterResource>;
+}
+
+@doc("Cluster type specific data.")
+@discriminator("type")
+model ClusterTypeSpecificData {
+  @doc("Cluster Type")
+  type: ClusterType;
+
+  @doc("Custom Location resource ID")
+  customLocationId: CustomLocationIdProperty;
+
+  @doc("Connected Cluster resource ID")
+  connectedClusterId: ConnectedClusterIdProperty;
+}
+
+@doc("AKS Cluster specific data.")
+model AksClusterData extends ClusterTypeSpecificData {
+  @doc("Azure Kubernetes Service Properties.")
+  type: ClusterType.Aks;
+}
+
+@doc("Nexus AKS Cluster specific data.")
+model NexusAksClusterData extends ClusterTypeSpecificData {
+  @doc("Nexus Operator Kubenetes Service Properties.")
+  type: ClusterType.NexusAks;
 }

@@ -2863,6 +2863,16 @@
     }
   },
   "definitions": {
+    "AksClusterData": {
+      "type": "object",
+      "description": "AKS Cluster specific data.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ClusterTypeSpecificData"
+        }
+      ],
+      "x-ms-discriminator-value": "Aks"
+    },
     "AmfDeploymentResource": {
       "type": "object",
       "description": "Azure for Operators 5G Core AMF/MME Deployment Resource",
@@ -3095,11 +3105,16 @@
         "unityCloudRelease": {
           "$ref": "#/definitions/UnityCloudRelease",
           "description": "Unity Cloud Release Version.  This is applied to all running workloads in this cluster"
+        },
+        "clusterTypeSpecificData": {
+          "$ref": "#/definitions/ClusterTypeSpecificData",
+          "description": "Cluster type specific data.  Contents depend on the cluster type"
         }
       },
       "required": [
         "mobileCoreScalingUnitSku",
-        "unityCloudRelease"
+        "unityCloudRelease",
+        "clusterTypeSpecificData"
       ]
     },
     "ClusterResourceTagsUpdate": {
@@ -3115,6 +3130,81 @@
         }
       }
     },
+    "ClusterType": {
+      "type": "string",
+      "description": "Cluster Type Definitions",
+      "enum": [
+        "Aks",
+        "NexusAks"
+      ],
+      "x-ms-enum": {
+        "name": "ClusterType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Aks",
+            "value": "Aks",
+            "description": "Azure Kubernetes Service"
+          },
+          {
+            "name": "NexusAks",
+            "value": "NexusAks",
+            "description": "Azure Operator Nexus Kubernetes Service"
+          }
+        ]
+      }
+    },
+    "ClusterTypeSpecificData": {
+      "type": "object",
+      "description": "Cluster type specific data.",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/ClusterType",
+          "description": "Cluster Type"
+        },
+        "customLocationId": {
+          "$ref": "#/definitions/CustomLocationIdProperty",
+          "description": "Custom Location resource ID"
+        },
+        "connectedClusterId": {
+          "$ref": "#/definitions/ConnectedClusterIdProperty",
+          "description": "Connected Cluster resource ID"
+        }
+      },
+      "discriminator": "type",
+      "required": [
+        "type",
+        "customLocationId",
+        "connectedClusterId"
+      ]
+    },
+    "ConnectedClusterIdProperty": {
+      "type": "string",
+      "format": "arm-id",
+      "description": "ARM resource ID of a connected or provisioned cluster.",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.Kubernetes/connectedClusters"
+          },
+          {
+            "type": "Microsoft.HybridContainerService/provisionedClusters"
+          }
+        ]
+      }
+    },
+    "CustomLocationIdProperty": {
+      "type": "string",
+      "format": "arm-id",
+      "description": "ARM resource ID of a custom location.",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.ExtendedLocation/customLocations"
+          }
+        ]
+      }
+    },
     "DeploymentStatus": {
       "type": "object",
       "description": "Deployment Status of Network Functions",
@@ -3127,6 +3217,18 @@
       "required": [
         "status"
       ]
+    },
+    "EmsDeploymentIdProperty": {
+      "type": "string",
+      "format": "arm-id",
+      "description": "ARM resource ID of a EMS deployment.",
+      "x-ms-arm-id-details": {
+        "allowedResources": [
+          {
+            "type": "Microsoft.MobilePacketCore/emsDeployments"
+          }
+        ]
+      }
     },
     "EmsDeploymentResource": {
       "type": "object",
@@ -3645,6 +3747,14 @@
           "description": "Simultaneously Attached Users (SAU)",
           "readOnly": true
         },
+        "emsDeployment": {
+          "$ref": "#/definitions/EmsDeploymentIdProperty",
+          "description": "EMS instance managing this MME",
+          "x-ms-mutability": [
+            "read",
+            "create"
+          ]
+        },
         "deploymentProfile": {
           "$ref": "#/definitions/MmeDeploymentProfile",
           "description": "MME deployment profile",
@@ -3673,6 +3783,7 @@
       "required": [
         "usageSku",
         "mobileCoreScalingUnitSku",
+        "emsDeployment",
         "deploymentProfile",
         "typeSpecificData",
         "mmeRelease",
@@ -4074,6 +4185,16 @@
           }
         ]
       }
+    },
+    "NexusAksClusterData": {
+      "type": "object",
+      "description": "Nexus AKS Cluster specific data.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ClusterTypeSpecificData"
+        }
+      ],
+      "x-ms-discriminator-value": "NexusAks"
     },
     "NexusL2NetworkProperties": {
       "type": "object",
