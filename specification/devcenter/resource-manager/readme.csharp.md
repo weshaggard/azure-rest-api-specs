@@ -1,4 +1,4 @@
-## C#
+## C
 
 These settings apply only when `--csharp` is specified on the command line.
 Please also specify `--csharp-sdks-folder=<path to "SDKs" directory of your azure-sdk-for-net clone>`.
@@ -7,9 +7,10 @@ Please also specify `--csharp-sdks-folder=<path to "SDKs" directory of your azur
 csharp:
   azure-arm: true
   license-header: MICROSOFT_MIT_NO_VERSION
-  payload-flattening-threshold: 1
   clear-output-folder: true
   client-side-validation: false
-  namespace: Microsoft.Azure.Management.DevCenter
-  output-folder: $(csharp-sdks-folder)/devcenter/management/Microsoft.Azure.Management.DevCenter/src/Generated
+
+payload-flattening-threshold: 2
+namespace: "Microsoft.Azure.Management.DevCenter"
+output-folder: "$(csharp-sdks-folder)/Management/src/generated"
 ```
