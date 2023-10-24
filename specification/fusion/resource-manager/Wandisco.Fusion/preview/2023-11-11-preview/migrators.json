@@ -3075,6 +3075,31 @@
       ],
       "x-ms-discriminator-value": "PatternExclusion"
     },
+    "LDMAgeExclusion": {
+      "description": "Live Data Migrator Exclusion based on age",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/LDMExclusionDetail"
+        }
+      ],
+      "properties": {
+        "timeValue": {
+          "description": "Modification time value. Exclude any file with a modification time later than timeValue * timeUnit, relative to the migration start",
+          "type": "integer",
+          "format": "int64"
+        },
+        "timeUnit": {
+          "description": "Modification time unit. Exclude any file with a modification time later than timeValue * timeUnit, relative to the migration start",
+          "$ref": "#/definitions/TimeUnit"
+        }
+      },
+      "required": [
+        "timeValue",
+        "timeUnit"
+      ],
+      "x-ms-discriminator-value": "AgeExclusion"
+    },
     "ExclusionRepresentation": {
       "description": "Exclusion Representation",
       "type": "object",
@@ -3105,7 +3130,8 @@
       "enum": [
         "DateExclusion",
         "FileSizeExclusion",
-        "PatternExclusion"
+        "PatternExclusion",
+        "AgeExclusion"
       ],
       "x-ms-enum": {
         "name": "ExclusionKind",
@@ -3119,6 +3145,9 @@
           },
           {
             "value": "PatternExclusion"
+          },
+          {
+            "value": "AgeExclusion"
           }
         ]
       }
@@ -3142,6 +3171,31 @@
         "dateForExclusion"
       ],
       "x-ms-discriminator-value": "DateExclusion"
+    },
+    "AgeExclusion": {
+      "description": "Migration Exclusion based on Age",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExclusionRepresentation"
+        }
+      ],
+      "properties": {
+        "timeValue": {
+          "description": "Modification time value. Exclude any file with a modification time later than timeValue * timeUnit, relative to the migration start",
+          "type": "integer",
+          "format": "int64"
+        },
+        "timeUnit": {
+          "description": "Modification time unit. Exclude any file with a modification time later than timeValue * timeUnit, relative to the migration start",
+          "$ref": "#/definitions/TimeUnit"
+        }
+      },
+      "required": [
+        "timeValue",
+        "timeUnit"
+      ],
+      "x-ms-discriminator-value": "AgeExclusion"
     },
     "FileSizeExclusion": {
       "description": "Exclusion based on File Size",
@@ -3181,6 +3235,30 @@
         "patternForExclusion"
       ],
       "x-ms-discriminator-value": "PatternExclusion"
+    },
+    "TimeUnit": {
+      "description": "Time unit",
+      "type": "string",
+      "enum": [
+        "Minutes",
+        "Hours",
+        "Days"
+      ],
+      "x-ms-enum": {
+        "name": "TimeUnit",
+        "modelAsString": true,
+        "values": [
+          {
+            "value": "Minutes"
+          },
+          {
+            "value": "Hours"
+          },
+          {
+            "value": "Days"
+          }
+        ]
+      }
     },
     "Migrator": {
       "description": "Migrator Resource",
