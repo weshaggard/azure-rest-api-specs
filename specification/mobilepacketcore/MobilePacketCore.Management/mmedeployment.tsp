@@ -36,25 +36,17 @@ model MmeDeploymentResourceProperties {
   @visibility("read")
   provisioningState?: ProvisioningState;
 
-  @doc("Usage SKU")
+  @doc("MME deployment type")
   @visibility("create", "read")
-  usageSku: UsageSku;
+  deploymentType: SkuDeploymentType;
 
-  @doc("Mobile Core Scaling Unit SKU")
-  @visibility("create", "read")
-  mobileCoreScalingUnitSku: MobileCoreScalingUnitSku;
-
-  @doc("Deployment status")
+  @doc("Billing Details")
   @visibility("read")
-  deploymentStatus?: DeploymentStatus;
+  billingDetails?: BillingDetails;
 
-  @doc("Mobile Core Scaling Units (MCSU)")
+  @doc("Operational status")
   @visibility("read")
-  actualMobileCoreScalingUnits?: float32;
-
-  @doc("Simultaneously Attached Users (SAU)")
-  @visibility("read")
-  simultaneouslyAttachedUsersCount?: int32;
+  operationalStatus?: OperationalStatus;
 
   @doc("EMS instance managing this MME")
   @visibility("read", "create")
@@ -195,9 +187,11 @@ model MmeDeploymentProfileAzureCoreData
   northSouthData1Ips: string;
 
   @doc("Loopback configuration for LB VMs.")
+  @extension("x-ms-identifiers", [])
   loopbackConfig: MmeLoopbackConfig[];
 
   @doc("Loopback configuration for LB VMs.")
+  @extension("x-ms-identifiers", [])
   dataLoopbackConfig: MmeDataLoopbackConfig[];
 
   @doc("Availability zone for cluster side A.")
@@ -210,8 +204,11 @@ model MmeDeploymentProfileAzureCoreData
 @doc("Azure for Operators 5G Core MME Deployment Resource")
 model MmeProfileAzureOperatorNexusData
   extends MmeDeploymentProfileTypeSpecificData {
-  @doc("MME Deployment Properties.")
+  @doc("MME Deployment Nexus Properties.")
   type: InfrastructureType.AzureOperatorNexus;
+
+  @doc("Custom Location resource ID")
+  customLocationId: CustomLocationIdProperty;
 
   @doc("ARM Resource ID of the Network Fabric")
   @visibility("create", "read")

@@ -2923,14 +2923,6 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "usageSku": {
-          "$ref": "#/definitions/UsageSku",
-          "description": "Usage SKU",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        },
         "unityCloudDeploymentParameters": {
           "$ref": "#/definitions/UnityCloudFederationParameters",
           "description": "UnityCloud NF Federation Parameters"
@@ -2947,20 +2939,18 @@
           "$ref": "#/definitions/UnityCloudRelease",
           "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
         },
-        "simultaneouslyAttachedUsersCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Simultaneously Attached Users (SAU)",
+        "billingDetails": {
+          "$ref": "#/definitions/BillingDetails",
+          "description": "Billing Details",
           "readOnly": true
         },
-        "deploymentStatus": {
-          "$ref": "#/definitions/DeploymentStatus",
-          "description": "Deployment status",
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
           "readOnly": true
         }
       },
       "required": [
-        "usageSku",
         "unityCloudDeploymentParameters",
         "cluster"
       ]
@@ -3012,6 +3002,40 @@
             "description": "Zone 3"
           }
         ]
+      }
+    },
+    "BillingDetails": {
+      "type": "object",
+      "description": "Billing Details",
+      "properties": {
+        "mobileCoreScalingUnitSku": {
+          "$ref": "#/definitions/MobileCoreScalingUnitSku",
+          "description": "Mobile Core Scaling Unit SKU",
+          "readOnly": true
+        },
+        "usageSku": {
+          "$ref": "#/definitions/UsageSku",
+          "description": "Usage SKU",
+          "readOnly": true
+        },
+        "mobileCoreScalingUnits": {
+          "type": "number",
+          "format": "float",
+          "description": "Mobile Core Scaling Units (MCSU)",
+          "readOnly": true
+        },
+        "simultaneouslyAttachedUsersCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Simultaneously Attached Users (SAU)",
+          "readOnly": true
+        },
+        "sessionCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "PDN/PDU Sessions",
+          "readOnly": true
+        }
       }
     },
     "CloudServiceNetworkIdProperty": {
@@ -3088,33 +3112,48 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "mobileCoreScalingUnitSku": {
-          "$ref": "#/definitions/MobileCoreScalingUnitSku",
-          "description": "Mobile Core Scaling Unit SKU",
+        "deploymentType": {
+          "$ref": "#/definitions/SkuDeploymentType",
+          "description": "Cluster deployment type",
           "x-ms-mutability": [
             "read",
             "create"
           ]
         },
-        "actualMobileCoreScalingUnits": {
-          "type": "number",
-          "format": "float",
-          "description": "Mobile Core Scaling Units (MCSU)",
-          "readOnly": true
-        },
         "unityCloudRelease": {
           "$ref": "#/definitions/UnityCloudRelease",
-          "description": "Unity Cloud Release Version.  This is applied to all running workloads in this cluster"
+          "description": "Unity Cloud Release Version.  This is applied to all PaaS components and running workloads in this cluster"
         },
         "clusterTypeSpecificData": {
           "$ref": "#/definitions/ClusterTypeSpecificData",
           "description": "Cluster type specific data.  Contents depend on the cluster type"
+        },
+        "unityCloudFederationParameters": {
+          "type": "array",
+          "description": "Unity Cloud Local PaaS federation parameters.  One set per federation type",
+          "items": {
+            "$ref": "#/definitions/UnityCloudDeploymentParameters"
+          },
+          "x-ms-identifiers": [
+            "type"
+          ]
+        },
+        "billingDetails": {
+          "$ref": "#/definitions/BillingDetails",
+          "description": "Billing Details",
+          "readOnly": true
+        },
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
+          "readOnly": true
         }
       },
       "required": [
-        "mobileCoreScalingUnitSku",
+        "deploymentType",
         "unityCloudRelease",
-        "clusterTypeSpecificData"
+        "clusterTypeSpecificData",
+        "unityCloudFederationParameters"
       ]
     },
     "ClusterResourceTagsUpdate": {
@@ -3205,18 +3244,34 @@
         ]
       }
     },
-    "DeploymentStatus": {
+    "EmsDeploymentAzureCoreData": {
       "type": "object",
-      "description": "Deployment Status of Network Functions",
+      "description": "EMS Deployment Azure Core specific data.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmsDeploymentTypeSpecificData"
+        }
+      ],
+      "x-ms-discriminator-value": "AzureCore"
+    },
+    "EmsDeploymentAzureOperatorNexusData": {
+      "type": "object",
+      "description": "EMS Deployment Azure Nexus specific data",
       "properties": {
-        "status": {
-          "type": "string",
-          "description": "Placeholder"
+        "customLocationId": {
+          "$ref": "#/definitions/CustomLocationIdProperty",
+          "description": "Custom Location resource ID"
         }
       },
       "required": [
-        "status"
-      ]
+        "customLocationId"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmsDeploymentTypeSpecificData"
+        }
+      ],
+      "x-ms-discriminator-value": "AzureOperatorNexus"
     },
     "EmsDeploymentIdProperty": {
       "type": "string",
@@ -3280,33 +3335,37 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "mobileCoreScalingUnitSku": {
-          "$ref": "#/definitions/MobileCoreScalingUnitSku",
-          "description": "Mobile Core Scaling Unit SKU",
+        "emsRelease": {
+          "$ref": "#/definitions/EmsRelease",
+          "description": "EMS Release Version"
+        },
+        "deploymentType": {
+          "$ref": "#/definitions/SkuDeploymentType",
+          "description": "EMS deployment type",
           "x-ms-mutability": [
             "read",
             "create"
           ]
         },
-        "emsRelease": {
-          "$ref": "#/definitions/EmsRelease",
-          "description": "EMS Release Version"
+        "emsDeploymentTypeSpecificData": {
+          "$ref": "#/definitions/EmsDeploymentTypeSpecificData",
+          "description": "Infrastructure type specific data.  Contents depend on the infrastructure type"
         },
-        "deploymentStatus": {
-          "$ref": "#/definitions/DeploymentStatus",
-          "description": "Deployment status",
+        "billingDetails": {
+          "$ref": "#/definitions/BillingDetails",
+          "description": "Billing Details",
           "readOnly": true
         },
-        "actualMobileCoreScalingUnits": {
-          "type": "number",
-          "format": "float",
-          "description": "Mobile Core Scaling Units (MCSU)",
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
           "readOnly": true
         }
       },
       "required": [
-        "mobileCoreScalingUnitSku",
-        "emsRelease"
+        "emsRelease",
+        "deploymentType",
+        "emsDeploymentTypeSpecificData"
       ]
     },
     "EmsDeploymentResourceTagsUpdate": {
@@ -3321,6 +3380,20 @@
           }
         }
       }
+    },
+    "EmsDeploymentTypeSpecificData": {
+      "type": "object",
+      "description": "EMS Deployment type specific data.",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/InfrastructureType",
+          "description": "NFVI Type"
+        }
+      },
+      "discriminator": "type",
+      "required": [
+        "type"
+      ]
     },
     "EmsRelease": {
       "type": "string",
@@ -3714,37 +3787,22 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "usageSku": {
-          "$ref": "#/definitions/UsageSku",
-          "description": "Usage SKU",
+        "deploymentType": {
+          "$ref": "#/definitions/SkuDeploymentType",
+          "description": "MME deployment type",
           "x-ms-mutability": [
             "read",
             "create"
           ]
         },
-        "mobileCoreScalingUnitSku": {
-          "$ref": "#/definitions/MobileCoreScalingUnitSku",
-          "description": "Mobile Core Scaling Unit SKU",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        },
-        "deploymentStatus": {
-          "$ref": "#/definitions/DeploymentStatus",
-          "description": "Deployment status",
+        "billingDetails": {
+          "$ref": "#/definitions/BillingDetails",
+          "description": "Billing Details",
           "readOnly": true
         },
-        "actualMobileCoreScalingUnits": {
-          "type": "number",
-          "format": "float",
-          "description": "Mobile Core Scaling Units (MCSU)",
-          "readOnly": true
-        },
-        "simultaneouslyAttachedUsersCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Simultaneously Attached Users (SAU)",
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
           "readOnly": true
         },
         "emsDeployment": {
@@ -3781,8 +3839,7 @@
         }
       },
       "required": [
-        "usageSku",
-        "mobileCoreScalingUnitSku",
+        "deploymentType",
         "emsDeployment",
         "deploymentProfile",
         "typeSpecificData",
@@ -3947,6 +4004,10 @@
       "type": "object",
       "description": "Azure for Operators 5G Core MME Deployment Resource",
       "properties": {
+        "customLocationId": {
+          "$ref": "#/definitions/CustomLocationIdProperty",
+          "description": "Custom Location resource ID"
+        },
         "networkFabricId": {
           "$ref": "#/definitions/NetworkFabricIdProperty",
           "description": "ARM Resource ID of the Network Fabric",
@@ -4025,6 +4086,7 @@
         }
       },
       "required": [
+        "customLocationId",
         "networkFabricId",
         "cloudServiceNetworkId",
         "managementL3IsolationDomainId",
@@ -4152,27 +4214,8 @@
       }
     },
     "MobileCoreScalingUnitSku": {
-      "type": "object",
-      "description": "Mobile Core Scaling Unit SKU Definition",
-      "properties": {
-        "deploymentType": {
-          "$ref": "#/definitions/SkuDeploymentType",
-          "description": "Deployment Type"
-        },
-        "mobileCoreScalingUnits": {
-          "$ref": "#/definitions/SkuMobileCoreScalingUnitDefinitions",
-          "description": "Usage Definition"
-        },
-        "sku": {
-          "type": "string",
-          "description": "Full SKU for the Resource",
-          "readOnly": true
-        }
-      },
-      "required": [
-        "deploymentType",
-        "mobileCoreScalingUnits"
-      ]
+      "type": "string",
+      "description": "Mobile Core Scaling Unit SKU Definition"
     },
     "NetworkFabricIdProperty": {
       "type": "string",
@@ -4264,7 +4307,10 @@
           "items": {
             "$ref": "#/definitions/Ipv4StaticRouteConfiguration"
           },
-          "x-ms-identifiers": []
+          "x-ms-identifiers": [
+            "prefix",
+            "nextHop"
+          ]
         }
       },
       "required": [
@@ -4381,9 +4427,9 @@
           "$ref": "#/definitions/UnityCloudRelease",
           "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
         },
-        "deploymentStatus": {
-          "$ref": "#/definitions/DeploymentStatus",
-          "description": "Deployment status",
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
           "readOnly": true
         }
       },
@@ -4471,9 +4517,9 @@
           "$ref": "#/definitions/UnityCloudRelease",
           "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
         },
-        "deploymentStatus": {
-          "$ref": "#/definitions/DeploymentStatus",
-          "description": "Deployment status",
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
           "readOnly": true
         }
       },
@@ -4492,6 +4538,22 @@
           "additionalProperties": {
             "type": "string"
           }
+        }
+      }
+    },
+    "OperationalStatus": {
+      "type": "object",
+      "description": "Operational Status of the resource",
+      "properties": {
+        "workload": {
+          "type": "string",
+          "description": "Status of the deployed workloads",
+          "readOnly": true
+        },
+        "healthCheck": {
+          "type": "string",
+          "description": "Health check results",
+          "readOnly": true
         }
       }
     },
@@ -4545,19 +4607,24 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "keyVault": {
-          "type": "string",
-          "format": "uri",
-          "description": "Azure keyvault used for provisioning the network function. For example: https://contosovault.vault.azure.net/"
+        "unityCloudFederationParameters": {
+          "type": "array",
+          "description": "Unity Cloud Observability PaaS federation parameters.  One set per federation type",
+          "items": {
+            "$ref": "#/definitions/UnityCloudDeploymentParameters"
+          },
+          "x-ms-identifiers": [
+            "type"
+          ]
         },
-        "deploymentStatus": {
-          "$ref": "#/definitions/DeploymentStatus",
-          "description": "Deployment status",
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
           "readOnly": true
         }
       },
       "required": [
-        "keyVault"
+        "unityCloudFederationParameters"
       ]
     },
     "PaasDeploymentResourceTagsUpdate": {
@@ -4671,48 +4738,12 @@
           {
             "name": "Production",
             "value": "Production",
-            "description": "Producton SKU"
+            "description": "Producton Deployment"
           },
           {
             "name": "Lab",
             "value": "Lab",
-            "description": "Lab SKU"
-          }
-        ]
-      }
-    },
-    "SkuMobileCoreScalingUnitDefinitions": {
-      "type": "string",
-      "description": "Mobile Core Scaling Unit Definitions",
-      "enum": [
-        "4"
-      ],
-      "x-ms-enum": {
-        "name": "SkuMobileCoreScalingUnitDefinitions",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "4",
-            "value": "4",
-            "description": "Unit of 4 vCPUs"
-          }
-        ]
-      }
-    },
-    "SkuUsageDefinitions": {
-      "type": "string",
-      "description": "Usage Definitions",
-      "enum": [
-        "10K"
-      ],
-      "x-ms-enum": {
-        "name": "SkuUsageDefinitions",
-        "modelAsString": true,
-        "values": [
-          {
-            "name": "10K",
-            "value": "10K",
-            "description": "10K Sessions or Simultaneously Attached Users"
+            "description": "Lab Deployment"
           }
         ]
       }
@@ -4767,14 +4798,6 @@
           "description": "The status of the last operation.",
           "readOnly": true
         },
-        "usageSku": {
-          "$ref": "#/definitions/UsageSku",
-          "description": "Usage SKU",
-          "x-ms-mutability": [
-            "read",
-            "create"
-          ]
-        },
         "unityCloudDeploymentParameters": {
           "$ref": "#/definitions/UnityCloudFederationParameters",
           "description": "UnityCloud NF Federation Parameters"
@@ -4791,20 +4814,18 @@
           "$ref": "#/definitions/UnityCloudRelease",
           "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
         },
-        "sessionCount": {
-          "type": "integer",
-          "format": "int32",
-          "description": "PDN/PDU Sessions",
+        "billingDetails": {
+          "$ref": "#/definitions/BillingDetails",
+          "description": "Billing Details",
           "readOnly": true
         },
-        "deploymentStatus": {
-          "$ref": "#/definitions/DeploymentStatus",
-          "description": "Deployment status",
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
           "readOnly": true
         }
       },
       "required": [
-        "usageSku",
         "unityCloudDeploymentParameters",
         "cluster"
       ]
@@ -4918,9 +4939,9 @@
           "$ref": "#/definitions/UnityCloudRelease",
           "description": "Unity Cloud Release version of the NF. This is inherited from the cluster"
         },
-        "deploymentStatus": {
-          "$ref": "#/definitions/DeploymentStatus",
-          "description": "Deployment status",
+        "operationalStatus": {
+          "$ref": "#/definitions/OperationalStatus",
+          "description": "Operational status",
           "readOnly": true
         }
       },
@@ -4943,27 +4964,8 @@
       }
     },
     "UsageSku": {
-      "type": "object",
-      "description": "Usage SKU Definition",
-      "properties": {
-        "deploymentType": {
-          "$ref": "#/definitions/SkuDeploymentType",
-          "description": "Deployment Type"
-        },
-        "usageUnits": {
-          "$ref": "#/definitions/SkuUsageDefinitions",
-          "description": "Usage Definition"
-        },
-        "sku": {
-          "type": "string",
-          "description": "Full SKU for the Resource",
-          "readOnly": true
-        }
-      },
-      "required": [
-        "deploymentType",
-        "usageUnits"
-      ]
+      "type": "string",
+      "description": "Usage SKU Definition"
     },
     "Versions": {
       "type": "string",
