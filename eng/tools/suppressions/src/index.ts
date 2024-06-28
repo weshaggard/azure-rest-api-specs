@@ -3,7 +3,7 @@ import { getSuppressions, Suppression } from "./suppressions.js";
 
 function getUsage(): string {
   return (
-    "  Usage: npx get-suppressions <tool-name> <path-to-file-or-directory>\n" +
+    "Testing  Usage: npx get-suppressions <tool-name> <path-to-file-or-directory>\n" +
     "Returns: JSON array of suppressions, with specified tool name, applying to file or directory (may be empty)\n" +
     "\n" +
     "Example: npx get-suppressions TypeSpecRequirement specification/foo/data-plane/Foo/stable/2023-01-01/Foo.json\n" +
